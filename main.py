@@ -1,26 +1,29 @@
-import data_voxel
-from method_init import manage_matrix
+import data_trf
+from method_init import init_matrix
 from method_init import green_function
 import scipy.io
 
-data_voxel = data_voxel.get_data()
+data_init = data_trf.get_data_init()
+data_solve = data_trf.get_data_solve()
 
-nx = data_voxel["nx"]
-ny = data_voxel["ny"]
-nz = data_voxel["nz"]
+nx = data_init["nx"]
+ny = data_init["ny"]
+nz = data_init["nz"]
+dx = data_init["dx"]
+dy = data_init["dy"]
+dz = data_init["dz"]
+n_min_center = data_init["n_min_center"]
 
-dx = data_voxel["dx"]
-dy = data_voxel["dy"]
-dz = data_voxel["dz"]
-
-n_min_center = data_voxel["n_min_center"]
+conductor = data_solve["conductor"]
+src_current = data_solve["src_current"]
+src_voltage = data_solve["src_voltage"]
 
 n = (nx, ny, nz)
 d = (dx, dy, dz)
 
-xyz = manage_matrix.get_voxel_coordinate(d, n)
+xyz = init_matrix.get_voxel_coordinate(d, n)
 
-A_incidence = manage_matrix.get_incidence_matrix(n)
+A_incidence = init_matrix.get_incidence_matrix(n)
 
 (G_mutual, G_self) = green_function.get_green_tensor(d, n, n_min_center)
 
