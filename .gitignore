@@ -1,0 +1,7 @@
+*.asv
+*.mat
+*.h5
+*.pyc
+*.db
+.idea/*
+scratch/*
