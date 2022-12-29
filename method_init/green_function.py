@@ -118,7 +118,7 @@ def get_green_tensor(d, n, n_min_center):
     (nx, ny, nz) = n
 
     # init the tensor
-    G_mutual = np.zeros((nx, ny, nz))
+    G_mutual = np.zeros((nx, ny, nz), dtype=np.float64)
 
     # populate the tensor
     for ix in range(nx):

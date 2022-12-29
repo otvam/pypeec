@@ -18,15 +18,15 @@ def get_data_solve():
     data_solve = dict()
 
     conductor = []
-    conductor.append({"idx": [1, 4, 5, 9, 13, 14, 15, 16, 12, 8], "rho": 1.7544e-08})
-    conductor.append({"idx": [33, 34, 35, 36, 40, 44, 48, 47, 46, 45, 41, 37], "rho": 8.7720e-08})
+    conductor.append({"idx": [0, 3, 4, 8, 12, 13, 14, 15, 11, 7], "rho": 1.7544e-08})
+    conductor.append({"idx": [32, 33, 34, 35, 39, 43, 47, 46, 45, 44, 40, 36], "rho": 8.7720e-08})
 
     src_current = []
-    src_current.append({"tag": "src", "idx": [1], "value": +1})
+    src_current.append({"tag": "src", "idx": [0], "value": +1})
 
     src_voltage = []
-    src_voltage.append({"tag": "sink", "idx": [4], "value": +1})
-    src_voltage.append({"tag": "short", "idx": [46], "value": -1})
+    src_voltage.append({"tag": "sink", "idx": [3], "value": +1})
+    src_voltage.append({"tag": "short", "idx": [45], "value": -1})
 
     data_solve["conductor"] = conductor
     data_solve["src_current"] = src_current

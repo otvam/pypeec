@@ -32,6 +32,11 @@ A_incidence = init_matrix.get_incidence_matrix(n)
 (idx_c, rho_c) = solve_matrix.get_conductor_geometry(conductor)
 (idx_src_c, val_src_c, idx_src_v, val_src_v) = solve_matrix.get_source_geomtry(src_current, src_voltage)
 
+
+(A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = solve_matrix.get_incidence_matrix(n, A_incidence, idx_c)
+(R_tensor, R_vector) = solve_matrix.get_resistance_matrix(n, d, idx_c, rho_c, idx_f_x, idx_f_y, idx_f_z, idx_f)
+
+
 # A_incidence = A_incidence.toarray()
 # mdic = {"xyz": xyz, "A_incidence": A_incidence, "G_mutual": G_mutual, "G_self": G_self}
 # scipy.io.savemat("matlab_matrix.mat", mdic)
