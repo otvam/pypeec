@@ -9,7 +9,7 @@ def get_data_init():
     data_init["dy"] = 2e-4
     data_init["dz"] = 1e-4
 
-    data_init["n_min_center"] = 4
+    data_init["n_min_center"] = 25
 
     return data_init
 
@@ -28,6 +28,7 @@ def get_data_solve():
     src_voltage.append({"tag": "sink", "idx": [3], "value": +1})
     src_voltage.append({"tag": "short", "idx": [45], "value": -1})
 
+    data_solve["freq"] = 10e6
     data_solve["conductor"] = conductor
     data_solve["src_current"] = src_current
     data_solve["src_voltage"] = src_voltage

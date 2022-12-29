@@ -1,5 +1,5 @@
 import numpy as np
-
+from method_solve import circulant_tensor
 
 def get_conductor_geometry(conductor):
     # get the indices of the conducting voxels and the resistivity
@@ -106,3 +106,34 @@ def get_resistance_matrix(n, d, idx_c, rho_c, idx_f_x, idx_f_y, idx_f_z, idx_f):
     R_vector = R_vector[idx_f]
 
     return R_tensor, R_vector
+
+
+def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
+    # extract the voxel data
+    (nx, ny, nz) = n
+    (dx, dy, dz) = d
+    n = nx*ny*nz
+
+    # vacuum permittivity
+    mu = 4*np.pi*1e-7
+
+    # compute the circulant tensor
+    G_mutual = circulant_tensor.get_circulant_tensor(G_mutual)
+
+    # compute the inductance tensor and the FFT
+    L_tensor = np.zeros((2*nx, 2*ny, 2*nz, 3), dtype=np.complex128)
+    # L_tensor[:, :, :, 0] = circulant_tensor.get_fft_tensor((mu*G_mutual)/(dy**2*dz**2))
+    # L_tensor[:, :, :, 1] = circulant_tensor.get_fft_tensor((mu*G_mutual)/(dx**2*dz**2))
+    # L_tensor[:, :, :, 2] = circulant_tensor.get_fft_tensor((mu*G_mutual)/(dx**2*dy**2))
+    L_tensor[:, :, :, 0] = ((mu*G_mutual)/(dy**2*dz**2))
+    L_tensor[:, :, :, 1] = ((mu*G_mutual)/(dx**2*dz**2))
+    L_tensor[:, :, :, 2] = ((mu*G_mutual)/(dx**2*dy**2))
+
+    # self-inductance for the preconditioner
+    L_x = (mu*G_self)/(dy**2*dz**2)
+    L_y = (mu*G_self)/(dx**2*dz**2)
+    L_z = (mu*G_self)/(dx**2*dy**2)
+    L_vector = np.concatenate((L_x*np.ones(n), L_y*np.ones(n), L_z*np.ones(n)), dtype=np.float64)
+    L_vector = L_vector[idx_f]
+
+    return L_tensor, L_vector

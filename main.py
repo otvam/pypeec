@@ -36,9 +36,13 @@ A_incidence = init_matrix.get_incidence_matrix(n)
 (A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = solve_matrix.get_incidence_matrix(n, A_incidence, idx_c)
 (R_tensor, R_vector) = solve_matrix.get_resistance_matrix(n, d, idx_c, rho_c, idx_f_x, idx_f_y, idx_f_z, idx_f)
 
+(L_tensor, L_vector) = solve_matrix.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
 
-# A_incidence = A_incidence.toarray()
-# mdic = {"xyz": xyz, "A_incidence": A_incidence, "G_mutual": G_mutual, "G_self": G_self}
+A_incidence = A_incidence.toarray()
+mdic = {"xyz": xyz, "A_incidence": A_incidence, "G_mutual": G_mutual, "G_self": G_self}
+scipy.io.savemat("matlab_matrix.mat", mdic)
+
+# mdic = {"L_tensor": L_tensor, "L_vector": L_vector, "R_tensor": R_tensor, "R_vector": R_vector}
 # scipy.io.savemat("matlab_matrix.mat", mdic)
 
 print('ok')
