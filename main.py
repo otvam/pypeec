@@ -1,6 +1,7 @@
 import data_trf
 from method_init import init_matrix
 from method_init import green_function
+from method_solve import solve_matrix
 import scipy.io
 
 data_init = data_trf.get_data_init()
@@ -28,7 +29,11 @@ A_incidence = init_matrix.get_incidence_matrix(n)
 (G_mutual, G_self) = green_function.get_green_tensor(d, n, n_min_center)
 
 
-A_incidence = A_incidence.toarray()
+(idx_c, rho_c) = solve_matrix.get_conductor_geometry(conductor)
+(idx_src_c, val_src_c, idx_src_v, val_src_v) = solve_matrix.get_source_geomtry(src_current, src_voltage)
 
-mdic = {"xyz": xyz, "A_incidence": A_incidence, "G_mutual": G_mutual, "G_self": G_self}
-scipy.io.savemat("matlab_matrix.mat", mdic)
+# A_incidence = A_incidence.toarray()
+# mdic = {"xyz": xyz, "A_incidence": A_incidence, "G_mutual": G_mutual, "G_self": G_self}
+# scipy.io.savemat("matlab_matrix.mat", mdic)
+
+print('ok')
