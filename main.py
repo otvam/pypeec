@@ -1,7 +1,9 @@
 import data_trf
 from method_init import voxel_geometry
 from method_init import green_function
-from method_solve import solve_matrix
+from method_solve import problem_geometry
+from method_solve import resistance_inductance
+from method_solve import equation_system
 import scipy.io
 
 data_init = data_trf.get_data_init()
@@ -33,21 +35,21 @@ A_incidence = voxel_geometry.get_incidence_matrix(n)
 
 ######################################################## PARSE
 
-(idx_v, rho_v) = solve_matrix.get_conductor_geometry(conductor)
-(idx_src_c, val_src_c, idx_src_v, val_src_v) = solve_matrix.get_source_geomtry(src_current, src_voltage)
+(idx_v, rho_v) = problem_geometry.get_conductor_geometry(conductor)
+(idx_src_c, val_src_c, idx_src_v, val_src_v) = problem_geometry.get_source_geomtry(src_current, src_voltage)
 
-(A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = solve_matrix.get_incidence_matrix(n, A_incidence, idx_v)
-(idx_src_c_local, idx_src_v_local) = solve_matrix.get_source_index(n, idx_v, idx_src_c, idx_src_v)
+(A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
+(idx_src_c_local, idx_src_v_local) = problem_geometry.get_source_index(n, idx_v, idx_src_c, idx_src_v)
 
+######################################################## PARSE
 
+(R_tensor, R_vector) = resistance_inductance.get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f)
 
-(R_tensor, R_vector) = solve_matrix.get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f)
+(L_tensor, L_vector) = resistance_inductance.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
 
-(L_tensor, L_vector) = solve_matrix.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
+(ZL_tensor, ZL_vector) = resistance_inductance.get_inductance_operator(n, freq, L_tensor, L_vector)
 
-(ZL_tensor, ZL_vector) = solve_matrix.get_inductance_operator(n, freq, L_tensor, L_vector)
-
-b_src = solve_matrix.get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v)
+b_src = equation_system.get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v)
 
 
 # A_incidence = A_incidence.toarray()
