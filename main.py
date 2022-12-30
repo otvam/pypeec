@@ -36,12 +36,12 @@ A_incidence = voxel_geometry.get_incidence_matrix(n)
 ######################################################## PARSE
 
 (idx_v, rho_v) = problem_geometry.get_conductor_geometry(conductor)
-(idx_src_c, val_src_c, idx_src_v, val_src_v) = problem_geometry.get_source_geomtry(src_current, src_voltage)
+(idx_src_c, val_src_c, idx_src_v, val_src_v) = problem_geometry.get_source_geometry(src_current, src_voltage)
 
 (A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
 (idx_src_c_local, idx_src_v_local) = problem_geometry.get_source_index(n, idx_v, idx_src_c, idx_src_v)
 
-######################################################## PARSE
+######################################################## MATRIX
 
 (R_tensor, R_vector) = resistance_inductance.get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f)
 
@@ -49,7 +49,10 @@ A_incidence = voxel_geometry.get_incidence_matrix(n)
 
 (ZL_tensor, ZL_vector) = resistance_inductance.get_inductance_operator(n, freq, L_tensor, L_vector)
 
+######################################################## EQN
+
 b_src = equation_system.get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v)
+(A_kcl, A_kvl, A_src) = equation_system.get_connection_matrix(A_reduced, idx_v, idx_f, idx_src_v_local)
 
 
 # A_incidence = A_incidence.toarray()

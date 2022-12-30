@@ -75,6 +75,7 @@ def get_green_ana(d, m):
     for ix in range(4):
         for iy in range(4):
             for iz in range(4):
+                # ignore division per zero (as it handled inside the log and arctan)
                 with np.errstate(all='ignore'):
                     sign = (-1)**(ix+1+iy+1+iz+1+1)
                     val = F(x[ix], y[iy], z[iz])

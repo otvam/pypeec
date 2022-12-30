@@ -1,5 +1,5 @@
 import numpy as np
-from method_solve import circulant_tensor
+
 
 def get_conductor_geometry(conductor):
     # get the indices of the conducting voxels and the resistivity
@@ -15,7 +15,7 @@ def get_conductor_geometry(conductor):
     return idx_v, rho_v
 
 
-def get_source_geomtry(src_current, src_voltage):
+def get_source_geometry(src_current, src_voltage):
 
     # get the indices of the current source voxels
     idx_src_c = np.array([], dtype=np.int64)
