@@ -96,13 +96,31 @@ def get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_s
     sol_a = sol[0:n_a]
     sol_b = sol[n_a:n_a+n_b]
 
-    # expand the current excitation into a tensor
-    sol_a_all = np.zeros(3*n)
+    # expand the current excitation into a vector with all the faces
+    sol_a_all = np.zeros(3*n, dtype=np.complex128)
     sol_a_all[idx_f] = sol_a
+
+    # reshape the current excitation into a tensor
     sol_a_all = sol_a_all.reshape((nx, ny, nz, 3), order="F")
 
-    sol_fft_tmp = circulant_tensor.get_multiply(ZL_tensor[:,:,:,0], sol_a_all[:,:,:,0])
+    # initialize the tensor for the matrix multiplication results
+    rhs_a_all = np.zeros((nx, ny, nz, 3), dtype=np.complex128)
 
-    rhs = None
+    # multiply the impedance matrix with the current vector
+    for i in range(3):
+        rhs_a_all[:, :, :, i] += circulant_tensor.get_multiply(ZL_tensor[:, :, :, i], sol_a_all[:, :, :, i])
+        rhs_a_all[:, :, :, i] += R_tensor[:, :, :, i]*sol_a_all[:, :, :, i]
+
+    # flatten the tensor into a vector
+    rhs_a_all = rhs_a_all.flatten(order="F")
+
+    # form the complete KVL
+    rhs_a = rhs_a_all[idx_f]+A_kvl*sol_b
+
+    # form the complete KCL
+    rhs_b = A_kcl*sol_a+A_src*sol_b
+
+    # assemble the solution
+    rhs = np.concatenate((rhs_a, rhs_b), dtype=np.complex128)
 
     return rhs

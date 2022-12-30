@@ -76,9 +76,8 @@ def get_inductance_operator(n, freq, L_tensor, L_vector):
 
     # compute the FFT and the impedance
     ZL_tensor = np.zeros((2*nx, 2*ny, 2*nz, 3), dtype=np.complex128)
-    ZL_tensor[:, :, :, 0] = s*circulant_tensor.get_fft_tensor(L_tensor[:, :, :, 0])
-    ZL_tensor[:, :, :, 1] = s*circulant_tensor.get_fft_tensor(L_tensor[:, :, :, 1])
-    ZL_tensor[:, :, :, 2] = s*circulant_tensor.get_fft_tensor(L_tensor[:, :, :, 2])
+    for i in range(3):
+        ZL_tensor[:, :, :, i] = s*circulant_tensor.get_fft_tensor(L_tensor[:, :, :, i])
 
     # self-impedance for the preconditioner
     ZL_vector = s*L_vector
