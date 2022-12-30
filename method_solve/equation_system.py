@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.sparse as sps
-import scipy.sparse.linalg as lna
+import scipy.sparse.linalg as sla
 from method_solve import circulant_tensor
 
 
@@ -60,7 +60,7 @@ def get_preconditioner_decomposition(R_vector, ZL_vector, A_kcl, A_kvl, A_src):
     S_matrix = A_src-A_kcl*Y_matrix*A_kvl
 
     # compute the LU decomposition of the sparse Schur complement
-    LU_decomposition = lna.splu(S_matrix)
+    LU_decomposition = sla.splu(S_matrix)
 
     return Y_matrix, LU_decomposition
 

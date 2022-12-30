@@ -4,6 +4,7 @@ These functions are used during the init phase of the FFT-PEEC method.
 """
 
 import numpy as np
+import numpy.linalg as lna
 
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2022 - Dartmouth College"
@@ -97,7 +98,7 @@ def get_green_center(d, m):
     # compute the volume and the distance
     vol = np.prod(d)
     xyz = np.multiply(d, m)
-    nrm = np.linalg.norm(xyz)
+    nrm = lna.norm(xyz)
 
     # compute the approximation
     G = (vol*vol)/(4*np.pi*nrm)
@@ -126,7 +127,7 @@ def get_green_tensor(d, n, n_min_center):
         for iy in range(ny):
             for iz in range(nz):
                 m = [ix, iy, iz]
-                n_center = np.linalg.norm(m)
+                n_center = lna.norm(m)
 
                 if n_center<=n_min_center:
                     G_mutual[ix, iy, iz] = get_green_ana(d, m)
