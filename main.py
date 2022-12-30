@@ -5,6 +5,7 @@ from method_solve import problem_geometry
 from method_solve import resistance_inductance
 from method_solve import equation_system
 import scipy.io
+import numpy as np
 
 data_init = data_trf.get_data_init()
 data_solve = data_trf.get_data_solve()
@@ -51,9 +52,12 @@ A_incidence = voxel_geometry.get_incidence_matrix(n)
 
 ######################################################## EQN
 
-b_src = equation_system.get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v)
+rhs = equation_system.get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v)
 (A_kcl, A_kvl, A_src) = equation_system.get_connection_matrix(A_reduced, idx_v, idx_f, idx_src_v_local)
 
+(Y_matrix, LU_decomposition) = equation_system.get_preconditioner_decomposition(R_vector, ZL_vector, A_kcl, A_kvl, A_src)
+
+sol = equation_system.get_preconditioner_solve(rhs, A_kcl, A_kvl, Y_matrix, LU_decomposition)
 
 # A_incidence = A_incidence.toarray()
 # mdic = {"xyz": xyz, "A_incidence": A_incidence, "G_mutual": G_mutual, "G_self": G_self}

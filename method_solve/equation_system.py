@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.sparse as sps
-import scipy.special as sc
+import scipy.sparse.linalg as lna
 
 
 def get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v):
@@ -9,19 +9,19 @@ def get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v):
     n_f = len(idx_f)
 
     # no excitation for the KVL
-    b_src_zero = np.zeros(n_f, dtype=np.float64)
+    rhs_zero = np.zeros(n_f, dtype=np.complex128)
 
     # current sources are connected to the KCL
-    b_src_current = np.zeros(n_v, dtype=np.float64)
-    b_src_current[idx_src_c_local] = val_src_c
+    rhs_current = np.zeros(n_v, dtype=np.complex128)
+    rhs_current[idx_src_c_local] = val_src_c
 
     # voltage sources are separate equations
-    b_src_voltage = val_src_v
+    rhs_voltage = val_src_v
 
     # assemble
-    b_src = np.concatenate((b_src_zero, b_src_current, b_src_voltage), dtype=np.float64)
+    rhs = np.concatenate((rhs_zero, rhs_current, rhs_voltage), dtype=np.complex128)
 
-    return b_src
+    return rhs
 
 
 def get_connection_matrix(A_reduced, idx_v, idx_f, idx_src_v_local):
@@ -46,3 +46,40 @@ def get_connection_matrix(A_reduced, idx_v, idx_f, idx_src_v_local):
     A_src = sps.csc_matrix((data, (idx_row, idx_col)), shape=(n_v+n_src_v, n_v+n_src_v), dtype=np.int64)
 
     return A_kcl, A_kvl, A_src
+
+
+def get_preconditioner_decomposition(R_vector, ZL_vector, A_kcl, A_kvl, A_src):
+
+    # admittance vector
+    Y_vector = 1/(R_vector+ZL_vector)
+
+    # admittance matrix
+    Y_matrix = sps.diags(Y_vector)
+
+    # computing the Schur complement (with respect to the diagonal admittance matrix)
+    S_matrix = A_src-A_kcl*Y_matrix*A_kvl
+
+    # compute the LU decomposition of the sparse Schur complement
+    LU_decomposition = lna.splu(S_matrix)
+
+    return Y_matrix, LU_decomposition
+
+
+def get_preconditioner_solve(rhs, A_kcl, A_kvl, Y_matrix, LU_decomposition):
+    # get the matrix size
+    n_a = A_kvl.shape[0]
+    n_b = A_kcl.shape[0]
+
+    # split the excitation vector
+    rhs_a = rhs[0:n_a]
+    rhs_b = rhs[n_a:n_a+n_b]
+
+    # solve the equation system (Schur complement and LU decomposition)
+    tmp = rhs_b-A_kcl*Y_matrix*rhs_a
+    sol_b = LU_decomposition.solve(tmp)
+    sol_a = Y_matrix*(rhs_a-A_kvl*sol_b)
+
+    # assemble the solution
+    sol = np.concatenate((sol_a, sol_b), dtype=np.complex128)
+
+    return sol

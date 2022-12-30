@@ -19,7 +19,7 @@ def get_source_geometry(src_current, src_voltage):
 
     # get the indices of the current source voxels
     idx_src_c = np.array([], dtype=np.int64)
-    val_src_c = np.array([], dtype=np.float64)
+    val_src_c = np.array([], dtype=np.complex128)
     for dat_tmp in src_current:
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
@@ -29,7 +29,7 @@ def get_source_geometry(src_current, src_voltage):
 
     # get the indices of the voltage source voxels
     idx_src_v = np.array([], dtype=np.int64)
-    val_src_v = np.array([], dtype=np.float64)
+    val_src_v = np.array([], dtype=np.complex128)
     for dat_tmp in src_voltage:
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
