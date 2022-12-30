@@ -22,15 +22,15 @@ def get_voxel_coordinate(d, n):
     (dx, dy, dz) = d
 
     # voxel index array
-    x = np.arange(nx)
-    y = np.arange(ny)
-    z = np.arange(nz)
+    x = np.arange(nx, dtype=np.int64)
+    y = np.arange(ny, dtype=np.int64)
+    z = np.arange(nz, dtype=np.int64)
     (idx_x, idx_y, idx_z) = np.meshgrid(x, y, z, indexing='ij')
 
     # voxel coordinate vector
-    x = dx*np.arange(nx)
-    y = dy*np.arange(ny)
-    z = dz*np.arange(nz)
+    x = dx*np.arange(nx, dtype=np.float64)
+    y = dy*np.arange(ny, dtype=np.float64)
+    z = dz*np.arange(nz, dtype=np.float64)
 
     # assemble the coordinate array
     xyz = np.stack((x[idx_x], y[idx_y], z[idx_z]), axis=3, dtype=np.float64)
@@ -50,9 +50,9 @@ def get_incidence_matrix(n):
     n = nx*ny*nz
 
     # voxel index array
-    x = np.arange(nx)
-    y = np.arange(ny)
-    z = np.arange(nz)
+    x = np.arange(nx, dtype=np.int64)
+    y = np.arange(ny, dtype=np.int64)
+    z = np.arange(nz, dtype=np.int64)
     (idx_x, idx_y, idx_z) = np.meshgrid(x, y, z, indexing='ij')
 
     # voxel index number
@@ -71,19 +71,19 @@ def get_incidence_matrix(n):
     # faces along x direction (faces with negative indices)
     idx_col = idx[0:-1, :, :].flatten()
     idx_row = idx[1:, :, :].flatten()
-    data = -np.ones((nx-1)*ny*nz)
+    data = -np.ones((nx-1)*ny*nz, dtype=np.int64)
     A_incidence += sps.csc_matrix((data, (idx_row, 0*n+idx_col)), shape=(n, 3*n), dtype=np.int64)
 
     # faces along y direction (faces with negative indices)
     idx_col = idx[:, 0:-1, :].flatten()
     idx_row = idx[:, 1:, :].flatten()
-    data = -np.ones(nx*(ny-1)*nz)
+    data = -np.ones(nx*(ny-1)*nz, dtype=np.int64)
     A_incidence += sps.csc_matrix((data, (idx_row, 1*n+idx_col)), shape=(n, 3*n), dtype=np.int64)
 
     # faces along z direction (faces with negative indices)
     idx_col = idx[:, :, 0:-1].flatten()
     idx_row = idx[:, :, 1:].flatten()
-    data = -np.ones(nx*ny*(nz-1))
+    data = -np.ones(nx*ny*(nz-1), dtype=np.int64)
     A_incidence += sps.csc_matrix((data, (idx_row, 2*n+idx_col)), shape=(n, 3*n), dtype=np.int64)
 
     return A_incidence
