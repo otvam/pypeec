@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.linalg as lna
+from method_solve import circulant_tensor
 
 
 def get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v):
@@ -49,7 +50,6 @@ def get_connection_matrix(A_reduced, idx_v, idx_f, idx_src_v_local):
 
 
 def get_preconditioner_decomposition(R_vector, ZL_vector, A_kcl, A_kvl, A_src):
-
     # admittance vector
     Y_vector = 1/(R_vector+ZL_vector)
 
@@ -65,21 +65,44 @@ def get_preconditioner_decomposition(R_vector, ZL_vector, A_kcl, A_kvl, A_src):
     return Y_matrix, LU_decomposition
 
 
-def get_preconditioner_solve(rhs, A_kcl, A_kvl, Y_matrix, LU_decomposition):
+def get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, LU_decomposition):
     # get the matrix size
-    n_a = A_kvl.shape[0]
-    n_b = A_kcl.shape[0]
+    n_a = len(idx_f)
+    n_b = len(idx_v)+len(idx_src_v_local)
 
     # split the excitation vector
     rhs_a = rhs[0:n_a]
     rhs_b = rhs[n_a:n_a+n_b]
 
     # solve the equation system (Schur complement and LU decomposition)
-    tmp = rhs_b-A_kcl*Y_matrix*rhs_a
+    tmp = rhs_b-(A_kcl*(Y_matrix*rhs_a))
     sol_b = LU_decomposition.solve(tmp)
-    sol_a = Y_matrix*(rhs_a-A_kvl*sol_b)
+    sol_a = Y_matrix*(rhs_a-(A_kvl*sol_b))
 
     # assemble the solution
     sol = np.concatenate((sol_a, sol_b), dtype=np.complex128)
 
     return sol
+
+
+def get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor):
+    # get the matrix size
+    n_a = len(idx_f)
+    n_b = len(idx_v)+len(idx_src_v_local)
+    (nx, ny, nz) = n
+    n = nx*ny*nz
+
+    # split the excitation vector
+    sol_a = sol[0:n_a]
+    sol_b = sol[n_a:n_a+n_b]
+
+    # expand the current excitation into a tensor
+    sol_a_all = np.zeros(3*n)
+    sol_a_all[idx_f] = sol_a
+    sol_a_all = sol_a_all.reshape((nx, ny, nz, 3), order="F")
+
+    sol_fft_tmp = circulant_tensor.get_multiply(ZL_tensor[:,:,:,0], sol_a_all[:,:,:,0])
+
+    rhs = None
+
+    return rhs

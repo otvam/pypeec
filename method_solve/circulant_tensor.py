@@ -2,39 +2,59 @@ import numpy as np
 import scipy.fft as fft
 
 
-def get_circulant_tensor(A_in):
+def get_circulant_tensor(A):
     # extract the input tensor data
-    (nx, ny, nz) = A_in.shape
+    (nx, ny, nz) = A.shape
 
     # init the circulant tensor
-    C_out = np.zeros((2*nx, 2*ny, 2*nz), dtype=np.float64)
+    C = np.zeros((2*nx, 2*ny, 2*nz), dtype=np.float64)
 
     # cube xyz
-    C_out[0:nx, 0:ny, 0:nz] = A_in[0:nx, 0:ny, 0:nz]
+    C[0:nx, 0:ny, 0:nz] = A[0:nx, 0:ny, 0:nz]
     # cube x
-    C_out[nx+1:2*nx, 0:ny, 0:nz] = A_in[nx-1:0:-1, 0:ny, 0:nz]
+    C[nx+1:2*nx, 0:ny, 0:nz] = A[nx-1:0:-1, 0:ny, 0:nz]
     # cube y
-    C_out[0:nx, ny+1:2*ny, 0:nz] = A_in[0:nx, ny-1:0:-1, 0:nz]
+    C[0:nx, ny+1:2*ny, 0:nz] = A[0:nx, ny-1:0:-1, 0:nz]
     # cube z
-    C_out[0:nx, 0:ny, nz+1:2*nz] = A_in[0:nx, 0:ny, nz-1:0:-1]
+    C[0:nx, 0:ny, nz+1:2*nz] = A[0:nx, 0:ny, nz-1:0:-1]
     # cube xy
-    C_out[nx+1:2*nx, ny+1:2*ny, 0:nz] = A_in[nx-1:0:-1, ny-1:0:-1, 0:nz]
+    C[nx+1:2*nx, ny+1:2*ny, 0:nz] = A[nx-1:0:-1, ny-1:0:-1, 0:nz]
     # cube xz
-    C_out[nx+1:2*nx, 0:ny, nz+1:2*nz] = A_in[nx-1:0:-1, 0:ny, nz-1:0:-1]
+    C[nx+1:2*nx, 0:ny, nz+1:2*nz] = A[nx-1:0:-1, 0:ny, nz-1:0:-1]
     # cube yz
-    C_out[0:nx, ny+1:2*ny, nz+1:2*nz] = A_in[0:nx, ny-1:0:-1, nz-1:0:-1]
+    C[0:nx, ny+1:2*ny, nz+1:2*nz] = A[0:nx, ny-1:0:-1, nz-1:0:-1]
     # cube xyz
-    C_out[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz] = A_in[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1]
+    C[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz] = A[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1]
 
-    return C_out
+    return C
 
 
-def get_fft_tensor(C_in):
+def get_fft_tensor(C):
     # extract the input tensor data
-    (nx, ny, nz) = C_in.shape
+    (nx, ny, nz) = C.shape
 
     # compute the FFT
-    F_out = fft.fftn(C_in, (nx, ny, nz))
+    CF = fft.fftn(C, (nx, ny, nz))
 
-    return F_out
+    return CF
+
+
+def get_multiply(CF, X):
+    # extract the input tensor data
+    (nx, ny, nz) = X.shape
+    (nnx, nny, nnz) = CF.shape
+
+    # compute the FFT of the vector
+    CX = fft.fftn(X, (nnx, nny, nnz))
+
+    # matrix vector multiplication in frequency domain
+    CY = CF*CX
+
+    # compute the iFFT
+    Y = fft.ifftn(CY)
+
+    # the result is in the first block of the matrix
+    Y = Y[0:nx, 0:ny, 0:nz]
+
+    return Y
 

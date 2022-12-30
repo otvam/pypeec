@@ -16,7 +16,6 @@ def get_conductor_geometry(conductor):
 
 
 def get_source_geometry(src_current, src_voltage):
-
     # get the indices of the current source voxels
     idx_src_c = np.array([], dtype=np.int64)
     val_src_c = np.array([], dtype=np.complex128)

@@ -57,7 +57,11 @@ rhs = equation_system.get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c
 
 (Y_matrix, LU_decomposition) = equation_system.get_preconditioner_decomposition(R_vector, ZL_vector, A_kcl, A_kvl, A_src)
 
-sol = equation_system.get_preconditioner_solve(rhs, A_kcl, A_kvl, Y_matrix, LU_decomposition)
+sol = equation_system.get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, LU_decomposition)
+
+sol = np.arange(45)+1
+rhs = equation_system.get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor)
+
 
 # A_incidence = A_incidence.toarray()
 # mdic = {"xyz": xyz, "A_incidence": A_incidence, "G_mutual": G_mutual, "G_self": G_self}
