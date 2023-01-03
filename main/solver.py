@@ -1,3 +1,11 @@
+"""
+Main script for solving a problem with the FFT-PEEC solver.
+Check the input data, solve the problem, and parse the results.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 from solver import check_data
 from solver import voxel_geometry
 from solver import green_function
@@ -8,11 +16,18 @@ from solver import equation_solver
 from solver import extract_solution
 from main import logging_utils
 
-
+# get a logger
 logger = logging_utils.get_logger("solver")
 
 
 def _run_sub(data_solver):
+    """
+    Solve a problem with the FFT-PEEC solver.
+    Check the input data, solve the problem, and parse the results.
+    Exceptions are not handled by this function.
+    The different parts of the code are timed.
+    """
+
     # check the input data type
     assert isinstance(data_solver, dict), "invalid input data"
 
@@ -128,6 +143,11 @@ def _run_sub(data_solver):
 
 
 def run(data_solver):
+    """
+    Main script for solving a problem with the FFT-PEEC solver.
+    Handle invalid data with exceptions.
+    """
+
     # init
     logger.info("INIT")
 
@@ -145,5 +165,3 @@ def run(data_solver):
     logger.info("END")
 
     return status, data_res
-
-

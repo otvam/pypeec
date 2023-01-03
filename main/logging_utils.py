@@ -1,22 +1,51 @@
+"""
+Module for handle the logging (with timer for elapsed time).
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import time
 import datetime
 import logging
 
 
 class _DeltaTiming:
+    """
+    Simple class for computing elapsed time.
+    The results are converted to string format.
+    """
+
     def __init__(self):
+        """
+        Constructor.
+        Initialize the timer.
+        """
+
         self.timestamp = time.time()
 
     def get_reset(self):
+        """
+        Reset the timer.
+        """
+
         self.timestamp = time.time()
 
     def get_init(self):
+        """
+        Get the timer starting time (as a string).
+        """
+
         init = datetime.datetime.fromtimestamp(self.timestamp)
         init = init.strftime("%H:%M:%S,%f")[:-3]
 
         return init
 
     def get_duration(self):
+        """
+        Get the timer elapsed time (as a string).
+        """
+
         duration = time.time()-self.timestamp
         duration = datetime.datetime.utcfromtimestamp(duration)
         duration = duration.strftime("%H:%M:%S,%f")[:-3]
@@ -25,41 +54,86 @@ class _DeltaTiming:
 
 
 class BlockTimer:
+    """
+    Class for timing block of code.
+    Uses enter and exit magic methods.
+    Display the results with a logger.
+    """
+
     def __init__(self, logger, name):
+        """
+        Constructor.
+        Assign block name and logger.
+        Create a timer.
+        """
+
         self.logger = logger
         self.name = name
         self.timer = _DeltaTiming()
 
     def __enter__(self):
+        """
+        Enter magic method.
+        Reset the timer and log the results.
+        """
+
         self.timer.get_reset()
         self.logger.info(self.name + " : enter : timing")
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
+        """
+        Exit magic method.
+        Get the elapsed time and log the results.
+        """
+
         duration = self.timer.get_duration()
         self.logger.info(self.name + " : exit : " + duration)
 
 
 class DeltaTimeFormatter(logging.Formatter):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    """
+    Class for adding elapsed time to a logger.
+    """
 
+    def __init__(self, *args, **kwargs):
+        """
+        Constructor.
+        Create a timer.
+        """
+
+        super().__init__(*args, **kwargs)
         self.timer = _DeltaTiming()
 
     def format(self, record):
+        """
+        Format a record to a string.
+        Add the elapsed time.
+        """
+
+        # add the elapsed time to the log record
         record.init = self.timer.get_init()
         record.duration = self.timer.get_duration()
 
+        # format the log record
         msg = super().format(record)
 
         return msg
 
 
 def get_logger(name="root", level=logging.INFO):
+    """
+    Get a logger with a name and level.
+    Display elapsed time, time, name, level, and message.
+    """
+
+    # get the formatter
     fmt = DeltaTimeFormatter('%(duration)s : %(asctime)s : %(name)-10s: %(levelname)-12s : %(message)s')
 
+    # get the handle
     handler = logging.StreamHandler()
     handler.setFormatter(fmt)
 
+    # get the logger
     logger = logging.getLogger(name)
     logger.setLevel(level)
     logger.addHandler(handler)

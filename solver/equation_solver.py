@@ -35,24 +35,27 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
     n_iter = obj.get_n_iter()
 
     # compute the residuum
-    res = sys_op(sol) - rhs
+    res = sys_op(sol)-rhs
     res_abs = lna.norm(res)
-    res_rel = lna.norm(res) / lna.norm(rhs)
+    res_rel = lna.norm(res)/lna.norm(rhs)
 
     # get problem size
     n_dof = len(rhs)
 
     # check for convergence
-    has_converged = (flag == 0) and (cond < condmax)
+    cond_ok = cond < condmax
+    solver_ok = flag == 0
+    has_converged = cond_ok and solver_ok
 
     # assign the results
     solver_status = {
         "n_iter": n_iter,
         "res_abs": res_abs,
         "res_rel": res_rel,
-        "has_converged": has_converged,
         "cond": cond,
         "n_dof": n_dof,
+        "cond_ok": cond_ok,
+        "solver_ok": solver_ok,
     }
 
     return sol, has_converged, solver_status
