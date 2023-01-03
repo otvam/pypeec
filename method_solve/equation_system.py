@@ -124,3 +124,33 @@ def get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_s
     rhs = np.concatenate((rhs_a, rhs_b), dtype=np.complex128)
 
     return rhs
+
+
+def get_preconditioner_operator(idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, LU_decomposition):
+    # get the matrix size
+    n_dof = len(idx_f)+len(idx_v)+len(idx_src_v_local)
+
+    # function describing the preconditioner
+    def fct(rhs):
+        sol = get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, LU_decomposition)
+        return sol
+
+    # corresponding linear operator
+    op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
+
+    return op
+
+
+def get_system_operator(n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor):
+    # get the matrix size
+    n_dof = len(idx_f)+len(idx_v)+len(idx_src_v_local)
+
+    # function describing the equation system
+    def fct(sol):
+        rhs = get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor)
+        return rhs
+
+    # corresponding linear operator
+    op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
+
+    return op
