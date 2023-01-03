@@ -10,12 +10,8 @@ from solver import extract_solution
 data_init = data_trf.get_data_init()
 data_solve = data_trf.get_data_solve()
 
-nx = data_init["nx"]
-ny = data_init["ny"]
-nz = data_init["nz"]
-dx = data_init["dx"]
-dy = data_init["dy"]
-dz = data_init["dz"]
+n = data_init["n"]
+d = data_init["d"]
 n_min_center = data_init["n_min_center"]
 
 freq = data_solve["freq"]
@@ -23,9 +19,6 @@ solver_options = data_solve["solver_options"]
 conductor = data_solve["conductor"]
 src_current = data_solve["src_current"]
 src_voltage = data_solve["src_voltage"]
-
-n = (nx, ny, nz)
-d = (dx, dy, dz)
 
 ######################################################## INIT
 
@@ -70,6 +63,8 @@ sys_op = equation_system.get_system_operator(n, idx_v, idx_f, idx_src_v_local, A
 (I_face, V_voxel, I_src_v) = extract_solution.get_sol_extract(n, idx_f, idx_v, idx_src_v, sol)
 
 J_voxel = extract_solution.get_current_density(n, d, A_incidence, I_face)
+
+src_terminal = extract_solution.get_src_terminal(src_current, src_voltage, V_voxel, I_src_v)
 
 # A_incidence = A_incidence.toarray()
 # mdic = {"xyz": xyz, "A_incidence": A_incidence, "G_mutual": G_mutual, "G_self": G_self}

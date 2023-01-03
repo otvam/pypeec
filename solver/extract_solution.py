@@ -45,3 +45,32 @@ def get_current_density(n, d, A_incidence, I_face):
 
     return J_voxel
 
+def get_src_terminal(src_current, src_voltage, V_voxel, I_src_v):
+    # init terminal dict
+    src_terminal = dict()
+
+    # parse the current source terminals
+    for dat_tmp in src_current:
+        idx = dat_tmp["idx"]
+        value = dat_tmp["value"]
+        tag = dat_tmp["tag"]
+
+        I_tmp = np.complex128(value)
+        V_tmp = np.complex128(np.mean(V_voxel[idx]))
+
+        assert tag not in src_terminal, "duplicated terminal tag"
+        src_terminal[tag] = {"V": V_tmp, "I": I_tmp}
+
+    # parse the voltage source terminals
+    for dat_tmp in src_voltage:
+        idx = dat_tmp["idx"]
+        value = dat_tmp["value"]
+        tag = dat_tmp["tag"]
+
+        V_tmp = np.complex128(value)
+        I_tmp = np.complex128(np.sum(I_src_v[idx]))
+
+        assert tag not in src_terminal, "duplicated terminal tag"
+        src_terminal[tag] = {"V": V_tmp, "I": I_tmp}
+
+    return src_terminal

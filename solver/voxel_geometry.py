@@ -14,7 +14,7 @@ def get_voxel_coordinate(d, n):
     """
     Get the coordinate of the voxels.
     The first voxel is at the origin.
-    The array has the following dimension: (nx, ny, nz, 3).
+    The array has the following dimension: (nx*ny*nz, 3).
     """
 
     # extract the voxel data
