@@ -28,7 +28,10 @@ def get_data_solve():
     src_voltage.append({"tag": "sink", "idx": [3], "value": +1})
     src_voltage.append({"tag": "short", "idx": [45], "value": -1})
 
+    solver_options = {"tol": 1e-5, "atol": 1e-12, "restart": 20, "maxiter": 100}
+
     data_solve["freq"] = 10e6
+    data_solve["solver_options"] = solver_options
     data_solve["conductor"] = conductor
     data_solve["src_current"] = src_current
     data_solve["src_voltage"] = src_voltage

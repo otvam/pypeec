@@ -10,7 +10,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2022 - Dartmouth College"
 
 
-def _get_safe_log(x):
+def __get_safe_log(x):
     """
     Compute the log. Set to zero if not finite.
     """
@@ -23,7 +23,7 @@ def _get_safe_log(x):
     return y
 
 
-def _get_safe_arctan(x):
+def __get_safe_arctan(x):
     """
     Compute the arctan. Set to zero if not finite.
     """
@@ -35,7 +35,7 @@ def _get_safe_arctan(x):
     return y
 
 
-def get_green_ana(d, m):
+def __get_green_ana(d, m):
     """
     Compute a Green function between two voxels.
     Analytical solution (from Cletus Hoer and Carl Love, 1965).
@@ -55,14 +55,14 @@ def get_green_ana(d, m):
             -3*y**2*z**2
     )
     F2 = lambda x, y, z: 12*x*y*z*(
-            -z**2*_get_safe_arctan((x*y)/(z*Fn(x, y, z))) +
-            -y**2*_get_safe_arctan((x*z)/(y*Fn(x, y, z))) +
-            -x**2*_get_safe_arctan((y*z)/(x*Fn(x, y, z)))
+            -z**2*__get_safe_arctan((x*y)/(z*Fn(x, y, z))) +
+            -y**2*__get_safe_arctan((x*z)/(y*Fn(x, y, z))) +
+            -x**2*__get_safe_arctan((y*z)/(x*Fn(x, y, z)))
     )
     F3 = lambda x, y, z: 3*(
-            -x*(y**4-6*y**2*z**2+z**4)*_get_safe_log(x+Fn(x, y, z)) +
-            -y*(x**4-6*x**2*z**2+z**4)*_get_safe_log(y+Fn(x, y, z)) +
-            -z*(x**4-6*x**2*y**2+y**4)*_get_safe_log(z+Fn(x, y, z))
+            -x*(y**4-6*y**2*z**2+z**4)*__get_safe_log(x+Fn(x, y, z)) +
+            -y*(x**4-6*x**2*z**2+z**4)*__get_safe_log(y+Fn(x, y, z)) +
+            -z*(x**4-6*x**2*y**2+y**4)*__get_safe_log(z+Fn(x, y, z))
     )
     F = lambda x, y, z: (1/72)*(F1(x, y, z)+F2(x, y, z)+F3(x, y, z))
 
@@ -87,7 +87,7 @@ def get_green_ana(d, m):
     return G
 
 
-def get_green_center(d, m):
+def __get_green_center(d, m):
     """
     Compute a Green function between two voxels.
     Approximation of the mutual coefficients.
@@ -130,11 +130,11 @@ def get_green_tensor(d, n, n_min_center):
                 n_center = lna.norm(m)
 
                 if n_center<=n_min_center:
-                    G_mutual[ix, iy, iz] = get_green_ana(d, m)
+                    G_mutual[ix, iy, iz] = __get_green_ana(d, m)
                 else:
-                    G_mutual[ix, iy, iz] = get_green_center(d, m)
+                    G_mutual[ix, iy, iz] = __get_green_center(d, m)
 
     # get the self-coefficient (used for the preconditioner)
-    G_self = get_green_ana(d, [0, 0, 0])
+    G_self = __get_green_ana(d, [0, 0, 0])
 
     return G_mutual, G_self

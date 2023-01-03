@@ -13,7 +13,7 @@ class IterCounter():
         return self.n_iter
 
 
-def get_solver(sys_op, precond_op, rhs, solver_options):
+def get_solver(sys_op, pcd_op, rhs, solver_options):
     # get the solver options
     tol = solver_options["tol"]
     atol = solver_options["atol"]
@@ -28,7 +28,7 @@ def get_solver(sys_op, precond_op, rhs, solver_options):
         obj.get_callback(res_iter)
 
     # call the solver
-    (sol, flag) = sla.gmres(sys_op, rhs, tol=tol, atol=atol, restart=restart, maxiter=maxiter, M=precond_op, callback=fct)
+    (sol, flag) = sla.gmres(sys_op, rhs, tol=tol, atol=atol, restart=restart, maxiter=maxiter, M=pcd_op, callback=fct)
 
     # get the number of iterations
     n_iter = obj.get_n_iter()
