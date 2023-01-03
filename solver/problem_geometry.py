@@ -86,3 +86,30 @@ def get_incidence_matrix(n, A_incidence, idx_v):
     A_reduced = A_reduced[:, idx_f]
 
     return A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f
+
+
+def get_status(n, idx_v, idx_f, idx_src_c, idx_src_v):
+    # extract the voxel data
+    (nx, ny, nz) = n
+
+    # count
+    n_total = nx*ny*nz
+    n_conductor = len(idx_v)
+    n_faces = len(idx_f)
+    n_src = len(idx_src_c)+len(idx_src_v)
+
+    # fraction of voxels
+    f_conductor = n_conductor/n_total
+    f_src = n_src/n_total
+
+    # assign data
+    problem_status = {
+        "n_total": n_total,
+        "n_conductor": n_conductor,
+        "n_faces": n_faces,
+        "n_src": n_src,
+        "f_conductor": f_conductor,
+        "f_src": f_src,
+    }
+
+    return problem_status

@@ -38,6 +38,9 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
     res_abs = lna.norm(res)
     res_rel = lna.norm(res) / lna.norm(rhs)
 
+    # get problem size
+    n_dof = len(rhs)
+
     # check for convergence
     has_converged = flag==0
 
@@ -48,6 +51,7 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
         "res_rel": res_rel,
         "has_converged": has_converged,
         "cond": cond,
+        "n_dof": n_dof,
     }
 
     return sol, solver_status

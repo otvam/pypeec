@@ -38,6 +38,8 @@ A_incidence = voxel_geometry.get_incidence_matrix(n)
 (A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
 (idx_src_c_local, idx_src_v_local) = problem_geometry.get_source_index(n, idx_v, idx_src_c, idx_src_v)
 
+problem_status = problem_geometry.get_status(n, idx_v, idx_f, idx_src_c, idx_src_v)
+
 ######################################################## MATRIX
 
 (R_tensor, R_vector) = resistance_inductance.get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f)
@@ -76,6 +78,7 @@ src_terminal = extract_solution.get_src_terminal(src_current, src_voltage, V_vox
 # mdic = {"L_tensor": L_tensor, "L_vector": L_vector, "R_tensor": R_tensor, "R_vector": R_vector}
 # scipy.io.savemat("matlab_matrix.mat", mdic)
 
+print(problem_status)
 print(solver_status)
 
 print('ok')
