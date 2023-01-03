@@ -19,6 +19,7 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
     atol = solver_options["atol"]
     restart = solver_options["restart"]
     maxiter = solver_options["maxiter"]
+    condmax = solver_options["condmax"]
 
     # object for counting the solver iterations (callback)
     obj = IterCounter()
@@ -42,7 +43,7 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
     n_dof = len(rhs)
 
     # check for convergence
-    has_converged = flag==0
+    has_converged = (flag == 0) and (cond < condmax)
 
     # assign the results
     solver_status = {
@@ -54,7 +55,7 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
         "n_dof": n_dof,
     }
 
-    return sol, solver_status
+    return sol, has_converged, solver_status
 
 
 def get_condition(mat):

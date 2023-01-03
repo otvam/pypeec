@@ -54,7 +54,7 @@ class DeltaTimeFormatter(logging.Formatter):
         return msg
 
 
-def get_logger(name="root", level=logging.DEBUG):
+def get_logger(name="root", level=logging.INFO):
     fmt = DeltaTimeFormatter('%(duration)s : %(asctime)s : %(name)-10s: %(levelname)-12s : %(message)s')
 
     handler = logging.StreamHandler()

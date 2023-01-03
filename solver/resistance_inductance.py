@@ -104,6 +104,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
 
     return L_tensor, L_vector
 
+
 def get_inductance_operator(n, freq, L_tensor, L_vector):
     # extract the voxel data
     (nx, ny, nz) = n

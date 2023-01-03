@@ -106,6 +106,17 @@ def __get_green_center(d, m):
     return G
 
 
+def get_green_self(d):
+    """
+    Compute the self-coefficient for the Green functions.
+    The self-coefficient is used for the preconditioner.
+    """
+
+    G_self = __get_green_ana(d, [0, 0, 0])
+
+    return G_self
+
+
 def get_green_tensor(d, n, n_green_simplify):
     """
     Compute the Green functions for the complete voxel structure.
@@ -134,7 +145,4 @@ def get_green_tensor(d, n, n_green_simplify):
                 else:
                     G_mutual[ix, iy, iz] = __get_green_center(d, m)
 
-    # get the self-coefficient (used for the preconditioner)
-    G_self = __get_green_ana(d, [0, 0, 0])
-
-    return G_mutual, G_self
+    return G_mutual

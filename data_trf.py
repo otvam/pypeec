@@ -12,7 +12,7 @@ def get_data_solver():
     src_voltage.append({"tag": "sink", "idx": [3], "value": +1})
     src_voltage.append({"tag": "short", "idx": [45], "value": -1})
 
-    solver_options = {"tol": 1e-5, "atol": 1e-12, "restart": 20, "maxiter": 100}
+    solver_options = {"tol": 1e-5, "atol": 1e-12, "restart": 20, "maxiter": 100, "condmax": 1e9}
 
     data_solver["n"] = (4, 4, 3)
     data_solver["d"] = (1e-4, 2e-4, 1e-4)
