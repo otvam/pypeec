@@ -6,6 +6,7 @@ from solver import resistance_inductance
 from solver import equation_system
 from solver import equation_solver
 from solver import extract_solution
+import numpy as np
 
 data_init = data_trf.get_data_init()
 data_solve = data_trf.get_data_solve()
@@ -54,9 +55,12 @@ rhs = equation_system.get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c
 pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_vector, ZL_vector)
 sys_op = equation_system.get_system_operator(n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor)
 
+S_matrix = equation_system.get_singular(A_kcl, A_kvl, A_src)
+
 ######################################################## SOLVE
 
-(sol, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
+cond = equation_solver.get_condition(S_matrix)
+(sol, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, cond, solver_options)
 
 ######################################################## EXTRACT
 
@@ -72,5 +76,7 @@ src_terminal = extract_solution.get_src_terminal(src_current, src_voltage, V_vox
 
 # mdic = {"L_tensor": L_tensor, "L_vector": L_vector, "R_tensor": R_tensor, "R_vector": R_vector}
 # scipy.io.savemat("matlab_matrix.mat", mdic)
+
+print(solver_status)
 
 print('ok')

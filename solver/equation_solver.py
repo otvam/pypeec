@@ -13,7 +13,7 @@ class IterCounter():
         return self.n_iter
 
 
-def get_solver(sys_op, pcd_op, rhs, solver_options):
+def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
     # get the solver options
     tol = solver_options["tol"]
     atol = solver_options["atol"]
@@ -42,6 +42,39 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     has_converged = flag==0
 
     # assign the results
-    solver_status = {"n_iter": n_iter, "res_abs": res_abs, "res_rel": res_rel, "has_converged": has_converged}
+    solver_status = {
+        "n_iter": n_iter,
+        "res_abs": res_abs,
+        "res_rel": res_rel,
+        "has_converged": has_converged,
+        "cond": cond,
+    }
 
     return sol, solver_status
+
+
+def get_condition(mat):
+    # compute the LU decomposition
+    try:
+        LU_decomposition = sla.splu(mat)
+    except RuntimeError:
+        return float('inf')
+
+    # get the function for the linear operator (original matrix)
+    def fct_matvec(v):
+        return LU_decomposition.solve(v, trans="N")
+
+    # get the function for the linear operator (transposed matrix)
+    def fct_rmatvec(v):
+        return LU_decomposition.solve(v, trans="H")
+
+    # assign linear operator for inversion
+    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec)
+
+    # compute an estimate of the condition
+    nrm_ori = sla.onenormest(mat)
+    nrm_inv = sla.onenormest(op)
+    cond = nrm_ori*nrm_inv
+
+    return cond
+

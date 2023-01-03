@@ -2,6 +2,7 @@ import numpy as np
 import scipy.fft as fft
 import scipy.sparse as sps
 import scipy.sparse.linalg as sla
+import numpy.linalg as lna
 
 
 def __get_circulant_multiply(CF, X):
@@ -34,8 +35,11 @@ def __get_preconditioner_decomposition(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
     # computing the Schur complement (with respect to the diagonal admittance matrix)
     S_matrix = A_src-A_kcl*Y_matrix*A_kvl
 
-    # compute the LU decomposition of the sparse Schur complement
-    LU_decomposition = sla.splu(S_matrix)
+    # compute the LU decomposition of the sparse Schur complement (None is singular)
+    try:
+        LU_decomposition = sla.splu(S_matrix)
+    except RuntimeError:
+        LU_decomposition = None
 
     return Y_matrix, LU_decomposition
 
@@ -153,6 +157,10 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_s
     # LU decomposition with the Schur complement
     (Y_matrix, LU_decomposition) = __get_preconditioner_decomposition(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
 
+    # if the matrix is singular
+    if LU_decomposition is None:
+        return None
+
     # function describing the preconditioner
     def fct(rhs):
         sol = __get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, LU_decomposition)
@@ -177,3 +185,10 @@ def get_system_operator(n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
 
     return op
+
+
+def get_singular(A_kcl, A_kvl, A_src):
+    # computing the Schur complement (using an identity impedance matrix)
+    S_matrix = A_src-A_kcl*A_kvl
+
+    return S_matrix
