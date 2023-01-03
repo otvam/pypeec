@@ -1,8 +1,23 @@
+"""
+Different functions for handling the resistance and inductance matrix.
+The resistance matrix is constructed with the non-empty voxels.
+The inductance matrix is computed with a FFT circulant tensor.
+Thr circulant tensor allows for matrix-vector multiplication with FFT.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import numpy as np
 import scipy.fft as fft
 
 
 def __get_circulant_tensor(A):
+    """
+    Construct a circulant tensor from a tensor.
+    The size of the circulant tensor is twice the size of the original tensor.
+    """
+
     # extract the input tensor data
     (nx, ny, nz) = A.shape
 
@@ -30,6 +45,10 @@ def __get_circulant_tensor(A):
 
 
 def __get_fft_tensor(C):
+    """
+    Compute the multidimensional FFT of a circulant tensor.
+    """
+
     # extract the input tensor data
     (nx, ny, nz) = C.shape
 
@@ -40,6 +59,13 @@ def __get_fft_tensor(C):
 
 
 def get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f):
+    """
+    Extract the resistance matrix of the system.
+    The problem contains n_f internal faces.
+    For solving the full system, a tensor is used: (nx, ny, nz, 3).
+    For solving the preconditioner, a vector is used: (n_f).
+    """
+
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
@@ -78,6 +104,13 @@ def get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f):
 
 
 def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
+    """
+    Extract the inductance matrix of the system.
+    The problem contains n_f internal faces.
+    For solving the full system, a circulant tensor is used: (2*nx, 2*ny, 2*nz, 3).
+    For solving the preconditioner, a vector is used: (n_f).
+    """
+
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
@@ -86,10 +119,10 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     # vacuum permittivity
     mu = 4*np.pi*1e-7
 
-    # compute the circulant tensor
+    # compute the circulant tensor (in order to make matrix-vector multiplication with FFT)
     G_mutual = __get_circulant_tensor(G_mutual)
 
-    # compute the inductance tensor and the FFT
+    # compute the circulant inductance tensor from the Green functions
     L_tensor = np.zeros((2*nx, 2*ny, 2*nz, 3), dtype=np.float64)
     L_tensor[:, :, :, 0] = (mu*G_mutual)/(dy**2*dz**2)
     L_tensor[:, :, :, 1] = (mu*G_mutual)/(dx**2*dz**2)
@@ -106,6 +139,13 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
 
 
 def get_inductance_operator(n, freq, L_tensor, L_vector):
+    """
+    Transform the circulant inductance tensor into a FFT circulant impedance tensor.
+    The problem contains n_f internal faces.
+    For solving the full system, circulant tensors are used: (2*nx, 2*ny, 2*nz, 3).
+    For solving the preconditioner, vectors are used: (n_f).
+    """
+
     # extract the voxel data
     (nx, ny, nz) = n
 
