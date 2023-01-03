@@ -61,7 +61,7 @@ def __get_fft_tensor(C):
 def get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f):
     """
     Extract the resistance matrix of the system.
-    The problem contains n_f internal faces.
+    The problem contains n_v non-empty voxels and n_f internal faces.
     For solving the full system, a tensor is used: (nx, ny, nz, 3).
     For solving the preconditioner, a vector is used: (n_f).
     """
