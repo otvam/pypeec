@@ -106,7 +106,7 @@ def __get_green_center(d, m):
     return G
 
 
-def get_green_tensor(d, n, n_min_center):
+def get_green_tensor(d, n, n_green_simplify):
     """
     Compute the Green functions for the complete voxel structure.
     For the self-coefficient and the close mutual coefficients, an analytical solution is used.
@@ -129,7 +129,7 @@ def get_green_tensor(d, n, n_min_center):
                 m = [ix, iy, iz]
                 n_center = lna.norm(m)
 
-                if n_center<=n_min_center:
+                if n_center <= n_green_simplify:
                     G_mutual[ix, iy, iz] = __get_green_ana(d, m)
                 else:
                     G_mutual[ix, iy, iz] = __get_green_center(d, m)

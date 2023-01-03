@@ -6,22 +6,21 @@ from solver import resistance_inductance
 from solver import equation_system
 from solver import equation_solver
 from solver import extract_solution
+from solver import check_data
 import numpy as np
 
-data_init = data_trf.get_data_init()
-data_solve = data_trf.get_data_solve()
+data_solver = data_trf.get_data_solver()
 
-n = data_init["n"]
-d = data_init["d"]
-n_min_center = data_init["n_min_center"]
+######################################################## CHECK
 
-freq = data_solve["freq"]
-solver_options = data_solve["solver_options"]
-conductor = data_solve["conductor"]
-src_current = data_solve["src_current"]
-src_voltage = data_solve["src_voltage"]
+assert isinstance(data_solver, dict), "invalid input data"
+(n, d, n_green_simplify) = check_data.check_voxel(data_solver)
+(freq, solver_options) = check_data.check_solver(data_solver)
+(conductor, src_current, src_voltage) = check_data.check_problem(data_solver)
 
 ######################################################## INIT
+
+
 
 xyz = voxel_geometry.get_voxel_coordinate(d, n)
 
@@ -29,7 +28,7 @@ A_incidence = voxel_geometry.get_incidence_matrix(n)
 
 ######################################################## GREEN
 
-(G_mutual, G_self) = green_function.get_green_tensor(d, n, n_min_center)
+(G_mutual, G_self) = green_function.get_green_tensor(d, n, n_green_simplify)
 
 ######################################################## PARSE
 

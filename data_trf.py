@@ -1,15 +1,5 @@
-def get_data_init():
-    data_init = dict()
-
-    data_init["n"] = (4, 4, 3)
-    data_init["d"] = (1e-4, 2e-4, 1e-4)
-    data_init["n_min_center"] = 25
-
-    return data_init
-
-
-def get_data_solve():
-    data_solve = dict()
+def get_data_solver():
+    data_solver = dict()
 
     conductor = []
     conductor.append({"idx": [0, 3, 4, 8, 12, 13, 14, 15, 11, 7], "rho": 1.7544e-08})
@@ -24,10 +14,15 @@ def get_data_solve():
 
     solver_options = {"tol": 1e-5, "atol": 1e-12, "restart": 20, "maxiter": 100}
 
-    data_solve["freq"] = 10e6
-    data_solve["solver_options"] = solver_options
-    data_solve["conductor"] = conductor
-    data_solve["src_current"] = src_current
-    data_solve["src_voltage"] = src_voltage
+    data_solver["n"] = (4, 4, 3)
+    data_solver["d"] = (1e-4, 2e-4, 1e-4)
+    data_solver["n_green_simplify"] = 25
 
-    return data_solve
+    data_solver["freq"] = 10e6
+    data_solver["solver_options"] = solver_options
+
+    data_solver["conductor"] = conductor
+    data_solver["src_current"] = src_current
+    data_solver["src_voltage"] = src_voltage
+
+    return data_solver

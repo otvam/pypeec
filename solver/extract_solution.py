@@ -57,8 +57,6 @@ def get_src_terminal(src_current, src_voltage, V_voxel, I_src_v):
 
         I_tmp = np.complex128(value)
         V_tmp = np.complex128(np.mean(V_voxel[idx]))
-
-        assert tag not in src_terminal, "duplicated terminal tag"
         src_terminal[tag] = {"V": V_tmp, "I": I_tmp}
 
     # parse the voltage source terminals
@@ -69,8 +67,6 @@ def get_src_terminal(src_current, src_voltage, V_voxel, I_src_v):
 
         V_tmp = np.complex128(value)
         I_tmp = np.complex128(np.sum(I_src_v[idx]))
-
-        assert tag not in src_terminal, "duplicated terminal tag"
         src_terminal[tag] = {"V": V_tmp, "I": I_tmp}
 
     return src_terminal
