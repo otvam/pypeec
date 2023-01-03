@@ -1,15 +1,33 @@
+"""
+Module for checking and extracting the solver input data.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import numpy as np
 
 
 class CheckError(Exception):
+    """
+    Exception used for signaling invalid input data.
+    """
+
     pass
 
 
 def __check_conductor(idx_v, conductor):
+    """
+    Check that the conductors are valid.
+    Append the conductor indices to an array.
+    """
+
     for dat_tmp in conductor:
+        # extract the data
         idx = dat_tmp["idx"]
         rho = dat_tmp["rho"]
 
+        # check the resistivity
         if not np.isscalar(rho):
             raise CheckError("conductor resistivity should be a scalar")
         if not np.isreal(rho):
@@ -17,22 +35,32 @@ def __check_conductor(idx_v, conductor):
         if not (rho > 0):
             raise CheckError("conductor resistivity should be greater than zero")
 
+        # append the indices
         idx_v = np.append(idx_v, np.array(idx))
 
     return idx_v
 
 
 def __check_src(idx_src, tag_src, src):
+    """
+    Check that the sources (voltage or current) are valid.
+    Append the source tag to a list.
+    Append the source indices to an array.
+    """
+
     for dat_tmp in src:
+        # extract the data
         tag = dat_tmp["tag"]
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
 
+        # check the source value and tag
         if not np.isscalar(value):
             raise CheckError("source value should be a scalar")
         if not isinstance(tag, str):
             raise CheckError("source name should be a string")
 
+        # append the tag and indices
         tag_src.append(tag)
         idx_src = np.append(idx_src, np.array(idx))
 
@@ -40,6 +68,10 @@ def __check_src(idx_src, tag_src, src):
 
 
 def check_voxel(data_solver):
+    """
+    Check and extract the voxel structure (number and size) and the Green function parameter.
+    """
+
     # extract field
     n = data_solver["n"]
     d = data_solver["d"]
@@ -47,9 +79,9 @@ def check_voxel(data_solver):
 
     # check size
     if not (len(n) == 3):
-        raise CheckError("invalid voxel size")
+        raise CheckError("invalid voxel number (should be three)")
     if not (len(d) == 3):
-        raise CheckError("invalid voxel size")
+        raise CheckError("invalid voxel size (should be three)")
 
     # extract the voxel data
     (nx, ny, nz) = n
@@ -67,6 +99,11 @@ def check_voxel(data_solver):
 
 
 def check_problem(data_solver):
+    """
+    Check and extract the conductors and sources.
+    More particularly, check that the indices of the voxels are valid.
+    """
+
     # extract field
     conductor = data_solver["conductor"]
     src_current = data_solver["src_current"]
@@ -117,6 +154,10 @@ def check_problem(data_solver):
 
 
 def check_solver(data_solver):
+    """
+    Check and extract the frequency and the solver options.
+    """
+
     # extract field
     freq = data_solver["freq"]
     solver_options = data_solver["solver_options"]

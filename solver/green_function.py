@@ -1,20 +1,19 @@
 """
 Different functions for computing Green functions with voxels.
-These functions are used during the init phase of the FFT-PEEC method.
+Analytical solutions and numerical approximations are used.
 """
-
-import numpy as np
-import numpy.linalg as lna
 
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2022 - Dartmouth College"
+
+import numpy as np
+import numpy.linalg as lna
 
 
 def __get_safe_log(x):
     """
     Compute the log. Set to zero if not finite.
     """
-
 
     y = np.log(x)
     if not np.isfinite(y):
@@ -67,9 +66,9 @@ def __get_green_ana(d, m):
     F = lambda x, y, z: (1/72)*(F1(x, y, z)+F2(x, y, z)+F3(x, y, z))
 
     # position vector
-    x = [(mx-1)*dx, mx*dx, (mx+1)*dx, mx*dx]
-    y = [(my-1)*dy, my*dy, (my+1)*dy, my*dy]
-    z = [(mz-1)*dz, mz*dz, (mz+1)*dz, mz*dz]
+    x_vec = [(mx-1)*dx, mx*dx, (mx+1)*dx, mx*dx]
+    y_vec = [(my-1)*dy, my*dy, (my+1)*dy, my*dy]
+    z_vec = [(mz-1)*dz, mz*dz, (mz+1)*dz, mz*dz]
 
     # compute the Green function
     G = 0.0
@@ -79,8 +78,9 @@ def __get_green_ana(d, m):
                 # ignore division per zero (as it handled inside the log and arctan)
                 with np.errstate(all='ignore'):
                     sign = (-1)**(ix+1+iy+1+iz+1+1)
-                    val = F(x[ix], y[iy], z[iz])
+                    val = F(x_vec[ix], y_vec[iy], z_vec[iz])
                     G += sign*val
+
     # add scaling
     G = G/(4*np.pi)
 
@@ -92,7 +92,7 @@ def __get_green_center(d, m):
     Compute a Green function between two voxels.
     Approximation of the mutual coefficients.
     Only valid for mutual coefficients (and not for the self-coefficient).
-    Only valid if the distance between the voxels is large.
+    Only valid if the distance between the two voxels is large.
     """
 
     # compute the volume and the distance
@@ -137,9 +137,11 @@ def get_green_tensor(d, n, n_green_simplify):
     for ix in range(nx):
         for iy in range(ny):
             for iz in range(nz):
+                # get the position of the voxel and the distance to the origin
                 m = [ix, iy, iz]
                 n_center = lna.norm(m)
 
+                # if the distance is large, use the numerical approximation
                 if n_center <= n_green_simplify:
                     G_mutual[ix, iy, iz] = __get_green_ana(d, m)
                 else:

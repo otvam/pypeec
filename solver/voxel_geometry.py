@@ -1,18 +1,18 @@
 """
 Different functions for dealing the voxel data.
-These functions are used during the init phase of the FFT-PEEC method.
+Compute the voxel coordinates and the incidence matrix.
 """
-
-import numpy as np
-import scipy.sparse as sps
 
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2022 - Dartmouth College"
 
+import numpy as np
+import scipy.sparse as sps
+
 
 def get_voxel_coordinate(d, n):
     """
-    Get the coordinate of the voxels.
+    Get the coordinate of the different voxels.
     The first voxel is at the origin.
     The array has the following dimension: (nx*ny*nz, 3).
     """
@@ -45,7 +45,7 @@ def get_voxel_coordinate(d, n):
 
 def get_incidence_matrix(n):
     """
-    Get the incidence matrix of the voxels.
+    Get the incidence matrix of the voxel structure.
     This matrix describes the relation between the voxels and the faces.
     The matrix has the following dimension: (nx*ny*nz, 3*nx*ny*nz).
     """
