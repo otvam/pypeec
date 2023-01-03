@@ -5,6 +5,7 @@ from solver import voxel_geometry
 from solver import resistance_inductance
 from solver import equation_system
 from solver import equation_solver
+from solver import extract_solution
 
 data_init = data_trf.get_data_init()
 data_solve = data_trf.get_data_solve()
@@ -32,6 +33,8 @@ xyz = voxel_geometry.get_voxel_coordinate(d, n)
 
 A_incidence = voxel_geometry.get_incidence_matrix(n)
 
+######################################################## GREEN
+
 (G_mutual, G_self) = green_function.get_green_tensor(d, n, n_min_center)
 
 ######################################################## PARSE
@@ -58,11 +61,15 @@ rhs = equation_system.get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c
 pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_vector, ZL_vector)
 sys_op = equation_system.get_system_operator(n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor)
 
+######################################################## SOLVE
+
 (sol, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
 
+######################################################## EXTRACT
 
-print(sol)
-print(solver_status)
+(I_face, V_voxel, I_src_v) = extract_solution.get_sol_extract(n, idx_f, idx_v, idx_src_v, sol)
+
+J_voxel = extract_solution.get_current_density(n, d, A_incidence, I_face)
 
 # A_incidence = A_incidence.toarray()
 # mdic = {"xyz": xyz, "A_incidence": A_incidence, "G_mutual": G_mutual, "G_self": G_self}

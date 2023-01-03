@@ -33,7 +33,12 @@ def get_voxel_coordinate(d, n):
     z = dz*np.arange(nz, dtype=np.float64)
 
     # assemble the coordinate array
-    xyz = np.stack((x[idx_x], y[idx_y], z[idx_z]), axis=3, dtype=np.float64)
+    x = x[idx_x].flatten(order="F")
+    y = y[idx_y].flatten(order="F")
+    z = z[idx_z].flatten(order="F")
+
+    # assemble the coordinate array
+    xyz = np.stack((x, y, z), axis=1, dtype=np.float64)
 
     return xyz
 
