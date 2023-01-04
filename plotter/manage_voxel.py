@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.linalg as lna
 import pyvista as pv
 
 
@@ -27,8 +28,10 @@ def get_material(idx_voxel, geom, src_terminal):
     # assign empty data
     data = np.full(len(idx_voxel), np.nan, dtype=np.float64)
 
-    # assign conductor
+    # get voxel indices
     idx = np.flatnonzero(idx_voxel)
+
+    # assign conductor
     data[idx] = 0
 
     # assign terminal
@@ -52,13 +55,39 @@ def get_material(idx_voxel, geom, src_terminal):
 
 
 def get_resistivity(idx_voxel, geom, rho_voxel):
-    # assign resistivity
+    # get voxel indices
     idx = np.flatnonzero(idx_voxel)
-    geom["rho"] = rho_voxel[idx]
+    rho = rho_voxel[idx]
+
+    # assign resistivity
+    geom["rho"] = rho
 
     return geom
 
 
+def get_potential(idx_voxel, geom, V_voxel):
+    # get voxel indices
+    idx = np.flatnonzero(idx_voxel)
+    V = V_voxel[idx]
 
+    # assign potential
+    geom["V_re"] = np.real(V)
+    geom["V_im"] = np.imag(V)
+    geom["V_abs"] = np.abs(V)
+
+    return geom
+
+
+def get_current_density(idx_voxel, geom, J_voxel):
+    # get voxel indices
+    idx = np.flatnonzero(idx_voxel)
+    J = J_voxel[idx, :]
+
+    # assign current density
+    geom["J_norm_abs"] = lna.norm(J, axis=1)
+    geom["J_norm_re"] = lna.norm(np.real(J), axis=1)
+    geom["J_norm_im"] = lna.norm(np.imag(J), axis=1)
+    geom["J_vec_re"] = np.real(J)
+    geom["J_vec_im"] = np.imag(J)
 
     return geom
