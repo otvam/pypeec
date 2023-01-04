@@ -67,6 +67,15 @@ def __check_src(idx_src, tag_src, src):
     return idx_src, tag_src
 
 
+def check_data_solver(data_solver):
+    """
+    Check the type of the input data.
+    """
+
+    if not isinstance(data_solver, dict):
+        raise CheckError("invalid input data")
+
+
 def check_voxel(data_solver):
     """
     Check and extract the voxel structure (number and size) and the Green function parameter.
@@ -75,13 +84,16 @@ def check_voxel(data_solver):
     # extract field
     n = data_solver["n"]
     d = data_solver["d"]
+    ori = data_solver["ori"]
     n_green_simplify = data_solver["n_green_simplify"]
 
     # check size
     if not (len(n) == 3):
-        raise CheckError("invalid voxel number (should be three)")
+        raise CheckError("invalid voxel number (should be a tuple with three elements)")
     if not (len(d) == 3):
-        raise CheckError("invalid voxel size (should be three)")
+        raise CheckError("invalid voxel size (should be a tuple with three elements)")
+    if not (len(ori) == 3):
+        raise CheckError("invalid voxel origin (should be a tuple with three elements)")
 
     # extract the voxel data
     (nx, ny, nz) = n
@@ -95,7 +107,7 @@ def check_voxel(data_solver):
     if not (n_green_simplify > 0):
         raise CheckError("voxel distance to simplify the green function cannot be zero of smaller")
 
-    return n, d, n_green_simplify
+    return n, d, ori, n_green_simplify
 
 
 def check_problem(data_solver):
@@ -116,11 +128,11 @@ def check_problem(data_solver):
 
     # check type
     if not isinstance(conductor, list):
-        raise CheckError("solver options should be a dict")
+        raise CheckError("solver options should be a list")
     if not isinstance(src_current, list):
-        raise CheckError("solver options should be a dict")
+        raise CheckError("solver options should be a list")
     if not isinstance(src_voltage, list):
-        raise CheckError("solver options should be a dict")
+        raise CheckError("solver options should be a list")
 
     # check the conductor
     idx_v = np.array([], dtype=np.int64)

@@ -17,7 +17,7 @@ from solver import extract_solution
 from main import logging_utils
 
 # get a logger
-logger = logging_utils.get_logger("solver")
+logger = logging_utils.get_logger("solver", "INFO")
 
 
 def _run_sub(data_solver):
@@ -28,13 +28,13 @@ def _run_sub(data_solver):
     The different parts of the code are timed.
     """
 
-    # check the input data type
-    assert isinstance(data_solver, dict), "invalid input data"
-
     # check and extract the input data
     with logging_utils.BlockTimer(logger, "check_data"):
         # check the voxel structure
-        (n, d, n_green_simplify) = check_data.check_voxel(data_solver)
+        check_data.check_data_solver(data_solver)
+
+        # check the voxel structure
+        (n, d, ori, n_green_simplify) = check_data.check_voxel(data_solver)
 
         # check the solver options and frequency
         (freq, solver_options) = check_data.check_solver(data_solver)
@@ -45,7 +45,7 @@ def _run_sub(data_solver):
     # get the voxel geometry and the incidence matrix
     with logging_utils.BlockTimer(logger, "voxel_geometry"):
         # get the coordinate of the voxels
-        xyz = voxel_geometry.get_voxel_coordinate(d, n)
+        xyz = voxel_geometry.get_voxel_coordinate(n, d, ori)
 
         # compute the incidence matrix
         A_incidence = voxel_geometry.get_incidence_matrix(n)
@@ -56,7 +56,7 @@ def _run_sub(data_solver):
         G_self = green_function.get_green_self(d)
 
         # Green function mutual coefficients
-        G_mutual = green_function.get_green_tensor(d, n, n_green_simplify)
+        G_mutual = green_function.get_green_tensor(n, d, n_green_simplify)
 
     # parse the problem geometry (conductors and sources)
     with logging_utils.BlockTimer(logger, "problem_geometry"):
@@ -133,13 +133,19 @@ def _run_sub(data_solver):
 
     # assign results
     data_res = {
+        "n": n,
+        "d": d,
+        "ori": ori,
+        "freq": freq,
+        "idx_v": idx_v,
+        "rho_v": rho_v,
+        "xyz": xyz,
+        "V_voxel": V_voxel,
+        "J_voxel": J_voxel,
         "has_converged": has_converged,
         "problem_status": problem_status,
         "solver_status": solver_status,
         "src_terminal": src_terminal,
-        "xyz": xyz,
-        "V_voxel": V_voxel,
-        "J_voxel": J_voxel,
     }
 
     return data_res

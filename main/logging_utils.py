@@ -120,7 +120,7 @@ class DeltaTimeFormatter(logging.Formatter):
         return msg
 
 
-def get_logger(name="root", level=logging.INFO):
+def get_logger(name="root", level="INFO"):
     """
     Get a logger with a name and level.
     Display elapsed time, time, name, level, and message.

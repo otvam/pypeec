@@ -117,7 +117,7 @@ def get_green_self(d):
     return G_self
 
 
-def get_green_tensor(d, n, n_green_simplify):
+def get_green_tensor(n, d, n_green_simplify):
     """
     Compute the Green functions for the complete voxel structure.
     For the self-coefficient and the close mutual coefficients, an analytical solution is used.

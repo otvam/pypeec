@@ -16,6 +16,8 @@ def get_data_solver():
 
     data_solver["n"] = (4, 4, 3)
     data_solver["d"] = (1e-4, 2e-4, 1e-4)
+    data_solver["ori"] = (0, 0, 0)
+
     data_solver["n_green_simplify"] = 25
 
     data_solver["freq"] = 10e6

@@ -113,8 +113,11 @@ def get_src_terminal(src_current, src_voltage, V_voxel, I_src_v):
         # voltage is the average between all the voxels composing the terminal
         V_tmp = np.complex128(np.mean(V_voxel[idx]))
 
+        # cast indices
+        idx = np.array(idx, dtype=np.int64)
+
         # assign the current and voltage
-        src_terminal[tag] = {"V": V_tmp, "I": I_tmp}
+        src_terminal[tag] = {"V": V_tmp, "I": I_tmp, "idx": idx, "type": "current"}
 
     # parse the voltage source terminals
     for dat_tmp in src_voltage:
@@ -129,7 +132,10 @@ def get_src_terminal(src_current, src_voltage, V_voxel, I_src_v):
         # current is the sum between all the voxels composing the terminal
         I_tmp = np.complex128(np.sum(I_src_v[idx]))
 
+        # cast indices
+        idx = np.array(idx, dtype=np.int64)
+
         # assign the current and voltage
-        src_terminal[tag] = {"V": V_tmp, "I": I_tmp}
+        src_terminal[tag] = {"V": V_tmp, "I": I_tmp, "idx": idx, "type": "voltage"}
 
     return src_terminal
