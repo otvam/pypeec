@@ -46,7 +46,7 @@ def get_source_geometry(src_current, src_voltage):
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
 
-        # append (the current source value is set such that the sum across al voxels is equal to the specified value)
+        # append (the current source value is set such that the sum across all voxels is equal to the specified value)
         idx_src_c = np.append(idx_src_c, np.array(idx))
         val_src_c = np.append(val_src_c, np.full(len(idx), value/len(idx)))
 

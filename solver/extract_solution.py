@@ -1,7 +1,26 @@
+"""
+Different functions for extracting the fields and terminal currents and voltages from the solution vector.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import numpy as np
 
 
 def get_sol_extract(n, idx_f, idx_v, idx_src_v, sol):
+    """
+    Extract the dace currents, voxel potentials, and voltage source currents.
+
+    The problem contains n_v non-empty voxels and n_f internal faces.
+    The problem contains n_src_v voltage source voxels.
+
+    The solution vector is set in the following order:
+    - n_f: face currents
+    - n_v: voxel potentials
+    - n_src_v: voltage source currents
+    """
+
     # extract the voxel data
     (nx, ny, nz) = n
     n_v = len(idx_v)
@@ -25,12 +44,18 @@ def get_sol_extract(n, idx_f, idx_v, idx_src_v, sol):
 
 
 def get_current_density(n, d, A_incidence, I_face):
+    """
+    Get the voxel current densities from the face currents.
+    Combine the currents of all the internal faces of a voxel into a single vector.
+    Scale the currents into current densities.
+    """
+
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     n = nx*ny*nz
 
-    # project the face currents into the voxels
+    # project the face currents into the voxels (0.5 because a current is going in and out)
     I_x = 0.5 * np.abs(A_incidence[:, 0:n]) * I_face[0:n]
     I_y = 0.5 * np.abs(A_incidence[:, n:2*n]) * I_face[n:2*n]
     I_z = 0.5 * np.abs(A_incidence[:, 2*n:3*n]) * I_face[2*n:3*n]
@@ -46,27 +71,44 @@ def get_current_density(n, d, A_incidence, I_face):
     return J_voxel
 
 def get_src_terminal(src_current, src_voltage, V_voxel, I_src_v):
+    """
+    Parse the terminal voltages and currents for the sources.
+    Assign the results to a dict.
+    """
+
     # init terminal dict
     src_terminal = dict()
 
     # parse the current source terminals
     for dat_tmp in src_current:
+        # get the data
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
         tag = dat_tmp["tag"]
 
+        # current is set by the source
         I_tmp = np.complex128(value)
+
+        # voltage is the average between all the voxels composing the terminal
         V_tmp = np.complex128(np.mean(V_voxel[idx]))
+
+        # assign the current and voltage
         src_terminal[tag] = {"V": V_tmp, "I": I_tmp}
 
     # parse the voltage source terminals
     for dat_tmp in src_voltage:
+        # get the data
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
         tag = dat_tmp["tag"]
 
+        # voltage is set by the source
         V_tmp = np.complex128(value)
+
+        # current is the sum between all the voxels composing the terminal
         I_tmp = np.complex128(np.sum(I_src_v[idx]))
+
+        # assign the current and voltage
         src_terminal[tag] = {"V": V_tmp, "I": I_tmp}
 
     return src_terminal

@@ -1,19 +1,48 @@
+"""
+Module for checking the matrix condition number and solving a sparse equation system.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import scipy.sparse.linalg as sla
 import scipy.linalg as lna
 
 
-class IterCounter():
+class IterCounter:
+    """
+    Simple class used as a callback to count the number of iteration of the matrix solver.
+    """
+
     def __init__(self):
+        """
+        Constructor.
+        Init the number of iteration.
+        """
+
         self.n_iter = 0
 
     def get_callback(self, res):
+        """
+        Callback increasing the iteration count.
+        """
+
         self.n_iter += 1
 
     def get_n_iter(self):
+        """
+        Get the number of iterations.
+        """
+
         return self.n_iter
 
 
 def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
+    """
+    Solve a sparse equation system with gmres.
+    The equation system and the preconditioner are described with linear operator.
+    """
+
     # get the solver options
     tol = solver_options["tol"]
     atol = solver_options["atol"]
@@ -34,7 +63,7 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
     # get the number of iterations
     n_iter = obj.get_n_iter()
 
-    # compute the residuum
+    # compute the absolute and relative residuum
     res = sys_op(sol)-rhs
     res_abs = lna.norm(res)
     res_rel = lna.norm(res)/lna.norm(rhs)
@@ -62,6 +91,10 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
 
 
 def get_condition(mat):
+    """
+    Compute an estimate of the condition number (norm 1) of a sparse matrix.
+    """
+
     # compute the LU decomposition
     try:
         LU_decomposition = sla.splu(mat)
@@ -79,10 +112,13 @@ def get_condition(mat):
     # assign linear operator for inversion
     op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec)
 
-    # compute an estimate of the condition
-    nrm_ori = sla.onenormest(mat)
+    # compute the norm of the matrix inverse (estimate)
     nrm_inv = sla.onenormest(op)
+
+    # compute the norm of the matrix (estimate)
+    nrm_ori = sla.onenormest(mat)
+
+    # compute an estimate of the condition
     cond = nrm_ori*nrm_inv
 
     return cond
-

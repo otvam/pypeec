@@ -6,6 +6,9 @@ The complete equation matrix is: [Z A_kvl ; A_kcl A_src].
 The complete solution vector is [face_currents ; voxel_potentials ; voltage_source_currents].
 The complete right-hand size vector is [zero_excitation ; current_source_currents ; voltage_source_voltages].
 
+The problem contains n_v non-empty voxels and n_f internal faces.
+The problem contains n_src_v voltage source voxels.
+
 The equations are set in the following order:
     - n_f: equations are the KVL
     - n_v: equations are the KCL

@@ -4,7 +4,7 @@ Analytical solutions and numerical approximations are used.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2022 - Dartmouth College"
+__copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
 import numpy.linalg as lna
