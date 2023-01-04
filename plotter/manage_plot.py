@@ -6,7 +6,7 @@ def __get_plot_base(pl, grid, geom, plot_options):
         pl.add_mesh(
             grid,
             style='wireframe',
-            color="black",
+            color=plot_options["grid_color"],
             opacity=plot_options["grid_opacity"],
             line_width=plot_options["grid_thickness"]
         )
@@ -14,7 +14,7 @@ def __get_plot_base(pl, grid, geom, plot_options):
         pl.add_mesh(
             geom,
             style='wireframe',
-            color="black",
+            color=plot_options["geom_color"],
             opacity=plot_options["geom_opacity"],
             line_width=plot_options["geom_thickness"]
         )
@@ -36,7 +36,7 @@ def __scale_range_vector(data, scale, range):
     return data
 
 
-def plot_geom(pl, grid, geom, plot_options, data_options):
+def plot_material(pl, grid, geom, plot_options, data_options):
     # copy to avoid a mess with scaling
     grid = grid.copy(deep=True)
     geom = geom.copy(deep=True)
