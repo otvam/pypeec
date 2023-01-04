@@ -58,7 +58,23 @@ def __get_fft_tensor(C):
     return CF
 
 
-def get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f):
+def get_resistivity_vector(n, idx_v, rho_v):
+    """
+    Extract the resistivity for all the voxels (including empty voxels).
+    """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    n = nx*ny*nz
+
+    # assign the resistivity to a vector with all the voxels (including empty voxels)
+    rho_voxel = np.zeros(n, dtype=np.float64)
+    rho_voxel[idx_v] = rho_v
+
+    return rho_voxel
+
+
+def get_resistance_matrix(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel):
     """
     Extract the resistance matrix of the system.
     The problem contains n_v non-empty voxels and n_f internal faces.
@@ -71,23 +87,19 @@ def get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f):
     (dx, dy, dz) = d
     n = nx*ny*nz
 
-    # assign the resistivity to a vector with all the voxels (including empty voxels)
-    rho_all = np.zeros(n, dtype=np.float64)
-    rho_all[idx_v] = rho_v
-
     # resistance matrix (x-direction)
     R_x = np.zeros(n, dtype=np.float64)
-    R_x[idx_f_x] = (dx/(dy*dz))*rho_all[idx_f_x]
+    R_x[idx_f_x] = (dx/(dy*dz))*rho_voxel[idx_f_x]
     R_x = R_x.reshape((nx, ny, nz), order="F")
 
     # resistance matrix (y-direction)
     R_y = np.zeros(n, dtype=np.float64)
-    R_y[idx_f_y] = (dy/(dx*dz))*rho_all[idx_f_y]
+    R_y[idx_f_y] = (dy/(dx*dz))*rho_voxel[idx_f_y]
     R_y = R_y.reshape((nx, ny, nz), order="F")
 
     # resistance matrix (z-direction)
     R_z = np.zeros(n, dtype=np.float64)
-    R_z[idx_f_z] = (dz/(dx*dy))*rho_all[idx_f_z]
+    R_z[idx_f_z] = (dz/(dx*dy))*rho_voxel[idx_f_z]
     R_z = R_z.reshape((nx, ny, nz), order="F")
 
     # assign the resistance tensor

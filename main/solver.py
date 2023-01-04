@@ -77,8 +77,11 @@ def _run_sub(data_solver):
 
     # get the resistances and inductances
     with logging_utils.BlockTimer(logger, "resistance_inductance"):
+        # get the resistivity for all the voxels (including empty voxels).
+        rho_voxel = resistance_inductance.get_resistivity_vector(n, idx_v, rho_v)
+
         # get the resistance vector (preconditioner) and tensor (full problem, tensor)
-        (R_tensor, R_vector) = resistance_inductance.get_resistance_matrix(n, d, idx_v, rho_v, idx_f_x, idx_f_y, idx_f_z, idx_f)
+        (R_tensor, R_vector) = resistance_inductance.get_resistance_matrix(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel)
 
         # get the inductance vector (preconditioner) and tensor (full problem, circulant tensor)
         (L_tensor, L_vector) = resistance_inductance.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
@@ -123,7 +126,7 @@ def _run_sub(data_solver):
         src_terminal = extract_solution.get_src_terminal(src_current, src_voltage, V_voxel, I_src_v)
 
         # assign invalid values to the empty voxels
-        (V_voxel, J_voxel) = extract_solution.get_assign_field(n, idx_v, V_voxel, J_voxel)
+        (rho_voxel, V_voxel, J_voxel) = extract_solution.get_assign_field(n, idx_v, rho_voxel, V_voxel, J_voxel)
 
     # check convergence
     if has_converged:
@@ -137,9 +140,8 @@ def _run_sub(data_solver):
         "d": d,
         "ori": ori,
         "freq": freq,
-        "idx_v": idx_v,
-        "rho_v": rho_v,
         "xyz": xyz,
+        "rho_voxel": rho_voxel,
         "V_voxel": V_voxel,
         "J_voxel": J_voxel,
         "has_converged": has_converged,

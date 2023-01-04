@@ -1,6 +1,6 @@
-*.asv
 *.mat
 *.h5
+*.pck
 *.pyc
 *.db
 .idea/*
