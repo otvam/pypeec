@@ -70,6 +70,27 @@ def get_current_density(n, d, A_incidence, I_face):
 
     return J_voxel
 
+
+def get_assign_field(n, idx_v, V_voxel, J_voxel):
+    """
+    Assign invalid values to the empty voxels.
+    """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    n = nx*ny*nz
+
+    # find the indices of the empty voxels
+    idx_all = np.arange(n, dtype=np.int64)
+    idx_nan = np.setdiff1d(idx_all, idx_v)
+
+    # flag empty voxels
+    V_voxel[idx_nan] = np.nan + 1j * np.nan
+    J_voxel[idx_nan, :] = np.nan + 1j * np.nan
+
+    return V_voxel, J_voxel
+
+
 def get_src_terminal(src_current, src_voltage, V_voxel, I_src_v):
     """
     Parse the terminal voltages and currents for the sources.

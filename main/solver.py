@@ -122,6 +122,9 @@ def _run_sub(data_solver):
         # parse the terminal voltages and currents for the sources
         src_terminal = extract_solution.get_src_terminal(src_current, src_voltage, V_voxel, I_src_v)
 
+        # assign invalid values to the empty voxels
+        (V_voxel, J_voxel) = extract_solution.get_assign_field(n, idx_v, V_voxel, J_voxel)
+
     # check convergence
     if has_converged:
         logger.info("convergence achieved")

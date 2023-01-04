@@ -21,6 +21,8 @@ class IterCounter:
         """
 
         self.n_iter = 0
+        self.res_vec = []
+        self.iter_vec = []
 
     def get_callback(self, res):
         """
@@ -28,13 +30,15 @@ class IterCounter:
         """
 
         self.n_iter += 1
+        self.iter_vec.append(self.n_iter)
+        self.res_vec.append(res)
 
     def get_n_iter(self):
         """
         Get the number of iterations.
         """
 
-        return self.n_iter
+        return self.n_iter, self.iter_vec, self.res_vec
 
 
 def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
@@ -58,10 +62,14 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
         obj.get_callback(res_iter)
 
     # call the solver
-    (sol, flag) = sla.gmres(sys_op, rhs, tol=tol, atol=atol, restart=restart, maxiter=maxiter, M=pcd_op, callback=fct)
+    (sol, flag) = sla.gmres(
+        sys_op, rhs,
+        tol=tol, atol=atol, restart=restart, maxiter=maxiter,
+        M=pcd_op, callback=fct, callback_type="pr_norm",
+    )
 
     # get the number of iterations
-    n_iter = obj.get_n_iter()
+    (n_iter, iter_vec, res_vec) = obj.get_n_iter()
 
     # compute the absolute and relative residuum
     res = sys_op(sol)-rhs
@@ -79,6 +87,8 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
     # assign the results
     solver_status = {
         "n_iter": n_iter,
+        "iter_vec": iter_vec,
+        "res_vec": res_vec,
         "res_abs": res_abs,
         "res_rel": res_rel,
         "cond": cond,
