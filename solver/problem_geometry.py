@@ -89,7 +89,11 @@ def get_source_index(n, idx_v, idx_src_c, idx_src_v):
     idx_tmp[idx_v] = np.arange(n_v, dtype=np.int64)
     idx_src_v_local = idx_tmp[idx_src_v]
 
-    return idx_src_c_local, idx_src_v_local
+    # get the voxel as a boolean array
+    idx_voxel = np.zeros(n, dtype=bool)
+    idx_voxel[idx_v] = True
+
+    return idx_voxel, idx_src_c_local, idx_src_v_local
 
 
 def get_incidence_matrix(n, A_incidence, idx_v):

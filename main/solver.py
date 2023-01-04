@@ -70,7 +70,7 @@ def _run_sub(data_solver):
         (A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
 
         # compute the local (with respect to the non-empty voxels) indices for the sources
-        (idx_src_c_local, idx_src_v_local) = problem_geometry.get_source_index(n, idx_v, idx_src_c, idx_src_v)
+        (idx_voxel, idx_src_c_local, idx_src_v_local) = problem_geometry.get_source_index(n, idx_v, idx_src_c, idx_src_v)
 
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_v, idx_f, idx_src_c, idx_src_v)
@@ -141,6 +141,7 @@ def _run_sub(data_solver):
         "ori": ori,
         "freq": freq,
         "xyz": xyz,
+        "idx_voxel": idx_voxel,
         "rho_voxel": rho_voxel,
         "V_voxel": V_voxel,
         "J_voxel": J_voxel,
