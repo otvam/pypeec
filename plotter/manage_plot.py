@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def get_plot_base(pl, grid, geom, plot_options):
+def __get_plot_base(pl, grid, geom, plot_options):
     if plot_options["grid_plot"]:
         pl.add_mesh(
             grid,
@@ -22,7 +22,25 @@ def get_plot_base(pl, grid, geom, plot_options):
     pl.add_axes(line_width=5)
 
 
+def __scale_range_vector(data, scale, range):
+    # convert to numpy
+    data = np.array(data)
+
+    # add scaling
+    data = scale*data
+
+    # clamp range
+    data = np.maximum(data, np.min(range))
+    data = np.minimum(data, np.max(range))
+
+    return data
+
+
 def plot_geom(pl, grid, geom, plot_options, data_options):
+    # copy to avoid a mess with scaling
+    grid = grid.copy(deep=True)
+    geom = geom.copy(deep=True)
+
     # extract
     legend = data_options["legend"]
     title = data_options["title"]
@@ -55,16 +73,21 @@ def plot_geom(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background
-    get_plot_base(pl, grid, geom, plot_options)
+    __get_plot_base(pl, grid, geom, plot_options)
 
     pl.add_text(title, font_size=10)
 
 
 def plot_scalar(pl, grid, geom, plot_options, data_options):
+    # copy to avoid a mess with scaling
+    grid = grid.copy(deep=True)
+    geom = geom.copy(deep=True)
+
     # extract
     data = data_options["data"]
     scale = data_options["scale"]
     log = data_options["log"]
+    lim = data_options["lim"]
     legend = data_options["legend"]
     title = data_options["title"]
 
@@ -77,29 +100,34 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     )
 
     # add scaled field
-    geom["tmp_scale"] = scale*geom[data]
+    geom[data] = __scale_range_vector(geom[data], scale, lim)
 
     # add the payload
     pl.add_mesh(
         geom,
-        scalars="tmp_scale",
+        scalars=data,
         log_scale=log,
         scalar_bar_args=scalar_bar_args,
     )
 
     # add the plot background
-    get_plot_base(pl, grid, geom, plot_options)
+    __get_plot_base(pl, grid, geom, plot_options)
 
     pl.add_text(title, font_size=10)
 
 
 def plot_arrow(pl, grid, geom, plot_options, data_options):
+    # copy to avoid a mess with scaling
+    grid = grid.copy(deep=True)
+    geom = geom.copy(deep=True)
+
     # extract
     data_norm = data_options["data_norm"]
     data_vec = data_options["data_vec"]
     scale = data_options["scale"]
     arrow = data_options["arrow"]
     log = data_options["log"]
+    lim = data_options["lim"]
     legend = data_options["legend"]
     title = data_options["title"]
 
@@ -112,11 +140,10 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     )
 
     # add scaled field
-    geom["tmp_norm_scale"] = scale*geom[data_norm]
-    geom["tmp_vec_scale"] = scale*geom[data_vec]
+    geom[data_norm] = __scale_range_vector(geom[data_norm], scale, lim)
 
     # create the arrows
-    glyphs = geom.glyph(orient="tmp_vec_scale", scale="tmp_norm_scale", factor=arrow)
+    glyphs = geom.glyph(orient=data_vec, scale=data_norm, factor=arrow)
 
     # add the payload
     pl.add_mesh(
@@ -126,7 +153,7 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background
-    get_plot_base(pl, grid, geom, plot_options)
+    __get_plot_base(pl, grid, geom, plot_options)
 
     pl.add_text(title, font_size=10)
 
