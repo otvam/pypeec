@@ -34,13 +34,14 @@ def __get_grid_voxel(data_res):
     rho_voxel = data_res["rho_voxel"]
     V_voxel = data_res["V_voxel"]
     J_voxel = data_res["J_voxel"]
-    src_terminal = data_res["src_terminal"]
+    source = data_res["source"]
+    conductor = data_res["conductor"]
 
     # convert the voxel geometry into PyVista grids
     (grid, geom) = manage_voxel.get_grid_geom(n, d, ori, idx_voxel)
 
     # add the problem solution to the grid
-    geom = manage_voxel.get_material(idx_voxel, geom, src_terminal)
+    geom = manage_voxel.get_material(idx_voxel, geom, conductor, source)
     geom = manage_voxel.get_resistivity(idx_voxel, geom, rho_voxel)
     geom = manage_voxel.get_potential(idx_voxel, geom, V_voxel)
     geom = manage_voxel.get_current_density(idx_voxel, geom, J_voxel)

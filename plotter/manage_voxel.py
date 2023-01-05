@@ -40,7 +40,7 @@ def get_grid_geom(n, d, ori, idx_voxel):
     return grid, geom
 
 
-def get_material(idx_voxel, geom, src_terminal):
+def get_material(idx_voxel, geom, conductor, source):
     """
     Extract and add to the geometry the material description.
     The following encoding is used:
@@ -52,25 +52,30 @@ def get_material(idx_voxel, geom, src_terminal):
     # assign empty data
     data = np.full(len(idx_voxel), np.nan, dtype=np.float64)
 
-    # get voxel indices
-    idx = np.flatnonzero(idx_voxel)
-
     # assign conductor voxels
-    data[idx] = 0
-
-    # assign terminal voxels
-    for tag in src_terminal:
+    for tag, dat_tmp in conductor.items():
         # get the data
-        idx_tmp = src_terminal[tag]["idx"]
-        type_tmp = src_terminal[tag]["type"]
+        idx_tmp = dat_tmp["idx"]
+
+        # assign the material
+        data[idx_tmp] = 0
+
+    # assign source voxels
+    for tag, dat_tmp in source.items():
+        # get the data
+        idx_tmp = dat_tmp["idx"]
+        source_type_tmp = dat_tmp["source_type"]
 
         # assign the material (current or voltage sources)
-        if type_tmp == "current":
+        if source_type_tmp == "current":
             data[idx_tmp] = 1
-        elif type_tmp == "voltage":
+        elif source_type_tmp == "voltage":
             data[idx_tmp] = 2
         else:
             raise ValueError("invalid terminal type")
+
+    # get voxel indices
+    idx = np.flatnonzero(idx_voxel)
 
     # assign the extract data to the geometry
     geom["material"] = data[idx]
