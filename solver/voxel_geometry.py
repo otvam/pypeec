@@ -23,10 +23,10 @@ def get_voxel_coordinate(n, d, ori):
     (orix, oriy, oriz) = ori
 
     # voxel index array
-    x = np.arange(nx, dtype=np.int64)
-    y = np.arange(ny, dtype=np.int64)
-    z = np.arange(nz, dtype=np.int64)
-    (idx_x, idx_y, idx_z) = np.meshgrid(x, y, z, indexing='ij')
+    idx_x = np.arange(nx, dtype=np.int64)
+    idx_y = np.arange(ny, dtype=np.int64)
+    idx_z = np.arange(nz, dtype=np.int64)
+    (idx_x, idx_y, idx_z) = np.meshgrid(idx_x, idx_y, idx_z, indexing='ij')
 
     # voxel coordinate vector
     x = orix+dx/2+dx*np.arange(nx, dtype=np.float64)

@@ -19,4 +19,5 @@ if __name__ == '__main__':
         pickle.dump((status, data_res), fid)
 
     # exit
+    status = int(status == False)
     sys.exit(status)
