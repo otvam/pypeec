@@ -6,7 +6,7 @@ import data_plotter
 
 if __name__ == '__main__':
     # get data
-    data_plotter = data_plotter.get_data_plotter()
+    data_plotter = data_plotter.get_data()
 
     # load data
     with open('data_trf.pck', 'rb') as fid:

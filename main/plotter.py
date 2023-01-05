@@ -1,6 +1,6 @@
 """
 Main script for plotting the solution of a FFT-PEEC problem.
-Plot the geometry, the resistivity, the potential, and the current density.
+Plot the material description, the resistivity, the potential, and the current density.
 
 The plotting is done with PyVista with the Qt framework.
 """
@@ -21,9 +21,9 @@ logger = logging_utils.get_logger("plotter", "INFO")
 
 def __get_grid_voxel(data_res):
     """
-    Convert the voxel geometry into a PyVista uniform grid.
+    Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
-    Add the solver results (material, resistivity, and field) to the grid.
+    Add the solver results (material description, resistivity, and field) to the grid.
     """
 
     # extract the data
@@ -37,7 +37,7 @@ def __get_grid_voxel(data_res):
     src_terminal = data_res["src_terminal"]
 
     # convert the voxel geometry into PyVista grids
-    (grid, geom) = manage_voxel.get_geom(n, d, ori, idx_voxel)
+    (grid, geom) = manage_voxel.get_grid_geom(n, d, ori, idx_voxel)
 
     # add the problem solution to the grid
     geom = manage_voxel.get_material(idx_voxel, geom, src_terminal)

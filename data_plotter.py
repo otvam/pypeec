@@ -1,4 +1,4 @@
-def __get_plot_options():
+def __get_data_sub(name, plot_type, data_options):
     plot_options = {
         "grid_plot": True,
         "grid_thickness": 1.0,
@@ -10,29 +10,29 @@ def __get_plot_options():
         "geom_opacity": 0.5,
     }
 
-    return plot_options
-
-
-def __get_geometry():
-    plot_options = __get_plot_options()
-    data_options = {
-        "legend": "Material Type",
-        "title": "Material",
-    }
-
     data = {
-        "title": "Material",
+        "title": name,
+        "plot_type": plot_type,
         "window_size": (800, 600),
-        "plot_type": "material",
         "data_options": data_options,
         "plot_options": plot_options
     }
+
+    return  data
+
+
+def __get_geometry(name):
+    data_options = {
+        "legend": name,
+        "title": name,
+    }
+
+    data = __get_data_sub(name, "material", data_options)
 
     return data
 
 
 def __get_scalar(data, scale, unit, name):
-    plot_options = __get_plot_options()
     data_options = {
         "data": data,
         "scale": scale,
@@ -42,19 +42,12 @@ def __get_scalar(data, scale, unit, name):
         "title": name,
     }
 
-    data = {
-        "title": name,
-        "window_size": (800, 600),
-        "plot_type": "scalar",
-        "data_options": data_options,
-        "plot_options": plot_options
-    }
+    data = __get_data_sub(name, "scalar", data_options)
 
     return data
 
 
 def __get_arrow(data_norm, data_vec, scale, arrow, unit, name):
-    plot_options = __get_plot_options()
     data_options = {
         "data_norm": data_norm,
         "data_vec": data_vec,
@@ -66,20 +59,14 @@ def __get_arrow(data_norm, data_vec, scale, arrow, unit, name):
         "title": name,
     }
 
-    data = {
-        "title": name,
-        "window_size": (800, 600),
-        "plot_type": "arrow",
-        "data_options": data_options,
-        "plot_options": plot_options
-    }
+    data = __get_data_sub(name, "arrow", data_options)
 
     return data
 
 
-def get_data_plotter():
+def get_data():
     data_plotter = [
-        __get_geometry(),
+        __get_geometry("Material"),
         __get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
         __get_scalar("V_abs", 1e0, "V", "Potential"),
         __get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),

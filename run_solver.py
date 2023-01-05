@@ -6,7 +6,7 @@ import data_trf
 
 if __name__ == '__main__':
     # get data
-    data_solver = data_trf.get_data_solver()
+    data_solver = data_trf.get_data()
 
     # call solver
     (status, data_res) = solver.run(data_solver)

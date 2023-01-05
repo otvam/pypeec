@@ -1,16 +1,19 @@
-def get_data_solver():
+def get_data():
     data_solver = dict()
 
-    conductor = []
-    conductor.append({"idx": [0, 3, 4, 8, 12, 13, 14, 15, 11, 7], "rho": 1.7544e-08})
-    conductor.append({"idx": [32, 33, 34, 35, 39, 43, 47, 46, 45, 44, 40, 36], "rho": 8.7720e-08})
+    conductor = [
+        {"idx": [0, 3, 4, 8, 12, 13, 14, 15, 11, 7], "rho": 1.7544e-08},
+        {"idx": [32, 33, 34, 35, 39, 43, 47, 46, 45, 44, 40, 36], "rho": 8.7720e-08},
+    ]
 
-    src_current = []
-    src_current.append({"tag": "src", "idx": [0], "value": +1})
+    src_current = [
+        {"tag": "src", "idx": [0], "value": +1},
+    ]
 
-    src_voltage = []
-    src_voltage.append({"tag": "sink", "idx": [3], "value": +1})
-    src_voltage.append({"tag": "short", "idx": [45], "value": -1})
+    src_voltage = [
+        {"tag": "sink", "idx": [3], "value": +1},
+        {"tag": "short", "idx": [45], "value": -1},
+    ]
 
     solver_options = {"tol": 1e-5, "atol": 1e-12, "restart": 20, "maxiter": 100, "condmax": 1e9}
 
