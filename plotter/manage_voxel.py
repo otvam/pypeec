@@ -29,7 +29,7 @@ def get_grid_geom(n, d, ori, idx_voxel):
     # set the array size and the voxel size
     grid.dimensions = (nx+1, ny+1, nz+1)
     grid.spacing = (dx, dy, dz)  # These are the cell sizes along each axis
-    grid.origin = (orix-dx/2, oriy-dy/2, oriz-dz/2)
+    grid.origin = (orix, oriy, oriz)
 
     # get voxel indices
     idx = np.flatnonzero(idx_voxel)

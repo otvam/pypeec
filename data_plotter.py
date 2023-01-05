@@ -8,6 +8,9 @@ def __get_data_sub(name, plot_type, data_options):
         "geom_thickness": 1.0,
         "geom_color": "black",
         "geom_opacity": 0.5,
+        "origin_plot": True,
+        "origin_size": 0.1,
+        "origin_color": "red",
     }
 
     data = {
@@ -67,11 +70,11 @@ def __get_arrow(data_norm, data_vec, scale, arrow, unit, name):
 def get_data():
     data_plotter = [
         __get_geometry("Material"),
-        __get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
-        __get_scalar("V_abs", 1e0, "V", "Potential"),
-        __get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        __get_arrow("J_norm_re", "J_vec_re", 1e-6, 1e-6, "A/mm2", "Re. Current"),
-        __get_arrow("J_norm_im", "J_vec_im", 1e-6, 1e-6, "A/mm2", "Im. Current"),
+        # __get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
+        # __get_scalar("V_abs", 1e0, "V", "Potential"),
+        # __get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
+        # __get_arrow("J_norm_re", "J_vec_re", 1e-6, 1e-6, "A/mm2", "Re. Current"),
+        # __get_arrow("J_norm_im", "J_vec_im", 1e-6, 1e-6, "A/mm2", "Im. Current"),
     ]
 
     return data_plotter

@@ -10,6 +10,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
+import pyvista as pv
 
 
 def __get_plot_base(pl, grid, geom, title, plot_options):
@@ -19,6 +20,7 @@ def __get_plot_base(pl, grid, geom, title, plot_options):
     Add a plot title.
     """
 
+    # plot the complete grid
     if plot_options["grid_plot"]:
         pl.add_mesh(
             grid,
@@ -27,6 +29,8 @@ def __get_plot_base(pl, grid, geom, title, plot_options):
             opacity=plot_options["grid_opacity"],
             line_width=plot_options["grid_thickness"]
         )
+
+    # plot the non-empty voxels
     if plot_options["geom_plot"]:
         pl.add_mesh(
             geom,
@@ -36,6 +40,14 @@ def __get_plot_base(pl, grid, geom, title, plot_options):
             line_width=plot_options["geom_thickness"]
         )
 
+    # add a marker at the origin
+    if plot_options["origin_plot"]:
+        d = np.min(grid.spacing)
+        r = d*plot_options["origin_size"]
+        origin = pv.Sphere(r, (0, 0, 0))
+        pl.add_mesh(origin, color=plot_options["origin_color"])
+
+    # add title and axes
     pl.add_axes(line_width=2)
     pl.add_text(title, font_size=10)
 
@@ -91,7 +103,7 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     }
 
     # get a colormap with three discrete color
-    cmap = ['yellow', 'red', 'blue']
+    cmap = ['yellow', 'green', 'blue']
 
     # add the resulting plot to the plotter
     pl.add_mesh(

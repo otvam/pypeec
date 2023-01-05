@@ -29,9 +29,9 @@ def get_voxel_coordinate(n, d, ori):
     (idx_x, idx_y, idx_z) = np.meshgrid(x, y, z, indexing='ij')
 
     # voxel coordinate vector
-    x = orix+dx*np.arange(nx, dtype=np.float64)
-    y = oriy+dy*np.arange(ny, dtype=np.float64)
-    z = oriz+dz*np.arange(nz, dtype=np.float64)
+    x = orix+dx/2+dx*np.arange(nx, dtype=np.float64)
+    y = oriy+dy/2+dy*np.arange(ny, dtype=np.float64)
+    z = oriz+dz/2+dz*np.arange(nz, dtype=np.float64)
 
     # assemble the coordinate array
     x = x[idx_x].flatten(order="F")
