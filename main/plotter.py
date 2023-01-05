@@ -1,3 +1,13 @@
+"""
+Main script for plotting the solution of a FFT-PEEC problem.
+Plot the geometry, the resistivity, the potential, and the current density.
+
+The plotting is done with PyVista with the Qt framework.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import qtpy.QtWidgets as qtw
 import pyvistaqt as pvqt
 
@@ -5,15 +15,15 @@ from plotter import manage_voxel
 from plotter import manage_plot
 from main import logging_utils
 
-
 # get a logger
 logger = logging_utils.get_logger("plotter", "INFO")
 
 
 def __get_grid_voxel(data_res):
     """
-    Convert the voxel geometry into an unstructured grid.
-    Add the solver results (field, material, resistivity) to the grid.
+    Convert the voxel geometry into a PyVista uniform grid.
+    Convert the non-empty voxel geometry into a PyVista unstructured grid.
+    Add the solver results (material, resistivity, and field) to the grid.
     """
 
     # extract the data
@@ -26,10 +36,10 @@ def __get_grid_voxel(data_res):
     J_voxel = data_res["J_voxel"]
     src_terminal = data_res["src_terminal"]
 
-    # convert the voxel geometry into a unstructured grid.
+    # convert the voxel geometry into PyVista grids
     (grid, geom) = manage_voxel.get_geom(n, d, ori, idx_voxel)
 
-    # add the solution to the grid
+    # add the problem solution to the grid
     geom = manage_voxel.get_material(idx_voxel, geom, src_terminal)
     geom = manage_voxel.get_resistivity(idx_voxel, geom, rho_voxel)
     geom = manage_voxel.get_potential(idx_voxel, geom, V_voxel)
@@ -39,6 +49,14 @@ def __get_grid_voxel(data_res):
 
 
 def __get_plot(grid, geom, data_plotter):
+    """
+    Make a plot with the specified user settings.
+    The plot contains the following elements:
+        - the geometry as wireframe
+        - the axis, color bar, and legend
+        - the payload (material description, scalar plots, or arrow plots)
+    """
+
     # extract the data
     title = data_plotter["title"]
     window_size = data_plotter["window_size"]
@@ -46,7 +64,7 @@ def __get_plot(grid, geom, data_plotter):
     data_options = data_plotter["data_options"]
     plot_options = data_plotter["plot_options"]
 
-    # get the plotter
+    # get the plotter (with the Qt framework)
     pl = pvqt.BackgroundPlotter(
         toolbar=False,
         menu_bar=False,
@@ -54,7 +72,7 @@ def __get_plot(grid, geom, data_plotter):
         window_size=window_size
     )
 
-    # find the plot type
+    # find the plot type and call the corresponding function
     if plot_type == "material":
         manage_plot.plot_material(pl, grid, geom, plot_options, data_options)
     elif plot_type == "scalar":
@@ -66,11 +84,15 @@ def __get_plot(grid, geom, data_plotter):
 
 
 def run(data_res, data_plotter):
+    """
+    Main script for plotting the solution of a FFT-PEEC problem.
+    """
+
     # init
     logger.info("INIT")
 
     # create the Qt app (should be at the beginning)
-    logger.info("parse the voxel geometry and the data")
+    logger.info("create the GUI application")
     app = qtw.QApplication([])
 
     # handle the data
@@ -78,12 +100,13 @@ def run(data_res, data_plotter):
     (grid, geom) = __get_grid_voxel(data_res)
 
     # make the plots
-    logger.info("parse the voxel geometry and the data")
-    for dat_tmp in data_plotter:
+    logger.info("generate the different plots")
+    for i, dat_tmp in enumerate(data_plotter):
+        logger.info("plotting %d / %d" % (i+1, len(data_plotter)))
         __get_plot(grid, geom, dat_tmp)
 
     # end
     logger.info("END")
 
-    # enter the event loop (should be at the end)
+    # enter the event loop (should be at the end, blocking call)
     return app.exec_()

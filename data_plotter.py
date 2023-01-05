@@ -83,8 +83,8 @@ def get_data_plotter():
         __get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
         __get_scalar("V_abs", 1e0, "V", "Potential"),
         __get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        __get_arrow("J_norm_re", "J_vec_re", 1e-6, 1e-6, "A/mm2", "Im. Current"),
-        __get_arrow("J_norm_im", "J_vec_im", 1e-6, 1e-6, "A/mm2", "Re. Current"),
+        __get_arrow("J_norm_re", "J_vec_re", 1e-6, 1e-6, "A/mm2", "Re. Current"),
+        __get_arrow("J_norm_im", "J_vec_im", 1e-6, 1e-6, "A/mm2", "Im. Current"),
     ]
 
     return data_plotter

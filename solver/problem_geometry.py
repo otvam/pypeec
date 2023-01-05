@@ -150,8 +150,8 @@ def get_status(n, idx_v, idx_f, idx_src_c, idx_src_v):
     n_src = len(idx_src_c)+len(idx_src_v)
 
     # fraction of voxels
-    f_conductor = n_conductor/n_total
-    f_src = n_src/n_total
+    ratio_conductor = n_conductor/n_total
+    ratio_src = n_src/n_total
 
     # assign data
     problem_status = {
@@ -159,8 +159,8 @@ def get_status(n, idx_v, idx_f, idx_src_c, idx_src_v):
         "n_conductor": n_conductor,
         "n_faces": n_faces,
         "n_src": n_src,
-        "f_conductor": f_conductor,
-        "f_src": f_src,
+        "ratio_conductor": ratio_conductor,
+        "ratio_src": ratio_src,
     }
 
     return problem_status

@@ -1,6 +1,8 @@
 """
 Main script for solving a problem with the FFT-PEEC solver.
 Check the input data, solve the problem, and parse the results.
+
+The solver is implemented with NumPy and Scipy.
 """
 
 __author__ = "Thomas Guillod"
@@ -82,7 +84,7 @@ def __run_preproc(data_solver):
 
 def __run_main(data_solver, data_preproc):
     """
-    Construct and solve the problem.
+    Construct and solve the problem (equation system).
     The different parts of the code are timed.
     """
 
@@ -120,8 +122,8 @@ def __run_main(data_solver, data_preproc):
     logger.info("problem size: n_conductor = %d" % problem_status["n_conductor"])
     logger.info("problem size: n_faces = %d" % problem_status["n_faces"])
     logger.info("problem size: n_src = %d" % problem_status["n_src"])
-    logger.info("problem size: f_conductor = %.3e" % problem_status["f_conductor"])
-    logger.info("problem size: f_src = %.3e" % problem_status["f_src"])
+    logger.info("problem size: ratio_conductor = %.3e" % problem_status["ratio_conductor"])
+    logger.info("problem size: ratio_src = %.3e" % problem_status["ratio_src"])
 
     # get the resistances and inductances
     with logging_utils.BlockTimer(logger, "resistance_inductance"):
@@ -234,7 +236,7 @@ def __run_postproc(data_solver, data_preproc, data_main):
 
 def __run_assemble(data_solver, data_preproc, data_main, data_postproc):
     """
-    Assemble the output dict.
+    Assemble the output data from the different dict.
     """
 
     # assign results

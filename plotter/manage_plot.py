@@ -45,7 +45,7 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     legend = data_options["legend"]
     title = data_options["title"]
 
-    # colorbar options
+    # color bar options
     scalar_bar_args = dict(
         n_labels=0,
         label_font_size=15,
@@ -91,7 +91,7 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     legend = data_options["legend"]
     title = data_options["title"]
 
-    # colorbar options
+    # color bar options
     scalar_bar_args = dict(
         n_labels=5,
         label_font_size=15,
@@ -131,7 +131,7 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     legend = data_options["legend"]
     title = data_options["title"]
 
-    # colorbar options
+    # color bar options
     scalar_bar_args = dict(
         n_labels=5,
         label_font_size=15,
