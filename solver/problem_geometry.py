@@ -19,7 +19,7 @@ def get_conductor_geometry(conductor):
     rho_v = np.array([], dtype=np.float64)
 
     # populate the arrays
-    for dat_tmp in conductor:
+    for tag, dat_tmp in conductor.items():
         # get the data
         idx = dat_tmp["idx"]
         rho = dat_tmp["rho"]
@@ -31,7 +31,7 @@ def get_conductor_geometry(conductor):
     return idx_v, rho_v
 
 
-def get_source_geometry(src_current, src_voltage):
+def get_source_geometry(source):
     """
     Get the indices of the source voxels and the corresponding source excitations.
     """
@@ -40,29 +40,28 @@ def get_source_geometry(src_current, src_voltage):
     idx_src_c = np.array([], dtype=np.int64)
     val_src_c = np.array([], dtype=np.complex128)
 
-    # populate the arrays with the current sources
-    for dat_tmp in src_current:
-        # get the data
-        idx = dat_tmp["idx"]
-        value = dat_tmp["value"]
-
-        # append (the current source value is set such that the sum across all voxels is equal to the specified value)
-        idx_src_c = np.append(idx_src_c, np.array(idx))
-        val_src_c = np.append(val_src_c, np.full(len(idx), value/len(idx)))
-
     # array for the voltage source indices and source values
     idx_src_v = np.array([], dtype=np.int64)
     val_src_v = np.array([], dtype=np.complex128)
 
-    # populate the arrays with the voltage sources
-    for dat_tmp in src_voltage:
+    # populate the arrays with the current sources
+    for tag, dat_tmp in source.items():
         # get the data
+        source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
 
-        # append (the voltage source value is set to the specified value for all the voxels)
-        idx_src_v = np.append(idx_src_v, np.array(idx))
-        val_src_v = np.append(val_src_v, np.full(len(idx), value))
+        # append the source
+        if source_type == "current":
+            # the current source value is set such that the sum across all voxels is equal to the specified value
+            idx_src_c = np.append(idx_src_c, np.array(idx))
+            val_src_c = np.append(val_src_c, np.full(len(idx), value / len(idx)))
+        elif source_type == "voltage":
+            # the voltage source value is set to the specified value for all the voxels
+            idx_src_v = np.append(idx_src_v, np.array(idx))
+            val_src_v = np.append(val_src_v, np.full(len(idx), value))
+        else:
+            raise ValueError("invalid terminal type")
 
     return idx_src_c, val_src_c, idx_src_v, val_src_v
 

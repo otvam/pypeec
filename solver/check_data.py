@@ -22,12 +22,14 @@ def __check_conductor(idx_v, conductor):
     Append the conductor indices to an array.
     """
 
-    for dat_tmp in conductor:
+    for tag, dat_tmp in conductor.items():
         # extract the data
         idx = dat_tmp["idx"]
         rho = dat_tmp["rho"]
 
-        # check the resistivity
+        # check the resistivity and tag
+        if not isinstance(tag, str):
+            raise CheckError("conductor name should be a string")
         if not np.isscalar(rho):
             raise CheckError("conductor resistivity should be a scalar")
         if not np.isreal(rho):
@@ -41,24 +43,28 @@ def __check_conductor(idx_v, conductor):
     return idx_v
 
 
-def __check_src(idx_src, tag_src, src):
+def __check_source(idx_src, tag_src, source):
     """
     Check that the sources (voltage or current) are valid.
     Append the source tag to a list.
     Append the source indices to an array.
     """
 
-    for dat_tmp in src:
+    for tag, dat_tmp in source.items():
         # extract the data
-        tag = dat_tmp["tag"]
+        source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
 
         # check the source value and tag
-        if not np.isscalar(value):
-            raise CheckError("source value should be a scalar")
         if not isinstance(tag, str):
             raise CheckError("source name should be a string")
+        if not np.isscalar(value):
+            raise CheckError("source value should be a scalar")
+        if not isinstance(source_type, str):
+            raise CheckError("source type should be a string")
+        if not ((source_type == "current") or (source_type == "voltage")):
+            raise CheckError("source type should be voltage or current")
 
         # append the tag and indices
         tag_src.append(tag)
@@ -83,13 +89,16 @@ def check_voxel(data_solver):
 
     # extract field
     n = data_solver["n"]
+    r = data_solver["r"]
     d = data_solver["d"]
     ori = data_solver["ori"]
-    n_green_simplify = data_solver["n_green_simplify"]
+    d_green_simplify = data_solver["d_green_simplify"]
 
     # check size
     if not (len(n) == 3):
         raise CheckError("invalid voxel number (should be a tuple with three elements)")
+    if not (len(r) == 3):
+        raise CheckError("invalid voxel resampling factor (should be a tuple with three elements)")
     if not (len(d) == 3):
         raise CheckError("invalid voxel size (should be a tuple with three elements)")
     if not (len(ori) == 3):
@@ -97,14 +106,17 @@ def check_voxel(data_solver):
 
     # extract the voxel data
     (nx, ny, nz) = n
+    (rx, ry, rz) = r
     (dx, dy, dz) = d
 
     # check value
     if not ((nx >= 1) and (ny >= 1) and (nz >= 1)):
         raise CheckError("number of voxels cannot be smaller than one")
+    if not ((rx >= 1) and (ry >= 1) and (rz >= 1)):
+        raise CheckError("number of resampling cannot be smaller than one")
     if not ((dx > 0) and (dy > 0) and (dz > 0)):
         raise CheckError("voxel dimension cannot be zero or smaller")
-    if not (n_green_simplify > 0):
+    if not (d_green_simplify > 0):
         raise CheckError("voxel distance to simplify the green function cannot be zero of smaller")
 
 
@@ -116,8 +128,7 @@ def check_problem(data_solver):
 
     # extract field
     conductor = data_solver["conductor"]
-    src_current = data_solver["src_current"]
-    src_voltage = data_solver["src_voltage"]
+    source = data_solver["source"]
     n = data_solver["n"]
 
     # extract the voxel data
@@ -125,12 +136,10 @@ def check_problem(data_solver):
     n = nx*ny*nz
 
     # check type
-    if not isinstance(conductor, list):
-        raise CheckError("solver options should be a list")
-    if not isinstance(src_current, list):
-        raise CheckError("solver options should be a list")
-    if not isinstance(src_voltage, list):
-        raise CheckError("solver options should be a list")
+    if not isinstance(conductor, dict):
+        raise CheckError("the conductor description should be a dict")
+    if not isinstance(source, dict):
+        raise CheckError("the source description should be a dict")
 
     # check the conductor
     idx_v = np.array([], dtype=np.int64)
@@ -139,8 +148,7 @@ def check_problem(data_solver):
 
     # find the indices and tags
     idx_v = __check_conductor(idx_v, conductor)
-    (idx_src, tag_src) = __check_src(idx_src, tag_src, src_current)
-    (idx_src, tag_src) = __check_src(idx_src, tag_src, src_voltage)
+    (idx_src, tag_src) = __check_source(idx_src, tag_src, source)
 
     # check for unicity
     if not (len(np.unique(idx_v)) == len(idx_v)):

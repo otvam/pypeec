@@ -43,6 +43,18 @@ def __run_check(data_solver):
         check_data.check_problem(data_solver)
 
 
+def __run_resampling(data_solver):
+    """
+    Resample the voxel structure and update the indices.
+    The different parts of the code are timed.
+    """
+
+    with logging_utils.BlockTimer(logger, "voxel_resampling"):
+        pass
+
+    return data_solver
+
+
 def __run_preproc(data_solver):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
@@ -53,7 +65,7 @@ def __run_preproc(data_solver):
     n = data_solver["n"]
     d = data_solver["d"]
     ori = data_solver["ori"]
-    n_green_simplify = data_solver["n_green_simplify"]
+    d_green_simplify = data_solver["d_green_simplify"]
 
     # get the voxel geometry and the incidence matrix
     with logging_utils.BlockTimer(logger, "voxel_geometry"):
@@ -69,20 +81,18 @@ def __run_preproc(data_solver):
         G_self = green_function.get_green_self(d)
 
         # Green function mutual coefficients
-        G_mutual = green_function.get_green_tensor(n, d, n_green_simplify)
+        G_mutual = green_function.get_green_tensor(n, d, d_green_simplify)
 
     # assemble results
-    data_preproc = {
-        "xyz": xyz,
-        "A_incidence": A_incidence,
-        "G_self": G_self,
-        "G_mutual": G_mutual,
-    }
+    data_solver["xyz"] = xyz
+    data_solver["A_incidence"] = A_incidence
+    data_solver["G_self"] = G_self
+    data_solver["G_mutual"] = G_mutual
 
-    return data_preproc
+    return data_solver
 
 
-def __run_main(data_solver, data_preproc):
+def __run_main(data_solver):
     """
     Construct and solve the problem (equation system).
     The different parts of the code are timed.
@@ -94,11 +104,10 @@ def __run_main(data_solver, data_preproc):
     freq = data_solver["freq"]
     solver_options = data_solver["solver_options"]
     conductor = data_solver["conductor"]
-    src_current = data_solver["src_current"]
-    src_voltage = data_solver["src_voltage"]
-    A_incidence = data_preproc["A_incidence"]
-    G_self = data_preproc["G_self"]
-    G_mutual = data_preproc["G_mutual"]
+    source = data_solver["source"]
+    A_incidence = data_solver["A_incidence"]
+    G_self = data_solver["G_self"]
+    G_mutual = data_solver["G_mutual"]
 
     # parse the problem geometry (conductors and sources)
     with logging_utils.BlockTimer(logger, "problem_geometry"):
@@ -106,7 +115,7 @@ def __run_main(data_solver, data_preproc):
         (idx_v, rho_v) = problem_geometry.get_conductor_geometry(conductor)
 
         # parse the current and voltage sources
-        (idx_src_c, val_src_c, idx_src_v, val_src_v) = problem_geometry.get_source_geometry(src_current, src_voltage)
+        (idx_src_c, val_src_c, idx_src_v, val_src_v) = problem_geometry.get_source_geometry(source)
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
         (A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
@@ -178,22 +187,21 @@ def __run_main(data_solver, data_preproc):
         logger.warning("matrix solver: convergence issues")
 
     # assemble results
-    data_main = {
-        "idx_f": idx_f,
-        "idx_v": idx_v,
-        "idx_src_v": idx_src_v,
-        "problem_status": problem_status,
-        "idx_voxel": idx_voxel,
-        "rho_voxel": rho_voxel,
-        "sol": sol,
-        "has_converged": has_converged,
-        "solver_status": solver_status,
-    }
+    data_solver["idx_f"] = idx_f
+    data_solver["idx_v"] = idx_v
+    data_solver["idx_src_v"] = idx_src_v
+    data_solver["idx_src_c"] = idx_src_c
+    data_solver["problem_status"] = problem_status
+    data_solver["idx_voxel"] = idx_voxel
+    data_solver["rho_voxel"] = rho_voxel
+    data_solver["sol"] = sol
+    data_solver["has_converged"] = has_converged
+    data_solver["solver_status"] = solver_status
 
-    return data_main
+    return data_solver
 
 
-def __run_postproc(data_solver, data_preproc, data_main):
+def __run_postproc(data_solver):
     """
     Extract the solution.
     The different parts of the code are timed.
@@ -202,13 +210,12 @@ def __run_postproc(data_solver, data_preproc, data_main):
     # extract the input data
     n = data_solver["n"]
     d = data_solver["d"]
-    src_current = data_solver["src_current"]
-    src_voltage = data_solver["src_voltage"]
-    A_incidence = data_preproc["A_incidence"]
-    idx_f = data_main["idx_f"]
-    idx_v = data_main["idx_v"]
-    idx_src_v = data_main["idx_src_v"]
-    sol = data_main["sol"]
+    source = data_solver["source"]
+    A_incidence = data_solver["A_incidence"]
+    idx_f = data_solver["idx_f"]
+    idx_v = data_solver["idx_v"]
+    idx_src_v = data_solver["idx_src_v"]
+    sol = data_solver["sol"]
 
     # extract the solution
     with logging_utils.BlockTimer(logger, "extract_solution"):
@@ -219,22 +226,20 @@ def __run_postproc(data_solver, data_preproc, data_main):
         J_voxel = extract_solution.get_current_density(n, d, A_incidence, I_face)
 
         # parse the terminal voltages and currents for the sources
-        src_terminal = extract_solution.get_src_terminal(src_current, src_voltage, V_voxel, I_src_v)
+        terminal = extract_solution.get_terminal(source, V_voxel, I_src_v)
 
         # assign invalid values to the empty voxels
         (V_voxel, J_voxel) = extract_solution.get_assign_field(n, idx_v, V_voxel, J_voxel)
 
     # assemble results
-    data_postproc = {
-        "src_terminal": src_terminal,
-        "V_voxel": V_voxel,
-        "J_voxel": J_voxel,
-    }
+    data_solver["terminal"] = terminal
+    data_solver["V_voxel"] = V_voxel
+    data_solver["J_voxel"] = J_voxel
 
-    return data_postproc
+    return data_solver
 
 
-def __run_assemble(data_solver, data_preproc, data_main, data_postproc):
+def __run_assemble(data_solver):
     """
     Assemble the output data from the different dict.
     """
@@ -242,18 +247,21 @@ def __run_assemble(data_solver, data_preproc, data_main, data_postproc):
     # assign results
     data_res = {
         "n": data_solver["n"],
+        "r": data_solver["r"],
         "d": data_solver["d"],
         "ori": data_solver["ori"],
+        "source": data_solver["source"],
+        "conductor": data_solver["conductor"],
         "freq": data_solver["freq"],
-        "xyz": data_preproc["xyz"],
-        "idx_voxel": data_main["idx_voxel"],
-        "rho_voxel": data_main["rho_voxel"],
-        "has_converged": data_main["has_converged"],
-        "problem_status": data_main["problem_status"],
-        "solver_status": data_main["solver_status"],
-        "V_voxel": data_postproc["V_voxel"],
-        "J_voxel": data_postproc["J_voxel"],
-        "src_terminal": data_postproc["src_terminal"],
+        "xyz": data_solver["xyz"],
+        "idx_voxel": data_solver["idx_voxel"],
+        "rho_voxel": data_solver["rho_voxel"],
+        "has_converged": data_solver["has_converged"],
+        "problem_status": data_solver["problem_status"],
+        "solver_status": data_solver["solver_status"],
+        "V_voxel": data_solver["V_voxel"],
+        "J_voxel": data_solver["J_voxel"],
+        "terminal": data_solver["terminal"],
     }
 
     return data_res
@@ -271,10 +279,11 @@ def run(data_solver):
     # run the solver
     try:
         __run_check(data_solver)
-        data_preproc = __run_preproc(data_solver)
-        data_main = __run_main(data_solver, data_preproc)
-        data_postproc = __run_postproc(data_solver, data_preproc, data_main)
-        data_res = __run_assemble(data_solver, data_preproc, data_main, data_postproc)
+        data_solver = __run_resampling(data_solver)
+        data_solver = __run_preproc(data_solver)
+        data_solver = __run_main(data_solver)
+        data_solver = __run_postproc(data_solver)
+        data_res = __run_assemble(data_solver)
 
         status = True
         logger.info("successful termination")

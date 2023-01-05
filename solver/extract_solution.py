@@ -91,51 +91,39 @@ def get_assign_field(n, idx_v, V_voxel, J_voxel):
     return V_voxel, J_voxel
 
 
-def get_src_terminal(src_current, src_voltage, V_voxel, I_src_v):
+def get_terminal(source, V_voxel, I_src_v):
     """
     Parse the terminal voltages and currents for the sources.
     Assign the results to a dict.
     """
 
     # init terminal dict
-    src_terminal = dict()
+    terminal = dict()
 
     # parse the current source terminals
-    for dat_tmp in src_current:
+    for tag, dat_tmp in source.items():
         # get the data
+        source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
-        tag = dat_tmp["tag"]
 
-        # current is set by the source
-        I_tmp = np.complex128(value)
+        # append the source
+        if source_type == "current":
+            # current is set by the source
+            I_tmp = np.complex128(value)
 
-        # voltage is the average between all the voxels composing the terminal
-        V_tmp = np.complex128(np.mean(V_voxel[idx]))
+            # voltage is the average between all the voxels composing the terminal
+            V_tmp = np.complex128(np.mean(V_voxel[idx]))
+        elif source_type == "voltage":
+            # voltage is set by the source
+            V_tmp = np.complex128(value)
 
-        # cast indices
-        idx = np.array(idx, dtype=np.int64)
-
-        # assign the current and voltage
-        src_terminal[tag] = {"V": V_tmp, "I": I_tmp, "idx": idx, "type": "current"}
-
-    # parse the voltage source terminals
-    for dat_tmp in src_voltage:
-        # get the data
-        idx = dat_tmp["idx"]
-        value = dat_tmp["value"]
-        tag = dat_tmp["tag"]
-
-        # voltage is set by the source
-        V_tmp = np.complex128(value)
-
-        # current is the sum between all the voxels composing the terminal
-        I_tmp = np.complex128(np.sum(I_src_v[idx]))
-
-        # cast indices
-        idx = np.array(idx, dtype=np.int64)
+            # current is the sum between all the voxels composing the terminal
+            I_tmp = np.complex128(np.sum(I_src_v[idx]))
+        else:
+            raise ValueError("invalid terminal type")
 
         # assign the current and voltage
-        src_terminal[tag] = {"V": V_tmp, "I": I_tmp, "idx": idx, "type": "voltage"}
+        terminal[tag] = {"V": V_tmp, "I": I_tmp}
 
-    return src_terminal
+    return terminal
