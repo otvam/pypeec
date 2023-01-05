@@ -68,7 +68,7 @@ def get_resistivity_vector(n, idx_v, rho_v):
     n = nx*ny*nz
 
     # assign the resistivity to a vector with all the voxels (including empty voxels)
-    rho_voxel = np.zeros(n, dtype=np.float64)
+    rho_voxel = np.full(n, np.nan, dtype=np.float64)
     rho_voxel[idx_v] = rho_v
 
     return rho_voxel

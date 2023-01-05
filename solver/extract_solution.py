@@ -71,7 +71,7 @@ def get_current_density(n, d, A_incidence, I_face):
     return J_voxel
 
 
-def get_assign_field(n, idx_v, rho_voxel, V_voxel, J_voxel):
+def get_assign_field(n, idx_v, V_voxel, J_voxel):
     """
     Assign invalid values to the empty voxels.
     """
@@ -85,11 +85,10 @@ def get_assign_field(n, idx_v, rho_voxel, V_voxel, J_voxel):
     idx_nan = np.setdiff1d(idx_all, idx_v)
 
     # flag empty voxels
-    rho_voxel[idx_nan] = np.nan
     V_voxel[idx_nan] = np.nan + 1j * np.nan
     J_voxel[idx_nan, :] = np.nan + 1j * np.nan
 
-    return rho_voxel, V_voxel, J_voxel
+    return V_voxel, J_voxel
 
 
 def get_src_terminal(src_current, src_voltage, V_voxel, I_src_v):

@@ -20,27 +20,38 @@ from main import logging_utils
 logger = logging_utils.get_logger("solver", "INFO")
 
 
-def _run_sub(data_solver):
+def __run_check(data_solver):
     """
-    Solve a problem with the FFT-PEEC solver.
-    Check the input data, solve the problem, and parse the results.
+    Check the input data.
     Exceptions are not handled by this function.
     The different parts of the code are timed.
     """
 
-    # check and extract the input data
     with logging_utils.BlockTimer(logger, "check_data"):
         # check the voxel structure
         check_data.check_data_solver(data_solver)
 
         # check the voxel structure
-        (n, d, ori, n_green_simplify) = check_data.check_voxel(data_solver)
+        check_data.check_voxel(data_solver)
 
         # check the solver options and frequency
-        (freq, solver_options) = check_data.check_solver(data_solver)
+        check_data.check_solver(data_solver)
 
         # check the conductors and sources
-        (conductor, src_current, src_voltage) = check_data.check_problem(data_solver)
+        check_data.check_problem(data_solver)
+
+
+def __run_preproc(data_solver):
+    """
+    Compute the voxel geometry, Green functions, and the incidence matrix.
+    The different parts of the code are timed.
+    """
+
+    # extract the input data
+    n = data_solver["n"]
+    d = data_solver["d"]
+    ori = data_solver["ori"]
+    n_green_simplify = data_solver["n_green_simplify"]
 
     # get the voxel geometry and the incidence matrix
     with logging_utils.BlockTimer(logger, "voxel_geometry"):
@@ -58,6 +69,35 @@ def _run_sub(data_solver):
         # Green function mutual coefficients
         G_mutual = green_function.get_green_tensor(n, d, n_green_simplify)
 
+    # assemble results
+    data_preproc = {
+        "xyz": xyz,
+        "A_incidence": A_incidence,
+        "G_self": G_self,
+        "G_mutual": G_mutual,
+    }
+
+    return data_preproc
+
+
+def __run_main(data_solver, data_preproc):
+    """
+    Construct and solve the problem.
+    The different parts of the code are timed.
+    """
+
+    # extract the input data
+    n = data_solver["n"]
+    d = data_solver["d"]
+    freq = data_solver["freq"]
+    solver_options = data_solver["solver_options"]
+    conductor = data_solver["conductor"]
+    src_current = data_solver["src_current"]
+    src_voltage = data_solver["src_voltage"]
+    A_incidence = data_preproc["A_incidence"]
+    G_self = data_preproc["G_self"]
+    G_mutual = data_preproc["G_mutual"]
+
     # parse the problem geometry (conductors and sources)
     with logging_utils.BlockTimer(logger, "problem_geometry"):
         # parse the conductors
@@ -74,6 +114,14 @@ def _run_sub(data_solver):
 
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_v, idx_f, idx_src_c, idx_src_v)
+
+    # display status
+    logger.info("problem size: n_total = %d" % problem_status["n_total"])
+    logger.info("problem size: n_conductor = %d" % problem_status["n_conductor"])
+    logger.info("problem size: n_faces = %d" % problem_status["n_faces"])
+    logger.info("problem size: n_src = %d" % problem_status["n_src"])
+    logger.info("problem size: f_conductor = %.3e" % problem_status["f_conductor"])
+    logger.info("problem size: f_src = %.3e" % problem_status["f_src"])
 
     # get the resistances and inductances
     with logging_utils.BlockTimer(logger, "resistance_inductance"):
@@ -114,6 +162,52 @@ def _run_sub(data_solver):
         # solve the equation system
         (sol, has_converged, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, cond, solver_options)
 
+    # display status
+    logger.info("matrix solver: n_dof = %d" % solver_status["n_dof"])
+    logger.info("matrix solver: n_iter = %d" % solver_status["n_iter"])
+    logger.info("matrix solver: cond = %.3e" % solver_status["cond"])
+    logger.info("matrix solver: res_abs = %.3e" % solver_status["res_abs"])
+    logger.info("matrix solver: res_rel = %.3e" % solver_status["res_rel"])
+    logger.info("matrix solver: cond_ok = %s" % solver_status["cond_ok"])
+    logger.info("matrix solver: solver_ok = %s" % solver_status["solver_ok"])
+    if has_converged:
+        logger.info("matrix solver: convergence achieved")
+    else:
+        logger.warning("matrix solver: convergence issues")
+
+    # assemble results
+    data_main = {
+        "idx_f": idx_f,
+        "idx_v": idx_v,
+        "idx_src_v": idx_src_v,
+        "problem_status": problem_status,
+        "idx_voxel": idx_voxel,
+        "rho_voxel": rho_voxel,
+        "sol": sol,
+        "has_converged": has_converged,
+        "solver_status": solver_status,
+    }
+
+    return data_main
+
+
+def __run_postproc(data_solver, data_preproc, data_main):
+    """
+    Extract the solution.
+    The different parts of the code are timed.
+    """
+
+    # extract the input data
+    n = data_solver["n"]
+    d = data_solver["d"]
+    src_current = data_solver["src_current"]
+    src_voltage = data_solver["src_voltage"]
+    A_incidence = data_preproc["A_incidence"]
+    idx_f = data_main["idx_f"]
+    idx_v = data_main["idx_v"]
+    idx_src_v = data_main["idx_src_v"]
+    sol = data_main["sol"]
+
     # extract the solution
     with logging_utils.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
@@ -126,29 +220,38 @@ def _run_sub(data_solver):
         src_terminal = extract_solution.get_src_terminal(src_current, src_voltage, V_voxel, I_src_v)
 
         # assign invalid values to the empty voxels
-        (rho_voxel, V_voxel, J_voxel) = extract_solution.get_assign_field(n, idx_v, rho_voxel, V_voxel, J_voxel)
+        (V_voxel, J_voxel) = extract_solution.get_assign_field(n, idx_v, V_voxel, J_voxel)
 
-    # check convergence
-    if has_converged:
-        logger.info("convergence achieved")
-    else:
-        logger.warning("convergence issues")
+    # assemble results
+    data_postproc = {
+        "src_terminal": src_terminal,
+        "V_voxel": V_voxel,
+        "J_voxel": J_voxel,
+    }
+
+    return data_postproc
+
+
+def __run_assemble(data_solver, data_preproc, data_main, data_postproc):
+    """
+    Assemble the output dict.
+    """
 
     # assign results
     data_res = {
-        "n": n,
-        "d": d,
-        "ori": ori,
-        "freq": freq,
-        "xyz": xyz,
-        "idx_voxel": idx_voxel,
-        "rho_voxel": rho_voxel,
-        "V_voxel": V_voxel,
-        "J_voxel": J_voxel,
-        "has_converged": has_converged,
-        "problem_status": problem_status,
-        "solver_status": solver_status,
-        "src_terminal": src_terminal,
+        "n": data_solver["n"],
+        "d": data_solver["d"],
+        "ori": data_solver["ori"],
+        "freq": data_solver["freq"],
+        "xyz": data_preproc["xyz"],
+        "idx_voxel": data_main["idx_voxel"],
+        "rho_voxel": data_main["rho_voxel"],
+        "has_converged": data_main["has_converged"],
+        "problem_status": data_main["problem_status"],
+        "solver_status": data_main["solver_status"],
+        "V_voxel": data_postproc["V_voxel"],
+        "J_voxel": data_postproc["J_voxel"],
+        "src_terminal": data_postproc["src_terminal"],
     }
 
     return data_res
@@ -165,12 +268,17 @@ def run(data_solver):
 
     # run the solver
     try:
-        data_res = _run_sub(data_solver)
+        __run_check(data_solver)
+        data_preproc = __run_preproc(data_solver)
+        data_main = __run_main(data_solver, data_preproc)
+        data_postproc = __run_postproc(data_solver, data_preproc, data_main)
+        data_res = __run_assemble(data_solver, data_preproc, data_main, data_postproc)
+
         status = True
         logger.info("successful termination")
     except check_data.CheckError as ex:
-        status = False
         data_res = None
+        status = False
         logger.error(str(ex))
 
     # end

@@ -1,5 +1,5 @@
 """
-Module for checking and extracting the solver input data.
+Module for checking the solver input data.
 """
 
 __author__ = "Thomas Guillod"
@@ -78,7 +78,7 @@ def check_data_solver(data_solver):
 
 def check_voxel(data_solver):
     """
-    Check and extract the voxel structure (number and size) and the Green function parameter.
+    Check the voxel structure (number and size) and the Green function parameter.
     """
 
     # extract field
@@ -107,12 +107,10 @@ def check_voxel(data_solver):
     if not (n_green_simplify > 0):
         raise CheckError("voxel distance to simplify the green function cannot be zero of smaller")
 
-    return n, d, ori, n_green_simplify
-
 
 def check_problem(data_solver):
     """
-    Check and extract the conductors and sources.
+    Check the conductors and sources.
     More particularly, check that the indices of the voxels are valid.
     """
 
@@ -162,12 +160,10 @@ def check_problem(data_solver):
     if not np.all(np.isin(idx_src, idx_v)):
         "source indices are not included in conductor indices"
 
-    return conductor, src_current, src_voltage
-
 
 def check_solver(data_solver):
     """
-    Check and extract the frequency and the solver options.
+    Check the frequency and the solver options.
     """
 
     # extract field
@@ -191,5 +187,3 @@ def check_solver(data_solver):
         raise CheckError("number of restart cycles should be greater than zero")
     if not (solver_options["condmax"] > 0):
         raise CheckError("maximum condition number should be greater than zero")
-
-    return freq, solver_options
