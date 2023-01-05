@@ -115,7 +115,7 @@ def check_voxel(data_solver):
     if not ((rx >= 1) and (ry >= 1) and (rz >= 1)):
         raise CheckError("number of resampling cannot be smaller than one")
     if not ((dx > 0) and (dy > 0) and (dz > 0)):
-        raise CheckError("voxel dimension cannot be zero or smaller")
+        raise CheckError("dimension of the voxels cannot be zero or smaller")
     if not (d_green_simplify > 0):
         raise CheckError("voxel distance to simplify the green function cannot be zero of smaller")
 

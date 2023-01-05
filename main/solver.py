@@ -9,6 +9,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 from solver import check_data
+from solver import voxel_resample
 from solver import voxel_geometry
 from solver import green_function
 from solver import problem_geometry
@@ -49,8 +50,33 @@ def __run_resampling(data_solver):
     The different parts of the code are timed.
     """
 
+    # extract the input data
+    n = data_solver["n"]
+    r = data_solver["r"]
+    d = data_solver["d"]
+    conductor = data_solver["conductor"]
+    source = data_solver["source"]
+
     with logging_utils.BlockTimer(logger, "voxel_resampling"):
-        pass
+        # get the original grid indices
+        idx_n = voxel_resample.get_original_grid(n)
+
+        # get the indices of a single resampled voxel
+        idx_r = voxel_resample.get_resample_voxel(r)
+
+        # update the indices of the problem
+        conductor = voxel_resample.get_update_indices(n, r, idx_n, idx_r, conductor)
+        source = voxel_resample.get_update_indices(n, r, idx_n, idx_r, source)
+
+        # update the voxel number and size
+        (n, d) = voxel_resample.get_update_size(n, r, d)
+
+    # assemble results
+    data_solver["n"] = n
+    data_solver["r"] = r
+    data_solver["d"] = d
+    data_solver["conductor"] = conductor
+    data_solver["source"] = source
 
     return data_solver
 
