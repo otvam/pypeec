@@ -1,17 +1,22 @@
-import data_plotter
-from main import plotter
+import sys
 import pickle
 
+from main import plotter
+import data_plotter
 
-# get data
-data_plotter = data_plotter.get_data_plotter()
+if __name__ == '__main__':
+    # get data
+    data_plotter = data_plotter.get_data_plotter()
 
-# load data
-with open('data_trf.pck', 'rb') as fid:
-    (status, data_res) = pickle.load(fid)
+    # load data
+    with open('data_trf.pck', 'rb') as fid:
+        (status, data_res) = pickle.load(fid)
 
-# check data
-assert status, "invalid simulation"
+    # check data
+    assert status, "invalid simulation"
 
-# call plotter
-plotter.run(data_res, data_plotter)
+    # call plotter
+    status = plotter.run(data_res, data_plotter)
+
+    # exit
+    sys.exit(status)

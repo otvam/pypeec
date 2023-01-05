@@ -1,16 +1,22 @@
-import data_trf
-from main import solver
+import sys
 import pickle
 
-# get data
-data_solver = data_trf.get_data_solver()
+from main import solver
+import data_trf
 
-# call solver
-(status, data_res) = solver.run(data_solver)
+if __name__ == '__main__':
+    # get data
+    data_solver = data_trf.get_data_solver()
 
-# check data
-assert status, "invalid simulation"
+    # call solver
+    (status, data_res) = solver.run(data_solver)
 
-# save results
-with open('data_trf.pck', 'wb') as fid:
-    pickle.dump((status, data_res), fid)
+    # check data
+    assert status, "invalid simulation"
+
+    # save results
+    with open('data_trf.pck', 'wb') as fid:
+        pickle.dump((status, data_res), fid)
+
+    # exit
+    sys.exit(status)

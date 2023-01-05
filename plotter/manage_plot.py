@@ -60,7 +60,7 @@ def plot_material(pl, grid, geom, plot_options, data_options):
         2: 'Voltage Src.',
     }
 
-    #get colormap
+    # get colormap
     cmap = ['yellow', 'red', 'blue']
 
     # add the payload

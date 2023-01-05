@@ -13,19 +13,25 @@ def __get_plot_options():
     return plot_options
 
 
-def __get_geometry(pos):
+def __get_geometry():
     plot_options = __get_plot_options()
     data_options = {
         "legend": "Material Type",
         "title": "Material",
     }
 
-    data = {"pos": pos, "type": "material", "data_options": data_options, "plot_options": plot_options}
+    data = {
+        "title": "Material",
+        "window_size": (800, 600),
+        "plot_type": "material",
+        "data_options": data_options,
+        "plot_options": plot_options
+    }
 
     return data
 
 
-def __get_scalar(pos, data, scale, unit, name):
+def __get_scalar(data, scale, unit, name):
     plot_options = __get_plot_options()
     data_options = {
         "data": data,
@@ -36,12 +42,18 @@ def __get_scalar(pos, data, scale, unit, name):
         "title": name,
     }
 
-    data = {"pos": pos, "type": "scalar", "data_options": data_options, "plot_options": plot_options}
+    data = {
+        "title": name,
+        "window_size": (800, 600),
+        "plot_type": "scalar",
+        "data_options": data_options,
+        "plot_options": plot_options
+    }
 
     return data
 
 
-def __get_arrow(pos, data_norm, data_vec, scale, arrow, unit, name):
+def __get_arrow(data_norm, data_vec, scale, arrow, unit, name):
     plot_options = __get_plot_options()
     data_options = {
         "data_norm": data_norm,
@@ -54,25 +66,25 @@ def __get_arrow(pos, data_norm, data_vec, scale, arrow, unit, name):
         "title": name,
     }
 
-    data = {"pos": pos, "type": "arrow", "data_options": data_options, "plot_options": plot_options}
+    data = {
+        "title": name,
+        "window_size": (800, 600),
+        "plot_type": "arrow",
+        "data_options": data_options,
+        "plot_options": plot_options
+    }
 
     return data
 
 
 def get_data_plotter():
-    data_plotter = dict()
-
-    data_plotter["title"] = "PyPEEC Plotter"
-    data_plotter["window_size"] = (1600, 600)
-    data_plotter["subplot_shape"] = (2, 3)
-
-    data_plotter["subplot_data"] = [
-        __get_geometry((0, 0)),
-        __get_scalar((0, 1), "rho", 1e8, "uOhm/cm", "Resistivity"),
-        __get_scalar((0, 2), "V_abs", 1e0, "V", "Potential"),
-        __get_scalar((1, 0), "J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        __get_arrow((1, 1), "J_norm_re", "J_vec_re", 1e-6, 1e-6, "A/mm2", "Im. Current"),
-        __get_arrow((1, 2), "J_norm_im", "J_vec_im", 1e-6, 1e-6, "A/mm2", "Re. Current"),
+    data_plotter = [
+        __get_geometry(),
+        __get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
+        __get_scalar("V_abs", 1e0, "V", "Potential"),
+        __get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
+        __get_arrow("J_norm_re", "J_vec_re", 1e-6, 1e-6, "A/mm2", "Im. Current"),
+        __get_arrow("J_norm_im", "J_vec_im", 1e-6, 1e-6, "A/mm2", "Re. Current"),
     ]
 
     return data_plotter
