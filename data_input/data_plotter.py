@@ -37,7 +37,7 @@ def _get_geometry(name):
 
 def _get_scalar(data, scale, unit, name):
     data_options = {
-        "data": data,
+        "data_output": data,
         "scale": scale,
         "log": False,
         "lim": [-float("inf"), +float("inf")],

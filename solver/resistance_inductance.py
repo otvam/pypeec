@@ -18,7 +18,7 @@ def _get_circulant_tensor(A):
     The size of the circulant tensor is twice the size of the original tensor.
     """
 
-    # extract the input tensor data
+    # extract the input tensor data_output
     (nx, ny, nz) = A.shape
 
     # init the circulant tensor
@@ -49,7 +49,7 @@ def _get_fft_tensor(C):
     Compute the multidimensional FFT of a circulant tensor.
     """
 
-    # extract the input tensor data
+    # extract the input tensor data_output
     (nx, ny, nz) = C.shape
 
     # compute the FFT
@@ -63,7 +63,7 @@ def get_resistivity_vector(n, idx_v, rho_v):
     Extract the resistivity for all the voxels (including empty voxels).
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     n = nx*ny*nz
 
@@ -82,7 +82,7 @@ def get_resistance_matrix(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel):
     For solving the preconditioner, a vector is used: (n_f).
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     n = nx*ny*nz
@@ -123,7 +123,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     For solving the preconditioner, a vector is used: (n_f).
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     n = nx*ny*nz
@@ -158,7 +158,7 @@ def get_inductance_operator(n, freq, L_tensor, L_vector):
     For solving the preconditioner, vectors are used: (n_f).
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
 
     # get the angular frequency

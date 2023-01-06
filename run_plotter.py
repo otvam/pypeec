@@ -1,22 +1,52 @@
+"""
+User script for plotting the solution of a FFT-PEEC problem.
+Contain the program entry point.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import sys
 import pickle
 
 from main import plotter
-import data_plotter
 
-if __name__ == '__main__':
-    # get data
+
+def get_data_plotter():
+    """
+    Get the data for standard plots.
+    """
+
+    # add the module to the namespace
+    from data_input import data_plotter
+
+    # get the data
     data_plotter = data_plotter.get_data()
 
-    # load data
-    with open('data_trf.pck', 'rb') as fid:
-        (status, data_res) = pickle.load(fid)
+    return data_plotter
 
-    # check data
-    assert status, "invalid simulation"
+
+def run(name, data_plotter):
+    """
+    Load the result file and plot the results.
+    """
+
+    # load data_output
+    filename = "data_output/%s.pck" % name
+    with open(filename, "rb") as fid:
+        data_res = pickle.load(fid)
 
     # call plotter
-    status = plotter.run(data_res, data_plotter)
+    exit_code = plotter.run(data_res, data_plotter)
 
-    # exit
-    sys.exit(status)
+    return exit_code
+
+
+if __name__ == "__main__":
+    # get the data
+    name = "data_simple"
+    data_plotter = get_data_plotter()
+
+    # run
+    exit_code = run(name, data_plotter)
+    sys.exit(exit_code)

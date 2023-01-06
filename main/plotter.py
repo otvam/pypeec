@@ -26,7 +26,7 @@ def _get_grid_voxel(data_res):
     Add the solver results (material description, resistivity, and field) to the grid.
     """
 
-    # extract the data
+    # extract the data_output
     n = data_res["n"]
     d = data_res["d"]
     ori = data_res["ori"]
@@ -58,7 +58,7 @@ def _get_plot(grid, geom, data_plotter):
         - the payload (material description, scalar plots, or arrow plots)
     """
 
-    # extract the data
+    # extract the data_output
     title = data_plotter["title"]
     window_size = data_plotter["window_size"]
     plot_type = data_plotter["plot_type"]
@@ -96,8 +96,8 @@ def run(data_res, data_plotter):
     logger.info("create the GUI application")
     app = qtw.QApplication([])
 
-    # handle the data
-    logger.info("parse the voxel geometry and the data")
+    # handle the data_output
+    logger.info("parse the voxel geometry and the data_output")
     (grid, geom) = _get_grid_voxel(data_res)
 
     # make the plots

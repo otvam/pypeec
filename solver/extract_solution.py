@@ -21,7 +21,7 @@ def get_sol_extract(n, idx_f, idx_v, idx_src_v, sol):
     - n_src_v: voltage source currents
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     n_v = len(idx_v)
     n_f = len(idx_f)
@@ -50,7 +50,7 @@ def get_current_density(n, d, A_incidence, I_face):
     Scale the currents into current densities.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     n = nx*ny*nz
@@ -76,7 +76,7 @@ def get_assign_field(n, idx_v, V_voxel, J_voxel):
     Assign invalid values to the empty voxels.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     n = nx*ny*nz
 
@@ -102,7 +102,7 @@ def get_terminal(source, V_voxel, I_src_v):
 
     # parse the current source terminals
     for tag, dat_tmp in source.items():
-        # get the data
+        # get the data_output
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]

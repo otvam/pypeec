@@ -97,7 +97,7 @@ def _get_green_ana(d, m):
     If the distance between the voxels is zero, the self-coefficient is computed.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (dx, dy, dz) = d
 
     # extract the voxel distance
@@ -114,7 +114,7 @@ def _get_green_ana(d, m):
     z_vec = dz*(mz+offset_z)
 
     # ignore division per zero (as it handled inside the log and arctan)
-    with np.errstate(all='ignore'):
+    with np.errstate(all="ignore"):
         val = _get_green_fct(x_vec, y_vec, z_vec)
 
     # sum the value of all the points
@@ -191,7 +191,7 @@ def get_green_tensor(n, d, d_green):
     All the elements are computed with respect to the first voxel.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     n = nx*ny*nz
 

@@ -1,5 +1,5 @@
 """
-Module for checking the solver input data.
+Module for checking the solver input data_output.
 """
 
 __author__ = "Thomas Guillod"
@@ -10,7 +10,7 @@ import numpy as np
 
 class CheckError(Exception):
     """
-    Exception used for signaling invalid input data.
+    Exception used for signaling invalid input data_output.
     """
 
     pass
@@ -23,7 +23,7 @@ def _check_conductor(idx_v, conductor):
     """
 
     for tag, dat_tmp in conductor.items():
-        # extract the data
+        # extract the data_output
         idx = dat_tmp["idx"]
         rho = dat_tmp["rho"]
 
@@ -51,7 +51,7 @@ def _check_source(idx_src, tag_src, source):
     """
 
     for tag, dat_tmp in source.items():
-        # extract the data
+        # extract the data_output
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
         value = dat_tmp["value"]
@@ -75,11 +75,11 @@ def _check_source(idx_src, tag_src, source):
 
 def check_data_solver(data_solver):
     """
-    Check the type of the input data.
+    Check the type of the input data_output.
     """
 
     if not isinstance(data_solver, dict):
-        raise CheckError("invalid input data")
+        raise CheckError("invalid input data_output")
 
 
 def check_voxel(data_solver):
@@ -104,7 +104,7 @@ def check_voxel(data_solver):
     if not (len(ori) == 3):
         raise CheckError("invalid voxel origin (should be a tuple with three elements)")
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     (rx, ry, rz) = r
     (dx, dy, dz) = d
@@ -131,7 +131,7 @@ def check_problem(data_solver):
     source = data_solver["source"]
     n = data_solver["n"]
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     n = nx*ny*nz
 

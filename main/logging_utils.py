@@ -151,7 +151,7 @@ def get_logger(name="root", level="INFO", global_timer=True):
 
     # get the formatter
     fmt = DeltaTimeFormatter(
-        fmt='%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s',
+        fmt="%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s",
         timestamp=timestamp_global,
         global_timer=global_timer,
     )

@@ -50,7 +50,7 @@ def _get_circulant_multiply(CF, X):
     The size of result is the same as the size of the vector.
     """
 
-    # extract the input tensor data
+    # extract the input tensor data_output
     (nx, ny, nz) = X.shape
     (nnx, nny, nnz) = CF.shape
 
@@ -196,7 +196,7 @@ def get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v):
     The right-hand size vector has the following size: n_f+n_v+n_src_v.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     n_v = len(idx_v)
     n_f = len(idx_f)
 
@@ -227,7 +227,7 @@ def get_connection_matrix(A_reduced, idx_v, idx_f, idx_src_v_local):
     The A_src matrix has the following size: (n_v+n_src_v, n_v+n_src_v).
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     n_v = len(idx_v)
     n_f = len(idx_f)
     n_src_v = len(idx_src_v_local)

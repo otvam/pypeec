@@ -33,7 +33,7 @@ class IterCounter:
         Callback increasing the iteration count.
         """
 
-        # update and save the iteration data
+        # update and save the iteration data_output
         self.n_iter += 1
         self.iter_vec.append(self.n_iter)
         self.res_vec.append(res)
@@ -58,7 +58,7 @@ def _get_lu_decomposition(mat):
     try:
         LU_decomposition = sla.splu(mat)
     except RuntimeError:
-        return float('inf')
+        return float("inf")
 
     # get the function for the linear operator (original matrix)
     def fct_matvec(v):

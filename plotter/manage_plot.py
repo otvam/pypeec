@@ -24,7 +24,7 @@ def _get_plot_base(pl, grid, geom, title, plot_options):
     if plot_options["grid_plot"]:
         pl.add_mesh(
             grid,
-            style='wireframe',
+            style="wireframe",
             color=plot_options["grid_color"],
             opacity=plot_options["grid_opacity"],
             line_width=plot_options["grid_thickness"]
@@ -34,7 +34,7 @@ def _get_plot_base(pl, grid, geom, title, plot_options):
     if plot_options["geom_plot"]:
         pl.add_mesh(
             geom,
-            style='wireframe',
+            style="wireframe",
             color=plot_options["geom_color"],
             opacity=plot_options["geom_opacity"],
             line_width=plot_options["geom_thickness"]
@@ -97,13 +97,13 @@ def plot_material(pl, grid, geom, plot_options, data_options):
 
     # get annotations
     annotations = {
-        0: 'Conductor',
-        1: 'Current Src.',
-        2: 'Voltage Src.',
+        0: "Conductor",
+        1: "Current Src.",
+        2: "Voltage Src.",
     }
 
     # get a colormap with three discrete color
-    cmap = ['yellow', 'green', 'blue']
+    cmap = ["yellow", "green", "blue"]
 
     # add the resulting plot to the plotter
     pl.add_mesh(
@@ -129,7 +129,7 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     geom = geom.copy(deep=True)
 
     # extract
-    data = data_options["data"]
+    data = data_options["data_output"]
     scale = data_options["scale"]
     log = data_options["log"]
     lim = data_options["lim"]

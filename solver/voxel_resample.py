@@ -21,7 +21,7 @@ def _get_idx_resample_tensor(idx, r, idx_n, idx_r):
     The computed tensor indices have the following dimension: (rx*ry*rz, n_idx).
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (rx, ry, rz) = r
 
     # get the provided indices (tensor indices instead of linear indices)
@@ -50,7 +50,7 @@ def _get_idx_resample_linear(idx_nr_x, idx_nr_y, idx_nr_z, n, r):
     The computed linear indices have the following dimension: rx*ry*rz*n_idx.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (rx, ry, rz) = r
     (nx, ny, nz) = n
 
@@ -67,7 +67,7 @@ def get_original_grid(n):
     The first resampled voxel has the index zero.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     n = nx*ny*nz
 
@@ -86,7 +86,7 @@ def get_resample_voxel(r):
     The first resampled sub-voxel has the index zero.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (rx, ry, rz) = r
     r = rx*ry*rz
 
@@ -123,7 +123,7 @@ def get_update_size(n, r, d):
     Update the number of voxels and the dimension of the voxels for the given resampling.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     (rx, ry, rz) = r
     (dx, dy, dz) = d

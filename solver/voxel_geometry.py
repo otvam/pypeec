@@ -1,5 +1,5 @@
 """
-Different functions for dealing the voxel data.
+Different functions for dealing the voxel data_output.
 Compute the voxel coordinates and the incidence matrix.
 """
 
@@ -17,7 +17,7 @@ def get_voxel_coordinate(n, d, ori):
     The array has the following dimension: (nx*ny*nz, 3).
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     (orix, oriy, oriz) = ori
@@ -26,7 +26,7 @@ def get_voxel_coordinate(n, d, ori):
     idx_x = np.arange(nx, dtype=np.int64)
     idx_y = np.arange(ny, dtype=np.int64)
     idx_z = np.arange(nz, dtype=np.int64)
-    (idx_x, idx_y, idx_z) = np.meshgrid(idx_x, idx_y, idx_z, indexing='ij')
+    (idx_x, idx_y, idx_z) = np.meshgrid(idx_x, idx_y, idx_z, indexing="ij")
 
     # voxel coordinate vector
     x = orix+dx/2+dx*np.arange(nx, dtype=np.float64)
@@ -51,7 +51,7 @@ def get_incidence_matrix(n):
     The matrix has the following dimension: (nx*ny*nz, 3*nx*ny*nz).
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     n = nx*ny*nz
 
@@ -59,7 +59,7 @@ def get_incidence_matrix(n):
     x = np.arange(nx, dtype=np.int64)
     y = np.arange(ny, dtype=np.int64)
     z = np.arange(nz, dtype=np.int64)
-    (idx_x, idx_y, idx_z) = np.meshgrid(x, y, z, indexing='ij')
+    (idx_x, idx_y, idx_z) = np.meshgrid(x, y, z, indexing="ij")
 
     # voxel index number
     idx = idx_x+idx_y*nx+idx_z*nx*ny

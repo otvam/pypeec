@@ -18,7 +18,7 @@ def get_grid_geom(n, d, ori, idx_voxel):
     The non-empty voxel geometry is represented with a PyVista unstructured grid.
     """
 
-    # extract the voxel data
+    # extract the voxel data_output
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     (orix, oriy, oriz) = ori
@@ -49,12 +49,12 @@ def get_material(idx_voxel, geom, conductor, source):
         - 2: voltage source voxels
     """
 
-    # assign empty data
+    # assign empty data_output
     data = np.full(len(idx_voxel), np.nan, dtype=np.float64)
 
     # assign conductor voxels
     for tag, dat_tmp in conductor.items():
-        # get the data
+        # get the data_output
         idx_tmp = dat_tmp["idx"]
 
         # assign the material
@@ -62,7 +62,7 @@ def get_material(idx_voxel, geom, conductor, source):
 
     # assign source voxels
     for tag, dat_tmp in source.items():
-        # get the data
+        # get the data_output
         idx_tmp = dat_tmp["idx"]
         source_type_tmp = dat_tmp["source_type"]
 
@@ -77,7 +77,7 @@ def get_material(idx_voxel, geom, conductor, source):
     # get voxel indices
     idx = np.flatnonzero(idx_voxel)
 
-    # assign the extract data to the geometry
+    # assign the extract data_output to the geometry
     geom["material"] = data[idx]
 
     return geom
@@ -92,7 +92,7 @@ def get_resistivity(idx_voxel, geom, rho_voxel):
     idx = np.flatnonzero(idx_voxel)
     rho = rho_voxel[idx]
 
-    # assign the extract data to the geometry
+    # assign the extract data_output to the geometry
     geom["rho"] = rho
 
     return geom
@@ -108,7 +108,7 @@ def get_potential(idx_voxel, geom, V_voxel):
     idx = np.flatnonzero(idx_voxel)
     V = V_voxel[idx]
 
-    # assign the extract data to the geometry
+    # assign the extract data_output to the geometry
     geom["V_re"] = np.real(V)
     geom["V_im"] = np.imag(V)
     geom["V_abs"] = np.abs(V)
@@ -127,7 +127,7 @@ def get_current_density(idx_voxel, geom, J_voxel):
     idx = np.flatnonzero(idx_voxel)
     J = J_voxel[idx, :]
 
-    # assign the extract data to the geometry
+    # assign the extract data_output to the geometry
     geom["J_norm_abs"] = lna.norm(J, axis=1)
     geom["J_norm_re"] = lna.norm(np.real(J), axis=1)
     geom["J_norm_im"] = lna.norm(np.imag(J), axis=1)

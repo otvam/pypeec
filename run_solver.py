@@ -1,23 +1,70 @@
+"""
+User script for solving a problem with the FFT-PEEC solver.
+Contain the program entry point.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import sys
 import pickle
 
 from main import solver
-import data_trf
 
-if __name__ == '__main__':
-    # get data
-    data_solver = data_trf.get_data()
+
+def get_data_solver_simple():
+    """
+    Get the data for a simple problem.
+    """
+
+    # add the module to the namespace
+    from data_input import data_solver_simple
+
+    # get the data
+    name = "data_simple"
+    data_solver = data_solver_simple.get_data()
+
+    return name, data_solver
+
+
+def get_data_solver_pcb_trf():
+    """
+    Get the data for a PCB transformer.
+    """
+
+    # add the module to the namespace
+    from data_input import data_solver_pcb_trf
+
+    # get the data
+    name = "data_pcb_trf"
+    data_solver = data_solver_pcb_trf.get_data()
+
+    return name, data_solver
+
+
+def run(name, data_solver):
+    """
+    Solve the problem and write the result file.
+    """
 
     # call solver
     (status, data_res) = solver.run(data_solver)
 
-    # check data
-    assert status, "invalid simulation"
-
     # save results
-    with open('data_trf.pck', 'wb') as fid:
-        pickle.dump((status, data_res), fid)
+    filename = "data_output/%s.pck" % name
+    with open(filename, "wb") as fid:
+        pickle.dump(data_res, fid)
 
     # exit
-    status = int(status == False)
-    sys.exit(status)
+    exit_code = int(not status)
+
+    return exit_code
+
+
+if __name__ == "__main__":
+    # get the data
+    (name, data_solver) = get_data_solver_simple()
+
+    # run
+    exit_code = run(name, data_solver)
+    sys.exit(exit_code)
