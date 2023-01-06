@@ -129,6 +129,7 @@ def __run_main(data_solver):
     d = data_solver["d"]
     freq = data_solver["freq"]
     solver_options = data_solver["solver_options"]
+    condition_options = data_solver["condition_options"]
     conductor = data_solver["conductor"]
     source = data_solver["source"]
     A_incidence = data_solver["A_incidence"]
@@ -186,10 +187,13 @@ def __run_main(data_solver):
     # solve the equation system
     with logging_utils.BlockTimer(logger, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
-        cond = equation_solver.get_condition(S_matrix)
+        (condition_ok, condition_status) = equation_solver.get_condition(S_matrix, condition_options)
 
         # solve the equation system
-        (sol, has_converged, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, cond, solver_options)
+        (sol, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
+
+        # compute converge
+        has_converged = solver_ok and condition_ok
 
     # assemble results
     data_solver["idx_f"] = idx_f
@@ -202,6 +206,7 @@ def __run_main(data_solver):
     data_solver["sol"] = sol
     data_solver["has_converged"] = has_converged
     data_solver["solver_status"] = solver_status
+    data_solver["condition_status"] = condition_status
 
     return data_solver
 
@@ -264,6 +269,7 @@ def __run_assemble(data_solver):
         "has_converged": data_solver["has_converged"],
         "problem_status": data_solver["problem_status"],
         "solver_status": data_solver["solver_status"],
+        "condition_status": data_solver["condition_status"],
         "V_voxel": data_solver["V_voxel"],
         "J_voxel": data_solver["J_voxel"],
         "terminal": data_solver["terminal"],

@@ -177,6 +177,7 @@ def check_solver(data_solver):
     # extract field
     freq = data_solver["freq"]
     solver_options = data_solver["solver_options"]
+    condition_options = data_solver["condition_options"]
 
     # check frequency
     if not(freq >= 0):
@@ -193,5 +194,13 @@ def check_solver(data_solver):
         raise CheckError("number of iterations between restarts should be greater than zero")
     if not (solver_options["maxiter"] >= 1):
         raise CheckError("number of restart cycles should be greater than zero")
-    if not (solver_options["condmax"] > 0):
-        raise CheckError("maximum condition number should be greater than zero")
+
+    # check condition options
+    if not isinstance(condition_options, dict):
+        raise CheckError("solver options should be a dict")
+    if not isinstance(condition_options["check"], bool):
+        raise CheckError("the flag for checking the condition should be a boolean")
+    if not (condition_options["tolerance"] > 0):
+        raise CheckError("maximum condition number tolerance should be greater than zero")
+    if not (condition_options["accuracy"] > 0):
+        raise CheckError("condition number accuracy should be greater than zero")

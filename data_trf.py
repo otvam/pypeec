@@ -19,7 +19,8 @@ def get_data():
     data_solver["d_green_simplify"] = 20e-4
 
     data_solver["freq"] = 10e6
-    data_solver["solver_options"] = {"tol": 1e-6, "atol": 1e-12, "restart": 20, "maxiter": 100, "condmax": 1e9}
+    data_solver["solver_options"] = {"tol": 1e-6, "atol": 1e-12, "restart": 20, "maxiter": 100}
+    data_solver["condition_options"] = {"check": True, "tolerance": 1e9, "accuracy": 2}
 
     data_solver["conductor"] = conductor
     data_solver["source"] = source

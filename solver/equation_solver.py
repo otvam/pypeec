@@ -49,7 +49,52 @@ class IterCounter:
         return self.n_iter, self.iter_vec, self.res_vec
 
 
-def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
+def _get_lu_decomposition(mat):
+    """
+    Get an inverse operator (with LU decomposition) for the provided matrix and the Hermitian matrix.
+    """
+
+    # compute the LU decomposition
+    try:
+        LU_decomposition = sla.splu(mat)
+    except RuntimeError:
+        return float('inf')
+
+    # get the function for the linear operator (original matrix)
+    def fct_matvec(v):
+        return LU_decomposition.solve(v, trans="N")
+
+    # get the function for the linear operator (transposed matrix)
+    def fct_rmatvec(v):
+        return LU_decomposition.solve(v, trans="H")
+
+    # assign linear operator for inversion
+    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec)
+
+    return op
+
+
+def _get_condition_estimate(mat, accuracy):
+    """
+    Compute an estimate of the condition number (norm 1) of a sparse matrix.
+    """
+
+    # get an inverse operator
+    op = _get_lu_decomposition(mat)
+
+    # compute the norm of the matrix inverse (estimate)
+    nrm_inv = sla.onenormest(op, t=accuracy)
+
+    # compute the norm of the matrix (estimate)
+    nrm_ori = sla.onenormest(mat, t=accuracy)
+
+    # compute an estimate of the condition
+    cond = nrm_ori*nrm_inv
+
+    return cond
+
+
+def get_solver(sys_op, pcd_op, rhs, solver_options):
     """
     Solve a sparse equation system with gmres.
     The equation system and the preconditioner are described with linear operator.
@@ -60,7 +105,6 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
     atol = solver_options["atol"]
     restart = solver_options["restart"]
     maxiter = solver_options["maxiter"]
-    condmax = solver_options["condmax"]
 
     # object for counting the solver iterations (callback)
     obj = IterCounter()
@@ -88,9 +132,7 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
     n_dof = len(rhs)
 
     # check for convergence
-    cond_ok = cond < condmax
-    solver_ok = flag == 0
-    has_converged = cond_ok and solver_ok
+    status = flag == 0
 
     # assign the results
     solver_status = {
@@ -99,57 +141,57 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
         "res_vec": res_vec,
         "res_abs": res_abs,
         "res_rel": res_rel,
-        "cond": cond,
         "n_dof": n_dof,
-        "cond_ok": cond_ok,
-        "solver_ok": solver_ok,
+        "status": status,
     }
 
     # display status
     logger.info("matrix solver: n_dof = %d" % n_dof)
     logger.info("matrix solver: n_iter = %d" % n_iter)
-    logger.info("matrix solver: cond = %.3e" % cond)
     logger.info("matrix solver: res_abs = %.3e" % res_abs)
     logger.info("matrix solver: res_rel = %.3e" % res_rel)
-    logger.info("matrix solver: cond_ok = %s" % cond_ok)
-    logger.info("matrix solver: solver_ok = %s" % solver_ok)
-    if has_converged:
+    logger.info("matrix solver: status = %s" % status)
+    if status:
         logger.info("matrix solver: convergence achieved")
     else:
         logger.warning("matrix solver: convergence issues")
 
-    return sol, has_converged, solver_status
+    return sol, status, solver_status
 
 
-def get_condition(mat):
+def get_condition(mat, conditions_options):
     """
     Compute an estimate of the condition number (norm 1) of a sparse matrix.
     """
 
-    # compute the LU decomposition
-    try:
-        LU_decomposition = sla.splu(mat)
-    except RuntimeError:
-        return float('inf')
+    # get the condition options
+    check = conditions_options["check"]
+    tolerance = conditions_options["tolerance"]
+    accuracy = conditions_options["accuracy"]
 
-    # get the function for the linear operator (original matrix)
-    def fct_matvec(v):
-        return LU_decomposition.solve(v, trans="N")
+    # computation is required
+    if check:
+        value = _get_condition_estimate(mat, accuracy)
+    else:
+        value = float(0)
 
-    # get the function for the linear operator (transposed matrix)
-    def fct_rmatvec(v):
-        return LU_decomposition.solve(v, trans="H")
+    # check the condition
+    status = value < tolerance
 
-    # assign linear operator for inversion
-    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec)
+    # assign the results
+    condition_status = {
+        "check": check,
+        "value": value,
+        "status": status,
+    }
 
-    # compute the norm of the matrix inverse (estimate)
-    nrm_inv = sla.onenormest(op)
+    # display status
+    logger.info("matrix condition: check = %s" % check)
+    logger.info("matrix condition: value = %.3e" % value)
+    logger.info("matrix condition: status = %s" % status)
+    if status:
+        logger.info("matrix condition: matrix condition is good")
+    else:
+        logger.warning("matrix condition: matrix condition is problematic")
 
-    # compute the norm of the matrix (estimate)
-    nrm_ori = sla.onenormest(mat)
-
-    # compute an estimate of the condition
-    cond = nrm_ori*nrm_inv
-
-    return cond
+    return status, condition_status
