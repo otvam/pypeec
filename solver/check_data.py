@@ -92,7 +92,7 @@ def check_voxel(data_solver):
     r = data_solver["r"]
     d = data_solver["d"]
     ori = data_solver["ori"]
-    d_green_simplify = data_solver["d_green_simplify"]
+    d_green = data_solver["d_green"]
 
     # check size
     if not (len(n) == 3):
@@ -116,7 +116,7 @@ def check_voxel(data_solver):
         raise CheckError("number of resampling cannot be smaller than one")
     if not ((dx > 0) and (dy > 0) and (dz > 0)):
         raise CheckError("dimension of the voxels cannot be zero or smaller")
-    if not (d_green_simplify > 0):
+    if not (d_green > 0):
         raise CheckError("voxel distance to simplify the green function cannot be zero of smaller")
 
 
