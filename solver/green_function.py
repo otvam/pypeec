@@ -1,6 +1,7 @@
 """
 Different functions for computing Green functions with voxels.
 Analytical solutions and numerical approximations are used.
+Analytical solution (from Cletus Hoer and Carl Love, 1965).
 """
 
 __author__ = "Thomas Guillod"
@@ -16,8 +17,8 @@ def __get_safe_log(x):
     """
 
     y = np.log(x)
-    if not np.isfinite(y):
-        y = 0.0
+    y[np.isnan(y)] = 0
+    y[np.isinf(y)] = 0
 
     return y
 
@@ -28,58 +29,96 @@ def __get_safe_arctan(x):
     """
 
     y = np.arctan(x)
-    if not np.isfinite(y):
-        y = 0.0
+    y[np.isnan(y)] = 0
+    y[np.isinf(y)] = 0
 
     return y
 
 
-def __get_green_ana(d, m):
+def __get_green_fct(x, y, z):
     """
-    Compute a Green function between two voxels.
-    Analytical solution (from Cletus Hoer and Carl Love, 1965).
-    If the distance between the voxels is zero, the self-coefficient is computed.
+    Compute part of the analytical Green function between two voxels.
+    The analytical solution for points is computed for a given distances.
     """
 
-    # extract the voxel data
-    (mx, my, mz) = m
-    (dx, dy, dz) = d
-
-    # analytical solution
-    Fn = lambda x, y, z: np.sqrt(x**2+y**2+z**2)
-    F1 = lambda x, y, z: +(6/5)*Fn(x, y, z)*(
+    nrm = np.sqrt(x**2+y**2+z**2)
+    val_1 = (6/5)*nrm*(
             +x**4+y**4+z**4 +
             -3*x**2*y**2 +
             -3*x**2*z**2 +
             -3*y**2*z**2
     )
-    F2 = lambda x, y, z: 12*x*y*z*(
-            -z**2*__get_safe_arctan((x*y)/(z*Fn(x, y, z))) +
-            -y**2*__get_safe_arctan((x*z)/(y*Fn(x, y, z))) +
-            -x**2*__get_safe_arctan((y*z)/(x*Fn(x, y, z)))
+    val_2 = 12*x*y*z*(
+            -z**2*__get_safe_arctan((x*y)/(z*nrm)) +
+            -y**2*__get_safe_arctan((x*z)/(y*nrm)) +
+            -x**2*__get_safe_arctan((y*z)/(x*nrm))
     )
-    F3 = lambda x, y, z: 3*(
-            -x*(y**4-6*y**2*z**2+z**4)*__get_safe_log(x+Fn(x, y, z)) +
-            -y*(x**4-6*x**2*z**2+z**4)*__get_safe_log(y+Fn(x, y, z)) +
-            -z*(x**4-6*x**2*y**2+y**4)*__get_safe_log(z+Fn(x, y, z))
+    val_3 = 3*(
+            -x*(y**4-6*y**2*z**2+z**4)*__get_safe_log(x+nrm) +
+            -y*(x**4-6*x**2*z**2+z**4)*__get_safe_log(y+nrm) +
+            -z*(x**4-6*x**2*y**2+y**4)*__get_safe_log(z+nrm)
     )
-    F = lambda x, y, z: (1/72)*(F1(x, y, z)+F2(x, y, z)+F3(x, y, z))
+    val = (1/72)*(val_1+val_2+val_3)
+
+    return val
+
+
+def __get_green_preproc():
+    """
+    Compute part of the analytical Green function between two voxels.
+    Offset vectors, which are used to compute the distances between points, are generated.
+    A sign vector, which is used to sum the points, id generated.
+    """
+
+    # get the offset vector
+    offset = np.array([-1, 0, +1, 0], dtype=np.int64)
+    (offset_x, offset_y, offset_z) = np.meshgrid(offset, offset, offset)
+    offset_x = offset_x.flatten()
+    offset_y = offset_y.flatten()
+    offset_z = offset_z.flatten()
+
+    # get the sign indices
+    idx = np.arange(len(offset), dtype=np.int64)
+    (idx_x, idx_y, idx_z) = np.meshgrid(idx, idx, idx)
+    idx_x = idx_x.flatten()
+    idx_y = idx_y.flatten()
+    idx_z = idx_z.flatten()
+
+    # get the sign vector
+    sign = (-1)**(idx_x+1+idx_y+1+idx_z+1+1)
+
+    return offset_x, offset_y, offset_z, sign
+
+
+def __get_green_ana(d, m):
+    """
+    Compute a Green function between two voxels.
+    An analytical solution is used.
+    If the distance between the voxels is zero, the self-coefficient is computed.
+    """
+
+    # extract the voxel data
+    (dx, dy, dz) = d
+
+    # extract the voxel distance
+    mx = m[:, [0]]
+    my = m[:, [1]]
+    mz = m[:, [2]]
+
+    # get the offset and sign vectors
+    (offset_x, offset_y, offset_z, sign) = __get_green_preproc()
 
     # position vector
-    x_vec = [(mx-1)*dx, mx*dx, (mx+1)*dx, mx*dx]
-    y_vec = [(my-1)*dy, my*dy, (my+1)*dy, my*dy]
-    z_vec = [(mz-1)*dz, mz*dz, (mz+1)*dz, mz*dz]
+    x_vec = dx*(mx+offset_x)
+    y_vec = dy*(my+offset_y)
+    z_vec = dz*(mz+offset_z)
 
-    # compute the Green function
-    G = 0.0
-    for ix in range(4):
-        for iy in range(4):
-            for iz in range(4):
-                # ignore division per zero (as it handled inside the log and arctan)
-                with np.errstate(all='ignore'):
-                    sign = (-1)**(ix+1+iy+1+iz+1+1)
-                    val = F(x_vec[ix], y_vec[iy], z_vec[iz])
-                    G += sign*val
+    # ignore division per zero (as it handled inside the log and arctan)
+    with np.errstate(all='ignore'):
+        val = __get_green_fct(x_vec, y_vec, z_vec)
+
+    # sum the value of all the points
+    G = np.sum(sign*val, axis=1)
 
     # add scaling
     G = G/(4*np.pi)
@@ -87,7 +126,7 @@ def __get_green_ana(d, m):
     return G
 
 
-def __get_green_center(d, m):
+def __get_green_num(d, m):
     """
     Compute a Green function between two voxels.
     Approximation of the mutual coefficients.
@@ -97,13 +136,37 @@ def __get_green_center(d, m):
 
     # compute the volume and the distance
     vol = np.prod(d)
-    xyz = np.multiply(d, m)
-    nrm = lna.norm(xyz)
+
+    # compute the physical distance
+    dis = lna.norm(np.multiply(d, m), axis=1)
 
     # compute the approximation
-    G = (vol*vol)/(4*np.pi*nrm)
+    G = (vol*vol)/(4*np.pi*dis)
 
     return G
+
+
+def __get_voxel_indices(nx, ny, nz):
+    """
+    Compute the indices of the complete voxel structure.
+    Return the indices as a matrix.
+    """
+
+    # get the indices array
+    mx = np.arange(nx, dtype=np.int64)
+    my = np.arange(ny, dtype=np.int64)
+    mz = np.arange(nz, dtype=np.int64)
+    [mx, my, mz] = np.meshgrid(mx, my, mz, indexing="ij")
+
+    # flatten the indices into vectors
+    mx = mx.flatten(order="F")
+    my = my.flatten(order="F")
+    mz = mz.flatten(order="F")
+
+    # assemble the vectors in a matrix
+    m = np.stack((mx, my, mz), axis=1, dtype=np.int64)
+
+    return m
 
 
 def get_green_self(d):
@@ -112,7 +175,8 @@ def get_green_self(d):
     The self-coefficient is used for the preconditioner.
     """
 
-    G_self = __get_green_ana(d, [0, 0, 0])
+    m = np.array([[0, 0, 0]])
+    G_self = __get_green_ana(d, m)
 
     return G_self
 
@@ -129,22 +193,28 @@ def get_green_tensor(n, d, d_green_simplify):
 
     # extract the voxel data
     (nx, ny, nz) = n
+    n = nx*ny*nz
 
-    # init the tensor
-    G_mutual = np.zeros((nx, ny, nz), dtype=np.float64)
+    # get the indices of the complete voxel structure (as a matrix)
+    m = __get_voxel_indices(nx, ny, nz)
 
-    # populate the tensor
-    for ix in range(nx):
-        for iy in range(ny):
-            for iz in range(nz):
-                # get the position of the voxel and the distance to the origin
-                m = [ix, iy, iz]
-                d_nrm = lna.norm(np.multiply(d, m))
+    # compute the physical distance between the voxels and the reference voxel at the origin
+    dis = lna.norm(np.multiply(d, m), axis=1)
 
-                # if the distance is large, use the numerical approximation
-                if d_nrm <= d_green_simplify:
-                    G_mutual[ix, iy, iz] = __get_green_ana(d, m)
-                else:
-                    G_mutual[ix, iy, iz] = __get_green_center(d, m)
+    # check where the analytical solution should be used
+    idx_ana = dis <= d_green_simplify
+    idx_num = np.invert(idx_ana)
+
+    # init the result vector
+    G_mutual = np.zeros(n, dtype=np.float64)
+
+    # analytical solution
+    G_mutual[idx_ana] = __get_green_ana(d, m[idx_ana, :])
+
+    # numerical solution
+    G_mutual[idx_num] = __get_green_num(d, m[idx_num, :])
+
+    # transform the vector into a tensor
+    G_mutual = G_mutual.reshape((nx, ny, nz), order="F")
 
     return G_mutual

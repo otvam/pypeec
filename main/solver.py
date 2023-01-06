@@ -12,7 +12,6 @@ from solver import check_data
 from solver import voxel_resample
 from solver import voxel_geometry
 from solver import green_function
-from solver import green_function_vec
 from solver import problem_geometry
 from solver import resistance_inductance
 from solver import equation_system
@@ -106,15 +105,9 @@ def __run_preproc(data_solver):
     with logging_utils.BlockTimer(logger, "green_function"):
         # Green function self-coefficient
         G_self = green_function.get_green_self(d)
-        G_self_vec = green_function_vec.get_green_self(d)
 
         # Green function mutual coefficients
         G_mutual = green_function.get_green_tensor(n, d, d_green_simplify)
-        G_mutual_vec = green_function_vec.get_green_tensor(n, d, d_green_simplify)
-
-
-    err_self = (G_self-G_self_vec)/G_self
-    err_mutual = (G_mutual-G_mutual_vec)/G_mutual
 
     # assemble results
     data_solver["xyz"] = xyz
