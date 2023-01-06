@@ -25,7 +25,7 @@ The right-hand side vector is set in the following order:
     - n_src_v: voltage source excitations
 
 For the preconditioner, the impedance matrix (Z) is diagonal.
-The preconditioner is solved with the Schur complement and the LU decomposition.
+The preconditioner is solved with the Schur complement and the matrix factorization.
 
 For the full system, the impedance matrix (Z) is dense.
 The matrix-vector multiplication is done with FFT circulant tensors.
@@ -69,12 +69,15 @@ def __get_circulant_multiply(CF, X):
     return Y
 
 
-def __get_preconditioner_decomposition(A_kcl, A_kvl, A_src, R_vector, ZL_vector):
+def __get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector):
     """
-    Compute the sparse LU decomposition for the preconditioner.
+    Compute the sparse matrix decomposition for the preconditioner.
     The preconditioner is using a diagonal impedance matrix (no cross-coupling).
     The diagonal impedance matrix can be trivially inverted.
-    Therefore, the LU decomposition is computed on the Schur complement.
+    Therefore, the factorization is computed on the Schur complement:
+        - with sparse matrix solver (UMFPACK solver)
+        - with LU decomposition (SuperLU solver)
+        - SuperLU is used if UMFPACK is not installed
 
     The problem contains n_v non-empty voxels and n_f internal faces.
     The problem contains n_src_v voltage source voxels.
@@ -91,19 +94,19 @@ def __get_preconditioner_decomposition(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
     # computing the Schur complement (with respect to the diagonal admittance matrix)
     S_matrix = A_src-A_kcl*Y_matrix*A_kvl
 
-    # compute the LU decomposition of the sparse Schur complement (None if singular)
+    # compute the factorization of the sparse Schur complement (None if singular)
     try:
-        LU_decomposition = sla.splu(S_matrix)
+        S_factorization = sla.factorized(S_matrix)
     except RuntimeError:
-        LU_decomposition = None
+        S_factorization = None
 
-    return Y_matrix, LU_decomposition
+    return Y_matrix, S_factorization
 
 
-def __get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, LU_decomposition):
+def __get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, S_factorization):
     """
     Solve the preconditioner equation system.
-    The Schur complement and LU decomposition are used.
+    The Schur complement and matrix factorization are used.
 
     The problem contains n_v non-empty voxels and n_f internal faces.
     The problem contains n_src_v voltage source voxels.
@@ -119,9 +122,9 @@ def __get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl,
     rhs_a = rhs[0:n_a]
     rhs_b = rhs[n_a:n_a+n_b]
 
-    # solve the equation system (Schur complement and LU decomposition)
+    # solve the equation system (Schur complement and matrix factorization)
     tmp = rhs_b-(A_kcl*(Y_matrix*rhs_a))
-    sol_b = LU_decomposition.solve(tmp)
+    sol_b = S_factorization(tmp)
     sol_a = Y_matrix*(rhs_a-(A_kvl*sol_b))
 
     # assemble the solution
@@ -258,16 +261,16 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_s
     # get the matrix size
     n_dof = len(idx_f)+len(idx_v)+len(idx_src_v_local)
 
-    # LU decomposition with the Schur complement
-    (Y_matrix, LU_decomposition) = __get_preconditioner_decomposition(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
+    # matrix factorization with the Schur complement
+    (Y_matrix, S_factorization) = __get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
 
     # if the matrix is singular, there is not preconditioner
-    if LU_decomposition is None:
+    if S_factorization is None:
         return None
 
     # function describing the preconditioner
     def fct(rhs):
-        sol = __get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, LU_decomposition)
+        sol = __get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, S_factorization)
         return sol
 
     # corresponding linear operator
