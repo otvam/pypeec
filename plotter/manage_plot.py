@@ -13,7 +13,7 @@ import numpy as np
 import pyvista as pv
 
 
-def __get_plot_base(pl, grid, geom, title, plot_options):
+def _get_plot_base(pl, grid, geom, title, plot_options):
     """
     Plot the geometry as wireframe (complete grid and non-empty voxels).
     Add the axis descriptor to orientate the geometry.
@@ -52,7 +52,7 @@ def __get_plot_base(pl, grid, geom, title, plot_options):
     pl.add_text(title, font_size=10)
 
 
-def __scale_range_vector(data, scale, lim):
+def _scale_range_vector(data, scale, lim):
     """
     Scale a variable and clamp the values between a lower and upper bound.
     """
@@ -115,7 +115,7 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background (wireframe, axis, and title)
-    __get_plot_base(pl, grid, geom, title, plot_options)
+    _get_plot_base(pl, grid, geom, title, plot_options)
 
 
 def plot_scalar(pl, grid, geom, plot_options, data_options):
@@ -145,7 +145,7 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     )
 
     # scale and clamp the variable
-    geom[data] = __scale_range_vector(geom[data], scale, lim)
+    geom[data] = _scale_range_vector(geom[data], scale, lim)
 
     # add the resulting plot to the plotter
     pl.add_mesh(
@@ -156,7 +156,7 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background (wireframe, axis, and title)
-    __get_plot_base(pl, grid, geom, title, plot_options)
+    _get_plot_base(pl, grid, geom, title, plot_options)
 
 
 def plot_arrow(pl, grid, geom, plot_options, data_options):
@@ -189,7 +189,7 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     )
 
     # scale and clamp the variable
-    geom[data_norm] = __scale_range_vector(geom[data_norm], scale, lim)
+    geom[data_norm] = _scale_range_vector(geom[data_norm], scale, lim)
 
     # create the arrows
     glyphs = geom.glyph(orient=data_vec, scale=data_norm, factor=arrow)
@@ -202,4 +202,4 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background (wireframe, axis, and title)
-    __get_plot_base(pl, grid, geom, title, plot_options)
+    _get_plot_base(pl, grid, geom, title, plot_options)

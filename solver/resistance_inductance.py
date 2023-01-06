@@ -12,7 +12,7 @@ import numpy as np
 import scipy.fft as fft
 
 
-def __get_circulant_tensor(A):
+def _get_circulant_tensor(A):
     """
     Construct a circulant tensor from a tensor.
     The size of the circulant tensor is twice the size of the original tensor.
@@ -44,7 +44,7 @@ def __get_circulant_tensor(A):
     return C
 
 
-def __get_fft_tensor(C):
+def _get_fft_tensor(C):
     """
     Compute the multidimensional FFT of a circulant tensor.
     """
@@ -132,7 +132,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     mu = 4*np.pi*1e-7
 
     # compute the circulant tensor (in order to make matrix-vector multiplication with FFT)
-    G_mutual = __get_circulant_tensor(G_mutual)
+    G_mutual = _get_circulant_tensor(G_mutual)
 
     # compute the circulant inductance tensor from the Green functions
     L_tensor = np.zeros((2*nx, 2*ny, 2*nz, 3), dtype=np.float64)
@@ -167,7 +167,7 @@ def get_inductance_operator(n, freq, L_tensor, L_vector):
     # compute the FFT and the impedance
     ZL_tensor = np.zeros((2*nx, 2*ny, 2*nz, 3), dtype=np.complex128)
     for i in range(3):
-        ZL_tensor[:, :, :, i] = s*__get_fft_tensor(L_tensor[:, :, :, i])
+        ZL_tensor[:, :, :, i] = s*_get_fft_tensor(L_tensor[:, :, :, i])
 
     # self-impedance for the preconditioner
     ZL_vector = s*L_vector

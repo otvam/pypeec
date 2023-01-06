@@ -14,7 +14,7 @@ def get_data():
 
     data_solver["n"] = (4, 4, 3)
     data_solver["d"] = (1e-4, 2e-4, 1e-4)
-    data_solver["r"] = (5, 5, 5)
+    data_solver["r"] = (10, 10, 10)
     data_solver["ori"] = (0, 0, 0)
     data_solver["d_green_simplify"] = 20e-4
 

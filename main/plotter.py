@@ -19,7 +19,7 @@ from main import logging_utils
 logger = logging_utils.get_logger("plotter")
 
 
-def __get_grid_voxel(data_res):
+def _get_grid_voxel(data_res):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -49,7 +49,7 @@ def __get_grid_voxel(data_res):
     return grid, geom
 
 
-def __get_plot(grid, geom, data_plotter):
+def _get_plot(grid, geom, data_plotter):
     """
     Make a plot with the specified user settings.
     The plot contains the following elements:
@@ -98,13 +98,13 @@ def run(data_res, data_plotter):
 
     # handle the data
     logger.info("parse the voxel geometry and the data")
-    (grid, geom) = __get_grid_voxel(data_res)
+    (grid, geom) = _get_grid_voxel(data_res)
 
     # make the plots
     logger.info("generate the different plots")
     for i, dat_tmp in enumerate(data_plotter):
         logger.info("plotting %d / %d" % (i+1, len(data_plotter)))
-        __get_plot(grid, geom, dat_tmp)
+        _get_plot(grid, geom, dat_tmp)
 
     # end
     logger.info("END")

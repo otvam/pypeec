@@ -1,4 +1,4 @@
-def __get_data_sub(name, plot_type, data_options):
+def _get_data_sub(name, plot_type, data_options):
     plot_options = {
         "grid_plot": True,
         "grid_thickness": 1.0,
@@ -24,18 +24,18 @@ def __get_data_sub(name, plot_type, data_options):
     return data
 
 
-def __get_geometry(name):
+def _get_geometry(name):
     data_options = {
         "legend": name,
         "title": name,
     }
 
-    data = __get_data_sub(name, "material", data_options)
+    data = _get_data_sub(name, "material", data_options)
 
     return data
 
 
-def __get_scalar(data, scale, unit, name):
+def _get_scalar(data, scale, unit, name):
     data_options = {
         "data": data,
         "scale": scale,
@@ -45,12 +45,12 @@ def __get_scalar(data, scale, unit, name):
         "title": name,
     }
 
-    data = __get_data_sub(name, "scalar", data_options)
+    data = _get_data_sub(name, "scalar", data_options)
 
     return data
 
 
-def __get_arrow(data_norm, data_vec, scale, arrow, unit, name):
+def _get_arrow(data_norm, data_vec, scale, arrow, unit, name):
     data_options = {
         "data_norm": data_norm,
         "data_vec": data_vec,
@@ -62,19 +62,19 @@ def __get_arrow(data_norm, data_vec, scale, arrow, unit, name):
         "title": name,
     }
 
-    data = __get_data_sub(name, "arrow", data_options)
+    data = _get_data_sub(name, "arrow", data_options)
 
     return data
 
 
 def get_data():
     data_plotter = [
-        __get_geometry("Material"),
-        __get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
-        __get_scalar("V_abs", 1e0, "V", "Potential"),
-        __get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        __get_arrow("J_norm_re", "J_vec_re", 1e-6, 1e-6, "A/mm2", "Re. Current"),
-        __get_arrow("J_norm_im", "J_vec_im", 1e-6, 1e-6, "A/mm2", "Im. Current"),
+        _get_geometry("Material"),
+        _get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
+        _get_scalar("V_abs", 1e0, "V", "Potential"),
+        _get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
+        _get_arrow("J_norm_re", "J_vec_re", 1e-6, 1e-6, "A/mm2", "Re. Current"),
+        _get_arrow("J_norm_im", "J_vec_im", 1e-6, 1e-6, "A/mm2", "Im. Current"),
     ]
 
     return data_plotter

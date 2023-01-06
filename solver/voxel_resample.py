@@ -9,7 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 
 
-def __get_idx_resample_tensor(idx, r, idx_n, idx_r):
+def _get_idx_resample_tensor(idx, r, idx_n, idx_r):
     """
     Transform linear indices (original voxels) into tensor indices (resample voxels).
 
@@ -42,7 +42,7 @@ def __get_idx_resample_tensor(idx, r, idx_n, idx_r):
     return idx_nr_x, idx_nr_y, idx_nr_z
 
 
-def __get_idx_resample_linear(idx_nr_x, idx_nr_y, idx_nr_z, n, r):
+def _get_idx_resample_linear(idx_nr_x, idx_nr_y, idx_nr_z, n, r):
     """
     Transform tensor indices (resample voxels) into linear indices (resample voxels).
 
@@ -109,8 +109,8 @@ def get_update_indices(n, r, idx_n, idx_r, conductor_source):
         idx = conductor_source[tag]["idx"]
 
         # update the old voxel indices into the new one for the resampled voxels
-        (idx_nr_x, idx_nr_y, idx_nr_z) = __get_idx_resample_tensor(idx, r, idx_n, idx_r)
-        idx = __get_idx_resample_linear(idx_nr_x, idx_nr_y, idx_nr_z, n, r)
+        (idx_nr_x, idx_nr_y, idx_nr_z) = _get_idx_resample_tensor(idx, r, idx_n, idx_r)
+        idx = _get_idx_resample_linear(idx_nr_x, idx_nr_y, idx_nr_z, n, r)
 
         # assign the new indices
         conductor_source[tag]["idx"] = idx

@@ -23,7 +23,7 @@ from main import logging_utils
 logger = logging_utils.get_logger("solver")
 
 
-def __run_check(data_solver):
+def _run_check(data_solver):
     """
     Check the input data.
     Exceptions are not handled by this function.
@@ -44,7 +44,7 @@ def __run_check(data_solver):
         check_data.check_problem(data_solver)
 
 
-def __run_resampling(data_solver):
+def _run_resampling(data_solver):
     """
     Resample the voxel structure and update the indices.
     The different parts of the code are timed.
@@ -81,7 +81,7 @@ def __run_resampling(data_solver):
     return data_solver
 
 
-def __run_preproc(data_solver):
+def _run_preproc(data_solver):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
     The different parts of the code are timed.
@@ -118,7 +118,7 @@ def __run_preproc(data_solver):
     return data_solver
 
 
-def __run_main(data_solver):
+def _run_main(data_solver):
     """
     Construct and solve the problem (equation system).
     The different parts of the code are timed.
@@ -211,7 +211,7 @@ def __run_main(data_solver):
     return data_solver
 
 
-def __run_postproc(data_solver):
+def _run_postproc(data_solver):
     """
     Extract the solution.
     The different parts of the code are timed.
@@ -249,7 +249,7 @@ def __run_postproc(data_solver):
     return data_solver
 
 
-def __run_assemble(data_solver):
+def _run_assemble(data_solver):
     """
     Assemble the output data from the different dict.
     """
@@ -289,12 +289,12 @@ def run(data_solver):
 
     # run the solver
     try:
-        __run_check(data_solver)
-        data_solver = __run_resampling(data_solver)
-        data_solver = __run_preproc(data_solver)
-        data_solver = __run_main(data_solver)
-        data_solver = __run_postproc(data_solver)
-        data_res = __run_assemble(data_solver)
+        _run_check(data_solver)
+        data_solver = _run_resampling(data_solver)
+        data_solver = _run_preproc(data_solver)
+        data_solver = _run_main(data_solver)
+        data_solver = _run_postproc(data_solver)
+        data_res = _run_assemble(data_solver)
 
         status = True
         logger.info("successful termination")

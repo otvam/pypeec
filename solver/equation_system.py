@@ -41,7 +41,7 @@ import scipy.sparse as sps
 import scipy.sparse.linalg as sla
 
 
-def __get_circulant_multiply(CF, X):
+def _get_circulant_multiply(CF, X):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
@@ -69,7 +69,7 @@ def __get_circulant_multiply(CF, X):
     return Y
 
 
-def __get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector):
+def _get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector):
     """
     Compute the sparse matrix decomposition for the preconditioner.
     The preconditioner is using a diagonal impedance matrix (no cross-coupling).
@@ -103,7 +103,7 @@ def __get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
     return Y_matrix, S_factorization
 
 
-def __get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, S_factorization):
+def _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, S_factorization):
     """
     Solve the preconditioner equation system.
     The Schur complement and matrix factorization are used.
@@ -133,7 +133,7 @@ def __get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl,
     return sol
 
 
-def __get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor):
+def _get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor):
     """
     Multiply the full equation matrix with a given solution test vector.
     For the multiplication of resistance matrix and the current, the Hadamard product is used.
@@ -167,7 +167,7 @@ def __get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A
     # multiply the impedance matrix with the current vector
     for i in range(3):
         # for the inductive component, the multiplication is done with the FFT circulant tensor
-        rhs_a_all[:, :, :, i] += __get_circulant_multiply(ZL_tensor[:, :, :, i], sol_a_all[:, :, :, i])
+        rhs_a_all[:, :, :, i] += _get_circulant_multiply(ZL_tensor[:, :, :, i], sol_a_all[:, :, :, i])
 
         # for the resistive component, the multiplication is done with the Hadamard product
         rhs_a_all[:, :, :, i] += R_tensor[:, :, :, i]*sol_a_all[:, :, :, i]
@@ -262,7 +262,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_s
     n_dof = len(idx_f)+len(idx_v)+len(idx_src_v_local)
 
     # matrix factorization with the Schur complement
-    (Y_matrix, S_factorization) = __get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
+    (Y_matrix, S_factorization) = _get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
 
     # if the matrix is singular, there is not preconditioner
     if S_factorization is None:
@@ -270,7 +270,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_s
 
     # function describing the preconditioner
     def fct(rhs):
-        sol = __get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, S_factorization)
+        sol = _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, Y_matrix, S_factorization)
         return sol
 
     # corresponding linear operator
@@ -290,7 +290,7 @@ def get_system_operator(n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R
 
     # function describing the equation system
     def fct(sol):
-        rhs = __get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor)
+        rhs = _get_system_multiply(sol, n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor)
         return rhs
 
     # corresponding linear operator

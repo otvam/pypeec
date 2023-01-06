@@ -16,7 +16,7 @@ class CheckError(Exception):
     pass
 
 
-def __check_conductor(idx_v, conductor):
+def _check_conductor(idx_v, conductor):
     """
     Check that the conductors are valid.
     Append the conductor indices to an array.
@@ -43,7 +43,7 @@ def __check_conductor(idx_v, conductor):
     return idx_v
 
 
-def __check_source(idx_src, tag_src, source):
+def _check_source(idx_src, tag_src, source):
     """
     Check that the sources (voltage or current) are valid.
     Append the source tag to a list.
@@ -147,8 +147,8 @@ def check_problem(data_solver):
     tag_src = []
 
     # find the indices and tags
-    idx_v = __check_conductor(idx_v, conductor)
-    (idx_src, tag_src) = __check_source(idx_src, tag_src, source)
+    idx_v = _check_conductor(idx_v, conductor)
+    (idx_src, tag_src) = _check_source(idx_src, tag_src, source)
 
     # check for unicity
     if not (len(np.unique(idx_v)) == len(idx_v)):

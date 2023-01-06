@@ -11,7 +11,7 @@ import numpy as np
 import numpy.linalg as lna
 
 
-def __get_safe_log(x):
+def _get_safe_log(x):
     """
     Compute the log. Set to zero if not finite.
     """
@@ -23,7 +23,7 @@ def __get_safe_log(x):
     return y
 
 
-def __get_safe_arctan(x):
+def _get_safe_arctan(x):
     """
     Compute the arctan. Set to zero if not finite.
     """
@@ -35,7 +35,7 @@ def __get_safe_arctan(x):
     return y
 
 
-def __get_green_fct(x, y, z):
+def _get_green_fct(x, y, z):
     """
     Compute part of the analytical Green function between two voxels.
     The analytical solution for points is computed for a given distances.
@@ -49,21 +49,21 @@ def __get_green_fct(x, y, z):
             -3*y**2*z**2
     )
     val_2 = 12*x*y*z*(
-            -z**2*__get_safe_arctan((x*y)/(z*nrm)) +
-            -y**2*__get_safe_arctan((x*z)/(y*nrm)) +
-            -x**2*__get_safe_arctan((y*z)/(x*nrm))
+            -z**2*_get_safe_arctan((x*y)/(z*nrm)) +
+            -y**2*_get_safe_arctan((x*z)/(y*nrm)) +
+            -x**2*_get_safe_arctan((y*z)/(x*nrm))
     )
     val_3 = 3*(
-            -x*(y**4-6*y**2*z**2+z**4)*__get_safe_log(x+nrm) +
-            -y*(x**4-6*x**2*z**2+z**4)*__get_safe_log(y+nrm) +
-            -z*(x**4-6*x**2*y**2+y**4)*__get_safe_log(z+nrm)
+            -x*(y**4-6*y**2*z**2+z**4)*_get_safe_log(x+nrm) +
+            -y*(x**4-6*x**2*z**2+z**4)*_get_safe_log(y+nrm) +
+            -z*(x**4-6*x**2*y**2+y**4)*_get_safe_log(z+nrm)
     )
     val = (1/72)*(val_1+val_2+val_3)
 
     return val
 
 
-def __get_green_preproc():
+def _get_green_preproc():
     """
     Compute part of the analytical Green function between two voxels.
     Offset vectors, which are used to compute the distances between points, are generated.
@@ -90,7 +90,7 @@ def __get_green_preproc():
     return offset_x, offset_y, offset_z, sign
 
 
-def __get_green_ana(d, m):
+def _get_green_ana(d, m):
     """
     Compute a Green function between two voxels.
     An analytical solution is used.
@@ -106,7 +106,7 @@ def __get_green_ana(d, m):
     mz = m[:, [2]]
 
     # get the offset and sign vectors
-    (offset_x, offset_y, offset_z, sign) = __get_green_preproc()
+    (offset_x, offset_y, offset_z, sign) = _get_green_preproc()
 
     # position vector
     x_vec = dx*(mx+offset_x)
@@ -115,7 +115,7 @@ def __get_green_ana(d, m):
 
     # ignore division per zero (as it handled inside the log and arctan)
     with np.errstate(all='ignore'):
-        val = __get_green_fct(x_vec, y_vec, z_vec)
+        val = _get_green_fct(x_vec, y_vec, z_vec)
 
     # sum the value of all the points
     G = np.sum(sign*val, axis=1)
@@ -126,7 +126,7 @@ def __get_green_ana(d, m):
     return G
 
 
-def __get_green_num(d, m):
+def _get_green_num(d, m):
     """
     Compute a Green function between two voxels.
     Approximation of the mutual coefficients.
@@ -146,7 +146,7 @@ def __get_green_num(d, m):
     return G
 
 
-def __get_voxel_indices(nx, ny, nz):
+def _get_voxel_indices(nx, ny, nz):
     """
     Compute the indices of the complete voxel structure.
     Return the indices as a matrix.
@@ -176,7 +176,7 @@ def get_green_self(d):
     """
 
     m = np.array([[0, 0, 0]])
-    G_self = __get_green_ana(d, m)
+    G_self = _get_green_ana(d, m)
 
     return G_self
 
@@ -196,7 +196,7 @@ def get_green_tensor(n, d, d_green_simplify):
     n = nx*ny*nz
 
     # get the indices of the complete voxel structure (as a matrix)
-    m = __get_voxel_indices(nx, ny, nz)
+    m = _get_voxel_indices(nx, ny, nz)
 
     # compute the physical distance between the voxels and the reference voxel at the origin
     dis = lna.norm(np.multiply(d, m), axis=1)
@@ -209,10 +209,10 @@ def get_green_tensor(n, d, d_green_simplify):
     G_mutual = np.zeros(n, dtype=np.float64)
 
     # analytical solution
-    G_mutual[idx_ana] = __get_green_ana(d, m[idx_ana, :])
+    G_mutual[idx_ana] = _get_green_ana(d, m[idx_ana, :])
 
     # numerical solution
-    G_mutual[idx_num] = __get_green_num(d, m[idx_num, :])
+    G_mutual[idx_num] = _get_green_num(d, m[idx_num, :])
 
     # transform the vector into a tensor
     G_mutual = G_mutual.reshape((nx, ny, nz), order="F")
