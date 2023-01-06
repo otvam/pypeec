@@ -7,6 +7,10 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
+from main import logging_utils
+
+# get a logger
+logger = logging_utils.get_logger("problem")
 
 
 def get_conductor_geometry(conductor):
@@ -161,5 +165,13 @@ def get_status(n, idx_v, idx_f, idx_src_c, idx_src_v):
         "ratio_conductor": ratio_conductor,
         "ratio_src": ratio_src,
     }
+
+    # display status
+    logger.info("problem size: n_total = %d" % n_total)
+    logger.info("problem size: n_conductor = %d" % n_conductor)
+    logger.info("problem size: n_faces = %d" % n_faces)
+    logger.info("problem size: n_src = %d" % n_src)
+    logger.info("problem size: ratio_conductor = %.3e" % ratio_conductor)
+    logger.info("problem size: ratio_src = %.3e" % ratio_src)
 
     return problem_status

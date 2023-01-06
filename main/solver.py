@@ -20,7 +20,7 @@ from solver import extract_solution
 from main import logging_utils
 
 # get a logger
-logger = logging_utils.get_logger("solver", "INFO")
+logger = logging_utils.get_logger("solver")
 
 
 def __run_check(data_solver):
@@ -152,14 +152,6 @@ def __run_main(data_solver):
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_v, idx_f, idx_src_c, idx_src_v)
 
-    # display status
-    logger.info("problem size: n_total = %d" % problem_status["n_total"])
-    logger.info("problem size: n_conductor = %d" % problem_status["n_conductor"])
-    logger.info("problem size: n_faces = %d" % problem_status["n_faces"])
-    logger.info("problem size: n_src = %d" % problem_status["n_src"])
-    logger.info("problem size: ratio_conductor = %.3e" % problem_status["ratio_conductor"])
-    logger.info("problem size: ratio_src = %.3e" % problem_status["ratio_src"])
-
     # get the resistances and inductances
     with logging_utils.BlockTimer(logger, "resistance_inductance"):
         # get the resistivity for all the voxels (including empty voxels).
@@ -198,19 +190,6 @@ def __run_main(data_solver):
 
         # solve the equation system
         (sol, has_converged, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, cond, solver_options)
-
-    # display status
-    logger.info("matrix solver: n_dof = %d" % solver_status["n_dof"])
-    logger.info("matrix solver: n_iter = %d" % solver_status["n_iter"])
-    logger.info("matrix solver: cond = %.3e" % solver_status["cond"])
-    logger.info("matrix solver: res_abs = %.3e" % solver_status["res_abs"])
-    logger.info("matrix solver: res_rel = %.3e" % solver_status["res_rel"])
-    logger.info("matrix solver: cond_ok = %s" % solver_status["cond_ok"])
-    logger.info("matrix solver: solver_ok = %s" % solver_status["solver_ok"])
-    if has_converged:
-        logger.info("matrix solver: convergence achieved")
-    else:
-        logger.warning("matrix solver: convergence issues")
 
     # assemble results
     data_solver["idx_f"] = idx_f

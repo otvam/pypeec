@@ -7,6 +7,10 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import scipy.sparse.linalg as sla
 import scipy.linalg as lna
+from main import logging_utils
+
+# get a logger
+logger = logging_utils.get_logger("equation")
 
 
 class IterCounter:
@@ -29,9 +33,13 @@ class IterCounter:
         Callback increasing the iteration count.
         """
 
+        # update and save the iteration data
         self.n_iter += 1
         self.iter_vec.append(self.n_iter)
         self.res_vec.append(res)
+
+        # log the results
+        logger.info("matrix iter: i_iter = %d / res = %.3e" % (self.n_iter, res))
 
     def get_n_iter(self):
         """
@@ -96,6 +104,19 @@ def get_solver(sys_op, pcd_op, rhs, cond, solver_options):
         "cond_ok": cond_ok,
         "solver_ok": solver_ok,
     }
+
+    # display status
+    logger.info("matrix solver: n_dof = %d" % n_dof)
+    logger.info("matrix solver: n_iter = %d" % n_iter)
+    logger.info("matrix solver: cond = %.3e" % cond)
+    logger.info("matrix solver: res_abs = %.3e" % res_abs)
+    logger.info("matrix solver: res_rel = %.3e" % res_rel)
+    logger.info("matrix solver: cond_ok = %s" % cond_ok)
+    logger.info("matrix solver: solver_ok = %s" % solver_ok)
+    if has_converged:
+        logger.info("matrix solver: convergence achieved")
+    else:
+        logger.warning("matrix solver: convergence issues")
 
     return sol, has_converged, solver_status
 

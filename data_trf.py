@@ -14,12 +14,12 @@ def get_data():
 
     data_solver["n"] = (4, 4, 3)
     data_solver["d"] = (1e-4, 2e-4, 1e-4)
-    data_solver["r"] = (2, 2, 2)
+    data_solver["r"] = (5, 5, 5)
     data_solver["ori"] = (0, 0, 0)
     data_solver["d_green_simplify"] = 20e-4
 
     data_solver["freq"] = 10e6
-    data_solver["solver_options"] =  {"tol": 1e-5, "atol": 1e-12, "restart": 20, "maxiter": 100, "condmax": 1e9}
+    data_solver["solver_options"] = {"tol": 1e-6, "atol": 1e-12, "restart": 20, "maxiter": 100, "condmax": 1e9}
 
     data_solver["conductor"] = conductor
     data_solver["source"] = source

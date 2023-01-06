@@ -16,7 +16,7 @@ from plotter import manage_plot
 from main import logging_utils
 
 # get a logger
-logger = logging_utils.get_logger("plotter", "INFO")
+logger = logging_utils.get_logger("plotter")
 
 
 def __get_grid_voxel(data_res):

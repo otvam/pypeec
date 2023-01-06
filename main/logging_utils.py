@@ -9,6 +9,8 @@ import time
 import datetime
 import logging
 
+timestamp_global = time.time()
+
 
 class _DeltaTiming:
     """
@@ -24,12 +26,19 @@ class _DeltaTiming:
 
         self.timestamp = time.time()
 
-    def get_reset(self):
+    def set_now(self):
         """
-        Reset the timer.
+        Set the timer to the current time.
         """
 
         self.timestamp = time.time()
+
+    def set_timestamp(self, timestamp):
+        """
+        Set the timer with a provided timestamp.
+        """
+
+        self.timestamp = timestamp
 
     def get_init(self):
         """
@@ -77,7 +86,7 @@ class BlockTimer:
         Reset the timer and log the results.
         """
 
-        self.timer.get_reset()
+        self.timer.set_now()
         self.logger.info(self.name + " : enter : timing")
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
@@ -95,14 +104,21 @@ class DeltaTimeFormatter(logging.Formatter):
     Class for adding elapsed time to a logger.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, fmt, timestamp, global_timer):
         """
         Constructor.
         Create a timer.
         """
 
-        super().__init__(*args, **kwargs)
+        # call parent constructor
+        super().__init__(fmt)
+
+        # create a timer
         self.timer = _DeltaTiming()
+
+        # ensure that all the logger share the same timer
+        if global_timer:
+            self.timer.set_timestamp(timestamp)
 
     def format(self, record):
         """
@@ -120,21 +136,31 @@ class DeltaTimeFormatter(logging.Formatter):
         return msg
 
 
-def get_logger(name="root", level="INFO"):
+def get_logger(name="root", level="INFO", global_timer=True):
     """
     Get a logger with a name and level.
     Display elapsed time, time, name, level, and message.
+    The elapsed time can be measured with respect to:
+        - the time the module is imported
+        - the time the logger is called
     """
 
+    # get the logger (only one logger per name is allowed)
+    logger = logging.getLogger(name)
+    assert len(logger.handlers) == 0, "duplicated logger name"
+
     # get the formatter
-    fmt = DeltaTimeFormatter('%(duration)s : %(asctime)s : %(name)-10s: %(levelname)-12s : %(message)s')
+    fmt = DeltaTimeFormatter(
+        fmt='%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s',
+        timestamp=timestamp_global,
+        global_timer=global_timer,
+    )
 
     # get the handle
     handler = logging.StreamHandler()
     handler.setFormatter(fmt)
 
     # get the logger
-    logger = logging.getLogger(name)
     logger.setLevel(level)
     logger.addHandler(handler)
 

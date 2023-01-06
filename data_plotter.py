@@ -21,7 +21,7 @@ def __get_data_sub(name, plot_type, data_options):
         "plot_options": plot_options
     }
 
-    return  data
+    return data
 
 
 def __get_geometry(name):
