@@ -131,7 +131,7 @@ def get_current_density(idx_voxel, geom, J_voxel):
     geom["J_norm_abs"] = lna.norm(J, axis=1)
     geom["J_norm_re"] = lna.norm(np.real(J), axis=1)
     geom["J_norm_im"] = lna.norm(np.imag(J), axis=1)
-    geom["J_vec_re"] = np.real(J)
-    geom["J_vec_im"] = np.imag(J)
+    geom["J_vec_unit_re"] = np.real(J)/lna.norm(np.real(J), axis=1, keepdims=True)
+    geom["J_vec_unit_im"] = np.imag(J)/lna.norm(np.imag(J), axis=1, keepdims=True)
 
     return geom

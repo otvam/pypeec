@@ -52,22 +52,29 @@ def _get_plot_base(pl, grid, geom, title, plot_options):
     pl.add_text(title, font_size=10)
 
 
-def _scale_range_vector(data, scale, lim):
+def _scale_range_vector(geom, var, filter_lim, color_lim, scale):
     """
     Scale a variable and clamp the values between a lower and upper bound.
     """
 
+    # filter data
+    geom = geom.threshold(value=filter_lim, scalars=var)
+
     # convert to numpy
+    data = geom[var]
     data = np.array(data)
+
+    # clamp range
+    data = np.maximum(data, np.min(color_lim))
+    data = np.minimum(data, np.max(color_lim))
 
     # add scaling
     data = scale*data
 
-    # clamp range
-    data = np.maximum(data, np.min(lim))
-    data = np.minimum(data, np.max(lim))
+    # assign data
+    geom[var] = data
 
-    return data
+    return geom
 
 
 def plot_material(pl, grid, geom, plot_options, data_options):
@@ -129,10 +136,11 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     geom = geom.copy(deep=True)
 
     # extract
-    data = data_options["data_output"]
+    var = data_options["var"]
     scale = data_options["scale"]
     log = data_options["log"]
-    lim = data_options["lim"]
+    filter_lim = data_options["filter_lim"]
+    color_lim = data_options["color_lim"]
     legend = data_options["legend"]
     title = data_options["title"]
 
@@ -145,12 +153,12 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     )
 
     # scale and clamp the variable
-    geom[data] = _scale_range_vector(geom[data], scale, lim)
+    geom = _scale_range_vector(geom, var, filter_lim, color_lim, scale)
 
     # add the resulting plot to the plotter
     pl.add_mesh(
         geom,
-        scalars=data,
+        scalars=var,
         log_scale=log,
         scalar_bar_args=scalar_bar_args,
     )
@@ -171,12 +179,13 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     geom = geom.copy(deep=True)
 
     # extract
-    data_norm = data_options["data_norm"]
-    data_vec = data_options["data_vec"]
+    var = data_options["var"]
+    vec = data_options["vec"]
     scale = data_options["scale"]
     arrow = data_options["arrow"]
     log = data_options["log"]
-    lim = data_options["lim"]
+    filter_lim = data_options["filter_lim"]
+    color_lim = data_options["color_lim"]
     legend = data_options["legend"]
     title = data_options["title"]
 
@@ -189,14 +198,15 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     )
 
     # scale and clamp the variable
-    geom[data_norm] = _scale_range_vector(geom[data_norm], scale, lim)
+    geom = _scale_range_vector(geom, var, filter_lim, color_lim, scale)
 
     # create the arrows
-    glyphs = geom.glyph(orient=data_vec, scale=data_norm, factor=arrow)
+    glyphs = geom.glyph(orient=vec, scale=False, factor=arrow)
 
     # add the resulting plot to the plotter
     pl.add_mesh(
         glyphs,
+        scalars=var,
         log_scale=log,
         scalar_bar_args=scalar_bar_args,
     )

@@ -35,12 +35,13 @@ def _get_geometry(name):
     return data
 
 
-def _get_scalar(data, scale, unit, name):
+def _get_scalar(var, scale, unit, name):
     data_options = {
-        "data_output": data,
+        "var": var,
         "scale": scale,
         "log": False,
-        "lim": [-float("inf"), +float("inf")],
+        "color_lim": [-float("inf"), +float("inf")],
+        "filter_lim": [-float("inf"), +float("inf")],
         "legend": "%s [%s]" % (name, unit),
         "title": name,
     }
@@ -50,14 +51,15 @@ def _get_scalar(data, scale, unit, name):
     return data
 
 
-def _get_arrow(data_norm, data_vec, scale, arrow, unit, name):
+def _get_arrow(var, vec, scale, arrow, unit, name):
     data_options = {
-        "data_norm": data_norm,
-        "data_vec": data_vec,
+        "var": var,
+        "vec": vec,
         "scale": scale,
         "arrow": arrow,
         "log": False,
-        "lim": [-float("inf"), +float("inf")],
+        "color_lim": [-float("inf"), +float("inf")],
+        "filter_lim": [-float("inf"), +float("inf")],
         "legend": "%s [%s]" % (name, unit),
         "title": name,
     }
@@ -73,8 +75,8 @@ def get_data():
         _get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
         _get_scalar("V_abs", 1e0, "V", "Potential"),
         _get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        _get_arrow("J_norm_re", "J_vec_re", 1e-6, 1e-6, "A/mm2", "Re. Current"),
-        _get_arrow("J_norm_im", "J_vec_im", 1e-6, 1e-6, "A/mm2", "Im. Current"),
+        _get_arrow("J_norm_re", "J_vec_unit_re", 1e-6, 2e-5, "A/mm2", "Re. Current"),
+        _get_arrow("J_norm_im", "J_vec_unit_im", 1e-6, 2e-5, "A/mm2", "Im. Current"),
     ]
 
     return data_plotter
