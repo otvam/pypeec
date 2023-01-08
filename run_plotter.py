@@ -44,7 +44,7 @@ def run(name, data_plotter):
 
 if __name__ == "__main__":
     # get the data
-    name = "data_simple"
+    name = "data_pcb_trf"
     data_plotter = get_data_plotter()
 
     # run

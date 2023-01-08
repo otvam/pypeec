@@ -56,16 +56,17 @@ def get_source_geometry(source):
         value = dat_tmp["value"]
 
         # append the source
-        if source_type == "current":
-            # the current source value is set such that the sum across all voxels is equal to the specified value
-            idx_src_c = np.append(idx_src_c, np.array(idx))
-            val_src_c = np.append(val_src_c, np.full(len(idx), value / len(idx)))
-        elif source_type == "voltage":
-            # the voltage source value is set to the specified value for all the voxels
-            idx_src_v = np.append(idx_src_v, np.array(idx))
-            val_src_v = np.append(val_src_v, np.full(len(idx), value))
-        else:
-            raise ValueError("invalid terminal type")
+        if len(idx) > 0:
+            if source_type == "current":
+                # the current source value is set such that the sum across all voxels is equal to the specified value
+                idx_src_c = np.append(idx_src_c, np.array(idx))
+                val_src_c = np.append(val_src_c, np.full(len(idx), value / len(idx)))
+            elif source_type == "voltage":
+                # the voltage source value is set to the specified value for all the voxels
+                idx_src_v = np.append(idx_src_v, np.array(idx))
+                val_src_v = np.append(val_src_v, np.full(len(idx), value))
+            else:
+                raise ValueError("invalid terminal type")
 
     return idx_src_c, val_src_c, idx_src_v, val_src_v
 

@@ -1,5 +1,6 @@
 import imageio.v3 as iio
 import numpy as np
+import os
 
 
 def _get_idx_image(nx, ny, img, color):
@@ -72,12 +73,16 @@ def _add_layer(conductor, source, nx, ny, nz, data):
     conductor_color = data["conductor_color"]
     source_color = data["source_color"]
 
-    # read the image
-    img = _get_image(filename)
-
     # add the indices
-    conductor = _get_color_indices(conductor, nx, ny, nz, n_add, img, conductor_color)
-    source = _get_color_indices(source, nx, ny, nz, n_add, img, source_color)
+    if filename is not None:
+        # read the image
+        path = os.path.dirname(__file__)
+        filename = os.path.join(path, filename)
+        img = _get_image(filename)
+
+        # add the indices
+        conductor = _get_color_indices(conductor, nx, ny, nz, n_add, img, conductor_color)
+        source = _get_color_indices(source, nx, ny, nz, n_add, img, source_color)
 
     # update the layer stack
     nz += n_add
@@ -98,37 +103,79 @@ def get_data():
 
     # layer parameters
     color_conductor = [[0, 0, 0, 255], [0, 255, 0, 255], [255, 0, 0, 255]]
-    color_sink = [[0, 0, 0, 255]]
-    color_source = [255, 0, 0, 255]
+    color_sink = [[0, 255, 0, 255]]
+    color_source = [[255, 0, 0, 255]]
 
     # init stack
     nz = 0
 
     conductor = {
-        "pri": {"idx": [], "rho": 1.7544e-08},
-        "sec": {"idx": [], "rho": 8.7720e-08},
+        "pri": {"idx": [], "rho": 1.75e-08},
+        "sec": {"idx": [], "rho": 1.75e-08},
     }
     source = {
         "pri_src": {"source_type": "current", "idx": [], "value": 1},
         "pri_sink": {"source_type": "voltage", "idx": [], "value": 0},
-        "sec_src": {"source_type": "current", "idx": [], "value": 1},
+        "sec_src": {"source_type": "current", "idx": [], "value": 0},
         "sec_sink": {"source_type": "voltage", "idx": [], "value": 0},
     }
 
     # stack
-    data = {
-        "n_add": 1,
-        "filename": "pcb_trf/return.png",
-        "conductor_color": {"pri": color_conductor},
-        "source_color": {"pri_sink": color_sink},
-    }
-    (nz, conductor, source), _add_layer(conductor, source, nx, ny, nz, data)
+    data = [
+        {
+            "n_add": 1,
+            "filename": "pcb_trf/return.png",
+            "conductor_color": {"pri": color_conductor},
+            "source_color": {"pri_sink": color_sink}
+        },
+        {
+            "n_add": 6,
+            "filename": "pcb_trf/via.png",
+            "conductor_color": {"pri": color_conductor},
+            "source_color": {}
+        },
+        {
+            "n_add": 1,
+            "filename": "pcb_trf/coil.png",
+            "conductor_color": {"pri": color_conductor},
+            "source_color": {"pri_src": color_source}
+        },
+        {
+            "n_add": 10,
+            "filename": None,
+            "conductor_color": {},
+            "source_color": {}
+        },
+        {
+            "n_add": 1,
+            "filename": "pcb_trf/coil.png",
+            "conductor_color": {"sec": color_conductor},
+            "source_color": {"sec_src": color_source}
+        },
+        {
+            "n_add": 6,
+            "filename": "pcb_trf/via.png",
+            "conductor_color": {"sec": color_conductor},
+            "source_color": {}
+        },
+        {
+            "n_add": 1,
+            "filename": "pcb_trf/return.png",
+            "conductor_color": {"sec": color_conductor},
+            "source_color": {"sec_sink": color_sink}
+        },
+    ]
+
+    # add the layers
+    for data_tmp in data:
+        (nz, conductor, source) = _add_layer(conductor, source, nx, ny, nz, data_tmp)
 
     # get voxel size
     n = (nx, ny, nz)
 
     # assign results
     data_solver = {
+        "n": n,
         "d": d,
         "r": r,
         "ori": ori,
@@ -141,6 +188,3 @@ def get_data():
     }
 
     return data_solver
-
-
-get_data()

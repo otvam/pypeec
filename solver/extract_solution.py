@@ -108,20 +108,24 @@ def get_terminal(source, V_voxel, I_src_v):
         value = dat_tmp["value"]
 
         # append the source
-        if source_type == "current":
-            # current is set by the source
-            I_tmp = np.complex128(value)
-
-            # voltage is the average between all the voxels composing the terminal
-            V_tmp = np.complex128(np.mean(V_voxel[idx]))
-        elif source_type == "voltage":
-            # voltage is set by the source
-            V_tmp = np.complex128(value)
-
-            # current is the sum between all the voxels composing the terminal
-            I_tmp = np.complex128(np.sum(I_src_v[idx]))
+        if len(idx) == 0:
+            I_tmp = np.nan
+            V_tmp = np.nan
         else:
-            raise ValueError("invalid terminal type")
+            if source_type == "current":
+                # current is set by the source
+                I_tmp = np.complex128(value)
+
+                # voltage is the average between all the voxels composing the terminal
+                V_tmp = np.complex128(np.mean(V_voxel[idx]))
+            elif source_type == "voltage":
+                # voltage is set by the source
+                V_tmp = np.complex128(value)
+
+                # current is the sum between all the voxels composing the terminal
+                I_tmp = np.complex128(np.sum(I_src_v[idx]))
+            else:
+                raise ValueError("invalid terminal type")
 
         # assign the current and voltage
         terminal[tag] = {"V": V_tmp, "I": I_tmp}

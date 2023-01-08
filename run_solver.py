@@ -21,10 +21,9 @@ def get_data_solver_simple():
     from data_input import data_solver_simple
 
     # get the data
-    name = "data_simple"
     data_solver = data_solver_simple.get_data()
 
-    return name, data_solver
+    return data_solver
 
 
 def get_data_solver_pcb_trf():
@@ -36,10 +35,9 @@ def get_data_solver_pcb_trf():
     from data_input import data_solver_pcb_trf
 
     # get the data
-    name = "data_pcb_trf"
     data_solver = data_solver_pcb_trf.get_data()
 
-    return name, data_solver
+    return data_solver
 
 
 def run(name, data_solver):
@@ -62,8 +60,16 @@ def run(name, data_solver):
 
 
 if __name__ == "__main__":
+    # name of the simulation
+    name = "data_pcb_trf"
+
     # get the data
-    (name, data_solver) = get_data_solver_simple()
+    if name == "data_simple":
+        data_solver = get_data_solver_simple()
+    elif name == "data_pcb_trf":
+        data_solver = get_data_solver_pcb_trf()
+    else:
+        raise ValueError("invalid name")
 
     # run
     exit_code = run(name, data_solver)
