@@ -91,9 +91,10 @@ def _add_layer(conductor, source, nx, ny, nz, data):
 
 
 def get_data():
+    # problem parameters
     nx = 176
     ny = 160
-    d = (50e-6, 50e-6, 50e-6)
+    d = (35e-6, 35e-6, 35e-6)
     r = (1, 1, 1)
     ori = (0, 0, 0)
     d_green = 1e-3
@@ -101,14 +102,7 @@ def get_data():
     solver_options = {"tol": 1e-6, "atol": 1e-12, "restart": 20, "maxiter": 100}
     condition_options = {"check": True, "tolerance": 1e9, "accuracy": 2}
 
-    # layer parameters
-    color_conductor = [[0, 0, 0, 255], [0, 255, 0, 255], [255, 0, 0, 255]]
-    color_sink = [[0, 255, 0, 255]]
-    color_source = [[255, 0, 0, 255]]
-
-    # init stack
-    nz = 0
-
+    # init the conductors and sources (without the indices)
     conductor = {
         "pri": {"idx": [], "rho": 1.75e-8},
         "sec": {"idx": [], "rho": 1.75e-8},
@@ -120,7 +114,12 @@ def get_data():
         "sec_sink": {"source_type": "voltage", "idx": [], "V": 0.0, "R": 0.01},
     }
 
-    # stack
+    # color legends
+    color_conductor = [[0, 0, 0, 255], [0, 255, 0, 255], [255, 0, 0, 255]]
+    color_sink = [[0, 255, 0, 255]]
+    color_source = [[255, 0, 0, 255]]
+
+    # layer stack definition
     data = [
         {
             "n_add": 1,
@@ -141,7 +140,7 @@ def get_data():
             "source_color": {"pri_src": color_source}
         },
         {
-            "n_add": 10,
+            "n_add": 6,
             "filename": None,
             "conductor_color": {},
             "source_color": {}
@@ -165,6 +164,9 @@ def get_data():
             "source_color": {"sec_sink": color_sink}
         },
     ]
+
+    # init stack
+    nz = 0
 
     # add the layers
     for data_tmp in data:
