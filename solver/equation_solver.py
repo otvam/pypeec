@@ -7,6 +7,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import scipy.sparse.linalg as sla
 import scipy.linalg as lna
+import numpy as np
 from main import logging_utils
 
 # get a logger
@@ -58,7 +59,7 @@ def _get_lu_decomposition(mat):
     try:
         LU_decomposition = sla.splu(mat)
     except RuntimeError:
-        return float("inf")
+        return None
 
     # get the function for the linear operator (original matrix)
     def fct_matvec(v):
@@ -81,6 +82,10 @@ def _get_condition_estimate(mat, accuracy):
 
     # get an inverse operator
     op = _get_lu_decomposition(mat)
+
+    # abort if LU decomposition failed
+    if op is None:
+        return float("inf")
 
     # compute the norm of the matrix inverse (estimate)
     nrm_inv = sla.onenormest(op, t=accuracy)

@@ -10,7 +10,6 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import qtpy.QtWidgets as qtw
 import pyvistaqt as pvqt
-
 from plotter import manage_voxel
 from plotter import manage_plot
 from main import logging_utils

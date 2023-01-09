@@ -54,17 +54,30 @@ def _check_source(idx_src, tag_src, source):
         # extract the data_output
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
-        value = dat_tmp["value"]
 
-        # check the source value and tag
+        # check the source type and tag
         if not isinstance(tag, str):
             raise CheckError("source name should be a string")
-        if not np.isscalar(value):
-            raise CheckError("source value should be a scalar")
         if not isinstance(source_type, str):
             raise CheckError("source type should be a string")
         if not ((source_type == "current") or (source_type == "voltage")):
             raise CheckError("source type should be voltage or current")
+
+        # get the source value
+        if source_type == "current":
+            value = dat_tmp["I"]
+            element = dat_tmp["G"]
+        elif source_type == "voltage":
+            value = dat_tmp["V"]
+            element = dat_tmp["R"]
+        else:
+            raise ValueError("invalid source type")
+
+        # check the source value
+        if not np.isscalar(value):
+            raise CheckError("source value should be a scalar")
+        if not np.isscalar(element):
+            raise CheckError("source internal resistance/conductance should be a scalar")
 
         # append the tag and indices
         tag_src.append(tag)

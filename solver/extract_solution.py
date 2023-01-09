@@ -8,7 +8,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 
 
-def get_sol_extract(n, idx_f, idx_v, idx_src_v, sol):
+def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):
     """
     Extract the dace currents, voxel potentials, and voltage source currents.
 
@@ -25,6 +25,7 @@ def get_sol_extract(n, idx_f, idx_v, idx_src_v, sol):
     (nx, ny, nz) = n
     n_v = len(idx_v)
     n_f = len(idx_f)
+    n_src_c = len(idx_src_c)
     n_src_v = len(idx_src_v)
     n = nx*ny*nz
 
@@ -36,11 +37,15 @@ def get_sol_extract(n, idx_f, idx_v, idx_src_v, sol):
     V_voxel = np.zeros(n, dtype=np.complex128)
     V_voxel[idx_v] = sol[n_f:n_f+n_v]
 
+    # assign current source currents
+    I_src_c = np.zeros(n, dtype=np.complex128)
+    I_src_c[idx_src_c] = sol[n_f+n_v:n_f+n_v+n_src_c]
+
     # assign voltage source currents
     I_src_v = np.zeros(n, dtype=np.complex128)
-    I_src_v[idx_src_v] = sol[n_f+n_v:n_f+n_v+n_src_v]
+    I_src_v[idx_src_v] = sol[n_f+n_v+n_src_c:n_f+n_v+n_src_c+n_src_v]
 
-    return I_face, V_voxel, I_src_v
+    return I_face, V_voxel, I_src_c, I_src_v
 
 
 def get_current_density(n, d, A_incidence, I_face):
@@ -91,7 +96,7 @@ def get_assign_field(n, idx_v, V_voxel, J_voxel):
     return V_voxel, J_voxel
 
 
-def get_terminal(source, V_voxel, I_src_v):
+def get_terminal(source, V_voxel, I_src_c, I_src_v):
     """
     Parse the terminal voltages and currents for the sources.
     Assign the results to a dict.
@@ -102,27 +107,22 @@ def get_terminal(source, V_voxel, I_src_v):
 
     # parse the current source terminals
     for tag, dat_tmp in source.items():
-        # get the data_output
+        # get the data
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
-        value = dat_tmp["value"]
 
         # append the source
         if len(idx) == 0:
             I_tmp = np.nan
             V_tmp = np.nan
         else:
+            # voltage is the average between all the voxels composing the terminal
+            V_tmp = np.complex128(np.mean(V_voxel[idx]))
+
+            # current is the sum between all the voxels composing the terminal
             if source_type == "current":
-                # current is set by the source
-                I_tmp = np.complex128(value)
-
-                # voltage is the average between all the voxels composing the terminal
-                V_tmp = np.complex128(np.mean(V_voxel[idx]))
+                I_tmp = np.complex128(np.sum(I_src_c[idx]))
             elif source_type == "voltage":
-                # voltage is set by the source
-                V_tmp = np.complex128(value)
-
-                # current is the sum between all the voxels composing the terminal
                 I_tmp = np.complex128(np.sum(I_src_v[idx]))
             else:
                 raise ValueError("invalid terminal type")

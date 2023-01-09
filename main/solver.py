@@ -141,8 +141,11 @@ def _run_main(data_solver):
         # parse the conductors
         (idx_v, rho_v) = problem_geometry.get_conductor_geometry(conductor)
 
-        # parse the current and voltage sources
-        (idx_src_c, val_src_c, idx_src_v, val_src_v) = problem_geometry.get_source_geometry(source)
+        # parse the current sources
+        (idx_src_c, I_src_c, G_src_c) = problem_geometry.get_source_current_geometry(source)
+
+        # parse the voltage sources
+        (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_voltage_geometry(source)
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
         (A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
@@ -169,20 +172,23 @@ def _run_main(data_solver):
 
     # assemble the equation system
     with logging_utils.BlockTimer(logger, "equation_system"):
-        # get the matrices defining the KCL, KVL, and sources
-        (A_kcl, A_kvl, A_src) = equation_system.get_connection_matrix(A_reduced, idx_v, idx_f, idx_src_v_local)
-
         # compute the right-hand vector with the sources
-        rhs = equation_system.get_source_vector(idx_v, idx_f, idx_src_c_local, val_src_c, val_src_v)
+        rhs = equation_system.get_source_vector(idx_v, idx_f, I_src_c, V_src_v)
+
+        # get the matrices defining the KCL, KVL
+        (A_kcl, A_kvl) = equation_system.get_kcl_kvl_matrix(A_reduced, idx_f, idx_src_c, idx_src_v)
+
+        # get the matrices the sources
+        A_src = equation_system.get_source_matrix(idx_v, idx_src_c_local, idx_src_v_local, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_vector, ZL_vector)
+        pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, A_src, R_vector, ZL_vector)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(n, idx_v, idx_f, idx_src_v_local, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor)
+        sys_op = equation_system.get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor)
 
         # get a matrix for detecting if the problem is quasi-singular (this matrix has no physical meaning)
-        S_matrix = equation_system.get_singular(A_kcl, A_kvl, A_src)
+        S_matrix = equation_system.get_singular(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
 
     # solve the equation system
     with logging_utils.BlockTimer(logger, "equation_solver"):
@@ -224,19 +230,20 @@ def _run_postproc(data_solver):
     A_incidence = data_solver["A_incidence"]
     idx_f = data_solver["idx_f"]
     idx_v = data_solver["idx_v"]
+    idx_src_c = data_solver["idx_src_c"]
     idx_src_v = data_solver["idx_src_v"]
     sol = data_solver["sol"]
 
     # extract the solution
     with logging_utils.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        (I_face, V_voxel, I_src_v) = extract_solution.get_sol_extract(n, idx_f, idx_v, idx_src_v, sol)
+        (I_face, V_voxel, I_src_c, I_src_v) = extract_solution.get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol)
 
         # get the voxel current densities from the face currents
         J_voxel = extract_solution.get_current_density(n, d, A_incidence, I_face)
 
         # parse the terminal voltages and currents for the sources
-        terminal = extract_solution.get_terminal(source, V_voxel, I_src_v)
+        terminal = extract_solution.get_terminal(source, V_voxel, I_src_c, I_src_v)
 
         # assign invalid values to the empty voxels
         (V_voxel, J_voxel) = extract_solution.get_assign_field(n, idx_v, V_voxel, J_voxel)
