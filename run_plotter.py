@@ -12,20 +12,6 @@ import pickle
 from main import plotter
 
 
-def get_data_plotter():
-    """
-    Get the data for standard plots.
-    """
-
-    # add the module to the namespace
-    from data_input import data_plotter
-
-    # get the data
-    data_plotter = data_plotter.get_data()
-
-    return data_plotter
-
-
 def run(name, data_plotter):
     """
     Load the result file and plot the results.
@@ -44,8 +30,11 @@ def run(name, data_plotter):
 
 if __name__ == "__main__":
     # get the data
-    name = "data_pcb_trf"
-    data_plotter = get_data_plotter()
+    name = "data_test"
+
+    # get the data
+    from data_input import data_plotter
+    data_plotter = data_plotter.get_data()
 
     # run
     exit_code = run(name, data_plotter)
