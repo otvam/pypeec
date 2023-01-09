@@ -54,7 +54,7 @@ def get_material(idx_voxel, geom, conductor, source):
 
     # assign conductor voxels
     for tag, dat_tmp in conductor.items():
-        # get the data_output
+        # get the data
         idx_tmp = dat_tmp["idx"]
 
         # assign the material
@@ -62,7 +62,7 @@ def get_material(idx_voxel, geom, conductor, source):
 
     # assign source voxels
     for tag, dat_tmp in source.items():
-        # get the data_output
+        # get the data
         idx_tmp = dat_tmp["idx"]
         source_type_tmp = dat_tmp["source_type"]
 
@@ -72,7 +72,7 @@ def get_material(idx_voxel, geom, conductor, source):
         elif source_type_tmp == "voltage":
             data[idx_tmp] = 2
         else:
-            raise ValueError("invalid terminal type")
+            raise ValueError("invalid source type")
 
     # get voxel indices
     idx = np.flatnonzero(idx_voxel)
@@ -131,7 +131,10 @@ def get_current_density(idx_voxel, geom, J_voxel):
     geom["J_norm_abs"] = lna.norm(J, axis=1)
     geom["J_norm_re"] = lna.norm(np.real(J), axis=1)
     geom["J_norm_im"] = lna.norm(np.imag(J), axis=1)
-    geom["J_vec_unit_re"] = np.real(J)/lna.norm(np.real(J), axis=1, keepdims=True)
-    geom["J_vec_unit_im"] = np.imag(J)/lna.norm(np.imag(J), axis=1, keepdims=True)
+
+    # compute the direction, ignore division per zero
+    with np.errstate(all="ignore"):
+        geom["J_vec_unit_re"] = np.real(J)/lna.norm(np.real(J), axis=1, keepdims=True)
+        geom["J_vec_unit_im"] = np.imag(J)/lna.norm(np.imag(J), axis=1, keepdims=True)
 
     return geom

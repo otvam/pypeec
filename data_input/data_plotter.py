@@ -71,12 +71,12 @@ def _get_arrow(var, vec, scale, arrow, unit, name):
 
 def get_data():
     data_plotter = [
-        _get_geometry("Material"),
-        _get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
+        #_get_geometry("Material"),
+        #_get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
         _get_scalar("V_abs", 1e0, "V", "Potential"),
         _get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        _get_arrow("J_norm_re", "J_vec_unit_re", 1e-6, 2e-5, "A/mm2", "Re. Current"),
-        _get_arrow("J_norm_im", "J_vec_unit_im", 1e-6, 2e-5, "A/mm2", "Im. Current"),
+        _get_arrow("J_norm_re", "J_vec_unit_re", 1e-6, 0.5, "A/mm2", "Re. Current"),
+        #_get_arrow("J_norm_im", "J_vec_unit_im", 1e-6, 2e-5, "A/mm2", "Im. Current"),
     ]
 
     return data_plotter

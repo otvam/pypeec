@@ -42,8 +42,12 @@ def _get_plot_base(pl, grid, geom, title, plot_options):
 
     # add a marker at the origin
     if plot_options["origin_plot"]:
+        # get the marker size
+        origin_size = plot_options["origin_size"]
         d = np.min(grid.spacing)
-        r = d*plot_options["origin_size"]
+        r = d*origin_size
+
+        # add the marker
         origin = pv.Sphere(r, (0, 0, 0))
         pl.add_mesh(origin, color=plot_options["origin_color"])
 
@@ -200,8 +204,12 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     # scale and clamp the variable
     geom = _scale_range_vector(geom, var, filter_lim, color_lim, scale)
 
+    # get arrow size
+    d = np.min(grid.spacing)
+    factor = d*arrow
+
     # create the arrows
-    glyphs = geom.glyph(orient=vec, scale=False, factor=arrow)
+    glyphs = geom.glyph(orient=vec, scale=False, factor=factor)
 
     # add the resulting plot to the plotter
     pl.add_mesh(
