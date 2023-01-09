@@ -13,11 +13,12 @@ def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):
     Extract the dace currents, voxel potentials, and voltage source currents.
 
     The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_v voltage source voxels.
+    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
 
     The solution vector is set in the following order:
     - n_f: face currents
     - n_v: voxel potentials
+    - n_src_c: current source currents
     - n_src_v: voltage source currents
     """
 
@@ -99,7 +100,9 @@ def get_assign_field(n, idx_v, V_voxel, J_voxel):
 def get_terminal(source, V_voxel, I_src_c, I_src_v):
     """
     Parse the terminal voltages and currents for the sources.
-    Assign the results to a dict.
+    The sources have internal resistances/admittances.
+    Therefore, the extract value can differ from the source value.
+    The results are assigned to a dict with the voltage and current values.
     """
 
     # init terminal dict

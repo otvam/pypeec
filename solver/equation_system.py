@@ -2,34 +2,43 @@
 Different functions for building the equation system.
 Two equation systems are built, one for the preconditioner and one for the full system.
 
-The complete equation matrix is: [Z A_kvl ; A_kcl A_src].
-The complete solution vector is [face_currents ; voxel_potentials ; voltage_source_currents].
-The complete right-hand size vector is [zero_excitation ; current_source_currents ; voltage_source_voltages].
-
 The problem contains n_v non-empty voxels and n_f internal faces.
-The problem contains n_src_v voltage source voxels.
+The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
 
 The equations are set in the following order:
     - n_f: equations are the KVL
     - n_v: equations are the KCL
-    - n_src_v equations are the voltage source voxels (potential fixing)
+    - n_src_c equations are the current source voxels (source equation with internal admittance)
+    - n_src_v equations are the voltage source voxels (source equation with internal resistance)
 
-The solution vector is set in the following order:
-    - n_f: face currents
-    - n_v: voxel potentials
-    - n_src_v: voltage source currents
+The complete equation matrix is:
+    [
+        Z, A_kvl ;
+        A_kcl, A_src ;
+    ]
 
-The right-hand side vector is set in the following order:
-    - n_f: zero excitation
-    - n_v: current source excitations
-    - n_src_v: voltage source excitations
+The complete solution vector is:
+    [
+        n_f: face currents
+        n_v: voxel potentials
+        n_src_c: current source currents
+        n_src_v: voltage source currents
+    ]
+
+The complete right-hand size vector is:
+    [
+        n_f: zero excitation
+        n_v: zero excitation
+        n_src_c: current source excitations
+        n_src_v: voltage source excitations
+    ]
 
 For the preconditioner, the impedance matrix (Z) is diagonal.
 The preconditioner is solved with the Schur complement and the matrix factorization.
 
 For the full system, the impedance matrix (Z) is dense.
 The matrix-vector multiplication is done with FFT circulant tensors.
-The system is solved with an iterative solver.
+The system is meant to be solved with an iterative solver.
 """
 
 __author__ = "Thomas Guillod"
@@ -69,7 +78,7 @@ def _get_circulant_multiply(CF, X):
     return Y
 
 
-def _get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector):
+def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     """
     Compute the sparse matrix decomposition for the preconditioner.
     The preconditioner is using a diagonal impedance matrix (no cross-coupling).
@@ -80,9 +89,9 @@ def _get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector):
         - SuperLU is used if UMFPACK is not installed
 
     The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_v voltage source voxels.
+    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
     The diagonal admittance matrix as the following size: (n_f, n_f).
-    The Schur complement matrix as the following size: (n_v+n_src_v, n_v+n_src_v).
+    The Schur complement matrix as the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
     """
 
     # admittance vector
@@ -103,15 +112,15 @@ def _get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector):
     return Y_matrix, S_factorization
 
 
-def _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, Y_matrix, S_factorization):
+def _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, Y_matrix, S_factorization):
     """
     Solve the preconditioner equation system.
     The Schur complement and matrix factorization are used.
 
     The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_v voltage source voxels.
-    The equation system has the following size: n_f+n_v+n_src_v.
-    The Schur complement split the system in two subsystems: n_f and n_v+n_src_v.
+    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
+    The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
+    The Schur complement split the system in two subsystems: n_f and n_v+n_src_c+n_src_v.
     """
 
     # get the matrix size (Schur complement split)
@@ -133,15 +142,15 @@ def _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_
     return sol
 
 
-def _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor):
+def _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_tensor, ZL_tensor):
     """
     Multiply the full equation matrix with a given solution test vector.
     For the multiplication of resistance matrix and the current, the Hadamard product is used.
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
 
     The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_v voltage source voxels.
-    The equation system has the following size: n_f+n_v+n_src_v.
+    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
+    The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
     """
 
     # get the matrix size
@@ -192,8 +201,8 @@ def get_source_vector(idx_v, idx_f, I_src_c, V_src_v):
     Construct the right-hand side with the current and voltage sources.
 
     The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_i current source voxels and n_src_v voltage source voxels.
-    The right-hand size vector has the following size: n_f+n_v+n_src_i+n_src_v.
+    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
+    The right-hand size vector has the following size: n_f+n_v+n_src_c+n_src_v.
     """
 
     # extract the voxel data_output
@@ -212,75 +221,79 @@ def get_source_vector(idx_v, idx_f, I_src_c, V_src_v):
     return rhs
 
 
-def get_kcl_kvl_matrix(A_reduced, idx_f, idx_src_c, idx_src_v):
+def get_kvl_kcl_matrix(A_reduced, idx_f, idx_src_c, idx_src_v):
     """
-    Construct the connection matrices for the KCL, KVL, and potential fixing.
+    Construct the connection matrices for the KCL, KVL.
 
     The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_i current source voxels and n_src_v voltage source voxels.
-    The A_kcl matrix has the following size: (n_v+n_src_v, n_f).
-    The A_kvl matrix has the following size: (n_f, n_v+n_src_v).
-    The A_src matrix has the following size: (n_v+n_src_v, n_v+n_src_v).
+    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
+    The A_kvl matrix has the following size: (n_f, n_v+n_src_c+n_src_v).
+    The A_kcl matrix has the following size: (n_v+n_src_c+n_src_v, n_f).
     """
 
     # extract the voxel data_output
     n_f = len(idx_f)
-    n_src_i = len(idx_src_c)
+    n_src_c = len(idx_src_c)
     n_src_v = len(idx_src_v)
 
     # connection matrix for the KCL
-    A_add = sps.csc_matrix((n_src_i+n_src_v, n_f), dtype=np.int64)
+    A_add = sps.csc_matrix((n_src_c+n_src_v, n_f), dtype=np.int64)
     A_kcl = sps.bmat([[+1*A_reduced], [A_add]], dtype=np.int64)
 
     # connection matrix for the KVL
-    A_add = sps.csc_matrix((n_f, n_src_i+n_src_v), dtype=np.int64)
+    A_add = sps.csc_matrix((n_f, n_src_c+n_src_v), dtype=np.int64)
     A_kvl = sps.bmat([[-1*A_reduced.transpose(), A_add]], dtype=np.int64)
 
-    return A_kcl, A_kvl
+    return A_kvl, A_kcl
 
 
 def get_source_matrix(idx_v, idx_src_i_local, idx_src_v_local, G_src_c, R_src_v):
+    """
+    Construct the source matrix (description of the sources with internal resistances/admittances).
 
-    # connection matrix for the source (one equation per voltage source voxel)
-    # the -1 term represents the current flowing inside/outside the voltage source voxels
-    # the +1 term represents the potential fixing for the voltage source voxels
+    The problem contains n_v non-empty voxels.
+    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
+    The A_src matrix has the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
+    """
 
     # extract the voxel data_output
     n_v = len(idx_v)
-    n_src_i = len(idx_src_i_local)
+    n_src_c = len(idx_src_i_local)
     n_src_v = len(idx_src_v_local)
 
-    # source indices
-    idx_src_i_add = np.arange(n_v, n_v+n_src_i, dtype=np.int64)
-    idx_src_v_add = np.arange(n_v+n_src_i, n_v+n_src_i+n_src_v, dtype=np.int64)
-    cst_src_i = np.full(n_src_i, 1, dtype=np.float64)
+    # indices of the new source equations to be added
+    idx_src_i_add = np.arange(n_v, n_v+n_src_c, dtype=np.int64)
+    idx_src_v_add = np.arange(n_v+n_src_c, n_v+n_src_c+n_src_v, dtype=np.int64)
+
+    # constant vector with the size of the sources
+    cst_src_i = np.full(n_src_c, 1, dtype=np.float64)
     cst_src_v = np.full(n_src_v, 1, dtype=np.float64)
 
-    # connection of the source current to the KCL
+    # connection of the current source currents and voltage source currents to the KCL
     idx_row_connect = np.concatenate((idx_src_i_local, idx_src_v_local), dtype=np.int64)
     idx_col_connect = np.concatenate((idx_src_i_add, idx_src_v_add), dtype=np.int64)
     val_connect = np.concatenate((-cst_src_i, -cst_src_v), dtype=np.float64)
 
-    # adding the current sources
+    # adding the current sources (source equation with internal admittance, Norton source)
     idx_row_current = np.concatenate((idx_src_i_add, idx_src_i_add), dtype=np.int64)
     idx_col_current = np.concatenate((idx_src_i_add, idx_src_i_local), dtype=np.int64)
     val_current = np.concatenate((cst_src_i, G_src_c), dtype=np.float64)
 
-    # adding the voltage sources
+    # adding the voltage sources (source equation with internal resistance, Thevenin source)
     idx_row_voltage = np.concatenate((idx_src_v_add, idx_src_v_add), dtype=np.int64)
     idx_col_voltage = np.concatenate((idx_src_v_local, idx_src_v_add), dtype=np.int64)
     val_voltage = np.concatenate((cst_src_v, R_src_v), dtype=np.float64)
 
-    # construct the matrix
+    # construct the matrix with the computed indices and values
     idx_row = np.concatenate((idx_row_connect, idx_row_current, idx_row_voltage), dtype=np.int64)
     idx_col = np.concatenate((idx_col_connect, idx_col_current, idx_col_voltage), dtype=np.int64)
     val = np.concatenate((val_connect, val_current, val_voltage), dtype=np.float64)
-    A_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_v+n_src_i+n_src_v, n_v+n_src_i+n_src_v), dtype=np.float64)
+    A_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v), dtype=np.float64)
 
     return A_src
 
 
-def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, A_src, R_vector, ZL_vector):
+def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
@@ -290,7 +303,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl
     n_dof = len(idx_f)+len(idx_v)+len(idx_src_c)+len(idx_src_v)
 
     # matrix factorization with the Schur complement
-    (Y_matrix, S_factorization) = _get_preconditioner_factorization(A_kcl, A_kvl, A_src, R_vector, ZL_vector)
+    (Y_matrix, S_factorization) = _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector)
 
     # if the matrix is singular, there is not preconditioner
     if S_factorization is None:
@@ -298,7 +311,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl
 
     # function describing the preconditioner
     def fct(rhs):
-        sol = _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, Y_matrix, S_factorization)
+        sol = _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, Y_matrix, S_factorization)
         return sol
 
     # corresponding linear operator
@@ -307,7 +320,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl
     return op
 
 
-def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor):
+def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_tensor, ZL_tensor):
     """
     Get a linear operator that produce the matrix-vector multiplication result for the full system.
     This operator is used for the iterative solver.
@@ -318,7 +331,7 @@ def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, A_s
 
     # function describing the equation system
     def fct(sol):
-        rhs = _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, A_src, R_tensor, ZL_tensor)
+        rhs = _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_tensor, ZL_tensor)
         return rhs
 
     # corresponding linear operator
@@ -327,7 +340,7 @@ def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kcl, A_kvl, A_s
     return op
 
 
-def get_singular(A_kcl, A_kvl, A_src, R_vector, ZL_vector):
+def get_singular(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     """
     Computing the Schur complement with the diagonal impedance matrix.
     The resulting matrix is used to detect quasi-singular equations systems.

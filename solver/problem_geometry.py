@@ -38,6 +38,7 @@ def get_conductor_geometry(conductor):
 def get_source_current_geometry(source):
     """
     Get the indices of the source voxels and the corresponding source excitations.
+    The current sources have internal admittances.
     """
 
     # array for the current source indices and source values
@@ -68,6 +69,7 @@ def get_source_current_geometry(source):
 def get_source_voltage_geometry(source):
     """
     Get the indices of the source voxels and the corresponding source excitations.
+    The voltage sources have internal resistances.
     """
 
     # array for the voltage source indices and source values
