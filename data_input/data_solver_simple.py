@@ -8,13 +8,13 @@ def get_data():
     data_solver["d_green"] = 20e-4
 
     data_solver["conductor"] = {
-        "pri": {"idx": [0, 3, 4, 8, 12, 13, 14, 15, 11, 7], "rho": 1.75e-08},
-        "sec": {"idx": [32, 33, 34, 35, 39, 43, 47, 46, 45, 44, 40, 36], "rho": 8.77e-08},
+        "pri": {"idx": [0, 3, 4, 8, 12, 13, 14, 15, 11, 7], "rho": 1.75e-8},
+        "sec": {"idx": [32, 33, 34, 35, 39, 43, 47, 46, 45, 44, 40, 36], "rho": 8.77e-8},
     }
     data_solver["source"] = {
-        "src": {"source_type": "current", "idx": [0], "value": +1},
-        "sink": {"source_type": "voltage", "idx": [3], "value": +1},
-        "short": {"source_type": "voltage", "idx": [45], "value": -1},
+        "src": {"source_type": "current", "idx": [0], "I": +1.0, "G": 0.0},
+        "sink": {"source_type": "voltage", "idx": [3], "V": +1.0, "R": 0.0},
+        "short": {"source_type": "voltage", "idx": [45], "V": -1.0, "R": 0.0},
     }
 
     data_solver["freq"] = 10e6

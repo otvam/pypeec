@@ -110,14 +110,14 @@ def get_data():
     nz = 0
 
     conductor = {
-        "pri": {"idx": [], "rho": 1.75e-08},
-        "sec": {"idx": [], "rho": 1.75e-08},
+        "pri": {"idx": [], "rho": 1.75e-8},
+        "sec": {"idx": [], "rho": 1.75e-8},
     }
     source = {
-        "pri_src": {"source_type": "current", "idx": [], "value": 1},
-        "pri_sink": {"source_type": "voltage", "idx": [], "value": 0},
-        "sec_src": {"source_type": "current", "idx": [], "value": 0},
-        "sec_sink": {"source_type": "voltage", "idx": [], "value": 0},
+        "pri_src": {"source_type": "current", "idx": [], "I": 1.0, "G": 0.01},
+        "pri_sink": {"source_type": "voltage", "idx": [], "V": 0.0, "R": 0.01},
+        "sec_src": {"source_type": "current", "idx": [], "I": 0.0, "G": 0.01},
+        "sec_sink": {"source_type": "voltage", "idx": [], "V": 0.0, "R": 0.01},
     }
 
     # stack

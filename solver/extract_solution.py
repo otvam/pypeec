@@ -6,6 +6,10 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
+from main import logging_utils
+
+# get a logger
+logger = logging_utils.get_logger("solution")
 
 
 def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):
@@ -91,8 +95,8 @@ def get_assign_field(n, idx_v, V_voxel, J_voxel):
     idx_nan = np.setdiff1d(idx_all, idx_v)
 
     # flag empty voxels
-    V_voxel[idx_nan] = np.nan + 1j * np.nan
-    J_voxel[idx_nan, :] = np.nan + 1j * np.nan
+    V_voxel[idx_nan] = np.nan+1j*np.nan
+    J_voxel[idx_nan, :] = np.nan+1j*np.nan
 
     return V_voxel, J_voxel
 
@@ -116,8 +120,8 @@ def get_terminal(source, V_voxel, I_src_c, I_src_v):
 
         # append the source
         if len(idx) == 0:
-            I_tmp = np.nan
-            V_tmp = np.nan
+            I_tmp = np.nan+1j*np.nan
+            V_tmp = np.nan+1j*np.nan
         else:
             # voltage is the average between all the voxels composing the terminal
             V_tmp = np.complex128(np.mean(V_voxel[idx]))
@@ -132,5 +136,10 @@ def get_terminal(source, V_voxel, I_src_c, I_src_v):
 
         # assign the current and voltage
         terminal[tag] = {"V": V_tmp, "I": I_tmp}
+
+        # display
+        V_str = "%.3e + %.3ej" % (V_tmp.real, V_tmp.imag)
+        I_str = "%.3e + %.3ej" % (I_tmp.real, I_tmp.imag)
+        logger.info("terminal: %s : V = %s V : I = %s A" % (tag, V_str, I_str))
 
     return terminal

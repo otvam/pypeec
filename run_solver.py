@@ -33,7 +33,7 @@ def run(name, data_solver):
 
 if __name__ == "__main__":
     # name of the simulation
-    name = "data_test"
+    name = "data_pcb_trf"
 
     # get the data
     if name == "data_test":

@@ -1,18 +1,18 @@
 def get_data():
     data_solver = dict()
 
-    data_solver["n"] = (1, 1, 3)
-    data_solver["d"] = (1e-2, 1e-2, 1e-2)
+    data_solver["n"] = (2, 1, 3)
+    data_solver["d"] = (0.5e-2, 1e-2, 1e-2)
     data_solver["r"] = (1, 1, 1)
     data_solver["ori"] = (0, 0, 0)
     data_solver["d_green"] = 20e-4
 
     data_solver["conductor"] = {
-        "cond": {"idx": [0, 1, 2], "rho": 1e-4},
+        "cond": {"idx": [0, 1, 2, 3, 4, 5], "rho": 1e-2},
     }
     data_solver["source"] = {
-        "src": {"source_type": "current", "idx": [0], "I": 100, "G": 0.0},
-        "sink": {"source_type": "voltage", "idx": [2], "V": 0, "R": 0.0},
+        "src": {"source_type": "current", "idx": [0, 1], "I": 1.0, "G": 0.5},
+        "sink": {"source_type": "voltage", "idx": [4, 5], "V": 0.0, "R": 2.0},
     }
 
     data_solver["freq"] = 0

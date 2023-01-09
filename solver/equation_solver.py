@@ -7,7 +7,6 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import scipy.sparse.linalg as sla
 import scipy.linalg as lna
-import numpy as np
 from main import logging_utils
 
 # get a logger
