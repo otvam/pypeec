@@ -74,9 +74,9 @@ def get_resistivity_vector(n, idx_v, rho_v):
     return rho_voxel
 
 
-def get_resistance_matrix(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel):
+def get_resistance_vector(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel):
     """
-    Extract the resistance matrix of the system.
+    Extract the resistance vector of the system (diagonal of the resistance matrix).
     The problem contains n_v non-empty voxels and n_f internal faces.
     For solving the full system, a tensor is used: (nx, ny, nz, 3).
     For solving the preconditioner, a vector is used: (n_f).
@@ -87,32 +87,23 @@ def get_resistance_matrix(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel):
     (dx, dy, dz) = d
     n = nx*ny*nz
 
-    # resistance matrix (x-direction)
+    # flattened resistance matrix (x-direction)
     R_x = np.zeros(n, dtype=np.float64)
     R_x[idx_f_x] = (dx/(dy*dz))*rho_voxel[idx_f_x]
-    R_x = R_x.reshape((nx, ny, nz), order="F")
 
-    # resistance matrix (y-direction)
+    # flattened resistance matrix (y-direction)
     R_y = np.zeros(n, dtype=np.float64)
     R_y[idx_f_y] = (dy/(dx*dz))*rho_voxel[idx_f_y]
-    R_y = R_y.reshape((nx, ny, nz), order="F")
 
-    # resistance matrix (z-direction)
+    # flattened resistance matrix (z-direction)
     R_z = np.zeros(n, dtype=np.float64)
     R_z[idx_f_z] = (dz/(dx*dy))*rho_voxel[idx_f_z]
-    R_z = R_z.reshape((nx, ny, nz), order="F")
 
-    # assign the resistance tensor
-    R_tensor = np.zeros((nx, ny, nz, 3), dtype=np.float64)
-    R_tensor[:, :, :, 0] = R_x
-    R_tensor[:, :, :, 1] = R_y
-    R_tensor[:, :, :, 2] = R_z
-
-    # assign the matrix as a vector for the preconditioner
-    R_vector = R_tensor.flatten(order="F")
+    # assemble the resistance vector
+    R_vector = np.concatenate((R_x, R_y, R_z), dtype=np.float64)
     R_vector = R_vector[idx_f]
 
-    return R_tensor, R_vector
+    return R_vector
 
 
 def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):

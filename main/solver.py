@@ -161,8 +161,8 @@ def _run_main(data_solver):
         # get the resistivity for all the voxels (including empty voxels).
         rho_voxel = resistance_inductance.get_resistivity_vector(n, idx_v, rho_v)
 
-        # get the resistance vector (preconditioner) and tensor (full problem, tensor)
-        (R_tensor, R_vector) = resistance_inductance.get_resistance_matrix(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel)
+        # get the resistance vector
+        R_vector = resistance_inductance.get_resistance_vector(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel)
 
         # get the inductance vector (preconditioner) and tensor (full problem, circulant tensor)
         (L_tensor, L_vector) = resistance_inductance.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
@@ -185,7 +185,7 @@ def _run_main(data_solver):
         pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_vector)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_tensor, ZL_tensor)
+        sys_op = equation_system.get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
 
         # get a matrix for detecting if the problem is quasi-singular (this matrix has no physical meaning)
         S_matrix = equation_system.get_singular(A_kvl, A_kcl, A_src, R_vector, ZL_vector)

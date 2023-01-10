@@ -142,10 +142,9 @@ def _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_
     return sol
 
 
-def _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_tensor, ZL_tensor):
+def _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
     """
     Multiply the full equation matrix with a given solution test vector.
-    For the multiplication of resistance matrix and the current, the Hadamard product is used.
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
 
     The problem contains n_v non-empty voxels and n_f internal faces.
@@ -173,19 +172,15 @@ def _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kc
     # initialize the tensor for the matrix multiplication results
     rhs_a_all = np.zeros((nx, ny, nz, 3), dtype=np.complex128)
 
-    # multiply the impedance matrix with the current vector
+    # multiply the impedance matrix with the current vector (multiplication is done with the FFT circulant tensor)
     for i in range(3):
-        # for the inductive component, the multiplication is done with the FFT circulant tensor
-        rhs_a_all[:, :, :, i] += _get_circulant_multiply(ZL_tensor[:, :, :, i], sol_a_all[:, :, :, i])
-
-        # for the resistive component, the multiplication is done with the Hadamard product
-        rhs_a_all[:, :, :, i] += R_tensor[:, :, :, i]*sol_a_all[:, :, :, i]
+        rhs_a_all[:, :, :, i] = _get_circulant_multiply(ZL_tensor[:, :, :, i], sol_a_all[:, :, :, i])
 
     # flatten the tensor into a vector
     rhs_a_all = rhs_a_all.flatten(order="F")
 
     # form the complete KVL
-    rhs_a = rhs_a_all[idx_f]+A_kvl*sol_b
+    rhs_a = rhs_a_all[idx_f]+R_vector*sol_a+A_kvl*sol_b
 
     # form the complete KCL and potential fixing
     rhs_b = A_kcl*sol_a+A_src*sol_b
@@ -320,7 +315,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl
     return op
 
 
-def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_tensor, ZL_tensor):
+def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
     """
     Get a linear operator that produce the matrix-vector multiplication result for the full system.
     This operator is used for the iterative solver.
@@ -331,7 +326,7 @@ def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_s
 
     # function describing the equation system
     def fct(sol):
-        rhs = _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_tensor, ZL_tensor)
+        rhs = _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
         return rhs
 
     # corresponding linear operator
