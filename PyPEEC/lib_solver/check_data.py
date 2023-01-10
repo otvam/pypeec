@@ -29,13 +29,11 @@ def _check_conductor(idx_v, conductor):
 
         # check the resistivity and tag
         if not isinstance(tag, str):
-            raise CheckError("conductor name should be a string")
-        if not np.isscalar(rho):
-            raise CheckError("conductor resistivity should be a scalar")
-        if not np.isreal(rho):
-            raise CheckError("conductor resistivity should be real")
+            raise CheckError("tag: conductor name should be a string")
+        if not (np.isscalar(rho) and np.isreal(rho)):
+            raise CheckError("rho: conductor resistivity should be a real scalar")
         if not (rho > 0):
-            raise CheckError("conductor resistivity should be greater than zero")
+            raise CheckError("rho: conductor resistivity should be greater than zero")
 
         # append the indices
         idx_v = np.append(idx_v, np.array(idx))
@@ -57,11 +55,11 @@ def _check_source(idx_src, tag_src, source):
 
         # check the source type and tag
         if not isinstance(tag, str):
-            raise CheckError("source name should be a string")
+            raise CheckError("tag: source name should be a string")
         if not isinstance(source_type, str):
-            raise CheckError("source type should be a string")
+            raise CheckError("source_type: source type should be a string")
         if not ((source_type == "current") or (source_type == "voltage")):
-            raise CheckError("source type should be voltage or current")
+            raise CheckError("source_type: source type should be voltage or current")
 
         # get the source value
         if source_type == "current":
@@ -75,9 +73,9 @@ def _check_source(idx_src, tag_src, source):
 
         # check the source value
         if not np.isscalar(value):
-            raise CheckError("source value should be a scalar")
-        if not np.isscalar(element):
-            raise CheckError("source internal resistance/conductance should be a scalar")
+            raise CheckError("I/V: current/voltage source value should be a scalar")
+        if not (np.isscalar(element) and np.isreal(element)):
+            raise CheckError("G/R: source internal conductance/resistance should be a real scalar")
 
         # append the tag and indices
         tag_src.append(tag)
@@ -109,28 +107,41 @@ def check_voxel(data_solver):
 
     # check size
     if not (len(n) == 3):
-        raise CheckError("invalid voxel number (should be a tuple with three elements)")
+        raise CheckError("n: invalid voxel number (should be a tuple with three elements)")
     if not (len(r) == 3):
-        raise CheckError("invalid voxel resampling factor (should be a tuple with three elements)")
+        raise CheckError("r: invalid voxel resampling factor (should be a tuple with three elements)")
     if not (len(d) == 3):
-        raise CheckError("invalid voxel size (should be a tuple with three elements)")
+        raise CheckError("d: invalid voxel size (should be a tuple with three elements)")
     if not (len(ori) == 3):
-        raise CheckError("invalid voxel origin (should be a tuple with three elements)")
+        raise CheckError("ori: invalid voxel origin (should be a tuple with three elements)")
 
     # extract the voxel data
     (nx, ny, nz) = n
     (rx, ry, rz) = r
     (dx, dy, dz) = d
+    (orix, oriy, orix) = d
+
+    # check type
+    fct_int = lambda x: np.issubdtype(type(x), np.integer)
+    fct_float = lambda x: np.isscalar(x) and np.isreal(x)
+    if not (fct_int(nx) and fct_int(ny) and fct_int(nz)):
+        raise CheckError("n: number of voxels should be composed of integers")
+    if not (fct_int(rx) and fct_int(ry) and fct_int(rz)):
+        raise CheckError("r: number of resampling be composed of integers")
+    if not (fct_float(dx) and fct_float(dy) and fct_float(dz)):
+        raise CheckError("r: dimension of the voxels should be composed of real integers")
+    if not (fct_float(orix) and fct_float(oriy) and fct_float(orix)):
+        raise CheckError("r: voxel origin should be composed of real integers")
 
     # check value
     if not ((nx >= 1) and (ny >= 1) and (nz >= 1)):
-        raise CheckError("number of voxels cannot be smaller than one")
+        raise CheckError("n: number of voxels cannot be smaller than one")
     if not ((rx >= 1) and (ry >= 1) and (rz >= 1)):
-        raise CheckError("number of resampling cannot be smaller than one")
+        raise CheckError("r: number of resampling cannot be smaller than one")
     if not ((dx > 0) and (dy > 0) and (dz > 0)):
-        raise CheckError("dimension of the voxels cannot be zero or smaller")
+        raise CheckError("d: dimension of the voxels should be positive")
     if not (d_green > 0):
-        raise CheckError("voxel distance to simplify the green function cannot be zero of smaller")
+        raise CheckError("d_green: voxel distance to simplify the green function should be positive")
 
 
 def check_problem(data_solver):
@@ -184,7 +195,7 @@ def check_problem(data_solver):
 
 def check_solver(data_solver):
     """
-    Check the frequency and the solver options.
+    Check the frequency, the condition number options, and the solver options.
     """
 
     # extract field
@@ -198,9 +209,9 @@ def check_solver(data_solver):
 
     # check solver options
     if not isinstance(solver_options, dict):
-        raise CheckError("solver options should be a dict")
+        raise CheckError("solver_options: solver options should be a dict")
     if not (solver_options["tol"] > 0):
-        raise CheckError("solver relative tolerance should be greater than zero")
+        raise CheckError("tol: solver relative tolerance should be greater than zero")
     if not (solver_options["atol"] > 0):
         raise CheckError("solver absolute tolerance should be greater than zero")
     if not (solver_options["restart"] >= 1):
