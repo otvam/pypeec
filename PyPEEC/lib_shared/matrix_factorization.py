@@ -12,7 +12,7 @@ elif MATRIX_FACTORIZATION == "UMFPACK":
     import scikits.umfpack as umf
     warnings.filterwarnings('ignore', module="scikits.umfpack")
 else:
-    raise ValueError("invalid matrix factorization options")
+    raise ValueError("invalid matrix factorization library")
 
 
 class MatrixFactorization:
@@ -37,7 +37,7 @@ class MatrixFactorization:
                 self.status = True
                 self.factor = umf.splu(A)
             else:
-                raise ValueError("invalid matrix factorization options")
+                raise ValueError("invalid matrix factorization library")
         except RuntimeError:
             self.status = False
             self.factor = None
@@ -60,7 +60,7 @@ class MatrixFactorization:
             elif MATRIX_FACTORIZATION == "UMFPACK":
                 sol = self.factor.solve(rhs)
             else:
-                raise ValueError("invalid matrix factorization options")
+                raise ValueError("invalid matrix factorization library")
         else:
             sol = None
 

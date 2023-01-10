@@ -45,10 +45,10 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-import scipy.fft as fft
 import scipy.sparse as sps
 import scipy.sparse.linalg as sla
 import PyPEEC.lib_shared.matrix_factorization as matrix_factorization
+import PyPEEC.lib_shared.fourier_transform as fourier_transform
 
 
 def _get_circulant_multiply(CF, X):
@@ -65,13 +65,13 @@ def _get_circulant_multiply(CF, X):
     (nnx, nny, nnz) = CF.shape
 
     # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
-    CX = fft.fftn(X, (nnx, nny, nnz))
+    CX = fourier_transform.get_fftn(X, (nnx, nny, nnz))
 
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
     CY = CF*CX
 
     # compute the iFFT
-    Y = fft.ifftn(CY)
+    Y = fourier_transform.get_ifftn(CY, (nnx, nny, nnz))
 
     # the result is in the first block of the matrix
     Y = Y[0:nx, 0:ny, 0:nz]
