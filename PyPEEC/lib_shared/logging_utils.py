@@ -10,7 +10,12 @@ import datetime
 import logging
 import PyPEEC.config as config
 
-timestamp_global = time.time()
+# get config
+LOGGING_LEVEL = config.LOGGING_LEVEL
+LOGGING_GLOBAL_TIMER = config.LOGGING_GLOBAL_TIMER
+
+# global timestamp (constant over the complete run)
+LOGGING_GLOBAL_TIMESTAMP = time.time()
 
 
 class _DeltaTiming:
@@ -139,26 +144,25 @@ class DeltaTimeFormatter(logging.Formatter):
 
 def get_logger(name):
     """
-    Get a logger with a name and level.
+    Get a logger with a name.
     Display elapsed time, time, name, level, and message.
+
     The elapsed time can be measured with respect to:
         - the time the module is imported
-        - the time the logger is called
+        - the time the logger is called/created
+
+    The elapsed time measurement method and the logging level are specified in the config.
     """
 
     # get the logger (only one logger per name is allowed)
     logger = logging.getLogger(name)
     assert len(logger.handlers) == 0, "duplicated logger name"
 
-    # get logging level
-    level = config.LOGGING_LEVEL
-    global_timer = config.LOGGING_GLOBAL_TIMER
-
     # get the formatter
     fmt = DeltaTimeFormatter(
         fmt="%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s",
-        timestamp=timestamp_global,
-        global_timer=global_timer,
+        timestamp=LOGGING_GLOBAL_TIMESTAMP,
+        global_timer=LOGGING_GLOBAL_TIMER,
     )
 
     # get the handle
@@ -166,7 +170,7 @@ def get_logger(name):
     handler.setFormatter(fmt)
 
     # get the logger
-    logger.setLevel(level)
+    logger.setLevel(LOGGING_LEVEL)
     logger.addHandler(handler)
 
     return logger

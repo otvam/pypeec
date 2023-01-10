@@ -48,6 +48,7 @@ import numpy as np
 import scipy.fft as fft
 import scipy.sparse as sps
 import scipy.sparse.linalg as sla
+import PyPEEC.lib_shared.matrix_factorization as matrix_factorization
 
 
 def _get_circulant_multiply(CF, X):
@@ -103,11 +104,8 @@ def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     # computing the Schur complement (with respect to the diagonal admittance matrix)
     S_matrix = A_src-A_kcl*Y_matrix*A_kvl
 
-    # compute the factorization of the sparse Schur complement (None if singular)
-    try:
-        S_factorization = sla.factorized(S_matrix)
-    except RuntimeError:
-        S_factorization = None
+    # compute the factorization of the sparse Schur complement
+    S_factorization = matrix_factorization.MatrixFactorization(S_matrix)
 
     return Y_matrix, S_factorization
 
@@ -129,7 +127,7 @@ def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factoriza
 
     # solve the equation system (Schur complement and matrix factorization)
     tmp = rhs_b-(A_kcl*(Y_matrix*rhs_a))
-    sol_b = S_factorization(tmp)
+    sol_b = S_factorization.get_solution(tmp)
     sol_a = Y_matrix*(rhs_a-(A_kvl*sol_b))
 
     # assemble the solution
@@ -310,7 +308,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl
     (Y_matrix, S_factorization) = _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector)
 
     # if the matrix is singular, there is not preconditioner
-    if S_factorization is None:
+    if not S_factorization.get_status():
         return None
 
     # function describing the preconditioner
