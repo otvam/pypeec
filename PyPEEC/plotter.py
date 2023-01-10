@@ -10,19 +10,19 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import qtpy.QtWidgets as qtw
 import pyvistaqt as pvqt
-from plotter import manage_voxel
-from plotter import manage_plot
-from main import logging_utils
+from PyPEEC.lib_plotter import manage_voxel
+from PyPEEC.lib_plotter import manage_plot
+from PyPEEC.lib_shared import logging_utils
 
 # get a logger
-logger = logging_utils.get_logger("plotter")
+logger = logging_utils.get_logger("lib_plotter")
 
 
 def _get_grid_voxel(data_res):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
-    Add the solver results (material description, resistivity, and field) to the grid.
+    Add the lib_solver results (material description, resistivity, and field) to the grid.
     """
 
     # extract the data_output
@@ -64,7 +64,7 @@ def _get_plot(grid, geom, data_plotter):
     data_options = data_plotter["data_options"]
     plot_options = data_plotter["plot_options"]
 
-    # get the plotter (with the Qt framework)
+    # get the lib_plotter (with the Qt framework)
     pl = pvqt.BackgroundPlotter(
         toolbar=False,
         menu_bar=False,

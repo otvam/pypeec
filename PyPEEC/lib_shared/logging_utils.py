@@ -8,6 +8,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import time
 import datetime
 import logging
+import PyPEEC.config as config
 
 timestamp_global = time.time()
 
@@ -136,7 +137,7 @@ class DeltaTimeFormatter(logging.Formatter):
         return msg
 
 
-def get_logger(name="root", level="INFO", global_timer=True):
+def get_logger(name):
     """
     Get a logger with a name and level.
     Display elapsed time, time, name, level, and message.
@@ -148,6 +149,10 @@ def get_logger(name="root", level="INFO", global_timer=True):
     # get the logger (only one logger per name is allowed)
     logger = logging.getLogger(name)
     assert len(logger.handlers) == 0, "duplicated logger name"
+
+    # get logging level
+    level = config.LOGGING_LEVEL
+    global_timer = config.LOGGING_GLOBAL_TIMER
 
     # get the formatter
     fmt = DeltaTimeFormatter(

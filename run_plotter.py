@@ -9,7 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import sys
 import pickle
 
-from main import plotter
+from PyPEEC import plotter
 
 
 def run(name, data_plotter):
@@ -22,7 +22,7 @@ def run(name, data_plotter):
     with open(filename, "rb") as fid:
         data_res = pickle.load(fid)
 
-    # call plotter
+    # call lib_plotter
     exit_code = plotter.run(data_res, data_plotter)
 
     return exit_code

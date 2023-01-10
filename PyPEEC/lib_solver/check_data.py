@@ -1,5 +1,5 @@
 """
-Module for checking the solver input data_output.
+Module for checking the lib_solver input data_output.
 """
 
 __author__ = "Thomas Guillod"
@@ -184,7 +184,7 @@ def check_problem(data_solver):
 
 def check_solver(data_solver):
     """
-    Check the frequency and the solver options.
+    Check the frequency and the lib_solver options.
     """
 
     # extract field
@@ -196,13 +196,13 @@ def check_solver(data_solver):
     if not(freq >= 0):
         raise CheckError("frequency cannot be negative")
 
-    # check solver options
+    # check lib_solver options
     if not isinstance(solver_options, dict):
-        raise CheckError("solver options should be a dict")
+        raise CheckError("lib_solver options should be a dict")
     if not (solver_options["tol"] > 0):
-        raise CheckError("solver relative tolerance should be greater than zero")
+        raise CheckError("lib_solver relative tolerance should be greater than zero")
     if not (solver_options["atol"] > 0):
-        raise CheckError("solver absolute tolerance should be greater than zero")
+        raise CheckError("lib_solver absolute tolerance should be greater than zero")
     if not (solver_options["restart"] >= 1):
         raise CheckError("number of iterations between restarts should be greater than zero")
     if not (solver_options["maxiter"] >= 1):
@@ -210,7 +210,7 @@ def check_solver(data_solver):
 
     # check condition options
     if not isinstance(condition_options, dict):
-        raise CheckError("solver options should be a dict")
+        raise CheckError("lib_solver options should be a dict")
     if not isinstance(condition_options["check"], bool):
         raise CheckError("the flag for checking the condition should be a boolean")
     if not (condition_options["tolerance"] > 0):

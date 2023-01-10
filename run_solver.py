@@ -1,5 +1,5 @@
 """
-User script for solving a problem with the FFT-PEEC solver.
+User script for solving a problem with the FFT-PEEC lib_solver.
 Contain the program entry point.
 """
 
@@ -9,7 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import sys
 import pickle
 
-from main import solver
+from PyPEEC import solver
 
 
 def run(name, data_solver):
@@ -17,7 +17,7 @@ def run(name, data_solver):
     Solve the problem and write the result file.
     """
 
-    # call solver
+    # call lib_solver
     (status, data_res) = solver.run(data_solver)
 
     # save results

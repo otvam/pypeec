@@ -6,7 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-from main import logging_utils
+from PyPEEC.lib_shared import logging_utils
 
 # get a logger
 logger = logging_utils.get_logger("solution")

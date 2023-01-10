@@ -38,7 +38,7 @@ The preconditioner is solved with the Schur complement and the matrix factorizat
 
 For the full system, the impedance matrix (Z) is dense.
 The matrix-vector multiplication is done with FFT circulant tensors.
-The system is meant to be solved with an iterative solver.
+The system is meant to be solved with an iterative lib_solver.
 """
 
 __author__ = "Thomas Guillod"
@@ -84,8 +84,8 @@ def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     The preconditioner is using a diagonal impedance matrix (no cross-coupling).
     The diagonal impedance matrix can be trivially inverted.
     Therefore, the factorization is computed on the Schur complement:
-        - with sparse matrix solver (UMFPACK solver)
-        - with LU decomposition (SuperLU solver)
+        - with sparse matrix lib_solver (UMFPACK lib_solver)
+        - with LU decomposition (SuperLU lib_solver)
         - SuperLU is used if UMFPACK is not installed
 
     The problem contains n_v non-empty voxels and n_f internal faces.
@@ -327,7 +327,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl
 def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
     """
     Get a linear operator that produce the matrix-vector multiplication result for the full system.
-    This operator is used for the iterative solver.
+    This operator is used for the iterative lib_solver.
     """
 
     # get the matrix size

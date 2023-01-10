@@ -1,26 +1,26 @@
 """
-Main script for solving a problem with the FFT-PEEC solver.
+Main script for solving a problem with the FFT-PEEC lib_solver.
 Check the input data_output, solve the problem, and parse the results.
 
-The solver is implemented with NumPy and Scipy.
+The lib_solver is implemented with NumPy and Scipy.
 """
 
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-from solver import check_data
-from solver import voxel_resample
-from solver import voxel_geometry
-from solver import green_function
-from solver import problem_geometry
-from solver import resistance_inductance
-from solver import equation_system
-from solver import equation_solver
-from solver import extract_solution
-from main import logging_utils
+from PyPEEC.lib_solver import check_data
+from PyPEEC.lib_solver import voxel_resample
+from PyPEEC.lib_solver import voxel_geometry
+from PyPEEC.lib_solver import green_function
+from PyPEEC.lib_solver import problem_geometry
+from PyPEEC.lib_solver import resistance_inductance
+from PyPEEC.lib_solver import equation_system
+from PyPEEC.lib_solver import equation_solver
+from PyPEEC.lib_solver import extract_solution
+from PyPEEC.lib_shared import logging_utils
 
 # get a logger
-logger = logging_utils.get_logger("solver")
+logger = logging_utils.get_logger("lib_solver")
 
 
 def _run_check(data_solver):
@@ -37,7 +37,7 @@ def _run_check(data_solver):
         # check the voxel structure
         check_data.check_voxel(data_solver)
 
-        # check the solver options and frequency
+        # check the lib_solver options and frequency
         check_data.check_solver(data_solver)
 
         # check the conductors and sources
@@ -287,14 +287,14 @@ def _run_assemble(data_solver):
 
 def run(data_solver):
     """
-    Main script for solving a problem with the FFT-PEEC solver.
+    Main script for solving a problem with the FFT-PEEC lib_solver.
     Handle invalid data_output with exceptions.
     """
 
     # init
     logger.info("INIT")
 
-    # run the solver
+    # run the lib_solver
     try:
         _run_check(data_solver)
         data_solver = _run_resampling(data_solver)
