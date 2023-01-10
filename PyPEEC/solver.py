@@ -1,8 +1,8 @@
 """
-Main script for solving a problem with the FFT-PEEC lib_solver.
-Check the input data_output, solve the problem, and parse the results.
+Main script for solving a problem with the FFT-PEEC solver.
+Check the input data, solve the problem, and parse the results.
 
-The lib_solver is implemented with NumPy and Scipy.
+The solver is implemented with NumPy and Scipy.
 """
 
 __author__ = "Thomas Guillod"
@@ -20,24 +20,24 @@ from PyPEEC.lib_solver import extract_solution
 from PyPEEC.lib_shared import logging_utils
 
 # get a logger
-logger = logging_utils.get_logger("lib_solver")
+logger = logging_utils.get_logger("solver")
 
 
 def _run_check(data_solver):
     """
-    Check the input data_output.
-    Exceptions are not handled by this function.
+    Check the input data.
+    Exceptions are not caught inside this function.
     The different parts of the code are timed.
     """
 
     with logging_utils.BlockTimer(logger, "check_data"):
-        # check the voxel structure
+        # check the data type
         check_data.check_data_solver(data_solver)
 
         # check the voxel structure
         check_data.check_voxel(data_solver)
 
-        # check the lib_solver options and frequency
+        # check the solver options and frequency
         check_data.check_solver(data_solver)
 
         # check the conductors and sources
@@ -50,7 +50,7 @@ def _run_resampling(data_solver):
     The different parts of the code are timed.
     """
 
-    # extract the input data_output
+    # extract the input data
     n = data_solver["n"]
     r = data_solver["r"]
     d = data_solver["d"]
@@ -87,7 +87,7 @@ def _run_preproc(data_solver):
     The different parts of the code are timed.
     """
 
-    # extract the input data_output
+    # extract the input data
     n = data_solver["n"]
     d = data_solver["d"]
     ori = data_solver["ori"]
@@ -124,7 +124,7 @@ def _run_main(data_solver):
     The different parts of the code are timed.
     """
 
-    # extract the input data_output
+    # extract the input data
     n = data_solver["n"]
     d = data_solver["d"]
     freq = data_solver["freq"]
@@ -223,7 +223,7 @@ def _run_postproc(data_solver):
     The different parts of the code are timed.
     """
 
-    # extract the input data_output
+    # extract the input data
     n = data_solver["n"]
     d = data_solver["d"]
     source = data_solver["source"]
@@ -258,7 +258,7 @@ def _run_postproc(data_solver):
 
 def _run_assemble(data_solver):
     """
-    Assemble the output data_output from the different dict.
+    Assemble the output data from the different dict.
     """
 
     # assign results
@@ -287,30 +287,28 @@ def _run_assemble(data_solver):
 
 def run(data_solver):
     """
-    Main script for solving a problem with the FFT-PEEC lib_solver.
-    Handle invalid data_output with exceptions.
+    Main script for solving a problem with the FFT-PEEC solver.
+    Handle invalid data with exceptions.
     """
 
     # init
-    logger.info("INIT")
+    logger.info("init")
 
-    # run the lib_solver
+    # check the input data
     try:
         _run_check(data_solver)
-        data_solver = _run_resampling(data_solver)
-        data_solver = _run_preproc(data_solver)
-        data_solver = _run_main(data_solver)
-        data_solver = _run_postproc(data_solver)
-        data_res = _run_assemble(data_solver)
-
-        status = True
-        logger.info("successful termination")
     except check_data.CheckError as ex:
-        data_res = None
-        status = False
         logger.error(str(ex))
+        return False, None
 
-    # end
-    logger.info("END")
+    # run the solver
+    data_solver = _run_resampling(data_solver)
+    data_solver = _run_preproc(data_solver)
+    data_solver = _run_main(data_solver)
+    data_solver = _run_postproc(data_solver)
+    data_res = _run_assemble(data_solver)
 
-    return status, data_res
+    # end message
+    logger.info("successful termination")
+
+    return True, data_res

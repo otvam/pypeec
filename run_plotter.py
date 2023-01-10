@@ -17,7 +17,7 @@ def run(name, data_plotter):
     Load the result file and plot the results.
     """
 
-    # load data_output
+    # load data
     filename = "data_output/%s.pck" % name
     with open(filename, "rb") as fid:
         data_res = pickle.load(fid)

@@ -74,7 +74,7 @@ def _get_ifftn(mat, shape, axes):
     return mat_trf
 
 
-def get_fct_tensor(mat, double_dim, fct):
+def _get_fct_tensor(mat, double_dim, fct):
     """
     Get the FFT/iFFT of a 4D tensor along the first 3D.
     The size of the output is:
@@ -110,7 +110,7 @@ def get_fft_tensor(mat, double_dim):
         - the double of the input
     """
 
-    return get_fct_tensor(mat, double_dim, _get_fftn)
+    return _get_fct_tensor(mat, double_dim, _get_fftn)
 
 
 def get_ifft_tensor(mat, double_dim):
@@ -121,4 +121,4 @@ def get_ifft_tensor(mat, double_dim):
         - the double of the input
     """
 
-    return get_fct_tensor(mat, double_dim, _get_ifftn)
+    return _get_fct_tensor(mat, double_dim, _get_ifftn)

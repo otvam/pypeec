@@ -15,7 +15,7 @@ logger = logging_utils.get_logger("equation")
 
 class IterCounter:
     """
-    Simple class used as a callback to count the number of iteration of the matrix lib_solver.
+    Simple class used as a callback to count the number of iteration of the matrix solver.
     """
 
     def __init__(self):
@@ -33,7 +33,7 @@ class IterCounter:
         Callback increasing the iteration count.
         """
 
-        # update and save the iteration data_output
+        # update and save the iteration data
         self.n_iter += 1
         self.iter_vec.append(self.n_iter)
         self.res_vec.append(res)
@@ -104,20 +104,20 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     The equation system and the preconditioner are described with linear operator.
     """
 
-    # get the lib_solver options
+    # get the solver options
     tol = solver_options["tol"]
     atol = solver_options["atol"]
     restart = solver_options["restart"]
     maxiter = solver_options["maxiter"]
 
-    # object for counting the lib_solver iterations (callback)
+    # object for counting the solver iterations (callback)
     obj = IterCounter()
 
     # define callback
     def fct(res_iter):
         obj.get_callback(res_iter)
 
-    # call the lib_solver
+    # call the solver
     (sol, flag) = sla.gmres(
         sys_op, rhs,
         tol=tol, atol=atol, restart=restart, maxiter=maxiter,
@@ -150,15 +150,15 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     }
 
     # display status
-    logger.info("matrix lib_solver: n_dof = %d" % n_dof)
-    logger.info("matrix lib_solver: n_iter = %d" % n_iter)
-    logger.info("matrix lib_solver: res_abs = %.3e" % res_abs)
-    logger.info("matrix lib_solver: res_rel = %.3e" % res_rel)
-    logger.info("matrix lib_solver: status = %s" % status)
+    logger.info("matrix solver: n_dof = %d" % n_dof)
+    logger.info("matrix solver: n_iter = %d" % n_iter)
+    logger.info("matrix solver: res_abs = %.3e" % res_abs)
+    logger.info("matrix solver: res_rel = %.3e" % res_rel)
+    logger.info("matrix solver: status = %s" % status)
     if status:
-        logger.info("matrix lib_solver: convergence achieved")
+        logger.info("matrix solver: convergence achieved")
     else:
-        logger.warning("matrix lib_solver: convergence issues")
+        logger.warning("matrix solver: convergence issues")
 
     return sol, status, solver_status
 

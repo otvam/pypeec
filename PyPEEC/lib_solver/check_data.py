@@ -1,5 +1,5 @@
 """
-Module for checking the lib_solver input data_output.
+Module for checking the solver input data.
 """
 
 __author__ = "Thomas Guillod"
@@ -10,7 +10,7 @@ import numpy as np
 
 class CheckError(Exception):
     """
-    Exception used for signaling invalid input data_output.
+    Exception used for signaling invalid input data.
     """
 
     pass
@@ -23,7 +23,7 @@ def _check_conductor(idx_v, conductor):
     """
 
     for tag, dat_tmp in conductor.items():
-        # extract the data_output
+        # extract the data
         idx = dat_tmp["idx"]
         rho = dat_tmp["rho"]
 
@@ -51,7 +51,7 @@ def _check_source(idx_src, tag_src, source):
     """
 
     for tag, dat_tmp in source.items():
-        # extract the data_output
+        # extract the data
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
 
@@ -88,11 +88,11 @@ def _check_source(idx_src, tag_src, source):
 
 def check_data_solver(data_solver):
     """
-    Check the type of the input data_output.
+    Check the type of the input data.
     """
 
     if not isinstance(data_solver, dict):
-        raise CheckError("invalid input data_output")
+        raise CheckError("invalid input data")
 
 
 def check_voxel(data_solver):
@@ -117,7 +117,7 @@ def check_voxel(data_solver):
     if not (len(ori) == 3):
         raise CheckError("invalid voxel origin (should be a tuple with three elements)")
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     (rx, ry, rz) = r
     (dx, dy, dz) = d
@@ -144,7 +144,7 @@ def check_problem(data_solver):
     source = data_solver["source"]
     n = data_solver["n"]
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     n = nx*ny*nz
 
@@ -184,7 +184,7 @@ def check_problem(data_solver):
 
 def check_solver(data_solver):
     """
-    Check the frequency and the lib_solver options.
+    Check the frequency and the solver options.
     """
 
     # extract field
@@ -196,13 +196,13 @@ def check_solver(data_solver):
     if not(freq >= 0):
         raise CheckError("frequency cannot be negative")
 
-    # check lib_solver options
+    # check solver options
     if not isinstance(solver_options, dict):
-        raise CheckError("lib_solver options should be a dict")
+        raise CheckError("solver options should be a dict")
     if not (solver_options["tol"] > 0):
-        raise CheckError("lib_solver relative tolerance should be greater than zero")
+        raise CheckError("solver relative tolerance should be greater than zero")
     if not (solver_options["atol"] > 0):
-        raise CheckError("lib_solver absolute tolerance should be greater than zero")
+        raise CheckError("solver absolute tolerance should be greater than zero")
     if not (solver_options["restart"] >= 1):
         raise CheckError("number of iterations between restarts should be greater than zero")
     if not (solver_options["maxiter"] >= 1):
@@ -210,7 +210,7 @@ def check_solver(data_solver):
 
     # check condition options
     if not isinstance(condition_options, dict):
-        raise CheckError("lib_solver options should be a dict")
+        raise CheckError("solver options should be a dict")
     if not isinstance(condition_options["check"], bool):
         raise CheckError("the flag for checking the condition should be a boolean")
     if not (condition_options["tolerance"] > 0):

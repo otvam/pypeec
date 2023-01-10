@@ -105,7 +105,7 @@ def get_source_index(n, idx_v, idx_src_c, idx_src_v):
     At the output, the indices are relative to the non-empty voxels (conductors).
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     n_v = len(idx_v)
     n = nx*ny*nz
@@ -136,7 +136,7 @@ def get_incidence_matrix(n, A_incidence, idx_v):
     The indices of the internal faces is also computed.
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     n = nx*ny*nz
 
@@ -171,7 +171,7 @@ def get_status(n, idx_v, idx_f, idx_src_c, idx_src_v):
     Total number of voxels, number of non-empty voxels, number of faces, and number of sources.
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
 
     # count
@@ -184,7 +184,7 @@ def get_status(n, idx_v, idx_f, idx_src_c, idx_src_v):
     ratio_conductor = n_conductor/n_total
     ratio_src = n_src/n_total
 
-    # assign data_output
+    # assign data
     problem_status = {
         "n_total": n_total,
         "n_conductor": n_conductor,

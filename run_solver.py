@@ -1,5 +1,5 @@
 """
-User script for solving a problem with the FFT-PEEC lib_solver.
+User script for solving a problem with the FFT-PEEC solver.
 Contain the program entry point.
 """
 
@@ -17,7 +17,7 @@ def run(name, data_solver):
     Solve the problem and write the result file.
     """
 
-    # call lib_solver
+    # call solver
     (status, data_res) = solver.run(data_solver)
 
     # save results
@@ -33,7 +33,7 @@ def run(name, data_solver):
 
 if __name__ == "__main__":
     # name of the simulation
-    name = "data_simple"
+    name = "data_pcb_trf"
 
     # get the data
     if name == "data_test":

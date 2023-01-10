@@ -46,7 +46,7 @@ def get_resistivity_vector(n, idx_v, rho_v):
     Extract the resistivity for all the voxels (including empty voxels).
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     n = nx*ny*nz
 
@@ -65,7 +65,7 @@ def get_resistance_vector(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel):
     For solving the preconditioner, a vector is used: (n_f).
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     n = nx*ny*nz
@@ -97,7 +97,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     For solving the preconditioner, a vector is used: (n_f).
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     n = nx*ny*nz

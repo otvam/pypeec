@@ -10,6 +10,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import qtpy.QtWidgets as qtw
 import pyvistaqt as pvqt
+from PyPEEC.lib_plotter import check_data
 from PyPEEC.lib_plotter import manage_voxel
 from PyPEEC.lib_plotter import manage_plot
 from PyPEEC.lib_shared import logging_utils
@@ -18,14 +19,28 @@ from PyPEEC.lib_shared import logging_utils
 logger = logging_utils.get_logger("lib_plotter")
 
 
+def _run_check(data_plotter):
+    """
+    Check the input data.
+    Exceptions are not caught inside this function.
+    """
+
+    # check the data type
+    check_data.check_data_plotter(data_plotter)
+
+    # check the plot
+    for dat_tmp in data_plotter:
+        check_data.check_plot(dat_tmp)
+
+
 def _get_grid_voxel(data_res):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
-    Add the lib_solver results (material description, resistivity, and field) to the grid.
+    Add the solver results (material description, resistivity, and field) to the grid.
     """
 
-    # extract the data_output
+    # extract the data
     n = data_res["n"]
     d = data_res["d"]
     ori = data_res["ori"]
@@ -57,7 +72,7 @@ def _get_plot(grid, geom, data_plotter):
         - the payload (material description, scalar plots, or arrow plots)
     """
 
-    # extract the data_output
+    # extract the data
     title = data_plotter["title"]
     window_size = data_plotter["window_size"]
     plot_type = data_plotter["plot_type"]
@@ -89,14 +104,22 @@ def run(data_res, data_plotter):
     """
 
     # init
-    logger.info("INIT")
+    logger.info("init")
+
+    # check the input data
+    logger.info("check the input data")
+    try:
+        _run_check(data_plotter)
+    except check_data.CheckError as ex:
+        logger.error(str(ex))
+        return False
 
     # create the Qt app (should be at the beginning)
     logger.info("create the GUI application")
     app = qtw.QApplication([])
 
-    # handle the data_output
-    logger.info("parse the voxel geometry and the data_output")
+    # handle the data
+    logger.info("parse the voxel geometry and the data")
     (grid, geom) = _get_grid_voxel(data_res)
 
     # make the plots
@@ -105,8 +128,8 @@ def run(data_res, data_plotter):
         logger.info("plotting %d / %d" % (i+1, len(data_plotter)))
         _get_plot(grid, geom, dat_tmp)
 
-    # end
-    logger.info("END")
+    # end message
+    logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
     return app.exec_()

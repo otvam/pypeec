@@ -97,7 +97,7 @@ def _get_green_ana(d, m):
     If the distance between the voxels is zero, the self-coefficient is computed.
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (dx, dy, dz) = d
 
     # extract the voxel distance
@@ -191,7 +191,7 @@ def get_green_tensor(n, d, d_green):
     All the elements are computed with respect to the first voxel.
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     n = nx*ny*nz
 

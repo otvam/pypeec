@@ -1,5 +1,5 @@
 """
-Different functions for dealing the voxel data_output.
+Different functions for dealing the voxel data.
 Compute the voxel coordinates and the incidence matrix.
 """
 
@@ -17,7 +17,7 @@ def get_voxel_coordinate(n, d, ori):
     The array has the following dimension: (nx*ny*nz, 3).
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     (orix, oriy, oriz) = ori
@@ -51,7 +51,7 @@ def get_incidence_matrix(n):
     The matrix has the following dimension: (nx*ny*nz, 3*nx*ny*nz).
     """
 
-    # extract the voxel data_output
+    # extract the voxel data
     (nx, ny, nz) = n
     n = nx*ny*nz
 
