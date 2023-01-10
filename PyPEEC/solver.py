@@ -168,7 +168,7 @@ def _run_main(data_solver):
         (L_tensor, L_vector) = resistance_inductance.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
 
         # get the impedance vector (preconditioner) and tensor (full problem, FFT circulant tensor)
-        (ZL_tensor, ZL_vector) = resistance_inductance.get_inductance_operator(n, freq, L_tensor, L_vector)
+        (ZL_tensor, ZL_vector) = resistance_inductance.get_inductance_operator(freq, L_tensor, L_vector)
 
     # assemble the equation system
     with logging_utils.BlockTimer(logger, "equation_system"):

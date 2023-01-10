@@ -51,7 +51,7 @@ import PyPEEC.lib_shared.matrix_factorization as matrix_factorization
 import PyPEEC.lib_shared.fourier_transform as fourier_transform
 
 
-def _get_circulant_multiply(CF, X):
+def _get_circulant_multiply(nx, ny, nz, CF, X):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
@@ -60,21 +60,17 @@ def _get_circulant_multiply(CF, X):
     The size of result is the same as the size of the vector.
     """
 
-    # extract the input tensor data_output
-    (nx, ny, nz) = X.shape
-    (nnx, nny, nnz) = CF.shape
-
     # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
-    CX = fourier_transform.get_fftn(X, (nnx, nny, nnz))
+    CX = fourier_transform.get_fft_tensor(X, True)
 
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
     CY = CF*CX
 
     # compute the iFFT
-    Y = fourier_transform.get_ifftn(CY, (nnx, nny, nnz))
+    Y = fourier_transform.get_ifft_tensor(CY, False)
 
     # the result is in the first block of the matrix
-    Y = Y[0:nx, 0:ny, 0:nz]
+    Y = Y[0:nx, 0:ny, 0:nz, :]
 
     return Y
 
@@ -161,12 +157,8 @@ def _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector,
     # reshape the current excitation into a tensor
     sol_a_all = sol_a_all.reshape((nx, ny, nz, 3), order="F")
 
-    # initialize the tensor for the matrix multiplication results
-    rhs_a_all = np.zeros((nx, ny, nz, 3), dtype=np.complex128)
-
     # multiply the impedance matrix with the current vector (multiplication is done with the FFT circulant tensor)
-    for i in range(3):
-        rhs_a_all[:, :, :, i] = _get_circulant_multiply(ZL_tensor[:, :, :, i], sol_a_all[:, :, :, i])
+    rhs_a_all = _get_circulant_multiply(nx, ny, nz, ZL_tensor, sol_a_all)
 
     # flatten the tensor into a vector
     rhs_a_all = rhs_a_all.flatten(order="F")

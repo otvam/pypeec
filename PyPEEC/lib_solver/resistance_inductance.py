@@ -9,17 +9,14 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-import scipy.fft as fft
+import PyPEEC.lib_shared.fourier_transform as fourier_transform
 
 
-def _get_circulant_tensor(A):
+def _get_circulant_tensor(nx, ny, nz, A):
     """
     Construct a circulant tensor from a tensor.
     The size of the circulant tensor is twice the size of the original tensor.
     """
-
-    # extract the input tensor data_output
-    (nx, ny, nz) = A.shape
 
     # init the circulant tensor
     C = np.zeros((2*nx, 2*ny, 2*nz), dtype=np.float64)
@@ -42,20 +39,6 @@ def _get_circulant_tensor(A):
     C[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz] = A[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1]
 
     return C
-
-
-def _get_fft_tensor(C):
-    """
-    Compute the multidimensional FFT of a circulant tensor.
-    """
-
-    # extract the input tensor data_output
-    (nx, ny, nz) = C.shape
-
-    # compute the FFT
-    CF = fft.fftn(C, (nx, ny, nz))
-
-    return CF
 
 
 def get_resistivity_vector(n, idx_v, rho_v):
@@ -123,7 +106,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     mu = 4*np.pi*1e-7
 
     # compute the circulant tensor (in order to make matrix-vector multiplication with FFT)
-    G_mutual = _get_circulant_tensor(G_mutual)
+    G_mutual = _get_circulant_tensor(nx, ny, nz, G_mutual)
 
     # compute the circulant inductance tensor from the Green functions
     L_tensor = np.zeros((2*nx, 2*ny, 2*nz, 3), dtype=np.float64)
@@ -141,7 +124,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     return L_tensor, L_vector
 
 
-def get_inductance_operator(n, freq, L_tensor, L_vector):
+def get_inductance_operator(freq, L_tensor, L_vector):
     """
     Transform the circulant inductance tensor into a FFT circulant impedance tensor.
     The problem contains n_f internal faces.
@@ -149,16 +132,12 @@ def get_inductance_operator(n, freq, L_tensor, L_vector):
     For solving the preconditioner, vectors are used: (n_f).
     """
 
-    # extract the voxel data_output
-    (nx, ny, nz) = n
-
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
     # compute the FFT and the impedance
-    ZL_tensor = np.zeros((2*nx, 2*ny, 2*nz, 3), dtype=np.complex128)
-    for i in range(3):
-        ZL_tensor[:, :, :, i] = s*_get_fft_tensor(L_tensor[:, :, :, i])
+    ZL_tensor = fourier_transform.get_fft_tensor(L_tensor, False)
+    ZL_tensor = s*ZL_tensor
 
     # self-impedance for the preconditioner
     ZL_vector = s*L_vector
