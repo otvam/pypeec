@@ -8,7 +8,9 @@ The plotting is done with PyVista with the Qt framework.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
 import qtpy.QtWidgets as qtw
+import qtpy.QtGui as qtu
 import pyvistaqt as pvqt
 from PyPEEC.lib_plotter import check_data
 from PyPEEC.lib_plotter import manage_voxel
@@ -86,6 +88,11 @@ def _get_plot(grid, geom, data_plotter):
         title=window_title,
         window_size=window_size
     )
+
+    # set icon
+    path = os.path.dirname(__file__)
+    filename = os.path.join(path, "icon.png")
+    pl.app.setWindowIcon(qtu.QIcon(filename))
 
     # find the plot type and call the corresponding function
     if plot_type == "material":

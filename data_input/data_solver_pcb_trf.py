@@ -1,6 +1,6 @@
-import imageio.v3 as iio
-import numpy as np
 import os
+import numpy as np
+import imageio.v3 as iio
 
 
 def _get_idx_image(nx, ny, img, color):
