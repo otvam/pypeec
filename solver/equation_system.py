@@ -112,7 +112,7 @@ def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     return Y_matrix, S_factorization
 
 
-def _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, Y_matrix, S_factorization):
+def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factorization):
     """
     Solve the preconditioner equation system.
     The Schur complement and matrix factorization are used.
@@ -122,10 +122,6 @@ def _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_
     The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
     The Schur complement split the system in two subsystems: n_f and n_v+n_src_c+n_src_v.
     """
-
-    # get the matrix size (Schur complement split)
-    n_a = len(idx_f)
-    n_b = len(idx_v)+len(idx_src_c)+len(idx_src_v)
 
     # split the excitation vector (Schur complement split)
     rhs_a = rhs[0:n_a]
@@ -142,7 +138,7 @@ def _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_
     return sol
 
 
-def _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
+def _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
     """
     Multiply the full equation matrix with a given solution test vector.
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
@@ -153,8 +149,6 @@ def _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kc
     """
 
     # get the matrix size
-    n_a = len(idx_f)
-    n_b = len(idx_v)+len(idx_src_c)+len(idx_src_v)
     (nx, ny, nz) = n
     n = nx*ny*nz
 
@@ -189,6 +183,21 @@ def _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kc
     rhs = np.concatenate((rhs_a, rhs_b), dtype=np.complex128)
 
     return rhs
+
+
+def _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v):
+    """
+    Get the equation system size (Schur complement and total size).
+    """
+
+    # get the matrix size (for the Schur complement)
+    n_a = len(idx_f)
+    n_b = len(idx_v)+len(idx_src_c)+len(idx_src_v)
+
+    # get the total size
+    n_dof = n_a+n_b
+
+    return n_dof, n_a, n_b
 
 
 def get_source_vector(idx_v, idx_f, I_src_c, V_src_v):
@@ -295,7 +304,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl
     """
 
     # get the matrix size
-    n_dof = len(idx_f)+len(idx_v)+len(idx_src_c)+len(idx_src_v)
+    (n_dof, n_a, n_b) = _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v)
 
     # matrix factorization with the Schur complement
     (Y_matrix, S_factorization) = _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector)
@@ -306,7 +315,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl
 
     # function describing the preconditioner
     def fct(rhs):
-        sol = _get_preconditioner_solve(rhs, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, Y_matrix, S_factorization)
+        sol = _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factorization)
         return sol
 
     # corresponding linear operator
@@ -322,11 +331,11 @@ def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_s
     """
 
     # get the matrix size
-    n_dof = len(idx_f)+len(idx_v)+len(idx_src_c)++len(idx_src_v)
+    (n_dof, n_a, n_b) = _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v)
 
     # function describing the equation system
     def fct(sol):
-        rhs = _get_system_multiply(sol, n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
+        rhs = _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
         return rhs
 
     # corresponding linear operator
