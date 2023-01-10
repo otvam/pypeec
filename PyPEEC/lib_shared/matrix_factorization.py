@@ -1,3 +1,16 @@
+"""
+Module for factorizing sparse matrix.
+This module is used as a common interface for different solvers:
+    - SuperLU: built-in library (with SciPy)
+    - UMFPACK: extra library (with SciKits)
+
+SuperLU is available on all platforms and easy to install.
+UMFPACK need to be compiled (easy on Linux, difficult on other platforms).
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import warnings
 import PyPEEC.config as config
 
@@ -18,9 +31,6 @@ else:
 class MatrixFactorization:
     """
     Simple class for factorizing and solving sparse matrices.
-    Two different methods are available:
-        - SuperLU: built-in with SciPy
-        - UMFPACK: extra library (with SciKits)
     """
 
     def __init__(self, A):
@@ -51,7 +61,7 @@ class MatrixFactorization:
 
     def get_solution(self, rhs):
         """
-        Set the timer with a provided timestamp.
+        Solve an equation system with the factorization.
         """
 
         if self.status:

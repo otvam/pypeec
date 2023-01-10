@@ -1,3 +1,14 @@
+"""
+Module for obtaining FFT and iFFT of tensors (N-D Fourier transform).
+This module is used as a common interface for different FFT libraries:
+    - NumPy FFT library
+    - SciPy FFT library
+    - FFTW FFT library (available with pyFFTW)
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import PyPEEC.config as config
 
 # get config
@@ -23,6 +34,11 @@ else:
 
 
 def get_fftn(mat, shape):
+    """
+    Get the N-D FFT of a tensor.
+    The size of the output tensor is specified.
+    """
+
     if FFT_SOLVER == "NumPy":
         mat_trf = fftn.fftn(mat, shape)
     elif FFT_SOLVER == "SciPy":
@@ -37,6 +53,11 @@ def get_fftn(mat, shape):
 
 
 def get_ifftn(mat, shape):
+    """
+    Get the N-D iFFT of a tensor.
+    The size of the output tensor is specified.
+    """
+
     if FFT_SOLVER == "NumPy":
         mat_trf = fftn.ifftn(mat, shape)
     elif FFT_SOLVER == "SciPy":

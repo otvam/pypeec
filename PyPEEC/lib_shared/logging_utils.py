@@ -1,5 +1,6 @@
 """
 Module for handle the logging (with timer for elapsed time).
+Provide a class for timing (and logging) code blocks.
 """
 
 __author__ = "Thomas Guillod"

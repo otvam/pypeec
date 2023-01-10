@@ -1,3 +1,11 @@
+"""
+Configuration of the program.
+Defined with global variables.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 # logging information
 LOGGING_LEVEL = "INFO"
 LOGGING_GLOBAL_TIMER = True
