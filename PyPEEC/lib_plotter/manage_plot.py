@@ -13,7 +13,7 @@ import numpy as np
 import pyvista as pv
 
 
-def _get_plot_base(pl, grid, geom, title, plot_options):
+def _get_plot_base(pl, grid, geom, plot_title, plot_options):
     """
     Plot the geometry as wireframe (complete grid and non-empty voxels).
     Add the axis descriptor to orientate the geometry.
@@ -53,7 +53,7 @@ def _get_plot_base(pl, grid, geom, title, plot_options):
 
     # add title and axes
     pl.add_axes(line_width=2)
-    pl.add_text(title, font_size=10)
+    pl.add_text(plot_title, font_size=10)
 
 
 def _scale_range_vector(geom, var, filter_lim, color_lim, scale):
@@ -95,15 +95,15 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     geom = geom.copy(deep=True)
 
     # extract
-    legend = data_options["legend"]
-    title = data_options["title"]
+    plot_legend = data_options["plot_legend"]
+    plot_title = data_options["plot_title"]
 
     # color bar options (no label as the positions are indicated with annotations)
     scalar_bar_args = dict(
         n_labels=0,
         label_font_size=15,
         title_font_size=15,
-        title=legend,
+        title=plot_legend,
     )
 
     # get annotations
@@ -126,7 +126,7 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_base(pl, grid, geom, title, plot_options)
+    _get_plot_base(pl, grid, geom, plot_title, plot_options)
 
 
 def plot_scalar(pl, grid, geom, plot_options, data_options):
@@ -145,15 +145,15 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     log = data_options["log"]
     filter_lim = data_options["filter_lim"]
     color_lim = data_options["color_lim"]
-    legend = data_options["legend"]
-    title = data_options["title"]
+    plot_legend = data_options["plot_legend"]
+    plot_title = data_options["plot_title"]
 
     # color bar options
     scalar_bar_args = dict(
         n_labels=5,
         label_font_size=15,
         title_font_size=15,
-        title=legend,
+        title=plot_legend,
     )
 
     # scale and clamp the variable
@@ -168,7 +168,7 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_base(pl, grid, geom, title, plot_options)
+    _get_plot_base(pl, grid, geom, plot_title, plot_options)
 
 
 def plot_arrow(pl, grid, geom, plot_options, data_options):
@@ -190,15 +190,15 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     log = data_options["log"]
     filter_lim = data_options["filter_lim"]
     color_lim = data_options["color_lim"]
-    legend = data_options["legend"]
-    title = data_options["title"]
+    plot_legend = data_options["plot_legend"]
+    plot_title = data_options["plot_title"]
 
     # color bar options
     scalar_bar_args = dict(
         n_labels=5,
         label_font_size=15,
         title_font_size=15,
-        title=legend,
+        title=plot_legend,
     )
 
     # scale and clamp the variable
@@ -220,4 +220,4 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_base(pl, grid, geom, title, plot_options)
+    _get_plot_base(pl, grid, geom, plot_title, plot_options)

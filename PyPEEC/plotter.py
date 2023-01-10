@@ -73,7 +73,7 @@ def _get_plot(grid, geom, data_plotter):
     """
 
     # extract the data
-    title = data_plotter["title"]
+    window_title = data_plotter["window_title"]
     window_size = data_plotter["window_size"]
     plot_type = data_plotter["plot_type"]
     data_options = data_plotter["data_options"]
@@ -83,7 +83,7 @@ def _get_plot(grid, geom, data_plotter):
     pl = pvqt.BackgroundPlotter(
         toolbar=False,
         menu_bar=False,
-        title=title,
+        title=window_title,
         window_size=window_size
     )
 

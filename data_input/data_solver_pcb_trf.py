@@ -96,7 +96,7 @@ def get_data():
     ny = 160
     d = (35e-6, 35e-6, 35e-6)
     r = (1, 1, 1)
-    ori = (0, 0, 0)
+    ori = (0.0, 0.0, 0.0)
     d_green = 1e-3
     freq = 1e6
     solver_options = {"tol": 1e-6, "atol": 1e-12, "restart": 20, "maxiter": 100}

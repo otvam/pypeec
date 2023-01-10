@@ -14,7 +14,7 @@ def _get_data_sub(name, plot_type, data_options):
     }
 
     data = {
-        "title": name,
+        "window_title": name,
         "plot_type": plot_type,
         "window_size": (800, 600),
         "data_options": data_options,
@@ -26,8 +26,8 @@ def _get_data_sub(name, plot_type, data_options):
 
 def _get_geometry(name):
     data_options = {
-        "legend": name,
-        "title": name,
+        "plot_legend": name,
+        "plot_title": name,
     }
 
     data = _get_data_sub(name, "material", data_options)
@@ -42,8 +42,8 @@ def _get_scalar(var, scale, unit, name):
         "log": False,
         "color_lim": [-float("inf"), +float("inf")],
         "filter_lim": [-float("inf"), +float("inf")],
-        "legend": "%s [%s]" % (name, unit),
-        "title": name,
+        "plot_legend": "%s [%s]" % (name, unit),
+        "plot_title": name,
     }
 
     data = _get_data_sub(name, "scalar", data_options)
@@ -60,8 +60,8 @@ def _get_arrow(var, vec, scale, arrow, unit, name):
         "log": False,
         "color_lim": [-float("inf"), +float("inf")],
         "filter_lim": [-float("inf"), +float("inf")],
-        "legend": "%s [%s]" % (name, unit),
-        "title": name,
+        "plot_legend": "%s [%s]" % (name, unit),
+        "plot_title": name,
     }
 
     data = _get_data_sub(name, "arrow", data_options)

@@ -4,7 +4,7 @@ def get_data():
     data_solver["n"] = (2, 1, 3)
     data_solver["d"] = (0.5e-2, 1e-2, 1e-2)
     data_solver["r"] = (1, 1, 1)
-    data_solver["ori"] = (0, 0, 0)
+    data_solver["ori"] = (0.0, 0.0, 0.0)
     data_solver["d_green"] = 20e-4
 
     data_solver["conductor"] = {

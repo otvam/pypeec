@@ -115,30 +115,22 @@ def check_voxel(data_solver):
     if not (len(ori) == 3):
         raise CheckError("ori: invalid voxel origin (should be a tuple with three elements)")
 
-    # extract the voxel data
-    (nx, ny, nz) = n
-    (rx, ry, rz) = r
-    (dx, dy, dz) = d
-    (orix, oriy, orix) = d
-
     # check type
-    fct_int = lambda x: np.issubdtype(type(x), np.integer)
-    fct_float = lambda x: np.isscalar(x) and np.isreal(x)
-    if not (fct_int(nx) and fct_int(ny) and fct_int(nz)):
+    if not all(np.issubdtype(type(x), np.integer) for x in n):
         raise CheckError("n: number of voxels should be composed of integers")
-    if not (fct_int(rx) and fct_int(ry) and fct_int(rz)):
+    if not all(np.issubdtype(type(x), np.integer) for x in r):
         raise CheckError("r: number of resampling be composed of integers")
-    if not (fct_float(dx) and fct_float(dy) and fct_float(dz)):
-        raise CheckError("r: dimension of the voxels should be composed of real integers")
-    if not (fct_float(orix) and fct_float(oriy) and fct_float(orix)):
-        raise CheckError("r: voxel origin should be composed of real integers")
+    if not all(np.issubdtype(type(x), np.floating) for x in d):
+        raise CheckError("d: dimension of the voxels should be composed of real floats")
+    if not all(np.issubdtype(type(x), np.floating) for x in ori):
+        raise CheckError("ori: voxel origin should be composed of real floats")
 
     # check value
-    if not ((nx >= 1) and (ny >= 1) and (nz >= 1)):
+    if not all((x >= 1) for x in n):
         raise CheckError("n: number of voxels cannot be smaller than one")
-    if not ((rx >= 1) and (ry >= 1) and (rz >= 1)):
+    if not all((x >= 1) for x in r):
         raise CheckError("r: number of resampling cannot be smaller than one")
-    if not ((dx > 0) and (dy > 0) and (dz > 0)):
+    if not all((x > 0) for x in d):
         raise CheckError("d: dimension of the voxels should be positive")
     if not (d_green > 0):
         raise CheckError("d_green: voxel distance to simplify the green function should be positive")
