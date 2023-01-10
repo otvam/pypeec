@@ -16,6 +16,24 @@ class CheckError(Exception):
     pass
 
 
+def _check_idx(idx):
+    """
+    Check if the indices are correct and cast to numpy array.
+    """
+
+    # cast to numpy array
+    idx = np.array(idx)
+
+    # check if vector
+    if not (len(idx.shape) == 1):
+        raise CheckError("idx: indices should be a vector")
+
+    if not np.issubdtype(idx.dtype, np.integer):
+        raise CheckError("idx: indices should be composed of integers")
+
+    return idx
+
+
 def _check_conductor(idx_v, conductor):
     """
     Check that the conductors are valid.
@@ -27,16 +45,23 @@ def _check_conductor(idx_v, conductor):
         idx = dat_tmp["idx"]
         rho = dat_tmp["rho"]
 
-        # check the resistivity and tag
+        # check type
         if not isinstance(tag, str):
             raise CheckError("tag: conductor name should be a string")
-        if not (np.isscalar(rho) and np.isreal(rho)):
+        if not np.issubdtype(type(rho), np.floating):
+            raise CheckError("rho: conductor resistivity should be a float")
+
+        # check value
+        if not np.isscalar(rho):
             raise CheckError("rho: conductor resistivity should be a real scalar")
         if not (rho > 0):
             raise CheckError("rho: conductor resistivity should be greater than zero")
 
+        # check indices
+        idx = _check_idx(idx)
+
         # append the indices
-        idx_v = np.append(idx_v, np.array(idx))
+        idx_v = np.append(idx_v, idx)
 
     return idx_v
 
@@ -53,11 +78,13 @@ def _check_source(idx_src, tag_src, source):
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
 
-        # check the source type and tag
+        # check type
         if not isinstance(tag, str):
             raise CheckError("tag: source name should be a string")
         if not isinstance(source_type, str):
             raise CheckError("source_type: source type should be a string")
+
+        # check value
         if not ((source_type == "current") or (source_type == "voltage")):
             raise CheckError("source_type: source type should be voltage or current")
 
@@ -71,15 +98,24 @@ def _check_source(idx_src, tag_src, source):
         else:
             raise ValueError("invalid source type")
 
+        # check the source type
+        if not np.issubdtype(type(value), np.number):
+            raise CheckError("I/V: current/voltage source value should be a complex number")
+        if not np.issubdtype(type(element), np.floating):
+            raise CheckError("G/R: source internal conductance/resistance should be a float")
+
         # check the source value
         if not np.isscalar(value):
             raise CheckError("I/V: current/voltage source value should be a scalar")
-        if not (np.isscalar(element) and np.isreal(element)):
+        if not np.isscalar(element):
             raise CheckError("G/R: source internal conductance/resistance should be a real scalar")
+
+        # check indices
+        idx = _check_idx(idx)
 
         # append the tag and indices
         tag_src.append(tag)
-        idx_src = np.append(idx_src, np.array(idx))
+        idx_src = np.append(idx_src, idx)
 
     return idx_src, tag_src
 

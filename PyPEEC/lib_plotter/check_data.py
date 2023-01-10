@@ -5,8 +5,6 @@ Module for checking the plotter input data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-import numpy as np
-
 
 class CheckError(Exception):
     """
@@ -17,12 +15,22 @@ class CheckError(Exception):
 
 
 def _check_data_options(plot_type, data_options):
+    """
+    Check the validity of the data options.
+    The data options are controlling the plot content.
+    Three different types of plots are available:
+        - material description (conductors, voltage sources, and current sources)
+        - scalar plots (resistivity, potential, and current density)
+        - arrow plots (current density)
+    """
+
     # list of allowed variable names
     var_list = ["rho", "V_re", "V_im", "V_abs", "J_norm_abs", "J_norm_re", "J_norm_im"]
     vec_list = ["J_vec_unit_re", "J_vec_unit_im"]
 
-    # check the common options for scalar, arrow, and material plots
+    # check the options for scalar, arrow, and material plots
     if (plot_type == "scalar") or (plot_type == "arrow") or (plot_type == "material"):
+        # check type
         if not isinstance(data_options["plot_title"], str):
             raise CheckError("plot_title: the plot title option should be a string")
         if not isinstance(data_options["plot_legend"], str):
@@ -30,7 +38,7 @@ def _check_data_options(plot_type, data_options):
 
     # check the options for scalar and arrow plots
     if (plot_type == "scalar") or (plot_type == "arrow"):
-        # check the type
+        # check type
         if not isinstance(data_options["var"], str):
             raise CheckError("var: the var option should be a string")
         if not isinstance(data_options["scale"], float):
@@ -44,7 +52,7 @@ def _check_data_options(plot_type, data_options):
         if not (len(data_options["filter_lim"]) == 2):
             raise CheckError("filter_lim: invalid filter limits (should be a tuple with tep elements)")
 
-        # check the value
+        # check value
         if not (data_options["var"] in var_list):
             raise CheckError("var: var option does not exist")
         if not (data_options["scale"] > 0):
@@ -56,13 +64,13 @@ def _check_data_options(plot_type, data_options):
 
     # check the options for arrow plots
     if plot_type == "arrow":
-        # check the type
+        # check type
         if not isinstance(data_options["vec"], str):
             raise CheckError("vec: the vec option should be a string")
         if not isinstance(data_options["arrow"], float):
             raise CheckError("arrow: the arrow option should be a float")
 
-        # check the value
+        # check value
         if not (data_options["vec"] in vec_list):
             raise CheckError("vec: vec option does not exist")
         if not (data_options["arrow"] > 0):
@@ -70,6 +78,11 @@ def _check_data_options(plot_type, data_options):
 
 
 def _check_plot_options(plot_options):
+    """
+    Check the validity of the plot options.
+    The plot options are controlling the wireframes and the origin marker.
+    """
+
     # check grid options (plot of the complete grid as wireframes)
     if not isinstance(plot_options["grid_plot"], bool):
         raise CheckError("grid_plot: the grid plot option should be a boolean")
@@ -110,7 +123,7 @@ def check_data_plotter(data_plotter):
 
 def check_plot(data_plotter):
     """
-    Check the voxel structure (number and size) and the Green function parameter.
+    Check the validity of the dict describing a plot.
     """
 
     # check type
@@ -127,14 +140,16 @@ def check_plot(data_plotter):
     # check type
     if not isinstance(window_title, str):
         raise CheckError("plot title should be a string")
-    if not len(window_size)==2:
-        raise CheckError("invalid window size (should be a tuple with two elements)")
     if not isinstance(plot_type, str):
         raise CheckError("plot type should be a string")
     if not isinstance(data_options, dict):
         raise CheckError("data options should be a dict")
     if not isinstance(plot_options, dict):
         raise CheckError("plot options should be a dict")
+
+    # check size
+    if not len(window_size)==2:
+        raise CheckError("invalid window size (should be a tuple with two elements)")
 
     # check value
     if not all(isinstance(x, int) for x in window_size):

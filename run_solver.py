@@ -21,9 +21,10 @@ def run(name, data_solver):
     (status, data_res) = solver.run(data_solver)
 
     # save results
-    filename = "data_output/%s.pck" % name
-    with open(filename, "wb") as fid:
-        pickle.dump(data_res, fid)
+    if status:
+        filename = "data_output/%s.pck" % name
+        with open(filename, "wb") as fid:
+            pickle.dump(data_res, fid)
 
     # exit
     exit_code = int(not status)
