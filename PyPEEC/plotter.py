@@ -28,7 +28,7 @@ def _run_check(data_plotter):
     """
 
     # check the data type
-    check_data.check_plotter(data_plotter)
+    check_data.check_data_plotter(data_plotter)
 
     # check the plot
     for dat_tmp in data_plotter:

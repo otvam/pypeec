@@ -24,6 +24,10 @@ def _check_data_options(plot_type, data_options):
         - arrow plots (current density)
     """
 
+    # check type
+    if not isinstance(data_options, dict):
+        raise CheckError("data_options: data options should be a dict")
+
     # list of allowed variable names
     var_list = ["rho", "V_re", "V_im", "V_abs", "J_norm_abs", "J_norm_re", "J_norm_im"]
     vec_list = ["J_vec_unit_re", "J_vec_unit_im"]
@@ -83,6 +87,10 @@ def _check_plot_options(plot_options):
     The plot options are controlling the wireframes and the origin marker.
     """
 
+    # check type
+    if not isinstance(plot_options, dict):
+        raise CheckError("plot_options: plot options should be a dict")
+
     # check grid options (plot of the complete grid as wireframes)
     if not isinstance(plot_options["grid_plot"], bool):
         raise CheckError("grid_plot: the grid plot option should be a boolean")
@@ -112,13 +120,13 @@ def _check_plot_options(plot_options):
         raise CheckError("origin_color: the origin color option should be a string")
 
 
-def check_plotter(data_plotter):
+def check_data_plotter(data_plotter):
     """
     Check the type of the input data.
     """
 
     if not isinstance(data_plotter, list):
-        raise CheckError("invalid input data")
+        raise CheckError("data_plotter: plot data should be a list")
 
 
 def check_plotter_item(data_plotter):
@@ -128,7 +136,7 @@ def check_plotter_item(data_plotter):
 
     # check type
     if not isinstance(data_plotter, dict):
-        raise CheckError("the plot description should be a dict")
+        raise CheckError("data_plotter: plot description should be a dict")
 
     # extract field
     window_title = data_plotter["window_title"]
@@ -157,7 +165,7 @@ def check_plotter_item(data_plotter):
     if not all((x >= 1) for x in window_size):
         raise CheckError("window_size: window size should be greater than zero")
     if plot_type not in ["material", "scalar", "arrow"]:
-        raise CheckError("plot_type: plot type does not exist")
+        raise CheckError("plot_type: specified plot type does not exist")
 
     # check data and plot options
     _check_data_options(plot_type, data_options)

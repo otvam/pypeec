@@ -31,13 +31,13 @@ def _run_check(data_voxel, data_problem):
 
     with logging_utils.BlockTimer(logger, "check_data"):
         # check the problem data
-        check_data.check_problem(data_problem)
+        check_data.check_data_problem(data_problem)
 
         # check the voxel data
-        check_data.check_voxel(data_voxel)
+        check_data.check_data_voxel(data_voxel)
 
         # combine the problem and voxel data
-        data_solver = check_data.get_solver(data_voxel, data_problem)
+        data_solver = check_data.get_data_solver(data_voxel, data_problem)
 
     return data_solver
 

@@ -7,13 +7,12 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import sys
-
 from PyPEEC import viewer
 
 
 if __name__ == "__main__":
     # get the data
-    from data_input import data_solver_simple
+    from data_input_solver import test_tranformer
     from data_input import data_viewer
     data_voxel = data_solver_simple.get_data_voxel()
     data_viewer = data_viewer.get_data()

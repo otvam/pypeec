@@ -8,7 +8,6 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import sys
 import pickle
-
 from PyPEEC import solver
 
 
@@ -38,15 +37,14 @@ if __name__ == "__main__":
 
     # get the data
     if name == "data_test":
-        from data_input import data_solver_test
         data_problem = data_solver_test.get_data_problem()
         data_voxel = data_solver_test.get_data_voxel()
     elif name == "data_simple":
-        from data_input import data_solver_simple
         data_problem = data_solver_simple.get_data_problem()
         data_voxel = data_solver_simple.get_data_voxel()
     elif name == "data_pcb_trf":
-        from data_input import data_solver_pcb_trf
+        from data_input_solver import data_solver_pcb_trf
+
         data_solver = data_solver_pcb_trf.get_data()
     else:
         raise ValueError("invalid name")

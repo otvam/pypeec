@@ -28,10 +28,10 @@ def _run_check(data_voxel, data_viewer):
     """
 
     # check the viewer data
-    check_data.check_voxel(data_voxel)
+    check_data.check_data_voxel(data_voxel)
 
     # check the viewer data
-    check_data.check_viewer(data_viewer)
+    check_data.check_data_viewer(data_viewer)
 
 
 def _get_grid_voxel(data_res):

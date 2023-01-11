@@ -28,6 +28,10 @@ def _check_domain_def(n, domain_def):
     # init the domain indices
     idx_domain = np.array([], dtype=np.int64)
 
+    # check type
+    if not isinstance(domain_def, dict):
+        raise CheckError("domain_def: domain definition should be a dict")
+
     # check the different domains
     for tag, idx in domain_def.items():
         # check tag
@@ -59,6 +63,10 @@ def _check_plot_options(plot_options):
     The plot options are controlling the wireframes and the origin marker.
     """
 
+    # check type
+    if not isinstance(plot_options, dict):
+        raise CheckError("plot_options: plot options should be a dict")
+
     # check grid options (plot of the complete grid as wireframes)
     if not isinstance(plot_options["grid_plot"], bool):
         raise CheckError("grid_plot: the grid plot option should be a boolean")
@@ -88,14 +96,14 @@ def _check_plot_options(plot_options):
         raise CheckError("origin_color: the origin color option should be a string")
 
 
-def check_viewer(data_viewer):
+def check_data_viewer(data_viewer):
     """
     Check the validity of the dict describing a plot.
     """
 
     # check type
     if not isinstance(data_viewer, dict):
-        raise CheckError("the plot description should be a dict")
+        raise CheckError("data_viewer: the plot description should be a dict")
 
     # extract field
     window_title = data_viewer["window_title"]
@@ -125,7 +133,7 @@ def check_viewer(data_viewer):
     _check_plot_options(plot_options)
 
 
-def check_voxel(data_voxel):
+def check_data_voxel(data_voxel):
     """
     Check the voxel structure (number and size).
     Check the domain definition (mapping between domain names and indices).
@@ -133,7 +141,7 @@ def check_voxel(data_voxel):
 
     # check type
     if not isinstance(data_voxel, dict):
-        raise CheckError("data_voxel: invalid input data")
+        raise CheckError("data_voxel: voxel description should be a dict")
 
     # extract field
     n = data_voxel["n"]

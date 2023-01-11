@@ -4,10 +4,10 @@ import os
 def get_data():
     # read the image
     path = os.path.dirname(__file__)
-    path = os.path.join(path, "pcb_inductor")
+    path = os.path.join(path, "png_inductor")
 
     # init
-    mesh_type = "stl"
+    mesh_type = "png"
     data_mesher = dict()
 
     # voxel size

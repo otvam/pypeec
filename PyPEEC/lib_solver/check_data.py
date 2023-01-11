@@ -53,6 +53,10 @@ def _check_domain_def(n, domain_def):
     # init the domain indices
     idx_domain = np.array([], dtype=np.int64)
 
+    # check type
+    if not isinstance(domain_def, dict):
+        raise CheckError("domain_def: domain definition should be a dict")
+
     # check the different domains
     for tag, idx in domain_def.items():
         # check tag
@@ -83,6 +87,11 @@ def _check_conductor_def(conductor_def):
     Check that the conductor definition is valid.
     """
 
+    # check type
+    if not isinstance(conductor_def, dict):
+        raise CheckError("conductor_def: conductor definition should be a dict")
+
+    # check value
     for tag, dat_tmp in conductor_def.items():
         # extract the data
         domain = dat_tmp["domain"]
@@ -108,6 +117,11 @@ def _check_source_def(source_def):
     Check that the source definition is valid.
     """
 
+    # check type
+    if not isinstance(source_def, dict):
+        raise CheckError("source_def: source definition should be a dict")
+
+    # check value
     for tag, dat_tmp in source_def.items():
         # extract the data
         source_type = dat_tmp["source_type"]
@@ -120,7 +134,7 @@ def _check_source_def(source_def):
             raise CheckError("source_type: source type should be a string")
 
         # check value
-        if not ((source_type == "current") or (source_type == "voltage")):
+        if not (source_type in ["current", "voltage"]):
             raise CheckError("source_type: source type should be voltage or current")
         if not all(np.issubdtype(type(x), str) for x in domain):
             raise CheckError("domain: domain name should be composed of strings")
@@ -229,7 +243,7 @@ def _check_indices(idx_conductor, idx_source):
         raise CheckError("source indices are not included in conductor indices")
 
 
-def check_voxel(data_voxel):
+def check_data_voxel(data_voxel):
     """
     Check the voxel structure (number and size).
     Check the domain definition (mapping between domain names and indices).
@@ -237,7 +251,7 @@ def check_voxel(data_voxel):
 
     # check type
     if not isinstance(data_voxel, dict):
-        raise CheckError("data_voxel: invalid input data")
+        raise CheckError("data_voxel: voxel description should be a dict")
 
     # extract field
     n = data_voxel["n"]
@@ -266,7 +280,7 @@ def check_voxel(data_voxel):
     _check_domain_def(n, domain_def)
 
 
-def check_problem(data_problem):
+def check_data_problem(data_problem):
     """
     Check the problem data (Green function, frequency, solver options, matrix condition options).
     Check the conductor and source definition.
@@ -274,7 +288,7 @@ def check_problem(data_problem):
 
     # check type
     if not isinstance(data_problem, dict):
-        raise CheckError("data_problem: invalid input data")
+        raise CheckError("data_problem: problem description should be a dict")
 
     # extract field
     n_green = data_problem["n_green"]
@@ -323,7 +337,7 @@ def check_problem(data_problem):
     _check_source_def(source_def)
 
 
-def get_solver(data_voxel, data_problem):
+def get_data_solver(data_voxel, data_problem):
     """
     Combine the voxel data and the problem data.
     The voxel data contains the mapping between domain names and indices.

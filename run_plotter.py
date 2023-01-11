@@ -8,7 +8,6 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import sys
 import pickle
-
 from PyPEEC import plotter
 
 

@@ -7,7 +7,7 @@ def get_data():
     path = os.path.join(path, "stl_inductor")
 
     # init
-    mesh_type = "png"
+    mesh_type = "stl"
     data_mesher = dict()
 
     # voxel size
