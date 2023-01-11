@@ -57,6 +57,10 @@ def get_material(geom, idx_v, idx_src_c, idx_src_v):
     data[idx_src_c_local] = 1
     data[idx_src_v_local] = 2
 
+    # sort idx
+    idx = np.argsort(idx_v)
+    data = data[idx]
+
     # assign the extract data to the geometry
     geom["material"] = data
 

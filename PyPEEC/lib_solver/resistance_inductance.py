@@ -61,9 +61,9 @@ def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
     R_vector = np.zeros(len(rho_vector), dtype=np.float64)
 
     # get the direction of the faces (x, y, z)
-    idx_f_x = np.intersect1d(np.arange(0, n), idx_f-0*n)
-    idx_f_y = np.intersect1d(np.arange(0, n), idx_f-1*n)
-    idx_f_z = np.intersect1d(np.arange(0, n), idx_f-2*n)
+    idx_f_x = np.flatnonzero(np.in1d(idx_f, np.arange(0*n, 1*n)))
+    idx_f_y = np.flatnonzero(np.in1d(idx_f, np.arange(1*n, 2*n)))
+    idx_f_z = np.flatnonzero(np.in1d(idx_f, np.arange(2*n, 3*n)))
 
     # resistance vector (different directions)
     R_vector[idx_f_x] = (dx/(dy*dz))*rho_vector[idx_f_x]
