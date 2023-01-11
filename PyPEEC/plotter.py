@@ -45,7 +45,6 @@ def _get_grid_voxel(data_res):
     # extract the data
     n = data_res["n"]
     d = data_res["d"]
-    ori = data_res["ori"]
     idx_v = data_res["idx_v"]
     idx_src_c = data_res["idx_src_c"]
     idx_src_v = data_res["idx_src_v"]
@@ -54,7 +53,7 @@ def _get_grid_voxel(data_res):
     J_v = data_res["J_v"]
 
     # convert the voxel geometry into PyVista grids
-    (grid, geom) = manage_voxel.get_grid_geom(n, d, ori, idx_v)
+    (grid, geom) = manage_voxel.get_grid_geom(n, d, idx_v)
 
     # add the problem solution to the grid
     geom = manage_voxel.get_material(geom, idx_v, idx_src_c, idx_src_v)

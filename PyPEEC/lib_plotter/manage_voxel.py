@@ -11,7 +11,7 @@ import numpy.linalg as lna
 import pyvista as pv
 
 
-def get_grid_geom(n, d, ori, idx_v):
+def get_grid_geom(n, d, idx_v):
     """
     Construct PyVista grids from the voxel structure.
     The complete voxel geometry is represented with a PyVista uniform grid.
@@ -21,7 +21,6 @@ def get_grid_geom(n, d, ori, idx_v):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    (orix, oriy, oriz) = ori
 
     # create a uniform grid for the complete structure
     grid = pv.UniformGrid()
@@ -29,7 +28,7 @@ def get_grid_geom(n, d, ori, idx_v):
     # set the array size and the voxel size
     grid.dimensions = (nx+1, ny+1, nz+1)
     grid.spacing = (dx, dy, dz)  # These are the cell sizes along each axis
-    grid.origin = (orix, oriy, oriz)
+    grid.origin = (0, 0, 0)
 
     # sort idx
     idx_v = np.sort(idx_v)

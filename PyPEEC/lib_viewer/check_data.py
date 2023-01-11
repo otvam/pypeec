@@ -138,7 +138,6 @@ def check_voxel(data_voxel):
     # extract field
     n = data_voxel["n"]
     d = data_voxel["d"]
-    ori = data_voxel["ori"]
     domain_def = data_voxel["domain_def"]
 
     # check size
@@ -146,16 +145,12 @@ def check_voxel(data_voxel):
         raise CheckError("n: invalid voxel number (should be a tuple with three elements)")
     if not (len(d) == 3):
         raise CheckError("d: invalid voxel size (should be a tuple with three elements)")
-    if not (len(ori) == 3):
-        raise CheckError("ori: invalid voxel origin (should be a tuple with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.integer) for x in n):
         raise CheckError("n: number of voxels should be composed of integers")
     if not all(np.issubdtype(type(x), np.floating) for x in d):
         raise CheckError("d: dimension of the voxels should be composed of real floats")
-    if not all(np.issubdtype(type(x), np.floating) for x in ori):
-        raise CheckError("ori: voxel origin should be composed of real floats")
 
     # check value
     if not all((x >= 1) for x in n):

@@ -3,7 +3,6 @@ def get_data_voxel():
 
     data_voxel["n"] = (2, 1, 3)
     data_voxel["d"] = (0.5e-2, 1e-2, 1e-2)
-    data_voxel["ori"] = (0.0, 0.0, 0.0)
 
     data_voxel["domain_def"] = {
         "cond": [2, 3],

@@ -44,11 +44,10 @@ def _get_grid_voxel(data_res):
     # extract the data
     n = data_res["n"]
     d = data_res["d"]
-    ori = data_res["ori"]
     domain_def = data_res["domain_def"]
 
     # convert the voxel geometry into a PyVista uniform grid
-    grid = manage_voxel.get_grid(n, d, ori)
+    grid = manage_voxel.get_grid(n, d)
 
     # convert the voxel geometry into a PyVista unstructured grid
     geom = manage_voxel.get_geom(grid, domain_def)
@@ -83,6 +82,7 @@ def _get_plot(grid, geom, data_viewer):
     # find the plot type and call the corresponding function
     manage_plot.get_plot_domain(pl, geom)
     manage_plot.get_plot_base(pl, grid, geom, plot_title, plot_options)
+
 
 def run(data_voxel, data_viewer):
     """

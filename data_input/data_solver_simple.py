@@ -3,7 +3,6 @@ def get_data_voxel():
 
     data_voxel["n"] = (4, 4, 3)
     data_voxel["d"] = (1e-4, 2e-4, 1e-4)
-    data_voxel["ori"] = (0.0, 0.0, 0.0)
 
     data_voxel["domain_def"] = {
         "pri": [4, 8, 12, 13, 14, 15, 11, 7],
@@ -21,7 +20,7 @@ def get_data_problem():
 
     data_problem["conductor_def"] = {
         "pri": {"domain": ["src", "sink", "pri"], "rho": 1.75e-8},
-        "sec": {"domain": ["sec"], "rho": 8.77e-8},
+        "sec": {"domain": ["sec", "short"], "rho": 8.77e-8},
     }
     data_problem["source_def"] = {
         "src": {"domain": ["src"], "source_type": "current", "I": +1.0, "G": 0.0},

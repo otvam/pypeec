@@ -96,7 +96,6 @@ def get_data():
     ny = 160
     d = (35e-6, 35e-6, 35e-6)
     r = (1, 1, 1)
-    ori = (0.0, 0.0, 0.0)
     n_green = 25.0
     freq = 1e6
     solver_options = {"tol": 1e-6, "atol": 1e-12, "restart": 20, "maxiter": 100}
@@ -123,19 +122,19 @@ def get_data():
     data = [
         {
             "n_add": 1,
-            "filename": "pcb_trf/return.png",
+            "filename": "png_inductor/return.png",
             "conductor_color": {"pri": color_conductor},
             "source_color": {"pri_sink": color_sink}
         },
         {
             "n_add": 6,
-            "filename": "pcb_trf/via.png",
+            "filename": "png_inductor/via.png",
             "conductor_color": {"pri": color_conductor},
             "source_color": {}
         },
         {
             "n_add": 1,
-            "filename": "pcb_trf/coil.png",
+            "filename": "png_inductor/coil.png",
             "conductor_color": {"pri": color_conductor},
             "source_color": {"pri_src": color_source}
         },
@@ -147,19 +146,19 @@ def get_data():
         },
         {
             "n_add": 1,
-            "filename": "pcb_trf/coil.png",
+            "filename": "png_inductor/coil.png",
             "conductor_color": {"sec": color_conductor},
             "source_color": {"sec_src": color_source}
         },
         {
             "n_add": 6,
-            "filename": "pcb_trf/via.png",
+            "filename": "png_inductor/via.png",
             "conductor_color": {"sec": color_conductor},
             "source_color": {}
         },
         {
             "n_add": 1,
-            "filename": "pcb_trf/return.png",
+            "filename": "png_inductor/return.png",
             "conductor_color": {"sec": color_conductor},
             "source_color": {"sec_sink": color_sink}
         },
@@ -180,7 +179,6 @@ def get_data():
         "n": n,
         "d": d,
         "r": r,
-        "ori": ori,
         "n_green": n_green,
         "conductor": conductor,
         "source": source,
