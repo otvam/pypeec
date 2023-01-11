@@ -139,7 +139,7 @@ def check_voxel(data_solver):
     r = data_solver["r"]
     d = data_solver["d"]
     ori = data_solver["ori"]
-    d_green = data_solver["d_green"]
+    n_green = data_solver["n_green"]
 
     # check size
     if not (len(n) == 3):
@@ -160,6 +160,8 @@ def check_voxel(data_solver):
         raise CheckError("d: dimension of the voxels should be composed of real floats")
     if not all(np.issubdtype(type(x), np.floating) for x in ori):
         raise CheckError("ori: voxel origin should be composed of real floats")
+    if not np.issubdtype(type(n_green), np.floating):
+        raise CheckError("n_green: voxel distance to simplify the green function should be a float")
 
     # check value
     if not all((x >= 1) for x in n):
@@ -168,8 +170,8 @@ def check_voxel(data_solver):
         raise CheckError("r: number of resampling cannot be smaller than one")
     if not all((x > 0) for x in d):
         raise CheckError("d: dimension of the voxels should be positive")
-    if not (d_green > 0):
-        raise CheckError("d_green: voxel distance to simplify the green function should be positive")
+    if not (n_green > 0):
+        raise CheckError("n_green: voxel distance to simplify the green function should be positive")
 
 
 def check_problem(data_solver):

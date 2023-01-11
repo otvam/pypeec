@@ -91,7 +91,7 @@ def _run_preproc(data_solver):
     n = data_solver["n"]
     d = data_solver["d"]
     ori = data_solver["ori"]
-    d_green = data_solver["d_green"]
+    n_green = data_solver["n_green"]
 
     # get the voxel geometry and the incidence matrix
     with logging_utils.BlockTimer(logger, "voxel_geometry"):
@@ -107,7 +107,7 @@ def _run_preproc(data_solver):
         G_self = green_function.get_green_self(d)
 
         # Green function mutual coefficients
-        G_mutual = green_function.get_green_tensor(n, d, d_green)
+        G_mutual = green_function.get_green_tensor(n, d, n_green)
 
     # assemble results
     data_solver["xyz"] = xyz

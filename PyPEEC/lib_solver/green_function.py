@@ -181,7 +181,7 @@ def get_green_self(d):
     return G_self
 
 
-def get_green_tensor(n, d, d_green):
+def get_green_tensor(n, d, n_green):
     """
     Compute the Green functions for the complete voxel structure.
     For the self-coefficient and the close mutual coefficients, an analytical solution is used.
@@ -198,11 +198,11 @@ def get_green_tensor(n, d, d_green):
     # get the indices of the complete voxel structure (as a matrix)
     m = _get_voxel_indices(nx, ny, nz)
 
-    # compute the physical distance between the voxels and the reference voxel at the origin
-    dis = lna.norm(np.multiply(d, m), axis=1)
+    # compute the normalized distance between the voxels and the reference voxel at the origin
+    n_cell = lna.norm(m, axis=1)
 
     # check where the analytical solution should be used
-    idx_ana = dis <= d_green
+    idx_ana = n_cell <= n_green
     idx_num = np.invert(idx_ana)
 
     # init the result vector

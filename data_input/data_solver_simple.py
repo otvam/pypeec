@@ -5,7 +5,7 @@ def get_data():
     data_solver["d"] = (1e-4, 2e-4, 1e-4)
     data_solver["r"] = (10, 10, 10)
     data_solver["ori"] = (0.0, 0.0, 0.0)
-    data_solver["d_green"] = 20e-4
+    data_solver["n_green"] = 25.0
 
     data_solver["conductor"] = {
         "pri": {"idx": [0, 3, 4, 8, 12, 13, 14, 15, 11, 7], "rho": 1.75e-8},

@@ -97,7 +97,7 @@ def get_data():
     d = (35e-6, 35e-6, 35e-6)
     r = (1, 1, 1)
     ori = (0.0, 0.0, 0.0)
-    d_green = 1e-3
+    n_green = 25.0
     freq = 1e6
     solver_options = {"tol": 1e-6, "atol": 1e-12, "restart": 20, "maxiter": 100}
     condition_options = {"check": True, "tolerance": 1e9, "accuracy": 2}
@@ -181,7 +181,7 @@ def get_data():
         "d": d,
         "r": r,
         "ori": ori,
-        "d_green": d_green,
+        "n_green": n_green,
         "conductor": conductor,
         "source": source,
         "freq": freq,
