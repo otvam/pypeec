@@ -18,7 +18,7 @@ from PyPEEC.lib_plotter import manage_plot
 from PyPEEC.lib_shared import logging_utils
 
 # get a logger
-logger = logging_utils.get_logger("lib_plotter")
+logger = logging_utils.get_logger("plotter")
 
 
 def _run_check(data_plotter):
@@ -28,11 +28,11 @@ def _run_check(data_plotter):
     """
 
     # check the data type
-    check_data.check_data_plotter(data_plotter)
+    check_data.check_plotter(data_plotter)
 
     # check the plot
     for dat_tmp in data_plotter:
-        check_data.check_plot(dat_tmp)
+        check_data.check_plotter_item(dat_tmp)
 
 
 def _get_grid_voxel(data_res):
@@ -81,7 +81,7 @@ def _get_plot(grid, geom, data_plotter):
     data_options = data_plotter["data_options"]
     plot_options = data_plotter["plot_options"]
 
-    # get the lib_plotter (with the Qt framework)
+    # get the plotter (with the Qt framework)
     pl = pvqt.BackgroundPlotter(
         toolbar=False,
         menu_bar=False,

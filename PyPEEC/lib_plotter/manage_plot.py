@@ -116,7 +116,7 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     # get a colormap with three discrete color
     cmap = ["yellow", "green", "blue"]
 
-    # add the resulting plot to the lib_plotter
+    # add the resulting plot to the plotter
     pl.add_mesh(
         geom,
         scalars="material",
@@ -159,7 +159,7 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     # scale and clamp the variable
     geom = _scale_range_vector(geom, var, filter_lim, color_lim, scale)
 
-    # add the resulting plot to the lib_plotter
+    # add the resulting plot to the plotter
     pl.add_mesh(
         geom,
         scalars=var,
@@ -211,7 +211,7 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     # create the arrows
     glyphs = geom.glyph(orient=vec, scale=False, factor=factor)
 
-    # add the resulting plot to the lib_plotter
+    # add the resulting plot to the plotter
     pl.add_mesh(
         glyphs,
         scalars=var,

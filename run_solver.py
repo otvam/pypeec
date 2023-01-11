@@ -34,19 +34,17 @@ def run(name, data_voxel, data_problem):
 
 if __name__ == "__main__":
     # name of the simulation
-    name = "data_new"
+    name = "data_simple"
 
     # get the data
-    if name == "data_new":
-        from data_input import data_solver_new
-        data_problem = data_solver_new.get_data_problem()
-        data_voxel = data_solver_new.get_data_voxel()
-    elif name == "data_test":
+    if name == "data_test":
         from data_input import data_solver_test
-        data_solver = data_solver_test.get_data()
+        data_problem = data_solver_test.get_data_problem()
+        data_voxel = data_solver_test.get_data_voxel()
     elif name == "data_simple":
         from data_input import data_solver_simple
-        data_solver = data_solver_simple.get_data()
+        data_problem = data_solver_simple.get_data_problem()
+        data_voxel = data_solver_simple.get_data_voxel()
     elif name == "data_pcb_trf":
         from data_input import data_solver_pcb_trf
         data_solver = data_solver_pcb_trf.get_data()

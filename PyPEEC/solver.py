@@ -30,9 +30,6 @@ def _run_check(data_voxel, data_problem):
     """
 
     with logging_utils.BlockTimer(logger, "check_data"):
-        # check the data type
-        check_data.check_data_type(data_voxel, data_problem)
-
         # check the problem data
         check_data.check_problem(data_problem)
 

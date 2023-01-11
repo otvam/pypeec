@@ -32,9 +32,9 @@ def _check_data_options(plot_type, data_options):
     if (plot_type == "scalar") or (plot_type == "arrow") or (plot_type == "material"):
         # check type
         if not isinstance(data_options["plot_title"], str):
-            raise CheckError("plot_title: the plot title option should be a string")
+            raise CheckError("plot_title: plot title option should be a string")
         if not isinstance(data_options["plot_legend"], str):
-            raise CheckError("plot_legend: the plot legend option should be a string")
+            raise CheckError("plot_legend: plot legend option should be a string")
 
     # check the options for scalar and arrow plots
     if (plot_type == "scalar") or (plot_type == "arrow"):
@@ -112,7 +112,7 @@ def _check_plot_options(plot_options):
         raise CheckError("origin_color: the origin color option should be a string")
 
 
-def check_data_plotter(data_plotter):
+def check_plotter(data_plotter):
     """
     Check the type of the input data.
     """
@@ -121,7 +121,7 @@ def check_data_plotter(data_plotter):
         raise CheckError("invalid input data")
 
 
-def check_plot(data_plotter):
+def check_plotter_item(data_plotter):
     """
     Check the validity of the dict describing a plot.
     """
@@ -139,13 +139,13 @@ def check_plot(data_plotter):
 
     # check type
     if not isinstance(window_title, str):
-        raise CheckError("plot title should be a string")
+        raise CheckError("window_title: window title should be a string")
     if not isinstance(plot_type, str):
-        raise CheckError("plot type should be a string")
+        raise CheckError("plot_type: plot type should be a string")
     if not isinstance(data_options, dict):
-        raise CheckError("data options should be a dict")
+        raise CheckError("data_options: data options should be a dict")
     if not isinstance(plot_options, dict):
-        raise CheckError("plot options should be a dict")
+        raise CheckError("plot_options: plot options should be a dict")
 
     # check size
     if not len(window_size)==2:
@@ -153,11 +153,11 @@ def check_plot(data_plotter):
 
     # check value
     if not all(isinstance(x, int) for x in window_size):
-        raise CheckError("window size should be composed of integers")
+        raise CheckError("window_size: window size should be composed of integers")
     if not all((x >= 1) for x in window_size):
-        raise CheckError("window size should be greater than zero")
+        raise CheckError("window_size: window size should be greater than zero")
     if plot_type not in ["material", "scalar", "arrow"]:
-        raise CheckError("plot type does not exist")
+        raise CheckError("plot_type: plot type does not exist")
 
     # check data and plot options
     _check_data_options(plot_type, data_options)

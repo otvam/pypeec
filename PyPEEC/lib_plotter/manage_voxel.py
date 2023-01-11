@@ -31,6 +31,9 @@ def get_grid_geom(n, d, ori, idx_v):
     grid.spacing = (dx, dy, dz)  # These are the cell sizes along each axis
     grid.origin = (orix, oriy, oriz)
 
+    # sort idx
+    idx_v = np.sort(idx_v)
+
     # transform the uniform grid into a unstructured grid (keeping the non-empty voxels)
     geom = grid.extract_cells(idx_v)
 
@@ -58,8 +61,8 @@ def get_material(geom, idx_v, idx_src_c, idx_src_v):
     data[idx_src_v_local] = 2
 
     # sort idx
-    idx = np.argsort(idx_v)
-    data = data[idx]
+    idx_s = np.argsort(idx_v)
+    data = data[idx_s]
 
     # assign the extract data to the geometry
     geom["material"] = data
@@ -73,8 +76,8 @@ def get_resistivity(geom, idx_v, rho_v):
     """
 
     # sort idx
-    idx = np.argsort(idx_v)
-    rho_v = rho_v[idx]
+    idx_s = np.argsort(idx_v)
+    rho_v = rho_v[idx_s]
 
     # assign data
     geom["rho"] = rho_v
@@ -89,8 +92,8 @@ def get_potential(geom, idx_v, V_v):
     """
 
     # sort idx
-    idx = np.argsort(idx_v)
-    V_v = V_v[idx]
+    idx_s = np.argsort(idx_v)
+    V_v = V_v[idx_s]
 
     # assign data
     geom["V_re"] = np.real(V_v)
@@ -108,8 +111,8 @@ def get_current_density(geom, idx_v, J_v):
     """
 
     # sort idx
-    idx = np.argsort(idx_v)
-    J_v = J_v[idx, :]
+    idx_s = np.argsort(idx_v)
+    J_v = J_v[idx_s, :]
 
     # compute the norm
     geom["J_norm_abs"] = lna.norm(J_v, axis=1)

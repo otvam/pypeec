@@ -41,11 +41,19 @@ def _get_domain_indices(domain, domain_def):
     return idx
 
 
-def _check_domain_def(domain_def):
+def _check_domain_def(n, domain_def):
     """
     Check that the domain definition is valid.
     """
 
+    # extract the voxel data
+    (nx, ny, nz) = n
+    n = nx * ny * nz
+
+    # init the domain indices
+    idx_domain = np.array([], dtype=np.int64)
+
+    # check the different domains
     for tag, idx in domain_def.items():
         # check tag
         if not isinstance(tag, str):
@@ -57,6 +65,17 @@ def _check_domain_def(domain_def):
             raise CheckError("idx: indices should be a vector")
         if not np.issubdtype(idx.dtype, np.integer):
             raise CheckError("idx: indices should be composed of integers")
+
+        # check for indices range
+        if not (np.all(idx >= 0) and np.all(idx < n)):
+            raise CheckError("idx: conductor indices should belong to the voxel structure")
+
+        # append
+        idx_domain = np.append(idx_domain, idx)
+
+    # check for duplicates
+    if not (len(np.unique(idx_domain)) == len(idx_domain)):
+        raise CheckError("domain indices should be unique")
 
 
 def _check_conductor_def(conductor_def):
@@ -192,16 +211,12 @@ def _get_source_idx(source_def, domain_def):
     return idx_source, source_idx
 
 
-def _check_indices(n, idx_conductor, idx_source):
+def _check_indices(idx_conductor, idx_source):
     """
     Check that the conductor and source indices are valid.
     The indices should be unique and compatible with the voxel size.
     The source indices should be included in the conductor indices.
     """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    n = nx*ny*nz
 
     # check for unicity
     if not (len(np.unique(idx_conductor)) == len(idx_conductor)):
@@ -209,26 +224,9 @@ def _check_indices(n, idx_conductor, idx_source):
     if not (len(np.unique(idx_source)) == len(idx_source)):
         raise CheckError("source indices should be unique")
 
-    # check for indices range
-    if not (np.all(idx_conductor >= 0) and np.all(idx_conductor < n)):
-        raise CheckError("conductor indices should belong to the voxel structure")
-    if not (np.all(idx_source >= 0) and np.all(idx_source < n)):
-        raise CheckError("source indices should belong to the voxel structure")
-
     # check that the terminal indices are conductor indices
     if not np.all(np.isin(idx_source, idx_conductor)):
         "source indices are not included in conductor indices"
-
-
-def check_data_type(data_voxel, data_problem):
-    """
-    Check the type of the input data.
-    """
-
-    if not isinstance(data_voxel, dict):
-        raise CheckError("data_voxel: invalid input data")
-    if not isinstance(data_problem, dict):
-        raise CheckError("data_problem: invalid input data")
 
 
 def check_voxel(data_voxel):
@@ -236,6 +234,10 @@ def check_voxel(data_voxel):
     Check the voxel structure (number and size).
     Check the domain definition (mapping between domain names and indices).
     """
+
+    # check type
+    if not isinstance(data_voxel, dict):
+        raise CheckError("data_voxel: invalid input data")
 
     # extract field
     n = data_voxel["n"]
@@ -266,7 +268,7 @@ def check_voxel(data_voxel):
         raise CheckError("d: dimension of the voxels should be positive")
 
     # check domain
-    _check_domain_def(domain_def)
+    _check_domain_def(n, domain_def)
 
 
 def check_problem(data_problem):
@@ -274,6 +276,10 @@ def check_problem(data_problem):
     Check the problem data (Green function, frequency, solver options, matrix condition options).
     Check the conductor and source definition.
     """
+
+    # check type
+    if not isinstance(data_problem, dict):
+        raise CheckError("data_problem: invalid input data")
 
     # extract field
     n_green = data_problem["n_green"]
@@ -349,7 +355,7 @@ def get_solver(data_voxel, data_problem):
     (idx_source, source_idx) = _get_source_idx(source_def, domain_def)
 
     # check indices
-    _check_indices(n, idx_conductor, idx_source)
+    _check_indices(idx_conductor, idx_source)
 
     # assign combined data
     data_solver = {

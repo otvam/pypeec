@@ -1,23 +1,33 @@
-def get_data():
-    data_solver = dict()
+def get_data_voxel():
+    data_voxel = dict()
 
-    data_solver["n"] = (1, 1, 4)
-    data_solver["d"] = (1e-2, 1e-2, 1e-2)
-    data_solver["r"] = (1, 1, 1)
-    data_solver["ori"] = (0.0, 0.0, 0.0)
-    data_solver["n_green"] = 25.0
+    data_voxel["n"] = (2, 1, 3)
+    data_voxel["d"] = (0.5e-2, 1e-2, 1e-2)
+    data_voxel["ori"] = (0.0, 0.0, 0.0)
 
-    data_solver["conductor"] = {
-        "cond_1": {"idx": [0, 2], "rho": 1e-2},
-        "cond_2": {"idx": [1], "rho": 2e-2},
-    }
-    data_solver["source"] = {
-        "src": {"source_type": "current", "idx": [0], "I": 1.0, "G": 0.0},
-        "sink": {"source_type": "voltage", "idx": [2], "V": 0.0, "R": 0.0},
+    data_voxel["domain_def"] = {
+        "cond": [2, 3],
+        "src": [0, 1],
+        "sink": [4, 5],
     }
 
-    data_solver["freq"] = 0
-    data_solver["solver_options"] = {"tol": 1e-6, "atol": 1e-12, "restart": 20, "maxiter": 100}
-    data_solver["condition_options"] = {"check": True, "tolerance": 1e9, "accuracy": 2}
+    return data_voxel
 
-    return data_solver
+
+def get_data_problem():
+    data_problem = dict()
+
+    data_problem["conductor_def"] = {
+        "cond": {"domain": ["cond", "src", "sink"], "rho": 1e-2},
+    }
+    data_problem["source_def"] = {
+        "src": {"domain": ["src"], "source_type": "current", "I": 1.0, "G": 0.5},
+        "sink": {"domain": ["sink"], "source_type": "voltage", "V": 0.0, "R": 2.0},
+    }
+
+    data_problem["n_green"] = 25.0
+    data_problem["freq"] = 0.0
+    data_problem["solver_options"] = {"tol": 1e-6, "atol": 1e-12, "restart": 20, "maxiter": 100}
+    data_problem["condition_options"] = {"check": True, "tolerance": 1e9, "accuracy": 2}
+
+    return data_problem
