@@ -9,7 +9,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_solver import check_data
-from PyPEEC.lib_solver import voxel_resample
 from PyPEEC.lib_solver import voxel_geometry
 from PyPEEC.lib_solver import green_function
 from PyPEEC.lib_solver import problem_geometry
@@ -23,7 +22,7 @@ from PyPEEC.lib_shared import logging_utils
 logger = logging_utils.get_logger("solver")
 
 
-def _run_check(data_solver):
+def _run_check(data_voxel, data_problem):
     """
     Check the input data.
     Exceptions are not caught inside this function.
@@ -32,51 +31,16 @@ def _run_check(data_solver):
 
     with logging_utils.BlockTimer(logger, "check_data"):
         # check the data type
-        check_data.check_data_solver(data_solver)
-
-        # check the voxel structure
-        check_data.check_voxel(data_solver)
+        check_data.check_data_type(data_voxel, data_problem)
 
         # check the solver options and frequency
-        check_data.check_solver(data_solver)
+        check_data.check_problem(data_problem)
+
+        # check the voxel structure
+        check_data.check_voxel(data_voxel)
 
         # check the conductors and sources
-        check_data.check_problem(data_solver)
-
-
-def _run_resampling(data_solver):
-    """
-    Resample the voxel structure and update the indices.
-    The different parts of the code are timed.
-    """
-
-    # extract the input data
-    n = data_solver["n"]
-    r = data_solver["r"]
-    d = data_solver["d"]
-    conductor = data_solver["conductor"]
-    source = data_solver["source"]
-
-    with logging_utils.BlockTimer(logger, "voxel_resampling"):
-        # get the original grid indices
-        idx_n = voxel_resample.get_original_grid(n)
-
-        # get the indices of a single resampled voxel
-        idx_r = voxel_resample.get_resample_voxel(r)
-
-        # update the indices of the problem
-        conductor = voxel_resample.get_update_indices(n, r, idx_n, idx_r, conductor)
-        source = voxel_resample.get_update_indices(n, r, idx_n, idx_r, source)
-
-        # update the voxel number and size
-        (n, d) = voxel_resample.get_update_size(n, r, d)
-
-    # assemble results
-    data_solver["n"] = n
-    data_solver["r"] = r
-    data_solver["d"] = d
-    data_solver["conductor"] = conductor
-    data_solver["source"] = source
+        data_solver = check_data.get_solver(data_voxel, data_problem)
 
     return data_solver
 
@@ -130,8 +94,8 @@ def _run_main(data_solver):
     freq = data_solver["freq"]
     solver_options = data_solver["solver_options"]
     condition_options = data_solver["condition_options"]
-    conductor = data_solver["conductor"]
-    source = data_solver["source"]
+    conductor_idx = data_solver["conductor_idx"]
+    source_idx = data_solver["source_idx"]
     A_incidence = data_solver["A_incidence"]
     G_self = data_solver["G_self"]
     G_mutual = data_solver["G_mutual"]
@@ -139,13 +103,13 @@ def _run_main(data_solver):
     # parse the problem geometry (conductors and sources)
     with logging_utils.BlockTimer(logger, "problem_geometry"):
         # parse the conductors
-        (idx_v, rho_v) = problem_geometry.get_conductor_geometry(conductor)
+        (idx_v, rho_v) = problem_geometry.get_conductor_geometry(conductor_idx)
 
         # parse the current sources
-        (idx_src_c, I_src_c, G_src_c) = problem_geometry.get_source_current_geometry(source)
+        (idx_src_c, I_src_c, G_src_c) = problem_geometry.get_source_current_geometry(source_idx)
 
         # parse the voltage sources
-        (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_voltage_geometry(source)
+        (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_voltage_geometry(source_idx)
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
         (A_reduced, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
@@ -219,7 +183,7 @@ def _run_postproc(data_solver):
     # extract the input data
     n = data_solver["n"]
     d = data_solver["d"]
-    source = data_solver["source"]
+    source_idx = data_solver["source_idx"]
     A_incidence = data_solver["A_incidence"]
     idx_f = data_solver["idx_f"]
     idx_v = data_solver["idx_v"]
@@ -236,7 +200,7 @@ def _run_postproc(data_solver):
         J_v_all = extract_solution.get_current_density(n, d, A_incidence, I_f_all)
 
         # parse the terminal voltages and currents for the sources
-        terminal = extract_solution.get_terminal(source, V_v_all, I_src_c, I_src_v)
+        terminal = extract_solution.get_terminal(source_idx, V_v_all, I_src_c, I_src_v)
 
         # assign invalid values to the empty voxels
         (V_v, J_v) = extract_solution.get_assign_field(idx_v, V_v_all, J_v_all)
@@ -277,7 +241,7 @@ def _run_assemble(data_solver):
     return data_res
 
 
-def run(data_solver):
+def run(data_voxel, data_problem):
     """
     Main script for solving a problem with the FFT-PEEC solver.
     Handle invalid data with exceptions.
@@ -288,13 +252,12 @@ def run(data_solver):
 
     # check the input data
     try:
-        _run_check(data_solver)
+        data_solver = _run_check(data_voxel, data_problem)
     except check_data.CheckError as ex:
         logger.error(str(ex))
         return False, None
 
     # run the solver
-    data_solver = _run_resampling(data_solver)
     data_solver = _run_preproc(data_solver)
     data_solver = _run_main(data_solver)
     data_solver = _run_postproc(data_solver)

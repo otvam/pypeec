@@ -16,33 +16,51 @@ class CheckError(Exception):
     pass
 
 
-def _check_idx(idx):
+def _check_domain_def(domain_def):
     """
-    Check if the indices are correct and cast to numpy array.
+    Check that the domain definition is valid.
     """
 
-    # cast to numpy array
-    idx = np.array(idx)
+    for tag, idx in domain_def.items():
+        # check tag
+        if not isinstance(tag, str):
+            raise CheckError("tag: conductor name should be a string")
 
-    # check if vector
-    if not (len(idx.shape) == 1):
-        raise CheckError("idx: indices should be a vector")
+        # cast indices
+        idx = np.array(idx)
+        if not (len(idx.shape) == 1):
+            raise CheckError("idx: indices should be a vector")
+        if not np.issubdtype(idx.dtype, np.integer):
+            raise CheckError("idx: indices should be composed of integers")
 
-    if not np.issubdtype(idx.dtype, np.integer):
-        raise CheckError("idx: indices should be composed of integers")
+
+def _get_domain_indices(domain, domain_def):
+    # init array
+    idx = np.array([], dtype=np.int64)
+
+    # find the indices
+    for tag_domain in domain:
+        # check that the domain exist
+        if tag_domain not in domain_def:
+            raise CheckError("domain: domain name should be list in the voxel definition")
+
+        # append indices
+        idx = np.append(idx, domain_def[tag_domain])
+
+    # filter indices
+    idx = np.unique(idx)
 
     return idx
 
 
-def _check_conductor(idx_v, conductor):
+def _check_conductor_def(conductor_def):
     """
-    Check that the conductors are valid.
-    Append the conductor indices to an array.
+    Check that the conductor definition is valid.
     """
 
-    for tag, dat_tmp in conductor.items():
+    for tag, dat_tmp in conductor_def.items():
         # extract the data
-        idx = dat_tmp["idx"]
+        domain = dat_tmp["domain"]
         rho = dat_tmp["rho"]
 
         # check type
@@ -56,27 +74,19 @@ def _check_conductor(idx_v, conductor):
             raise CheckError("rho: conductor resistivity should be a real scalar")
         if not (rho > 0):
             raise CheckError("rho: conductor resistivity should be greater than zero")
-
-        # check indices
-        idx = _check_idx(idx)
-
-        # append the indices
-        idx_v = np.append(idx_v, idx)
-
-    return idx_v
+        if not all(np.issubdtype(type(x), str) for x in domain):
+            raise CheckError("domain: domain name should be composed of strings")
 
 
-def _check_source(idx_src, tag_src, source):
+def _check_source_def(source_def):
     """
-    Check that the sources (voltage or current) are valid.
-    Append the source tag to a list.
-    Append the source indices to an array.
+    Check that the source definition is valid.
     """
 
-    for tag, dat_tmp in source.items():
+    for tag, dat_tmp in source_def.items():
         # extract the data
         source_type = dat_tmp["source_type"]
-        idx = dat_tmp["idx"]
+        domain = dat_tmp["domain"]
 
         # check type
         if not isinstance(tag, str):
@@ -87,6 +97,8 @@ def _check_source(idx_src, tag_src, source):
         # check value
         if not ((source_type == "current") or (source_type == "voltage")):
             raise CheckError("source_type: source type should be voltage or current")
+        if not all(np.issubdtype(type(x), str) for x in domain):
+            raise CheckError("domain: domain name should be composed of strings")
 
         # get the source value
         if source_type == "current":
@@ -110,42 +122,107 @@ def _check_source(idx_src, tag_src, source):
         if not np.isscalar(element):
             raise CheckError("G/R: source internal conductance/resistance should be a real scalar")
 
-        # check indices
-        idx = _check_idx(idx)
 
-        # append the tag and indices
-        tag_src.append(tag)
-        idx_src = np.append(idx_src, idx)
+def _get_conductor_idx(conductor_def, domain_def):
+    # init
+    conductor_idx = dict()
+    idx_conductor = np.array([], dtype=np.int64)
 
-    return idx_src, tag_src
+    for tag, dat_tmp in conductor_def.items():
+        # extract the data
+        domain = dat_tmp["domain"]
+        rho = dat_tmp["rho"]
+
+        # get indices
+        idx = _get_domain_indices(domain, domain_def)
+
+        # append indices
+        idx_conductor = np.append(idx_conductor, idx)
+
+        # assign data
+        conductor_idx[tag] = {"idx": idx, "rho": rho}
+
+    return idx_conductor, conductor_idx
 
 
-def check_data_solver(data_solver):
+def _get_source_idx(source_def, domain_def):
+    # init
+    source_idx = dict()
+    idx_source = np.array([], dtype=np.int64)
+
+    for tag, dat_tmp in source_def.items():
+        # extract the data
+        source_type = dat_tmp["source_type"]
+        domain = dat_tmp["domain"]
+
+        # get indices
+        idx = _get_domain_indices(domain, domain_def)
+
+        # append indices
+        idx_source = np.append(idx_source, idx)
+
+        # get the source value
+        if source_type == "current":
+            I = dat_tmp["I"]
+            G = dat_tmp["G"]
+            source_idx[tag] = {"idx": idx, "source_type": source_type, "I": I, "G": G}
+        elif source_type == "voltage":
+            V = dat_tmp["V"]
+            R = dat_tmp["R"]
+            source_idx[tag] = {"idx": idx, "source_type": source_type, "V": V, "R": R}
+        else:
+            raise ValueError("invalid source type")
+
+    return idx_source, source_idx
+
+
+def _check_indices(n, idx_conductor, idx_source):
+    # extract the voxel data
+    (nx, ny, nz) = n
+    n = nx*ny*nz
+
+    # check for unicity
+    if not (len(np.unique(idx_conductor)) == len(idx_conductor)):
+        raise CheckError("conductor indices should be unique")
+    if not (len(np.unique(idx_source)) == len(idx_source)):
+        raise CheckError("source indices should be unique")
+
+    # check for indices range
+    if not (np.all(idx_conductor >= 0) and np.all(idx_conductor < n)):
+        raise CheckError("conductor indices should belong to the voxel structure")
+    if not (np.all(idx_source >= 0) and np.all(idx_source < n)):
+        raise CheckError("source indices should belong to the voxel structure")
+
+    # check that the terminal indices are conductor indices
+    if not np.all(np.isin(idx_source, idx_conductor)):
+        "source indices are not included in conductor indices"
+
+
+def check_data_type(data_voxel, data_problem):
     """
     Check the type of the input data.
     """
 
-    if not isinstance(data_solver, dict):
-        raise CheckError("invalid input data")
+    if not isinstance(data_voxel, dict):
+        raise CheckError("data_voxel: invalid input data")
+    if not isinstance(data_problem, dict):
+        raise CheckError("data_problem: invalid input data")
 
 
-def check_voxel(data_solver):
+def check_voxel(data_voxel):
     """
     Check the voxel structure (number and size) and the Green function parameter.
     """
 
     # extract field
-    n = data_solver["n"]
-    r = data_solver["r"]
-    d = data_solver["d"]
-    ori = data_solver["ori"]
-    n_green = data_solver["n_green"]
+    n = data_voxel["n"]
+    d = data_voxel["d"]
+    ori = data_voxel["ori"]
+    domain_def = data_voxel["domain_def"]
 
     # check size
     if not (len(n) == 3):
         raise CheckError("n: invalid voxel number (should be a tuple with three elements)")
-    if not (len(r) == 3):
-        raise CheckError("r: invalid voxel resampling factor (should be a tuple with three elements)")
     if not (len(d) == 3):
         raise CheckError("d: invalid voxel size (should be a tuple with three elements)")
     if not (len(ori) == 3):
@@ -154,88 +231,45 @@ def check_voxel(data_solver):
     # check type
     if not all(np.issubdtype(type(x), np.integer) for x in n):
         raise CheckError("n: number of voxels should be composed of integers")
-    if not all(np.issubdtype(type(x), np.integer) for x in r):
-        raise CheckError("r: number of resampling be composed of integers")
     if not all(np.issubdtype(type(x), np.floating) for x in d):
         raise CheckError("d: dimension of the voxels should be composed of real floats")
     if not all(np.issubdtype(type(x), np.floating) for x in ori):
         raise CheckError("ori: voxel origin should be composed of real floats")
-    if not np.issubdtype(type(n_green), np.floating):
-        raise CheckError("n_green: voxel distance to simplify the green function should be a float")
 
     # check value
     if not all((x >= 1) for x in n):
         raise CheckError("n: number of voxels cannot be smaller than one")
-    if not all((x >= 1) for x in r):
-        raise CheckError("r: number of resampling cannot be smaller than one")
     if not all((x > 0) for x in d):
         raise CheckError("d: dimension of the voxels should be positive")
-    if not (n_green > 0):
-        raise CheckError("n_green: voxel distance to simplify the green function should be positive")
+
+    # check domain
+    _check_domain_def(domain_def)
 
 
-def check_problem(data_solver):
-    """
-    Check the conductors and sources.
-    More particularly, check that the indices of the voxels are valid.
-    """
-
-    # extract field
-    conductor = data_solver["conductor"]
-    source = data_solver["source"]
-    n = data_solver["n"]
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    n = nx*ny*nz
-
-    # check type
-    if not isinstance(conductor, dict):
-        raise CheckError("the conductor description should be a dict")
-    if not isinstance(source, dict):
-        raise CheckError("the source description should be a dict")
-
-    # check the conductor
-    idx_v = np.array([], dtype=np.int64)
-    idx_src = np.array([], dtype=np.int64)
-    tag_src = []
-
-    # find the indices and tags
-    idx_v = _check_conductor(idx_v, conductor)
-    (idx_src, tag_src) = _check_source(idx_src, tag_src, source)
-
-    # check for unicity
-    if not (len(np.unique(idx_v)) == len(idx_v)):
-        raise CheckError("conductor indices should be unique")
-    if not (len(np.unique(idx_src)) == len(idx_src)):
-        raise CheckError("source indices should be unique")
-    if not (len(np.unique(tag_src)) == len(tag_src)):
-        raise CheckError("source tag should be unique")
-
-    # check for indices range
-    if not (np.all(idx_v >= 0) and np.all(idx_v < n)):
-        raise CheckError("conductor indices should belong to the voxel structure")
-    if not (np.all(idx_src >= 0) and np.all(idx_src < n)):
-        raise CheckError("source indices should belong to the voxel structure")
-
-    # check that the terminal indices are conductor indices
-    if not np.all(np.isin(idx_src, idx_v)):
-        "source indices are not included in conductor indices"
-
-
-def check_solver(data_solver):
+def check_problem(data_problem):
     """
     Check the frequency, the condition number options, and the solver options.
     """
 
     # extract field
-    freq = data_solver["freq"]
-    solver_options = data_solver["solver_options"]
-    condition_options = data_solver["condition_options"]
+    n_green = data_problem["n_green"]
+    freq = data_problem["freq"]
+    solver_options = data_problem["solver_options"]
+    condition_options = data_problem["condition_options"]
+    conductor_def = data_problem["conductor_def"]
+    source_def = data_problem["source_def"]
 
-    # check frequency
+    # check type
+    if not np.issubdtype(type(freq), np.floating):
+        raise CheckError("freq: frequency should be a float")
+    if not np.issubdtype(type(n_green), np.floating):
+        raise CheckError("n_green: voxel distance to simplify the green function should be a float")
+
+    # check value
     if not(freq >= 0):
-        raise CheckError("frequency cannot be negative")
+        raise CheckError("freq: frequency should be positive")
+    if not (n_green > 0):
+        raise CheckError("n_green: voxel distance to simplify the green function should be positive")
 
     # check solver options
     if not isinstance(solver_options, dict):
@@ -258,3 +292,45 @@ def check_solver(data_solver):
         raise CheckError("maximum condition number tolerance should be greater than zero")
     if not (condition_options["accuracy"] > 0):
         raise CheckError("condition number accuracy should be greater than zero")
+
+    # check conductor and source
+    _check_conductor_def(conductor_def)
+    _check_source_def(source_def)
+
+
+def get_solver(data_voxel, data_problem):
+    # extract field
+    n_green = data_problem["n_green"]
+    freq = data_problem["freq"]
+    solver_options = data_problem["solver_options"]
+    condition_options = data_problem["condition_options"]
+    conductor_def = data_problem["conductor_def"]
+    source_def = data_problem["source_def"]
+
+    # extract field
+    n = data_voxel["n"]
+    d = data_voxel["d"]
+    ori = data_voxel["ori"]
+    domain_def = data_voxel["domain_def"]
+
+    # get conductor indices
+    (idx_conductor, conductor_idx) = _get_conductor_idx(conductor_def, domain_def)
+    (idx_source, source_idx) = _get_source_idx(source_def, domain_def)
+
+    # check indices
+    _check_indices(n, idx_conductor, idx_source)
+
+    # assign combined data
+    data_solver = {
+        "n": n,
+        "d": d,
+        "ori": ori,
+        "n_green": n_green,
+        "freq": freq,
+        "solver_options": solver_options,
+        "condition_options": condition_options,
+        "conductor_idx": conductor_idx,
+        "source_idx": source_idx,
+    }
+
+    return data_solver

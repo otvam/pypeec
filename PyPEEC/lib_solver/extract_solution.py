@@ -93,7 +93,7 @@ def get_assign_field(idx_v, V_v_all, J_v_all):
     return V_v, J_v
 
 
-def get_terminal(source, V_v_all, I_src_c, I_src_v):
+def get_terminal(source_idx, V_v_all, I_src_c, I_src_v):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
@@ -105,7 +105,7 @@ def get_terminal(source, V_v_all, I_src_c, I_src_v):
     terminal = dict()
 
     # parse the current source terminals
-    for tag, dat_tmp in source.items():
+    for tag, dat_tmp in source_idx.items():
         # get the data
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]

@@ -12,13 +12,13 @@ import pickle
 from PyPEEC import solver
 
 
-def run(name, data_solver):
+def run(name, data_voxel, data_problem):
     """
     Solve the problem and write the result file.
     """
 
     # call solver
-    (status, data_res) = solver.run(data_solver)
+    (status, data_res) = solver.run(data_voxel, data_problem)
 
     # save results
     if status:
@@ -34,10 +34,14 @@ def run(name, data_solver):
 
 if __name__ == "__main__":
     # name of the simulation
-    name = "data_pcb_trf"
+    name = "data_new"
 
     # get the data
-    if name == "data_test":
+    if name == "data_new":
+        from data_input import data_solver_new
+        data_problem = data_solver_new.get_data_problem()
+        data_voxel = data_solver_new.get_data_voxel()
+    elif name == "data_test":
         from data_input import data_solver_test
         data_solver = data_solver_test.get_data()
     elif name == "data_simple":
@@ -50,5 +54,5 @@ if __name__ == "__main__":
         raise ValueError("invalid name")
 
     # run
-    exit_code = run(name, data_solver)
+    exit_code = run(name, data_voxel, data_problem)
     sys.exit(exit_code)

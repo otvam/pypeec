@@ -13,7 +13,7 @@ from PyPEEC.lib_shared import logging_utils
 logger = logging_utils.get_logger("problem")
 
 
-def get_conductor_geometry(conductor):
+def get_conductor_geometry(conductor_idx):
     """
     Get the indices of the conducting voxels and the corresponding resistivities.
     """
@@ -23,7 +23,7 @@ def get_conductor_geometry(conductor):
     rho_v = np.array([], dtype=np.float64)
 
     # populate the arrays
-    for tag, dat_tmp in conductor.items():
+    for tag, dat_tmp in conductor_idx.items():
         # get the data
         idx = dat_tmp["idx"]
         rho = dat_tmp["rho"]
@@ -35,7 +35,7 @@ def get_conductor_geometry(conductor):
     return idx_v, rho_v
 
 
-def get_source_current_geometry(source):
+def get_source_current_geometry(source_idx):
     """
     Get the indices of the source voxels and the corresponding source excitations.
     The current sources have internal admittances.
@@ -47,7 +47,7 @@ def get_source_current_geometry(source):
     G_src_c = np.array([], dtype=np.float64)
 
     # populate the arrays with the current sources
-    for tag, dat_tmp in source.items():
+    for tag, dat_tmp in source_idx.items():
         # get the data
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
@@ -66,7 +66,7 @@ def get_source_current_geometry(source):
     return idx_src_c, I_src_c, G_src_c
 
 
-def get_source_voltage_geometry(source):
+def get_source_voltage_geometry(source_idx):
     """
     Get the indices of the source voxels and the corresponding source excitations.
     The voltage sources have internal resistances.
@@ -78,22 +78,21 @@ def get_source_voltage_geometry(source):
     R_src_v = np.array([], dtype=np.float64)
 
     # populate the arrays with the current sources
-    for tag, dat_tmp in source.items():
+    for tag, dat_tmp in source_idx.items():
         # get the data
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
 
         # the voltage source value is set to the specified value for all the voxels
         if (len(idx) > 0) and (source_type == "voltage"):
-            if source_type == "voltage":
-                # get the data
-                V = dat_tmp["V"]
-                R = dat_tmp["R"]
+            # get the data
+            V = dat_tmp["V"]
+            R = dat_tmp["R"]
 
-                # append the local voltage sources
-                idx_src_v = np.append(idx_src_v, np.array(idx))
-                V_src_v = np.append(V_src_v, np.full(len(idx), V))
-                R_src_v = np.append(R_src_v, np.full(len(idx), R*len(idx)))
+            # append the local voltage sources
+            idx_src_v = np.append(idx_src_v, np.array(idx))
+            V_src_v = np.append(V_src_v, np.full(len(idx), V))
+            R_src_v = np.append(R_src_v, np.full(len(idx), R*len(idx)))
 
     return idx_src_v, V_src_v, R_src_v
 
