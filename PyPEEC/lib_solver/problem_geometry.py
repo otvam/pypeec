@@ -120,11 +120,7 @@ def get_source_index(n, idx_v, idx_src_c, idx_src_v):
     idx_tmp[idx_v] = np.arange(n_v, dtype=np.int64)
     idx_src_v_local = idx_tmp[idx_src_v]
 
-    # get the voxel as a boolean array
-    idx_voxel = np.zeros(n, dtype=bool)
-    idx_voxel[idx_v] = True
-
-    return idx_voxel, idx_src_c_local, idx_src_v_local
+    return idx_src_c_local, idx_src_v_local
 
 
 def get_incidence_matrix(n, A_incidence, idx_v):
@@ -143,18 +139,6 @@ def get_incidence_matrix(n, A_incidence, idx_v):
     # reduce the size of the incidence matrix (only the non-empty voxels)
     A_reduced = A_incidence[idx_v, :]
 
-    # indices of the x-oriented faces (local face indices, 0:n)
-    idx_f_x = np.sum(np.abs(A_reduced[:, 0:n]), axis=0) == 2
-    idx_f_x = np.flatnonzero(idx_f_x)
-
-    # indices of the y-oriented faces (local face indices, 0:n)
-    idx_f_y = np.sum(np.abs(A_reduced[:, n:2*n]), axis=0) == 2
-    idx_f_y = np.flatnonzero(idx_f_y)
-
-    # indices of the z-oriented faces (local face indices, 0:n)
-    idx_f_z = np.sum(np.abs(A_reduced[:, 2*n:3*n]), axis=0) == 2
-    idx_f_z = np.flatnonzero(idx_f_z)
-
     # indices of the all the internal faces (global face indices, 0:3*n)
     idx_f = np.sum(np.abs(A_reduced), axis=0) == 2
     idx_f = np.flatnonzero(idx_f)
@@ -162,7 +146,7 @@ def get_incidence_matrix(n, A_incidence, idx_v):
     # reduce the size of the incidence matrix (only the internal faces)
     A_reduced = A_reduced[:, idx_f]
 
-    return A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f
+    return A_reduced, idx_f
 
 
 def get_status(n, idx_v, idx_f, idx_src_c, idx_src_v):

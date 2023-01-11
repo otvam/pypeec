@@ -57,7 +57,7 @@ def get_resistivity_vector(n, idx_v, rho_v):
     return rho_voxel
 
 
-def get_resistance_vector(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel):
+def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
     """
     Extract the resistance vector of the system (diagonal of the resistance matrix).
     The problem contains n_v non-empty voxels and n_f internal faces.
@@ -70,21 +70,21 @@ def get_resistance_vector(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel):
     (dx, dy, dz) = d
     n = nx*ny*nz
 
-    # flattened resistance matrix (x-direction)
-    R_x = np.zeros(n, dtype=np.float64)
-    R_x[idx_f_x] = (dx/(dy*dz))*rho_voxel[idx_f_x]
+    # get the resistivity of the faces (average between voxels)
+    rho_vector = 0.5*rho_v*np.abs(A_reduced)
 
-    # flattened resistance matrix (y-direction)
-    R_y = np.zeros(n, dtype=np.float64)
-    R_y[idx_f_y] = (dy/(dx*dz))*rho_voxel[idx_f_y]
+    # init the resistance vector
+    R_vector = np.zeros(len(rho_vector), dtype=np.float64)
 
-    # flattened resistance matrix (z-direction)
-    R_z = np.zeros(n, dtype=np.float64)
-    R_z[idx_f_z] = (dz/(dx*dy))*rho_voxel[idx_f_z]
+    # get the direction of the faces (x, y, z)
+    idx_f_x = np.intersect1d(np.arange(0, n), idx_f-0*n)
+    idx_f_y = np.intersect1d(np.arange(0, n), idx_f-1*n)
+    idx_f_z = np.intersect1d(np.arange(0, n), idx_f-2*n)
 
-    # assemble the resistance vector
-    R_vector = np.concatenate((R_x, R_y, R_z), dtype=np.float64)
-    R_vector = R_vector[idx_f]
+    # resistance vector (different directions)
+    R_vector[idx_f_x] = (dx/(dy*dz))*rho_vector[idx_f_x]
+    R_vector[idx_f_y] = (dx/(dy*dz))*rho_vector[idx_f_y]
+    R_vector[idx_f_z] = (dx/(dy*dz))*rho_vector[idx_f_z]
 
     return R_vector
 

@@ -66,9 +66,9 @@ def get_current_density(n, d, A_incidence, I_face):
     n = nx*ny*nz
 
     # project the face currents into the voxels (0.5 because a current is going in and out)
-    I_x = 0.5 * np.abs(A_incidence[:, 0:n]) * I_face[0:n]
-    I_y = 0.5 * np.abs(A_incidence[:, n:2*n]) * I_face[n:2*n]
-    I_z = 0.5 * np.abs(A_incidence[:, 2*n:3*n]) * I_face[2*n:3*n]
+    I_x = 0.5*np.abs(A_incidence[:, 0:n])*I_face[0:n]
+    I_y = 0.5*np.abs(A_incidence[:, n:2*n])*I_face[n:2*n]
+    I_z = 0.5*np.abs(A_incidence[:, 2*n:3*n])*I_face[2*n:3*n]
 
     # convert currents into current densities
     J_x = I_x/(dy*dz)

@@ -148,10 +148,10 @@ def _run_main(data_solver):
         (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_voltage_geometry(source)
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
-        (A_reduced, idx_f_x, idx_f_y, idx_f_z, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
+        (A_reduced, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
 
         # compute the local (with respect to the non-empty voxels) indices for the sources
-        (idx_voxel, idx_src_c_local, idx_src_v_local) = problem_geometry.get_source_index(n, idx_v, idx_src_c, idx_src_v)
+        (idx_src_c_local, idx_src_v_local) = problem_geometry.get_source_index(n, idx_v, idx_src_c, idx_src_v)
 
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_v, idx_f, idx_src_c, idx_src_v)
@@ -162,7 +162,7 @@ def _run_main(data_solver):
         rho_voxel = resistance_inductance.get_resistivity_vector(n, idx_v, rho_v)
 
         # get the resistance vector
-        R_vector = resistance_inductance.get_resistance_vector(n, d, idx_f_x, idx_f_y, idx_f_z, idx_f, rho_voxel)
+        R_vector = resistance_inductance.get_resistance_vector(n, d, A_reduced, idx_f, rho_v)
 
         # get the inductance vector (preconditioner) and tensor (full problem, circulant tensor)
         (L_tensor, L_vector) = resistance_inductance.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
@@ -204,11 +204,10 @@ def _run_main(data_solver):
     # assemble results
     data_solver["idx_f"] = idx_f
     data_solver["idx_v"] = idx_v
+    data_solver["rho_v"] = rho_v
     data_solver["idx_src_v"] = idx_src_v
     data_solver["idx_src_c"] = idx_src_c
     data_solver["problem_status"] = problem_status
-    data_solver["idx_voxel"] = idx_voxel
-    data_solver["rho_voxel"] = rho_voxel
     data_solver["sol"] = sol
     data_solver["has_converged"] = has_converged
     data_solver["solver_status"] = solver_status
@@ -264,15 +263,14 @@ def _run_assemble(data_solver):
     # assign results
     data_res = {
         "n": data_solver["n"],
-        "r": data_solver["r"],
         "d": data_solver["d"],
         "ori": data_solver["ori"],
-        "source": data_solver["source"],
-        "conductor": data_solver["conductor"],
-        "freq": data_solver["freq"],
         "xyz": data_solver["xyz"],
-        "idx_voxel": data_solver["idx_voxel"],
-        "rho_voxel": data_solver["rho_voxel"],
+        "idx_v": data_solver["idx_v"],
+        "rho_v": data_solver["rho_v"],
+        "idx_src_c": data_solver["idx_src_c"],
+        "idx_src_v": data_solver["idx_src_v"],
+        "freq": data_solver["freq"],
         "has_converged": data_solver["has_converged"],
         "problem_status": data_solver["problem_status"],
         "solver_status": data_solver["solver_status"],
