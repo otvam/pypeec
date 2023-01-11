@@ -24,7 +24,7 @@ logger = logging_utils.get_logger("solver")
 
 def _run_check(data_voxel, data_problem):
     """
-    Check the input data.
+    Check and combine the input data.
     Exceptions are not caught inside this function.
     The different parts of the code are timed.
     """
@@ -33,13 +33,13 @@ def _run_check(data_voxel, data_problem):
         # check the data type
         check_data.check_data_type(data_voxel, data_problem)
 
-        # check the solver options and frequency
+        # check the problem data
         check_data.check_problem(data_problem)
 
-        # check the voxel structure
+        # check the voxel data
         check_data.check_voxel(data_voxel)
 
-        # check the conductors and sources
+        # combine the problem and voxel data
         data_solver = check_data.get_solver(data_voxel, data_problem)
 
     return data_solver

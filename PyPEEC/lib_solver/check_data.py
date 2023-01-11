@@ -1,5 +1,7 @@
 """
 Module for checking the solver input data.
+Check the voxel and problem data.
+Combine the voxel and problem data into solver data.
 """
 
 __author__ = "Thomas Guillod"
@@ -14,6 +16,29 @@ class CheckError(Exception):
     """
 
     pass
+
+
+def _get_domain_indices(domain, domain_def):
+    """
+    Get indices from list of domain names.
+    """
+
+    # init array
+    idx = np.array([], dtype=np.int64)
+
+    # find the indices
+    for tag_domain in domain:
+        # check that the domain exist
+        if tag_domain not in domain_def:
+            raise CheckError("domain: domain name should be list in the voxel definition")
+
+        # append indices
+        idx = np.append(idx, domain_def[tag_domain])
+
+    # filter indices
+    idx = np.unique(idx)
+
+    return idx
 
 
 def _check_domain_def(domain_def):
@@ -32,25 +57,6 @@ def _check_domain_def(domain_def):
             raise CheckError("idx: indices should be a vector")
         if not np.issubdtype(idx.dtype, np.integer):
             raise CheckError("idx: indices should be composed of integers")
-
-
-def _get_domain_indices(domain, domain_def):
-    # init array
-    idx = np.array([], dtype=np.int64)
-
-    # find the indices
-    for tag_domain in domain:
-        # check that the domain exist
-        if tag_domain not in domain_def:
-            raise CheckError("domain: domain name should be list in the voxel definition")
-
-        # append indices
-        idx = np.append(idx, domain_def[tag_domain])
-
-    # filter indices
-    idx = np.unique(idx)
-
-    return idx
 
 
 def _check_conductor_def(conductor_def):
@@ -124,6 +130,11 @@ def _check_source_def(source_def):
 
 
 def _get_conductor_idx(conductor_def, domain_def):
+    """
+    Get the indices of the conductors.
+    Create a new dict with the indices in place of the domain names.
+    """
+
     # init
     conductor_idx = dict()
     idx_conductor = np.array([], dtype=np.int64)
@@ -146,6 +157,11 @@ def _get_conductor_idx(conductor_def, domain_def):
 
 
 def _get_source_idx(source_def, domain_def):
+    """
+    Get the indices of the sources.
+    Create a new dict with the indices in place of the domain names.
+    """
+
     # init
     source_idx = dict()
     idx_source = np.array([], dtype=np.int64)
@@ -177,6 +193,12 @@ def _get_source_idx(source_def, domain_def):
 
 
 def _check_indices(n, idx_conductor, idx_source):
+    """
+    Check that the conductor and source indices are valid.
+    The indices should be unique and compatible with the voxel size.
+    The source indices should be included in the conductor indices.
+    """
+
     # extract the voxel data
     (nx, ny, nz) = n
     n = nx*ny*nz
@@ -211,7 +233,8 @@ def check_data_type(data_voxel, data_problem):
 
 def check_voxel(data_voxel):
     """
-    Check the voxel structure (number and size) and the Green function parameter.
+    Check the voxel structure (number and size).
+    Check the domain definition (mapping between domain names and indices).
     """
 
     # extract field
@@ -248,7 +271,8 @@ def check_voxel(data_voxel):
 
 def check_problem(data_problem):
     """
-    Check the frequency, the condition number options, and the solver options.
+    Check the problem data (Green function, frequency, solver options, matrix condition options).
+    Check the conductor and source definition.
     """
 
     # extract field
@@ -299,6 +323,13 @@ def check_problem(data_problem):
 
 
 def get_solver(data_voxel, data_problem):
+    """
+    Combine the voxel data and the problem data.
+    The voxel data contains the mapping between domain names and indices.
+    The problem data contains domain names used for the sourced.
+    The new dict contains the indices used for the sources.
+    """
+
     # extract field
     n_green = data_problem["n_green"]
     freq = data_problem["freq"]
