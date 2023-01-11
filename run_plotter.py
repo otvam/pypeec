@@ -21,7 +21,7 @@ def run(name, data_plotter):
     with open(filename, "rb") as fid:
         data_res = pickle.load(fid)
 
-    # call lib_plotter
+    # call plotter
     exit_code = plotter.run(data_res, data_plotter)
 
     return exit_code

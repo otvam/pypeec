@@ -26,6 +26,24 @@ def _check_pts(pts):
         raise CheckError("pts: the coordinates of a point should be composed of real floats")
 
 
+def _check_resampling(use_resampling, n_resampling):
+    # check type
+    if not isinstance(use_resampling, bool):
+        raise CheckError("use_resampling: resampling flag should be a boolean")
+
+    # check size
+    if not (len(n_resampling) == 3):
+        raise CheckError("n_resampling: invalid voxel resampling (should be a tuple with three elements)")
+
+    # check type
+    if not all(np.issubdtype(type(x), np.integer) for x in n_resampling):
+        raise CheckError("n_resampling: number of resampling should be composed of integers")
+
+    # check value
+    if not all((x >= 1) for x in n_resampling):
+        raise CheckError("n_resampling: number of resampling cannot be smaller than one")
+
+
 def _check_domain_color(domain_color):
     """
     Check that the conductor definition is valid.
@@ -128,23 +146,20 @@ def check_data_mesher_png(data_mesher):
 
     # extract field
     d = data_mesher["d"]
-    r = data_mesher["r"]
     nx = data_mesher["nx"]
     ny = data_mesher["ny"]
+    use_resampling = data_mesher["use_resampling"]
+    n_resampling = data_mesher["n_resampling"]
     domain_color = data_mesher["domain_color"]
     layer_stack = data_mesher["layer_stack"]
 
     # check size
     if not (len(d) == 3):
         raise CheckError("d: invalid voxel size (should be a tuple with three elements)")
-    if not (len(r) == 3):
-        raise CheckError("r: invalid voxel resampling (should be a tuple with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.floating) for x in d):
         raise CheckError("d: dimension of the voxels should be composed of real floats")
-    if not all(np.issubdtype(type(x), np.integer) for x in r):
-        raise CheckError("r: number of resampling should be composed of integers")
     if not np.issubdtype(type(nx), np.integer):
         raise CheckError("nx: number of voxel in x direction should be an integer")
     if not np.issubdtype(type(ny), np.integer):
@@ -153,12 +168,13 @@ def check_data_mesher_png(data_mesher):
     # check value
     if not all((x > 0) for x in d):
         raise CheckError("d: dimension of the voxels should be positive")
-    if not all((x >= 1) for x in r):
-        raise CheckError("r: number of resampling cannot be smaller than one")
     if not (nx >= 1):
         raise CheckError("nx: of voxel in x direction cannot be smaller than one")
     if not (ny >= 1):
         raise CheckError("ny: of voxel in y direction cannot be smaller than one")
+
+    # check resampling
+    _check_resampling(use_resampling, n_resampling)
 
     # check domains and layers
     _check_domain_color(domain_color)
@@ -177,28 +193,26 @@ def check_data_mesher_stl(data_mesher):
 
     # extract field
     n = data_mesher["n"]
-    r = data_mesher["r"]
     pts_min = data_mesher["pts_min"]
     pts_max = data_mesher["pts_max"]
+    use_resampling = data_mesher["use_resampling"]
+    n_resampling = data_mesher["n_resampling"]
     domain_stl = data_mesher["domain_stl"]
 
     # check size
     if not (len(n) == 3):
         raise CheckError("n: invalid voxel number (should be a tuple with three elements)")
-    if not (len(r) == 3):
-        raise CheckError("r: invalid voxel resampling (should be a tuple with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.integer) for x in n):
         raise CheckError("n: number of voxels should be composed of integers")
-    if not all(np.issubdtype(type(x), np.integer) for x in r):
-        raise CheckError("r: number of resampling should be composed of integers")
 
     # check value
     if not all((x >= 1) for x in n):
         raise CheckError("n: number of voxels cannot be smaller than one")
-    if not all((x >= 1) for x in r):
-        raise CheckError("r: number of resampling cannot be smaller than one")
+
+    # check resampling
+    _check_resampling(use_resampling, n_resampling)
 
     # check the points
     _check_pts(pts_min)

@@ -12,7 +12,8 @@ def get_data():
 
     # voxel size
     data_mesher["d"] = (35e-6, 35e-6, 35e-6)
-    data_mesher["r"] = (1, 1, 1)
+    data_mesher["use_resampling"] = True
+    data_mesher["n_resampling"] = (1, 1, 1)
     data_mesher["nx"] = 176
     data_mesher["ny"] = 160
 

@@ -7,18 +7,37 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import sys
+import pickle
 from PyPEEC import viewer
+from data_input_plotter_viewer import data_viewer
 
 
-if __name__ == "__main__":
-    # get the data
-    from data_input_solver import test_tranformer
-    from data_input import data_viewer
-    data_voxel = data_solver_simple.get_data_voxel()
-    data_viewer = data_viewer.get_data()
+def run(name, data_viewer):
+    """
+    Load the result file and plot the results.
+    """
+
+    # load data
+    filename = "data_output/mesher_%s.pck" % name
+    with open(filename, "rb") as fid:
+        data_voxel = pickle.load(fid)
 
     # call lib_plotter
     exit_code = viewer.run(data_voxel, data_viewer)
+
+    return exit_code
+
+
+if __name__ == "__main__":
+    # name of the simulation
+    name = "png_inductor"
+    # name = "stl_inductor"
+
+    # get the data
+    data_viewer = data_viewer.get_data()
+
+    # call viewer
+    exit_code = run(name, data_viewer)
 
     # run
     sys.exit(exit_code)

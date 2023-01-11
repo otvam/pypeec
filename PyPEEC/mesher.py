@@ -9,6 +9,8 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_mesher import check_data
+from PyPEEC.lib_mesher import png_mesher
+from PyPEEC.lib_mesher import voxel_resample
 from PyPEEC.lib_shared import logging_utils
 
 # get a logger
@@ -41,11 +43,25 @@ def _run_png(data_mesher):
     The different parts of the code are timed.
     """
 
-    # get the voxel geometry and the incidence matrix
-    with logging_utils.BlockTimer(logger, "voxel_geometry"):
-        pass
+    # extract the data
+    d = data_mesher["d"]
+    nx = data_mesher["nx"]
+    ny = data_mesher["ny"]
+    domain_color = data_mesher["domain_color"]
+    layer_stack = data_mesher["layer_stack"]
 
-    return None
+    # get the voxel geometry and the incidence matrix
+    with logging_utils.BlockTimer(logger, "png_mesher"):
+        (n, domain_def) = png_mesher.get_mesh(nx, ny, domain_color, layer_stack)
+
+    # assemble the data
+    data_voxel = {
+        "n": n,
+        "d": d,
+        "domain_def": domain_def,
+    }
+
+    return data_voxel
 
 
 def _run_stl(data_mesher):
@@ -61,12 +77,51 @@ def _run_stl(data_mesher):
     return None
 
 
+def _run_resample(data_voxel, data_mesher):
+    # extract the data
+    n = data_voxel["n"]
+    d = data_voxel["d"]
+    domain_def = data_voxel["domain_def"]
+    use_resampling = data_mesher["use_resampling"]
+    n_resampling = data_mesher["n_resampling"]
+
+    if use_resampling:
+        with logging_utils.BlockTimer(logger, "voxel_resample"):
+            (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, n_resampling)
+
+    # assemble the data
+    data_voxel = {
+        "n": n,
+        "d": d,
+        "domain_def": domain_def,
+    }
+
+    return data_voxel
+
+
 def _run_disp(data_voxel):
     """
     Assemble the output data from the different dict.
     """
 
-    pass
+    # extract the data
+    n = data_voxel["n"]
+    d = data_voxel["d"]
+    domain_def = data_voxel["domain_def"]
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    (dx, dy, dz) = d
+    n = nx*ny*nz
+
+    # plot the voxel size
+    logger.info("(nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
+    logger.info("(dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
+    logger.info("n = %d" % n)
+
+    # plot the domain size
+    for tag, idx in domain_def.items():
+        logger.info("domain / %s = %d" % (tag, len(idx)))
 
 
 def run(mesh_type, data_mesher):
@@ -85,13 +140,16 @@ def run(mesh_type, data_mesher):
         logger.error(str(ex))
         return False, None
 
-    # run the solver
+    # run the mesher
     if mesh_type=="png":
         data_voxel = _run_png(data_mesher)
     elif mesh_type=="stl":
         data_voxel = _run_stl(data_mesher)
     else:
         raise ValueError("invalid mesh type")
+
+    # resample and assemble
+    data_voxel = _run_resample(data_voxel, data_mesher)
 
     # display the results
     _run_disp(data_voxel)
