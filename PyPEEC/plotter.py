@@ -46,21 +46,21 @@ def _get_grid_voxel(data_res):
     n = data_res["n"]
     d = data_res["d"]
     ori = data_res["ori"]
-    idx_voxel = data_res["idx_voxel"]
-    rho_voxel = data_res["rho_voxel"]
-    V_voxel = data_res["V_voxel"]
-    J_voxel = data_res["J_voxel"]
-    source = data_res["source"]
-    conductor = data_res["conductor"]
+    idx_v = data_res["idx_v"]
+    idx_src_c = data_res["idx_src_c"]
+    idx_src_v = data_res["idx_src_v"]
+    rho_v = data_res["rho_v"]
+    V_v = data_res["V_v"]
+    J_v = data_res["J_v"]
 
     # convert the voxel geometry into PyVista grids
-    (grid, geom) = manage_voxel.get_grid_geom(n, d, ori, idx_voxel)
+    (grid, geom) = manage_voxel.get_grid_geom(n, d, ori, idx_v)
 
     # add the problem solution to the grid
-    geom = manage_voxel.get_material(idx_voxel, geom, conductor, source)
-    geom = manage_voxel.get_resistivity(idx_voxel, geom, rho_voxel)
-    geom = manage_voxel.get_potential(idx_voxel, geom, V_voxel)
-    geom = manage_voxel.get_current_density(idx_voxel, geom, J_voxel)
+    geom = manage_voxel.get_material(geom, idx_v, idx_src_c, idx_src_v)
+    geom = manage_voxel.get_resistivity(geom, idx_v, rho_v)
+    geom = manage_voxel.get_potential(geom, idx_v, V_v)
+    geom = manage_voxel.get_current_density(geom, idx_v, J_v)
 
     return grid, geom
 

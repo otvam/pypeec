@@ -11,7 +11,7 @@ import numpy.linalg as lna
 import pyvista as pv
 
 
-def get_grid_geom(n, d, ori, idx_voxel):
+def get_grid_geom(n, d, ori, idx_v):
     """
     Construct PyVista grids from the voxel structure.
     The complete voxel geometry is represented with a PyVista uniform grid.
@@ -31,16 +31,13 @@ def get_grid_geom(n, d, ori, idx_voxel):
     grid.spacing = (dx, dy, dz)  # These are the cell sizes along each axis
     grid.origin = (orix, oriy, oriz)
 
-    # get voxel indices
-    idx = np.flatnonzero(idx_voxel)
-
     # transform the uniform grid into a unstructured grid (keeping the non-empty voxels)
-    geom = grid.extract_cells(idx)
+    geom = grid.extract_cells(idx_v)
 
     return grid, geom
 
 
-def get_material(idx_voxel, geom, conductor, source):
+def get_material(geom, idx_v, idx_src_c, idx_src_v):
     """
     Extract and add to the geometry the material description.
     The following encoding is used:
@@ -49,92 +46,75 @@ def get_material(idx_voxel, geom, conductor, source):
         - 2: voltage source voxels
     """
 
-    # assign empty data
-    data = np.full(len(idx_voxel), np.nan, dtype=np.float64)
+    # assign conductors
+    data = np.zeros(len(idx_v), dtype=np.float64)
 
-    # assign conductor voxels
-    for tag, dat_tmp in conductor.items():
-        # get the data
-        idx_tmp = dat_tmp["idx"]
+    # get the local source indices
+    idx_src_c_local = np.flatnonzero(np.in1d(idx_v, idx_src_c))
+    idx_src_v_local = np.flatnonzero(np.in1d(idx_v, idx_src_v))
 
-        # assign the material
-        data[idx_tmp] = 0
-
-    # assign source voxels
-    for tag, dat_tmp in source.items():
-        # get the data
-        idx_tmp = dat_tmp["idx"]
-        source_type_tmp = dat_tmp["source_type"]
-
-        # assign the material (current or voltage sources)
-        if source_type_tmp == "current":
-            data[idx_tmp] = 1
-        elif source_type_tmp == "voltage":
-            data[idx_tmp] = 2
-        else:
-            raise ValueError("invalid source type")
-
-    # get voxel indices
-    idx = np.flatnonzero(idx_voxel)
+    # assign the voltage and current sources
+    data[idx_src_c_local] = 1
+    data[idx_src_v_local] = 2
 
     # assign the extract data to the geometry
-    geom["material"] = data[idx]
+    geom["material"] = data
 
     return geom
 
 
-def get_resistivity(idx_voxel, geom, rho_voxel):
+def get_resistivity(geom, idx_v, rho_v):
     """
     Extract and add to the geometry the resistivity.
     """
 
-    # get voxel indices
-    idx = np.flatnonzero(idx_voxel)
-    rho = rho_voxel[idx]
+    # sort idx
+    idx = np.argsort(idx_v)
+    rho_v = rho_v[idx]
 
-    # assign the extract data to the geometry
-    geom["rho"] = rho
+    # assign data
+    geom["rho"] = rho_v
 
     return geom
 
 
-def get_potential(idx_voxel, geom, V_voxel):
+def get_potential(geom, idx_v, V_v):
     """
     Extract and add to the geometry the potential (solved variable).
     Assign the real part, the imaginary part, and the absolute value.
     """
 
-    # get voxel indices
-    idx = np.flatnonzero(idx_voxel)
-    V = V_voxel[idx]
+    # sort idx
+    idx = np.argsort(idx_v)
+    V_v = V_v[idx]
 
-    # assign the extract data to the geometry
-    geom["V_re"] = np.real(V)
-    geom["V_im"] = np.imag(V)
-    geom["V_abs"] = np.abs(V)
+    # assign data
+    geom["V_re"] = np.real(V_v)
+    geom["V_im"] = np.imag(V_v)
+    geom["V_abs"] = np.abs(V_v)
 
     return geom
 
 
-def get_current_density(idx_voxel, geom, J_voxel):
+def get_current_density(geom, idx_v, J_v):
     """
     Extract and add to the geometry the current density (solved variable).
     Assign the real part and the imaginary part for the current density vector.
     Assign the real part, the imaginary part, and the absolute value for the current density norm.
     """
 
-    # get voxel indices
-    idx = np.flatnonzero(idx_voxel)
-    J = J_voxel[idx, :]
+    # sort idx
+    idx = np.argsort(idx_v)
+    J_v = J_v[idx, :]
 
-    # assign the extract data to the geometry
-    geom["J_norm_abs"] = lna.norm(J, axis=1)
-    geom["J_norm_re"] = lna.norm(np.real(J), axis=1)
-    geom["J_norm_im"] = lna.norm(np.imag(J), axis=1)
+    # compute the norm
+    geom["J_norm_abs"] = lna.norm(J_v, axis=1)
+    geom["J_norm_re"] = lna.norm(np.real(J_v), axis=1)
+    geom["J_norm_im"] = lna.norm(np.imag(J_v), axis=1)
 
     # compute the direction, ignore division per zero
     with np.errstate(all="ignore"):
-        geom["J_vec_unit_re"] = np.real(J)/lna.norm(np.real(J), axis=1, keepdims=True)
-        geom["J_vec_unit_im"] = np.imag(J)/lna.norm(np.imag(J), axis=1, keepdims=True)
+        geom["J_vec_unit_re"] = np.real(J_v)/lna.norm(np.real(J_v), axis=1, keepdims=True)
+        geom["J_vec_unit_im"] = np.imag(J_v)/lna.norm(np.imag(J_v), axis=1, keepdims=True)
 
     return geom

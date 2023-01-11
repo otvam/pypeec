@@ -41,22 +41,6 @@ def _get_circulant_tensor(nx, ny, nz, A):
     return C
 
 
-def get_resistivity_vector(n, idx_v, rho_v):
-    """
-    Extract the resistivity for all the voxels (including empty voxels).
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    n = nx*ny*nz
-
-    # assign the resistivity to a vector with all the voxels (including empty voxels)
-    rho_voxel = np.full(n, np.nan, dtype=np.float64)
-    rho_voxel[idx_v] = rho_v
-
-    return rho_voxel
-
-
 def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
     """
     Extract the resistance vector of the system (diagonal of the resistance matrix).

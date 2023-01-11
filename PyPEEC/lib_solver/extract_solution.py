@@ -35,12 +35,12 @@ def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):
     n = nx*ny*nz
 
     # assign face currents
-    I_face = np.zeros(3*n, dtype=np.complex128)
-    I_face[idx_f] = sol[0:n_f]
+    I_f_all = np.zeros(3*n, dtype=np.complex128)
+    I_f_all[idx_f] = sol[0:n_f]
 
     # assign voxel voltages
-    V_voxel = np.zeros(n, dtype=np.complex128)
-    V_voxel[idx_v] = sol[n_f:n_f+n_v]
+    V_v_all = np.zeros(n, dtype=np.complex128)
+    V_v_all[idx_v] = sol[n_f:n_f+n_v]
 
     # assign current source currents
     I_src_c = np.zeros(n, dtype=np.complex128)
@@ -50,10 +50,10 @@ def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):
     I_src_v = np.zeros(n, dtype=np.complex128)
     I_src_v[idx_src_v] = sol[n_f+n_v+n_src_c:n_f+n_v+n_src_c+n_src_v]
 
-    return I_face, V_voxel, I_src_c, I_src_v
+    return I_f_all, V_v_all, I_src_c, I_src_v
 
 
-def get_current_density(n, d, A_incidence, I_face):
+def get_current_density(n, d, A_incidence, I_f_all):
     """
     Get the voxel current densities from the face currents.
     Combine the currents of all the internal faces of a voxel into a single vector.
@@ -66,9 +66,9 @@ def get_current_density(n, d, A_incidence, I_face):
     n = nx*ny*nz
 
     # project the face currents into the voxels (0.5 because a current is going in and out)
-    I_x = 0.5*np.abs(A_incidence[:, 0:n])*I_face[0:n]
-    I_y = 0.5*np.abs(A_incidence[:, n:2*n])*I_face[n:2*n]
-    I_z = 0.5*np.abs(A_incidence[:, 2*n:3*n])*I_face[2*n:3*n]
+    I_x = 0.5*np.abs(A_incidence[:, 0:n])*I_f_all[0:n]
+    I_y = 0.5*np.abs(A_incidence[:, n:2*n])*I_f_all[n:2*n]
+    I_z = 0.5*np.abs(A_incidence[:, 2*n:3*n])*I_f_all[2*n:3*n]
 
     # convert currents into current densities
     J_x = I_x/(dy*dz)
@@ -76,32 +76,24 @@ def get_current_density(n, d, A_incidence, I_face):
     J_z = I_z/(dx*dy)
 
     # assemble voxel current densities
-    J_voxel = np.stack((J_x, J_y, J_z), axis=1, dtype=np.complex128)
+    J_v_all = np.stack((J_x, J_y, J_z), axis=1, dtype=np.complex128)
 
-    return J_voxel
+    return J_v_all
 
 
-def get_assign_field(n, idx_v, V_voxel, J_voxel):
+def get_assign_field(idx_v, V_v_all, J_v_all):
     """
     Assign invalid values to the empty voxels.
     """
 
-    # extract the voxel data
-    (nx, ny, nz) = n
-    n = nx*ny*nz
-
-    # find the indices of the empty voxels
-    idx_all = np.arange(n, dtype=np.int64)
-    idx_nan = np.setdiff1d(idx_all, idx_v)
-
     # flag empty voxels
-    V_voxel[idx_nan] = np.nan+1j*np.nan
-    J_voxel[idx_nan, :] = np.nan+1j*np.nan
+    V_v = V_v_all[idx_v]
+    J_v = J_v_all[idx_v, :]
 
-    return V_voxel, J_voxel
+    return V_v, J_v
 
 
-def get_terminal(source, V_voxel, I_src_c, I_src_v):
+def get_terminal(source, V_v_all, I_src_c, I_src_v):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
@@ -124,7 +116,7 @@ def get_terminal(source, V_voxel, I_src_c, I_src_v):
             V_tmp = np.nan+1j*np.nan
         else:
             # voltage is the average between all the voxels composing the terminal
-            V_tmp = np.complex128(np.mean(V_voxel[idx]))
+            V_tmp = np.complex128(np.mean(V_v_all[idx]))
 
             # current is the sum between all the voxels composing the terminal
             if source_type == "current":

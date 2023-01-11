@@ -98,31 +98,6 @@ def get_source_voltage_geometry(source):
     return idx_src_v, V_src_v, R_src_v
 
 
-def get_source_index(n, idx_v, idx_src_c, idx_src_v):
-    """
-    Compute the local indices for the sources.
-    At the input, the indices are relative to the complete voxel structures.
-    At the output, the indices are relative to the non-empty voxels (conductors).
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    n_v = len(idx_v)
-    n = nx*ny*nz
-
-    # get the local indices for the current source
-    idx_tmp = np.zeros(n, dtype=np.int64)
-    idx_tmp[idx_v] = np.arange(n_v, dtype=np.int64)
-    idx_src_c_local = idx_tmp[idx_src_c]
-
-    # get the local indices for the voltage source
-    idx_tmp = np.zeros(n, dtype=np.int64)
-    idx_tmp[idx_v] = np.arange(n_v, dtype=np.int64)
-    idx_src_v_local = idx_tmp[idx_src_v]
-
-    return idx_src_c_local, idx_src_v_local
-
-
 def get_incidence_matrix(n, A_incidence, idx_v):
     """
     Reduce the incidence matrix to the non-empty voxels and compute face indices.

@@ -150,17 +150,11 @@ def _run_main(data_solver):
         # reduce the incidence matrix to the non-empty voxels and compute face indices
         (A_reduced, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
 
-        # compute the local (with respect to the non-empty voxels) indices for the sources
-        (idx_src_c_local, idx_src_v_local) = problem_geometry.get_source_index(n, idx_v, idx_src_c, idx_src_v)
-
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_v, idx_f, idx_src_c, idx_src_v)
 
     # get the resistances and inductances
     with logging_utils.BlockTimer(logger, "resistance_inductance"):
-        # get the resistivity for all the voxels (including empty voxels).
-        rho_voxel = resistance_inductance.get_resistivity_vector(n, idx_v, rho_v)
-
         # get the resistance vector
         R_vector = resistance_inductance.get_resistance_vector(n, d, A_reduced, idx_f, rho_v)
 
@@ -179,7 +173,7 @@ def _run_main(data_solver):
         (A_kvl, A_kcl) = equation_system.get_kvl_kcl_matrix(A_reduced, idx_f, idx_src_c, idx_src_v)
 
         # get the matrices the sources
-        A_src = equation_system.get_source_matrix(idx_v, idx_src_c_local, idx_src_v_local, G_src_c, R_src_v)
+        A_src = equation_system.get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
         pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_vector)
@@ -236,21 +230,21 @@ def _run_postproc(data_solver):
     # extract the solution
     with logging_utils.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        (I_face, V_voxel, I_src_c, I_src_v) = extract_solution.get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol)
+        (I_f_all, V_v_all, I_src_c, I_src_v) = extract_solution.get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol)
 
         # get the voxel current densities from the face currents
-        J_voxel = extract_solution.get_current_density(n, d, A_incidence, I_face)
+        J_v_all = extract_solution.get_current_density(n, d, A_incidence, I_f_all)
 
         # parse the terminal voltages and currents for the sources
-        terminal = extract_solution.get_terminal(source, V_voxel, I_src_c, I_src_v)
+        terminal = extract_solution.get_terminal(source, V_v_all, I_src_c, I_src_v)
 
         # assign invalid values to the empty voxels
-        (V_voxel, J_voxel) = extract_solution.get_assign_field(n, idx_v, V_voxel, J_voxel)
+        (V_v, J_v) = extract_solution.get_assign_field(idx_v, V_v_all, J_v_all)
 
     # assemble results
     data_solver["terminal"] = terminal
-    data_solver["V_voxel"] = V_voxel
-    data_solver["J_voxel"] = J_voxel
+    data_solver["V_v"] = V_v
+    data_solver["J_v"] = J_v
 
     return data_solver
 
@@ -267,7 +261,6 @@ def _run_assemble(data_solver):
         "ori": data_solver["ori"],
         "xyz": data_solver["xyz"],
         "idx_v": data_solver["idx_v"],
-        "rho_v": data_solver["rho_v"],
         "idx_src_c": data_solver["idx_src_c"],
         "idx_src_v": data_solver["idx_src_v"],
         "freq": data_solver["freq"],
@@ -275,8 +268,9 @@ def _run_assemble(data_solver):
         "problem_status": data_solver["problem_status"],
         "solver_status": data_solver["solver_status"],
         "condition_status": data_solver["condition_status"],
-        "V_voxel": data_solver["V_voxel"],
-        "J_voxel": data_solver["J_voxel"],
+        "rho_v": data_solver["rho_v"],
+        "V_v": data_solver["V_v"],
+        "J_v": data_solver["J_v"],
         "terminal": data_solver["terminal"],
     }
 

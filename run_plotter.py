@@ -30,7 +30,7 @@ def run(name, data_plotter):
 
 if __name__ == "__main__":
     # get the data
-    name = "data_pcb_trf"
+    name = "data_test"
 
     # get the data
     from data_input import data_plotter

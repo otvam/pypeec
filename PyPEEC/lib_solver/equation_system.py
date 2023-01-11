@@ -241,7 +241,7 @@ def get_kvl_kcl_matrix(A_reduced, idx_f, idx_src_c, idx_src_v):
     return A_kvl, A_kcl
 
 
-def get_source_matrix(idx_v, idx_src_i_local, idx_src_v_local, G_src_c, R_src_v):
+def get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v):
     """
     Construct the source matrix (description of the sources with internal resistances/admittances).
 
@@ -252,26 +252,30 @@ def get_source_matrix(idx_v, idx_src_i_local, idx_src_v_local, G_src_c, R_src_v)
 
     # extract the voxel data
     n_v = len(idx_v)
-    n_src_c = len(idx_src_i_local)
-    n_src_v = len(idx_src_v_local)
+    n_src_c = len(idx_src_c)
+    n_src_v = len(idx_src_v)
+
+    # get the local source indices
+    idx_src_c_local = np.flatnonzero(np.in1d(idx_v, idx_src_c))
+    idx_src_v_local = np.flatnonzero(np.in1d(idx_v, idx_src_v))
 
     # indices of the new source equations to be added
-    idx_src_i_add = np.arange(n_v, n_v+n_src_c, dtype=np.int64)
+    idx_src_c_add = np.arange(n_v, n_v+n_src_c, dtype=np.int64)
     idx_src_v_add = np.arange(n_v+n_src_c, n_v+n_src_c+n_src_v, dtype=np.int64)
 
     # constant vector with the size of the sources
-    cst_src_i = np.full(n_src_c, 1, dtype=np.float64)
+    cst_src_c = np.full(n_src_c, 1, dtype=np.float64)
     cst_src_v = np.full(n_src_v, 1, dtype=np.float64)
 
     # connection of the current source currents and voltage source currents to the KCL
-    idx_row_connect = np.concatenate((idx_src_i_local, idx_src_v_local), dtype=np.int64)
-    idx_col_connect = np.concatenate((idx_src_i_add, idx_src_v_add), dtype=np.int64)
-    val_connect = np.concatenate((-cst_src_i, -cst_src_v), dtype=np.float64)
+    idx_row_connect = np.concatenate((idx_src_c_local, idx_src_v_local), dtype=np.int64)
+    idx_col_connect = np.concatenate((idx_src_c_add, idx_src_v_add), dtype=np.int64)
+    val_connect = np.concatenate((-cst_src_c, -cst_src_v), dtype=np.float64)
 
     # adding the current sources (source equation with internal admittance, Norton source)
-    idx_row_current = np.concatenate((idx_src_i_add, idx_src_i_add), dtype=np.int64)
-    idx_col_current = np.concatenate((idx_src_i_add, idx_src_i_local), dtype=np.int64)
-    val_current = np.concatenate((cst_src_i, G_src_c), dtype=np.float64)
+    idx_row_current = np.concatenate((idx_src_c_add, idx_src_c_add), dtype=np.int64)
+    idx_col_current = np.concatenate((idx_src_c_add, idx_src_c_local), dtype=np.int64)
+    val_current = np.concatenate((cst_src_c, G_src_c), dtype=np.float64)
 
     # adding the voltage sources (source equation with internal resistance, Thevenin source)
     idx_row_voltage = np.concatenate((idx_src_v_add, idx_src_v_add), dtype=np.int64)

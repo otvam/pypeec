@@ -1,7 +1,7 @@
 def get_data():
     data_solver = dict()
 
-    data_solver["n"] = (1, 1, 3)
+    data_solver["n"] = (1, 1, 4)
     data_solver["d"] = (1e-2, 1e-2, 1e-2)
     data_solver["r"] = (1, 1, 1)
     data_solver["ori"] = (0.0, 0.0, 0.0)
