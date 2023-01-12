@@ -99,20 +99,20 @@ def _check_domain_stl_conflict(domain_stl, domain_conflict):
     # check value
     for dat_tmp in domain_conflict:
         # extract data
-        domain_add = dat_tmp["domain_add"]
-        domain_sub = dat_tmp["domain_sub"]
+        domain_ref = dat_tmp["domain_ref"]
+        domain_fix = dat_tmp["domain_fix"]
 
         # check type
-        if not isinstance(domain_add, str):
-            raise CheckError("domain_add: domain name should be a string")
-        if not isinstance(domain_sub, str):
-            raise CheckError("domain_sub: domain name should be a string")
+        if not isinstance(domain_ref, str):
+            raise CheckError("domain_ref: domain name should be a string")
+        if not isinstance(domain_fix, str):
+            raise CheckError("domain_fix: domain name should be a string")
 
         # check value
-        if domain_add not in domain_stl:
-            raise CheckError("domain_add: domain name should be a valid domain name")
-        if domain_sub not in domain_stl:
-            raise CheckError("domain_sub: domain name should be a valid domain name")
+        if domain_ref not in domain_stl:
+            raise CheckError("domain_ref: domain name should be a valid domain name")
+        if domain_sub not in domain_fix:
+            raise CheckError("domain_fix: domain name should be a valid domain name")
 
 
 def check_mesher_type(mesh_type):

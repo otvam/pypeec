@@ -14,7 +14,7 @@ from data_input_plotter_viewer import data_plotter
 
 def run(name, data_plotter):
     """
-    Load the result file and plot the results.
+    Load the solver solution and plot the results.
     """
 
     # load data

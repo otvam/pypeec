@@ -1,6 +1,7 @@
 """
 Main script for solving a problem with the FFT-PEEC solver.
 Check the input data, solve the problem, and parse the results.
+The different parts of the code are timed.
 
 The solver is implemented with NumPy and Scipy.
 """
@@ -29,7 +30,6 @@ def _run_check(data_voxel, data_problem):
     """
     Check and combine the input data.
     Exceptions are not caught inside this function.
-    The different parts of the code are timed.
     """
 
     with logging_utils.BlockTimer(logger, "check_data"):
@@ -48,7 +48,6 @@ def _run_check(data_voxel, data_problem):
 def _run_preproc(data_solver):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
-    The different parts of the code are timed.
     """
 
     # extract the input data
@@ -84,7 +83,6 @@ def _run_preproc(data_solver):
 def _run_main(data_solver):
     """
     Construct and solve the problem (equation system).
-    The different parts of the code are timed.
     """
 
     # extract the input data
@@ -175,8 +173,7 @@ def _run_main(data_solver):
 
 def _run_postproc(data_solver):
     """
-    Extract the solution.
-    The different parts of the code are timed.
+    Extract and parse the solution.
     """
 
     # extract the input data
@@ -214,7 +211,7 @@ def _run_postproc(data_solver):
 
 def _run_assemble(data_solver):
     """
-    Assemble the output data from the different dict.
+    Generate the output data, discard intermediate results.
     """
 
     # assign results

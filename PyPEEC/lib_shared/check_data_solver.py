@@ -13,7 +13,7 @@ from PyPEEC.lib_shared.check_data_error import CheckError
 
 def _get_domain_indices(domain, domain_def):
     """
-    Get indices from list of domain names.
+    Get indices from a list of domain names.
     """
 
     # init array

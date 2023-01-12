@@ -1,8 +1,14 @@
 """
-Main script for solving a problem with the FFT-PEEC solver.
-Check the input data, solve the problem, and parse the results.
+Main script for creating a voxel structure.
+Check the input data and mesh the structure.
+The different parts of the code are timed.
 
-The solver is implemented with NumPy and Scipy.
+Three different kind of geometry can be meshed:
+    - png: the voxel are taken from 2D PNG images and assembled into a 3D voxel structures
+    - stl: the voxel structure is generated from 3D STL files
+    - voxel: the voxel structure is provided (do nothing)
+
+The mesher is implemented with PyVista.
 """
 
 __author__ = "Thomas Guillod"
@@ -24,7 +30,6 @@ def _run_check(mesh_type, data_mesher, data_resampling):
     """
     Check and combine the input data.
     Exceptions are not caught inside this function.
-    The different parts of the code are timed.
     """
 
     with logging_utils.BlockTimer(logger, "check_data"):
@@ -47,8 +52,7 @@ def _run_check(mesh_type, data_mesher, data_resampling):
 
 def _run_png(data_mesher):
     """
-    Compute the voxel geometry, Green functions, and the incidence matrix.
-    The different parts of the code are timed.
+    Generate a 3D voxel structure from 2D PNG images.
     """
 
     # extract the data
@@ -74,8 +78,7 @@ def _run_png(data_mesher):
 
 def _run_stl(data_mesher):
     """
-    Compute the voxel geometry, Green functions, and the incidence matrix.
-    The different parts of the code are timed.
+    Generate a 3D voxel structure from 3D STL files.
     """
 
     # extract the data
@@ -101,6 +104,10 @@ def _run_stl(data_mesher):
 
 
 def _run_resample(data_voxel, data_resampling):
+    """
+    Resampling of a 3D voxel structure (increases the number of voxels).
+    """
+
     # extract the data
     n = data_voxel["n"]
     d = data_voxel["d"]
@@ -124,7 +131,7 @@ def _run_resample(data_voxel, data_resampling):
 
 def _run_disp(data_voxel):
     """
-    Assemble the output data from the different dict.
+    Display the voxel structure statistics (number and size).
     """
 
     # extract the data
@@ -149,7 +156,7 @@ def _run_disp(data_voxel):
 
 def run(mesh_type, data_mesher, data_resampling):
     """
-    Main script for solving a problem with the FFT-PEEC solver.
+    Main script for creating a voxel structure.
     Handle invalid data with exceptions.
     """
 

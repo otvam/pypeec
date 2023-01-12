@@ -101,12 +101,14 @@ def _get_resampled_voxel(n_resampling):
 
 def _get_update_indices(n, r, idx_n, idx_r, domain_def):
     """
-    Update the indices for the conductors or sources such that they match the resampled structure.
+    Update the indices of the domains such that they match the resampled structure.
     """
 
     for tag, idx in domain_def.items():
-        # update the old voxel indices into the new one for the resampled voxels
+        # update the old voxel indices into the new tensor indices
         (idx_nr_x, idx_nr_y, idx_nr_z) = _get_idx_resample_tensor(r, idx_n, idx_r, idx)
+
+        # transform the tensor indices into linear indices
         idx = _get_idx_resample_linear(n, r, idx_nr_x, idx_nr_y, idx_nr_z)
 
         # assign the new indices
@@ -135,6 +137,10 @@ def _get_update_size(n, d, n_resampling):
 
 
 def get_remesh(n, d, domain_def, n_resampling):
+    """
+    Resampling of a voxel structure (increases the number of voxels).
+    """
+
     # get the original grid indices
     idx_n = _get_original_grid(n)
 

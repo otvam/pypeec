@@ -1,6 +1,6 @@
 """
 Main script for visualizing a 3D voxel structure.
-Plot the geometry and the different domains.
+Plot the geometry and color the different domains.
 
 The plotting is done with PyVista with the Qt framework.
 """
@@ -59,7 +59,7 @@ def _get_grid_voxel(data_res):
 
 def _get_plot(grid, geom, data_viewer):
     """
-    Make a plot with the voxel structure.
+    Make a plot with the voxel structure and the domains.
     """
 
     # extract the data

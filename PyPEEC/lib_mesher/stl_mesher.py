@@ -1,11 +1,25 @@
+"""
+Module for transforming STL files into a 3D voxel structure.
+Each STL file corresponds to a domain of the 3D voxel structure.
+
+If a voxel is located between two domains, it can be assigned to both domains.
+This creates a conflict as the voxel to domains mapping is not anymore a bijection.
+Therefore, such conflicts are detected and resolved.
+
+The voxelization is done with PyVista.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
 import numpy as np
 import pyvista as pv
 
 
 def _get_grid(n, d, pts_min):
     """
-    Construct a PyVista grid from the voxel structure.
-    The complete voxel geometry is represented with a PyVista uniform grid.
+    Construct a PyVista uniform grid for the complete voxel structure.
+    The grid is located around the STL meshes to be voxelized.
     """
 
     # create a uniform grid for the complete structure
@@ -16,7 +30,7 @@ def _get_grid(n, d, pts_min):
     grid.dimensions = n+1
     grid.spacing = d
 
-    # add the indices for tracking after voxelization
+    # add indices for tracking the voxels after voxelization
     grid["idx"] = np.arange(np.prod(n), dtype=np.int64)
 
     # cast is required for voxelization
@@ -26,23 +40,32 @@ def _get_grid(n, d, pts_min):
 
 
 def get_voxelize(grid, mesh):
-    # voxelize
+    """
+    Voxelixe a STL mesh with respect to an uniform grid.
+    Return the indices of the created voxels.
+    """
+
+    # voxelize the mesh
     selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=True)
 
     # create a boolean mask
     mask = selection.point_data['SelectedPoints'].view(bool)
 
-    # extract the voxels
+    # transform the grid into an unstructured grid (keeping the non-empty voxels)
     geom = grid.extract_points(mask)
 
-    # get the indices of the voxels
+    # get the indices of the extracted voxels
     idx = geom["idx"]
 
     return idx
 
 
 def _get_idx_stl(grid, mesh_stl):
-    # init
+    """
+    Voxelize STL meshes and assign the indices to a dict.
+    """
+
+    # init the domain dict
     domain_def = dict()
 
     # load the STL files
@@ -57,12 +80,19 @@ def _get_idx_stl(grid, mesh_stl):
 
 
 def _get_load_stl(domain_stl):
-    # init mesh dict
+    """
+    Load meshes from STL files and find the minimum and maximum coordinates.
+    The minimum and maximum coordinates defines a bounding box for all the meshes.
+    """
+
+    # init STL mesh dict
     mesh_stl = dict()
+
+    # init the coordinate (minimum and maximum coordinates)
     coord_min = np.full(3, +np.inf, dtype=np.float64)
     coord_max = np.full(3, -np.inf, dtype=np.float64)
 
-    # load the STL files
+    # load the STL files and find the bounding box
     for tag, filename in domain_stl.items():
         # load the STL
         mesh = pv.read(filename)
@@ -82,22 +112,34 @@ def _get_load_stl(domain_stl):
     return mesh_stl, coord_min, coord_max
 
 
-def _get_solve_overlap(domain_def, domain_add, domain_sub):
+def _get_solve_overlap(domain_def, domain_ref, domain_fix):
+    """
+    Detect and remove shared indices (conflict) between two domains.
+    The conflict is solved in the following way:
+        - the reference domain remains unchanged
+        - the shared indices are removed from the domain to be fixed
+    """
+
     # get the indices
-    idx_add = domain_def[domain_add]
-    idx_sub = domain_def[domain_sub]
+    idx_ref = domain_def[domain_ref]
+    idx_fix = domain_def[domain_fix]
 
     # resolve the conflict
-    idx_sub = np.setdiff1d(idx_sub, idx_add)
+    idx_fix = np.setdiff1d(idx_fix, idx_ref)
 
     # update the domain indices
-    domain_def[domain_sub] = idx_sub
+    domain_def[domain_fix] = idx_fix
 
     return domain_def
 
 
 def get_mesh(n, pts_min, pts_max, domain_stl):
-    # load the mesh and get the bounds
+    """
+    Transform STL files into a 3D voxel structure.
+    Each STL file corresponds to a domain of the 3D voxel structure.
+    """
+
+    # load the mesh and get the STL bounds
     (mesh_stl, coord_min, coord_max) = _get_load_stl(domain_stl)
 
     # cast to array
@@ -105,7 +147,7 @@ def get_mesh(n, pts_min, pts_max, domain_stl):
     pts_min = np.array(pts_min, np.float64)
     pts_max = np.array(pts_max, np.float64)
 
-    # update the bounds
+    # if provided use the user specified bounds, otherwise the STL bounds
     pts_min = np.array(pts_min, np.float64)
     pts_max = np.array(pts_max, np.float64)
     idx_replace_min = np.isnan(pts_min)
@@ -122,28 +164,34 @@ def get_mesh(n, pts_min, pts_max, domain_stl):
     # voxelize the meshes and get the indices
     domain_def = _get_idx_stl(grid, mesh_stl)
 
-    # cast back to tuple
+    # cast back the voxel size to tuple
     d = tuple(d.tolist())
 
     return d, domain_def
 
 
 def get_conflict(domain_def, domain_conflict):
+    """
+    Detect and remove shared indices (conflict) between domains.
+    The direction of the conflict resolution (between two domains) is specified by the user.
+    At the end, check that all shared indices have been removed.
+    """
 
+    # resolve the conflicts for all the specified domain pairs
     for dat_tmp in domain_conflict:
         # extract data
-        domain_add = dat_tmp["domain_add"]
-        domain_sub = dat_tmp["domain_sub"]
+        domain_ref = dat_tmp["domain_ref"]
+        domain_fix = dat_tmp["domain_fix"]
 
         # solve the conflict
-        domain_def = _get_solve_overlap(domain_def, domain_add, domain_sub)
+        domain_def = _get_solve_overlap(domain_def, domain_ref, domain_fix)
 
     # assemble all the indices
     idx_all = np.array([], dtype=np.int64)
     for idx in domain_def.values():
         idx_all = np.append(idx_all, idx)
 
-    # check that conflicts are resolved
+    # check that all the conflicts are resolved
     if not (len(np.unique(idx_all)) == len(idx_all)):
         raise ValueError("domain indices should be unique")
 

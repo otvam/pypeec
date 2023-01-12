@@ -14,7 +14,7 @@ from PyPEEC import solver
 
 def run(name, data_problem):
     """
-    Solve the problem and write the result file.
+    Load the voxel structure, solve the problem and write the solver results.
     """
 
     # load data

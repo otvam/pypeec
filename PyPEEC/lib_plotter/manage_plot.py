@@ -1,5 +1,6 @@
 """
 Different functions for plotting the solution with PyVista.
+
 The following plots are available:
     - material description (conductors, voltage sources, and current sources)
     - scalar plots (resistivity, potential, and current density)

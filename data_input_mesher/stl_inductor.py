@@ -23,8 +23,8 @@ def get_data():
         "sink": os.path.join(path, "sink.stl"),
     }
     data_mesher["domain_conflict"] = [
-        {"domain_sub": "coil", "domain_add": "src"},
-        {"domain_sub": "coil", "domain_add": "sink"},
+        {"domain_fix": "coil", "domain_ref": "src"},
+        {"domain_fix": "coil", "domain_ref": "sink"},
     ]
 
     return mesh_type, data_mesher, data_resampling

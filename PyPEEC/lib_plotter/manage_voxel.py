@@ -33,7 +33,7 @@ def get_grid_geom(n, d, idx_v):
     # sort idx
     idx_v = np.sort(idx_v)
 
-    # transform the uniform grid into a unstructured grid (keeping the non-empty voxels)
+    # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
     geom = grid.extract_cells(idx_v)
 
     return grid, geom

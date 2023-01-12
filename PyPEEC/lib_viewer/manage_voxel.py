@@ -12,8 +12,7 @@ import pyvista as pv
 
 def get_grid(n, d):
     """
-    Construct a PyVista grid from the voxel structure.
-    The complete voxel geometry is represented with a PyVista uniform grid.
+    Construct a PyVista uniform grid for the complete voxel structure.
     """
 
     # extract the voxel data
@@ -33,8 +32,7 @@ def get_grid(n, d):
 
 def get_geom(grid, domain_def):
     """
-    Construct a PyVista grid from the voxel structure.
-    The non-empty voxel geometry is represented with a PyVista unstructured grid.
+    Construct a PyVista unstructured grid for the non-empty voxel.
     Add the domain tags to the grid as a fake scalar field.
     """
 
@@ -58,7 +56,7 @@ def get_geom(grid, domain_def):
     idx_domain = idx_domain[idx_sort]
     color_domain = color_domain[idx_sort]
 
-    # transform the uniform grid into a unstructured grid (keeping the non-empty voxels)
+    # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
     geom = grid.extract_cells(idx_domain)
 
     # assign the colord

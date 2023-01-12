@@ -14,7 +14,7 @@ from data_input_plotter_viewer import data_viewer
 
 def run(name, data_viewer):
     """
-    Load the result file and plot the results.
+    Load the voxel structure and plot the results.
     """
 
     # load data

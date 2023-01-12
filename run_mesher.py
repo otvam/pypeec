@@ -14,7 +14,7 @@ from PyPEEC import mesher
 
 def run(name, mesh_type, data_mesher, data_resampling):
     """
-    Solve the problem and write the result file.
+    Solve the problem and write the mesher results.
     """
 
     # call solver
