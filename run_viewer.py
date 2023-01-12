@@ -36,8 +36,6 @@ if __name__ == "__main__":
     # get the data
     data_viewer = data_viewer.get_data()
 
-    # call viewer
+    # run viewer
     exit_code = run(name, data_viewer)
-
-    # run
     sys.exit(exit_code)

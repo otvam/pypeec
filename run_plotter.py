@@ -9,6 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import sys
 import pickle
 from PyPEEC import plotter
+from data_input_plotter_viewer import data_plotter
 
 
 def run(name, data_plotter):
@@ -17,7 +18,7 @@ def run(name, data_plotter):
     """
 
     # load data
-    filename = "data_output/%s.pck" % name
+    filename = "data_output/solver_%s.pck" % name
     with open(filename, "rb") as fid:
         data_res = pickle.load(fid)
 
@@ -29,10 +30,9 @@ def run(name, data_plotter):
 
 if __name__ == "__main__":
     # get the data
-    name = "data_pcb_trf"
+    name = "test_slab"
 
     # get the data
-    from data_input import data_plotter
     data_plotter = data_plotter.get_data()
 
     # run
