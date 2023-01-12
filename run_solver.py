@@ -40,7 +40,9 @@ def run(name, data_voxel, data_problem):
 
 if __name__ == "__main__":
     # name of the simulation
-    name = "test_slab"
+    # name = "test_slab"
+    # name = "png_inductor"
+    name = "stl_inductor"
 
     # get the data
     data = importlib.import_module("data_input_solver.%s" % name)

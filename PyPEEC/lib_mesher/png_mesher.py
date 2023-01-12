@@ -4,12 +4,14 @@ import imageio.v3 as iio
 
 def _get_idx_image(nx, ny, img, color):
     # check image
-    assert img.shape == (nx, ny, 4), "invalid image size"
+    if not (img.shape == (nx, ny, 4)):
+        raise ValueError("invalid image size")
 
     # get the color vector
     color_tmp = np.array(color)
     color_tmp = np.expand_dims(color_tmp, axis=(0, 1))
-    assert color_tmp.shape == (1, 1, 4), "invalid image size"
+    if not (color_tmp.shape == (1, 1, 4)):
+        raise ValueError("invalid image size")
 
     # find the color
     idx_img = np.all(img == color_tmp, axis=2)

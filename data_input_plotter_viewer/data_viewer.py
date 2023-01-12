@@ -14,8 +14,8 @@ def get_data():
     }
 
     data_viewer = {
-        "window_title": "viewer",
-        "plot_title": "viewer",
+        "window_title": "Viewer",
+        "plot_title": "Viewer",
         "window_size": (800, 600),
         "plot_options": plot_options
     }

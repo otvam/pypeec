@@ -30,7 +30,9 @@ def run(name, data_plotter):
 
 if __name__ == "__main__":
     # get the data
-    name = "test_slab"
+    # name = "test_slab"
+    # name = "png_inductor"
+    name = "stl_inductor"
 
     # get the data
     data_plotter = data_plotter.get_data()
