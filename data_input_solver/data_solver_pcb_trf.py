@@ -168,8 +168,8 @@ def get_data():
     nz = 0
 
     # add the layers
-    for data_tmp in data:
-        (nz, conductor, source) = _add_layer(conductor, source, nx, ny, nz, data_tmp)
+    for dat_tmp in data:
+        (nz, conductor, source) = _add_layer(conductor, source, nx, ny, nz, dat_tmp)
 
     # get voxel size
     n = (nx, ny, nz)

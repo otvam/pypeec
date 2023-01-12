@@ -30,8 +30,8 @@ def run(name, data_viewer):
 
 if __name__ == "__main__":
     # name of the simulation
-    name = "png_inductor"
-    # name = "stl_inductor"
+    # name = "png_inductor"
+    name = "stl_inductor"
 
     # get the data
     data_viewer = data_viewer.get_data()

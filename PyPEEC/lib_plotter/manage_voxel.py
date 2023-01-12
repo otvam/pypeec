@@ -27,7 +27,7 @@ def get_grid_geom(n, d, idx_v):
 
     # set the array size and the voxel size
     grid.dimensions = (nx+1, ny+1, nz+1)
-    grid.spacing = (dx, dy, dz)  # These are the cell sizes along each axis
+    grid.spacing = (dx, dy, dz)
     grid.origin = (0, 0, 0)
 
     # sort idx

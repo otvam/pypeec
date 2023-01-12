@@ -35,9 +35,6 @@ def _get_domain_indices(domain, domain_def):
         # append indices
         idx = np.append(idx, domain_def[tag_domain])
 
-    # filter indices
-    idx = np.unique(idx)
-
     return idx
 
 

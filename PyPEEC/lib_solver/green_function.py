@@ -175,7 +175,7 @@ def get_green_self(d):
     The self-coefficient is used for the preconditioner.
     """
 
-    m = np.array([[0, 0, 0]])
+    m = np.array([[0, 0, 0]], dtype=np.int64)
     G_self = _get_green_ana(d, m)
 
     return G_self

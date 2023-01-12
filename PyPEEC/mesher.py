@@ -10,6 +10,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_mesher import check_data
 from PyPEEC.lib_mesher import png_mesher
+from PyPEEC.lib_mesher import stl_mesher
 from PyPEEC.lib_mesher import voxel_resample
 from PyPEEC.lib_shared import logging_utils
 
@@ -70,11 +71,26 @@ def _run_stl(data_mesher):
     The different parts of the code are timed.
     """
 
+    # extract the data
+    n = data_mesher["n"]
+    pts_min = data_mesher["pts_min"]
+    pts_max = data_mesher["pts_max"]
+    domain_stl = data_mesher["domain_stl"]
+    domain_conflict = data_mesher["domain_conflict"]
+
     # get the voxel geometry and the incidence matrix
     with logging_utils.BlockTimer(logger, "voxel_geometry"):
-        pass
+        (d, domain_def) = stl_mesher.get_mesh(n, pts_min, pts_max, domain_stl)
+        domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
 
-    return None
+    # assemble the data
+    data_voxel = {
+        "n": n,
+        "d": d,
+        "domain_def": domain_def,
+    }
+
+    return data_voxel
 
 
 def _run_resample(data_voxel, data_mesher):

@@ -14,7 +14,6 @@ def get_data():
     data_mesher["n"] = (150, 150, 25)
     data_mesher["use_resampling"] = True
     data_mesher["n_resampling"] = (1, 1, 1)
-    data_mesher["r"] = (1, 1, 1)
     data_mesher["pts_min"] = (None, None, None)
     data_mesher["pts_max"] = (None, None, None)
 
@@ -24,5 +23,9 @@ def get_data():
         "src": os.path.join(path, "src.stl"),
         "sink": os.path.join(path, "sink.stl"),
     }
+    data_mesher["domain_conflict"] = [
+        {"domain_sub": "coil", "domain_add": "src"},
+        {"domain_sub": "coil", "domain_add": "sink"},
+    ]
 
     return mesh_type, data_mesher

@@ -97,10 +97,12 @@ def _check_layer_stack(layer_stack):
             raise CheckError("filename: file does not exist")
 
 
-def _check_domain_stl(domain_stl):
+def _check_domain_stl_conflict(domain_stl, domain_conflict):
     # check type
     if not isinstance(domain_stl, dict):
         raise CheckError("domain_stl: domain definition should be a dict")
+    if not isinstance(domain_conflict, list):
+        raise CheckError("domain_conflict: domain conflict should be a list")
 
     # check value
     for tag, filename in domain_stl.items():
@@ -118,6 +120,24 @@ def _check_domain_stl(domain_stl):
             fid.close()
         except FileNotFoundError:
             raise CheckError("filename: file does not exist")
+
+    # check value
+    for dat_tmp in domain_conflict:
+        # extract data
+        domain_add = dat_tmp["domain_add"]
+        domain_sub = dat_tmp["domain_sub"]
+
+        # check type
+        if not isinstance(domain_add, str):
+            raise CheckError("domain_add: domain name should be a string")
+        if not isinstance(domain_sub, str):
+            raise CheckError("domain_sub: domain name should be a string")
+
+        # check value
+        if domain_add not in domain_stl:
+            raise CheckError("domain_add: domain name should be a valid domain name")
+        if domain_sub not in domain_stl:
+            raise CheckError("domain_sub: domain name should be a valid domain name")
 
 
 def check_mesher_type(mesh_type):
@@ -198,6 +218,7 @@ def check_data_mesher_stl(data_mesher):
     use_resampling = data_mesher["use_resampling"]
     n_resampling = data_mesher["n_resampling"]
     domain_stl = data_mesher["domain_stl"]
+    domain_conflict = data_mesher["domain_conflict"]
 
     # check size
     if not (len(n) == 3):
@@ -219,4 +240,4 @@ def check_data_mesher_stl(data_mesher):
     _check_pts(pts_max)
 
     # check the stl file
-    _check_domain_stl(domain_stl)
+    _check_domain_stl_conflict(domain_stl, domain_conflict)

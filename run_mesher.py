@@ -34,8 +34,8 @@ def run(name, mesh_type, data_mesher):
 
 if __name__ == "__main__":
     # name of the simulation
-    name = "png_inductor"
-    # name = "stl_inductor"
+    # name = "png_inductor"
+    name = "stl_inductor"
 
     # get the data
     data = importlib.import_module("data_input_mesher.%s" % name)
