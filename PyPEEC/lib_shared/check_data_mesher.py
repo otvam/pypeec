@@ -73,7 +73,7 @@ def _check_pts(pts):
 
     # check size
     if not (len(pts) == 3):
-        raise CheckError("pts: invalid point size (should be a tuple with three elements)")
+        raise CheckError("pts: invalid point size (should be a list with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.floating) or (x is None) for x in pts):
@@ -177,7 +177,7 @@ def check_data_voxelize_png(data_voxelize):
 
     # check size
     if not (len(d) == 3):
-        raise CheckError("d: invalid voxel size (should be a tuple with three elements)")
+        raise CheckError("d: invalid voxel size (should be a list with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.floating) for x in d):
@@ -218,7 +218,7 @@ def check_data_voxelize_stl(data_voxelize):
 
     # check size
     if not (len(n) == 3):
-        raise CheckError("n: invalid voxel number (should be a tuple with three elements)")
+        raise CheckError("n: invalid voxel number (should be a list with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.integer) for x in n):
@@ -256,7 +256,7 @@ def check_data_resampling(data_resampling):
 
     # check size
     if not (len(n_resampling) == 3):
-        raise CheckError("n_resampling: invalid voxel resampling (should be a tuple with three elements)")
+        raise CheckError("n_resampling: invalid voxel resampling (should be a list with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.integer) for x in n_resampling):

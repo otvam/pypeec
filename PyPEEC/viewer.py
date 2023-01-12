@@ -68,15 +68,12 @@ def _get_plot(grid, geom, data_viewer):
     window_size = data_viewer["window_size"]
     plot_options = data_viewer["plot_options"]
 
-    # ensure that window size is a tuple
-    window_size = tuple(window_size)
-
     # get the plotter (with the Qt framework)
     pl = pvqt.BackgroundPlotter(
         toolbar=False,
         menu_bar=False,
         title=window_title,
-        window_size=window_size
+        window_size=tuple(window_size)
     )
 
     # set icon

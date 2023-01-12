@@ -16,7 +16,7 @@ logger = logging_utils.get_logger("fileio")
 
 def load_pickle(filename):
     """
-    Load a picke file.
+    Load a pickle file.
     """
 
     try:

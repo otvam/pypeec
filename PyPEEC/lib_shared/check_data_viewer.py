@@ -60,7 +60,7 @@ def _check_plot_main(window_title, plot_title, window_size):
 
     # check size
     if not len(window_size) == 2:
-        raise CheckError("invalid window size (should be a tuple with two elements)")
+        raise CheckError("invalid window size (should be a list with two elements)")
 
     # check value
     if not all(isinstance(x, int) for x in window_size):

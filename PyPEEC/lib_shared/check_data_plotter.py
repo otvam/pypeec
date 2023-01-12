@@ -46,9 +46,9 @@ def _check_data_options(plot_type, data_options):
 
         # check size
         if not (len(data_options["color_lim"]) == 2):
-            raise CheckError("color_lim: invalid color limits (should be a tuple with tep elements)")
+            raise CheckError("color_lim: invalid color limits (should be a list with tep elements)")
         if not (len(data_options["filter_lim"]) == 2):
-            raise CheckError("filter_lim: invalid filter limits (should be a tuple with tep elements)")
+            raise CheckError("filter_lim: invalid filter limits (should be a list with tep elements)")
 
         # check value
         if not (data_options["var"] in var_list):
@@ -131,7 +131,7 @@ def _check_plot_main(window_title, window_size, plot_type):
 
     # check size
     if not len(window_size) == 2:
-        raise CheckError("invalid window size (should be a tuple with two elements)")
+        raise CheckError("invalid window size (should be a list with two elements)")
 
     # check value
     if not all(isinstance(x, int) for x in window_size):

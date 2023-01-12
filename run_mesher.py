@@ -31,8 +31,8 @@ def run(file_mesher, file_voxel):
 
 if __name__ == "__main__":
     # name of the simulation
-    name = "png_inductor"
-    # name = "stl_inductor"
+    # name = "png_inductor"
+    name = "stl_inductor"
     # name = "test_slab"
 
     # get the filename

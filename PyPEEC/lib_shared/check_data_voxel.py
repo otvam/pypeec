@@ -57,9 +57,9 @@ def _check_voxel_size(n, d):
 
     # check size
     if not (len(n) == 3):
-        raise CheckError("n: invalid voxel number (should be a tuple with three elements)")
+        raise CheckError("n: invalid voxel number (should be a list with three elements)")
     if not (len(d) == 3):
-        raise CheckError("d: invalid voxel size (should be a tuple with three elements)")
+        raise CheckError("d: invalid voxel size (should be a list with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.integer) for x in n):

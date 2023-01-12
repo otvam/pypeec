@@ -165,8 +165,8 @@ def get_mesh(n, pts_min, pts_max, domain_stl):
     # voxelize the meshes and get the indices
     domain_def = _get_idx_stl(grid, mesh_stl)
 
-    # cast back the voxel size to tuple
-    d = tuple(d.tolist())
+    # cast back the voxel size to a list
+    d = d.tolist()
 
     return d, domain_def
 
