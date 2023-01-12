@@ -18,9 +18,9 @@ if __name__ == "__main__":
     # name = "stl_inductor"
 
     # get the filename
-    file_res = os.path.join("data_output_solution",  name + ".pck")
+    file_solution = os.path.join("data_output_solution",  name + ".pck")
     file_plotter = os.path.join("data_input_plotter_viewer", "data_plotter.json")
 
     # run
-    status = script.run_plotter(file_res, file_plotter)
+    status = script.run_plotter(file_solution, file_plotter)
     sys.exit(int(not status))

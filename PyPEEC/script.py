@@ -5,6 +5,8 @@ Contain the program entry points.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import sys
+import argparse
 from PyPEEC import mesher
 from PyPEEC import viewer
 from PyPEEC import solver
@@ -59,7 +61,7 @@ def run_viewer(file_voxel, file_viewer):
     return status
 
 
-def run_solver(file_voxel, file_problem, file_res):
+def run_solver(file_voxel, file_problem, file_solution):
     """
     Load the voxel structure, solve the problem and write the solver results.
     """
@@ -75,7 +77,7 @@ def run_solver(file_voxel, file_problem, file_res):
         (status, data_solution) = solver.run(data_voxel, data_problem)
 
         # save results
-        fileio.write_pickle(status, file_res, data_solution)
+        fileio.write_pickle(status, file_solution, data_solution)
     except FileError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -86,14 +88,14 @@ def run_solver(file_voxel, file_problem, file_res):
     return exit_code
 
 
-def run_plotter(file_res, file_plotter):
+def run_plotter(file_solution, file_plotter):
     """
     Load the solver solution and plot the results.
     """
 
     try:
         # load res file
-        data_solution = fileio.load_pickle(file_res)
+        data_solution = fileio.load_pickle(file_solution)
 
         # load plotter file
         data_plotter = fileio.load_json(file_plotter)
@@ -105,3 +107,95 @@ def run_plotter(file_res, file_plotter):
         return False
 
     return status
+
+
+def main_mesher():
+    """
+    User script for meshing a voxel structure.
+    """
+
+    # get the parser
+    parser = argparse.ArgumentParser(description="Transform the provided data into a 3D voxel structure.")
+    parser.add_argument(
+        "--mesher", help="mesher file (input / JSON)",
+        required=True, dest="file_mesher"
+    )
+    parser.add_argument(
+        "--voxel", help="voxel file (output / pickle)",
+        required=True, dest="file_voxel"
+    )
+
+    # parse and call
+    args = parser.parse_args()
+    status = run_mesher(args.file_mesher, args.file_voxel)
+    sys.exit(int(not status))
+
+
+def main_viewer():
+    """
+    User script for visualizing a 3D voxel structure..
+    """
+
+    # get the parser
+    parser = argparse.ArgumentParser(description="Visualization of a 3D voxel structure.")
+    parser.add_argument(
+        "--voxel", help="voxel file (input / pickle)",
+        required=True, dest="file_voxel"
+    )
+    parser.add_argument(
+        "--viewer", help="viewer file (input / JSON)",
+        required=True, dest="file_viewer"
+    )
+
+    # parse and call
+    args = parser.parse_args()
+    status = run_viewer(args.file_voxel, args.file_viewer)
+    sys.exit(int(not status))
+
+
+def main_solver():
+    """
+    User script for solving a problem with the FFT-PEEC solver.
+    """
+
+    # get the parser
+    parser = argparse.ArgumentParser(description="Solve a problem with the FFT-PEEC method.")
+    parser.add_argument(
+        "--voxel", help="voxel file (input / pickle)",
+        required=True, dest="file_voxel"
+    )
+    parser.add_argument(
+        "--problem", help="problem file (input / JSON)",
+        required=True, dest="file_problem"
+    )
+    parser.add_argument(
+        "--solution", help="solution file (output / pickle)",
+        required=True, dest="file_solution"
+    )
+
+    # parse and call
+    args = parser.parse_args()
+    status = run_solver(args.file_voxel, args.file_problem, args.file_solution)
+    sys.exit(int(not status))
+
+
+def main_plotter():
+    """
+    User script for plotting the solution of a FFT-PEEC problem.
+    """
+
+    # get the parser
+    parser = argparse.ArgumentParser(description="Plot the solution of a FFT-PEEC problem.")
+    parser.add_argument(
+        "--solution", help="solution file (input / pickle)",
+        required=True, dest="file_solution"
+    )
+    parser.add_argument(
+        "--plotter", help="plotter file (input / JSON)",
+        required=True, dest="file_plotter"
+    )
+
+    # parse and call
+    args = parser.parse_args()
+    status = run_plotter(args.file_solution, args.file_plotter)
+    sys.exit(int(not status))

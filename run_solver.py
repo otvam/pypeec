@@ -20,8 +20,8 @@ if __name__ == "__main__":
     # get the filename
     file_problem = os.path.join("data_input_solver", "%s.json" % name)
     file_voxel = os.path.join("data_output_voxel",  name + ".pck")
-    file_res = os.path.join("data_output_solution",  name + ".pck")
+    file_solution = os.path.join("data_output_solution",  name + ".pck")
 
     # run
-    exit_code = script.run_solver(file_voxel, file_problem, file_res)
+    exit_code = script.run_solver(file_voxel, file_problem, file_solution)
     sys.exit(exit_code)
