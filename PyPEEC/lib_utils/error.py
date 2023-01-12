@@ -20,3 +20,11 @@ class RunError(Exception):
     """
 
     pass
+
+
+class FileError(Exception):
+    """
+    Exception used for an error during loading/writing files.
+    """
+
+    pass

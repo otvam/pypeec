@@ -5,7 +5,7 @@ Module for checking the plotter data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-from PyPEEC.error import CheckError
+from PyPEEC.lib_utils.error import CheckError
 
 
 def _check_data_options(plot_type, data_options):

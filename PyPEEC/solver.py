@@ -16,14 +16,14 @@ from PyPEEC.lib_solver import resistance_inductance
 from PyPEEC.lib_solver import equation_system
 from PyPEEC.lib_solver import equation_solver
 from PyPEEC.lib_solver import extract_solution
-from PyPEEC.lib_shared import logging_utils
 from PyPEEC.lib_shared import check_data_problem
 from PyPEEC.lib_shared import check_data_solver
 from PyPEEC.lib_shared import check_data_voxel
-from PyPEEC.error import CheckError, RunError
+from PyPEEC.lib_utils import timelogger
+from PyPEEC.lib_utils.error import CheckError, RunError
 
 # get a logger
-logger = logging_utils.get_logger("solver")
+logger = timelogger.get_logger("solver")
 
 
 def _run_check(data_voxel, data_problem):
@@ -32,7 +32,7 @@ def _run_check(data_voxel, data_problem):
     Exceptions are not caught inside this function.
     """
 
-    with logging_utils.BlockTimer(logger, "check_data"):
+    with timelogger.BlockTimer(logger, "check_data"):
         # check the problem data
         check_data_problem.check_data_problem(data_problem)
 
@@ -56,7 +56,7 @@ def _run_preproc(data_solver):
     n_green = data_solver["n_green"]
 
     # get the voxel geometry and the incidence matrix
-    with logging_utils.BlockTimer(logger, "voxel_geometry"):
+    with timelogger.BlockTimer(logger, "voxel_geometry"):
         # get the coordinate of the voxels
         xyz = voxel_geometry.get_voxel_coordinate(n, d)
 
@@ -64,7 +64,7 @@ def _run_preproc(data_solver):
         A_incidence = voxel_geometry.get_incidence_matrix(n)
 
     # get the Green functions
-    with logging_utils.BlockTimer(logger, "green_function"):
+    with timelogger.BlockTimer(logger, "green_function"):
         # Green function self-coefficient
         G_self = green_function.get_green_self(d)
 
@@ -98,7 +98,7 @@ def _run_main(data_solver):
     G_mutual = data_solver["G_mutual"]
 
     # parse the problem geometry (conductors and sources)
-    with logging_utils.BlockTimer(logger, "problem_geometry"):
+    with timelogger.BlockTimer(logger, "problem_geometry"):
         # parse the conductors
         (idx_v, rho_v) = problem_geometry.get_conductor_geometry(conductor_idx)
 
@@ -115,7 +115,7 @@ def _run_main(data_solver):
         problem_status = problem_geometry.get_status(n, idx_v, idx_f, idx_src_c, idx_src_v)
 
     # get the resistances and inductances
-    with logging_utils.BlockTimer(logger, "resistance_inductance"):
+    with timelogger.BlockTimer(logger, "resistance_inductance"):
         # get the resistance vector
         R_vector = resistance_inductance.get_resistance_vector(n, d, A_reduced, idx_f, rho_v)
 
@@ -126,7 +126,7 @@ def _run_main(data_solver):
         (ZL_tensor, ZL_vector) = resistance_inductance.get_inductance_operator(freq, L_tensor, L_vector)
 
     # assemble the equation system
-    with logging_utils.BlockTimer(logger, "equation_system"):
+    with timelogger.BlockTimer(logger, "equation_system"):
         # compute the right-hand vector with the sources
         rhs = equation_system.get_source_vector(idx_v, idx_f, I_src_c, V_src_v)
 
@@ -146,7 +146,7 @@ def _run_main(data_solver):
         S_matrix = equation_system.get_singular(A_kvl, A_kcl, A_src, R_vector, ZL_vector)
 
     # solve the equation system
-    with logging_utils.BlockTimer(logger, "equation_solver"):
+    with timelogger.BlockTimer(logger, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
         (condition_ok, condition_status) = equation_solver.get_condition(S_matrix, condition_options)
 
@@ -188,7 +188,7 @@ def _run_postproc(data_solver):
     sol = data_solver["sol"]
 
     # extract the solution
-    with logging_utils.BlockTimer(logger, "extract_solution"):
+    with timelogger.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
         (I_f_all, V_v_all, I_src_c, I_src_v) = extract_solution.get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol)
 

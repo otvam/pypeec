@@ -8,25 +8,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import os
 import sys
-from PyPEEC import plotter
-from PyPEEC import fileio
-
-
-def run(file_res, file_plotter):
-    """
-    Load the solver solution and plot the results.
-    """
-
-    # load res file
-    data_solution = fileio.load_pickle(file_res)
-
-    # load plotter file
-    data_plotter = fileio.load_json(file_plotter)
-
-    # call plotter
-    status = plotter.run(data_solution, data_plotter)
-
-    return status
+from PyPEEC import script
 
 
 if __name__ == "__main__":
@@ -40,5 +22,5 @@ if __name__ == "__main__":
     file_plotter = os.path.join("data_input_plotter_viewer", "data_plotter.json")
 
     # run
-    status = run(file_res, file_plotter)
+    status = script.run_plotter(file_res, file_plotter)
     sys.exit(int(not status))

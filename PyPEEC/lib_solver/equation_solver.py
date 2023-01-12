@@ -7,10 +7,10 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import scipy.sparse.linalg as sla
 import scipy.linalg as lna
-from PyPEEC.lib_shared import logging_utils
+from PyPEEC.lib_utils import timelogger
 
 # get a logger
-logger = logging_utils.get_logger("equation")
+logger = timelogger.get_logger("equation")
 
 
 class IterCounter:

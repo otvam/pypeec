@@ -8,31 +8,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import os
 import sys
-from PyPEEC import solver
-from PyPEEC import fileio
-
-
-def run(file_voxel, file_problem, file_res):
-    """
-    Load the voxel structure, solve the problem and write the solver results.
-    """
-
-    # load voxel file
-    data_voxel = fileio.load_pickle(file_voxel)
-
-    # load mesher file
-    data_problem = fileio.load_json(file_problem)
-
-    # call solver
-    (status, data_solution) = solver.run(data_voxel, data_problem)
-
-    # save results
-    fileio.write_pickle(status, file_res, data_solution)
-
-    # exit
-    exit_code = int(not status)
-
-    return exit_code
+from PyPEEC import script
 
 
 if __name__ == "__main__":
@@ -47,5 +23,5 @@ if __name__ == "__main__":
     file_res = os.path.join("data_output_solution",  name + ".pck")
 
     # run
-    exit_code = run(file_voxel, file_problem, file_res)
+    exit_code = script.run_solver(file_voxel, file_problem, file_res)
     sys.exit(exit_code)

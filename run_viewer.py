@@ -8,25 +8,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import os
 import sys
-from PyPEEC import viewer
-from PyPEEC import fileio
-
-
-def run(file_voxel, file_viewer):
-    """
-    Load the voxel structure and plot the results.
-    """
-
-    # load voxel file
-    data_voxel = fileio.load_pickle(file_voxel)
-
-    # load viewer file
-    data_viewer = fileio.load_json(file_viewer)
-
-    # call lib_plotter
-    status = viewer.run(data_voxel, data_viewer)
-
-    return status
+from PyPEEC import script
 
 
 if __name__ == "__main__":
@@ -40,5 +22,5 @@ if __name__ == "__main__":
     file_viewer = os.path.join("data_input_plotter_viewer", "data_viewer.json")
 
     # run viewer
-    status = run(file_voxel, file_viewer)
+    status = script.run_viewer(file_voxel, file_viewer)
     sys.exit(int(not status))

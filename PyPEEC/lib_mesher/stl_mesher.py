@@ -14,7 +14,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
 import pyvista as pv
-from PyPEEC.error import RunError
+from PyPEEC.lib_utils.error import RunError
 
 
 def _get_grid(n, d, pts_min):

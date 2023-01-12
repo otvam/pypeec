@@ -6,10 +6,10 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-from PyPEEC.lib_shared import logging_utils
+from PyPEEC.lib_utils import timelogger
 
 # get a logger
-logger = logging_utils.get_logger("solution")
+logger = timelogger.get_logger("solution")
 
 
 def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):

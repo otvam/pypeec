@@ -5,13 +5,9 @@ Simple module for serialization and deserialization.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-import sys
 import json
 import pickle
-from PyPEEC.lib_shared import logging_utils
-
-# get a logger
-logger = logging_utils.get_logger("fileio")
+from PyPEEC.lib_utils.error import FileError
 
 
 def load_pickle(filename):
@@ -23,8 +19,7 @@ def load_pickle(filename):
         with open(filename, "rb") as fid:
             data = pickle.load(fid)
     except FileNotFoundError:
-        logger.error("file not found: %s" % filename)
-        sys.exit(1)
+        raise FileError("file not found: %s" % filename)
 
     return data
 
@@ -38,11 +33,9 @@ def load_json(filename):
         with open(filename, 'r') as fid:
             data = json.load(fid)
     except FileNotFoundError:
-        logger.error("cannot open the file: %s" % filename)
-        sys.exit(1)
+        raise FileError("cannot open the file: %s" % filename)
     except ValueError:
-        logger.error("invalid JSON file: %s" % filename)
-        sys.exit(1)
+        raise FileError("invalid JSON file: %s" % filename)
 
     return data
 
@@ -57,5 +50,4 @@ def write_pickle(status, filename, data):
             with open(filename, "wb") as fid:
                 pickle.dump(data, fid)
         except FileNotFoundError:
-            logger.error("cannot write the file: %s" % filename)
-            sys.exit(1)
+            raise FileError("cannot write the file: %s" % filename)

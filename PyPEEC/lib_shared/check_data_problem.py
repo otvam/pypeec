@@ -6,7 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-from PyPEEC.error import CheckError
+from PyPEEC.lib_utils.error import CheckError
 
 
 def _check_conductor_def(conductor_def):

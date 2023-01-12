@@ -17,13 +17,13 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 from PyPEEC.lib_mesher import png_mesher
 from PyPEEC.lib_mesher import stl_mesher
 from PyPEEC.lib_mesher import voxel_resample
-from PyPEEC.lib_shared import logging_utils
 from PyPEEC.lib_shared import check_data_mesher
 from PyPEEC.lib_shared import check_data_voxel
-from PyPEEC.error import CheckError, RunError
+from PyPEEC.lib_utils import timelogger
+from PyPEEC.lib_utils.error import CheckError, RunError
 
 # get a logger
-logger = logging_utils.get_logger("mesher")
+logger = timelogger.get_logger("mesher")
 
 
 def _run_check(data_mesher):
@@ -32,7 +32,7 @@ def _run_check(data_mesher):
     Exceptions are not caught inside this function.
     """
 
-    with logging_utils.BlockTimer(logger, "check_data"):
+    with timelogger.BlockTimer(logger, "check_data"):
         # check the mesher data
         (mesh_type, data_voxelize, data_resampling) = check_data_mesher.check_data_mesher(data_mesher)
 
@@ -68,7 +68,7 @@ def _run_png(data_voxelize):
     layer_stack = data_voxelize["layer_stack"]
 
     # get the voxel geometry and the incidence matrix
-    with logging_utils.BlockTimer(logger, "png_mesher"):
+    with timelogger.BlockTimer(logger, "png_mesher"):
         (n, domain_def) = png_mesher.get_mesh(nx, ny, domain_color, layer_stack)
 
     # assemble the data
@@ -94,7 +94,7 @@ def _run_stl(data_voxelize):
     domain_conflict = data_voxelize["domain_conflict"]
 
     # get the voxel geometry and the incidence matrix
-    with logging_utils.BlockTimer(logger, "voxel_geometry"):
+    with timelogger.BlockTimer(logger, "voxel_geometry"):
         (d, domain_def) = stl_mesher.get_mesh(n, pts_min, pts_max, domain_stl)
         domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
 
@@ -121,7 +121,7 @@ def _run_resample(data_voxel, data_resampling):
     n_resampling = data_resampling["n_resampling"]
 
     if use_resampling:
-        with logging_utils.BlockTimer(logger, "voxel_resample"):
+        with timelogger.BlockTimer(logger, "voxel_resample"):
             (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, n_resampling)
 
     # assemble the data

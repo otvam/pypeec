@@ -14,12 +14,12 @@ from qtpy.QtGui import QIcon
 from qtpy.QtWidgets import QApplication
 from PyPEEC.lib_plotter import manage_voxel
 from PyPEEC.lib_plotter import manage_plot
-from PyPEEC.lib_shared import logging_utils
 from PyPEEC.lib_shared import check_data_plotter
-from PyPEEC.error import CheckError, RunError
+from PyPEEC.lib_utils import timelogger
+from PyPEEC.lib_utils.error import CheckError, RunError
 
 # get a logger
-logger = logging_utils.get_logger("plotter")
+logger = timelogger.get_logger("plotter")
 
 
 def _run_check(data_plotter):

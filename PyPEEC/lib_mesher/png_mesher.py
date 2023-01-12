@@ -12,7 +12,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
 import imageio.v3 as iio
-from PyPEEC.error import RunError
+from PyPEEC.lib_utils.error import RunError
 
 
 def _get_idx_image(nx, ny, img, color):
