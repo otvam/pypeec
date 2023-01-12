@@ -6,14 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-
-
-class CheckError(Exception):
-    """
-    Exception used for signaling invalid input data.
-    """
-
-    pass
+from PyPEEC.lib_shared.check_data_error import CheckError
 
 
 def _check_pts(pts):
@@ -24,24 +17,6 @@ def _check_pts(pts):
     # check type
     if not all(np.issubdtype(type(x), np.floating) or (x is None) for x in pts):
         raise CheckError("pts: the coordinates of a point should be composed of real floats")
-
-
-def _check_resampling(use_resampling, n_resampling):
-    # check type
-    if not isinstance(use_resampling, bool):
-        raise CheckError("use_resampling: resampling flag should be a boolean")
-
-    # check size
-    if not (len(n_resampling) == 3):
-        raise CheckError("n_resampling: invalid voxel resampling (should be a tuple with three elements)")
-
-    # check type
-    if not all(np.issubdtype(type(x), np.integer) for x in n_resampling):
-        raise CheckError("n_resampling: number of resampling should be composed of integers")
-
-    # check value
-    if not all((x >= 1) for x in n_resampling):
-        raise CheckError("n_resampling: number of resampling cannot be smaller than one")
 
 
 def _check_domain_color(domain_color):
@@ -150,7 +125,7 @@ def check_mesher_type(mesh_type):
         raise CheckError("mesh_type: mesher type should be a string")
 
     # check value
-    if mesh_type not in ["stl", "png"]:
+    if mesh_type not in ["stl", "png", "voxel"]:
         raise CheckError("mesh_type: specified mesh type does not exist")
 
 
@@ -162,14 +137,12 @@ def check_data_mesher_png(data_mesher):
 
     # check type
     if not isinstance(data_mesher, dict):
-        raise CheckError("data_mesher: invalid input data")
+        raise CheckError("data_mesher: mesher data should be a dict")
 
     # extract field
     d = data_mesher["d"]
     nx = data_mesher["nx"]
     ny = data_mesher["ny"]
-    use_resampling = data_mesher["use_resampling"]
-    n_resampling = data_mesher["n_resampling"]
     domain_color = data_mesher["domain_color"]
     layer_stack = data_mesher["layer_stack"]
 
@@ -193,9 +166,6 @@ def check_data_mesher_png(data_mesher):
     if not (ny >= 1):
         raise CheckError("ny: of voxel in y direction cannot be smaller than one")
 
-    # check resampling
-    _check_resampling(use_resampling, n_resampling)
-
     # check domains and layers
     _check_domain_color(domain_color)
     _check_layer_stack(layer_stack)
@@ -209,14 +179,12 @@ def check_data_mesher_stl(data_mesher):
 
     # check type
     if not isinstance(data_mesher, dict):
-        raise CheckError("data_mesher: invalid input data")
+        raise CheckError("data_mesher: mesher data should be a dict")
 
     # extract field
     n = data_mesher["n"]
     pts_min = data_mesher["pts_min"]
     pts_max = data_mesher["pts_max"]
-    use_resampling = data_mesher["use_resampling"]
-    n_resampling = data_mesher["n_resampling"]
     domain_stl = data_mesher["domain_stl"]
     domain_conflict = data_mesher["domain_conflict"]
 
@@ -232,12 +200,35 @@ def check_data_mesher_stl(data_mesher):
     if not all((x >= 1) for x in n):
         raise CheckError("n: number of voxels cannot be smaller than one")
 
-    # check resampling
-    _check_resampling(use_resampling, n_resampling)
-
     # check the points
     _check_pts(pts_min)
     _check_pts(pts_max)
 
     # check the stl file
     _check_domain_stl_conflict(domain_stl, domain_conflict)
+
+
+def check_data_resampling(data_resampling):
+    # check type
+    if not isinstance(data_resampling, dict):
+        raise CheckError("data_resampling: resampling data should be a dict")
+
+    # extract field
+    use_resampling = data_resampling["use_resampling"]
+    n_resampling = data_resampling["n_resampling"]
+
+    # check type
+    if not isinstance(use_resampling, bool):
+        raise CheckError("use_resampling: resampling flag should be a boolean")
+
+    # check size
+    if not (len(n_resampling) == 3):
+        raise CheckError("n_resampling: invalid voxel resampling (should be a tuple with three elements)")
+
+    # check type
+    if not all(np.issubdtype(type(x), np.integer) for x in n_resampling):
+        raise CheckError("n_resampling: number of resampling should be composed of integers")
+
+    # check value
+    if not all((x >= 1) for x in n_resampling):
+        raise CheckError("n_resampling: number of resampling cannot be smaller than one")

@@ -12,13 +12,13 @@ import importlib
 from PyPEEC import mesher
 
 
-def run(name, mesh_type, data_mesher):
+def run(name, mesh_type, data_mesher, data_resampling):
     """
     Solve the problem and write the result file.
     """
 
     # call solver
-    (status, data_voxel) = mesher.run(mesh_type, data_mesher)
+    (status, data_voxel) = mesher.run(mesh_type, data_mesher, data_resampling)
 
     # save results
     if status:
@@ -35,12 +35,13 @@ def run(name, mesh_type, data_mesher):
 if __name__ == "__main__":
     # name of the simulation
     # name = "png_inductor"
-    name = "stl_inductor"
+    # name = "stl_inductor"
+    name = "test_slab"
 
     # get the data
     data = importlib.import_module("data_input_mesher.%s" % name)
-    (mesh_type, data_mesher) = data.get_data()
+    (mesh_type, data_mesher, data_resampling) = data.get_data()
 
     # run
-    exit_code = run(name, mesh_type, data_mesher)
+    exit_code = run(name, mesh_type, data_mesher, data_resampling)
     sys.exit(exit_code)

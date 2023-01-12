@@ -5,13 +5,7 @@ Module for checking the plotter input data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-
-class CheckError(Exception):
-    """
-    Exception used for signaling invalid input data.
-    """
-
-    pass
+from PyPEEC.lib_shared.check_data_error import CheckError
 
 
 def _check_data_options(plot_type, data_options):
@@ -129,6 +123,27 @@ def check_data_plotter(data_plotter):
         raise CheckError("data_plotter: plot data should be a list")
 
 
+def _check_plot_main(window_title, window_size, plot_type):
+    # check type
+    if not isinstance(window_title, str):
+        raise CheckError("window_title: window title should be a string")
+    if not isinstance(plot_type, str):
+        raise CheckError("plot_type: plot type should be a string")
+
+    # check size
+    if not len(window_size)==2:
+        raise CheckError("invalid window size (should be a tuple with two elements)")
+
+    # check value
+    if not all(isinstance(x, int) for x in window_size):
+        raise CheckError("window_size: window size should be composed of integers")
+    if not all((x >= 1) for x in window_size):
+        raise CheckError("window_size: window size should be greater than zero")
+    if plot_type not in ["material", "scalar", "arrow"]:
+        raise CheckError("plot_type: specified plot type does not exist")
+
+
+
 def check_plotter_item(data_plotter):
     """
     Check the validity of the dict describing a plot.
@@ -145,28 +160,7 @@ def check_plotter_item(data_plotter):
     data_options = data_plotter["data_options"]
     plot_options = data_plotter["plot_options"]
 
-    # check type
-    if not isinstance(window_title, str):
-        raise CheckError("window_title: window title should be a string")
-    if not isinstance(plot_type, str):
-        raise CheckError("plot_type: plot type should be a string")
-    if not isinstance(data_options, dict):
-        raise CheckError("data_options: data options should be a dict")
-    if not isinstance(plot_options, dict):
-        raise CheckError("plot_options: plot options should be a dict")
-
-    # check size
-    if not len(window_size)==2:
-        raise CheckError("invalid window size (should be a tuple with two elements)")
-
-    # check value
-    if not all(isinstance(x, int) for x in window_size):
-        raise CheckError("window_size: window size should be composed of integers")
-    if not all((x >= 1) for x in window_size):
-        raise CheckError("window_size: window size should be greater than zero")
-    if plot_type not in ["material", "scalar", "arrow"]:
-        raise CheckError("plot_type: specified plot type does not exist")
-
-    # check data and plot options
+    # check data
+    _check_plot_main(window_title, window_size, plot_type)
     _check_data_options(plot_type, data_options)
     _check_plot_options(plot_options)

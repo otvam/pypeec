@@ -1,8 +1,4 @@
 def get_data():
-    # voxel structure is computed by the mesher
-    data_voxel = None
-
-    # problem structure is defined here
     data_problem = dict()
     data_problem["n_green"] = 25.0
     data_problem["freq"] = 10e6
@@ -16,4 +12,4 @@ def get_data():
         "sink": {"domain": ["sink"], "source_type": "voltage", "V": 0.0, "R": 0.0},
     }
 
-    return data_voxel, data_problem
+    return data_problem

@@ -8,17 +8,19 @@ The solver is implemented with NumPy and Scipy.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-from PyPEEC.lib_mesher import check_data
 from PyPEEC.lib_mesher import png_mesher
 from PyPEEC.lib_mesher import stl_mesher
 from PyPEEC.lib_mesher import voxel_resample
 from PyPEEC.lib_shared import logging_utils
+from PyPEEC.lib_shared import check_data_mesher
+from PyPEEC.lib_shared import check_data_voxel
+from PyPEEC.lib_shared.check_data_error import CheckError
 
 # get a logger
 logger = logging_utils.get_logger("mesher")
 
 
-def _run_check(mesh_type, data_mesher):
+def _run_check(mesh_type, data_mesher, data_resampling):
     """
     Check and combine the input data.
     Exceptions are not caught inside this function.
@@ -27,15 +29,20 @@ def _run_check(mesh_type, data_mesher):
 
     with logging_utils.BlockTimer(logger, "check_data"):
         # check the mesher type
-        check_data.check_mesher_type(mesh_type)
+        check_data_mesher.check_mesher_type(mesh_type)
 
-        # run the solver
+        # check the mesher
         if mesh_type == "png":
-            check_data.check_data_mesher_png(data_mesher)
+            check_data_mesher.check_data_mesher_png(data_mesher)
         elif mesh_type == "stl":
-            check_data.check_data_mesher_stl(data_mesher)
+            check_data_mesher.check_data_mesher_stl(data_mesher)
+        elif mesh_type == "voxel":
+            pass
         else:
             raise ValueError("invalid mesh type")
+
+        # check the resampling data
+        check_data_mesher.check_data_resampling(data_resampling)
 
 
 def _run_png(data_mesher):
@@ -93,13 +100,13 @@ def _run_stl(data_mesher):
     return data_voxel
 
 
-def _run_resample(data_voxel, data_mesher):
+def _run_resample(data_voxel, data_resampling):
     # extract the data
     n = data_voxel["n"]
     d = data_voxel["d"]
     domain_def = data_voxel["domain_def"]
-    use_resampling = data_mesher["use_resampling"]
-    n_resampling = data_mesher["n_resampling"]
+    use_resampling = data_resampling["use_resampling"]
+    n_resampling = data_resampling["n_resampling"]
 
     if use_resampling:
         with logging_utils.BlockTimer(logger, "voxel_resample"):
@@ -140,7 +147,7 @@ def _run_disp(data_voxel):
         logger.info("domain / %s = %d" % (tag, len(idx)))
 
 
-def run(mesh_type, data_mesher):
+def run(mesh_type, data_mesher, data_resampling):
     """
     Main script for solving a problem with the FFT-PEEC solver.
     Handle invalid data with exceptions.
@@ -149,26 +156,32 @@ def run(mesh_type, data_mesher):
     # init
     logger.info("init")
 
-    # check the input data
+    # run the code
     try:
-        _run_check(mesh_type, data_mesher)
-    except check_data.CheckError as ex:
+        # check the input data
+        _run_check(mesh_type, data_mesher, data_resampling)
+
+        # run the mesher
+        if mesh_type == "png":
+            data_voxel = _run_png(data_mesher)
+        elif mesh_type == "stl":
+            data_voxel = _run_stl(data_mesher)
+        elif mesh_type == "voxel":
+            data_voxel = data_mesher
+        else:
+            raise ValueError("invalid mesh type")
+
+        # resample and assemble
+        data_voxel = _run_resample(data_voxel, data_resampling)
+
+        # display the results
+        _run_disp(data_voxel)
+
+        # check the output
+        check_data_voxel.check_data_voxel(data_voxel)
+    except CheckError as ex:
         logger.error(str(ex))
         return False, None
-
-    # run the mesher
-    if mesh_type=="png":
-        data_voxel = _run_png(data_mesher)
-    elif mesh_type=="stl":
-        data_voxel = _run_stl(data_mesher)
-    else:
-        raise ValueError("invalid mesh type")
-
-    # resample and assemble
-    data_voxel = _run_resample(data_voxel, data_mesher)
-
-    # display the results
-    _run_disp(data_voxel)
 
     # end message
     logger.info("successful termination")

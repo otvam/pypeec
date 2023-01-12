@@ -12,16 +12,15 @@ import importlib
 from PyPEEC import solver
 
 
-def run(name, data_voxel, data_problem):
+def run(name, data_problem):
     """
     Solve the problem and write the result file.
     """
 
     # load data
-    if data_voxel is None:
-        filename = "data_output/mesher_%s.pck" % name
-        with open(filename, "rb") as fid:
-            data_voxel = pickle.load(fid)
+    filename = "data_output/mesher_%s.pck" % name
+    with open(filename, "rb") as fid:
+        data_voxel = pickle.load(fid)
 
     # call solver
     (status, data_res) = solver.run(data_voxel, data_problem)
@@ -40,14 +39,14 @@ def run(name, data_voxel, data_problem):
 
 if __name__ == "__main__":
     # name of the simulation
-    # name = "test_slab"
+    name = "test_slab"
     # name = "png_inductor"
-    name = "stl_inductor"
+    # name = "stl_inductor"
 
     # get the data
     data = importlib.import_module("data_input_solver.%s" % name)
-    (data_voxel, data_problem) = data.get_data()
+    data_problem = data.get_data()
 
     # run
-    exit_code = run(name, data_voxel, data_problem)
+    exit_code = run(name, data_problem)
     sys.exit(exit_code)

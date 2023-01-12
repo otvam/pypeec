@@ -9,11 +9,10 @@ def get_data():
     # init
     mesh_type = "png"
     data_mesher = dict()
+    data_resampling = {"use_resampling": True, "n_resampling": (1, 1, 1)}
 
     # voxel size
     data_mesher["d"] = (35e-6, 35e-6, 35e-6)
-    data_mesher["use_resampling"] = True
-    data_mesher["n_resampling"] = (1, 1, 1)
     data_mesher["nx"] = 176
     data_mesher["ny"] = 160
 
@@ -31,4 +30,4 @@ def get_data():
         {"n_add": 1, "filename": os.path.join(path, "coil.png")},
     ]
 
-    return mesh_type, data_mesher
+    return mesh_type, data_mesher, data_resampling

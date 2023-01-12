@@ -9,13 +9,15 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import os
-import qtpy.QtWidgets as qtw
-import qtpy.QtGui as qtu
 import pyvistaqt as pvqt
-from PyPEEC.lib_viewer import check_data
+from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QApplication
 from PyPEEC.lib_viewer import manage_voxel
 from PyPEEC.lib_viewer import manage_plot
 from PyPEEC.lib_shared import logging_utils
+from PyPEEC.lib_shared import check_data_viewer
+from PyPEEC.lib_shared import check_data_voxel
+from PyPEEC.lib_shared.check_data_error import CheckError
 
 # get a logger
 logger = logging_utils.get_logger("viewer")
@@ -28,10 +30,10 @@ def _run_check(data_voxel, data_viewer):
     """
 
     # check the viewer data
-    check_data.check_data_voxel(data_voxel)
+    check_data_voxel.check_data_voxel(data_voxel)
 
     # check the viewer data
-    check_data.check_data_viewer(data_viewer)
+    check_data_viewer.check_data_viewer(data_viewer)
 
 
 def _get_grid_voxel(data_res):
@@ -77,7 +79,7 @@ def _get_plot(grid, geom, data_viewer):
     # set icon
     path = os.path.dirname(__file__)
     filename = os.path.join(path, "icon.png")
-    pl.app.setWindowIcon(qtu.QIcon(filename))
+    pl.app.setWindowIcon(QIcon(filename))
 
     # find the plot type and call the corresponding function
     manage_plot.get_plot_domain(pl, geom)
@@ -92,25 +94,26 @@ def run(data_voxel, data_viewer):
     # init
     logger.info("init")
 
-    # check the input data
-    logger.info("check the input data")
+    # run the code
     try:
+        # check the input data
+        logger.info("check the input data")
         _run_check(data_voxel, data_viewer)
-    except check_data.CheckError as ex:
+
+        # create the Qt app (should be at the beginning)
+        logger.info("create the GUI application")
+        app = QApplication([])
+
+        # handle the data
+        logger.info("parse the voxel geometry and the data")
+        (grid, geom) = _get_grid_voxel(data_voxel)
+
+        # make the plots
+        logger.info("generate the plot")
+        _get_plot(grid, geom, data_viewer)
+    except CheckError as ex:
         logger.error(str(ex))
         return False
-
-    # create the Qt app (should be at the beginning)
-    logger.info("create the GUI application")
-    app = qtw.QApplication([])
-
-    # handle the data
-    logger.info("parse the voxel geometry and the data")
-    (grid, geom) = _get_grid_voxel(data_voxel)
-
-    # make the plots
-    logger.info("generate the plot")
-    _get_plot(grid, geom, data_viewer)
 
     # end message
     logger.info("successful termination")

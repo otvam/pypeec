@@ -9,11 +9,10 @@ def get_data():
     # init
     mesh_type = "stl"
     data_mesher = dict()
+    data_resampling = {"use_resampling": True, "n_resampling": (1, 1, 1)}
 
     # voxel size
     data_mesher["n"] = (150, 150, 25)
-    data_mesher["use_resampling"] = True
-    data_mesher["n_resampling"] = (1, 1, 1)
     data_mesher["pts_min"] = (None, None, None)
     data_mesher["pts_max"] = (None, None, None)
 
@@ -28,4 +27,4 @@ def get_data():
         {"domain_sub": "coil", "domain_add": "sink"},
     ]
 
-    return mesh_type, data_mesher
+    return mesh_type, data_mesher, data_resampling

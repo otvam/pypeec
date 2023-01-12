@@ -1,13 +1,4 @@
 def get_data():
-    data_voxel = dict()
-    data_voxel["n"] = (2, 1, 3)
-    data_voxel["d"] = (0.5e-2, 1e-2, 1e-2)
-    data_voxel["domain_def"] = {
-        "cond": [2, 3],
-        "src": [0, 1],
-        "sink": [4, 5],
-    }
-
     data_problem = dict()
     data_problem["n_green"] = 25.0
     data_problem["freq"] = 0.0
@@ -21,4 +12,4 @@ def get_data():
         "sink": {"domain": ["sink"], "source_type": "voltage", "V": 0.0, "R": 2.0},
     }
 
-    return data_voxel, data_problem
+    return data_problem

@@ -8,7 +8,6 @@ The solver is implemented with NumPy and Scipy.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-from PyPEEC.lib_solver import check_data
 from PyPEEC.lib_solver import voxel_geometry
 from PyPEEC.lib_solver import green_function
 from PyPEEC.lib_solver import problem_geometry
@@ -17,6 +16,10 @@ from PyPEEC.lib_solver import equation_system
 from PyPEEC.lib_solver import equation_solver
 from PyPEEC.lib_solver import extract_solution
 from PyPEEC.lib_shared import logging_utils
+from PyPEEC.lib_shared import check_data_problem
+from PyPEEC.lib_shared import check_data_solver
+from PyPEEC.lib_shared import check_data_voxel
+from PyPEEC.lib_shared.check_data_error import CheckError
 
 # get a logger
 logger = logging_utils.get_logger("solver")
@@ -31,13 +34,13 @@ def _run_check(data_voxel, data_problem):
 
     with logging_utils.BlockTimer(logger, "check_data"):
         # check the problem data
-        check_data.check_data_problem(data_problem)
+        check_data_problem.check_data_problem(data_problem)
 
         # check the voxel data
-        check_data.check_data_voxel(data_voxel)
+        check_data_voxel.check_data_voxel(data_voxel)
 
         # combine the problem and voxel data
-        data_solver = check_data.get_data_solver(data_voxel, data_problem)
+        data_solver = check_data_solver.get_data_solver(data_voxel, data_problem)
 
     return data_solver
 
@@ -245,18 +248,16 @@ def run(data_voxel, data_problem):
     # init
     logger.info("init")
 
-    # check the input data
+    # run the solver
     try:
         data_solver = _run_check(data_voxel, data_problem)
-    except check_data.CheckError as ex:
+        data_solver = _run_preproc(data_solver)
+        data_solver = _run_main(data_solver)
+        data_solver = _run_postproc(data_solver)
+        data_res = _run_assemble(data_solver)
+    except CheckError as ex:
         logger.error(str(ex))
         return False, None
-
-    # run the solver
-    data_solver = _run_preproc(data_solver)
-    data_solver = _run_main(data_solver)
-    data_solver = _run_postproc(data_solver)
-    data_res = _run_assemble(data_solver)
 
     # end message
     logger.info("successful termination")
