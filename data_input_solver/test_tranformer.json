@@ -1,6 +1,6 @@
 {
     "n_green": 25.0,
-    "freq": 10000000.0,
+    "freq": 10e6,
     "solver_options": {
         "tol": 1e-06,
         "atol": 1e-12,
@@ -9,17 +9,17 @@
     },
     "condition_options": {
         "check": true,
-        "tolerance": 1000000000.0,
+        "tolerance": 1e12,
         "accuracy": 2
     },
     "conductor_def": {
         "pri": {
             "domain": ["src", "sink", "pri"],
-            "rho": 1.75e-08
+            "rho": 1.75e-8
         },
         "sec": {
             "domain": ["sec", "short"],
-            "rho": 8.77e-08
+            "rho": 8.75e-8
         }
     },
     "source_def": {

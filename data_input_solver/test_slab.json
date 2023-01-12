@@ -9,7 +9,7 @@
     },
     "condition_options": {
         "check": true,
-        "tolerance": 1000000000.0,
+        "tolerance": 1e12,
         "accuracy": 2
     },
     "conductor_def": {

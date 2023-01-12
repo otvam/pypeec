@@ -31,9 +31,9 @@ def run(file_voxel, file_viewer):
 
 if __name__ == "__main__":
     # name of the simulation
-    # name = "png_inductor"
+    name = "png_inductor"
     # name = "stl_inductor"
-    name = "test_slab"
+    # name = "test_slab"
 
     # get the filename
     file_voxel = os.path.join("data_output_voxel",  name + ".pck")
