@@ -8,6 +8,10 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import sys
 import json
 import pickle
+from PyPEEC.lib_shared import logging_utils
+
+# get a logger
+logger = logging_utils.get_logger("fileio")
 
 
 def load_pickle(filename):
@@ -19,7 +23,7 @@ def load_pickle(filename):
         with open(filename, "rb") as fid:
             data = pickle.load(fid)
     except FileNotFoundError:
-        print("file not found: %s" % filename)
+        logger.error("file not found: %s" % filename)
         sys.exit(1)
 
     return data
@@ -34,7 +38,7 @@ def load_json(filename):
         with open(filename, 'r') as fid:
             data = json.load(fid)
     except FileNotFoundError:
-        print("cannot open the file: %s" % filename)
+        logger.error("cannot open the file: %s" % filename)
         sys.exit(1)
 
     return data
@@ -50,5 +54,5 @@ def write_pickle(status, filename, data):
             with open(filename, "wb") as fid:
                 pickle.dump(data, fid)
         except FileNotFoundError:
-            print("cannot write the file: %s" % filename)
+            logger.error("cannot write the file: %s" % filename)
             sys.exit(1)

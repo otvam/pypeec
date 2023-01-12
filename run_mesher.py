@@ -31,9 +31,9 @@ def run(file_mesher, file_voxel):
 
 if __name__ == "__main__":
     # name of the simulation
-    # name = "png_inductor"
+    name = "png_inductor"
     # name = "stl_inductor"
-    name = "test_slab"
+    # name = "test_slab"
 
     # get the filename
     file_mesher = os.path.join("data_input_mesher", name + ".json")

@@ -175,9 +175,9 @@ def run(data_mesher):
 
         # run the mesher
         if mesh_type == "png":
-            data_voxel = _run_png(data_mesher)
+            data_voxel = _run_png(data_voxelize)
         elif mesh_type == "stl":
-            data_voxel = _run_stl(data_mesher)
+            data_voxel = _run_stl(data_voxelize)
         elif mesh_type == "voxel":
             data_voxel = data_voxelize
         else:
