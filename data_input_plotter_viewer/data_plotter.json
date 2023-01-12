@@ -141,9 +141,8 @@
         ],
         "data_options": {
             "var": "J_norm_re",
-            "vec": "J_vec_unit_re",
+            "vec": "J_vec_re",
             "scale": 1e-06,
-            "arrow": 0.5,
             "log": false,
             "color_lim": [
                 null,
@@ -153,6 +152,8 @@
                 null,
                 null
             ],
+            "arrow_threshold": 0.001,
+            "arrow_scale": 0.5,
             "plot_legend": "Re. Current [A/mm2]",
             "plot_title": "Re. Current"
         },
@@ -179,9 +180,8 @@
         ],
         "data_options": {
             "var": "J_norm_im",
-            "vec": "J_vec_unit_im",
+            "vec": "J_vec_im",
             "scale": 1e-06,
-            "arrow": 0.5,
             "log": false,
             "color_lim": [
                 null,
@@ -191,6 +191,8 @@
                 null,
                 null
             ],
+            "arrow_threshold": 0.001,
+            "arrow_scale": 0.5,
             "plot_legend": "Im. Current [A/mm2]",
             "plot_title": "Im. Current"
         },

@@ -120,7 +120,7 @@ def get_current_density(geom, idx_v, J_v):
 
     # compute the direction, ignore division per zero
     with np.errstate(all="ignore"):
-        geom["J_vec_unit_re"] = np.real(J_v)/lna.norm(np.real(J_v), axis=1, keepdims=True)
-        geom["J_vec_unit_im"] = np.imag(J_v)/lna.norm(np.imag(J_v), axis=1, keepdims=True)
+        geom["J_vec_re"] = np.real(J_v)
+        geom["J_vec_im"] = np.imag(J_v)
 
     return geom

@@ -54,15 +54,16 @@ def _get_scalar(var, scale, unit, name):
     return data
 
 
-def _get_arrow(var, vec, scale, arrow, unit, name):
+def _get_arrow(var, vec, scale, unit, name):
     data_options = {
         "var": var,
         "vec": vec,
         "scale": scale,
-        "arrow": arrow,
         "log": False,
         "color_lim": (None, None),
         "filter_lim": (None, None),
+        "arrow_threshold": 1e-3,
+        "arrow_scale": 0.5,
         "plot_legend": "%s [%s]" % (name, unit),
         "plot_title": name,
     }
@@ -78,8 +79,8 @@ def get_data():
         _get_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
         _get_scalar("V_abs", 1e0, "V", "Potential"),
         _get_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        _get_arrow("J_norm_re", "J_vec_unit_re", 1e-6, 0.5, "A/mm2", "Re. Current"),
-        _get_arrow("J_norm_im", "J_vec_unit_im", 1e-6, 0.5, "A/mm2", "Im. Current"),
+        _get_arrow("J_norm_re", "J_vec_re", 1e-6, "A/mm2", "Re. Current"),
+        _get_arrow("J_norm_im", "J_vec_im", 1e-6, "A/mm2", "Im. Current"),
     ]
 
     return data_plotter

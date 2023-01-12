@@ -11,6 +11,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
+import numpy.linalg as lna
 import pyvista as pv
 
 
@@ -57,10 +58,42 @@ def _get_plot_base(pl, grid, geom, plot_title, plot_options):
     pl.add_text(plot_title, font_size=10)
 
 
-def _scale_range_vector(geom, var, filter_lim, color_lim, scale):
+def _get_filter_vector(geom, vec, arrow_threshold):
     """
-    Scale a variable and clamp the values between a lower and upper bound.
+    Filter the voxel structure with a vector field.
+    This function is used to remove arrow with extremely low lengths.
     """
+
+    # if the voxel structure is empty, nothing to do
+    if geom.n_cells == 0:
+        return geom
+
+    # get var
+    data = geom[vec]
+
+    # get norm
+    nrm = lna.norm(data, axis=1)
+
+    # threshold for arrow removal
+    thr = np.max(nrm)*arrow_threshold
+
+    # filter out the arrows that are too small
+    idx = nrm > thr
+    geom = geom.extract_cells(idx)
+
+    return geom
+
+
+def _get_filter_scalar(geom, var, filter_lim, color_lim, scale):
+    """
+    Filter the voxel structure with provided variable limits.
+    Clamp the variable between a lower and upper bound.
+    Scale a variable.
+    """
+
+    # if the voxel structure is empty, nothing to do
+    if geom.n_cells == 0:
+        return geom
 
     # handle None
     (f_min, f_max) = filter_lim
@@ -170,15 +203,17 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
     )
 
     # scale and clamp the variable
-    geom = _scale_range_vector(geom, var, filter_lim, color_lim, scale)
+    geom_var = geom.copy(deep=True)
+    geom_var = _get_filter_scalar(geom_var, var, filter_lim, color_lim, scale)
 
     # add the resulting plot to the plotter
-    pl.add_mesh(
-        geom,
-        scalars=var,
-        log_scale=log,
-        scalar_bar_args=scalar_bar_args,
-    )
+    if geom_var.n_cells > 0:
+        pl.add_mesh(
+            geom_var,
+            scalars=var,
+            log_scale=log,
+            scalar_bar_args=scalar_bar_args,
+        )
 
     # add the plot background (wireframe, axis, and title)
     _get_plot_base(pl, grid, geom, plot_title, plot_options)
@@ -199,10 +234,12 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     var = data_options["var"]
     vec = data_options["vec"]
     scale = data_options["scale"]
-    arrow = data_options["arrow"]
     log = data_options["log"]
     filter_lim = data_options["filter_lim"]
     color_lim = data_options["color_lim"]
+    arrow_scale = data_options["arrow_scale"]
+    arrow_threshold = data_options["arrow_threshold"]
+
     plot_legend = data_options["plot_legend"]
     plot_title = data_options["plot_title"]
 
@@ -215,22 +252,21 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     )
 
     # scale and clamp the variable
-    geom = _scale_range_vector(geom, var, filter_lim, color_lim, scale)
+    geom_var = geom.copy(deep=True)
+    geom_var = _get_filter_vector(geom_var, vec, arrow_threshold)
+    geom_var = _get_filter_scalar(geom_var, var, filter_lim, color_lim, scale)
 
     # get arrow size
-    d = np.min(grid.spacing)
-    factor = d*arrow
-
-    # create the arrows
-    glyphs = geom.glyph(orient=vec, scale=False, factor=factor)
+    factor = np.min(grid.spacing)*arrow_scale
 
     # add the resulting plot to the plotter
-    pl.add_mesh(
-        glyphs,
-        scalars=var,
-        log_scale=log,
-        scalar_bar_args=scalar_bar_args,
-    )
+    if geom_var.n_cells > 0:
+        pl.add_mesh(
+            geom_var.glyph(orient=vec, scale=False, factor=factor),
+            scalars=var,
+            log_scale=log,
+            scalar_bar_args=scalar_bar_args,
+        )
 
     # add the plot background (wireframe, axis, and title)
     _get_plot_base(pl, grid, geom, plot_title, plot_options)

@@ -24,7 +24,7 @@ def _check_data_options(plot_type, data_options):
 
     # list of allowed variable names
     var_list = ["rho", "V_re", "V_im", "V_abs", "J_norm_abs", "J_norm_re", "J_norm_im"]
-    vec_list = ["J_vec_unit_re", "J_vec_unit_im"]
+    vec_list = ["J_vec_re", "J_vec_im"]
 
     # check the options for scalar, arrow, and material plots
     if (plot_type == "scalar") or (plot_type == "arrow") or (plot_type == "material"):
@@ -65,14 +65,18 @@ def _check_data_options(plot_type, data_options):
         # check type
         if not isinstance(data_options["vec"], str):
             raise CheckError("vec: the vec option should be a string")
-        if not isinstance(data_options["arrow"], float):
-            raise CheckError("arrow: the arrow option should be a float")
+        if not isinstance(data_options["arrow_scale"], float):
+            raise CheckError("arrow_scale: the arrow relative scaling should be a float")
+        if not isinstance(data_options["arrow_threshold"], float):
+            raise CheckError("arrow_threshold: the arrow removal threshold should be a float")
 
         # check value
         if not (data_options["vec"] in vec_list):
             raise CheckError("vec: vec option does not exist")
-        if not (data_options["arrow"] > 0):
-            raise CheckError("arrow: the arrow option should be greater than zero")
+        if not (data_options["arrow_scale"] > 0):
+            raise CheckError("arrow_scale: the arrow relative scaling should be greater than zero")
+        if not (data_options["arrow_threshold"] > 0):
+            raise CheckError("arrow_threshold: the arrow removal threshold should be greater than zero")
 
 
 def _check_plot_options(plot_options):
