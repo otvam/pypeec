@@ -6,30 +6,27 @@ Contain the program entry point.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
 import sys
-import pickle
-import importlib
 from PyPEEC import mesher
+from PyPEEC import fileio
 
 
-def run(name, mesh_type, data_mesher, data_resampling):
+def run(file_mesher, file_voxel):
     """
     Solve the problem and write the mesher results.
     """
 
+    # load mesher file
+    data_mesher = fileio.load_json(file_mesher)
+
     # call solver
-    (status, data_voxel) = mesher.run(mesh_type, data_mesher, data_resampling)
+    (status, data_voxel) = mesher.run(data_mesher)
 
     # save results
-    if status:
-        filename = "data_output/mesher_%s.pck" % name
-        with open(filename, "wb") as fid:
-            pickle.dump(data_voxel, fid)
+    fileio.write_pickle(status, file_voxel, data_voxel)
 
-    # exit
-    exit_code = int(not status)
-
-    return exit_code
+    return status
 
 
 if __name__ == "__main__":
@@ -38,10 +35,10 @@ if __name__ == "__main__":
     # name = "stl_inductor"
     name = "test_slab"
 
-    # get the data
-    data = importlib.import_module("data_input_mesher.%s" % name)
-    (mesh_type, data_mesher, data_resampling) = data.get_data()
+    # get the filename
+    file_mesher = os.path.join("data_input_mesher", name + ".json")
+    file_voxel = os.path.join("data_output_voxel",  name + ".pck")
 
     # run
-    exit_code = run(name, mesh_type, data_mesher, data_resampling)
-    sys.exit(exit_code)
+    status = run(file_mesher, file_voxel)
+    sys.exit(int(not status))

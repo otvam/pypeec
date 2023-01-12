@@ -26,21 +26,24 @@ from PyPEEC.error import CheckError, RunError
 logger = logging_utils.get_logger("mesher")
 
 
-def _run_check(mesh_type, data_mesher, data_resampling):
+def _run_check(data_mesher):
     """
     Check and combine the input data.
     Exceptions are not caught inside this function.
     """
 
     with logging_utils.BlockTimer(logger, "check_data"):
+        # check the mesher data
+        (mesh_type, data_voxelize, data_resampling) = check_data_mesher.check_data_mesher(data_mesher)
+
         # check the mesher type
-        check_data_mesher.check_mesher_type(mesh_type)
+        check_data_mesher.check_mesh_type(mesh_type)
 
         # check the mesher
         if mesh_type == "png":
-            check_data_mesher.check_data_mesher_png(data_mesher)
+            check_data_mesher.check_data_voxelize_png(data_voxelize)
         elif mesh_type == "stl":
-            check_data_mesher.check_data_mesher_stl(data_mesher)
+            check_data_mesher.check_data_voxelize_stl(data_voxelize)
         elif mesh_type == "voxel":
             pass
         else:
@@ -48,19 +51,21 @@ def _run_check(mesh_type, data_mesher, data_resampling):
 
         # check the resampling data
         check_data_mesher.check_data_resampling(data_resampling)
+        
+        return mesh_type, data_voxelize, data_resampling
 
 
-def _run_png(data_mesher):
+def _run_png(data_voxelize):
     """
     Generate a 3D voxel structure from 2D PNG images.
     """
 
     # extract the data
-    d = data_mesher["d"]
-    nx = data_mesher["nx"]
-    ny = data_mesher["ny"]
-    domain_color = data_mesher["domain_color"]
-    layer_stack = data_mesher["layer_stack"]
+    d = data_voxelize["d"]
+    nx = data_voxelize["nx"]
+    ny = data_voxelize["ny"]
+    domain_color = data_voxelize["domain_color"]
+    layer_stack = data_voxelize["layer_stack"]
 
     # get the voxel geometry and the incidence matrix
     with logging_utils.BlockTimer(logger, "png_mesher"):
@@ -76,17 +81,17 @@ def _run_png(data_mesher):
     return data_voxel
 
 
-def _run_stl(data_mesher):
+def _run_stl(data_voxelize):
     """
     Generate a 3D voxel structure from 3D STL files.
     """
 
     # extract the data
-    n = data_mesher["n"]
-    pts_min = data_mesher["pts_min"]
-    pts_max = data_mesher["pts_max"]
-    domain_stl = data_mesher["domain_stl"]
-    domain_conflict = data_mesher["domain_conflict"]
+    n = data_voxelize["n"]
+    pts_min = data_voxelize["pts_min"]
+    pts_max = data_voxelize["pts_max"]
+    domain_stl = data_voxelize["domain_stl"]
+    domain_conflict = data_voxelize["domain_conflict"]
 
     # get the voxel geometry and the incidence matrix
     with logging_utils.BlockTimer(logger, "voxel_geometry"):
@@ -154,7 +159,7 @@ def _run_disp(data_voxel):
         logger.info("domain / %s = %d" % (tag, len(idx)))
 
 
-def run(mesh_type, data_mesher, data_resampling):
+def run(data_mesher):
     """
     Main script for creating a voxel structure.
     Handle invalid data with exceptions.
@@ -166,7 +171,7 @@ def run(mesh_type, data_mesher, data_resampling):
     # run the code
     try:
         # check the input data
-        _run_check(mesh_type, data_mesher, data_resampling)
+        (mesh_type, data_voxelize, data_resampling) = _run_check(data_mesher)
 
         # run the mesher
         if mesh_type == "png":
@@ -174,7 +179,7 @@ def run(mesh_type, data_mesher, data_resampling):
         elif mesh_type == "stl":
             data_voxel = _run_stl(data_mesher)
         elif mesh_type == "voxel":
-            data_voxel = data_mesher
+            data_voxel = data_voxelize
         else:
             raise CheckError("invalid mesh type")
 

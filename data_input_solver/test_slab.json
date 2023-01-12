@@ -1,0 +1,35 @@
+{
+    "n_green": 25.0,
+    "freq": 0.0,
+    "solver_options": {
+        "tol": 1e-06,
+        "atol": 1e-12,
+        "restart": 20,
+        "maxiter": 100
+    },
+    "condition_options": {
+        "check": true,
+        "tolerance": 1000000000.0,
+        "accuracy": 2
+    },
+    "conductor_def": {
+        "cond": {
+            "domain": ["cond", "src", "sink"],
+            "rho": 0.01
+        }
+    },
+    "source_def": {
+        "src": {
+            "domain": ["src"],
+            "source_type": "current",
+            "I": 1.0,
+            "G": 0.5
+        },
+        "sink": {
+            "domain": ["sink"],
+            "source_type": "voltage",
+            "V": 0.0,
+            "R": 2.0
+        }
+    }
+}

@@ -6,26 +6,27 @@ Contain the program entry point.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
 import sys
-import pickle
 from PyPEEC import plotter
-from data_input_plotter_viewer import data_plotter
+from PyPEEC import fileio
 
 
-def run(name, data_plotter):
+def run(file_res, file_plotter):
     """
     Load the solver solution and plot the results.
     """
 
-    # load data
-    filename = "data_output/solver_%s.pck" % name
-    with open(filename, "rb") as fid:
-        data_res = pickle.load(fid)
+    # load res file
+    data_solution = fileio.load_pickle(file_res)
+
+    # load plotter file
+    data_plotter = fileio.load_json(file_plotter)
 
     # call plotter
-    exit_code = plotter.run(data_res, data_plotter)
+    status = plotter.run(data_solution, data_plotter)
 
-    return exit_code
+    return status
 
 
 if __name__ == "__main__":
@@ -34,9 +35,10 @@ if __name__ == "__main__":
     # name = "png_inductor"
     # name = "stl_inductor"
 
-    # get the data
-    data_plotter = data_plotter.get_data()
+    # get the filename
+    file_res = os.path.join("data_output_solution",  name + ".pck")
+    file_plotter = os.path.join("data_input_plotter_viewer", "data_plotter.json")
 
     # run
-    exit_code = run(name, data_plotter)
-    sys.exit(exit_code)
+    status = run(file_res, file_plotter)
+    sys.exit(int(not status))

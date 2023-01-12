@@ -215,7 +215,7 @@ def _run_assemble(data_solver):
     """
 
     # assign results
-    data_res = {
+    data_solution = {
         "n": data_solver["n"],
         "d": data_solver["d"],
         "xyz": data_solver["xyz"],
@@ -233,7 +233,7 @@ def _run_assemble(data_solver):
         "terminal": data_solver["terminal"],
     }
 
-    return data_res
+    return data_solution
 
 
 def run(data_voxel, data_problem):
@@ -251,7 +251,7 @@ def run(data_voxel, data_problem):
         data_solver = _run_preproc(data_solver)
         data_solver = _run_main(data_solver)
         data_solver = _run_postproc(data_solver)
-        data_res = _run_assemble(data_solver)
+        data_solution = _run_assemble(data_solver)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -262,4 +262,4 @@ def run(data_voxel, data_problem):
     # end message
     logger.info("successful termination")
 
-    return True, data_res
+    return True, data_solution

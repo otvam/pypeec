@@ -6,30 +6,28 @@ Contain the program entry point.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
 import sys
-import pickle
-import importlib
 from PyPEEC import solver
+from PyPEEC import fileio
 
 
-def run(name, data_problem):
+def run(file_voxel, file_problem, file_res):
     """
     Load the voxel structure, solve the problem and write the solver results.
     """
 
-    # load data
-    filename = "data_output/mesher_%s.pck" % name
-    with open(filename, "rb") as fid:
-        data_voxel = pickle.load(fid)
+    # load voxel file
+    data_voxel = fileio.load_pickle(file_voxel)
+
+    # load mesher file
+    data_problem = fileio.load_json(file_problem)
 
     # call solver
-    (status, data_res) = solver.run(data_voxel, data_problem)
+    (status, data_solution) = solver.run(data_voxel, data_problem)
 
     # save results
-    if status:
-        filename = "data_output/solver_%s.pck" % name
-        with open(filename, "wb") as fid:
-            pickle.dump(data_res, fid)
+    fileio.write_pickle(status, file_res, data_solution)
 
     # exit
     exit_code = int(not status)
@@ -43,10 +41,11 @@ if __name__ == "__main__":
     # name = "png_inductor"
     # name = "stl_inductor"
 
-    # get the data
-    data = importlib.import_module("data_input_solver.%s" % name)
-    data_problem = data.get_data()
+    # get the filename
+    file_problem = os.path.join("data_input_solver", "%s.json" % name)
+    file_voxel = os.path.join("data_output_voxel",  name + ".pck")
+    file_res = os.path.join("data_output_solution",  name + ".pck")
 
     # run
-    exit_code = run(name, data_problem)
+    exit_code = run(file_voxel, file_problem, file_res)
     sys.exit(exit_code)

@@ -6,26 +6,27 @@ Contain the program entry point.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
 import sys
-import pickle
 from PyPEEC import viewer
-from data_input_plotter_viewer import data_viewer
+from PyPEEC import fileio
 
 
-def run(name, data_viewer):
+def run(file_voxel, file_viewer):
     """
     Load the voxel structure and plot the results.
     """
 
-    # load data
-    filename = "data_output/mesher_%s.pck" % name
-    with open(filename, "rb") as fid:
-        data_voxel = pickle.load(fid)
+    # load voxel file
+    data_voxel = fileio.load_pickle(file_voxel)
+
+    # load viewer file
+    data_viewer = fileio.load_json(file_viewer)
 
     # call lib_plotter
-    exit_code = viewer.run(data_voxel, data_viewer)
+    status = viewer.run(data_voxel, data_viewer)
 
-    return exit_code
+    return status
 
 
 if __name__ == "__main__":
@@ -34,9 +35,10 @@ if __name__ == "__main__":
     # name = "stl_inductor"
     name = "test_slab"
 
-    # get the data
-    data_viewer = data_viewer.get_data()
+    # get the filename
+    file_voxel = os.path.join("data_output_voxel",  name + ".pck")
+    file_viewer = os.path.join("data_input_plotter_viewer", "data_viewer.json")
 
     # run viewer
-    exit_code = run(name, data_viewer)
-    sys.exit(exit_code)
+    status = run(file_voxel, file_viewer)
+    sys.exit(int(not status))

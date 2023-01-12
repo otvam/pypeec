@@ -1,3 +1,5 @@
+import json
+
 def get_data():
     plot_options = {
         "grid_plot": True,
@@ -21,3 +23,12 @@ def get_data():
     }
 
     return data_viewer
+
+
+if __name__ == "__main__":
+    # get data
+    data_viewer = get_data()
+
+    # write file
+    with open("data_viewer.json", "w") as fid:
+        json.dump(data_viewer, fid, indent=4)

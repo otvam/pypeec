@@ -36,7 +36,7 @@ def _run_check(data_plotter):
         check_data_plotter.check_plotter_item(dat_tmp)
 
 
-def _get_grid_voxel(data_res):
+def _get_grid_voxel(data_solution):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -44,14 +44,14 @@ def _get_grid_voxel(data_res):
     """
 
     # extract the data
-    n = data_res["n"]
-    d = data_res["d"]
-    idx_v = data_res["idx_v"]
-    idx_src_c = data_res["idx_src_c"]
-    idx_src_v = data_res["idx_src_v"]
-    rho_v = data_res["rho_v"]
-    V_v = data_res["V_v"]
-    J_v = data_res["J_v"]
+    n = data_solution["n"]
+    d = data_solution["d"]
+    idx_v = data_solution["idx_v"]
+    idx_src_c = data_solution["idx_src_c"]
+    idx_src_v = data_solution["idx_src_v"]
+    rho_v = data_solution["rho_v"]
+    V_v = data_solution["V_v"]
+    J_v = data_solution["J_v"]
 
     # convert the voxel geometry into PyVista grids
     (grid, geom) = manage_voxel.get_grid_geom(n, d, idx_v)
@@ -81,6 +81,9 @@ def _get_plot(grid, geom, data_plotter):
     data_options = data_plotter["data_options"]
     plot_options = data_plotter["plot_options"]
 
+    # ensure that window size is a tuple
+    window_size = tuple(window_size)
+
     # get the plotter (with the Qt framework)
     pl = pvqt.BackgroundPlotter(
         toolbar=False,
@@ -105,7 +108,7 @@ def _get_plot(grid, geom, data_plotter):
         raise CheckError("invalid plot type")
 
 
-def run(data_res, data_plotter):
+def run(data_voxel, data_plotter):
     """
     Main script for plotting the solution of a FFT-PEEC problem.
     """
@@ -125,7 +128,7 @@ def run(data_res, data_plotter):
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
-        (grid, geom) = _get_grid_voxel(data_res)
+        (grid, geom) = _get_grid_voxel(data_voxel)
 
         # make the plots
         logger.info("generate the different plots")
@@ -143,4 +146,4 @@ def run(data_res, data_plotter):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    return app.exec_()
+    return app.exec_() == 0

@@ -36,7 +36,7 @@ def _run_check(data_voxel, data_viewer):
     check_data_viewer.check_data_viewer(data_viewer)
 
 
-def _get_grid_voxel(data_res):
+def _get_grid_voxel(data_voxel):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -44,9 +44,9 @@ def _get_grid_voxel(data_res):
     """
 
     # extract the data
-    n = data_res["n"]
-    d = data_res["d"]
-    domain_def = data_res["domain_def"]
+    n = data_voxel["n"]
+    d = data_voxel["d"]
+    domain_def = data_voxel["domain_def"]
 
     # convert the voxel geometry into a PyVista uniform grid
     grid = manage_voxel.get_grid(n, d)
@@ -67,6 +67,9 @@ def _get_plot(grid, geom, data_viewer):
     plot_title = data_viewer["plot_title"]
     window_size = data_viewer["window_size"]
     plot_options = data_viewer["plot_options"]
+
+    # ensure that window size is a tuple
+    window_size = tuple(window_size)
 
     # get the plotter (with the Qt framework)
     pl = pvqt.BackgroundPlotter(
@@ -122,4 +125,4 @@ def run(data_voxel, data_viewer):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    return app.exec_()
+    return app.exec_() == 0

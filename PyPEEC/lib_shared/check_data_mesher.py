@@ -128,7 +128,24 @@ def _check_domain_stl_conflict(domain_stl, domain_conflict):
             raise CheckError("domain_fix: domain name should be a valid domain name")
 
 
-def check_mesher_type(mesh_type):
+def check_data_mesher(data_mesher):
+    """
+    Check the validity of the mesh type.
+    """
+
+    # check type
+    if not isinstance(data_mesher, dict):
+        raise CheckError("data_mesher: mesher data should be a dict")
+
+    # extract field
+    mesh_type = data_mesher["mesh_type"]
+    data_voxelize = data_mesher["data_voxelize"]
+    data_resampling = data_mesher["data_resampling"]
+
+    return mesh_type, data_voxelize, data_resampling
+
+
+def check_mesh_type(mesh_type):
     """
     Check the validity of the mesh type.
     """
@@ -142,21 +159,21 @@ def check_mesher_type(mesh_type):
         raise CheckError("mesh_type: specified mesh type does not exist")
 
 
-def check_data_mesher_png(data_mesher):
+def check_data_voxelize_png(data_voxelize):
     """
     Check the mesher structure (PNG mesher).
     """
 
     # check type
-    if not isinstance(data_mesher, dict):
+    if not isinstance(data_voxelize, dict):
         raise CheckError("data_mesher: mesher data should be a dict")
 
     # extract field
-    d = data_mesher["d"]
-    nx = data_mesher["nx"]
-    ny = data_mesher["ny"]
-    domain_color = data_mesher["domain_color"]
-    layer_stack = data_mesher["layer_stack"]
+    d = data_voxelize["d"]
+    nx = data_voxelize["nx"]
+    ny = data_voxelize["ny"]
+    domain_color = data_voxelize["domain_color"]
+    layer_stack = data_voxelize["layer_stack"]
 
     # check size
     if not (len(d) == 3):
@@ -183,21 +200,21 @@ def check_data_mesher_png(data_mesher):
     _check_layer_stack(layer_stack)
 
 
-def check_data_mesher_stl(data_mesher):
+def check_data_voxelize_stl(data_voxelize):
     """
     Check the mesher structure (STL mesher).
     """
 
     # check type
-    if not isinstance(data_mesher, dict):
+    if not isinstance(data_voxelize, dict):
         raise CheckError("data_mesher: mesher data should be a dict")
 
     # extract field
-    n = data_mesher["n"]
-    pts_min = data_mesher["pts_min"]
-    pts_max = data_mesher["pts_max"]
-    domain_stl = data_mesher["domain_stl"]
-    domain_conflict = data_mesher["domain_conflict"]
+    n = data_voxelize["n"]
+    pts_min = data_voxelize["pts_min"]
+    pts_max = data_voxelize["pts_max"]
+    domain_stl = data_voxelize["domain_stl"]
+    domain_conflict = data_voxelize["domain_conflict"]
 
     # check size
     if not (len(n) == 3):

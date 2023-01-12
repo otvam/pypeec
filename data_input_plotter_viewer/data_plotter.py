@@ -1,3 +1,6 @@
+import json
+
+
 def _get_data_sub(name, plot_type, data_options):
     plot_options = {
         "grid_plot": True,
@@ -80,3 +83,12 @@ def get_data():
     ]
 
     return data_plotter
+
+
+if __name__ == "__main__":
+    # get data
+    data_plotter = get_data()
+
+    # write file
+    with open("data_plotter.json", "w") as fid:
+        json.dump(data_plotter, fid, indent=4)
