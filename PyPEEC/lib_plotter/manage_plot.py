@@ -62,16 +62,28 @@ def _scale_range_vector(geom, var, filter_lim, color_lim, scale):
     Scale a variable and clamp the values between a lower and upper bound.
     """
 
+    # handle None
+    (f_min, f_max) = filter_lim
+    (c_min, c_max) = color_lim
+    if f_min is None:
+        f_min = -float("inf")
+    if f_max is None:
+        f_max = +float("inf")
+    if c_min is None:
+        c_min = -float("inf")
+    if c_max is None:
+        c_max = +float("inf")
+
     # filter data
-    geom = geom.threshold(value=filter_lim, scalars=var)
+    geom = geom.threshold(value=(f_min, f_max), scalars=var)
 
     # convert to numpy
     data = geom[var]
     data = np.array(data)
 
     # clamp range
-    data = np.maximum(data, np.min(color_lim))
-    data = np.minimum(data, np.max(color_lim))
+    data = np.maximum(data, c_min)
+    data = np.minimum(data, c_max)
 
     # add scaling
     data = scale*data

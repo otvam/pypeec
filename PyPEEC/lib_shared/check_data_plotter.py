@@ -55,9 +55,9 @@ def _check_data_options(plot_type, data_options):
             raise CheckError("var: var option does not exist")
         if not (data_options["scale"] > 0):
             raise CheckError("scale: the scale option should be greater than zero")
-        if not all(isinstance(x, float) for x in data_options["color_lim"]):
+        if not all(isinstance(x, float) or (x is None) for x in data_options["color_lim"]):
             raise CheckError("color_lim: color limits should be composed of floats")
-        if not all(isinstance(x, float) for x in data_options["filter_lim"]):
+        if not all(isinstance(x, float) or (x is None) for x in data_options["filter_lim"]):
             raise CheckError("filter_lim: filter limits should be composed of floats")
 
     # check the options for arrow plots

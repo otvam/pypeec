@@ -40,8 +40,8 @@ def _get_scalar(var, scale, unit, name):
         "var": var,
         "scale": scale,
         "log": False,
-        "color_lim": [-float("inf"), +float("inf")],
-        "filter_lim": [-float("inf"), +float("inf")],
+        "color_lim": (None, None),
+        "filter_lim": (None, None),
         "plot_legend": "%s [%s]" % (name, unit),
         "plot_title": name,
     }
@@ -58,8 +58,8 @@ def _get_arrow(var, vec, scale, arrow, unit, name):
         "scale": scale,
         "arrow": arrow,
         "log": False,
-        "color_lim": [-float("inf"), +float("inf")],
-        "filter_lim": [-float("inf"), +float("inf")],
+        "color_lim": (None, None),
+        "filter_lim": (None, None),
         "plot_legend": "%s [%s]" % (name, unit),
         "plot_title": name,
     }
