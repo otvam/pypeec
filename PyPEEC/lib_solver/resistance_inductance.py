@@ -67,8 +67,8 @@ def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
 
     # resistance vector (different directions)
     R_vector[idx_f_x] = (dx/(dy*dz))*rho_vector[idx_f_x]
-    R_vector[idx_f_y] = (dx/(dy*dz))*rho_vector[idx_f_y]
-    R_vector[idx_f_z] = (dx/(dy*dz))*rho_vector[idx_f_z]
+    R_vector[idx_f_y] = (dy/(dx*dz))*rho_vector[idx_f_y]
+    R_vector[idx_f_z] = (dz/(dx*dy))*rho_vector[idx_f_z]
 
     return R_vector
 
