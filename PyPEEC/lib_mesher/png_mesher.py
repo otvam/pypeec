@@ -12,6 +12,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
 import imageio.v3 as iio
+from PyPEEC.error import RunError
 
 
 def _get_idx_image(nx, ny, img, color):
@@ -21,13 +22,13 @@ def _get_idx_image(nx, ny, img, color):
 
     # check image
     if not (img.shape == (nx, ny, 4)):
-        raise ValueError("invalid image size")
+        raise RunError("invalid image size")
 
     # get the color vector
     color_tmp = np.array(color)
     color_tmp = np.expand_dims(color_tmp, axis=(0, 1))
     if not (color_tmp.shape == (1, 1, 4)):
-        raise ValueError("invalid image size")
+        raise RunError("invalid image size")
 
     # find the color in the image
     idx_img = np.all(img == color_tmp, axis=2)

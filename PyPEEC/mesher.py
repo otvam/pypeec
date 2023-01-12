@@ -20,7 +20,7 @@ from PyPEEC.lib_mesher import voxel_resample
 from PyPEEC.lib_shared import logging_utils
 from PyPEEC.lib_shared import check_data_mesher
 from PyPEEC.lib_shared import check_data_voxel
-from PyPEEC.lib_shared.check_data_error import CheckError
+from PyPEEC.error import CheckError, RunError
 
 # get a logger
 logger = logging_utils.get_logger("mesher")
@@ -44,7 +44,7 @@ def _run_check(mesh_type, data_mesher, data_resampling):
         elif mesh_type == "voxel":
             pass
         else:
-            raise ValueError("invalid mesh type")
+            raise CheckError("invalid mesh type")
 
         # check the resampling data
         check_data_mesher.check_data_resampling(data_resampling)
@@ -176,7 +176,7 @@ def run(mesh_type, data_mesher, data_resampling):
         elif mesh_type == "voxel":
             data_voxel = data_mesher
         else:
-            raise ValueError("invalid mesh type")
+            raise CheckError("invalid mesh type")
 
         # resample and assemble
         data_voxel = _run_resample(data_voxel, data_resampling)
@@ -187,8 +187,11 @@ def run(mesh_type, data_mesher, data_resampling):
         # check the output
         check_data_voxel.check_data_voxel(data_voxel)
     except CheckError as ex:
-        logger.error(str(ex))
-        return False, None
+        logger.error("check error : " + str(ex))
+        return False
+    except RunError as ex:
+        logger.error("check error : " + str(ex))
+        return False
 
     # end message
     logger.info("successful termination")

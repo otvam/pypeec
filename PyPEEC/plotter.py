@@ -16,7 +16,7 @@ from PyPEEC.lib_plotter import manage_voxel
 from PyPEEC.lib_plotter import manage_plot
 from PyPEEC.lib_shared import logging_utils
 from PyPEEC.lib_shared import check_data_plotter
-from PyPEEC.lib_shared.check_data_error import CheckError
+from PyPEEC.error import CheckError, RunError
 
 # get a logger
 logger = logging_utils.get_logger("plotter")
@@ -102,7 +102,7 @@ def _get_plot(grid, geom, data_plotter):
     elif plot_type == "arrow":
         manage_plot.plot_arrow(pl, grid, geom, plot_options, data_options)
     else:
-        raise ValueError("invalid plot type")
+        raise CheckError("invalid plot type")
 
 
 def run(data_res, data_plotter):
@@ -133,7 +133,10 @@ def run(data_res, data_plotter):
             logger.info("plotting %d / %d" % (i + 1, len(data_plotter)))
             _get_plot(grid, geom, dat_tmp)
     except CheckError as ex:
-        logger.error(str(ex))
+        logger.error("check error : " + str(ex))
+        return False
+    except RunError as ex:
+        logger.error("check error : " + str(ex))
         return False
 
     # end message

@@ -20,7 +20,7 @@ from PyPEEC.lib_shared import logging_utils
 from PyPEEC.lib_shared import check_data_problem
 from PyPEEC.lib_shared import check_data_solver
 from PyPEEC.lib_shared import check_data_voxel
-from PyPEEC.lib_shared.check_data_error import CheckError
+from PyPEEC.error import CheckError, RunError
 
 # get a logger
 logger = logging_utils.get_logger("solver")
@@ -253,8 +253,11 @@ def run(data_voxel, data_problem):
         data_solver = _run_postproc(data_solver)
         data_res = _run_assemble(data_solver)
     except CheckError as ex:
-        logger.error(str(ex))
-        return False, None
+        logger.error("check error : " + str(ex))
+        return False
+    except RunError as ex:
+        logger.error("check error : " + str(ex))
+        return False
 
     # end message
     logger.info("successful termination")

@@ -6,7 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-from PyPEEC.lib_shared.check_data_error import CheckError
+from PyPEEC.error import CheckError
 
 
 def _check_domain_def(n, domain_def):

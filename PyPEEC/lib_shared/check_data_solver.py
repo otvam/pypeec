@@ -8,7 +8,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-from PyPEEC.lib_shared.check_data_error import CheckError
+from PyPEEC.error import CheckError
 
 
 def _get_domain_indices(domain, domain_def):
@@ -89,7 +89,7 @@ def _get_source_idx(source_def, domain_def):
             R = dat_tmp["R"]
             source_idx[tag] = {"idx": idx, "source_type": source_type, "V": V, "R": R}
         else:
-            raise ValueError("invalid source type")
+            raise CheckError("invalid source type")
 
     return idx_source, source_idx
 

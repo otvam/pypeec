@@ -17,7 +17,7 @@ from PyPEEC.lib_viewer import manage_plot
 from PyPEEC.lib_shared import logging_utils
 from PyPEEC.lib_shared import check_data_viewer
 from PyPEEC.lib_shared import check_data_voxel
-from PyPEEC.lib_shared.check_data_error import CheckError
+from PyPEEC.error import CheckError, RunError
 
 # get a logger
 logger = logging_utils.get_logger("viewer")
@@ -112,7 +112,10 @@ def run(data_voxel, data_viewer):
         logger.info("generate the plot")
         _get_plot(grid, geom, data_viewer)
     except CheckError as ex:
-        logger.error(str(ex))
+        logger.error("check error : " + str(ex))
+        return False
+    except RunError as ex:
+        logger.error("check error : " + str(ex))
         return False
 
     # end message

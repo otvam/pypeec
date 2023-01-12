@@ -8,7 +8,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-from PyPEEC.lib_shared.check_data_error import CheckError
+from PyPEEC.error import CheckError
 
 
 def _check_conductor_def(conductor_def):
@@ -76,7 +76,7 @@ def _check_source_def(source_def):
             value = dat_tmp["V"]
             element = dat_tmp["R"]
         else:
-            raise ValueError("invalid source type")
+            raise CheckError("invalid source type")
 
         # check the source type
         if not np.issubdtype(type(value), np.number):

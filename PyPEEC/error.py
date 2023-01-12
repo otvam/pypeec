@@ -1,5 +1,5 @@
 """
-Module for checking the viewer input data.
+Definition of the used exceptions.
 """
 
 __author__ = "Thomas Guillod"
@@ -9,6 +9,14 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 class CheckError(Exception):
     """
     Exception used for signaling invalid input data.
+    """
+
+    pass
+
+
+class RunError(Exception):
+    """
+    Exception used for an error during execution.
     """
 
     pass

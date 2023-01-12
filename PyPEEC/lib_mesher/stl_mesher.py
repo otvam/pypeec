@@ -14,6 +14,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
 import pyvista as pv
+from PyPEEC.error import RunError
 
 
 def _get_grid(n, d, pts_min):
@@ -193,6 +194,6 @@ def get_conflict(domain_def, domain_conflict):
 
     # check that all the conflicts are resolved
     if not (len(np.unique(idx_all)) == len(idx_all)):
-        raise ValueError("domain indices should be unique")
+        raise RunError("domain indices should be unique")
 
     return domain_def

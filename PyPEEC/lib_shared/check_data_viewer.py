@@ -5,7 +5,7 @@ Module for checking the viewer input data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-from PyPEEC.lib_shared.check_data_error import CheckError
+from PyPEEC.error import CheckError
 
 
 def _check_plot_options(plot_options):

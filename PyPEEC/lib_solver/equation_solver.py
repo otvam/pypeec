@@ -134,7 +134,7 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     if rhs_abs > 0:
         res_rel = res_abs/rhs_abs
     else:
-        res_rel = 0.0
+        res_rel = float("nan")
 
     # get problem size
     n_dof = len(rhs)
