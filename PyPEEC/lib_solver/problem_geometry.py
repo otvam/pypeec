@@ -97,7 +97,7 @@ def get_source_voltage_geometry(source_idx):
     return idx_src_v, V_src_v, R_src_v
 
 
-def get_incidence_matrix(n, A_incidence, idx_v):
+def get_incidence_matrix(A_incidence, idx_v):
     """
     Reduce the incidence matrix to the non-empty voxels and compute face indices.
     The problem contains n_v non-empty voxels and n_f internal faces.
@@ -105,10 +105,6 @@ def get_incidence_matrix(n, A_incidence, idx_v):
     At the output, the reduced incidence matrix is provided: (n_v, n_f).
     The indices of the internal faces is also computed.
     """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    n = nx*ny*nz
 
     # reduce the size of the incidence matrix (only the non-empty voxels)
     A_reduced = A_incidence[idx_v, :]

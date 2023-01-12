@@ -1,5 +1,5 @@
 """
-Module for checking the viewer input data.
+Module for checking the viewer data.
 """
 
 __author__ = "Thomas Guillod"
@@ -48,6 +48,10 @@ def _check_plot_options(plot_options):
 
 
 def _check_plot_main(window_title, plot_title, window_size):
+    """
+    Check the plot window options (window title, plot title, and window size).
+    """
+
     # check type
     if not isinstance(window_title, str):
         raise CheckError("window_title: window title should be a string")
@@ -55,7 +59,7 @@ def _check_plot_main(window_title, plot_title, window_size):
         raise CheckError("plot_title: plot title should be a string")
 
     # check size
-    if not len(window_size)==2:
+    if not len(window_size) == 2:
         raise CheckError("invalid window size (should be a tuple with two elements)")
 
     # check value
@@ -67,7 +71,7 @@ def _check_plot_main(window_title, plot_title, window_size):
 
 def check_data_viewer(data_viewer):
     """
-    Check the validity of the dict describing a plot.
+    Check the validity of the dict describing a 3D voxel structure plot.
     """
 
     # check type

@@ -1,5 +1,5 @@
 """
-Module for checking the viewer input data.
+Module for checking the voxel data.
 """
 
 __author__ = "Thomas Guillod"
@@ -11,7 +11,7 @@ from PyPEEC.error import CheckError
 
 def _check_domain_def(n, domain_def):
     """
-    Check that the domain definition is valid.
+    Check the domain definition (mapping between domain names and indices).
     """
 
     # extract the voxel data
@@ -51,6 +51,10 @@ def _check_domain_def(n, domain_def):
 
 
 def _check_voxel_size(n, d):
+    """
+    Check the voxel number and dimension.
+    """
+
     # check size
     if not (len(n) == 3):
         raise CheckError("n: invalid voxel number (should be a tuple with three elements)")
@@ -72,7 +76,7 @@ def _check_voxel_size(n, d):
 
 def check_data_voxel(data_voxel):
     """
-    Check the voxel structure (number and size).
+    Check the voxel structure (number and dimension).
     Check the domain definition (mapping between domain names and indices).
     """
 

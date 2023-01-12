@@ -1,7 +1,5 @@
 """
-Module for checking the solver input data.
-Check the voxel and problem data.
-Combine the voxel and problem data into solver data.
+Module for checking the solver problem data.
 """
 
 __author__ = "Thomas Guillod"
@@ -93,8 +91,13 @@ def _check_source_def(source_def):
 
 def check_data_problem(data_problem):
     """
-    Check the problem data (Green function, frequency, solver options, matrix condition options).
-    Check the conductor and source definition.
+    Check the solver problem data:
+        - Green function
+        - frequency
+        - solver options
+        - matrix condition options
+        - conductor definition
+        - source definition
     """
 
     # check type

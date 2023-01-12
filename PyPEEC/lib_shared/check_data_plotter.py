@@ -1,5 +1,5 @@
 """
-Module for checking the plotter input data.
+Module for checking the plotter data.
 """
 
 __author__ = "Thomas Guillod"
@@ -114,16 +114,11 @@ def _check_plot_options(plot_options):
         raise CheckError("origin_color: the origin color option should be a string")
 
 
-def check_data_plotter(data_plotter):
-    """
-    Check the type of the input data.
-    """
-
-    if not isinstance(data_plotter, list):
-        raise CheckError("data_plotter: plot data should be a list")
-
-
 def _check_plot_main(window_title, window_size, plot_type):
+    """
+    Check the plot window options (window title, window size, and type).
+    """
+
     # check type
     if not isinstance(window_title, str):
         raise CheckError("window_title: window title should be a string")
@@ -131,7 +126,7 @@ def _check_plot_main(window_title, window_size, plot_type):
         raise CheckError("plot_type: plot type should be a string")
 
     # check size
-    if not len(window_size)==2:
+    if not len(window_size) == 2:
         raise CheckError("invalid window size (should be a tuple with two elements)")
 
     # check value
@@ -143,10 +138,18 @@ def _check_plot_main(window_title, window_size, plot_type):
         raise CheckError("plot_type: specified plot type does not exist")
 
 
+def check_data_plotter(data_plotter):
+    """
+    Check the type of the data defining several plots.
+    """
+
+    if not isinstance(data_plotter, list):
+        raise CheckError("data_plotter: plot data should be a list")
+
 
 def check_plotter_item(data_plotter):
     """
-    Check the validity of the dict describing a plot.
+    Check the validity of the dict describing a single plot.
     """
 
     # check type

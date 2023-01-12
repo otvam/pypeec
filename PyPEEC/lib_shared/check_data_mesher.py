@@ -1,5 +1,5 @@
 """
-Module for checking the viewer input data.
+Module for checking the mesher data.
 """
 
 __author__ = "Thomas Guillod"
@@ -9,19 +9,9 @@ import numpy as np
 from PyPEEC.error import CheckError
 
 
-def _check_pts(pts):
-    # check size
-    if not (len(pts) == 3):
-        raise CheckError("pts: invalid point size (should be a tuple with three elements)")
-
-    # check type
-    if not all(np.issubdtype(type(x), np.floating) or (x is None) for x in pts):
-        raise CheckError("pts: the coordinates of a point should be composed of real floats")
-
-
 def _check_domain_color(domain_color):
     """
-    Check that the conductor definition is valid.
+    Check that the mapping between the pixel colors and the domains is valid (PNG mesher).
     """
 
     # check type
@@ -44,6 +34,10 @@ def _check_domain_color(domain_color):
 
 
 def _check_layer_stack(layer_stack):
+    """
+    Check the validity of the image layer stack (PNG mesher).
+    """
+
     # check type
     if not isinstance(layer_stack, list):
         raise CheckError("layer_stack: layer stack definition should be a list")
@@ -72,7 +66,26 @@ def _check_layer_stack(layer_stack):
             raise CheckError("filename: file does not exist")
 
 
+def _check_pts(pts):
+    """
+    Check that the points defining the voxel structure bounds are valid (STL mesher).
+    """
+
+    # check size
+    if not (len(pts) == 3):
+        raise CheckError("pts: invalid point size (should be a tuple with three elements)")
+
+    # check type
+    if not all(np.issubdtype(type(x), np.floating) or (x is None) for x in pts):
+        raise CheckError("pts: the coordinates of a point should be composed of real floats")
+
+
 def _check_domain_stl_conflict(domain_stl, domain_conflict):
+    """
+    Check the validity of the domain definition (STL mesher).
+    Check the validity of the rules to solve conflict between domains (STL mesher).
+    """
+
     # check type
     if not isinstance(domain_stl, dict):
         raise CheckError("domain_stl: domain definition should be a dict")
@@ -111,13 +124,13 @@ def _check_domain_stl_conflict(domain_stl, domain_conflict):
         # check value
         if domain_ref not in domain_stl:
             raise CheckError("domain_ref: domain name should be a valid domain name")
-        if domain_sub not in domain_fix:
+        if domain_fix not in domain_fix:
             raise CheckError("domain_fix: domain name should be a valid domain name")
 
 
 def check_mesher_type(mesh_type):
     """
-    Check the validity of the dict describing a plot.
+    Check the validity of the mesh type.
     """
 
     # check type
@@ -131,8 +144,7 @@ def check_mesher_type(mesh_type):
 
 def check_data_mesher_png(data_mesher):
     """
-    Check the voxel structure (number and size).
-    Check the domain definition (mapping between domain names and indices).
+    Check the mesher structure (PNG mesher).
     """
 
     # check type
@@ -173,8 +185,7 @@ def check_data_mesher_png(data_mesher):
 
 def check_data_mesher_stl(data_mesher):
     """
-    Check the voxel structure (number and size).
-    Check the domain definition (mapping between domain names and indices).
+    Check the mesher structure (STL mesher).
     """
 
     # check type
@@ -209,6 +220,11 @@ def check_data_mesher_stl(data_mesher):
 
 
 def check_data_resampling(data_resampling):
+    """
+    Check the resampling data.
+    These data are controlling the resampling of a voxel structure.
+    """
+
     # check type
     if not isinstance(data_resampling, dict):
         raise CheckError("data_resampling: resampling data should be a dict")

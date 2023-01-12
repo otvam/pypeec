@@ -1,7 +1,5 @@
 """
-Module for checking the solver input data.
-Check the voxel and problem data.
-Combine the voxel and problem data into solver data.
+Combine the voxel and problem data into a new solver data structure.
 """
 
 __author__ = "Thomas Guillod"
@@ -116,8 +114,8 @@ def get_data_solver(data_voxel, data_problem):
     """
     Combine the voxel data and the problem data.
     The voxel data contains the mapping between domain names and indices.
-    The problem data contains domain names used for the sourced.
-    The new dict contains the indices used for the sources.
+    The problem data contains domain names used for the conductors and sources.
+    The new dict contains the indices used for the conductors and sources.
     """
 
     # extract field

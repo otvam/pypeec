@@ -109,7 +109,7 @@ def _run_main(data_solver):
         (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_voltage_geometry(source_idx)
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
-        (A_reduced, idx_f) = problem_geometry.get_incidence_matrix(n, A_incidence, idx_v)
+        (A_reduced, idx_f) = problem_geometry.get_incidence_matrix(A_incidence, idx_v)
 
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_v, idx_f, idx_src_c, idx_src_v)
