@@ -130,7 +130,11 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     # compute the absolute and relative residuum
     res = sys_op(sol)-rhs
     res_abs = lna.norm(res)
-    res_rel = lna.norm(res)/lna.norm(rhs)
+    rhs_abs = lna.norm(rhs)
+    if rhs_abs > 0:
+        res_rel = res_abs/rhs_abs
+    else:
+        res_rel = 0.0
 
     # get problem size
     n_dof = len(rhs)

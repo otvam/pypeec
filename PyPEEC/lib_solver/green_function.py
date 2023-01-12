@@ -17,8 +17,8 @@ def _get_safe_log(x):
     """
 
     y = np.log(x)
-    y[np.isnan(y)] = 0
-    y[np.isinf(y)] = 0
+    y[np.isnan(y)] = 0.0
+    y[np.isinf(y)] = 0.0
 
     return y
 
@@ -29,8 +29,8 @@ def _get_safe_arctan(x):
     """
 
     y = np.arctan(x)
-    y[np.isnan(y)] = 0
-    y[np.isinf(y)] = 0
+    y[np.isnan(y)] = 0.0
+    y[np.isinf(y)] = 0.0
 
     return y
 
