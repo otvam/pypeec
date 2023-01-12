@@ -193,10 +193,10 @@ def run(data_mesher):
         check_data_voxel.check_data_voxel(data_voxel)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
-        return False
+        return False, None
     except RunError as ex:
         logger.error("check error : " + str(ex))
-        return False
+        return False, None
 
     # end message
     logger.info("successful termination")

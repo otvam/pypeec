@@ -47,13 +47,20 @@ def get_voxelize(grid, mesh):
     """
 
     # voxelize the mesh
-    selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=True)
+    try:
+        selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=True)
+    except RuntimeError:
+        raise RunError("invalid mesh: mesh cannot be voxelized")
 
     # create a boolean mask
     mask = selection.point_data['SelectedPoints'].view(bool)
 
     # transform the grid into an unstructured grid (keeping the non-empty voxels)
     geom = grid.extract_points(mask)
+
+    # check for empty voxels
+    if geom.n_cells == 0:
+        raise RunError("invalid mesh: empty voxel structure")
 
     # get the indices of the extracted voxels
     idx = geom["idx"]
@@ -96,7 +103,10 @@ def _get_load_stl(domain_stl):
     # load the STL files and find the bounding box
     for tag, filename in domain_stl.items():
         # load the STL
-        mesh = pv.read(filename)
+        try:
+            mesh = pv.read(filename, force_ext=".stl")
+        except ValueError:
+            raise RunError("invalid stl: invalid file content: %s" % filename)
 
         # find the bounds
         (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
@@ -159,6 +169,10 @@ def get_mesh(n, pts_min, pts_max, domain_stl):
     # extract the voxel size
     d = (pts_max-pts_min)/n
 
+    # check voxel validity
+    if not np.all(d > 0):
+        RunError("invalid voxel dimension: should be positive")
+
     # get the uniform grid
     grid = _get_grid(n, d, pts_min)
 
@@ -194,6 +208,6 @@ def get_conflict(domain_def, domain_conflict):
 
     # check that all the conflicts are resolved
     if not (len(np.unique(idx_all)) == len(idx_all)):
-        raise RunError("domain indices should be unique")
+        raise RunError("invalid domain: domain indices should be unique")
 
     return domain_def

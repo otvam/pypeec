@@ -40,6 +40,9 @@ def load_json(filename):
     except FileNotFoundError:
         logger.error("cannot open the file: %s" % filename)
         sys.exit(1)
+    except ValueError:
+        logger.error("invalid JSON file: %s" % filename)
+        sys.exit(1)
 
     return data
 
