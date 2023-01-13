@@ -8,14 +8,14 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import os
 import sys
-import json
 from PyPEEC import script
-from examples import config_viewer_plotter
-from examples import config_examples
+from examples import examples_viewer_plotter
+from examples import examples_utils
+from examples import examples_config
 
 # get config
-PATH_ROOT = config_examples.PATH_ROOT
-EXAMPLE_NAME = config_examples.EXAMPLE_NAME
+PATH_ROOT = examples_config.PATH_ROOT
+EXAMPLE_NAME = examples_config.EXAMPLE_NAME
 
 
 if __name__ == "__main__":
@@ -24,11 +24,11 @@ if __name__ == "__main__":
     file_plotter = os.path.join(PATH_ROOT, "data_viewer_plotter", "data_plotter.json")
 
     # get viewer data
-    data_plotter = config_viewer_plotter.get_data_plotter()
+    data_plotter = examples_viewer_plotter.get_data_plotter()
 
-    # write file
-    with open(file_plotter, "w") as fid:
-        json.dump(data_plotter, fid, indent=4)
+    # create folder and file
+    examples_utils.create_folder(file_plotter)
+    examples_utils.write_json(file_plotter, data_plotter)
 
     # run
     status = script.run_plotter(file_solution, file_plotter, True)
