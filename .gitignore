@@ -1,6 +1,9 @@
 *.pyc
+*.egg-info
 .idea/*
 scratch/*
+dist/*
+venv/*
 examples/data_voxel/*
 examples/data_solution/*
 PyPEEC/version.py
