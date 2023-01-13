@@ -1,4 +1,4 @@
-# PyPEEC - 3D FFT-PEEC Solver
+# PyPEEC - 3D FFT-PEEC Solver 
 
 ## Summary
 
@@ -27,6 +27,15 @@ Different examples are located in the `examples` folder:
 * **voxel_transformer**: a simple transformer
 
 The tests are located in the `tests` folder and can be run with `python -m unittest -v`.
+
+## Gallery
+
+![viewer](docs/viewer.png)
+
+![plotter_potential](docs/plotter_potential.png)
+
+![plotter_current](docs/plotter_current.png)
+
 
 ## Compatibility
 
