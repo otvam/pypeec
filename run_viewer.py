@@ -15,8 +15,8 @@ if __name__ == "__main__":
     # name of the simulation
     # name = "png_inductor"
     # name = "stl_inductor"
-    # name = "voxel_slab"
-    name = "voxel_transformer"
+    name = "voxel_slab"
+    # name = "voxel_transformer"
 
     # get the filename
     file_voxel = os.path.join("data_output_voxel",  name + ".pck")

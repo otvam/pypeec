@@ -37,7 +37,7 @@ class TestSum(unittest.TestCase):
             # get the temped file name
             file_solution = fid_solution.name
 
-            # run the mesher
+            # run the solver
             status = script.run_solver(file_voxel, file_problem, file_solution)
             self.assertTrue(status, msg="solver failure")
 
