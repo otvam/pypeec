@@ -1,0 +1,27 @@
+{
+    "mesh_type": "stl",
+    "data_voxelize": {
+        "n": [150, 150, 25],
+        "pts_min": [null, null, null],
+        "pts_max": [null, null, null],
+        "domain_stl": {
+            "coil": "data_input_mesher/stl_inductor/coil.stl",
+            "src": "data_input_mesher/stl_inductor/src.stl",
+            "sink": "data_input_mesher/stl_inductor/sink.stl"
+        },
+        "domain_conflict": [
+            {
+                "domain_fix": "coil",
+                "domain_ref": "src"
+            },
+            {
+                "domain_fix": "coil",
+                "domain_ref": "sink"
+            }
+        ]
+    },
+    "data_resampling": {
+        "use_resampling": true,
+        "n_resampling": [1, 1, 1]
+    }
+}
