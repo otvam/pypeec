@@ -12,7 +12,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import warnings
-import PyPEEC.config as config
+from PyPEEC import config
 
 # get config
 MATRIX_FACTORIZATION = config.MATRIX_FACTORIZATION

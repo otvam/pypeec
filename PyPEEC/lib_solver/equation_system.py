@@ -47,8 +47,8 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.linalg as sla
-import PyPEEC.lib_shared.matrix_factorization as matrix_factorization
-import PyPEEC.lib_shared.fourier_transform as fourier_transform
+from PyPEEC.lib_shared import matrix_factorization
+from PyPEEC.lib_shared import fourier_transform
 
 
 def _get_circulant_multiply(nx, ny, nz, CF, X):

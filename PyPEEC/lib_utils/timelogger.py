@@ -9,7 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import time
 import datetime
 import logging
-import PyPEEC.config as config
+from PyPEEC import config
 
 # get config
 LOGGING_LEVEL = config.LOGGING_LEVEL

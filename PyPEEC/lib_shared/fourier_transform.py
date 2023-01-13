@@ -10,8 +10,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-
-import PyPEEC.config as config
+from PyPEEC import config
 
 # get config
 FFT_SOLVER = config.FFT_SOLVER

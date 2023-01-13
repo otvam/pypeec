@@ -9,7 +9,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-import PyPEEC.lib_shared.fourier_transform as fourier_transform
+from PyPEEC.lib_shared import fourier_transform
 
 
 def _get_circulant_tensor(nx, ny, nz, A):
