@@ -142,16 +142,7 @@ def _check_plot_main(window_title, window_size, plot_type):
         raise CheckError("plot_type: specified plot type does not exist")
 
 
-def check_data_plotter(data_plotter):
-    """
-    Check the type of the data defining several plots.
-    """
-
-    if not isinstance(data_plotter, list):
-        raise CheckError("data_plotter: plot data should be a list")
-
-
-def check_plotter_item(data_plotter):
+def _check_data_plotter_item(data_plotter):
     """
     Check the validity of the dict describing a single plot.
     """
@@ -171,3 +162,17 @@ def check_plotter_item(data_plotter):
     _check_plot_main(window_title, window_size, plot_type)
     _check_data_options(plot_type, data_options)
     _check_plot_options(plot_options)
+
+
+def check_data_plotter(data_plotter):
+    """
+    Check the type of the data defining several plots.
+    """
+
+    # check type
+    if not isinstance(data_plotter, list):
+        raise CheckError("data_plotter: plot data should be a list")
+
+    # check items
+    for dat_tmp in data_plotter:
+        _check_data_plotter_item(dat_tmp)

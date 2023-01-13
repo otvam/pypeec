@@ -1,7 +1,6 @@
-*.mat
-*.h5
-*.pck
 *.pyc
-*.db
 .idea/*
 scratch/*
+examples/data_voxel/*
+examples/data_solution/*
+PyPEEC/version.py

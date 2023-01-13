@@ -20,19 +20,6 @@ from PyPEEC.lib_utils.error import CheckError, RunError
 logger = timelogger.get_logger("viewer")
 
 
-def _run_check(data_voxel, data_viewer):
-    """
-    Check the input data.
-    Exceptions are not caught inside this function.
-    """
-
-    # check the viewer data
-    check_data_voxel.check_data_voxel(data_voxel)
-
-    # check the viewer data
-    check_data_viewer.check_data_viewer(data_viewer)
-
-
 def _get_grid_voxel(data_voxel):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
@@ -88,7 +75,8 @@ def run(data_voxel, data_viewer, is_blocking):
     try:
         # check the input data
         logger.info("check the input data")
-        _run_check(data_voxel, data_viewer)
+        check_data_voxel.check_data_voxel(data_voxel)
+        check_data_viewer.check_data_viewer(data_viewer)
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")

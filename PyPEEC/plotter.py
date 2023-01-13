@@ -19,20 +19,6 @@ from PyPEEC.lib_utils.error import CheckError, RunError
 logger = timelogger.get_logger("plotter")
 
 
-def _run_check(data_plotter):
-    """
-    Check the input data.
-    Exceptions are not caught inside this function.
-    """
-
-    # check the data type
-    check_data_plotter.check_data_plotter(data_plotter)
-
-    # check the plot
-    for dat_tmp in data_plotter:
-        check_data_plotter.check_plotter_item(dat_tmp)
-
-
 def _get_grid_voxel(data_solution):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
@@ -107,7 +93,8 @@ def run(data_voxel, data_plotter, is_blocking):
     try:
         # check the input data
         logger.info("check the input data")
-        _run_check(data_plotter)
+        # check the data type
+        check_data_plotter.check_data_plotter(data_plotter)
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")
