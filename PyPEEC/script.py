@@ -146,10 +146,14 @@ def main_viewer():
         "--viewer", help="viewer file (input / JSON)",
         required=True, dest="file_viewer"
     )
+    parser.add_argument(
+        "--silent", help="if set, do not display the plots",
+        action="store_false", dest="is_blocking"
+    )
 
     # parse and call
     args = parser.parse_args()
-    status = run_viewer(args.file_voxel, args.file_viewer)
+    status = run_viewer(args.file_voxel, args.file_viewer, args.is_blocking)
     sys.exit(int(not status))
 
 

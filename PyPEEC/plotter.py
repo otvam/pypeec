@@ -8,13 +8,10 @@ The plotting is done with PyVista with the Qt framework.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-import os
-import pyvistaqt as pvqt
-from qtpy.QtGui import QIcon
-from qtpy.QtWidgets import QApplication
 from PyPEEC.lib_plotter import manage_voxel
 from PyPEEC.lib_plotter import manage_plot
 from PyPEEC.lib_shared import check_data_plotter
+from PyPEEC.lib_utils import vistagui
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 
@@ -82,18 +79,7 @@ def _get_plot(grid, geom, data_plotter, is_blocking):
     plot_options = data_plotter["plot_options"]
 
     # get the plotter (with the Qt framework)
-    pl = pvqt.BackgroundPlotter(
-        show=is_blocking,
-        toolbar=False,
-        menu_bar=False,
-        title=window_title,
-        window_size=tuple(window_size)
-    )
-
-    # set icon
-    path = os.path.dirname(__file__)
-    filename = os.path.join(path, "icon.png")
-    pl.app.setWindowIcon(QIcon(filename))
+    pl = vistagui.open_plotter(window_title, window_size, is_blocking)
 
     # find the plot type and call the corresponding function
     if plot_type == "material":
@@ -106,8 +92,7 @@ def _get_plot(grid, geom, data_plotter, is_blocking):
         raise CheckError("invalid plot type")
 
     # close plotter is non blocking
-    if not is_blocking:
-        pl.close()
+    vistagui.close_plotter(pl, is_blocking)
 
 
 def run(data_voxel, data_plotter, is_blocking):
@@ -126,7 +111,7 @@ def run(data_voxel, data_plotter, is_blocking):
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")
-        app = QApplication([])
+        app = vistagui.open_app()
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
@@ -148,7 +133,4 @@ def run(data_voxel, data_plotter, is_blocking):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    if is_blocking:
-        return app.exec_() == 0
-    else:
-        return True
+    return vistagui.run_app(app, is_blocking)

@@ -22,5 +22,5 @@ if __name__ == "__main__":
     file_viewer = os.path.join("data_input_plotter_viewer", "data_viewer.json")
 
     # run viewer
-    status = script.run_viewer(file_voxel, file_viewer, False)
+    status = script.run_viewer(file_voxel, file_viewer, True)
     sys.exit(int(not status))
