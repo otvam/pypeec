@@ -1,14 +1,14 @@
 # standard numpy and scipy
-numpy~=1.24.1
-scipy~=1.9.3
+numpy~=1.24.1 # used by the mesher, viewer, solver, and plotter
+scipy~=1.9.3 # used by the solver
+
+# high-performance libraries
+scikit-umfpack~=0.3.3 # used by the solver, optional see config file
+pyFFTW~=0.13.1 # used by the solver, optional see config file
 
 # package for visualization
-imageio~=2.23.0
-pyvistaqt~=0.9.0
-pyvista~=0.37.0
-QtPy~=2.3.0
-PyQt5~=5.15.7
-
-# optional high-performance libraries
-scikit-umfpack~=0.3.3
-pyFFTW~=0.13.1
+imageio~=2.23.0 # used by the mesher
+pyvista~=0.37.0 # used by the mesher, viewer, and plotter
+pyvistaqt~=0.9.0 # used by the viewer, and plotter
+QtPy~=2.3.0 # used by the viewer, and plotter
+PyQt5~=5.15.7 # used by the viewer, and plotter

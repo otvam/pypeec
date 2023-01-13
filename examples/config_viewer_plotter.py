@@ -1,7 +1,18 @@
-import json
+"""
+Define the options for the viewer and plotter.
+Ultimately, these options are dumped into JSON files.
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
 
 
 def _get_plot_options():
+    """
+    The plot options are controlling the wireframes and the origin marker.
+    This structure is used by the viewer and the plotter.
+    """
+
     plot_options = {
         "grid_plot": True,
         "grid_thickness": 1.0,
@@ -20,6 +31,11 @@ def _get_plot_options():
 
 
 def _get_data_plotter_geometry(name):
+    """
+    Plot options for the material description (conductors and sources).
+    This structure is used by the plotter.
+    """
+
     data_options = {
         "plot_legend": name,
         "plot_title": name,
@@ -31,6 +47,11 @@ def _get_data_plotter_geometry(name):
 
 
 def _get_data_plotter_scalar(var, scale, unit, name):
+    """
+    Plot options for a scalar variable (scalar plot).
+    This structure is used by the plotter.
+    """
+
     data_options = {
         "var": var,
         "scale": scale,
@@ -47,6 +68,11 @@ def _get_data_plotter_scalar(var, scale, unit, name):
 
 
 def _get_data_plotter_arrow(var, vec, scale, unit, name):
+    """
+    Plot options for a vector variable (arrow plot).
+    This structure is used by the plotter.
+    """
+
     data_options = {
         "var": var,
         "vec": vec,
@@ -66,33 +92,45 @@ def _get_data_plotter_arrow(var, vec, scale, unit, name):
 
 
 def _get_data_plotter_item(name, plot_type, data_options):
-    plot_options = _get_plot_options()
+    """
+    Get the options defining a single plot for the plotter.
+    This structure is used by the plotter.
+    """
 
     data = {
         "window_title": name,
         "plot_type": plot_type,
         "window_size": (800, 600),
         "data_options": data_options,
-        "plot_options": plot_options,
+        "plot_options": _get_plot_options(),
     }
 
     return data
 
 
 def get_data_viewer():
-    plot_options = _get_plot_options()
+    """
+    Get the options for visualizing the voxel structure.
+    This structure is used by the viewer.
+    """
 
     data_viewer = {
         "window_title": "Viewer",
         "plot_title": "Viewer",
         "window_size": (800, 600),
-        "plot_options": plot_options,
+        "plot_options": _get_plot_options(),
     }
 
     return data_viewer
 
 
 def get_data_plotter():
+    """
+    Get the options for plotting the solver solution.
+    Each element in the list represent a different plot.
+    This structure is used by the plotter.
+    """
+
     data_plotter = [
         _get_data_plotter_geometry("Material"),
         _get_data_plotter_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
