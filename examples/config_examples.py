@@ -13,4 +13,4 @@ import os
 PATH_ROOT = os.path.dirname(__file__)
 
 # name of the considered example
-EXAMPLE_NAME = "voxel_slab"
+EXAMPLE_NAME = "png_inductor"

@@ -63,7 +63,7 @@ def _check_layer_stack(layer_stack):
             fid = open(filename, "rb")
             fid.close()
         except FileNotFoundError:
-            raise CheckError("filename: file does not exist")
+            raise CheckError("filename: file does not exist: %s" % filename)
 
 
 def _check_pts(pts):
@@ -107,7 +107,7 @@ def _check_domain_stl_conflict(domain_stl, domain_conflict):
             fid = open(filename, "rb")
             fid.close()
         except FileNotFoundError:
-            raise CheckError("filename: file does not exist")
+            raise CheckError("filename: file does not exist: %s" % filename)
 
     # check value
     for dat_tmp in domain_conflict:

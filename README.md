@@ -14,7 +14,7 @@ The **PyPEEC** contains the following tools:
 * **ppmesher**: create a 3D voxel structure from STL or PNG files
 * **ppviewer**: visualization of the 3D voxel structure
 * **ppsolver**: solver for the magnetic field problem
-* **ppsolver**: visualization of the problem solution
+* **ppplotter**: visualization of the problem solution
 
 Different examples are located in the `examples` folder:
 * **stl_inductor**: an inductor created from STL files
@@ -42,6 +42,6 @@ PyPEEC is tested on Linux x64 but should run on other platforms.
 * [guillod@otvam.ch](mailto:guillod@otvam.ch)
 * [https://otvam.ch](https://otvam.ch)
 
-## License
+## Copyright
 
 * (c) 2023 - Thomas Guillod - Dartmouth College

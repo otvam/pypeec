@@ -12,15 +12,15 @@
         "layer_stack": [
             {
                 "n_add": 1,
-                "filename": "data_input_mesher/png_inductor/return.png"
+                "filename": "tests/data_mesher/png_inductor/return.png"
             },
             {
                 "n_add": 6,
-                "filename": "data_input_mesher/png_inductor/via.png"
+                "filename": "tests/data_mesher/png_inductor/via.png"
             },
             {
                 "n_add": 1,
-                "filename": "data_input_mesher/png_inductor/coil.png"
+                "filename": "tests/data_mesher/png_inductor/coil.png"
             }
         ]
     },
