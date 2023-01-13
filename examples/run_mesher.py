@@ -9,18 +9,17 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import os
 import sys
 from PyPEEC import script
+from examples import config_examples
+
+# get config
+PATH_ROOT = config_examples.PATH_ROOT
+EXAMPLE_NAME = config_examples.EXAMPLE_NAME
 
 
 if __name__ == "__main__":
-    # name of the simulation
-    # name = "png_inductor"
-    # name = "stl_inductor"
-    name = "voxel_slab"
-    # name = "voxel_transformer"
-
     # get the filename
-    file_mesher = os.path.join("data_input_mesher", name + ".json")
-    file_voxel = os.path.join("data_output_voxel",  name + ".pck")
+    file_mesher = os.path.join(PATH_ROOT, "data_mesher", EXAMPLE_NAME + ".json")
+    file_voxel = os.path.join(PATH_ROOT, "data_voxel", EXAMPLE_NAME + ".pck")
 
     # run
     status = script.run_mesher(file_mesher, file_voxel)
