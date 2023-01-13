@@ -11,10 +11,14 @@
 * Connection of current and voltage sources
 
 The **PyPEEC** contains the following tools:
-* **ppmesher**: create a 3D voxel structure from STL or PNG files
-* **ppviewer**: visualization of the 3D voxel structure
-* **ppsolver**: solver for the magnetic field problem
-* **ppplotter**: visualization of the problem solution
+* **mesher**: create a 3D voxel structure from STL or PNG files
+* **viewer**: visualization of the 3D voxel structure
+* **solver**: solver for the magnetic field problem
+* **plotter**: visualization of the problem solution
+
+All the modules and packages are located in the `PyPEEC` folder.
+The module `PyPEEC.script` contains the entry point scripts.
+Different command line scripts are defined: `ppmesher`, `ppviewer`, `ppsolver`, and `ppplotter`.
 
 Different examples are located in the `examples` folder:
 * **stl_inductor**: an inductor created from STL files
@@ -22,12 +26,12 @@ Different examples are located in the `examples` folder:
 * **voxel_slab**: a simple slab conductor
 * **voxel_transformer**: a simple transformer
 
-Different tests are located in the `tests` folder.
+The tests are located in the `tests` folder and can be run with `python -m unittest -v`.
 
 ## Compatibility
 
 PyPEEC is using the following packages:
-* Python
+* Python 3
 * Numpy and Scipy
 * scikit-umfpack (for the solver, optional)
 * pyFFTW (for the solver, optional)
@@ -35,6 +39,8 @@ PyPEEC is using the following packages:
 * pyvista, pyvistaqt, QtPy, PyQt5 (for the viewer and plotter)
 
 PyPEEC is tested on Linux x64 but should run on other platforms.
+
+The package can be built with `python -m build`.
 
 ## Author
 

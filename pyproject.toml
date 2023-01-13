@@ -3,4 +3,4 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools", "wheel", "setuptools_scm"]
 
 [tool.setuptools_scm]
-write_to = "mypackage/version.py"
+write_to = "PyPEEC/version.py"
