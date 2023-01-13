@@ -8,6 +8,7 @@ The testing is done with the unittest library.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
 import unittest
 import tempfile
 import logging
@@ -15,6 +16,9 @@ from PyPEEC import script
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.CRITICAL)
+
+# get the path the folder
+path_root = os.path.dirname(__file__)
 
 
 class TestMesherViewer(unittest.TestCase):
@@ -28,8 +32,8 @@ class TestMesherViewer(unittest.TestCase):
         """
 
         # get input file name
-        file_mesher = "tests/data_mesher/%s.json" % name
-        file_viewer = "tests/data_viewer_plotter/data_viewer.json"
+        file_mesher = os.path.join(path_root, "data_mesher/%s.json" % name)
+        file_viewer = os.path.join(path_root, "data_viewer_plotter/data_viewer.json")
 
         # create the temporary output file
         with tempfile.NamedTemporaryFile(suffix='.pck') as fid_voxel:

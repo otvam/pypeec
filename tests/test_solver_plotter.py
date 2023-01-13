@@ -8,6 +8,7 @@ The testing is done with the unittest library.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
 import unittest
 import tempfile
 import logging
@@ -15,6 +16,9 @@ from PyPEEC import script
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.CRITICAL)
+
+# get the path the folder
+path_root = os.path.dirname(__file__)
 
 
 class TestSolverPlotter(unittest.TestCase):
@@ -28,9 +32,9 @@ class TestSolverPlotter(unittest.TestCase):
         """
 
         # get input file name
-        file_voxel = "tests/data_voxel/%s.pck" % name
-        file_problem = "tests/data_problem/%s.json" % name
-        file_plotter = "tests/data_viewer_plotter/data_plotter.json"
+        file_voxel = os.path.join(path_root, "data_voxel/%s.pck" % name)
+        file_problem = os.path.join(path_root, "data_problem/%s.json" % name)
+        file_plotter = os.path.join(path_root, "data_viewer_plotter/data_plotter.json")
 
         # create the temporary output file
         with tempfile.NamedTemporaryFile(suffix='.pck') as fid_solution:
