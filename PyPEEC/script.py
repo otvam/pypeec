@@ -82,10 +82,7 @@ def run_solver(file_voxel, file_problem, file_solution):
         logger.error("check error : " + str(ex))
         return False
 
-    # exit
-    exit_code = int(not status)
-
-    return exit_code
+    return status
 
 
 def run_plotter(file_solution, file_plotter, is_blocking):
@@ -198,8 +195,12 @@ def main_plotter():
         "--plotter", help="plotter file (input / JSON)",
         required=True, dest="file_plotter"
     )
+    parser.add_argument(
+        "--silent", help="if set, do not display the plots",
+        action="store_false", dest="is_blocking"
+    )
 
     # parse and call
     args = parser.parse_args()
-    status = run_plotter(args.file_solution, args.file_plotter)
+    status = run_plotter(args.file_solution, args.file_plotter, args.is_blocking)
     sys.exit(int(not status))

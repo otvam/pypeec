@@ -18,7 +18,7 @@ def load_pickle(filename):
     try:
         with open(filename, "rb") as fid:
             data = pickle.load(fid)
-    except FileNotFoundError:
+    except (FileNotFoundError, EOFError):
         raise FileError("file not found: %s" % filename)
 
     return data

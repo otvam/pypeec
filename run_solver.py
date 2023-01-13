@@ -13,9 +13,10 @@ from PyPEEC import script
 
 if __name__ == "__main__":
     # name of the simulation
-    name = "test_slab"
     # name = "png_inductor"
     # name = "stl_inductor"
+    # name = "voxel_slab"
+    name = "voxel_transformer"
 
     # get the filename
     file_problem = os.path.join("data_input_solver", "%s.json" % name)

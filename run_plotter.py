@@ -13,9 +13,10 @@ from PyPEEC import script
 
 if __name__ == "__main__":
     # get the data
-    name = "test_slab"
     # name = "png_inductor"
     # name = "stl_inductor"
+    # name = "voxel_slab"
+    name = "voxel_transformer"
 
     # get the filename
     file_solution = os.path.join("data_output_solution",  name + ".pck")

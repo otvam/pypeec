@@ -44,12 +44,15 @@ def close_plotter(pl, is_blocking):
         pl.close()
 
 
-def open_app():
+def open_app(is_blocking):
     """
     Create a master Qt app for all the plotter windows.
     """
 
-    app = QApplication([])
+    if is_blocking:
+        app = QApplication([])
+    else:
+        app = None
 
     return app
 

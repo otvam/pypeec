@@ -111,7 +111,7 @@ def run(data_voxel, data_plotter, is_blocking):
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")
-        app = vistagui.open_app()
+        app = vistagui.open_app(is_blocking)
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
