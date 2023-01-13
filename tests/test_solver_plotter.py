@@ -17,7 +17,7 @@ from PyPEEC import script
 logging.disable(logging.CRITICAL)
 
 
-class TestSum(unittest.TestCase):
+class TestSolverPlotter(unittest.TestCase):
     """
     Test solver/plotter for different cases.
     """

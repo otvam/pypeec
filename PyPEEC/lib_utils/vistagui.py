@@ -7,8 +7,11 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import os
 import pyvistaqt as pvqt
-from qtpy.QtGui import QIcon
 from qtpy.QtWidgets import QApplication
+from PyPEEC import config
+
+# get config
+PATH_ROOT = config.PATH_ROOT
 
 
 def open_plotter(window_title, window_size, is_blocking):
@@ -23,13 +26,11 @@ def open_plotter(window_title, window_size, is_blocking):
         toolbar=False,
         menu_bar=False,
         title=window_title,
-        window_size=tuple(window_size)
+        window_size=tuple(window_size),
     )
 
     # set icon
-    path = os.path.dirname(__file__)
-    filename = os.path.join(path, "../icon.png")
-    pl.app.setWindowIcon(QIcon(filename))
+    pl.set_icon(PATH_ROOT + "/icon.png")
 
     return pl
 

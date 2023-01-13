@@ -17,7 +17,7 @@ from PyPEEC import script
 logging.disable(logging.CRITICAL)
 
 
-class TestSum(unittest.TestCase):
+class TestMesherViewer(unittest.TestCase):
     """
     Test mesher/viewer for different cases.
     """
