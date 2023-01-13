@@ -76,19 +76,17 @@ def _get_filter_vector(geom, vec, arrow_threshold):
 
     # threshold for arrow removal
     thr = np.max(nrm)*arrow_threshold
+    idx = nrm > thr
 
     # filter out the arrows that are too small
-    idx = nrm > thr
     geom = geom.extract_cells(idx)
 
     return geom
 
 
-def _get_filter_scalar(geom, var, filter_lim, color_lim, scale):
+def _get_filter_scalar(geom, var, filter_lim):
     """
     Filter the voxel structure with provided variable limits.
-    Clamp the variable between a lower and upper bound.
-    Scale a variable.
     """
 
     # if the voxel structure is empty, nothing to do
@@ -97,22 +95,42 @@ def _get_filter_scalar(geom, var, filter_lim, color_lim, scale):
 
     # handle None
     (f_min, f_max) = filter_lim
-    (c_min, c_max) = color_lim
     if f_min is None:
         f_min = -float("inf")
     if f_max is None:
         f_max = +float("inf")
+
+    # get var
+    data = geom[var]
+
+    # find the filter
+    idx = np.logical_and(data >= f_min, data <= f_max)
+
+    # filter data
+    geom = geom.extract_cells(idx)
+
+    return geom
+
+
+def _get_clamp_scale_scalar(geom, var, color_lim, scale):
+    """
+    Clamp the variable between a lower and upper bound.
+    Afterwards, scale a variable.
+    """
+
+    # if the voxel structure is empty, nothing to do
+    if geom.n_cells == 0:
+        return geom
+
+    # handle None
+    (c_min, c_max) = color_lim
     if c_min is None:
         c_min = -float("inf")
     if c_max is None:
         c_max = +float("inf")
 
-    # filter data
-    geom = geom.threshold(value=(f_min, f_max), scalars=var)
-
-    # convert to numpy
+    # get var
     data = geom[var]
-    data = np.array(data)
 
     # clamp range
     data = np.maximum(data, c_min)
@@ -204,7 +222,8 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
 
     # scale and clamp the variable
     geom_var = geom.copy(deep=True)
-    geom_var = _get_filter_scalar(geom_var, var, filter_lim, color_lim, scale)
+    geom_var = _get_filter_scalar(geom_var, var, filter_lim)
+    geom_var = _get_clamp_scale_scalar(geom_var, var, color_lim, scale)
 
     # add the resulting plot to the plotter
     if geom_var.n_cells > 0:
@@ -254,7 +273,8 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     # scale and clamp the variable
     geom_var = geom.copy(deep=True)
     geom_var = _get_filter_vector(geom_var, vec, arrow_threshold)
-    geom_var = _get_filter_scalar(geom_var, var, filter_lim, color_lim, scale)
+    geom_var = _get_filter_scalar(geom_var, var, filter_lim)
+    geom_var = _get_clamp_scale_scalar(geom_var, var, color_lim, scale)
 
     # get arrow size
     factor = np.min(grid.spacing)*arrow_scale
