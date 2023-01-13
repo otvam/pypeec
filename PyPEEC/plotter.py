@@ -65,7 +65,7 @@ def _get_grid_voxel(data_solution):
     return grid, geom
 
 
-def _get_plot(grid, geom, data_plotter):
+def _get_plot(grid, geom, data_plotter, is_blocking):
     """
     Make a plot with the specified user settings.
     The plot contains the following elements:
@@ -83,6 +83,7 @@ def _get_plot(grid, geom, data_plotter):
 
     # get the plotter (with the Qt framework)
     pl = pvqt.BackgroundPlotter(
+        show=is_blocking,
         toolbar=False,
         menu_bar=False,
         title=window_title,
@@ -104,8 +105,12 @@ def _get_plot(grid, geom, data_plotter):
     else:
         raise CheckError("invalid plot type")
 
+    # close plotter is non blocking
+    if not is_blocking:
+        pl.close()
 
-def run(data_voxel, data_plotter):
+
+def run(data_voxel, data_plotter, is_blocking):
     """
     Main script for plotting the solution of a FFT-PEEC problem.
     """
@@ -131,7 +136,7 @@ def run(data_voxel, data_plotter):
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_plotter):
             logger.info("plotting %d / %d" % (i + 1, len(data_plotter)))
-            _get_plot(grid, geom, dat_tmp)
+            _get_plot(grid, geom, dat_tmp, is_blocking)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -143,4 +148,7 @@ def run(data_voxel, data_plotter):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    return app.exec_() == 0
+    if is_blocking:
+        return app.exec_() == 0
+    else:
+        return True

@@ -40,7 +40,7 @@ def run_mesher(file_mesher, file_voxel):
     return status
 
 
-def run_viewer(file_voxel, file_viewer):
+def run_viewer(file_voxel, file_viewer, is_blocking):
     """
     Load the voxel structure and plot the results.
     """
@@ -53,7 +53,7 @@ def run_viewer(file_voxel, file_viewer):
         data_viewer = fileio.load_json(file_viewer)
 
         # call lib_plotter
-        status = viewer.run(data_voxel, data_viewer)
+        status = viewer.run(data_voxel, data_viewer, is_blocking)
     except FileError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -88,7 +88,7 @@ def run_solver(file_voxel, file_problem, file_solution):
     return exit_code
 
 
-def run_plotter(file_solution, file_plotter):
+def run_plotter(file_solution, file_plotter, is_blocking):
     """
     Load the solver solution and plot the results.
     """
@@ -101,7 +101,7 @@ def run_plotter(file_solution, file_plotter):
         data_plotter = fileio.load_json(file_plotter)
 
         # call plotter
-        status = plotter.run(data_solution, data_plotter)
+        status = plotter.run(data_solution, data_plotter, is_blocking)
     except FileError as ex:
         logger.error("check error : " + str(ex))
         return False

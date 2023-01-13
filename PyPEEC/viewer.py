@@ -57,7 +57,7 @@ def _get_grid_voxel(data_voxel):
     return grid, geom
 
 
-def _get_plot(grid, geom, data_viewer):
+def _get_plot(grid, geom, data_viewer, is_blocking):
     """
     Make a plot with the voxel structure and the domains.
     """
@@ -70,6 +70,7 @@ def _get_plot(grid, geom, data_viewer):
 
     # get the plotter (with the Qt framework)
     pl = pvqt.BackgroundPlotter(
+        show=is_blocking,
         toolbar=False,
         menu_bar=False,
         title=window_title,
@@ -85,8 +86,12 @@ def _get_plot(grid, geom, data_viewer):
     manage_plot.get_plot_domain(pl, geom)
     manage_plot.get_plot_base(pl, grid, geom, plot_title, plot_options)
 
+    # close plotter is non blocking
+    if not is_blocking:
+        pl.close()
 
-def run(data_voxel, data_viewer):
+
+def run(data_voxel, data_viewer, is_blocking):
     """
     Main script for visualizing a 3D voxel structure.
     """
@@ -110,7 +115,7 @@ def run(data_voxel, data_viewer):
 
         # make the plots
         logger.info("generate the plot")
-        _get_plot(grid, geom, data_viewer)
+        _get_plot(grid, geom, data_viewer, is_blocking)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -122,4 +127,7 @@ def run(data_voxel, data_viewer):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    return app.exec_() == 0
+    if is_blocking:
+        return app.exec_() == 0
+    else:
+        return True
