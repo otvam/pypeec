@@ -118,28 +118,31 @@ def _check_plot_options(plot_options):
         raise CheckError("origin_color: the origin color option should be a string")
 
 
-def _check_plot_main(window_title, window_size, plot_type):
+def _check_data_window(data_window):
     """
     Check the plot window options (window title, window size, and type).
     """
 
+    # get the data
+    title = data_window["title"]
+    show_menu = data_window["show_menu"]
+    size = data_window["size"]
+
     # check type
-    if not isinstance(window_title, str):
-        raise CheckError("window_title: window title should be a string")
-    if not isinstance(plot_type, str):
-        raise CheckError("plot_type: plot type should be a string")
+    if not isinstance(title, str):
+        raise CheckError("title: window title should be a string")
+    if not isinstance(show_menu, bool):
+        raise CheckError("show_menu: menu toggle switch should be a boolean")
 
     # check size
-    if not len(window_size) == 2:
-        raise CheckError("invalid window size (should be a list with two elements)")
+    if not len(size) == 2:
+        raise CheckError("size: invalid window size (should be a list with two elements)")
 
     # check value
-    if not all(isinstance(x, int) for x in window_size):
-        raise CheckError("window_size: window size should be composed of integers")
-    if not all((x >= 1) for x in window_size):
-        raise CheckError("window_size: window size should be greater than zero")
-    if plot_type not in ["material", "scalar", "arrow"]:
-        raise CheckError("plot_type: specified plot type does not exist")
+    if not all(isinstance(x, int) for x in size):
+        raise CheckError("size: window_size: window size should be composed of integers")
+    if not all((x >= 1) for x in size):
+        raise CheckError("size: window_size: window size should be greater than zero")
 
 
 def _check_data_plotter_item(data_plotter):
@@ -152,14 +155,21 @@ def _check_data_plotter_item(data_plotter):
         raise CheckError("data_plotter: plot description should be a dict")
 
     # extract field
-    window_title = data_plotter["window_title"]
-    window_size = data_plotter["window_size"]
     plot_type = data_plotter["plot_type"]
+    data_window = data_plotter["data_window"]
     data_options = data_plotter["data_options"]
     plot_options = data_plotter["plot_options"]
 
+    # check type
+    if not isinstance(plot_type, str):
+        raise CheckError("plot_type: plot type should be a string")
+
+    # check value
+    if plot_type not in ["material", "scalar", "arrow"]:
+        raise CheckError("plot_type: specified plot type does not exist")
+
     # check data
-    _check_plot_main(window_title, window_size, plot_type)
+    _check_data_window(data_window)
     _check_data_options(plot_type, data_options)
     _check_plot_options(plot_options)
 

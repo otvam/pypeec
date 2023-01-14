@@ -30,6 +30,21 @@ def _get_plot_options():
     return plot_options
 
 
+def _get_data_window(name):
+    """
+    The window options are the window title and appearance.
+    This structure is used by the viewer and the plotter.
+    """
+
+    data_window = {
+        "title": name,
+        "show_menu": False,
+        "size": (800, 600),
+    }
+
+    return data_window
+
+
 def _get_data_plotter_geometry(name):
     """
     Plot options for the material description (conductors and sources).
@@ -98,11 +113,10 @@ def _get_data_plotter_item(name, plot_type, data_options):
     """
 
     data = {
-        "window_title": name,
         "plot_type": plot_type,
-        "window_size": (800, 600),
         "data_options": data_options,
         "plot_options": _get_plot_options(),
+        "data_window": _get_data_window(name),
     }
 
     return data
@@ -115,10 +129,9 @@ def get_data_viewer():
     """
 
     data_viewer = {
-        "window_title": "Viewer",
         "plot_title": "Viewer",
-        "window_size": (800, 600),
         "plot_options": _get_plot_options(),
+        "data_window": _get_data_window("Viewer"),
     }
 
     return data_viewer

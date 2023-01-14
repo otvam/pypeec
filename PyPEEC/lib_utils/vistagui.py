@@ -13,19 +13,24 @@ from PyPEEC import config
 PATH_ROOT = config.PATH_ROOT
 
 
-def open_plotter(window_title, window_size, is_blocking):
+def open_plotter(data_window, is_blocking):
     """
     Get a PyVista plotter.
     If the call is non-blocking, the window is not shown.
     """
 
+    # get the data
+    title = data_window["title"]
+    show_menu = data_window["show_menu"]
+    size = data_window["size"]
+
     # get the plotter (with the Qt framework)
     pl = pvqt.BackgroundPlotter(
         show=is_blocking,
-        toolbar=False,
-        menu_bar=False,
-        title=window_title,
-        window_size=tuple(window_size),
+        toolbar=show_menu,
+        menu_bar=show_menu,
+        title=title,
+        window_size=tuple(size),
     )
 
     # set icon

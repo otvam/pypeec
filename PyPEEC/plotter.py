@@ -58,14 +58,13 @@ def _get_plot(grid, geom, data_plotter, is_blocking):
     """
 
     # extract the data
-    window_title = data_plotter["window_title"]
-    window_size = data_plotter["window_size"]
     plot_type = data_plotter["plot_type"]
+    data_window = data_plotter["data_window"]
     data_options = data_plotter["data_options"]
     plot_options = data_plotter["plot_options"]
 
     # get the plotter (with the Qt framework)
-    pl = vistagui.open_plotter(window_title, window_size, is_blocking)
+    pl = vistagui.open_plotter(data_window, is_blocking)
 
     # find the plot type and call the corresponding function
     if plot_type == "material":

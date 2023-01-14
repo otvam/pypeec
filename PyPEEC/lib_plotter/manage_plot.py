@@ -178,7 +178,7 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     }
 
     # get a colormap with three discrete color
-    cmap = ["yellow", "green", "blue"]
+    cmap = ["darkorange", "forestgreen", "royalblue"]
 
     # add the resulting plot to the plotter
     pl.add_mesh(

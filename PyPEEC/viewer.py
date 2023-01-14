@@ -47,13 +47,12 @@ def _get_plot(grid, geom, data_viewer, is_blocking):
     """
 
     # extract the data
-    window_title = data_viewer["window_title"]
     plot_title = data_viewer["plot_title"]
-    window_size = data_viewer["window_size"]
+    data_window = data_viewer["data_window"]
     plot_options = data_viewer["plot_options"]
 
     # get the plotter (with the Qt framework)
-    pl = vistagui.open_plotter(window_title, window_size, is_blocking)
+    pl = vistagui.open_plotter(data_window, is_blocking)
 
     # find the plot type and call the corresponding function
     manage_plot.get_plot_domain(pl, geom)

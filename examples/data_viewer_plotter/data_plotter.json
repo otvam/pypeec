@@ -1,11 +1,6 @@
 [
     {
-        "window_title": "Material",
         "plot_type": "material",
-        "window_size": [
-            800,
-            600
-        ],
         "data_options": {
             "plot_legend": "Material",
             "plot_title": "Material"
@@ -22,15 +17,18 @@
             "origin_plot": true,
             "origin_size": 0.1,
             "origin_color": "red"
+        },
+        "data_window": {
+            "title": "Material",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
         }
     },
     {
-        "window_title": "Resistivity",
         "plot_type": "scalar",
-        "window_size": [
-            800,
-            600
-        ],
         "data_options": {
             "var": "rho",
             "scale": 100000000.0,
@@ -58,15 +56,18 @@
             "origin_plot": true,
             "origin_size": 0.1,
             "origin_color": "red"
+        },
+        "data_window": {
+            "title": "Resistivity",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
         }
     },
     {
-        "window_title": "Potential",
         "plot_type": "scalar",
-        "window_size": [
-            800,
-            600
-        ],
         "data_options": {
             "var": "V_abs",
             "scale": 1.0,
@@ -94,15 +95,18 @@
             "origin_plot": true,
             "origin_size": 0.1,
             "origin_color": "red"
+        },
+        "data_window": {
+            "title": "Potential",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
         }
     },
     {
-        "window_title": "Current Norm",
         "plot_type": "scalar",
-        "window_size": [
-            800,
-            600
-        ],
         "data_options": {
             "var": "J_norm_abs",
             "scale": 1e-06,
@@ -130,15 +134,18 @@
             "origin_plot": true,
             "origin_size": 0.1,
             "origin_color": "red"
+        },
+        "data_window": {
+            "title": "Current Norm",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
         }
     },
     {
-        "window_title": "Re. Current",
         "plot_type": "arrow",
-        "window_size": [
-            800,
-            600
-        ],
         "data_options": {
             "var": "J_norm_re",
             "vec": "J_vec_re",
@@ -169,15 +176,18 @@
             "origin_plot": true,
             "origin_size": 0.1,
             "origin_color": "red"
+        },
+        "data_window": {
+            "title": "Re. Current",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
         }
     },
     {
-        "window_title": "Im. Current",
         "plot_type": "arrow",
-        "window_size": [
-            800,
-            600
-        ],
         "data_options": {
             "var": "J_norm_im",
             "vec": "J_vec_im",
@@ -208,6 +218,14 @@
             "origin_plot": true,
             "origin_size": 0.1,
             "origin_color": "red"
+        },
+        "data_window": {
+            "title": "Im. Current",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
         }
     }
 ]
