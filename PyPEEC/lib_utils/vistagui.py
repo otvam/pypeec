@@ -5,7 +5,6 @@ Module for managing plotting windows with PyVista and Qt.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-import os
 import pyvistaqt as pvqt
 from qtpy.QtWidgets import QApplication
 from PyPEEC import config

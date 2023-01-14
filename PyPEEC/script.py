@@ -112,14 +112,24 @@ def main_mesher():
     """
 
     # get the parser
-    parser = argparse.ArgumentParser(description="Transform the provided data into a 3D voxel structure.")
-    parser.add_argument(
-        "--mesher", help="mesher file (input / JSON)",
-        required=True, dest="file_mesher"
+    parser = argparse.ArgumentParser(
+        prog="ppmesher",
+        description="Transform the provided data into a 3D voxel structure.",
+        epilog = "(c) Thomas Guillod, Dartmouth College",
     )
     parser.add_argument(
-        "--voxel", help="voxel file (output / pickle)",
-        required=True, dest="file_voxel"
+        "--mesher",
+        metavar="file",
+        help="mesher file (input / JSON)",
+        required=True,
+        dest="file_mesher",
+    )
+    parser.add_argument(
+        "--voxel",
+        metavar="file",
+        help="voxel file (output / pickle)",
+        required=True,
+        dest="file_voxel",
     )
 
     # parse and call
@@ -134,18 +144,30 @@ def main_viewer():
     """
 
     # get the parser
-    parser = argparse.ArgumentParser(description="Visualization of a 3D voxel structure.")
-    parser.add_argument(
-        "--voxel", help="voxel file (input / pickle)",
-        required=True, dest="file_voxel"
+    parser = argparse.ArgumentParser(
+        prog="ppviewer",
+        description="Visualization of a 3D voxel structure.",
+        epilog="(c) Thomas Guillod, Dartmouth College",
     )
     parser.add_argument(
-        "--viewer", help="viewer file (input / JSON)",
-        required=True, dest="file_viewer"
+        "--voxel",
+        metavar="file",
+        help="voxel file (input / pickle)",
+        required=True,
+        dest="file_voxel",
     )
     parser.add_argument(
-        "--silent", help="if set, do not display the plots",
-        action="store_false", dest="is_blocking"
+        "--viewer",
+        metavar="file",
+        help="viewer file (input / JSON)",
+        required=True,
+        dest="file_viewer",
+    )
+    parser.add_argument(
+        "--silent",
+        help="if set, do not display the plots",
+        action="store_false",
+        dest="is_blocking",
     )
 
     # parse and call
@@ -160,18 +182,31 @@ def main_solver():
     """
 
     # get the parser
-    parser = argparse.ArgumentParser(description="Solve a problem with the FFT-PEEC method.")
-    parser.add_argument(
-        "--voxel", help="voxel file (input / pickle)",
-        required=True, dest="file_voxel"
+    parser = argparse.ArgumentParser(
+        prog="ppsolver",
+        description="Solve a problem with the FFT-PEEC method.",
+        epilog="(c) Thomas Guillod, Dartmouth College",
     )
     parser.add_argument(
-        "--problem", help="problem file (input / JSON)",
-        required=True, dest="file_problem"
+        "--voxel",
+        metavar="file",
+        help="voxel file (input / pickle)",
+        required=True,
+        dest="file_voxel",
     )
     parser.add_argument(
-        "--solution", help="solution file (output / pickle)",
-        required=True, dest="file_solution"
+        "--problem",
+        metavar="file",
+        help="problem file (input / JSON)",
+        required=True,
+        dest="file_problem",
+    )
+    parser.add_argument(
+        "--solution",
+        metavar="file",
+        help="solution file (output / pickle)",
+        required=True,
+        dest="file_solution",
     )
 
     # parse and call
@@ -186,18 +221,30 @@ def main_plotter():
     """
 
     # get the parser
-    parser = argparse.ArgumentParser(description="Plot the solution of a FFT-PEEC problem.")
-    parser.add_argument(
-        "--solution", help="solution file (input / pickle)",
-        required=True, dest="file_solution"
+    parser = argparse.ArgumentParser(
+        prog="ppplotter",
+        description="Plot the solution of a FFT-PEEC problem.",
+        epilog="(c) Thomas Guillod, Dartmouth College",
     )
     parser.add_argument(
-        "--plotter", help="plotter file (input / JSON)",
-        required=True, dest="file_plotter"
+        "--solution",
+        metavar="file",
+        help="solution file (input / pickle)",
+        required=True,
+        dest="file_solution",
     )
     parser.add_argument(
-        "--silent", help="if set, do not display the plots",
-        action="store_false", dest="is_blocking"
+        "--plotter",
+        metavar="file",
+        help="plotter file (input / JSON)",
+        required=True,
+        dest="file_plotter",
+    )
+    parser.add_argument(
+        "--silent",
+        help="if set, do not display the plots",
+        action="store_false",
+        dest="is_blocking",
     )
 
     # parse and call

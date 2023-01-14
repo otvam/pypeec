@@ -24,7 +24,7 @@ if __name__ == "__main__":
     file_solution = os.path.join(PATH_ROOT, "data_solution", EXAMPLE_NAME + ".pck")
 
     # create folder
-    examples_utils.create_folder(file_solutionq)
+    examples_utils.create_folder(file_solution)
 
     # run
     exit_code = script.run_solver(file_voxel, file_problem, file_solution)
