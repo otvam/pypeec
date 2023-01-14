@@ -12,50 +12,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
 import numpy.linalg as lna
-import pyvista as pv
-
-
-def _get_plot_base(pl, grid, geom, plot_title, plot_options):
-    """
-    Plot the geometry as wireframe (complete grid and non-empty voxels).
-    Add the axis descriptor to orientate the geometry.
-    Add a plot title.
-    """
-
-    # plot the complete grid
-    if plot_options["grid_plot"]:
-        pl.add_mesh(
-            grid,
-            style="wireframe",
-            color=plot_options["grid_color"],
-            opacity=plot_options["grid_opacity"],
-            line_width=plot_options["grid_thickness"]
-        )
-
-    # plot the non-empty voxels
-    if plot_options["geom_plot"]:
-        pl.add_mesh(
-            geom,
-            style="wireframe",
-            color=plot_options["geom_color"],
-            opacity=plot_options["geom_opacity"],
-            line_width=plot_options["geom_thickness"]
-        )
-
-    # add a marker at the origin
-    if plot_options["origin_plot"]:
-        # get the marker size
-        origin_size = plot_options["origin_size"]
-        d = np.min(grid.spacing)
-        r = d*origin_size
-
-        # add the marker
-        origin = pv.Sphere(r, (0, 0, 0))
-        pl.add_mesh(origin, color=plot_options["origin_color"])
-
-    # add title and axes
-    pl.add_axes(line_width=2)
-    pl.add_text(plot_title, font_size=10)
+from PyPEEC.lib_shared import plot_geometry
 
 
 def _get_filter_vector(geom, vec, arrow_threshold):
@@ -75,7 +32,7 @@ def _get_filter_vector(geom, vec, arrow_threshold):
     nrm = lna.norm(data, axis=1)
 
     # threshold for arrow removal
-    thr = np.max(nrm)*arrow_threshold
+    thr = max(nrm)*arrow_threshold
     idx = nrm > thr
 
     # filter out the arrows that are too small
@@ -190,7 +147,7 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_base(pl, grid, geom, plot_title, plot_options)
+    plot_geometry.get_plot_geometry(pl, grid, geom, plot_title, plot_options)
 
 
 def plot_scalar(pl, grid, geom, plot_options, data_options):
@@ -235,7 +192,7 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
         )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_base(pl, grid, geom, plot_title, plot_options)
+    plot_geometry.get_plot_geometry(pl, grid, geom, plot_title, plot_options)
 
 
 def plot_arrow(pl, grid, geom, plot_options, data_options):
@@ -277,7 +234,7 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     geom_var = _get_clamp_scale_scalar(geom_var, var, color_lim, scale)
 
     # get arrow size
-    factor = np.min(grid.spacing)*arrow_scale
+    factor = min(grid.spacing)*arrow_scale
 
     # add the resulting plot to the plotter
     if geom_var.n_cells > 0:
@@ -289,4 +246,4 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
         )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_base(pl, grid, geom, plot_title, plot_options)
+    plot_geometry.get_plot_geometry(pl, grid, geom, plot_title, plot_options)

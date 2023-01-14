@@ -10,7 +10,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_plotter import manage_voxel
 from PyPEEC.lib_plotter import manage_plot
-from PyPEEC.lib_shared import check_data_plotter
+from PyPEEC.lib_check import check_data_viewer_plotter
 from PyPEEC.lib_utils import vistagui
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
@@ -93,7 +93,7 @@ def run(data_voxel, data_plotter, is_blocking):
         # check the input data
         logger.info("check the input data")
         # check the data type
-        check_data_plotter.check_data_plotter(data_plotter)
+        check_data_viewer_plotter.check_data_plotter(data_plotter)
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")

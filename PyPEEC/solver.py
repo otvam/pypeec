@@ -16,9 +16,7 @@ from PyPEEC.lib_solver import resistance_inductance
 from PyPEEC.lib_solver import equation_system
 from PyPEEC.lib_solver import equation_solver
 from PyPEEC.lib_solver import extract_solution
-from PyPEEC.lib_shared import check_data_problem
-from PyPEEC.lib_shared import check_data_solver
-from PyPEEC.lib_shared import check_data_voxel
+from PyPEEC.lib_check import check_data_problem, check_data_voxel, check_data_solver
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 

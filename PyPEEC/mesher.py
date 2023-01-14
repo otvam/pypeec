@@ -17,8 +17,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 from PyPEEC.lib_mesher import png_mesher
 from PyPEEC.lib_mesher import stl_mesher
 from PyPEEC.lib_mesher import voxel_resample
-from PyPEEC.lib_shared import check_data_mesher
-from PyPEEC.lib_shared import check_data_voxel
+from PyPEEC.lib_check import check_data_voxel, check_data_mesher
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 

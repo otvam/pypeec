@@ -186,3 +186,25 @@ def check_data_plotter(data_plotter):
     # check items
     for dat_tmp in data_plotter:
         _check_data_plotter_item(dat_tmp)
+
+def check_data_viewer(data_viewer):
+    """
+    Check the validity of the dict describing a 3D voxel structure plot.
+    """
+
+    # check type
+    if not isinstance(data_viewer, dict):
+        raise CheckError("data_viewer: the plot description should be a dict")
+
+    # extract field
+    plot_title = data_viewer["plot_title"]
+    data_window = data_viewer["data_window"]
+    plot_options = data_viewer["plot_options"]
+
+    # check type
+    if not isinstance(plot_title, str):
+        raise CheckError("plot_title: plot title should be a string")
+
+    # check data
+    _check_data_window(data_window)
+    _check_plot_options(plot_options)

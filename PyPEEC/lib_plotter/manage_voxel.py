@@ -9,6 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 import numpy.linalg as lna
 import pyvista as pv
+from PyPEEC.lib_shared import plot_geometry
 
 
 def get_grid_geom(n, d, idx_v):
@@ -18,17 +19,8 @@ def get_grid_geom(n, d, idx_v):
     The non-empty voxel geometry is represented with a PyVista unstructured grid.
     """
 
-    # extract the voxel data
-    (nx, ny, nz) = n
-    (dx, dy, dz) = d
-
-    # create a uniform grid for the complete structure
-    grid = pv.UniformGrid()
-
-    # set the array size and the voxel size
-    grid.dimensions = (nx+1, ny+1, nz+1)
-    grid.spacing = (dx, dy, dz)
-    grid.origin = (0, 0, 0)
+    # get the regular grid
+    grid = plot_geometry.get_grid(n, d)
 
     # sort idx
     idx_v = np.sort(idx_v)

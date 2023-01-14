@@ -7,34 +7,17 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-import pyvista as pv
+from PyPEEC.lib_shared import plot_geometry
 
 
-def get_grid(n, d):
-    """
-    Construct a PyVista uniform grid for the complete voxel structure.
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    (dx, dy, dz) = d
-
-    # create a uniform grid for the complete structure
-    grid = pv.UniformGrid()
-
-    # set the array size and the voxel size
-    grid.dimensions = (nx+1, ny+1, nz+1)
-    grid.spacing = (dx, dy, dz)
-    grid.origin = (0, 0, 0)
-
-    return grid
-
-
-def get_geom(grid, domain_def):
+def get_grid_geom(n, d, domain_def):
     """
     Construct a PyVista unstructured grid for the non-empty voxel.
     Add the domain tags to the grid as a fake scalar field.
     """
+
+    # get the regular grid
+    grid = plot_geometry.get_grid(n, d)
 
     # init
     idx_domain = np.array([], dtype=np.int64)
@@ -62,4 +45,4 @@ def get_geom(grid, domain_def):
     # assign the colord
     geom["domain"] = color_domain
 
-    return geom
+    return grid, geom

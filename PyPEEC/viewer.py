@@ -10,8 +10,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_viewer import manage_voxel
 from PyPEEC.lib_viewer import manage_plot
-from PyPEEC.lib_shared import check_data_viewer
-from PyPEEC.lib_shared import check_data_voxel
+from PyPEEC.lib_check import check_data_voxel, check_data_viewer_plotter
 from PyPEEC.lib_utils import vistagui
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
@@ -32,11 +31,8 @@ def _get_grid_voxel(data_voxel):
     d = data_voxel["d"]
     domain_def = data_voxel["domain_def"]
 
-    # convert the voxel geometry into a PyVista uniform grid
-    grid = manage_voxel.get_grid(n, d)
-
-    # convert the voxel geometry into a PyVista unstructured grid
-    geom = manage_voxel.get_geom(grid, domain_def)
+    # convert the voxel geometry into PyVista grids
+    (grid, geom) = manage_voxel.get_grid_geom(n, d, domain_def)
 
     return grid, geom
 
@@ -54,9 +50,8 @@ def _get_plot(grid, geom, data_viewer, is_blocking):
     # get the plotter (with the Qt framework)
     pl = vistagui.open_plotter(data_window, is_blocking)
 
-    # find the plot type and call the corresponding function
-    manage_plot.get_plot_domain(pl, geom)
-    manage_plot.get_plot_base(pl, grid, geom, plot_title, plot_options)
+    # make the plot
+    manage_plot.get_plot_viewer(pl, grid, geom, plot_title, plot_options)
 
     # close plotter is non blocking
     vistagui.close_plotter(pl, is_blocking)
@@ -75,7 +70,7 @@ def run(data_voxel, data_viewer, is_blocking):
         # check the input data
         logger.info("check the input data")
         check_data_voxel.check_data_voxel(data_voxel)
-        check_data_viewer.check_data_viewer(data_viewer)
+        check_data_viewer_plotter.check_data_viewer(data_viewer)
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")
