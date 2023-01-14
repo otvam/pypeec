@@ -77,5 +77,5 @@ class TestMesherViewer(unittest.TestCase):
         self._test_mesher_viewer("voxel_transformer")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

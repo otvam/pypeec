@@ -1,3 +1,8 @@
+# Script for defining the dependencies.
+#
+# Thomas Guillod
+# (c) 2023 - Dartmouth College
+
 # standard numpy and scipy
 numpy~=1.24.1 # used by the mesher, viewer, solver, and plotter
 scipy~=1.9.3 # used by the solver

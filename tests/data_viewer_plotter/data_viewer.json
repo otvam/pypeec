@@ -1,10 +1,5 @@
 {
-    "window_title": "Viewer",
     "plot_title": "Viewer",
-    "window_size": [
-        800,
-        600
-    ],
     "plot_options": {
         "grid_plot": true,
         "grid_thickness": 1.0,
@@ -17,5 +12,13 @@
         "origin_plot": true,
         "origin_size": 0.1,
         "origin_color": "red"
+    },
+    "data_window": {
+        "title": "Viewer",
+        "show_menu": false,
+        "size": [
+            800,
+            600
+        ]
     }
 }

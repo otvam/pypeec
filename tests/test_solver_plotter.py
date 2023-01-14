@@ -64,5 +64,5 @@ class TestSolverPlotter(unittest.TestCase):
         self._test_solver_plotter("voxel_transformer")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

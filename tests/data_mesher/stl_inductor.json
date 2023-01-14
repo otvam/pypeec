@@ -5,9 +5,9 @@
         "pts_min": [null, null, null],
         "pts_max": [null, null, null],
         "domain_stl": {
-            "coil": "tests/data_mesher/stl_inductor/coil.stl",
-            "src": "tests/data_mesher/stl_inductor/src.stl",
-            "sink": "tests/data_mesher/stl_inductor/sink.stl"
+            "coil": "examples/data_mesher/stl_inductor/coil.stl",
+            "src": "examples/data_mesher/stl_inductor/src.stl",
+            "sink": "examples/data_mesher/stl_inductor/sink.stl"
         },
         "domain_conflict": [
             {
