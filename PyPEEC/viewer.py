@@ -10,7 +10,8 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_viewer import manage_voxel
 from PyPEEC.lib_viewer import manage_plot
-from PyPEEC.lib_check import check_data_voxel, check_data_viewer_plotter
+from PyPEEC.lib_check import check_data_voxel
+from PyPEEC.lib_check import check_data_visualization
 from PyPEEC.lib_utils import vistagui
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
@@ -53,7 +54,7 @@ def _get_plot(grid, geom, data_viewer, is_blocking):
     # make the plot
     manage_plot.get_plot_viewer(pl, grid, geom, plot_title, plot_options)
 
-    # close plotter is non blocking
+    # close plotter if non-blocking
     vistagui.close_plotter(pl, is_blocking)
 
 
@@ -70,7 +71,7 @@ def run(data_voxel, data_viewer, is_blocking):
         # check the input data
         logger.info("check the input data")
         check_data_voxel.check_data_voxel(data_voxel)
-        check_data_viewer_plotter.check_data_viewer(data_viewer)
+        check_data_visualization.check_data_viewer(data_viewer)
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")

@@ -34,7 +34,7 @@ class TestSolverPlotter(unittest.TestCase):
         # get input file name
         file_voxel = os.path.join(path_root, "data_voxel", name + ".pck")
         file_problem = os.path.join(path_root, "data_problem", name + ".json")
-        file_plotter = os.path.join(path_root, "data_viewer_plotter", "data_plotter.json")
+        file_plotter = os.path.join(path_root, "data_visualization", "data_plotter.json")
 
         # create the temporary output file
         with tempfile.NamedTemporaryFile(suffix='.pck') as fid_solution:

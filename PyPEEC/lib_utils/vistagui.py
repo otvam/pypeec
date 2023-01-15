@@ -44,7 +44,7 @@ def close_plotter(pl, is_blocking):
     Close a PyVista plotter (only if the call is non-blocking).
     """
 
-    # close plotter is non blocking
+    # close plotter if non-blocking
     if not is_blocking:
         pl.close()
 

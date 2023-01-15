@@ -24,8 +24,8 @@ function copy_folder {
 
 #######################################################################
 echo "copy the viewer and plotter configuration files"
-copy_file "data_viewer_plotter" "data_viewer.json"
-copy_file "data_viewer_plotter" "data_plotter.json"
+copy_file "examples_visualization" "data_viewer.json"
+copy_file "examples_visualization" "data_plotter.json"
 
 #######################################################################
 echo "copy the mesher files"

@@ -9,7 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import os
 import sys
 from PyPEEC import script
-from examples import examples_viewer_plotter
+from examples import examples_visualization
 from examples import examples_utils
 from examples import examples_config
 
@@ -21,10 +21,10 @@ EXAMPLE_NAME = examples_config.EXAMPLE_NAME
 if __name__ == "__main__":
     # get the filename
     file_voxel = os.path.join(PATH_ROOT, "data_voxel", EXAMPLE_NAME + ".pck")
-    file_viewer = os.path.join(PATH_ROOT, "data_viewer_plotter", "data_viewer.json")
+    file_viewer = os.path.join(PATH_ROOT, "data_visualization", "data_viewer.json")
 
     # get viewer data
-    data_viewer = examples_viewer_plotter.get_data_viewer()
+    data_viewer = examples_visualization.get_data_viewer()
 
     # create folder and file
     examples_utils.create_folder(file_viewer)

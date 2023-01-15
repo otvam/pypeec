@@ -187,6 +187,7 @@ def check_data_plotter(data_plotter):
     for dat_tmp in data_plotter:
         _check_data_plotter_item(dat_tmp)
 
+
 def check_data_viewer(data_viewer):
     """
     Check the validity of the dict describing a 3D voxel structure plot.

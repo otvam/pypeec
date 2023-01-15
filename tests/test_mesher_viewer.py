@@ -33,7 +33,7 @@ class TestMesherViewer(unittest.TestCase):
 
         # get input file name
         file_mesher = os.path.join(path_root, "data_mesher", name + ".json")
-        file_viewer = os.path.join(path_root, "data_viewer_plotter", "data_viewer.json")
+        file_viewer = os.path.join(path_root, "data_visualization", "data_viewer.json")
 
         # create the temporary output file
         with tempfile.NamedTemporaryFile(suffix='.pck') as fid_voxel:

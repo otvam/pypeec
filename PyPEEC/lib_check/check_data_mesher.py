@@ -244,30 +244,6 @@ def check_data_voxelize_stl(data_voxelize):
     _check_stl_domain_name(domain_stl, domain_conflict)
 
 
-def get_domain_stl_path(domain_stl, path_ref):
-    """
-    Update the filename of the STL files with respect to the provided path.
-    """
-
-    # init new domain description
-    domain_stl_path = []
-
-    # check value
-    for tag, filename in domain_stl.items():
-        # check file
-        filename = path_ref + "/" + filename
-        try:
-            fid = open(filename, "rb")
-            fid.close()
-        except FileNotFoundError:
-            raise CheckError("filename: file does not exist: %s" % filename)
-
-        # add the new item
-        domain_stl_path[tag] = filename
-
-        return domain_stl_path
-
-
 def check_data_resampling(data_resampling):
     """
     Check the resampling data.
@@ -299,6 +275,30 @@ def check_data_resampling(data_resampling):
         raise CheckError("n_resampling: number of resampling cannot be smaller than one")
 
 
+def get_domain_stl_path(domain_stl, path_ref):
+    """
+    Update the filename of the STL files with respect to the provided path.
+    """
+
+    # init new domain description
+    domain_stl_path = []
+
+    # check value
+    for tag, filename in domain_stl.items():
+        # check file
+        filename = path_ref + "/" + filename
+        try:
+            fid = open(filename, "rb")
+            fid.close()
+        except FileNotFoundError:
+            raise CheckError("filename: file does not exist: %s" % filename)
+
+        # add the new item
+        domain_stl_path[tag] = filename
+
+    return domain_stl_path
+
+
 def get_layer_stack_path(layer_stack, path_ref):
     """
     Update the filename of the PNG images with respect to the provided path.
@@ -324,4 +324,4 @@ def get_layer_stack_path(layer_stack, path_ref):
         # add the new item
         layer_stack_path.append({"n_add": n_add, "filename": filename})
 
-        return layer_stack_path
+    return layer_stack_path
