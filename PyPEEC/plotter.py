@@ -8,8 +8,8 @@ The plotting is done with PyVista with the Qt framework.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-from PyPEEC.lib_plotter import manage_voxel
-from PyPEEC.lib_plotter import manage_plot
+from PyPEEC.lib_visualization import manage_voxel
+from PyPEEC.lib_visualization import manage_plot
 from PyPEEC.lib_check import check_data_visualization
 from PyPEEC.lib_utils import vistagui
 from PyPEEC.lib_utils import timelogger
@@ -37,7 +37,8 @@ def _get_grid_voxel(data_solution):
     J_v = data_solution["J_v"]
 
     # convert the voxel geometry into PyVista grids
-    (grid, geom) = manage_voxel.get_grid_geom(n, d, idx_v)
+    grid = manage_voxel.get_grid(n, d)
+    geom = manage_voxel.get_geom_plotter(grid, idx_v)
 
     # add the problem solution to the grid
     geom = manage_voxel.get_material(geom, idx_v, idx_src_c, idx_src_v)

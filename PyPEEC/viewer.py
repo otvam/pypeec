@@ -8,8 +8,8 @@ The plotting is done with PyVista with the Qt framework.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-from PyPEEC.lib_viewer import manage_voxel
-from PyPEEC.lib_viewer import manage_plot
+from PyPEEC.lib_visualization import manage_voxel
+from PyPEEC.lib_visualization import manage_plot
 from PyPEEC.lib_check import check_data_voxel
 from PyPEEC.lib_check import check_data_visualization
 from PyPEEC.lib_utils import vistagui
@@ -33,7 +33,8 @@ def _get_grid_voxel(data_voxel):
     domain_def = data_voxel["domain_def"]
 
     # convert the voxel geometry into PyVista grids
-    (grid, geom) = manage_voxel.get_grid_geom(n, d, domain_def)
+    grid = manage_voxel.get_grid(n, d)
+    geom = manage_voxel.get_geom_viewer(grid, domain_def)
 
     return grid, geom
 

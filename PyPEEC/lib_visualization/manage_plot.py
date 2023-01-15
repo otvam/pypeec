@@ -1,7 +1,9 @@
 """
-Different functions for plotting the solution with PyVista.
+Different functions for plotting voxel structures with PyVista.
 
-The following plots are available:
+For the viewer, the geometry and the domains are plotted.
+
+For the plotter, the following plots are available:
     - material description (conductors, voltage sources, and current sources)
     - scalar plots (resistivity, potential, and current density)
     - arrow plots (current density)
@@ -11,8 +13,51 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
+import pyvista as pv
 import numpy.linalg as lna
-from PyPEEC.lib_shared import plot_geometry
+
+
+def _get_plot_geometry(pl, grid, geom, plot_title, plot_options):
+    """
+    Plot the geometry as wireframe (complete grid and non-empty voxels).
+    Add the axis descriptor to orientate the geometry.
+    Add a plot title.
+    """
+
+    # plot the complete grid
+    if plot_options["grid_plot"]:
+        pl.add_mesh(
+            grid,
+            style="wireframe",
+            color=plot_options["grid_color"],
+            opacity=plot_options["grid_opacity"],
+            line_width=plot_options["grid_thickness"]
+        )
+
+    # plot the non-empty voxels
+    if plot_options["geom_plot"]:
+        pl.add_mesh(
+            geom,
+            style="wireframe",
+            color=plot_options["geom_color"],
+            opacity=plot_options["geom_opacity"],
+            line_width=plot_options["geom_thickness"]
+        )
+
+    # add a marker at the origin
+    if plot_options["origin_plot"]:
+        # get the marker size
+        origin_size = plot_options["origin_size"]
+        d = min(grid.spacing)
+        r = d*origin_size
+
+        # add the marker
+        origin = pv.Sphere(r, (0, 0, 0))
+        pl.add_mesh(origin, color=plot_options["origin_color"])
+
+    # add title and axes
+    pl.add_axes(line_width=2)
+    pl.add_text(plot_title, font_size=10)
 
 
 def _get_filter_vector(geom, vec, arrow_threshold):
@@ -147,7 +192,7 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background (wireframe, axis, and title)
-    plot_geometry.get_plot_geometry(pl, grid, geom, plot_title, plot_options)
+    _get_plot_geometry(pl, grid, geom, plot_title, plot_options)
 
 
 def plot_scalar(pl, grid, geom, plot_options, data_options):
@@ -192,7 +237,7 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
         )
 
     # add the plot background (wireframe, axis, and title)
-    plot_geometry.get_plot_geometry(pl, grid, geom, plot_title, plot_options)
+    _get_plot_geometry(pl, grid, geom, plot_title, plot_options)
 
 
 def plot_arrow(pl, grid, geom, plot_options, data_options):
@@ -246,4 +291,25 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
         )
 
     # add the plot background (wireframe, axis, and title)
-    plot_geometry.get_plot_geometry(pl, grid, geom, plot_title, plot_options)
+    _get_plot_geometry(pl, grid, geom, plot_title, plot_options)
+
+
+def get_plot_viewer(pl, grid, geom, plot_title, plot_options):
+    """
+    Plot the different domains composing the voxel structure.
+    The variable is plotted on the faces of the voxels.
+    """
+
+    # copy to avoid a mess with scaling
+    geom = geom.copy(deep=True)
+
+    # add the resulting plot to the plotter
+    pl.add_mesh(
+        geom,
+        show_scalar_bar=False,
+        scalars="domain",
+        cmap="Accent",
+    )
+
+    # add the plot background (wireframe, axis, and title)
+    _get_plot_geometry(pl, grid, geom, plot_title, plot_options)

@@ -1,6 +1,12 @@
 """
 Different functions for extracting PyVista grids from the voxel structure.
-Add the solution (material description, resistivity, potential, and current density) to the PyVista grids.
+
+For the viewer, add the domain definition to the grid.
+For the plotter, add the solution to the grid:
+    - material description (conductors and sources)
+    - resistivity
+    - potential
+    - current density)
 """
 
 __author__ = "Thomas Guillod"
@@ -9,18 +15,69 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 import numpy.linalg as lna
 import pyvista as pv
-from PyPEEC.lib_shared import plot_geometry
 
 
-def get_grid_geom(n, d, idx_v):
+def get_grid(n, d):
+    """
+    Construct a PyVista uniform grid for the complete voxel structure.
+    """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    (dx, dy, dz) = d
+
+    # create a uniform grid for the complete structure
+    grid = pv.UniformGrid()
+
+    # set the array size and the voxel size
+    grid.dimensions = (nx+1, ny+1, nz+1)
+    grid.spacing = (dx, dy, dz)
+    grid.origin = (0, 0, 0)
+
+    return grid
+
+
+def get_geom_viewer(grid, domain_def):
+    """
+    Construct a PyVista unstructured grid for the non-empty voxel.
+    Add the domain tags to the grid as a fake scalar field.
+    """
+
+    # init
+    idx_domain = np.array([], dtype=np.int64)
+    color_domain = np.array([], dtype=np.int64)
+
+    # get the indices and colord
+    counter = 0
+    for tag, idx in domain_def.items():
+        # assign the color (n different integer for each domain)
+        color = np.full(len(idx), counter, dtype=np.int64)
+
+        # append the indices and colors
+        idx_domain = np.append(idx_domain, idx)
+        color_domain = np.append(color_domain, color)
+        counter += 1
+
+    # sort idx
+    idx_sort = np.argsort(idx_domain)
+    idx_domain = idx_domain[idx_sort]
+    color_domain = color_domain[idx_sort]
+
+    # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
+    geom = grid.extract_cells(idx_domain)
+
+    # assign the colord
+    geom["domain"] = color_domain
+
+    return geom
+
+
+def get_geom_plotter(grid, idx_v):
     """
     Construct PyVista grids from the voxel structure.
     The complete voxel geometry is represented with a PyVista uniform grid.
     The non-empty voxel geometry is represented with a PyVista unstructured grid.
     """
-
-    # get the regular grid
-    grid = plot_geometry.get_grid(n, d)
 
     # sort idx
     idx_v = np.sort(idx_v)
@@ -28,7 +85,7 @@ def get_grid_geom(n, d, idx_v):
     # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
     geom = grid.extract_cells(idx_v)
 
-    return grid, geom
+    return geom
 
 
 def get_material(geom, idx_v, idx_src_c, idx_src_v):
