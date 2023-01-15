@@ -12,4 +12,4 @@ import os
 PATH_ROOT = os.path.dirname(__file__)
 
 # name of the considered example
-EXAMPLE_NAME = "png_inductor"
+EXAMPLE_NAME = "stl_inductor"

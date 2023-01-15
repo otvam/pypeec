@@ -117,7 +117,7 @@ def _check_stl_domain_conflict(domain_conflict):
             raise CheckError("domain_fix: domain name should be a string")
 
 
-def _check_stl_domain_name(domain_conflict, domain_list):
+def _check_stl_domain_name(domain_stl, domain_conflict):
     """
     Check the consistency of the domain names.
     """
@@ -128,9 +128,9 @@ def _check_stl_domain_name(domain_conflict, domain_list):
         domain_fix = dat_tmp["domain_fix"]
 
         # check value
-        if domain_ref not in domain_list:
+        if domain_ref not in domain_stl:
             raise CheckError("domain_ref: domain name should be a valid domain name")
-        if domain_fix not in domain_list:
+        if domain_fix not in domain_stl:
             raise CheckError("domain_fix: domain name should be a valid domain name")
 
 
@@ -281,7 +281,7 @@ def get_domain_stl_path(domain_stl, path_ref):
     """
 
     # init new domain description
-    domain_stl_path = []
+    domain_stl_path = dict()
 
     # check value
     for tag, filename in domain_stl.items():
