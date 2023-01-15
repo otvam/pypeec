@@ -9,7 +9,7 @@ import numpy as np
 from PyPEEC.lib_utils.error import CheckError
 
 
-def _check_domain_color(domain_color):
+def _check_png_domain_color(domain_color):
     """
     Check that the mapping between the pixel colors and the domains is valid (PNG mesher).
     """
@@ -33,7 +33,7 @@ def _check_domain_color(domain_color):
             raise CheckError("color: color array should be composed of integers")
 
 
-def _check_layer_stack(layer_stack):
+def _check_png_layer_stack(layer_stack):
     """
     Check the validity of the image layer stack (PNG mesher).
     """
@@ -58,15 +58,8 @@ def _check_layer_stack(layer_stack):
         if not (n_add >= 1):
             raise CheckError("n_add: number of layers cannot be smaller than one")
 
-        # check file
-        try:
-            fid = open(filename, "rb")
-            fid.close()
-        except FileNotFoundError:
-            raise CheckError("filename: file does not exist: %s" % filename)
 
-
-def _check_pts(pts):
+def _check_stl_pts(pts):
     """
     Check that the points defining the voxel structure bounds are valid (STL mesher).
     """
@@ -80,7 +73,7 @@ def _check_pts(pts):
         raise CheckError("pts: the coordinates of a point should be composed of real floats")
 
 
-def _check_domain_stl_conflict(domain_stl, domain_conflict):
+def _check_stl_domain_stl(domain_stl):
     """
     Check the validity of the domain definition (STL mesher).
     Check the validity of the rules to solve conflict between domains (STL mesher).
@@ -89,8 +82,6 @@ def _check_domain_stl_conflict(domain_stl, domain_conflict):
     # check type
     if not isinstance(domain_stl, dict):
         raise CheckError("domain_stl: domain definition should be a dict")
-    if not isinstance(domain_conflict, list):
-        raise CheckError("domain_conflict: domain conflict should be a list")
 
     # check value
     for tag, filename in domain_stl.items():
@@ -102,12 +93,16 @@ def _check_domain_stl_conflict(domain_stl, domain_conflict):
         if not isinstance(filename, str):
             raise CheckError("filename: filename should be a string")
 
-        # check file
-        try:
-            fid = open(filename, "rb")
-            fid.close()
-        except FileNotFoundError:
-            raise CheckError("filename: file does not exist: %s" % filename)
+
+def _check_stl_domain_conflict(domain_conflict):
+    """
+    Check the validity of the domain definition (STL mesher).
+    Check the validity of the rules to solve conflict between domains (STL mesher).
+    """
+
+    # check type
+    if not isinstance(domain_conflict, list):
+        raise CheckError("domain_conflict: domain conflict should be a list")
 
     # check value
     for dat_tmp in domain_conflict:
@@ -121,10 +116,21 @@ def _check_domain_stl_conflict(domain_stl, domain_conflict):
         if not isinstance(domain_fix, str):
             raise CheckError("domain_fix: domain name should be a string")
 
+
+def _check_stl_domain_name(domain_conflict, domain_list):
+    """
+    Check the consistency of the domain names.
+    """
+
+    for dat_tmp in domain_conflict:
+        # extract data
+        domain_ref = dat_tmp["domain_ref"]
+        domain_fix = dat_tmp["domain_fix"]
+
         # check value
-        if domain_ref not in domain_stl:
+        if domain_ref not in domain_list:
             raise CheckError("domain_ref: domain name should be a valid domain name")
-        if domain_fix not in domain_fix:
+        if domain_fix not in domain_list:
             raise CheckError("domain_fix: domain name should be a valid domain name")
 
 
@@ -196,8 +202,8 @@ def check_data_voxelize_png(data_voxelize):
         raise CheckError("ny: of voxel in y direction cannot be smaller than one")
 
     # check domains and layers
-    _check_domain_color(domain_color)
-    _check_layer_stack(layer_stack)
+    _check_png_domain_color(domain_color)
+    _check_png_layer_stack(layer_stack)
 
 
 def check_data_voxelize_stl(data_voxelize):
@@ -229,11 +235,37 @@ def check_data_voxelize_stl(data_voxelize):
         raise CheckError("n: number of voxels cannot be smaller than one")
 
     # check the points
-    _check_pts(pts_min)
-    _check_pts(pts_max)
+    _check_stl_pts(pts_min)
+    _check_stl_pts(pts_max)
 
     # check the stl file
-    _check_domain_stl_conflict(domain_stl, domain_conflict)
+    _check_stl_domain_stl(domain_stl)
+    _check_stl_domain_conflict(domain_conflict)
+    _check_stl_domain_name(domain_stl, domain_conflict)
+
+
+def get_domain_stl_path(domain_stl, path_ref):
+    """
+    Update the filename of the STL files with respect to the provided path.
+    """
+
+    # init new domain description
+    domain_stl_path = []
+
+    # check value
+    for tag, filename in domain_stl.items():
+        # check file
+        filename = path_ref + "/" + filename
+        try:
+            fid = open(filename, "rb")
+            fid.close()
+        except FileNotFoundError:
+            raise CheckError("filename: file does not exist: %s" % filename)
+
+        # add the new item
+        domain_stl_path[tag] = filename
+
+        return domain_stl_path
 
 
 def check_data_resampling(data_resampling):
@@ -265,3 +297,31 @@ def check_data_resampling(data_resampling):
     # check value
     if not all((x >= 1) for x in n_resampling):
         raise CheckError("n_resampling: number of resampling cannot be smaller than one")
+
+
+def get_layer_stack_path(layer_stack, path_ref):
+    """
+    Update the filename of the PNG images with respect to the provided path.
+    """
+
+    # init new layer stack
+    layer_stack_path = []
+
+    # update value
+    for dat_tmp in layer_stack:
+        # get the data
+        n_add = dat_tmp["n_add"]
+        filename = dat_tmp["filename"]
+
+        # check file
+        filename = path_ref + "/" + filename
+        try:
+            fid = open(filename, "rb")
+            fid.close()
+        except FileNotFoundError:
+            raise CheckError("filename: file does not exist: %s" % filename)
+
+        # add the new item
+        layer_stack_path.append({"n_add": n_add, "filename": filename})
+
+        return layer_stack_path

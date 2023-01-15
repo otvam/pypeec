@@ -54,7 +54,7 @@ def _run_check(data_mesher):
         return mesh_type, data_voxelize, data_resampling
 
 
-def _run_png(data_voxelize):
+def _run_png(data_voxelize, path_ref):
     """
     Generate a 3D voxel structure from 2D PNG images.
     """
@@ -68,6 +68,7 @@ def _run_png(data_voxelize):
 
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "png_mesher"):
+        layer_stack = check_data_mesher.get_layer_stack_path(layer_stack, path_ref)
         (n, domain_def) = png_mesher.get_mesh(nx, ny, domain_color, layer_stack)
 
     # assemble the data
@@ -80,7 +81,7 @@ def _run_png(data_voxelize):
     return data_voxel
 
 
-def _run_stl(data_voxelize):
+def _run_stl(data_voxelize, path_ref):
     """
     Generate a 3D voxel structure from 3D STL files.
     """
@@ -94,6 +95,7 @@ def _run_stl(data_voxelize):
 
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
+        domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
         (d, domain_def) = stl_mesher.get_mesh(n, pts_min, pts_max, domain_stl)
         domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
 
@@ -158,7 +160,7 @@ def _run_disp(data_voxel):
         logger.info("domain / %s = %d" % (tag, len(idx)))
 
 
-def run(data_mesher):
+def run(data_mesher, path_ref):
     """
     Main script for creating a voxel structure.
     Handle invalid data with exceptions.
@@ -174,9 +176,9 @@ def run(data_mesher):
 
         # run the mesher
         if mesh_type == "png":
-            data_voxel = _run_png(data_voxelize)
+            data_voxel = _run_png(data_voxelize, path_ref)
         elif mesh_type == "stl":
-            data_voxel = _run_stl(data_voxelize)
+            data_voxel = _run_stl(data_voxelize, path_ref)
         elif mesh_type == "voxel":
             data_voxel = data_voxelize
         else:

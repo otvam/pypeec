@@ -5,6 +5,7 @@ Contain the program entry points.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
 import sys
 import argparse
 from PyPEEC import mesher
@@ -28,8 +29,13 @@ def run_mesher(file_mesher, file_voxel):
         # load mesher file
         data_mesher = fileio.load_json(file_mesher)
 
+        # get the path for relative file loading
+        path_ref = os.path.dirname(file_mesher)
+        path_cwd = os.getcwd()
+        path_ref = os.path.relpath(path_ref, path_cwd)
+
         # call solver
-        (status, data_voxel) = mesher.run(data_mesher)
+        (status, data_voxel) = mesher.run(data_mesher, path_ref)
 
         # save results
         fileio.write_pickle(status, file_voxel, data_voxel)
