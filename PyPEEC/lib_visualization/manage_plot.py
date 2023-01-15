@@ -63,7 +63,7 @@ def _get_plot_geometry(pl, grid, geom, plot_title, plot_options):
 def _get_filter_vector(geom, vec, arrow_threshold):
     """
     Filter the voxel structure with a vector field.
-    This function is used to remove arrow with extremely low lengths.
+    This function is used to remove arrows with extremely low lengths.
     """
 
     # if the voxel structure is empty, nothing to do
@@ -88,7 +88,7 @@ def _get_filter_vector(geom, vec, arrow_threshold):
 
 def _get_filter_scalar(geom, var, filter_lim):
     """
-    Filter the voxel structure with provided variable limits.
+    Filter the voxel structure with provided limits with respect to a scalar variable.
     """
 
     # if the voxel structure is empty, nothing to do
@@ -116,8 +116,8 @@ def _get_filter_scalar(geom, var, filter_lim):
 
 def _get_clamp_scale_scalar(geom, var, color_lim, scale):
     """
-    Clamp the variable between a lower and upper bound.
-    Afterwards, scale a variable.
+    Clamp a scalar variable between a lower and upper bound.
+    Afterwards, the clamped variable is scaled.
     """
 
     # if the voxel structure is empty, nothing to do
@@ -243,7 +243,7 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
 def plot_arrow(pl, grid, geom, plot_options, data_options):
     """
     Plot a vector variable (current density) with an arrow plot (quiver plot).
-    A scalar variable is used to determine the length and color of the arrows.
+    A scalar variable is used to determine the color of the arrows.
     The arrows are located at the center of the voxels.
     """
 

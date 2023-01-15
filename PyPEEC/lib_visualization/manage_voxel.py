@@ -1,8 +1,9 @@
 """
 Different functions for extracting PyVista grids from the voxel structure.
 
-For the viewer, add the domain definition to the grid.
-For the plotter, add the solution to the grid:
+For the viewer, create the grid and add the domain definition
+
+For the plotter, create the grid and add the solution:
     - material description (conductors and sources)
     - resistivity
     - potential
@@ -39,7 +40,7 @@ def get_grid(n, d):
 
 def get_geom_viewer(grid, domain_def):
     """
-    Construct a PyVista unstructured grid for the non-empty voxel.
+    Construct a PyVista unstructured grid for the non-empty voxels.
     Add the domain tags to the grid as a fake scalar field.
     """
 
@@ -74,9 +75,8 @@ def get_geom_viewer(grid, domain_def):
 
 def get_geom_plotter(grid, idx_v):
     """
-    Construct PyVista grids from the voxel structure.
-    The complete voxel geometry is represented with a PyVista uniform grid.
-    The non-empty voxel geometry is represented with a PyVista unstructured grid.
+    Construct a PyVista unstructured grid for the non-empty voxels.
+    The indices of the non-empty vocels are provided.
     """
 
     # sort idx
@@ -90,7 +90,7 @@ def get_geom_plotter(grid, idx_v):
 
 def get_material(geom, idx_v, idx_src_c, idx_src_v):
     """
-    Extract and add to the geometry the material description.
+    Add the material description (scalar field, input variable) to the unstructured grid.
     The following encoding is used:
         - 0: conducting voxels
         - 1: current source voxels
@@ -120,7 +120,7 @@ def get_material(geom, idx_v, idx_src_c, idx_src_v):
 
 def get_resistivity(geom, idx_v, rho_v):
     """
-    Extract and add to the geometry the resistivity.
+    Add the resistivity (scalar field, input variable) to the unstructured grid.
     """
 
     # sort idx
@@ -135,8 +135,7 @@ def get_resistivity(geom, idx_v, rho_v):
 
 def get_potential(geom, idx_v, V_v):
     """
-    Extract and add to the geometry the potential (solved variable).
-    Assign the real part, the imaginary part, and the absolute value.
+    Add the potential (scalar field, solved variable) to the unstructured grid.
     """
 
     # sort idx
@@ -153,9 +152,8 @@ def get_potential(geom, idx_v, V_v):
 
 def get_current_density(geom, idx_v, J_v):
     """
-    Extract and add to the geometry the current density (solved variable).
-    Assign the real part and the imaginary part for the current density vector.
-    Assign the real part, the imaginary part, and the absolute value for the current density norm.
+    Add the potential (scalar and vector fields, current density) to the unstructured grid.
+    The norm (scalar field) and the direction (vector field) are added.
     """
 
     # sort idx

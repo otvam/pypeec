@@ -1,11 +1,77 @@
 """
-Module for checking the plotter data.
+Module for checking the viewer and plotter data.
 """
 
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_utils.error import CheckError
+
+
+def _check_data_window(data_window):
+    """
+    Check the plot window options (window title, window size, and type).
+    """
+
+    # get the data
+    title = data_window["title"]
+    show_menu = data_window["show_menu"]
+    size = data_window["size"]
+
+    # check type
+    if not isinstance(title, str):
+        raise CheckError("title: window title should be a string")
+    if not isinstance(show_menu, bool):
+        raise CheckError("show_menu: menu toggle switch should be a boolean")
+
+    # check size
+    if not len(size) == 2:
+        raise CheckError("size: invalid window size (should be a list with two elements)")
+
+    # check value
+    if not all(isinstance(x, int) for x in size):
+        raise CheckError("size: window_size: window size should be composed of integers")
+    if not all((x >= 1) for x in size):
+        raise CheckError("size: window_size: window size should be greater than zero")
+
+
+def _check_plot_options(plot_options):
+    """
+    Check the validity of the plot options.
+    The plot options are controlling the wireframes and the origin marker.
+    """
+
+    # check type
+    if not isinstance(plot_options, dict):
+        raise CheckError("plot_options: plot options should be a dict")
+
+    # check grid options (plot of the complete grid as wireframes)
+    if not isinstance(plot_options["grid_plot"], bool):
+        raise CheckError("grid_plot: the grid plot option should be a boolean")
+    if not isinstance(plot_options["grid_thickness"], float):
+        raise CheckError("grid_thickness: the grid thickness option should be a float")
+    if not isinstance(plot_options["grid_color"], str):
+        raise CheckError("grid_color: the grid color option should be a string")
+    if not isinstance(plot_options["grid_opacity"], float):
+        raise CheckError("grid_opacity: the grid opacity option should be a float")
+
+    # check geom options (plot of the non-empty voxels as wireframe)
+    if not isinstance(plot_options["geom_plot"], bool):
+        raise CheckError("geom_plot: the geom plot option should be a boolean")
+    if not isinstance(plot_options["geom_thickness"], float):
+        raise CheckError("geom_thickness: the geom thickness option should be a float")
+    if not isinstance(plot_options["geom_color"], str):
+        raise CheckError("geom_color: the geom color option should be a string")
+    if not isinstance(plot_options["geom_opacity"], float):
+        raise CheckError("geom_opacity: the geom opacity option should be a float")
+
+    # check origin options (add a marker at the origin)
+    if not isinstance(plot_options["origin_plot"], bool):
+        raise CheckError("origin_plot: the origin plot option should be a boolean")
+    if not isinstance(plot_options["origin_size"], float):
+        raise CheckError("origin_size: the origin size option should be a float")
+    if not isinstance(plot_options["origin_color"], str):
+        raise CheckError("origin_color: the origin color option should be a string")
 
 
 def _check_data_options(plot_type, data_options):
@@ -79,72 +145,6 @@ def _check_data_options(plot_type, data_options):
             raise CheckError("arrow_threshold: the arrow removal threshold should be greater than zero")
 
 
-def _check_plot_options(plot_options):
-    """
-    Check the validity of the plot options.
-    The plot options are controlling the wireframes and the origin marker.
-    """
-
-    # check type
-    if not isinstance(plot_options, dict):
-        raise CheckError("plot_options: plot options should be a dict")
-
-    # check grid options (plot of the complete grid as wireframes)
-    if not isinstance(plot_options["grid_plot"], bool):
-        raise CheckError("grid_plot: the grid plot option should be a boolean")
-    if not isinstance(plot_options["grid_thickness"], float):
-        raise CheckError("grid_thickness: the grid thickness option should be a float")
-    if not isinstance(plot_options["grid_color"], str):
-        raise CheckError("grid_color: the grid color option should be a string")
-    if not isinstance(plot_options["grid_opacity"], float):
-        raise CheckError("grid_opacity: the grid opacity option should be a float")
-
-    # check geom options (plot of the non-empty voxels as wireframe)
-    if not isinstance(plot_options["geom_plot"], bool):
-        raise CheckError("geom_plot: the geom plot option should be a boolean")
-    if not isinstance(plot_options["geom_thickness"], float):
-        raise CheckError("geom_thickness: the geom thickness option should be a float")
-    if not isinstance(plot_options["geom_color"], str):
-        raise CheckError("geom_color: the geom color option should be a string")
-    if not isinstance(plot_options["geom_opacity"], float):
-        raise CheckError("geom_opacity: the geom opacity option should be a float")
-
-    # check origin options (add a marker at the origin)
-    if not isinstance(plot_options["origin_plot"], bool):
-        raise CheckError("origin_plot: the origin plot option should be a boolean")
-    if not isinstance(plot_options["origin_size"], float):
-        raise CheckError("origin_size: the origin size option should be a float")
-    if not isinstance(plot_options["origin_color"], str):
-        raise CheckError("origin_color: the origin color option should be a string")
-
-
-def _check_data_window(data_window):
-    """
-    Check the plot window options (window title, window size, and type).
-    """
-
-    # get the data
-    title = data_window["title"]
-    show_menu = data_window["show_menu"]
-    size = data_window["size"]
-
-    # check type
-    if not isinstance(title, str):
-        raise CheckError("title: window title should be a string")
-    if not isinstance(show_menu, bool):
-        raise CheckError("show_menu: menu toggle switch should be a boolean")
-
-    # check size
-    if not len(size) == 2:
-        raise CheckError("size: invalid window size (should be a list with two elements)")
-
-    # check value
-    if not all(isinstance(x, int) for x in size):
-        raise CheckError("size: window_size: window size should be composed of integers")
-    if not all((x >= 1) for x in size):
-        raise CheckError("size: window_size: window size should be greater than zero")
-
-
 def _check_data_plotter_item(data_plotter):
     """
     Check the validity of the dict describing a single plot.
@@ -177,6 +177,7 @@ def _check_data_plotter_item(data_plotter):
 def check_data_plotter(data_plotter):
     """
     Check the type of the data defining several plots.
+    This function is used for the plotter.
     """
 
     # check type
@@ -191,6 +192,7 @@ def check_data_plotter(data_plotter):
 def check_data_viewer(data_viewer):
     """
     Check the validity of the dict describing a 3D voxel structure plot.
+    This function is used for the viewer.
     """
 
     # check type
