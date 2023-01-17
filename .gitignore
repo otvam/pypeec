@@ -10,6 +10,7 @@ PyPEEC/version.py
 
 # exclude virtual env
 venv/*
+cenv/*
 
 # exclude PyCharm project
 .idea/*
