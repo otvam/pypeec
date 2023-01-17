@@ -16,6 +16,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 import numpy.linalg as lna
 import pyvista as pv
+from PyPEEC.lib_utils.error import RunError
 
 
 def get_grid(n, d, ori):
@@ -74,10 +75,10 @@ def get_geom_viewer(grid, domain_def):
     return geom
 
 
-def get_cloud_viewer(geom, point_def):
+def get_cloud_viewer(geom, data_point):
     """
     Construct a PyVista point cloud with the defined points.
-    Add the point tags to the grid as a fake scalar field.
+    Add the point tags to the cloud as a fake scalar field.
     """
 
     # init
@@ -86,7 +87,7 @@ def get_cloud_viewer(geom, point_def):
 
     # get the indices and colors
     counter = 0
-    for tag, coord in point_def.items():
+    for tag, coord in data_point.items():
         # add the array
         coord = np.array(coord, dtype=np.float64)
 
@@ -100,6 +101,12 @@ def get_cloud_viewer(geom, point_def):
 
     # create the point cloud
     cloud = pv.PolyData(coord_point)
+
+    # check that the points are not inside the grid
+    selection = cloud.select_enclosed_points(geom.extract_surface())
+    mask = selection['SelectedPoints'].view(bool)
+    if np.any(mask):
+        raise RunError("invalid points: points should not be located inside the non-empty voxels.")
 
     # assign the colors
     cloud["tag"] = color_point

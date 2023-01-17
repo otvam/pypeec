@@ -8,7 +8,11 @@
         "geom_plot": true,
         "geom_thickness": 1.0,
         "geom_color": "black",
-        "geom_opacity": 0.5
+        "geom_opacity": 0.5,
+        "cloud_plot": true,
+        "cloud_color": "black",
+        "cloud_size": 10.0,
+        "cloud_opacity": 0.5
     },
     "data_window": {
         "title": "Viewer",

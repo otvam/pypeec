@@ -16,7 +16,7 @@ import numpy as np
 import numpy.linalg as lna
 
 
-def _get_plot_geometry(pl, grid, geom, plot_title, plot_options):
+def _get_plot_geometry(pl, grid, geom, cloud, plot_title, plot_options):
     """
     Plot the geometry as wireframe (complete grid and non-empty voxels).
     Add the axis descriptor to orientate the geometry.
@@ -24,7 +24,7 @@ def _get_plot_geometry(pl, grid, geom, plot_title, plot_options):
     """
 
     # plot the complete grid
-    if plot_options["grid_plot"]:
+    if plot_options["grid_plot"] and (grid.n_cells > 0):
         pl.add_mesh(
             grid,
             style="wireframe",
@@ -34,13 +34,22 @@ def _get_plot_geometry(pl, grid, geom, plot_title, plot_options):
         )
 
     # plot the non-empty voxels
-    if plot_options["geom_plot"]:
+    if plot_options["geom_plot"] and (geom.n_cells > 0):
         pl.add_mesh(
             geom,
             style="wireframe",
             color=plot_options["geom_color"],
             opacity=plot_options["geom_opacity"],
             line_width=plot_options["geom_thickness"]
+        )
+
+    if plot_options["cloud_plot"] and (cloud.n_cells > 0):
+        pl.add_mesh(
+            cloud,
+            color=plot_options["cloud_color"],
+            point_size=plot_options["cloud_size"],
+            opacity=plot_options["cloud_opacity"],
+            render_points_as_spheres=True,
         )
 
     # add title and axes
@@ -290,6 +299,8 @@ def get_plot_viewer(pl, grid, geom, cloud, plot_title, plot_options):
 
     # copy to avoid a mess with scaling
     geom = geom.copy(deep=True)
+    grid = grid.copy(deep=True)
+    cloud = cloud.copy(deep=True)
 
     # add the resulting plot to the plotter
     pl.add_mesh(
@@ -298,14 +309,6 @@ def get_plot_viewer(pl, grid, geom, cloud, plot_title, plot_options):
         scalars="tag",
         cmap="Accent",
     )
-    if cloud.n_cells > 0:
-        pl.add_mesh(
-            cloud,
-            point_size=5,
-            show_scalar_bar=False,
-            scalars="tag",
-            cmap="Accent",
-        )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_geometry(pl, grid, geom, plot_title, plot_options)
+    _get_plot_geometry(pl, grid, geom, cloud, plot_title, plot_options)

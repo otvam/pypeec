@@ -65,6 +65,16 @@ def _check_plot_options(plot_options):
     if not isinstance(plot_options["geom_opacity"], float):
         raise CheckError("geom_opacity: the geom opacity option should be a float")
 
+    # check cloud options (plot of the cloud points)
+    if not isinstance(plot_options["cloud_plot"], bool):
+        raise CheckError("cloud_plot: the cloud plot option should be a boolean")
+    if not isinstance(plot_options["cloud_size"], float):
+        raise CheckError("cloud_size: the cloud size option should be a float")
+    if not isinstance(plot_options["cloud_color"], str):
+        raise CheckError("cloud_color: the cloud color option should be a string")
+    if not isinstance(plot_options["cloud_opacity"], float):
+        raise CheckError("cloud_opacity: the cloud opacity option should be a float")
+
 
 def _check_data_options(plot_type, data_options):
     """

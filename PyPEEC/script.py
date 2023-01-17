@@ -46,7 +46,7 @@ def run_mesher(file_mesher, file_voxel):
     return status
 
 
-def run_viewer(file_voxel, file_viewer, is_blocking):
+def run_viewer(file_voxel, file_point, file_viewer, is_blocking):
     """
     Load the voxel structure and plot the results.
     """
@@ -56,10 +56,13 @@ def run_viewer(file_voxel, file_viewer, is_blocking):
         data_voxel = fileio.load_pickle(file_voxel)
 
         # load viewer file
+        data_point = fileio.load_json(file_point)
+
+        # load viewer file
         data_viewer = fileio.load_json(file_viewer)
 
         # call lib_plotter
-        status = viewer.run(data_voxel, data_viewer, is_blocking)
+        status = viewer.run(data_voxel, data_point, data_viewer, is_blocking)
     except FileError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -163,6 +166,13 @@ def main_viewer():
         dest="file_voxel",
     )
     parser.add_argument(
+        "--point",
+        metavar="file",
+        help="point file (input / JSON)",
+        required=True,
+        dest="file_point",
+    )
+    parser.add_argument(
         "--viewer",
         metavar="file",
         help="viewer file (input / JSON)",
@@ -178,7 +188,7 @@ def main_viewer():
 
     # parse and call
     args = parser.parse_args()
-    status = run_viewer(args.file_voxel, args.file_viewer, args.is_blocking)
+    status = run_viewer(args.file_voxel, args.file_point, args.file_viewer, args.is_blocking)
     sys.exit(int(not status))
 
 

@@ -21,6 +21,7 @@ EXAMPLE_NAME = examples_config.EXAMPLE_NAME
 if __name__ == "__main__":
     # get the filename
     file_voxel = os.path.join(PATH_ROOT, "data_voxel", EXAMPLE_NAME + ".pck")
+    file_point = os.path.join(PATH_ROOT, "data_point", EXAMPLE_NAME + ".json")
     file_viewer = os.path.join(PATH_ROOT, "data_visualization", "data_viewer.json")
 
     # get viewer data
@@ -31,5 +32,5 @@ if __name__ == "__main__":
     examples_utils.write_json(file_viewer, data_viewer)
 
     # run viewer
-    status = script.run_viewer(file_voxel, file_viewer, True)
+    status = script.run_viewer(file_voxel, file_point, file_viewer, True)
     sys.exit(int(not status))

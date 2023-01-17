@@ -31,7 +31,7 @@ def _check_domain_def(n, domain_def):
     for tag, idx in domain_def.items():
         # check tag
         if not isinstance(tag, str):
-            raise CheckError("tag: conductor name should be a string")
+            raise CheckError("tag: domain name should be a string")
 
         # cast indices
         idx = np.array(idx)
@@ -42,7 +42,7 @@ def _check_domain_def(n, domain_def):
 
         # check for indices range
         if not (np.all(idx >= 0) and np.all(idx < n)):
-            raise CheckError("idx: conductor indices should belong to the voxel structure")
+            raise CheckError("idx: domain indices should belong to the voxel structure")
 
         # append
         idx_domain = np.append(idx_domain, idx)

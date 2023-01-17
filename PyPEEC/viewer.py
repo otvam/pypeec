@@ -11,6 +11,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 from PyPEEC.lib_visualization import manage_voxel
 from PyPEEC.lib_visualization import manage_plot
 from PyPEEC.lib_check import check_data_voxel
+from PyPEEC.lib_check import check_data_point
 from PyPEEC.lib_check import check_data_visualization
 from PyPEEC.lib_utils import vistagui
 from PyPEEC.lib_utils import timelogger
@@ -20,7 +21,7 @@ from PyPEEC.lib_utils.error import CheckError, RunError
 logger = timelogger.get_logger("viewer")
 
 
-def _get_grid_voxel(data_voxel):
+def _get_grid_voxel(data_voxel, data_point):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -32,12 +33,11 @@ def _get_grid_voxel(data_voxel):
     d = data_voxel["d"]
     ori = data_voxel["ori"]
     domain_def = data_voxel["domain_def"]
-    point_def = data_voxel["point_def"]
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, ori)
     geom = manage_voxel.get_geom_viewer(grid, domain_def)
-    cloud = manage_voxel.get_cloud_viewer(grid, point_def)
+    cloud = manage_voxel.get_cloud_viewer(geom, data_point)
 
     return grid, geom, cloud
 
@@ -62,7 +62,7 @@ def _get_plot(grid, geom, cloud, data_viewer, is_blocking):
     vistagui.close_plotter(pl, is_blocking)
 
 
-def run(data_voxel, data_viewer, is_blocking):
+def run(data_voxel, data_point, data_viewer, is_blocking):
     """
     Main script for visualizing a 3D voxel structure.
     """
@@ -75,6 +75,7 @@ def run(data_voxel, data_viewer, is_blocking):
         # check the input data
         logger.info("check the input data")
         check_data_voxel.check_data_voxel(data_voxel)
+        check_data_point.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
 
         # create the Qt app (should be at the beginning)
@@ -83,7 +84,7 @@ def run(data_voxel, data_viewer, is_blocking):
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
-        (grid, geom, cloud) = _get_grid_voxel(data_voxel)
+        (grid, geom, cloud) = _get_grid_voxel(data_voxel, data_point)
 
         # make the plots
         logger.info("generate the plot")

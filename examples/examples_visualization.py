@@ -22,6 +22,10 @@ def _get_plot_options():
         "geom_thickness": 1.0,
         "geom_color": "black",
         "geom_opacity": 0.5,
+        "cloud_plot": True,
+        "cloud_color": "black",
+        "cloud_size": 10.0,
+        "cloud_opacity": 0.5,
     }
 
     return plot_options
