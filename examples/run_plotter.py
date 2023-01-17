@@ -21,6 +21,7 @@ EXAMPLE_NAME = examples_config.EXAMPLE_NAME
 if __name__ == "__main__":
     # get the filename
     file_solution = os.path.join(PATH_ROOT, "data_solution", EXAMPLE_NAME + ".pck")
+    file_point = os.path.join(PATH_ROOT, "data_point", EXAMPLE_NAME + ".json")
     file_plotter = os.path.join(PATH_ROOT, "data_visualization", "data_plotter.json")
 
     # get viewer data
@@ -31,5 +32,5 @@ if __name__ == "__main__":
     examples_utils.write_json(file_plotter, data_plotter)
 
     # run
-    status = script.run_plotter(file_solution, file_plotter, True)
+    status = script.run_plotter(file_solution, file_point, file_plotter, True)
     sys.exit(int(not status))

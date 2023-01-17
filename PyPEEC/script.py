@@ -94,7 +94,7 @@ def run_solver(file_voxel, file_problem, file_solution):
     return status
 
 
-def run_plotter(file_solution, file_plotter, is_blocking):
+def run_plotter(file_solution, file_point, file_plotter, is_blocking):
     """
     Load the solver solution and plot the results.
     """
@@ -103,11 +103,14 @@ def run_plotter(file_solution, file_plotter, is_blocking):
         # load res file
         data_solution = fileio.load_pickle(file_solution)
 
+        # load viewer file
+        data_point = fileio.load_json(file_point)
+
         # load plotter file
         data_plotter = fileio.load_json(file_plotter)
 
         # call plotter
-        status = plotter.run(data_solution, data_plotter, is_blocking)
+        status = plotter.run(data_solution, data_point, data_plotter, is_blocking)
     except FileError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -250,6 +253,13 @@ def main_plotter():
         dest="file_solution",
     )
     parser.add_argument(
+        "--point",
+        metavar="file",
+        help="point file (input / JSON)",
+        required=True,
+        dest="file_point",
+    )
+    parser.add_argument(
         "--plotter",
         metavar="file",
         help="plotter file (input / JSON)",
@@ -265,5 +275,5 @@ def main_plotter():
 
     # parse and call
     args = parser.parse_args()
-    status = run_plotter(args.file_solution, args.file_plotter, args.is_blocking)
+    status = run_plotter(args.file_solution, args.file_point, args.file_plotter, args.is_blocking)
     sys.exit(int(not status))

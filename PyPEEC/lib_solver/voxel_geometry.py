@@ -10,7 +10,7 @@ import numpy as np
 import scipy.sparse as sps
 
 
-def get_voxel_coordinate(n, d):
+def get_voxel_coordinate(n, d, ori):
     """
     Get the coordinate of the different voxels.
     The first voxel center is at the specified origin coordinate.
@@ -20,6 +20,7 @@ def get_voxel_coordinate(n, d):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
+    (orix, oriy, oriz) = ori
 
     # voxel index array
     idx_x = np.arange(nx, dtype=np.int64)
@@ -28,9 +29,9 @@ def get_voxel_coordinate(n, d):
     (idx_x, idx_y, idx_z) = np.meshgrid(idx_x, idx_y, idx_z, indexing="ij")
 
     # voxel coordinate vector
-    x = dx/2+dx*np.arange(nx, dtype=np.float64)
-    y = dy/2+dy*np.arange(ny, dtype=np.float64)
-    z = dz/2+dz*np.arange(nz, dtype=np.float64)
+    x = orix+dx/2+dx*np.arange(nx, dtype=np.float64)
+    y = oriy+dy/2+dy*np.arange(ny, dtype=np.float64)
+    z = oriz+dz/2+dz*np.arange(nz, dtype=np.float64)
 
     # assemble the coordinate array
     x = x[idx_x].flatten(order="F")

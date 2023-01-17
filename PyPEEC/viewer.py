@@ -34,10 +34,16 @@ def _get_grid_voxel(data_voxel, data_point):
     ori = data_voxel["ori"]
     domain_def = data_voxel["domain_def"]
 
+    # get the indices of the non-empty voxels
+    (idx_v, dom_v) = manage_voxel.get_viewer_domain(domain_def)
+
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, ori)
-    geom = manage_voxel.get_geom_viewer(grid, domain_def)
-    cloud = manage_voxel.get_cloud_viewer(geom, data_point)
+    geom = manage_voxel.get_geom(grid, idx_v)
+    cloud = manage_voxel.get_cloud(geom, data_point)
+
+    # add the domain tag to the geometry
+    geom = manage_voxel.get_viewer_tag(geom, idx_v, dom_v)
 
     return grid, geom, cloud
 

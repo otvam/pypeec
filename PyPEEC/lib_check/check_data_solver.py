@@ -129,6 +129,7 @@ def get_data_solver(data_voxel, data_problem):
     # extract field
     n = data_voxel["n"]
     d = data_voxel["d"]
+    ori = data_voxel["ori"]
     domain_def = data_voxel["domain_def"]
 
     # get conductor indices
@@ -142,6 +143,7 @@ def get_data_solver(data_voxel, data_problem):
     data_solver = {
         "n": n,
         "d": d,
+        "ori": ori,
         "n_green": n_green,
         "freq": freq,
         "solver_options": solver_options,

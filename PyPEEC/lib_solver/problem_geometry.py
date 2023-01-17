@@ -29,7 +29,7 @@ def get_conductor_geometry(conductor_idx):
         rho = dat_tmp["rho"]
 
         # append (all voxels in a group have the same resistivities)
-        idx_v = np.append(idx_v, np.array(idx))
+        idx_v = np.append(idx_v, idx)
         rho_v = np.append(rho_v, np.full(len(idx), rho))
 
     return idx_v, rho_v
@@ -59,7 +59,7 @@ def get_source_current_geometry(source_idx):
             G = dat_tmp["G"]
 
             # append the local current sources
-            idx_src_c = np.append(idx_src_c, np.array(idx))
+            idx_src_c = np.append(idx_src_c, idx)
             I_src_c = np.append(I_src_c, np.full(len(idx), I/len(idx)))
             G_src_c = np.append(G_src_c, np.full(len(idx), G/len(idx)))
 
@@ -90,7 +90,7 @@ def get_source_voltage_geometry(source_idx):
             R = dat_tmp["R"]
 
             # append the local voltage sources
-            idx_src_v = np.append(idx_src_v, np.array(idx))
+            idx_src_v = np.append(idx_src_v, idx)
             V_src_v = np.append(V_src_v, np.full(len(idx), V))
             R_src_v = np.append(R_src_v, np.full(len(idx), R*len(idx)))
 

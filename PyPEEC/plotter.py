@@ -10,6 +10,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_visualization import manage_voxel
 from PyPEEC.lib_visualization import manage_plot
+from PyPEEC.lib_check import check_data_point
 from PyPEEC.lib_check import check_data_visualization
 from PyPEEC.lib_utils import vistagui
 from PyPEEC.lib_utils import timelogger
@@ -19,7 +20,7 @@ from PyPEEC.lib_utils.error import CheckError, RunError
 logger = timelogger.get_logger("plotter")
 
 
-def _get_grid_voxel(data_solution):
+def _get_grid_voxel(data_solution, data_point):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -29,6 +30,7 @@ def _get_grid_voxel(data_solution):
     # extract the data
     n = data_solution["n"]
     d = data_solution["d"]
+    ori = data_solution["ori"]
     idx_v = data_solution["idx_v"]
     idx_src_c = data_solution["idx_src_c"]
     idx_src_v = data_solution["idx_src_v"]
@@ -37,19 +39,20 @@ def _get_grid_voxel(data_solution):
     J_v = data_solution["J_v"]
 
     # convert the voxel geometry into PyVista grids
-    grid = manage_voxel.get_grid(n, d)
-    geom = manage_voxel.get_geom_plotter(grid, idx_v)
+    grid = manage_voxel.get_grid(n, d, ori)
+    geom = manage_voxel.get_geom(grid, idx_v)
+    cloud = manage_voxel.get_cloud(geom, data_point)
 
     # add the problem solution to the grid
-    geom = manage_voxel.get_material(geom, idx_v, idx_src_c, idx_src_v)
-    geom = manage_voxel.get_resistivity(geom, idx_v, rho_v)
-    geom = manage_voxel.get_potential(geom, idx_v, V_v)
-    geom = manage_voxel.get_current_density(geom, idx_v, J_v)
+    geom = manage_voxel.get_plotter_tag(geom, idx_v, idx_src_c, idx_src_v)
+    geom = manage_voxel.get_plotter_resistivity(geom, idx_v, rho_v)
+    geom = manage_voxel.get_plotter_potential(geom, idx_v, V_v)
+    geom = manage_voxel.get_plotter_current_density(geom, idx_v, J_v)
 
-    return grid, geom
+    return grid, geom, cloud
 
 
-def _get_plot(grid, geom, data_plotter, is_blocking):
+def _get_plot(grid, geom, cloud, data_plotter, is_blocking):
     """
     Make a plot with the specified user settings.
     The plot contains the following elements:
@@ -69,11 +72,11 @@ def _get_plot(grid, geom, data_plotter, is_blocking):
 
     # find the plot type and call the corresponding function
     if plot_type == "material":
-        manage_plot.plot_material(pl, grid, geom, plot_options, data_options)
+        manage_plot.plot_material(pl, grid, geom, cloud, plot_options, data_options)
     elif plot_type == "scalar":
-        manage_plot.plot_scalar(pl, grid, geom, plot_options, data_options)
+        manage_plot.plot_scalar(pl, grid, geom, cloud, plot_options, data_options)
     elif plot_type == "arrow":
-        manage_plot.plot_arrow(pl, grid, geom, plot_options, data_options)
+        manage_plot.plot_arrow(pl, grid, geom, cloud, plot_options, data_options)
     else:
         raise CheckError("invalid plot type")
 
@@ -81,7 +84,7 @@ def _get_plot(grid, geom, data_plotter, is_blocking):
     vistagui.close_plotter(pl, is_blocking)
 
 
-def run(data_voxel, data_plotter, is_blocking):
+def run(data_solution, data_point, data_plotter, is_blocking):
     """
     Main script for plotting the solution of a FFT-PEEC problem.
     """
@@ -94,6 +97,7 @@ def run(data_voxel, data_plotter, is_blocking):
         # check the input data
         logger.info("check the input data")
         # check the data type
+        check_data_point.check_data_point(data_point)
         check_data_visualization.check_data_plotter(data_plotter)
 
         # create the Qt app (should be at the beginning)
@@ -102,13 +106,13 @@ def run(data_voxel, data_plotter, is_blocking):
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
-        (grid, geom) = _get_grid_voxel(data_voxel)
+        (grid, geom, cloud) = _get_grid_voxel(data_solution, data_point)
 
         # make the plots
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_plotter):
             logger.info("plotting %d / %d" % (i + 1, len(data_plotter)))
-            _get_plot(grid, geom, dat_tmp, is_blocking)
+            _get_plot(grid, geom, cloud, dat_tmp, is_blocking)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False

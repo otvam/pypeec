@@ -144,7 +144,7 @@ def _get_clamp_scale_scalar(geom, var, color_lim, scale):
     return geom
 
 
-def plot_material(pl, grid, geom, plot_options, data_options):
+def plot_material(pl, grid, geom, cloud, plot_options, data_options):
     """
     Plot the material description (conductors, voltage sources, and current sources).
     The following encoding is used:
@@ -189,10 +189,10 @@ def plot_material(pl, grid, geom, plot_options, data_options):
     )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_geometry(pl, grid, geom, plot_title, plot_options)
+    _get_plot_geometry(pl, grid, geom, cloud, plot_title, plot_options)
 
 
-def plot_scalar(pl, grid, geom, plot_options, data_options):
+def plot_scalar(pl, grid, geom, cloud, plot_options, data_options):
     """
     Plot a scalar variable (resistivity, potential, or current density).
     The variable is plotted on the faces of the voxels.
@@ -234,10 +234,10 @@ def plot_scalar(pl, grid, geom, plot_options, data_options):
         )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_geometry(pl, grid, geom, plot_title, plot_options)
+    _get_plot_geometry(pl, grid, geom, cloud, plot_title, plot_options)
 
 
-def plot_arrow(pl, grid, geom, plot_options, data_options):
+def plot_arrow(pl, grid, geom, cloud, plot_options, data_options):
     """
     Plot a vector variable (current density) with an arrow plot (quiver plot).
     A scalar variable is used to determine the color of the arrows.
@@ -288,7 +288,7 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
         )
 
     # add the plot background (wireframe, axis, and title)
-    _get_plot_geometry(pl, grid, geom, plot_title, plot_options)
+    _get_plot_geometry(pl, grid, geom, cloud, plot_title, plot_options)
 
 
 def get_plot_viewer(pl, grid, geom, cloud, plot_title, plot_options):
