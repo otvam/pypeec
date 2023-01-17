@@ -26,7 +26,7 @@ Different examples are located in the `examples` folder:
 * **voxel_slab**: a simple slab conductor
 * **voxel_transformer**: a simple transformer
 
-The tests are located in the `tests` folder and can be run with `python -m unittest -v`.
+The tests are located in the `tests` folder and can be run with `run_tests.sh`.
 
 ## Gallery
 
@@ -45,11 +45,26 @@ PyPEEC is using the following packages:
 * scikit-umfpack (for the solver, optional)
 * pyFFTW (for the solver, optional)
 * pyvista and imageio (for the mesher)
-* pyvista, pyvistaqt, QtPy, PyQt5 (for the viewer and plotter)
+* matplotlib, pyvista, pyvistaqt, QtPy, PyQt5 (for the viewer and plotter)
 
 PyPEEC is tested on Linux x64 but should run on other platforms.
 
-The package can be built with `python -m build`.
+## Packaging and Environment
+
+* A Python package can be built from the (`pyproject.toml` and `setup.cfg`).
+* In order to create a Python Virtual Environment, use `requirements.txt`.
+* In order to create a Conda Environment, use `conda.yml`.
+
+## Credits
+
+The FFT-PEEC method has been first described and implemented in:
+* R. Torchio, IEEE TPEL, 10.1109/TPEL.2021.3092431
+* R. Torchio, https://github.com/UniPD-DII-ETCOMP/FFT-PEEC
+
+Other interesting papers about similar methods:
+* A.C Yucel, IEEE TMTT, 10.1109/TMTT.2017.2785842
+* P. Bettini, IOP, 10.1088/1361-6587/abce8f
+* N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864
 
 ## Author
 
