@@ -1,11 +1,13 @@
 [
     {
         "plot_type": "material",
+        "plot_geom": "material",
         "data_options": {
-            "plot_legend": "Material",
-            "plot_title": "Material"
+            "legend": "Material",
+            "opacity": 1.0
         },
         "plot_options": {
+            "title": "Material",
             "grid_plot": true,
             "grid_thickness": 1.0,
             "grid_color": "black",
@@ -16,7 +18,7 @@
             "geom_opacity": 0.5,
             "cloud_plot": true,
             "cloud_color": "black",
-            "cloud_size": 10.0,
+            "cloud_size": 5.0,
             "cloud_opacity": 0.5
         },
         "data_window": {
@@ -30,6 +32,7 @@
     },
     {
         "plot_type": "scalar",
+        "plot_geom": "voxel",
         "data_options": {
             "var": "rho",
             "scale": 100000000.0,
@@ -42,10 +45,12 @@
                 null,
                 null
             ],
-            "plot_legend": "Resistivity [uOhm/cm]",
-            "plot_title": "Resistivity"
+            "opacity": 1.0,
+            "size": 10.0,
+            "legend": "Resistivity [uOhm/cm]"
         },
         "plot_options": {
+            "title": "Resistivity",
             "grid_plot": true,
             "grid_thickness": 1.0,
             "grid_color": "black",
@@ -56,7 +61,7 @@
             "geom_opacity": 0.5,
             "cloud_plot": true,
             "cloud_color": "black",
-            "cloud_size": 10.0,
+            "cloud_size": 5.0,
             "cloud_opacity": 0.5
         },
         "data_window": {
@@ -70,6 +75,7 @@
     },
     {
         "plot_type": "scalar",
+        "plot_geom": "voxel",
         "data_options": {
             "var": "V_abs",
             "scale": 1.0,
@@ -82,10 +88,12 @@
                 null,
                 null
             ],
-            "plot_legend": "Potential [V]",
-            "plot_title": "Potential"
+            "opacity": 1.0,
+            "size": 10.0,
+            "legend": "Potential [V]"
         },
         "plot_options": {
+            "title": "Potential",
             "grid_plot": true,
             "grid_thickness": 1.0,
             "grid_color": "black",
@@ -96,7 +104,7 @@
             "geom_opacity": 0.5,
             "cloud_plot": true,
             "cloud_color": "black",
-            "cloud_size": 10.0,
+            "cloud_size": 5.0,
             "cloud_opacity": 0.5
         },
         "data_window": {
@@ -110,6 +118,7 @@
     },
     {
         "plot_type": "scalar",
+        "plot_geom": "voxel",
         "data_options": {
             "var": "J_norm_abs",
             "scale": 1e-06,
@@ -122,10 +131,12 @@
                 null,
                 null
             ],
-            "plot_legend": "Current Norm [A/mm2]",
-            "plot_title": "Current Norm"
+            "opacity": 1.0,
+            "size": 10.0,
+            "legend": "Current Norm [A/mm2]"
         },
         "plot_options": {
+            "title": "Current Norm",
             "grid_plot": true,
             "grid_thickness": 1.0,
             "grid_color": "black",
@@ -136,7 +147,7 @@
             "geom_opacity": 0.5,
             "cloud_plot": true,
             "cloud_color": "black",
-            "cloud_size": 10.0,
+            "cloud_size": 5.0,
             "cloud_opacity": 0.5
         },
         "data_window": {
@@ -150,6 +161,7 @@
     },
     {
         "plot_type": "arrow",
+        "plot_geom": "voxel",
         "data_options": {
             "var": "J_norm_re",
             "vec": "J_vec_re",
@@ -165,10 +177,10 @@
             ],
             "arrow_threshold": 0.001,
             "arrow_scale": 0.5,
-            "plot_legend": "Re. Current [A/mm2]",
-            "plot_title": "Re. Current"
+            "legend": "Re. Current [A/mm2]"
         },
         "plot_options": {
+            "title": "Re. Current",
             "grid_plot": true,
             "grid_thickness": 1.0,
             "grid_color": "black",
@@ -179,7 +191,7 @@
             "geom_opacity": 0.5,
             "cloud_plot": true,
             "cloud_color": "black",
-            "cloud_size": 10.0,
+            "cloud_size": 5.0,
             "cloud_opacity": 0.5
         },
         "data_window": {
@@ -193,6 +205,7 @@
     },
     {
         "plot_type": "arrow",
+        "plot_geom": "voxel",
         "data_options": {
             "var": "J_norm_im",
             "vec": "J_vec_im",
@@ -208,10 +221,10 @@
             ],
             "arrow_threshold": 0.001,
             "arrow_scale": 0.5,
-            "plot_legend": "Im. Current [A/mm2]",
-            "plot_title": "Im. Current"
+            "legend": "Im. Current [A/mm2]"
         },
         "plot_options": {
+            "title": "Im. Current",
             "grid_plot": true,
             "grid_thickness": 1.0,
             "grid_color": "black",
@@ -222,11 +235,142 @@
             "geom_opacity": 0.5,
             "cloud_plot": true,
             "cloud_color": "black",
-            "cloud_size": 10.0,
+            "cloud_size": 5.0,
             "cloud_opacity": 0.5
         },
         "data_window": {
             "title": "Im. Current",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
+        }
+    },
+    {
+        "plot_type": "scalar",
+        "plot_geom": "point",
+        "data_options": {
+            "var": "H_norm_abs",
+            "scale": 1.0,
+            "log": false,
+            "color_lim": [
+                null,
+                null
+            ],
+            "filter_lim": [
+                null,
+                null
+            ],
+            "opacity": 1.0,
+            "size": 10.0,
+            "legend": "Mag. Field Norm [A/m]"
+        },
+        "plot_options": {
+            "title": "Mag. Field Norm",
+            "grid_plot": true,
+            "grid_thickness": 1.0,
+            "grid_color": "black",
+            "grid_opacity": 0.1,
+            "geom_plot": true,
+            "geom_thickness": 1.0,
+            "geom_color": "black",
+            "geom_opacity": 0.5,
+            "cloud_plot": true,
+            "cloud_color": "black",
+            "cloud_size": 5.0,
+            "cloud_opacity": 0.5
+        },
+        "data_window": {
+            "title": "Mag. Field Norm",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
+        }
+    },
+    {
+        "plot_type": "arrow",
+        "plot_geom": "point",
+        "data_options": {
+            "var": "H_norm_re",
+            "vec": "H_vec_re",
+            "scale": 1.0,
+            "log": false,
+            "color_lim": [
+                null,
+                null
+            ],
+            "filter_lim": [
+                null,
+                null
+            ],
+            "arrow_threshold": 0.001,
+            "arrow_scale": 0.5,
+            "legend": "Re. Mag. Field [A/m]"
+        },
+        "plot_options": {
+            "title": "Re. Mag. Field",
+            "grid_plot": true,
+            "grid_thickness": 1.0,
+            "grid_color": "black",
+            "grid_opacity": 0.1,
+            "geom_plot": true,
+            "geom_thickness": 1.0,
+            "geom_color": "black",
+            "geom_opacity": 0.5,
+            "cloud_plot": true,
+            "cloud_color": "black",
+            "cloud_size": 5.0,
+            "cloud_opacity": 0.5
+        },
+        "data_window": {
+            "title": "Re. Mag. Field",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
+        }
+    },
+    {
+        "plot_type": "arrow",
+        "plot_geom": "point",
+        "data_options": {
+            "var": "H_norm_im",
+            "vec": "H_vec_im",
+            "scale": 1.0,
+            "log": false,
+            "color_lim": [
+                null,
+                null
+            ],
+            "filter_lim": [
+                null,
+                null
+            ],
+            "arrow_threshold": 0.001,
+            "arrow_scale": 0.5,
+            "legend": "Im. Mag. Field [A/m]"
+        },
+        "plot_options": {
+            "title": "Im. Mag. Field",
+            "grid_plot": true,
+            "grid_thickness": 1.0,
+            "grid_color": "black",
+            "grid_opacity": 0.1,
+            "geom_plot": true,
+            "geom_thickness": 1.0,
+            "geom_color": "black",
+            "geom_opacity": 0.5,
+            "cloud_plot": true,
+            "cloud_color": "black",
+            "cloud_size": 5.0,
+            "cloud_opacity": 0.5
+        },
+        "data_window": {
+            "title": "Im. Mag. Field",
             "show_menu": false,
             "size": [
                 800,

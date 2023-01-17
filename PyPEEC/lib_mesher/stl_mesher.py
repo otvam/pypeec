@@ -56,14 +56,14 @@ def get_voxelize(grid, mesh):
     mask = selection['SelectedPoints'].view(bool)
 
     # transform the grid into an unstructured grid (keeping the non-empty voxels)
-    geom = grid.extract_points(mask)
+    voxel = grid.extract_points(mask)
 
     # check for empty voxels
-    if geom.n_cells == 0:
+    if voxel.n_cells == 0:
         raise RunError("invalid mesh: empty voxel structure")
 
     # get the indices of the extracted voxels
-    idx = geom["idx"]
+    idx = voxel["idx"]
 
     return idx
 

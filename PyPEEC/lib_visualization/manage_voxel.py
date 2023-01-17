@@ -40,7 +40,7 @@ def get_grid(n, d, ori):
     return grid
 
 
-def get_geom(grid, idx_v):
+def get_voxel(grid, idx_v):
     """
     Construct a PyVista unstructured grid for the non-empty voxels.
     The indices of the non-empty vocels are provided.
@@ -50,33 +50,27 @@ def get_geom(grid, idx_v):
     idx_v = np.sort(idx_v)
 
     # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
-    geom = grid.extract_cells(idx_v)
+    voxel = grid.extract_cells(idx_v)
 
-    return geom
+    return voxel
 
 
-def get_cloud(geom, data_point):
+def get_point(voxel, data_point):
     """
     Construct a PyVista point cloud with the defined points.
     """
 
-    # init
-    coord_point = np.empty((0, 3), dtype=np.float64)
-
-    # get the coordinates
-    for tag, coord in data_point.items():
-        coord_point = np.concatenate((coord_point, coord), axis=0, dtype=np.float64)
-
     # create the point cloud
-    cloud = pv.PolyData(coord_point)
+    point = pv.PolyData(data_point)
 
     # check that the points are not inside the grid
-    selection = cloud.select_enclosed_points(geom.extract_surface())
+    surface = voxel.extract_surface()
+    selection = point.select_enclosed_points(surface)
     mask = selection['SelectedPoints'].view(bool)
     if np.any(mask):
         raise RunError("invalid points: points should not be located inside the non-empty voxels.")
 
-    return cloud
+    return point
 
 
 def get_viewer_domain(domain_def):
@@ -103,7 +97,7 @@ def get_viewer_domain(domain_def):
     return idx_v, dom_v
 
 
-def get_viewer_tag(geom, idx_v, dom_v):
+def get_viewer_tag(voxel, idx_v, dom_v):
     """
     Add the domain tags to the grid as a fake scalar field.
     """
@@ -113,12 +107,12 @@ def get_viewer_tag(geom, idx_v, dom_v):
     dom_v = dom_v[idx_sort]
 
     # assign the extract data to the geometry
-    geom["tag"] = dom_v
+    voxel["tag"] = dom_v
 
-    return geom
+    return voxel
 
 
-def get_plotter_tag(geom, idx_v, idx_src_c, idx_src_v):
+def get_plotter_tag(voxel, idx_v, idx_src_c, idx_src_v):
     """
     Add the material description (scalar field, input variable) to the unstructured grid.
     The following encoding is used:
@@ -143,12 +137,12 @@ def get_plotter_tag(geom, idx_v, idx_src_c, idx_src_v):
     data = data[idx_sort]
 
     # assign the extract data to the geometry
-    geom["material"] = data
+    voxel["material"] = data
 
-    return geom
+    return voxel
 
 
-def get_plotter_resistivity(geom, idx_v, rho_v):
+def get_plotter_resistivity(voxel, idx_v, rho_v):
     """
     Add the resistivity (scalar field, input variable) to the unstructured grid.
     """
@@ -158,12 +152,12 @@ def get_plotter_resistivity(geom, idx_v, rho_v):
     rho_v = rho_v[idx_s]
 
     # assign data
-    geom["rho"] = rho_v
+    voxel["rho"] = rho_v
 
-    return geom
+    return voxel
 
 
-def get_plotter_potential(geom, idx_v, V_v):
+def get_plotter_potential(voxel, idx_v, V_v):
     """
     Add the potential (scalar field, solved variable) to the unstructured grid.
     """
@@ -173,14 +167,14 @@ def get_plotter_potential(geom, idx_v, V_v):
     V_v = V_v[idx_s]
 
     # assign data
-    geom["V_re"] = np.real(V_v)
-    geom["V_im"] = np.imag(V_v)
-    geom["V_abs"] = np.abs(V_v)
+    voxel["V_re"] = np.real(V_v)
+    voxel["V_im"] = np.imag(V_v)
+    voxel["V_abs"] = np.abs(V_v)
 
-    return geom
+    return voxel
 
 
-def get_plotter_current_density(geom, idx_v, J_v):
+def get_plotter_current_density(voxel, idx_v, J_v):
     """
     Add the potential (scalar and vector fields, current density) to the unstructured grid.
     The norm (scalar field) and the direction (vector field) are added.
@@ -191,13 +185,13 @@ def get_plotter_current_density(geom, idx_v, J_v):
     J_v = J_v[idx_s, :]
 
     # compute the norm
-    geom["J_norm_abs"] = lna.norm(J_v, axis=1)
-    geom["J_norm_re"] = lna.norm(np.real(J_v), axis=1)
-    geom["J_norm_im"] = lna.norm(np.imag(J_v), axis=1)
+    voxel["J_norm_abs"] = lna.norm(J_v, axis=1)
+    voxel["J_norm_re"] = lna.norm(np.real(J_v), axis=1)
+    voxel["J_norm_im"] = lna.norm(np.imag(J_v), axis=1)
 
     # compute the direction, ignore division per zero
     with np.errstate(all="ignore"):
-        geom["J_vec_re"] = np.real(J_v)
-        geom["J_vec_im"] = np.imag(J_v)
+        voxel["J_vec_re"] = np.real(J_v)
+        voxel["J_vec_im"] = np.imag(J_v)
 
-    return geom
+    return voxel

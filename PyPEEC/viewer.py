@@ -39,22 +39,21 @@ def _get_grid_voxel(data_voxel, data_point):
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, ori)
-    geom = manage_voxel.get_geom(grid, idx_v)
-    cloud = manage_voxel.get_cloud(geom, data_point)
+    voxel = manage_voxel.get_voxel(grid, idx_v)
+    point = manage_voxel.get_point(voxel, data_point)
 
     # add the domain tag to the geometry
-    geom = manage_voxel.get_viewer_tag(geom, idx_v, dom_v)
+    voxel = manage_voxel.get_viewer_tag(voxel, idx_v, dom_v)
 
-    return grid, geom, cloud
+    return grid, voxel, point
 
 
-def _get_plot(grid, geom, cloud, data_viewer, is_blocking):
+def _get_plot(grid, voxel, point, data_viewer, is_blocking):
     """
     Make a plot with the voxel structure and the domains.
     """
 
     # extract the data
-    plot_title = data_viewer["plot_title"]
     data_window = data_viewer["data_window"]
     plot_options = data_viewer["plot_options"]
 
@@ -62,7 +61,10 @@ def _get_plot(grid, geom, cloud, data_viewer, is_blocking):
     pl = vistagui.open_plotter(data_window, is_blocking)
 
     # make the plot
-    manage_plot.get_plot_viewer(pl, grid, geom, cloud, plot_title, plot_options)
+    manage_plot.get_plot_viewer(pl, voxel)
+
+    # add the geometry and axes
+    manage_plot.get_plot_options(pl, grid, voxel, point, plot_options)
 
     # close plotter if non-blocking
     vistagui.close_plotter(pl, is_blocking)
@@ -90,11 +92,11 @@ def run(data_voxel, data_point, data_viewer, is_blocking):
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
-        (grid, geom, cloud) = _get_grid_voxel(data_voxel, data_point)
+        (grid, voxel, point) = _get_grid_voxel(data_voxel, data_point)
 
         # make the plots
         logger.info("generate the plot")
-        _get_plot(grid, geom, cloud, data_viewer, is_blocking)
+        _get_plot(grid, voxel, point, data_viewer, is_blocking)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False

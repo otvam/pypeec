@@ -7,13 +7,14 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 
-def _get_plot_options():
+def _get_plot_options(name):
     """
     The plot options are controlling the wireframes and the origin marker.
     This structure is used by the viewer and the plotter.
     """
 
     plot_options = {
+        "title": name,
         "grid_plot": True,
         "grid_thickness": 1.0,
         "grid_color": "black",
@@ -24,7 +25,7 @@ def _get_plot_options():
         "geom_opacity": 0.5,
         "cloud_plot": True,
         "cloud_color": "black",
-        "cloud_size": 10.0,
+        "cloud_size": 5.0,
         "cloud_opacity": 0.5,
     }
 
@@ -53,16 +54,16 @@ def _get_data_plotter_geometry(name):
     """
 
     data_options = {
-        "plot_legend": name,
-        "plot_title": name,
+        "legend": name,
+        "opacity": 1.0,
     }
 
-    data = _get_data_plotter_item(name, "material", data_options)
+    data = _get_data_plotter_item("material", "material", name, data_options)
 
     return data
 
 
-def _get_data_plotter_scalar(var, scale, unit, name):
+def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
     """
     Plot options for a scalar variable (scalar plot).
     This structure is used by the plotter.
@@ -74,16 +75,17 @@ def _get_data_plotter_scalar(var, scale, unit, name):
         "log": False,
         "color_lim": (None, None),
         "filter_lim": (None, None),
-        "plot_legend": "%s [%s]" % (name, unit),
-        "plot_title": name,
+        "opacity": 1.0,
+        "size": 10.0,
+        "legend": "%s [%s]" % (name, unit),
     }
 
-    data = _get_data_plotter_item(name, "scalar", data_options)
+    data = _get_data_plotter_item("scalar", plot_geom, name, data_options)
 
     return data
 
 
-def _get_data_plotter_arrow(var, vec, scale, unit, name):
+def _get_data_plotter_arrow(plot_geom, var, vec, scale, unit, name):
     """
     Plot options for a vector variable (arrow plot).
     This structure is used by the plotter.
@@ -98,16 +100,15 @@ def _get_data_plotter_arrow(var, vec, scale, unit, name):
         "filter_lim": (None, None),
         "arrow_threshold": 1e-3,
         "arrow_scale": 0.5,
-        "plot_legend": "%s [%s]" % (name, unit),
-        "plot_title": name,
+        "legend": "%s [%s]" % (name, unit),
     }
 
-    data = _get_data_plotter_item(name, "arrow", data_options)
+    data = _get_data_plotter_item("arrow", plot_geom, name, data_options)
 
     return data
 
 
-def _get_data_plotter_item(name, plot_type, data_options):
+def _get_data_plotter_item(plot_type, plot_geom, name, data_options):
     """
     Get the options defining a single plot for the plotter.
     This structure is used by the plotter.
@@ -115,8 +116,9 @@ def _get_data_plotter_item(name, plot_type, data_options):
 
     data = {
         "plot_type": plot_type,
+        "plot_geom": plot_geom,
         "data_options": data_options,
-        "plot_options": _get_plot_options(),
+        "plot_options": _get_plot_options(name),
         "data_window": _get_data_window(name),
     }
 
@@ -130,8 +132,7 @@ def get_data_viewer():
     """
 
     data_viewer = {
-        "plot_title": "Viewer",
-        "plot_options": _get_plot_options(),
+        "plot_options": _get_plot_options("Viewer"),
         "data_window": _get_data_window("Viewer"),
     }
 
@@ -147,11 +148,14 @@ def get_data_plotter():
 
     data_plotter = [
         _get_data_plotter_geometry("Material"),
-        _get_data_plotter_scalar("rho", 1e8, "uOhm/cm", "Resistivity"),
-        _get_data_plotter_scalar("V_abs", 1e0, "V", "Potential"),
-        _get_data_plotter_scalar("J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        _get_data_plotter_arrow("J_norm_re", "J_vec_re", 1e-6, "A/mm2", "Re. Current"),
-        _get_data_plotter_arrow("J_norm_im", "J_vec_im", 1e-6, "A/mm2", "Im. Current"),
+        _get_data_plotter_scalar("voxel", "rho", 1e8, "uOhm/cm", "Resistivity"),
+        _get_data_plotter_scalar("voxel", "V_abs", 1e0, "V", "Potential"),
+        _get_data_plotter_scalar("voxel", "J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
+        _get_data_plotter_arrow("voxel", "J_norm_re", "J_vec_re", 1e-6, "A/mm2", "Re. Current"),
+        _get_data_plotter_arrow("voxel", "J_norm_im", "J_vec_im", 1e-6, "A/mm2", "Im. Current"),
+        _get_data_plotter_scalar("point", "H_norm_abs", 1e0, "A/m", "Mag. Field Norm"),
+        _get_data_plotter_arrow("point", "H_norm_re", "H_vec_re", 1e0, "A/m", "Re. Mag. Field"),
+        _get_data_plotter_arrow("point", "H_norm_im", "H_vec_im", 1e0, "A/m", "Im. Mag. Field"),
     ]
 
     return data_plotter

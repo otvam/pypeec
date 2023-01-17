@@ -45,6 +45,10 @@ def _check_plot_options(plot_options):
     if not isinstance(plot_options, dict):
         raise CheckError("plot_options: plot options should be a dict")
 
+    # check type
+    if not isinstance(plot_options["title"], str):
+        raise CheckError("title: plot title should be a string")
+
     # check grid options (plot of the complete grid as wireframes)
     if not isinstance(plot_options["grid_plot"], bool):
         raise CheckError("grid_plot: the grid plot option should be a boolean")
@@ -76,7 +80,7 @@ def _check_plot_options(plot_options):
         raise CheckError("cloud_opacity: the cloud opacity option should be a float")
 
 
-def _check_data_options(plot_type, data_options):
+def _check_data_options(plot_type, plot_geom, data_options):
     """
     Check the validity of the data options.
     The data options are controlling the plot content.
@@ -91,22 +95,77 @@ def _check_data_options(plot_type, data_options):
         raise CheckError("data_options: data options should be a dict")
 
     # list of allowed variable names
-    var_list = ["rho", "V_re", "V_im", "V_abs", "J_norm_abs", "J_norm_re", "J_norm_im"]
-    vec_list = ["J_vec_re", "J_vec_im"]
+    var_voxel_list = ["rho", "V_re", "V_im", "V_abs", "J_norm_abs", "J_norm_re", "J_norm_im"]
+    var_point_list = ["H_norm_abs", "H_norm_re", "H_norm_im"]
+    vec_voxel_list = ["J_vec_re", "J_vec_im"]
+    vec_point_list = ["H_vec_re", "H_vec_im"]
 
-    # check the options for scalar, arrow, and material plots
-    if (plot_type == "scalar") or (plot_type == "arrow") or (plot_type == "material"):
+    # check legend
+    if not isinstance(data_options["legend"], str):
+        raise CheckError("plot_legend: plot legend option should be a string")
+
+    # check the options compatibility
+    if plot_type == "material":
+        if plot_geom != "material":
+            raise CheckError("plot_geom: the plot geometry option is incompatible with the plot type")
+        if not isinstance(data_options["opacity"], float):
+            raise CheckError("opacity: opacity should be a float")
+
+    # check the scalar options
+    if plot_type == "scalar":
         # check type
-        if not isinstance(data_options["plot_title"], str):
-            raise CheckError("plot_title: plot title option should be a string")
-        if not isinstance(data_options["plot_legend"], str):
-            raise CheckError("plot_legend: plot legend option should be a string")
+        if not isinstance(data_options["var"], str):
+            raise CheckError("var: scalar variable name should be a string")
+        if not isinstance(data_options["opacity"], float):
+            raise CheckError("opacity: opacity should be a float")
+        if not isinstance(data_options["size"], float):
+            raise CheckError("size: the marker size option should be a float")
+
+        # check compatibility
+        if plot_geom == "voxel":
+            if not (data_options["var"] in var_voxel_list):
+                raise CheckError("var: scalar variable name is invalid for this plot type and geometry")
+        elif plot_geom == "point":
+            if not (data_options["var"] in var_point_list):
+                raise CheckError("var: scalar variable name is invalid for this plot type and geometry")
+        else:
+            raise CheckError("plot_geom: the plot geometry option is incompatible with the plot type")
+
+    # check the arrow options
+    if plot_type == "arrow":
+        # check type
+        if not isinstance(data_options["var"], str):
+            raise CheckError("var: scalar variable name should be a string")
+        if not isinstance(data_options["vec"], str):
+            raise CheckError("vec: vector variable name should be a string")
+        if not isinstance(data_options["arrow_scale"], float):
+            raise CheckError("arrow_scale: the arrow relative scaling should be a float")
+        if not isinstance(data_options["arrow_threshold"], float):
+            raise CheckError("arrow_threshold: the arrow removal threshold should be a float")
+
+        # check value
+        if not (data_options["arrow_scale"] > 0):
+            raise CheckError("arrow_scale: the arrow relative scaling should be greater than zero")
+        if not (data_options["arrow_threshold"] > 0):
+            raise CheckError("arrow_threshold: the arrow removal threshold should be greater than zero")
+
+        # check compatibility
+        if plot_geom == "voxel":
+            if not (data_options["var"] in var_voxel_list):
+                raise CheckError("var: scalar variable name is invalid for this plot type and geometry")
+            if not (data_options["vec"] in vec_voxel_list):
+                raise CheckError("var: vector variable name is invalid for this plot type and geometry")
+        elif plot_geom == "point":
+            if not (data_options["var"] in var_point_list):
+                raise CheckError("var: scalar variable name is invalid for this plot type and geometry")
+            if not (data_options["vec"] in vec_point_list):
+                raise CheckError("var: vector variable name is invalid for this plot type and geometry")
+        else:
+            raise CheckError("plot_geom: the plot geometry option is incompatible with the plot type")
 
     # check the options for scalar and arrow plots
     if (plot_type == "scalar") or (plot_type == "arrow"):
         # check type
-        if not isinstance(data_options["var"], str):
-            raise CheckError("var: the var option should be a string")
         if not isinstance(data_options["scale"], float):
             raise CheckError("scale: the scale option should be a float")
         if not isinstance(data_options["log"], bool):
@@ -119,32 +178,12 @@ def _check_data_options(plot_type, data_options):
             raise CheckError("filter_lim: invalid filter limits (should be a list with tep elements)")
 
         # check value
-        if not (data_options["var"] in var_list):
-            raise CheckError("var: var option does not exist")
         if not (data_options["scale"] > 0):
             raise CheckError("scale: the scale option should be greater than zero")
         if not all(isinstance(x, float) or (x is None) for x in data_options["color_lim"]):
             raise CheckError("color_lim: color limits should be composed of floats")
         if not all(isinstance(x, float) or (x is None) for x in data_options["filter_lim"]):
             raise CheckError("filter_lim: filter limits should be composed of floats")
-
-    # check the options for arrow plots
-    if plot_type == "arrow":
-        # check type
-        if not isinstance(data_options["vec"], str):
-            raise CheckError("vec: the vec option should be a string")
-        if not isinstance(data_options["arrow_scale"], float):
-            raise CheckError("arrow_scale: the arrow relative scaling should be a float")
-        if not isinstance(data_options["arrow_threshold"], float):
-            raise CheckError("arrow_threshold: the arrow removal threshold should be a float")
-
-        # check value
-        if not (data_options["vec"] in vec_list):
-            raise CheckError("vec: vec option does not exist")
-        if not (data_options["arrow_scale"] > 0):
-            raise CheckError("arrow_scale: the arrow relative scaling should be greater than zero")
-        if not (data_options["arrow_threshold"] > 0):
-            raise CheckError("arrow_threshold: the arrow removal threshold should be greater than zero")
 
 
 def _check_data_plotter_item(data_plotter):
@@ -158,6 +197,7 @@ def _check_data_plotter_item(data_plotter):
 
     # extract field
     plot_type = data_plotter["plot_type"]
+    plot_geom = data_plotter["plot_geom"]
     data_window = data_plotter["data_window"]
     data_options = data_plotter["data_options"]
     plot_options = data_plotter["plot_options"]
@@ -165,14 +205,18 @@ def _check_data_plotter_item(data_plotter):
     # check type
     if not isinstance(plot_type, str):
         raise CheckError("plot_type: plot type should be a string")
+    if not isinstance(plot_geom, str):
+        raise CheckError("plot_geom: plot type should be a string")
 
     # check value
     if plot_type not in ["material", "scalar", "arrow"]:
-        raise CheckError("plot_type: specified plot type does not exist")
+        raise CheckError("plot_type: specified plot type is invalid")
+    if plot_geom not in ["material", "voxel", "point"]:
+        raise CheckError("plot_geom: specified plot geometry is invalid")
 
     # check data
     _check_data_window(data_window)
-    _check_data_options(plot_type, data_options)
+    _check_data_options(plot_type, plot_geom, data_options)
     _check_plot_options(plot_options)
 
 
@@ -202,13 +246,8 @@ def check_data_viewer(data_viewer):
         raise CheckError("data_viewer: the plot description should be a dict")
 
     # extract field
-    plot_title = data_viewer["plot_title"]
     data_window = data_viewer["data_window"]
     plot_options = data_viewer["plot_options"]
-
-    # check type
-    if not isinstance(plot_title, str):
-        raise CheckError("plot_title: plot title should be a string")
 
     # check data
     _check_data_window(data_window)

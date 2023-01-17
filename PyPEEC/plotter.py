@@ -40,19 +40,26 @@ def _get_grid_voxel(data_solution, data_point):
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, ori)
-    geom = manage_voxel.get_geom(grid, idx_v)
-    cloud = manage_voxel.get_cloud(geom, data_point)
+    voxel = manage_voxel.get_voxel(grid, idx_v)
+    point = manage_voxel.get_point(voxel, data_point)
+
+    import numpy as np
+    point["H_norm_abs"] = np.arange(16)
+    point["H_norm_re"] = np.arange(16)
+    point["H_norm_im"] = np.arange(16)
+    point["H_vec_re"] = np.ones((16, 3))
+    point["H_vec_im"] = np.ones((16, 3))
 
     # add the problem solution to the grid
-    geom = manage_voxel.get_plotter_tag(geom, idx_v, idx_src_c, idx_src_v)
-    geom = manage_voxel.get_plotter_resistivity(geom, idx_v, rho_v)
-    geom = manage_voxel.get_plotter_potential(geom, idx_v, V_v)
-    geom = manage_voxel.get_plotter_current_density(geom, idx_v, J_v)
+    voxel = manage_voxel.get_plotter_tag(voxel, idx_v, idx_src_c, idx_src_v)
+    voxel = manage_voxel.get_plotter_resistivity(voxel, idx_v, rho_v)
+    voxel = manage_voxel.get_plotter_potential(voxel, idx_v, V_v)
+    voxel = manage_voxel.get_plotter_current_density(voxel, idx_v, J_v)
 
-    return grid, geom, cloud
+    return grid, voxel, point
 
 
-def _get_plot(grid, geom, cloud, data_plotter, is_blocking):
+def _get_plot(grid, voxel, point, data_plotter, is_blocking):
     """
     Make a plot with the specified user settings.
     The plot contains the following elements:
@@ -63,6 +70,7 @@ def _get_plot(grid, geom, cloud, data_plotter, is_blocking):
 
     # extract the data
     plot_type = data_plotter["plot_type"]
+    plot_geom = data_plotter["plot_geom"]
     data_window = data_plotter["data_window"]
     data_options = data_plotter["data_options"]
     plot_options = data_plotter["plot_options"]
@@ -71,14 +79,10 @@ def _get_plot(grid, geom, cloud, data_plotter, is_blocking):
     pl = vistagui.open_plotter(data_window, is_blocking)
 
     # find the plot type and call the corresponding function
-    if plot_type == "material":
-        manage_plot.plot_material(pl, grid, geom, cloud, plot_options, data_options)
-    elif plot_type == "scalar":
-        manage_plot.plot_scalar(pl, grid, geom, cloud, plot_options, data_options)
-    elif plot_type == "arrow":
-        manage_plot.plot_arrow(pl, grid, geom, cloud, plot_options, data_options)
-    else:
-        raise CheckError("invalid plot type")
+    manage_plot.get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options)
+
+    # add the geometry and axes
+    manage_plot.get_plot_options(pl, grid, voxel, point, plot_options)
 
     # close plotter if non-blocking
     vistagui.close_plotter(pl, is_blocking)
@@ -106,13 +110,13 @@ def run(data_solution, data_point, data_plotter, is_blocking):
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
-        (grid, geom, cloud) = _get_grid_voxel(data_solution, data_point)
+        (grid, voxel, point) = _get_grid_voxel(data_solution, data_point)
 
         # make the plots
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_plotter):
             logger.info("plotting %d / %d" % (i + 1, len(data_plotter)))
-            _get_plot(grid, geom, cloud, dat_tmp, is_blocking)
+            _get_plot(grid, voxel, point, dat_tmp, is_blocking)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False
