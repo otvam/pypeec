@@ -22,9 +22,6 @@ def _get_plot_options():
         "geom_thickness": 1.0,
         "geom_color": "black",
         "geom_opacity": 0.5,
-        "origin_plot": True,
-        "origin_size": 0.1,
-        "origin_color": "red",
     }
 
     return plot_options

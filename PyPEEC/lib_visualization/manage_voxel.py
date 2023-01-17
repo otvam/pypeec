@@ -18,7 +18,7 @@ import numpy.linalg as lna
 import pyvista as pv
 
 
-def get_grid(n, d):
+def get_grid(n, d, ori):
     """
     Construct a PyVista uniform grid for the complete voxel structure.
     """
@@ -26,14 +26,15 @@ def get_grid(n, d):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
+    (orix, oriy, oriz) = ori
 
     # create a uniform grid for the complete structure
     grid = pv.UniformGrid()
 
     # set the array size and the voxel size
+    grid.origin = (orix, oriy, oriz)
     grid.dimensions = (nx+1, ny+1, nz+1)
     grid.spacing = (dx, dy, dz)
-    grid.origin = (0, 0, 0)
 
     return grid
 
@@ -45,10 +46,10 @@ def get_geom_viewer(grid, domain_def):
     """
 
     # init
-    idx_domain = np.array([], dtype=np.int64)
-    color_domain = np.array([], dtype=np.int64)
+    idx_domain = np.empty(0, dtype=np.int64)
+    color_domain = np.empty(0, dtype=np.int64)
 
-    # get the indices and colord
+    # get the indices and colors
     counter = 0
     for tag, idx in domain_def.items():
         # assign the color (n different integer for each domain)
@@ -67,10 +68,43 @@ def get_geom_viewer(grid, domain_def):
     # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
     geom = grid.extract_cells(idx_domain)
 
-    # assign the colord
-    geom["domain"] = color_domain
+    # assign the colors
+    geom["tag"] = color_domain
 
     return geom
+
+
+def get_cloud_viewer(geom, point_def):
+    """
+    Construct a PyVista point cloud with the defined points.
+    Add the point tags to the grid as a fake scalar field.
+    """
+
+    # init
+    coord_point = np.empty((0, 3), dtype=np.float64)
+    color_point = np.empty(0, dtype=np.int64)
+
+    # get the indices and colors
+    counter = 0
+    for tag, coord in point_def.items():
+        # add the array
+        coord = np.array(coord, dtype=np.float64)
+
+        # assign the color (n different integer for each domain)
+        color = np.full(len(coord), counter, dtype=np.int64)
+
+        # append the indices and colors
+        coord_point = np.concatenate((coord_point, coord), axis=0, dtype=np.float64)
+        color_point = np.append(color_point, color)
+        counter += 1
+
+    # create the point cloud
+    cloud = pv.PolyData(coord_point)
+
+    # assign the colors
+    cloud["tag"] = color_point
+
+    return cloud
 
 
 def get_geom_plotter(grid, idx_v):

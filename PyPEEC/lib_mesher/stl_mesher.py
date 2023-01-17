@@ -17,7 +17,7 @@ import pyvista as pv
 from PyPEEC.lib_utils.error import RunError
 
 
-def _get_grid(n, d, pts_min):
+def _get_grid(n, d, ori):
     """
     Construct a PyVista uniform grid for the complete voxel structure.
     The grid is located around the STL meshes to be voxelized.
@@ -27,7 +27,7 @@ def _get_grid(n, d, pts_min):
     grid = pv.UniformGrid()
 
     # set the array size and the voxel size
-    grid.origin = pts_min
+    grid.origin = ori
     grid.dimensions = n+1
     grid.spacing = d
 
@@ -169,20 +169,24 @@ def get_mesh(n, pts_min, pts_max, domain_stl):
     # extract the voxel size
     d = (pts_max-pts_min)/n
 
+    # extract the origin
+    ori = pts_min
+
     # check voxel validity
     if not np.all(d > 0):
         RunError("invalid voxel dimension: should be positive")
 
     # get the uniform grid
-    grid = _get_grid(n, d, pts_min)
+    grid = _get_grid(n, d, ori)
 
     # voxelize the meshes and get the indices
     domain_def = _get_idx_stl(grid, mesh_stl)
 
-    # cast back the voxel size to a list
+    # cast back the voxel size and origin to a list
     d = d.tolist()
+    ori = ori.tolist()
 
-    return d, domain_def
+    return d, ori, domain_def
 
 
 def get_conflict(domain_def, domain_conflict):

@@ -17,6 +17,8 @@ def _check_png_domain_color(domain_color):
     # check type
     if not isinstance(domain_color, dict):
         raise CheckError("domain_color: domain color definition should be a dict")
+    if not domain_color:
+        raise CheckError("domain_color: domain color definition cannot be empty")
 
     # check value
     for tag, color in domain_color.items():
@@ -41,6 +43,8 @@ def _check_png_layer_stack(layer_stack):
     # check type
     if not isinstance(layer_stack, list):
         raise CheckError("layer_stack: layer stack definition should be a list")
+    if not layer_stack:
+        raise CheckError("layer_stack: layer stack definition cannot be empty")
 
     # check value
     for dat_tmp in layer_stack:
@@ -82,6 +86,8 @@ def _check_stl_domain_stl(domain_stl):
     # check type
     if not isinstance(domain_stl, dict):
         raise CheckError("domain_stl: domain definition should be a dict")
+    if not domain_stl:
+        raise CheckError("domain_stl: domain definition cannot be empty")
 
     # check value
     for tag, filename in domain_stl.items():
@@ -176,6 +182,7 @@ def check_data_voxelize_png(data_voxelize):
 
     # extract field
     d = data_voxelize["d"]
+    ori = data_voxelize["ori"]
     nx = data_voxelize["nx"]
     ny = data_voxelize["ny"]
     domain_color = data_voxelize["domain_color"]
@@ -184,10 +191,14 @@ def check_data_voxelize_png(data_voxelize):
     # check size
     if not (len(d) == 3):
         raise CheckError("d: invalid voxel size (should be a list with three elements)")
+    if not (len(ori) == 3):
+        raise CheckError("ori: invalid origin coordinate size (should be a list with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.floating) for x in d):
         raise CheckError("d: dimension of the voxels should be composed of real floats")
+    if not all(np.issubdtype(type(x), np.floating) for x in ori):
+        raise CheckError("ori: origin coordinate should be composed of real floats")
     if not np.issubdtype(type(nx), np.integer):
         raise CheckError("nx: number of voxel in x direction should be an integer")
     if not np.issubdtype(type(ny), np.integer):

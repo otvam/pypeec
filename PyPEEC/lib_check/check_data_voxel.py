@@ -24,6 +24,8 @@ def _check_domain_def(n, domain_def):
     # check type
     if not isinstance(domain_def, dict):
         raise CheckError("domain_def: domain definition should be a dict")
+    if not domain_def:
+        raise CheckError("domain_def: domain definition cannot be empty")
 
     # check the different domains
     for tag, idx in domain_def.items():
@@ -50,7 +52,7 @@ def _check_domain_def(n, domain_def):
         raise CheckError("domain indices should be unique")
 
 
-def _check_voxel_size(n, d):
+def _check_voxel_size(n, d, ori):
     """
     Check the voxel number and dimension.
     """
@@ -60,12 +62,16 @@ def _check_voxel_size(n, d):
         raise CheckError("n: invalid voxel number (should be a list with three elements)")
     if not (len(d) == 3):
         raise CheckError("d: invalid voxel size (should be a list with three elements)")
+    if not (len(ori) == 3):
+        raise CheckError("ori: invalid origin coordinate size (should be a list with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.integer) for x in n):
         raise CheckError("n: number of voxels should be composed of integers")
     if not all(np.issubdtype(type(x), np.floating) for x in d):
         raise CheckError("d: dimension of the voxels should be composed of real floats")
+    if not all(np.issubdtype(type(x), np.floating) for x in ori):
+        raise CheckError("ori: origin coordinate should be composed of real floats")
 
     # check value
     if not all((x >= 1) for x in n):
@@ -87,8 +93,9 @@ def check_data_voxel(data_voxel):
     # extract field
     n = data_voxel["n"]
     d = data_voxel["d"]
+    ori = data_voxel["ori"]
     domain_def = data_voxel["domain_def"]
 
     # check data
-    _check_voxel_size(n, d)
+    _check_voxel_size(n, d, ori)
     _check_domain_def(n, domain_def)

@@ -17,6 +17,8 @@ def _check_conductor_def(conductor_def):
     # check type
     if not isinstance(conductor_def, dict):
         raise CheckError("conductor_def: conductor definition should be a dict")
+    if not conductor_def:
+        raise CheckError("conductor_def: conductor definition cannot be empty")
 
     # check value
     for tag, dat_tmp in conductor_def.items():
@@ -47,6 +49,8 @@ def _check_source_def(source_def):
     # check type
     if not isinstance(source_def, dict):
         raise CheckError("source_def: source definition should be a dict")
+    if not source_def:
+        raise CheckError("source_def: source definition cannot be empty")
 
     # check value
     for tag, dat_tmp in source_def.items():

@@ -13,7 +13,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-import pyvista as pv
 import numpy.linalg as lna
 
 
@@ -43,17 +42,6 @@ def _get_plot_geometry(pl, grid, geom, plot_title, plot_options):
             opacity=plot_options["geom_opacity"],
             line_width=plot_options["geom_thickness"]
         )
-
-    # add a marker at the origin
-    if plot_options["origin_plot"]:
-        # get the marker size
-        origin_size = plot_options["origin_size"]
-        d = min(grid.spacing)
-        r = d*origin_size
-
-        # add the marker
-        origin = pv.Sphere(r, (0, 0, 0))
-        pl.add_mesh(origin, color=plot_options["origin_color"])
 
     # add title and axes
     pl.add_axes(line_width=2)
@@ -294,7 +282,7 @@ def plot_arrow(pl, grid, geom, plot_options, data_options):
     _get_plot_geometry(pl, grid, geom, plot_title, plot_options)
 
 
-def get_plot_viewer(pl, grid, geom, plot_title, plot_options):
+def get_plot_viewer(pl, grid, geom, cloud, plot_title, plot_options):
     """
     Plot the different domains composing the voxel structure.
     The variable is plotted on the faces of the voxels.
@@ -307,9 +295,17 @@ def get_plot_viewer(pl, grid, geom, plot_title, plot_options):
     pl.add_mesh(
         geom,
         show_scalar_bar=False,
-        scalars="domain",
+        scalars="tag",
         cmap="Accent",
     )
+    if cloud.n_cells > 0:
+        pl.add_mesh(
+            cloud,
+            point_size=5,
+            show_scalar_bar=False,
+            scalars="tag",
+            cmap="Accent",
+        )
 
     # add the plot background (wireframe, axis, and title)
     _get_plot_geometry(pl, grid, geom, plot_title, plot_options)

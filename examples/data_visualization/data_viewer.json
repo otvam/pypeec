@@ -8,10 +8,7 @@
         "geom_plot": true,
         "geom_thickness": 1.0,
         "geom_color": "black",
-        "geom_opacity": 0.5,
-        "origin_plot": true,
-        "origin_size": 0.1,
-        "origin_color": "red"
+        "geom_opacity": 0.5
     },
     "data_window": {
         "title": "Viewer",

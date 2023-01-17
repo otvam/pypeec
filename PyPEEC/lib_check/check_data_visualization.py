@@ -65,14 +65,6 @@ def _check_plot_options(plot_options):
     if not isinstance(plot_options["geom_opacity"], float):
         raise CheckError("geom_opacity: the geom opacity option should be a float")
 
-    # check origin options (add a marker at the origin)
-    if not isinstance(plot_options["origin_plot"], bool):
-        raise CheckError("origin_plot: the origin plot option should be a boolean")
-    if not isinstance(plot_options["origin_size"], float):
-        raise CheckError("origin_size: the origin size option should be a float")
-    if not isinstance(plot_options["origin_color"], str):
-        raise CheckError("origin_color: the origin color option should be a string")
-
 
 def _check_data_options(plot_type, data_options):
     """

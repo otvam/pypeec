@@ -30,16 +30,19 @@ def _get_grid_voxel(data_voxel):
     # extract the data
     n = data_voxel["n"]
     d = data_voxel["d"]
+    ori = data_voxel["ori"]
     domain_def = data_voxel["domain_def"]
+    point_def = data_voxel["point_def"]
 
     # convert the voxel geometry into PyVista grids
-    grid = manage_voxel.get_grid(n, d)
+    grid = manage_voxel.get_grid(n, d, ori)
     geom = manage_voxel.get_geom_viewer(grid, domain_def)
+    cloud = manage_voxel.get_cloud_viewer(grid, point_def)
 
-    return grid, geom
+    return grid, geom, cloud
 
 
-def _get_plot(grid, geom, data_viewer, is_blocking):
+def _get_plot(grid, geom, cloud, data_viewer, is_blocking):
     """
     Make a plot with the voxel structure and the domains.
     """
@@ -53,7 +56,7 @@ def _get_plot(grid, geom, data_viewer, is_blocking):
     pl = vistagui.open_plotter(data_window, is_blocking)
 
     # make the plot
-    manage_plot.get_plot_viewer(pl, grid, geom, plot_title, plot_options)
+    manage_plot.get_plot_viewer(pl, grid, geom, cloud, plot_title, plot_options)
 
     # close plotter if non-blocking
     vistagui.close_plotter(pl, is_blocking)
@@ -80,11 +83,11 @@ def run(data_voxel, data_viewer, is_blocking):
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
-        (grid, geom) = _get_grid_voxel(data_voxel)
+        (grid, geom, cloud) = _get_grid_voxel(data_voxel)
 
         # make the plots
         logger.info("generate the plot")
-        _get_plot(grid, geom, data_viewer, is_blocking)
+        _get_plot(grid, geom, cloud, data_viewer, is_blocking)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False
