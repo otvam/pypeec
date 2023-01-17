@@ -20,11 +20,14 @@ def check_data_point(data_point):
 
     # cast indices
     data_point = np.array(data_point)
-    if not (len(data_point.shape) == 2):
-        raise CheckError("data_point: coordinates should be a 2D array")
-    if not (data_point.shape[0] > 0):
-        raise CheckError("coord: coordinates cannot be empty")
-    if not (data_point.shape[1] == 3):
-        raise CheckError("data_point: coordinates should have three dimensions")
-    if not np.issubdtype(data_point.dtype, np.floating):
-        raise CheckError("data_point: coordinates should be composed of floats")
+
+    # check the points (if any)
+    if data_point:
+        if not (len(data_point.shape) == 2):
+            raise CheckError("data_point: coordinates should be a 2D array")
+        if not (data_point.shape[0] > 0):
+            raise CheckError("coord: coordinates cannot be empty")
+        if not (data_point.shape[1] == 3):
+            raise CheckError("data_point: coordinates should have three dimensions")
+        if not np.issubdtype(data_point.dtype, np.floating):
+            raise CheckError("data_point: coordinates should be composed of floats")

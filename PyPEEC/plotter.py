@@ -47,15 +47,6 @@ def _get_grid_voxel(data_solution, data_point):
     voxel = manage_voxel.get_voxel(grid, idx_v)
     point = manage_voxel.get_point(voxel, data_point)
 
-
-
-    import numpy as np
-    point["H_norm_abs"] = np.arange(16)
-    point["H_norm_re"] = np.arange(16)
-    point["H_norm_im"] = np.arange(16)
-    point["H_vec_re"] = np.ones((16, 3))
-    point["H_vec_im"] = np.ones((16, 3))
-
     # add the problem solution to the grid
     voxel = manage_voxel.set_plotter_material(voxel, idx_v, idx_src_c, idx_src_v)
     voxel = manage_voxel.set_plotter_resistivity(voxel, idx_v, rho_v)
