@@ -289,7 +289,6 @@ def get_plot_viewer(pl, voxel):
 
 
 def get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options):
-
     if (plot_type == "material") and (plot_geom == "material"):
         plot_material(pl, voxel, data_options)
     elif (plot_type == "scalar") and (plot_geom == "voxel"):

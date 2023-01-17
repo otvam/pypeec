@@ -97,7 +97,34 @@ def get_viewer_domain(domain_def):
     return idx_v, dom_v
 
 
-def get_viewer_tag(voxel, idx_v, dom_v):
+def get_magnetic_field(d, idx_v, J_v, voxel_point, data_point):
+    # extract the voxel volume
+    vol = np.prod(d)
+
+    # keep non-empty voxels
+    pts_v = voxel_point[idx_v, :]
+
+    # create the result vector
+    H_points = np.zeros((len(data_point), 3), dtype=np.complex128)
+
+    # for each provided point, compute the magnetic field
+    for i, pts_tmp in enumerate(data_point):
+        # get the distance between the points and the voxels
+        vec = pts_tmp-pts_v
+
+        # get the norm of the distance
+        nrm = lna.norm(vec, axis=1, keepdims=True)
+
+        # compute the Biot-Savart contributions
+        H_matrix = (vol/(4*np.pi))*(np.cross(J_v, vec, axis=1)/(nrm**3))
+
+        # assign the magnetic field
+        H_points[i, :] = np.sum(H_matrix, axis=0)
+
+    return H_points
+
+
+def set_viewer_domain(voxel, idx_v, dom_v):
     """
     Add the domain tags to the grid as a fake scalar field.
     """
@@ -112,7 +139,7 @@ def get_viewer_tag(voxel, idx_v, dom_v):
     return voxel
 
 
-def get_plotter_tag(voxel, idx_v, idx_src_c, idx_src_v):
+def set_plotter_material(voxel, idx_v, idx_src_c, idx_src_v):
     """
     Add the material description (scalar field, input variable) to the unstructured grid.
     The following encoding is used:
@@ -142,7 +169,7 @@ def get_plotter_tag(voxel, idx_v, idx_src_c, idx_src_v):
     return voxel
 
 
-def get_plotter_resistivity(voxel, idx_v, rho_v):
+def set_plotter_resistivity(voxel, idx_v, rho_v):
     """
     Add the resistivity (scalar field, input variable) to the unstructured grid.
     """
@@ -157,7 +184,7 @@ def get_plotter_resistivity(voxel, idx_v, rho_v):
     return voxel
 
 
-def get_plotter_potential(voxel, idx_v, V_v):
+def set_plotter_potential(voxel, idx_v, V_v):
     """
     Add the potential (scalar field, solved variable) to the unstructured grid.
     """
@@ -174,7 +201,7 @@ def get_plotter_potential(voxel, idx_v, V_v):
     return voxel
 
 
-def get_plotter_current_density(voxel, idx_v, J_v):
+def set_plotter_current_density(voxel, idx_v, J_v):
     """
     Add the potential (scalar and vector fields, current density) to the unstructured grid.
     The norm (scalar field) and the direction (vector field) are added.
@@ -189,9 +216,21 @@ def get_plotter_current_density(voxel, idx_v, J_v):
     voxel["J_norm_re"] = lna.norm(np.real(J_v), axis=1)
     voxel["J_norm_im"] = lna.norm(np.imag(J_v), axis=1)
 
-    # compute the direction, ignore division per zero
-    with np.errstate(all="ignore"):
-        voxel["J_vec_re"] = np.real(J_v)
-        voxel["J_vec_im"] = np.imag(J_v)
+    # compute the direction
+    voxel["J_vec_re"] = np.real(J_v)
+    voxel["J_vec_im"] = np.imag(J_v)
 
     return voxel
+
+
+def set_plotter_magnetic_field(point, H_point):
+    # compute the norm
+    point["H_norm_abs"] = lna.norm(H_point, axis=1)
+    point["H_norm_re"] = lna.norm(np.real(H_point), axis=1)
+    point["H_norm_im"] = lna.norm(np.imag(H_point), axis=1)
+
+    # compute the direction
+    point["H_vec_re"] = np.real(H_point)
+    point["H_vec_im"] = np.imag(H_point)
+
+    return point

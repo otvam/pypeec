@@ -43,7 +43,7 @@ def _get_grid_voxel(data_voxel, data_point):
     point = manage_voxel.get_point(voxel, data_point)
 
     # add the domain tag to the geometry
-    voxel = manage_voxel.get_viewer_tag(voxel, idx_v, dom_v)
+    voxel = manage_voxel.set_viewer_domain(voxel, idx_v, dom_v)
 
     return grid, voxel, point
 

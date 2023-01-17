@@ -31,6 +31,7 @@ def _get_grid_voxel(data_solution, data_point):
     n = data_solution["n"]
     d = data_solution["d"]
     ori = data_solution["ori"]
+    voxel_point = data_solution["voxel_point"]
     idx_v = data_solution["idx_v"]
     idx_src_c = data_solution["idx_src_c"]
     idx_src_v = data_solution["idx_src_v"]
@@ -38,10 +39,15 @@ def _get_grid_voxel(data_solution, data_point):
     V_v = data_solution["V_v"]
     J_v = data_solution["J_v"]
 
+    # compute the magnetic field
+    H_point = manage_voxel.get_magnetic_field(d, idx_v, J_v, voxel_point, data_point)
+
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, ori)
     voxel = manage_voxel.get_voxel(grid, idx_v)
     point = manage_voxel.get_point(voxel, data_point)
+
+
 
     import numpy as np
     point["H_norm_abs"] = np.arange(16)
@@ -51,10 +57,11 @@ def _get_grid_voxel(data_solution, data_point):
     point["H_vec_im"] = np.ones((16, 3))
 
     # add the problem solution to the grid
-    voxel = manage_voxel.get_plotter_tag(voxel, idx_v, idx_src_c, idx_src_v)
-    voxel = manage_voxel.get_plotter_resistivity(voxel, idx_v, rho_v)
-    voxel = manage_voxel.get_plotter_potential(voxel, idx_v, V_v)
-    voxel = manage_voxel.get_plotter_current_density(voxel, idx_v, J_v)
+    voxel = manage_voxel.set_plotter_material(voxel, idx_v, idx_src_c, idx_src_v)
+    voxel = manage_voxel.set_plotter_resistivity(voxel, idx_v, rho_v)
+    voxel = manage_voxel.set_plotter_potential(voxel, idx_v, V_v)
+    voxel = manage_voxel.set_plotter_current_density(voxel, idx_v, J_v)
+    point = manage_voxel.set_plotter_magnetic_field(point, H_point)
 
     return grid, voxel, point
 

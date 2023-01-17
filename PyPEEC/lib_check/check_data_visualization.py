@@ -100,16 +100,14 @@ def _check_data_options(plot_type, plot_geom, data_options):
     vec_voxel_list = ["J_vec_re", "J_vec_im"]
     vec_point_list = ["H_vec_re", "H_vec_im"]
 
-    # check legend
-    if not isinstance(data_options["legend"], str):
-        raise CheckError("plot_legend: plot legend option should be a string")
-
     # check the options compatibility
     if plot_type == "material":
         if plot_geom != "material":
             raise CheckError("plot_geom: the plot geometry option is incompatible with the plot type")
         if not isinstance(data_options["opacity"], float):
             raise CheckError("opacity: opacity should be a float")
+        if not isinstance(data_options["legend"], str):
+            raise CheckError("plot_legend: plot legend option should be a string")
 
     # check the scalar options
     if plot_type == "scalar":
@@ -170,6 +168,8 @@ def _check_data_options(plot_type, plot_geom, data_options):
             raise CheckError("scale: the scale option should be a float")
         if not isinstance(data_options["log"], bool):
             raise CheckError("log: the log option should be a boolean")
+        if not isinstance(data_options["legend"], str):
+            raise CheckError("plot_legend: plot legend option should be a string")
 
         # check size
         if not (len(data_options["color_lim"]) == 2):
