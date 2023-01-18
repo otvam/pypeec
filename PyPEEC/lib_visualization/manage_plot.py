@@ -295,7 +295,7 @@ def get_plot_options(pl, grid, voxel, point, plot_options):
 
 def get_plot_viewer(pl, voxel, plot_type):
     """
-    Plot the voxel structure.
+    Plot the voxel structure (for the viewer).
     The following plot types are available:
         - the domains are shown for the non-empty voxels
         - the connected components for the non-empty voxels
@@ -323,7 +323,7 @@ def get_plot_viewer(pl, voxel, plot_type):
 
 def get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options):
     """
-    Plot the solution (material, scalar, or vector plots).
+    Plot the solution (for the plotter).
     The following plot types are available:
         - plot the material description (conductors and sources) on the voxel structure
         - plot a scalar variable on the voxel structure

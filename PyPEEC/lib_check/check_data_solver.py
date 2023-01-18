@@ -106,8 +106,19 @@ def _check_indices(idx_conductor, idx_source):
         raise CheckError("source indices should be unique")
 
     # check that the terminal indices are conductor indices
-    if not np.all(np.isin(idx_source, idx_conductor)):
+    if not np.all(np.in1d(idx_source, idx_conductor)):
         raise CheckError("source indices are not included in conductor indices")
+
+
+def _check_graph(idx_source, graph_def):
+    """
+    Check that there is at least one source per connected component.
+    A connected components without a source would lead to a singular problem.
+    """
+
+    for idx_graph in graph_def:
+        if not np.any(np.in1d(idx_graph, idx_source)):
+            raise CheckError("a connected component does not include at least one source")
 
 
 def get_data_solver(data_voxel, data_problem):
@@ -131,6 +142,7 @@ def get_data_solver(data_voxel, data_problem):
     d = data_voxel["d"]
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
+    graph_def = data_voxel["graph_def"]
 
     # get conductor indices
     (idx_conductor, conductor_idx) = _get_conductor_idx(conductor_def, domain_def)
@@ -138,6 +150,9 @@ def get_data_solver(data_voxel, data_problem):
 
     # check indices
     _check_indices(idx_conductor, idx_source)
+
+    # check graph
+    _check_graph(idx_source, graph_def)
 
     # assign combined data
     data_solver = {
