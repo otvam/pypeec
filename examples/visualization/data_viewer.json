@@ -4,7 +4,7 @@
         "clip_options": {
             "clip_plot": false,
             "clip_invert": false,
-            "clip_axis": "x",
+            "clip_axis": "z",
             "clip_value": 0.0
         },
         "plot_options": {
@@ -36,7 +36,7 @@
         "clip_options": {
             "clip_plot": false,
             "clip_invert": false,
-            "clip_axis": "x",
+            "clip_axis": "z",
             "clip_value": 0.0
         },
         "plot_options": {

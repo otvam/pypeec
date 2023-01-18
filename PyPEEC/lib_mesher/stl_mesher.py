@@ -58,9 +58,14 @@ def get_voxelize(grid, mesh):
     # transform the grid into an unstructured grid (keeping the non-empty voxels)
     voxel = grid.extract_points(mask)
 
+    # get the surface of the new geometry
+    surface = voxel.extract_surface()
+
     # check for empty voxels
     if voxel.n_cells == 0:
         raise RunError("invalid mesh: empty voxel structure")
+    if surface.n_open_edges > 0:
+        raise RunError("invalid mesh: surface is not closed")
 
     # get the indices of the extracted voxels
     idx = voxel["idx"]
