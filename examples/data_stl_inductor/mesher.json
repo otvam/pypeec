@@ -1,0 +1,24 @@
+{
+    "mesh_type": "stl",
+    "data_voxelize": {
+        "n": [150, 150, 25],
+        "pts_min": [null, null, null],
+        "pts_max": [null, null, null],
+        "domain_stl": {
+            "coil": "stl_inductor/coil.stl",
+            "src": "stl_inductor/src.stl",
+            "sink": "stl_inductor/sink.stl"
+        },
+        "domain_conflict": [
+            {
+                "domain_fix": "coil",
+                "domain_ref": "src"
+            },
+            {
+                "domain_fix": "coil",
+                "domain_ref": "sink"
+            }
+        ]
+    },
+    "n_resampling": [1, 1, 1]
+}
