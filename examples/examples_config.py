@@ -12,8 +12,8 @@ import os
 PATH_ROOT = os.path.dirname(__file__)
 
 # name of the considered example
-# voxel_slab
-# voxel_transformer
-# stl_inductor
-# png_inductor
-EXAMPLE_NAME = "voxel_slab"
+# data_voxel_slab
+# data_voxel_transformer
+# data_stl_inductor
+# data_png_inductor
+EXAMPLE_NAME = "data_voxel_slab"
