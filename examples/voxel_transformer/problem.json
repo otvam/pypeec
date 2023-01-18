@@ -14,7 +14,7 @@
     },
     "conductor_def": {
         "pri": {
-            "domain": ["src", "sink", "pri"],
+            "domain": ["pri" ,"src", "sink"],
             "rho": 1.75e-8
         },
         "sec": {

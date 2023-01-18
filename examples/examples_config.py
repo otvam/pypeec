@@ -12,9 +12,10 @@ import os
 PATH_ROOT = os.path.dirname(__file__)
 
 # name of the considered example
-# data_voxel_slab
-# data_voxel_transformer
-# data_stl_inductor
-# data_png_inductor
-# data_png_cylinder
-EXAMPLE_NAME = "data_png_cylinder"
+# voxel_slab
+# voxel_transformer
+# stl_inductor
+# stl_transformer
+# png_inductor
+# png_cylinder
+EXAMPLE_NAME = "png_cylinder"

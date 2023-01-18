@@ -41,8 +41,8 @@ class TestMesherViewer(unittest.TestCase):
         file_mesher = os.path.join(path_root, name, "mesher.json")
         file_point = os.path.join(path_root, name, "point.json")
         file_problem = os.path.join(path_root, name, "problem.json")
-        file_plotter = os.path.join(path_root, "data_visualization", "data_plotter.json")
-        file_viewer = os.path.join(path_root, "data_visualization", "data_viewer.json")
+        file_plotter = os.path.join(path_root, "visualization", "data_plotter.json")
+        file_viewer = os.path.join(path_root, "visualization", "data_viewer.json")
 
         # get the temped file name
         fid_voxel = tempfile.NamedTemporaryFile(suffix='.pck')
@@ -71,35 +71,42 @@ class TestMesherViewer(unittest.TestCase):
         Test workflow for png_inductor.
         """
 
-        self._test_workflow("data_png_inductor")
+        self._test_workflow("png_inductor")
 
     def test_png_cylinder(self):
         """
         Test workflow for png_cylinder.
         """
 
-        self._test_workflow("data_png_cylinder")
+        self._test_workflow("png_cylinder")
 
     def test_stl_inductor(self):
         """
         Test workflow for stl_inductor.
         """
 
-        self._test_workflow("data_stl_inductor")
+        self._test_workflow("stl_inductor")
+
+    def test_stl_transformer(self):
+        """
+        Test workflow for stl_transformer.
+        """
+
+        self._test_workflow("stl_transformer")
 
     def test_voxel_slab(self):
         """
         Test workflow for voxel_slab.
         """
 
-        self._test_workflow("data_voxel_slab")
+        self._test_workflow("voxel_slab")
 
     def test_voxel_transformer(self):
         """
         Test workflow for voxel_transformer.
         """
 
-        self._test_workflow("data_voxel_transformer")
+        self._test_workflow("voxel_transformer")
 
 
 if __name__ == "__main__":

@@ -16,12 +16,13 @@ echo "================================================================"
 echo "COPY THE FILES"
 echo "================================================================"
 
-copy_folder data_visualization
-copy_folder data_voxel_slab
-copy_folder data_voxel_transformer
-copy_folder data_png_inductor
+copy_folder visualization
+copy_folder voxel_slab
+copy_folder voxel_transformer
 copy_folder png_cylinder
-copy_folder data_stl_inductor
+copy_folder png_inductor
+copy_folder stl_inductor
+copy_folder stl_transformer
 
 echo "================================================================"
 echo "RUN THE TESTS"

@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # get the filename
     file_voxel = os.path.join(PATH_ROOT, EXAMPLE_NAME, "voxel.pck")
     file_point = os.path.join(PATH_ROOT, EXAMPLE_NAME, "point.json")
-    file_viewer = os.path.join(PATH_ROOT, "data_visualization", "data_viewer.json")
+    file_viewer = os.path.join(PATH_ROOT, "visualization", "data_viewer.json")
 
     # get viewer data
     data_viewer = examples_visualization.get_data_viewer()

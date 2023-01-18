@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # get the filename
     file_solution = os.path.join(PATH_ROOT, EXAMPLE_NAME, "solution.pck")
     file_point = os.path.join(PATH_ROOT, EXAMPLE_NAME, "point.json")
-    file_plotter = os.path.join(PATH_ROOT, "data_visualization", "data_plotter.json")
+    file_plotter = os.path.join(PATH_ROOT, "visualization", "data_plotter.json")
 
     # get viewer data
     data_plotter = examples_visualization.get_data_plotter()
