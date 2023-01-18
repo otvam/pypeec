@@ -1,12 +1,19 @@
 """
 Different functions for plotting voxel structures with PyVista.
 
-For the viewer, the geometry and the domains are plotted.
+For the viewer and the plotter, the following object are plotter:
+    - the complete voxel structure (as wireframe)
+    - the structure containing non-empty voxels (as wireframe)
+    - the defined point cloud (as points)
+
+For the viewer, the domains are shown for the non-empty voxels.
 
 For the plotter, the following plots are available:
-    - material description (conductors, voltage sources, and current sources)
-    - scalar plots (resistivity, potential, and current density)
-    - arrow plots (current density)
+    - material description for the non-empty voxels (conductors and sources)
+    - scalar plots for the non-empty voxels (resistivity, potential, and current density)
+    - arrow plots for the non-empty voxels (resistivity, potential, and current density)
+    - scalar plots for the point cloud (magnetic field)
+    - arrow plots for the point cloud (magnetic field)
 """
 
 __author__ = "Thomas Guillod"
@@ -103,10 +110,11 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     return obj
 
 
-def plot_material(pl, obj, data_options):
+def plot_material(pl, voxel, data_options):
     """
     Plot the material description (conductors, voltage sources, and current sources).
-    The following encoding is used:
+    The plot is made on the unstructured grid describing the non-empty voxels.
+    The following fake scalar field encoding is used:
         - 0: conducting voxels
         - 1: current source voxels
         - 2: voltage source voxels
@@ -136,7 +144,7 @@ def plot_material(pl, obj, data_options):
 
     # add the resulting plot to the plotter
     pl.add_mesh(
-        obj,
+        voxel,
         scalars="material",
         opacity=opacity,
         scalar_bar_args=scalar_bar_args,
@@ -147,8 +155,10 @@ def plot_material(pl, obj, data_options):
 
 def plot_scalar(pl, obj, data_options):
     """
-    Plot a scalar variable (resistivity, potential, or current density).
-    The variable is plotted on the faces of the voxels.
+    Plot a scalar variable (resistivity, potential, current density, or magnetic field).
+    The plot is either made on:
+        - the unstructured grid describing the non-empty voxels
+        - the polydata (point cloud) used to evaluate the field
     """
 
     # extract
@@ -189,9 +199,13 @@ def plot_scalar(pl, obj, data_options):
 
 def plot_arrow(pl, d_char, obj, data_options):
     """
-    Plot a vector variable (current density) with an arrow plot (quiver plot).
+    Plot a vector variable (current density or magnetic field) with an arrow plot (quiver plot).
+    The plot is either made on:
+        - the unstructured grid describing the non-empty voxels
+        - the polydata (point cloud) used to evaluate the field
+
     A scalar variable is used to determine the color of the arrows.
-    The arrows are located at the center of the voxels.
+    The length of the arrows is constant (and scaled with respect to the voxel size).
     """
 
     # extract
@@ -235,6 +249,7 @@ def plot_arrow(pl, d_char, obj, data_options):
 def get_plot_options(pl, grid, voxel, point, plot_options):
     """
     Plot the geometry as wireframe (complete grid and non-empty voxels).
+    Plot the point cloud used for the field evaluation.
     Add the axis descriptor to orientate the geometry.
     Add a plot title.
     """
@@ -276,7 +291,7 @@ def get_plot_options(pl, grid, voxel, point, plot_options):
 def get_plot_viewer(pl, voxel):
     """
     Plot the different domains composing the voxel structure.
-    The variable is plotted on the faces of the voxels.
+    The plot is made on the unstructured grid describing the non-empty voxels.
     """
 
     # add the resulting plot to the plotter
@@ -289,6 +304,16 @@ def get_plot_viewer(pl, voxel):
 
 
 def get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options):
+    """
+    Plot the solution (material, scalar, or vector plots).
+    The following plot types are available:
+        - plot the material description (conductors and sources) on the voxel structure
+        - plot a scalar variable on the voxel structure
+        - plot a scalar variable on the point cloud
+        - plot a vector variable on the voxel structure
+        - plot a vector variable on the point cloud
+    """
+
     if (plot_type == "material") and (plot_geom == "material"):
         plot_material(pl, voxel, data_options)
     elif (plot_type == "scalar") and (plot_geom == "voxel"):

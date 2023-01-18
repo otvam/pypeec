@@ -80,7 +80,6 @@ def _check_stl_pts(pts):
 def _check_stl_domain_stl(domain_stl):
     """
     Check the validity of the domain definition (STL mesher).
-    Check the validity of the rules to solve conflict between domains (STL mesher).
     """
 
     # check type
@@ -102,7 +101,6 @@ def _check_stl_domain_stl(domain_stl):
 
 def _check_stl_domain_conflict(domain_conflict):
     """
-    Check the validity of the domain definition (STL mesher).
     Check the validity of the rules to solve conflict between domains (STL mesher).
     """
 
@@ -142,7 +140,7 @@ def _check_stl_domain_name(domain_stl, domain_conflict):
 
 def check_data_mesher(data_mesher):
     """
-    Check the validity of the mesh type.
+    Check the mesher data type and extract the data.
     """
 
     # check type
@@ -173,7 +171,7 @@ def check_mesh_type(mesh_type):
 
 def check_data_voxelize_png(data_voxelize):
     """
-    Check the mesher structure (PNG mesher).
+    Check the data used for voxelization (PNG mesher).
     """
 
     # check type
@@ -219,7 +217,7 @@ def check_data_voxelize_png(data_voxelize):
 
 def check_data_voxelize_stl(data_voxelize):
     """
-    Check the mesher structure (STL mesher).
+    Check the data used for voxelization (STL mesher).
     """
 
     # check type

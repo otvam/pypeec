@@ -9,7 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 def _get_plot_options(name):
     """
-    The plot options are controlling the wireframes.
+    The plot options are controlling the wireframe rendering.
     This structure is used by the viewer and the plotter.
     """
 

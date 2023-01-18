@@ -54,7 +54,7 @@ def _check_domain_def(n, domain_def):
 
 def _check_voxel_size(n, d, c):
     """
-    Check the voxel number and dimension.
+    Check the voxel number, placement, and dimension.
     """
 
     # check size
@@ -82,8 +82,8 @@ def _check_voxel_size(n, d, c):
 
 def check_data_voxel(data_voxel):
     """
-    Check the voxel structure (number and dimension).
-    Check the domain definition (mapping between domain names and indices).
+    Check the voxel structure (number, placement, and dimension).
+    Check the mapping between domain names and indices.
     """
 
     # check type

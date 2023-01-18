@@ -11,7 +11,8 @@ from PyPEEC.lib_utils.error import CheckError
 
 def check_data_point(data_point):
     """
-    Check the point structure (defining the cloud of points).
+    Check the point structure (defining the point cloud).
+    The point cloud is used for magnetic field evaluation.
     """
 
     # check type

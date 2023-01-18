@@ -1,13 +1,17 @@
 """
-Different functions for extracting PyVista grids from the voxel structure.
+Different functions for extracting PyVista object from the voxel structure:
+    - the complete voxel structure (uniform grid)
+    - the structure containing non-empty voxels (unstructured grid)
+    - the defined point cloud (polydata object)
 
-For the viewer, create the grid and add the domain definition
+For the viewer, create the objects and add the domain definition.
 
-For the plotter, create the grid and add the solution:
+For the plotter, create the objects and add the solution:
     - material description (conductors and sources)
     - resistivity
     - potential
-    - current density)
+    - current density
+    - magnetic field
 """
 
 __author__ = "Thomas Guillod"
@@ -62,7 +66,8 @@ def get_voxel(grid, idx_v):
 
 def get_point(voxel, data_point):
     """
-    Construct a PyVista point cloud with the defined points.
+    Construct a PyVista point cloud (polydata) with the defined points.
+    The points cannot be located inside the non-empty voxels.
     """
 
     # create the point cloud
@@ -103,6 +108,11 @@ def get_viewer_domain(domain_def):
 
 
 def get_magnetic_field(d, idx_v, J_v, voxel_point, data_point):
+    """
+    Compute the magnetic field for the provided points.
+    The Biot-Savart law is used for te computation.
+    """
+
     # extract the voxel volume
     vol = np.prod(d)
 
@@ -123,15 +133,19 @@ def get_magnetic_field(d, idx_v, J_v, voxel_point, data_point):
         # compute the Biot-Savart contributions
         H_matrix = (vol/(4*np.pi))*(np.cross(J_v, vec, axis=1)/(nrm**3))
 
+        # sum the contributions
+        H_vector = np.sum(H_matrix, axis=0)
+
         # assign the magnetic field
-        H_points[i, :] = np.sum(H_matrix, axis=0)
+        H_points[i, :] = H_vector
 
     return H_points
 
 
 def set_viewer_domain(voxel, idx_v, dom_v):
     """
-    Add the domain tags to the grid as a fake scalar field.
+    Add the domain tags to the unstructured grid
+    A fake scalar field is used to encode the different domains.
     """
 
     # sort idx
@@ -146,8 +160,8 @@ def set_viewer_domain(voxel, idx_v, dom_v):
 
 def set_plotter_material(voxel, idx_v, idx_src_c, idx_src_v):
     """
-    Add the material description (scalar field, input variable) to the unstructured grid.
-    The following encoding is used:
+    Add the material description to the unstructured grid.
+    The following fake scalar field encoding is used:
         - 0: conducting voxels
         - 1: current source voxels
         - 2: voltage source voxels
@@ -208,7 +222,7 @@ def set_plotter_potential(voxel, idx_v, V_v):
 
 def set_plotter_current_density(voxel, idx_v, J_v):
     """
-    Add the potential (scalar and vector fields, current density) to the unstructured grid.
+    Add the current density (scalar and vector fields, current density) to the unstructured grid.
     The norm (scalar field) and the direction (vector field) are added.
     """
 
@@ -229,6 +243,11 @@ def set_plotter_current_density(voxel, idx_v, J_v):
 
 
 def set_plotter_magnetic_field(point, H_point):
+    """
+    Add the magnetic field (scalar and vector fields, current density) to the point cloud.
+    The norm (scalar field) and the direction (vector field) are added.
+    """
+
     # compute the norm
     point["H_norm_abs"] = lna.norm(H_point, axis=1)
     point["H_norm_re"] = lna.norm(np.real(H_point), axis=1)

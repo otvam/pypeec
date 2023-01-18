@@ -38,7 +38,7 @@ def _check_data_window(data_window):
 def _check_plot_options(plot_options):
     """
     Check the validity of the plot options.
-    The plot options are controlling the wireframes and the origin marker.
+    The plot options are controlling the wireframe rendering.
     """
 
     # check type
