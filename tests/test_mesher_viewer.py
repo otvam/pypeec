@@ -33,6 +33,7 @@ class TestMesherViewer(unittest.TestCase):
 
         # get input file name
         file_mesher = os.path.join(path_root, "data_mesher", name + ".json")
+        file_point = os.path.join(path_root, "data_point", name + ".json")
         file_viewer = os.path.join(path_root, "data_visualization", "data_viewer.json")
 
         # create the temporary output file
@@ -45,7 +46,7 @@ class TestMesherViewer(unittest.TestCase):
             self.assertTrue(status, msg="mesher failure")
 
             # run the viewer
-            status = script.run_viewer(file_voxel, file_viewer, False)
+            status = script.run_viewer(file_voxel, file_point, file_viewer, False)
             self.assertTrue(status, msg="viewer failure")
 
     def test_png_inductor(self):

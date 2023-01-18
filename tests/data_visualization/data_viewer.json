@@ -1,6 +1,6 @@
 {
-    "plot_title": "Viewer",
     "plot_options": {
+        "title": "Viewer",
         "grid_plot": true,
         "grid_thickness": 1.0,
         "grid_color": "black",
@@ -9,9 +9,10 @@
         "geom_thickness": 1.0,
         "geom_color": "black",
         "geom_opacity": 0.5,
-        "origin_plot": true,
-        "origin_size": 0.1,
-        "origin_color": "red"
+        "cloud_plot": true,
+        "cloud_color": "black",
+        "cloud_size": 5.0,
+        "cloud_opacity": 0.5
     },
     "data_window": {
         "title": "Viewer",

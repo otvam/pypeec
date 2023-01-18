@@ -34,6 +34,7 @@ class TestSolverPlotter(unittest.TestCase):
         # get input file name
         file_voxel = os.path.join(path_root, "data_voxel", name + ".pck")
         file_problem = os.path.join(path_root, "data_problem", name + ".json")
+        file_point = os.path.join(path_root, "data_point", name + ".json")
         file_plotter = os.path.join(path_root, "data_visualization", "data_plotter.json")
 
         # create the temporary output file
@@ -46,7 +47,7 @@ class TestSolverPlotter(unittest.TestCase):
             self.assertTrue(status, msg="solver failure")
 
             # run the plotter
-            status = script.run_plotter(file_solution, file_plotter, False)
+            status = script.run_plotter(file_solution, file_point, file_plotter, False)
             self.assertTrue(status, msg="plotter failure")
 
     def test_voxel_slab(self):

@@ -38,6 +38,12 @@ copy_file "data_mesher" "voxel_transformer.json"
 copy_folder "data_mesher" "png_inductor"
 copy_folder "data_mesher" "stl_inductor"
 
+echo "copy the point files"
+copy_file "data_point" "png_inductor.json"
+copy_file "data_point" "stl_inductor.json"
+copy_file "data_point" "voxel_slab.json"
+copy_file "data_point" "voxel_transformer.json"
+
 echo "copy the problem files"
 copy_file "data_problem" "voxel_slab.json"
 copy_file "data_problem" "voxel_transformer.json"

@@ -26,7 +26,8 @@ def run_mesher(file_mesher, file_voxel):
     """
 
     try:
-        # load mesher file
+        # load data
+        logger.info("load the data")
         data_mesher = fileio.load_json(file_mesher)
 
         # get the path for relative file loading
@@ -34,10 +35,11 @@ def run_mesher(file_mesher, file_voxel):
         path_cwd = os.getcwd()
         path_ref = os.path.relpath(path_ref, path_cwd)
 
-        # call solver
+        # call the mesher
         (status, data_voxel) = mesher.run(data_mesher, path_ref)
 
         # save results
+        logger.info("save the results")
         fileio.write_pickle(status, file_voxel, data_voxel)
     except FileError as ex:
         logger.error("check error : " + str(ex))
@@ -52,16 +54,13 @@ def run_viewer(file_voxel, file_point, file_viewer, is_blocking):
     """
 
     try:
-        # load voxel file
+        # load data
+        logger.info("load the data")
         data_voxel = fileio.load_pickle(file_voxel)
-
-        # load viewer file
         data_point = fileio.load_json(file_point)
-
-        # load viewer file
         data_viewer = fileio.load_json(file_viewer)
 
-        # call lib_plotter
+        # call the viewer
         status = viewer.run(data_voxel, data_point, data_viewer, is_blocking)
     except FileError as ex:
         logger.error("check error : " + str(ex))
@@ -76,16 +75,16 @@ def run_solver(file_voxel, file_problem, file_solution):
     """
 
     try:
-        # load voxel file
+        # load data
+        logger.info("load the data")
         data_voxel = fileio.load_pickle(file_voxel)
-
-        # load mesher file
         data_problem = fileio.load_json(file_problem)
 
-        # call solver
+        # call the solver
         (status, data_solution) = solver.run(data_voxel, data_problem)
 
         # save results
+        logger.info("save the results")
         fileio.write_pickle(status, file_solution, data_solution)
     except FileError as ex:
         logger.error("check error : " + str(ex))
@@ -100,16 +99,13 @@ def run_plotter(file_solution, file_point, file_plotter, is_blocking):
     """
 
     try:
-        # load res file
+        # load data
+        logger.info("load the data")
         data_solution = fileio.load_pickle(file_solution)
-
-        # load viewer file
         data_point = fileio.load_json(file_point)
-
-        # load plotter file
         data_plotter = fileio.load_json(file_plotter)
 
-        # call plotter
+        # call the plotter
         status = plotter.run(data_solution, data_point, data_plotter, is_blocking)
     except FileError as ex:
         logger.error("check error : " + str(ex))
