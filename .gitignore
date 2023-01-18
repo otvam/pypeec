@@ -1,8 +1,10 @@
 # remove Python object
-*.pck
 *.pyc
 *.pyo
 **/__pycache__
+
+# remove pickle file
+*.pck
 
 # remove packinging files
 dist/*
