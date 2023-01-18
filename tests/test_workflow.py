@@ -73,6 +73,13 @@ class TestMesherViewer(unittest.TestCase):
 
         self._test_workflow("data_png_inductor")
 
+    def test_png_cylinder(self):
+        """
+        Test workflow for png_cylinder.
+        """
+
+        self._test_workflow("data_png_cylinder")
+
     def test_stl_inductor(self):
         """
         Test workflow for stl_inductor.

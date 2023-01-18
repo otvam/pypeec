@@ -40,7 +40,7 @@ def _get_clip_options():
     clip_options = {
         "clip_plot": False,
         "clip_invert": False,
-        "clip_axis": "x",
+        "clip_axis": "z",
         "clip_value": 0.0,
     }
 

@@ -1,10 +1,10 @@
 {
     "mesh_type": "png",
     "data_voxelize": {
-        "d": [35e-6, 35e-6, 35e-6],
+        "d": [50e-6, 50e-6, 2e-3],
         "c": [0.0, 0.0, 0.0],
-        "nx": 176,
-        "ny": 160,
+        "nx": 49,
+        "ny": 49,
         "domain_color": {
             "coil": [0, 0, 0, 255],
             "src": [255, 0, 0, 255],
@@ -13,15 +13,15 @@
         "layer_stack": [
             {
                 "n_add": 1,
-                "filename": "png/return.png"
+                "filename": "png/src.png"
             },
             {
-                "n_add": 6,
-                "filename": "png/via.png"
+                "n_add": 8,
+                "filename": "png/wire.png"
             },
             {
                 "n_add": 1,
-                "filename": "png/coil.png"
+                "filename": "png/sink.png"
             }
         ]
     },

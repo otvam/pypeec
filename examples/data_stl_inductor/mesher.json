@@ -5,9 +5,9 @@
         "pts_min": [null, null, null],
         "pts_max": [null, null, null],
         "domain_stl": {
-            "coil": "stl_inductor/coil.stl",
-            "src": "stl_inductor/src.stl",
-            "sink": "stl_inductor/sink.stl"
+            "coil": "stl/coil.stl",
+            "src": "stl/src.stl",
+            "sink": "stl/sink.stl"
         },
         "domain_conflict": [
             {
