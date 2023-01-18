@@ -32,6 +32,21 @@ def _get_plot_options(name):
     return plot_options
 
 
+def _get_clip_options():
+    """
+    Define the display (with/without clipping plane).
+    """
+
+    clip_options = {
+        "clip_plot": False,
+        "clip_invert": False,
+        "clip_axis": "x",
+        "clip_value": 0.0,
+    }
+
+    return clip_options
+
+
 def _get_data_window(name):
     """
     The window options are the window title and appearance.
@@ -121,6 +136,7 @@ def _get_data_plotter_item(plot_type, plot_geom, name, data_options):
         "plot_type": plot_type,
         "plot_geom": plot_geom,
         "data_options": data_options,
+        "clip_options": _get_clip_options(),
         "plot_options": _get_plot_options(name),
         "data_window": _get_data_window(name),
     }
@@ -138,11 +154,13 @@ def get_data_viewer():
     data_viewer = [
         {
             "plot_type": "domain",
+            "clip_options": _get_clip_options(),
             "plot_options": _get_plot_options("Domain"),
             "data_window": _get_data_window("Domain"),
         },
         {
             "plot_type": "graph",
+            "clip_options": _get_clip_options(),
             "plot_options": _get_plot_options("Graph"),
             "data_window": _get_data_window("Graph"),
         },

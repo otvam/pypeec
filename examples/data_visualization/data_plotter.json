@@ -6,6 +6,12 @@
             "legend": "Material",
             "opacity": 1.0
         },
+        "clip_options": {
+            "clip_plot": false,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
+        },
         "plot_options": {
             "title": "Material",
             "grid_plot": true,
@@ -48,6 +54,12 @@
             "opacity": 1.0,
             "size": 10.0,
             "legend": "Resistivity [uOhm/cm]"
+        },
+        "clip_options": {
+            "clip_plot": false,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
         },
         "plot_options": {
             "title": "Resistivity",
@@ -92,6 +104,12 @@
             "size": 10.0,
             "legend": "Potential [V]"
         },
+        "clip_options": {
+            "clip_plot": false,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
+        },
         "plot_options": {
             "title": "Potential",
             "grid_plot": true,
@@ -134,6 +152,12 @@
             "opacity": 1.0,
             "size": 10.0,
             "legend": "Current Norm [A/mm2]"
+        },
+        "clip_options": {
+            "clip_plot": false,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
         },
         "plot_options": {
             "title": "Current Norm",
@@ -179,6 +203,12 @@
             "arrow_scale": 0.5,
             "legend": "Re. Current [A/mm2]"
         },
+        "clip_options": {
+            "clip_plot": false,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
+        },
         "plot_options": {
             "title": "Re. Current",
             "grid_plot": true,
@@ -223,6 +253,12 @@
             "arrow_scale": 0.5,
             "legend": "Im. Current [A/mm2]"
         },
+        "clip_options": {
+            "clip_plot": false,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
+        },
         "plot_options": {
             "title": "Im. Current",
             "grid_plot": true,
@@ -265,6 +301,12 @@
             "opacity": 1.0,
             "size": 10.0,
             "legend": "Mag. Field Norm [A/m]"
+        },
+        "clip_options": {
+            "clip_plot": false,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
         },
         "plot_options": {
             "title": "Mag. Field Norm",
@@ -310,6 +352,12 @@
             "arrow_scale": 0.5,
             "legend": "Re. Mag. Field [A/m]"
         },
+        "clip_options": {
+            "clip_plot": false,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
+        },
         "plot_options": {
             "title": "Re. Mag. Field",
             "grid_plot": true,
@@ -353,6 +401,12 @@
             "arrow_threshold": 0.001,
             "arrow_scale": 0.5,
             "legend": "Im. Mag. Field [A/m]"
+        },
+        "clip_options": {
+            "clip_plot": false,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
         },
         "plot_options": {
             "title": "Im. Mag. Field",

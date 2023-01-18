@@ -25,6 +25,38 @@ import numpy as np
 import numpy.linalg as lna
 
 
+def _get_clip_mesh(pl, obj, arg, clip_options):
+    """
+    Add an object (either full view or clipped).
+    """
+
+    # extract
+    clip_plot = clip_options["clip_plot"]
+    clip_invert = clip_options["clip_invert"]
+    clip_axis = clip_options["clip_axis"]
+    clip_value = clip_options["clip_value"]
+
+    # add the plot
+    if clip_plot:
+        # add the clipping arguments
+        arg["invert"] = clip_invert
+        arg["normal"] = clip_axis
+        arg["value"] = clip_value
+        arg["normal_rotation"] = False
+
+        # add the clipped plot
+        pl.add_mesh_clip_plane(
+            obj,
+            **arg,
+        )
+    else:
+        # add the full plot
+        pl.add_mesh(
+            obj,
+            **arg,
+        )
+
+
 def _get_filter_vector(obj, vec, arrow_threshold):
     """
     Filter the voxel structure with a vector field.
@@ -112,7 +144,7 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     return obj
 
 
-def plot_material(pl, voxel, data_options):
+def plot_material(pl, voxel, data_options, clip_options):
     """
     Plot the material description (conductors, voltage sources, and current sources).
     The plot is made on the unstructured grid describing the non-empty voxels.
@@ -148,17 +180,18 @@ def plot_material(pl, voxel, data_options):
     voxel_tmp = voxel.copy(deep=True)
 
     # add the resulting plot to the plotter
-    pl.add_mesh(
-        voxel_tmp,
+    arg = dict(
         scalars="material",
         opacity=opacity,
         scalar_bar_args=scalar_bar_args,
         annotations=annotations,
         cmap=cmap,
     )
+    if voxel_tmp.n_cells > 0:
+        _get_clip_mesh(pl, voxel_tmp, arg, clip_options)
 
 
-def plot_scalar(pl, obj, data_options):
+def plot_scalar(pl, obj, data_options, clip_options):
     """
     Plot a scalar variable (resistivity, potential, current density, or magnetic field).
     The plot is either made on:
@@ -190,19 +223,19 @@ def plot_scalar(pl, obj, data_options):
     obj_tmp = _get_clamp_scale_scalar(obj_tmp, var, color_lim, scale)
 
     # add the resulting plot to the plotter
+    arg = dict(
+        scalars=var,
+        opacity=opacity,
+        point_size=size,
+        log_scale=log,
+        scalar_bar_args=scalar_bar_args,
+        render_points_as_spheres=True,
+    )
     if obj_tmp.n_cells > 0:
-        pl.add_mesh(
-            obj_tmp,
-            scalars=var,
-            opacity=opacity,
-            point_size=size,
-            log_scale=log,
-            scalar_bar_args=scalar_bar_args,
-            render_points_as_spheres=True,
-        )
+        _get_clip_mesh(pl, obj_tmp, arg, clip_options)
 
 
-def plot_arrow(pl, d_char, obj, data_options):
+def plot_arrow(pl, d_char, obj, data_options, clip_options):
     """
     Plot a vector variable (current density or magnetic field) with an arrow plot (quiver plot).
     The plot is either made on:
@@ -242,13 +275,70 @@ def plot_arrow(pl, d_char, obj, data_options):
     factor = d_char*arrow_scale
 
     # add the resulting plot to the plotter
+    arg = dict(
+        scalars=var,
+        log_scale=log,
+        scalar_bar_args=scalar_bar_args,
+    )
     if obj_tmp.n_cells > 0:
-        pl.add_mesh(
-            obj_tmp.glyph(orient=vec, scale=False, factor=factor),
-            scalars=var,
-            log_scale=log,
-            scalar_bar_args=scalar_bar_args,
-        )
+        glyph_tmp = obj_tmp.glyph(orient=vec, scale=False, factor=factor)
+        _get_clip_mesh(pl, glyph_tmp, arg, clip_options)
+
+
+def get_plot_viewer(pl, voxel, plot_type, clip_options):
+    """
+    Plot the voxel structure (for the viewer).
+    The following plot types are available:
+        - the domains are shown for the non-empty voxels
+        - the connected components for the non-empty voxels
+    """
+
+    # find the variable to be plotted
+    if plot_type == "domain":
+        tag = "domain"
+    elif plot_type == "graph":
+        tag = "graph"
+    else:
+        raise ValueError("invalid plot type and plot feature")
+
+    # make a copy (for avoid cross coupling)
+    voxel_tmp = voxel.copy(deep=True)
+
+    # add the resulting plot to the plotter
+    arg = dict(
+        show_scalar_bar=False,
+        scalars=tag,
+        cmap="Accent",
+    )
+    if voxel_tmp.n_cells > 0:
+        _get_clip_mesh(pl, voxel_tmp, arg, clip_options)
+
+
+def get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options, clip_options):
+    """
+    Plot the solution (for the plotter).
+    The following plot types are available:
+        - plot the material description (conductors and sources) on the voxel structure
+        - plot a scalar variable on the voxel structure
+        - plot a scalar variable on the point cloud
+        - plot a vector variable on the voxel structure
+        - plot a vector variable on the point cloud
+    """
+
+    if (plot_type == "material") and (plot_geom == "material"):
+        plot_material(pl, voxel, data_options, clip_options)
+    elif (plot_type == "scalar") and (plot_geom == "voxel"):
+        plot_scalar(pl, voxel, data_options, clip_options)
+    elif (plot_type == "scalar") and (plot_geom == "point"):
+        plot_scalar(pl, point, data_options, clip_options)
+    elif (plot_type == "arrow") and (plot_geom == "voxel"):
+        d_char = min(grid.spacing)
+        plot_arrow(pl, d_char, voxel, data_options, clip_options)
+    elif (plot_type == "arrow") and (plot_geom == "point"):
+        d_char = min(grid.spacing)
+        plot_arrow(pl, d_char, point, data_options, clip_options)
+    else:
+        raise ValueError("invalid plot type and plot feature")
 
 
 def get_plot_options(pl, grid, voxel, point, plot_options):
@@ -291,58 +381,3 @@ def get_plot_options(pl, grid, voxel, point, plot_options):
     # add title and axes
     pl.add_axes(line_width=2)
     pl.add_text(plot_options["title"], font_size=10)
-
-
-def get_plot_viewer(pl, voxel, plot_type):
-    """
-    Plot the voxel structure (for the viewer).
-    The following plot types are available:
-        - the domains are shown for the non-empty voxels
-        - the connected components for the non-empty voxels
-    """
-
-    # find the variable to be plotted
-    if plot_type == "domain":
-        tag = "domain"
-    elif plot_type == "graph":
-        tag = "graph"
-    else:
-        raise ValueError("invalid plot type and plot feature")
-
-    # make a copy (for avoid cross coupling)
-    voxel_tmp = voxel.copy(deep=True)
-
-    # add the resulting plot to the plotter
-    pl.add_mesh(
-        voxel_tmp,
-        show_scalar_bar=False,
-        scalars=tag,
-        cmap="Accent",
-    )
-
-
-def get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options):
-    """
-    Plot the solution (for the plotter).
-    The following plot types are available:
-        - plot the material description (conductors and sources) on the voxel structure
-        - plot a scalar variable on the voxel structure
-        - plot a scalar variable on the point cloud
-        - plot a vector variable on the voxel structure
-        - plot a vector variable on the point cloud
-    """
-
-    if (plot_type == "material") and (plot_geom == "material"):
-        plot_material(pl, voxel, data_options)
-    elif (plot_type == "scalar") and (plot_geom == "voxel"):
-        plot_scalar(pl, voxel, data_options)
-    elif (plot_type == "scalar") and (plot_geom == "point"):
-        plot_scalar(pl, point, data_options)
-    elif (plot_type == "arrow") and (plot_geom == "voxel"):
-        d_char = min(grid.spacing)
-        plot_arrow(pl, d_char, voxel, data_options)
-    elif (plot_type == "arrow") and (plot_geom == "point"):
-        d_char = min(grid.spacing)
-        plot_arrow(pl, d_char, point, data_options)
-    else:
-        raise ValueError("invalid plot type and plot feature")

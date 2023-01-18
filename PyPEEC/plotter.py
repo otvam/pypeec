@@ -76,13 +76,14 @@ def _get_plot(grid, voxel, point, data_plotter, is_blocking):
     plot_geom = data_plotter["plot_geom"]
     data_window = data_plotter["data_window"]
     data_options = data_plotter["data_options"]
+    clip_options = data_plotter["clip_options"]
     plot_options = data_plotter["plot_options"]
 
     # get the plotter (with the Qt framework)
     pl = vistagui.open_plotter(data_window, is_blocking)
 
     # find the plot type and call the corresponding function
-    manage_plot.get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options)
+    manage_plot.get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options, clip_options)
 
     # add the geometry and axes
     manage_plot.get_plot_options(pl, grid, voxel, point, plot_options)

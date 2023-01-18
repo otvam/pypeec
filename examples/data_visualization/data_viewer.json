@@ -1,6 +1,12 @@
 [
     {
         "plot_type": "domain",
+        "clip_options": {
+            "clip_plot": true,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
+        },
         "plot_options": {
             "title": "Domain",
             "grid_plot": true,
@@ -27,6 +33,12 @@
     },
     {
         "plot_type": "graph",
+        "clip_options": {
+            "clip_plot": true,
+            "clip_invert": false,
+            "clip_axis": "x",
+            "clip_value": 0.0
+        },
         "plot_options": {
             "title": "Graph",
             "grid_plot": true,
