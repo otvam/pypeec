@@ -9,7 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 def _get_plot_options(name):
     """
-    The plot options are controlling the wireframes and the origin marker.
+    The plot options are controlling the wireframes.
     This structure is used by the viewer and the plotter.
     """
 
@@ -50,6 +50,7 @@ def _get_data_window(name):
 def _get_data_plotter_geometry(name):
     """
     Plot options for the material description (conductors and sources).
+    The result is plotted on the voxel structure.
     This structure is used by the plotter.
     """
 
@@ -66,6 +67,7 @@ def _get_data_plotter_geometry(name):
 def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
     """
     Plot options for a scalar variable (scalar plot).
+    The variable is either plotted on the voxel structure or on a provided point cloud.
     This structure is used by the plotter.
     """
 
@@ -88,6 +90,7 @@ def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
 def _get_data_plotter_arrow(plot_geom, var, vec, scale, unit, name):
     """
     Plot options for a vector variable (arrow plot).
+    The variable is either plotted on the voxel structure or on a provided point cloud.
     This structure is used by the plotter.
     """
 
@@ -128,6 +131,7 @@ def _get_data_plotter_item(plot_type, plot_geom, name, data_options):
 def get_data_viewer():
     """
     Get the options for visualizing the voxel structure.
+    The result is plotted on the voxel structure.
     This structure is used by the viewer.
     """
 
@@ -142,7 +146,7 @@ def get_data_viewer():
 def get_data_plotter():
     """
     Get the options for plotting the solver solution.
-    Each element in the list represent a different plot.
+    Each element in the list represents a different plot.
     This structure is used by the plotter.
     """
 

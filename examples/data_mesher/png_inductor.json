@@ -2,7 +2,7 @@
     "mesh_type": "png",
     "data_voxelize": {
         "d": [35e-6, 35e-6, 35e-6],
-        "ori": [0e-3, 0e-3, 0e-3],
+        "c": [0.0, 0.0, 0.0],
         "nx": 176,
         "ny": 160,
         "domain_color": {

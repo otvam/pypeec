@@ -182,7 +182,7 @@ def check_data_voxelize_png(data_voxelize):
 
     # extract field
     d = data_voxelize["d"]
-    ori = data_voxelize["ori"]
+    c = data_voxelize["c"]
     nx = data_voxelize["nx"]
     ny = data_voxelize["ny"]
     domain_color = data_voxelize["domain_color"]
@@ -191,14 +191,14 @@ def check_data_voxelize_png(data_voxelize):
     # check size
     if not (len(d) == 3):
         raise CheckError("d: invalid voxel size (should be a list with three elements)")
-    if not (len(ori) == 3):
-        raise CheckError("ori: invalid origin coordinate size (should be a list with three elements)")
+    if not (len(c) == 3):
+        raise CheckError("c: invalid center coordinate size (should be a list with three elements)")
 
     # check type
     if not all(np.issubdtype(type(x), np.floating) for x in d):
         raise CheckError("d: dimension of the voxels should be composed of real floats")
-    if not all(np.issubdtype(type(x), np.floating) for x in ori):
-        raise CheckError("ori: origin coordinate should be composed of real floats")
+    if not all(np.issubdtype(type(x), np.floating) for x in c):
+        raise CheckError("c: center coordinate should be composed of real floats")
     if not np.issubdtype(type(nx), np.integer):
         raise CheckError("nx: number of voxel in x direction should be an integer")
     if not np.issubdtype(type(ny), np.integer):

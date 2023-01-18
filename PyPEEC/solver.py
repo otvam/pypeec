@@ -51,13 +51,13 @@ def _run_preproc(data_solver):
     # extract the input data
     n = data_solver["n"]
     d = data_solver["d"]
-    ori = data_solver["ori"]
+    c = data_solver["c"]
     n_green = data_solver["n_green"]
 
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
         # get the coordinate of the voxels
-        voxel_point = voxel_geometry.get_voxel_point(n, d, ori)
+        voxel_point = voxel_geometry.get_voxel_point(n, d, c)
 
         # compute the incidence matrix
         A_incidence = voxel_geometry.get_incidence_matrix(n)
@@ -217,7 +217,7 @@ def _run_assemble(data_solver):
     data_solution = {
         "n": data_solver["n"],
         "d": data_solver["d"],
-        "ori": data_solver["ori"],
+        "c": data_solver["c"],
         "voxel_point": data_solver["voxel_point"],
         "idx_v": data_solver["idx_v"],
         "idx_src_c": data_solver["idx_src_c"],

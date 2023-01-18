@@ -19,7 +19,7 @@ import pyvista as pv
 from PyPEEC.lib_utils.error import RunError
 
 
-def get_grid(n, d, ori):
+def get_grid(n, d, c):
     """
     Construct a PyVista uniform grid for the complete voxel structure.
     """
@@ -27,13 +27,18 @@ def get_grid(n, d, ori):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    (orix, oriy, oriz) = ori
+    (cx, cy, cz) = c
+
+    # origin coordinate
+    ox = cx-(nx*dx)/2
+    oy = cy-(ny*dy)/2
+    oz = cz-(nz*dz)/2
 
     # create a uniform grid for the complete structure
     grid = pv.UniformGrid()
 
     # set the array size and the voxel size
-    grid.origin = (orix, oriy, oriz)
+    grid.origin = (ox, oy, oz)
     grid.dimensions = (nx+1, ny+1, nz+1)
     grid.spacing = (dx, dy, dz)
 

@@ -61,7 +61,7 @@ def _run_png(data_voxelize, path_ref):
 
     # extract the data
     d = data_voxelize["d"]
-    ori = data_voxelize["ori"]
+    c = data_voxelize["c"]
     nx = data_voxelize["nx"]
     ny = data_voxelize["ny"]
     domain_color = data_voxelize["domain_color"]
@@ -76,7 +76,7 @@ def _run_png(data_voxelize, path_ref):
     data_voxel = {
         "n": n,
         "d": d,
-        "ori": ori,
+        "c": c,
         "domain_def": domain_def,
     }
 
@@ -98,14 +98,14 @@ def _run_stl(data_voxelize, path_ref):
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
         domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
-        (d, ori, domain_def) = stl_mesher.get_mesh(n, pts_min, pts_max, domain_stl)
+        (d, c, domain_def) = stl_mesher.get_mesh(n, pts_min, pts_max, domain_stl)
         domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
 
     # assemble the data
     data_voxel = {
         "n": n,
         "d": d,
-        "ori": ori,
+        "c": c,
         "domain_def": domain_def,
     }
 
@@ -120,7 +120,7 @@ def _run_resample(data_voxel, data_resampling):
     # extract the data
     n = data_voxel["n"]
     d = data_voxel["d"]
-    ori = data_voxel["ori"]
+    c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
     use_resampling = data_resampling["use_resampling"]
     n_resampling = data_resampling["n_resampling"]
@@ -133,7 +133,7 @@ def _run_resample(data_voxel, data_resampling):
     data_voxel = {
         "n": n,
         "d": d,
-        "ori": ori,
+        "c": c,
         "domain_def": domain_def,
     }
 
@@ -148,19 +148,19 @@ def _run_disp(data_voxel):
     # extract the data
     n = data_voxel["n"]
     d = data_voxel["d"]
-    ori = data_voxel["ori"]
+    c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
 
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    (orix, oriy, oriz) = ori
+    (cx, cy, cz) = c
     n = nx*ny*nz
 
     # plot the voxel size
     logger.info("(nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
     logger.info("(dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
-    logger.info("(orix, oriy, oriz) =  (%.3e, %.3e, %.3e)" % (orix, oriy, oriz))
+    logger.info("(cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
     logger.info("n = %d" % n)
 
     # plot the domain size

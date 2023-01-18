@@ -30,7 +30,7 @@ def _get_grid_voxel(data_solution, data_point):
     # extract the data
     n = data_solution["n"]
     d = data_solution["d"]
-    ori = data_solution["ori"]
+    c = data_solution["c"]
     voxel_point = data_solution["voxel_point"]
     idx_v = data_solution["idx_v"]
     idx_src_c = data_solution["idx_src_c"]
@@ -43,7 +43,7 @@ def _get_grid_voxel(data_solution, data_point):
     H_point = manage_voxel.get_magnetic_field(d, idx_v, J_v, voxel_point, data_point)
 
     # convert the voxel geometry into PyVista grids
-    grid = manage_voxel.get_grid(n, d, ori)
+    grid = manage_voxel.get_grid(n, d, c)
     voxel = manage_voxel.get_voxel(grid, idx_v)
     point = manage_voxel.get_point(voxel, data_point)
 

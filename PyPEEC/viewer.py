@@ -31,14 +31,14 @@ def _get_grid_voxel(data_voxel, data_point):
     # extract the data
     n = data_voxel["n"]
     d = data_voxel["d"]
-    ori = data_voxel["ori"]
+    c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
 
     # get the indices of the non-empty voxels
     (idx_v, dom_v) = manage_voxel.get_viewer_domain(domain_def)
 
     # convert the voxel geometry into PyVista grids
-    grid = manage_voxel.get_grid(n, d, ori)
+    grid = manage_voxel.get_grid(n, d, c)
     voxel = manage_voxel.get_voxel(grid, idx_v)
     point = manage_voxel.get_point(voxel, data_point)
 

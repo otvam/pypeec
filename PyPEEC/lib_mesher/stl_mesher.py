@@ -17,7 +17,7 @@ import pyvista as pv
 from PyPEEC.lib_utils.error import RunError
 
 
-def _get_grid(n, d, ori):
+def _get_grid(n, d, c):
     """
     Construct a PyVista uniform grid for the complete voxel structure.
     The grid is located around the STL meshes to be voxelized.
@@ -27,7 +27,7 @@ def _get_grid(n, d, ori):
     grid = pv.UniformGrid()
 
     # set the array size and the voxel size
-    grid.origin = ori
+    grid.origin = c-(n*d)/2
     grid.dimensions = n+1
     grid.spacing = d
 
@@ -158,7 +158,7 @@ def get_mesh(n, pts_min, pts_max, domain_stl):
     pts_min = np.array(pts_min, np.float64)
     pts_max = np.array(pts_max, np.float64)
 
-    # if provided use the user specified bounds, otherwise the STL bounds
+    # if provided, the user specified bounds are used, otherwise the STL bounds
     pts_min = np.array(pts_min, np.float64)
     pts_max = np.array(pts_max, np.float64)
     idx_replace_min = np.isnan(pts_min)
@@ -169,24 +169,24 @@ def get_mesh(n, pts_min, pts_max, domain_stl):
     # extract the voxel size
     d = (pts_max-pts_min)/n
 
-    # extract the origin
-    ori = pts_min
+    # extract the center
+    c = (pts_max+pts_min)/2
 
     # check voxel validity
     if not np.all(d > 0):
         RunError("invalid voxel dimension: should be positive")
 
     # get the uniform grid
-    grid = _get_grid(n, d, ori)
+    grid = _get_grid(n, d, c)
 
     # voxelize the meshes and get the indices
     domain_def = _get_idx_stl(grid, mesh_stl)
 
-    # cast back the voxel size and origin to a list
+    # cast back the voxel size and center to a list
     d = d.tolist()
-    ori = ori.tolist()
+    c = c.tolist()
 
-    return d, ori, domain_def
+    return d, c, domain_def
 
 
 def get_conflict(domain_def, domain_conflict):

@@ -128,10 +128,10 @@ def _get_update_size(n, d, n_resampling):
     (rx, ry, rz) = n_resampling
 
     # update the number of voxels
-    n = (nx*rx, ny*ry, nz*rz)
+    n = [nx*rx, ny*ry, nz*rz]
 
     # update the dimension of the voxels
-    d = (dx/rx, dy/ry, dz/rz)
+    d = [dx/rx, dy/ry, dz/rz]
 
     return n, d
 

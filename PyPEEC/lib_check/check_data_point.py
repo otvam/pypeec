@@ -18,11 +18,9 @@ def check_data_point(data_point):
     if not isinstance(data_point, list):
         raise CheckError("data_point: point description should be a list")
 
-    # cast indices
-    data_point = np.array(data_point)
-
     # check the points (if any)
     if data_point:
+        data_point = np.array(data_point)
         if not (len(data_point.shape) == 2):
             raise CheckError("data_point: coordinates should be a 2D array")
         if not (data_point.shape[0] > 0):
