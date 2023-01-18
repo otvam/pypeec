@@ -20,8 +20,5 @@
             }
         ]
     },
-    "data_resampling": {
-        "use_resampling": true,
-        "n_resampling": [1, 1, 1]
-    }
+    "n_resampling": [1, 1, 1]
 }

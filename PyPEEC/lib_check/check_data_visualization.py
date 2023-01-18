@@ -81,6 +81,29 @@ def _check_plot_options(plot_options):
         raise CheckError("cloud_opacity: the cloud opacity option should be a float")
 
 
+def _check_clip_options(clip_options):
+    """
+    Check the validity of the clip options (for the viewer and plotter).
+    The clip options are controlling the cut plane (clipping) of the plots.
+    """
+
+    # check type
+    if not isinstance(clip_options, dict):
+        raise CheckError("clip_options: clip options should be a dict")
+
+    # check type
+    if not isinstance(clip_options["clip_plot"], bool):
+        raise CheckError("clip_plot: the clip plot option should be a boolean")
+    if not isinstance(clip_options["clip_invert"], bool):
+        raise CheckError("clip_invert: the clip invert option should be a boolean")
+    if not isinstance(clip_options["clip_axis"], str):
+        raise CheckError("clip_axis: the axis of the clip should be a string")
+    if not clip_options["clip_axis"] in ["x", "y", "z"]:
+        raise CheckError("clip_axis: the axis of the clip is invalid")
+    if not isinstance(clip_options["clip_value"], float):
+        raise CheckError("clip_value: the value of the clip plane should be a float")
+
+
 def _check_data_options(plot_type, plot_geom, data_options):
     """
     Check the validity of the data options (for the plotter).
@@ -201,6 +224,7 @@ def _check_data_plotter_item(data_plotter):
     plot_geom = data_plotter["plot_geom"]
     data_window = data_plotter["data_window"]
     data_options = data_plotter["data_options"]
+    clip_options = data_plotter["clip_options"]
     plot_options = data_plotter["plot_options"]
 
     # check type
@@ -218,6 +242,7 @@ def _check_data_plotter_item(data_plotter):
     # check data
     _check_data_window(data_window)
     _check_data_options(plot_type, plot_geom, data_options)
+    _check_clip_options(clip_options)
     _check_plot_options(plot_options)
 
 
@@ -233,6 +258,7 @@ def _check_data_viewer_item(data_viewer):
     # extract field
     plot_type = data_viewer["plot_type"]
     data_window = data_viewer["data_window"]
+    clip_options = data_viewer["clip_options"]
     plot_options = data_viewer["plot_options"]
 
     # check type
@@ -245,6 +271,7 @@ def _check_data_viewer_item(data_viewer):
 
     # check data
     _check_data_window(data_window)
+    _check_clip_options(clip_options)
     _check_plot_options(plot_options)
 
 

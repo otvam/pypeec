@@ -5,7 +5,7 @@
 
 # standard numpy and scipy
 numpy>=1.24 # used by the mesher, viewer, solver, and plotter
-scipy>=1.9 # used by the solver
+scipy>=1.9 # used by the mesher and solver
 
 # high-performance libraries
 scikit-umfpack>=0.3 # used by the solver, optional see config file

@@ -2,7 +2,7 @@
     {
         "plot_type": "domain",
         "clip_options": {
-            "clip_plot": true,
+            "clip_plot": false,
             "clip_invert": false,
             "clip_axis": "x",
             "clip_value": 0.0
@@ -34,7 +34,7 @@
     {
         "plot_type": "graph",
         "clip_options": {
-            "clip_plot": true,
+            "clip_plot": false,
             "clip_invert": false,
             "clip_axis": "x",
             "clip_value": 0.0
