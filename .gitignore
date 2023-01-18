@@ -3,12 +3,17 @@
 *.pyo
 **/__pycache__
 
-# remove pickle file
-*.pck
+# exclude pickle file
+examples/**/*.pck
+
+# exclude the test files
+tests/**/*.json
+tests/**/*.png
+tests/**/*.stl
 
 # remove packinging files
 dist/*
-*.egg-info
+PyPEEC.egg-info/*
 PyPEEC/version.py
 
 # exclude virtual env
