@@ -9,6 +9,77 @@ import numpy as np
 from PyPEEC.lib_utils.error import CheckError
 
 
+def _check_voxel_domain_def(n, domain_def):
+    """
+    Check the domain definition (mapping between domain names and indices).
+    """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    n = nx * ny * nz
+
+    # init the domain indices
+    idx_domain = np.array([], dtype=np.int64)
+
+    # check type
+    if not isinstance(domain_def, dict):
+        raise CheckError("domain_def: domain definition should be a dict")
+    if not domain_def:
+        raise CheckError("domain_def: domain definition cannot be empty")
+
+    # check the different domains
+    for tag, idx in domain_def.items():
+        # check tag
+        if not isinstance(tag, str):
+            raise CheckError("tag: domain name should be a string")
+
+        # cast indices
+        idx = np.array(idx)
+        if not (len(idx.shape) == 1):
+            raise CheckError("idx: indices should be a vector")
+        if not np.issubdtype(idx.dtype, np.integer):
+            raise CheckError("idx: indices should be composed of integers")
+
+        # check for indices range
+        if not (np.all(idx >= 0) and np.all(idx < n)):
+            raise CheckError("idx: domain indices should belong to the voxel structure")
+
+        # append
+        idx_domain = np.append(idx_domain, idx)
+
+    # check for duplicates
+    if not (len(np.unique(idx_domain)) == len(idx_domain)):
+        raise CheckError("domain indices should be unique")
+
+
+def _check_voxel_size(n, d, c):
+    """
+    Check the voxel number, placement, and dimension.
+    """
+
+    # check size
+    if not (len(n) == 3):
+        raise CheckError("n: invalid voxel number (should be a list with three elements)")
+    if not (len(d) == 3):
+        raise CheckError("d: invalid voxel size (should be a list with three elements)")
+    if not (len(c) == 3):
+        raise CheckError("c: invalid center coordinate size (should be a list with three elements)")
+
+    # check type
+    if not all(np.issubdtype(type(x), np.integer) for x in n):
+        raise CheckError("n: number of voxels should be composed of integers")
+    if not all(np.issubdtype(type(x), np.floating) for x in d):
+        raise CheckError("d: dimension of the voxels should be composed of real floats")
+    if not all(np.issubdtype(type(x), np.floating) for x in c):
+        raise CheckError("c: center coordinate should be composed of real floats")
+
+    # check value
+    if not all((x >= 1) for x in n):
+        raise CheckError("n: number of voxels cannot be smaller than one")
+    if not all((x > 0) for x in d):
+        raise CheckError("d: dimension of the voxels should be positive")
+
+
 def _check_png_domain_color(domain_color):
     """
     Check that the mapping between the pixel colors and the domains is valid (PNG mesher).
@@ -150,9 +221,9 @@ def check_data_mesher(data_mesher):
     # extract field
     mesh_type = data_mesher["mesh_type"]
     data_voxelize = data_mesher["data_voxelize"]
-    data_resampling = data_mesher["data_resampling"]
+    n_resampling = data_mesher["n_resampling"]
 
-    return mesh_type, data_voxelize, data_resampling
+    return mesh_type, data_voxelize, n_resampling
 
 
 def check_mesh_type(mesh_type):
@@ -176,7 +247,7 @@ def check_data_voxelize_png(data_voxelize):
 
     # check type
     if not isinstance(data_voxelize, dict):
-        raise CheckError("data_mesher: mesher data should be a dict")
+        raise CheckError("data_voxelize: mesher data should be a dict")
 
     # extract field
     d = data_voxelize["d"]
@@ -222,7 +293,7 @@ def check_data_voxelize_stl(data_voxelize):
 
     # check type
     if not isinstance(data_voxelize, dict):
-        raise CheckError("data_mesher: mesher data should be a dict")
+        raise CheckError("data_voxelize: mesher data should be a dict")
 
     # extract field
     n = data_voxelize["n"]
@@ -253,23 +324,32 @@ def check_data_voxelize_stl(data_voxelize):
     _check_stl_domain_name(domain_stl, domain_conflict)
 
 
-def check_data_resampling(data_resampling):
+def check_data_voxelize_voxel(data_voxelize):
     """
-    Check the resampling data.
-    These data are controlling the resampling of a voxel structure.
+    Check the voxel structure (number, placement, and dimension).
+    Check the mapping between domain names and indices.
     """
 
     # check type
-    if not isinstance(data_resampling, dict):
-        raise CheckError("data_resampling: resampling data should be a dict")
+    if not isinstance(data_voxelize, dict):
+        raise CheckError("data_voxelize: voxel description should be a dict")
 
     # extract field
-    use_resampling = data_resampling["use_resampling"]
-    n_resampling = data_resampling["n_resampling"]
+    n = data_voxelize["n"]
+    d = data_voxelize["d"]
+    c = data_voxelize["c"]
+    domain_def = data_voxelize["domain_def"]
 
-    # check type
-    if not isinstance(use_resampling, bool):
-        raise CheckError("use_resampling: resampling flag should be a boolean")
+    # check data
+    _check_voxel_size(n, d, c)
+    _check_voxel_domain_def(n, domain_def)
+
+
+def check_n_resampling(n_resampling):
+    """
+    Check the resampling data.
+    These vector is controlling the resampling of a voxel structure.
+    """
 
     # check size
     if not (len(n_resampling) == 3):

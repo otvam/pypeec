@@ -131,14 +131,22 @@ def _get_data_plotter_item(plot_type, plot_geom, name, data_options):
 def get_data_viewer():
     """
     Get the options for visualizing the voxel structure.
-    The result is plotted on the voxel structure.
+    Each element in the list represents a different plot.
     This structure is used by the viewer.
     """
 
-    data_viewer = {
-        "plot_options": _get_plot_options("Viewer"),
-        "data_window": _get_data_window("Viewer"),
-    }
+    data_viewer = [
+        {
+            "plot_type": "domain",
+            "plot_options": _get_plot_options("Domain"),
+            "data_window": _get_data_window("Domain"),
+        },
+        {
+            "plot_type": "graph",
+            "plot_options": _get_plot_options("Graph"),
+            "data_window": _get_data_window("Graph"),
+        },
+    ]
 
     return data_viewer
 

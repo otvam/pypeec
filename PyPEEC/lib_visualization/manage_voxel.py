@@ -23,6 +23,56 @@ import pyvista as pv
 from PyPEEC.lib_utils.error import RunError
 
 
+def _get_biot_savart(pts, pts_src, J_src, vol):
+    """
+    Compute the magnetic field at a specified point.
+    The field is created by many current densities.
+    """
+
+    # get the distance between the points and the voxels
+    vec = pts-pts_src
+
+    # get the norm of the distance
+    nrm = lna.norm(vec, axis=1, keepdims=True)
+
+    # compute the Biot-Savart contributions
+    H_all = (vol/(4*np.pi))*(np.cross(J_src, vec, axis=1)/(nrm**3))
+
+    # sum the contributions
+    H_pts = np.sum(H_all, axis=0)
+
+    return H_pts
+
+
+def _get_graph_component(idx, graph_def):
+    # init the data with invalid data
+    gra = np.zeros(len(idx), dtype=np.int64)
+
+    # find to corresponding connected components
+    for i, idx_graph in enumerate(graph_def):
+        # find which indices are belong to this connected component
+        idx_ok = np.in1d(idx, idx_graph)
+
+        # assign the component number to the corresponding indices
+        gra[idx_ok] = i+1
+
+    # check that everything was assigned
+    if not np.all(gra):
+        raise RunError("invalid graph: some voxels are not part of the graph")
+
+    return gra
+
+
+def _get_domain_tag(idx, counter):
+    # assign the color (n different integer for each domain)
+    dom = np.full(len(idx), counter, dtype=np.int64)
+
+    # update the domain counter
+    counter += 1
+
+    return dom, counter
+
+
 def get_grid(n, d, c):
     """
     Construct a PyVista uniform grid for the complete voxel structure.
@@ -83,28 +133,33 @@ def get_point(voxel, data_point):
     return point
 
 
-def get_viewer_domain(domain_def):
+def get_viewer_domain(domain_def, graph_def):
     """
     Get the indices of the non-empty voxels.
     Assign a different scalar for each domain.
+    Assign a different scalar for each connected component.
     """
 
     # init
     idx_v = np.empty(0, dtype=np.int64)
     dom_v = np.empty(0, dtype=np.int64)
+    gra_v = np.empty(0, dtype=np.int64)
 
     # get the indices and colors
-    counter = 0
+    counter = 1
     for tag, idx_tmp in domain_def.items():
         # assign the color (n different integer for each domain)
-        dom_tmp = np.full(len(idx_tmp), counter, dtype=np.int64)
+        (dom_tmp, counter) = _get_domain_tag(idx_tmp, counter)
+
+        # compute to which connected component the indices are belonging
+        gra_tmp = _get_graph_component(idx_tmp, graph_def)
 
         # append the indices and colors
         idx_v = np.append(idx_v, idx_tmp)
         dom_v = np.append(dom_v, dom_tmp)
-        counter += 1
+        gra_v = np.append(gra_v, gra_tmp)
 
-    return idx_v, dom_v
+    return idx_v, dom_v, gra_v
 
 
 def get_magnetic_field(d, idx_v, J_v, voxel_point, data_point):
@@ -119,41 +174,29 @@ def get_magnetic_field(d, idx_v, J_v, voxel_point, data_point):
     # keep non-empty voxels
     pts_v = voxel_point[idx_v, :]
 
-    # create the result vector
-    H_points = np.zeros((len(data_point), 3), dtype=np.complex128)
-
     # for each provided point, compute the magnetic field
+    H_points = np.zeros((len(data_point), 3), dtype=np.complex128)
     for i, pts_tmp in enumerate(data_point):
-        # get the distance between the points and the voxels
-        vec = pts_tmp-pts_v
-
-        # get the norm of the distance
-        nrm = lna.norm(vec, axis=1, keepdims=True)
-
-        # compute the Biot-Savart contributions
-        H_matrix = (vol/(4*np.pi))*(np.cross(J_v, vec, axis=1)/(nrm**3))
-
-        # sum the contributions
-        H_vector = np.sum(H_matrix, axis=0)
-
-        # assign the magnetic field
-        H_points[i, :] = H_vector
+        H_points[i, :] = _get_biot_savart(pts_tmp, pts_v, J_v, vol)
 
     return H_points
 
 
-def set_viewer_domain(voxel, idx_v, dom_v):
+def set_viewer_domain(voxel, idx_v, dom_v, gra_v):
     """
-    Add the domain tags to the unstructured grid
-    A fake scalar field is used to encode the different domains.
+    Add the domains to the unstructured grid.
+    Add the connected components to the unstructured grid.
+    A fake scalar field is used to encode the domains and connected components.
     """
 
     # sort idx
     idx_sort = np.argsort(idx_v)
     dom_v = dom_v[idx_sort]
+    gra_v = gra_v[idx_sort]
 
     # assign the extract data to the geometry
-    voxel["tag"] = dom_v
+    voxel["domain"] = dom_v
+    voxel["graph"] = gra_v
 
     return voxel
 

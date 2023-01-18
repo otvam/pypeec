@@ -17,7 +17,8 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 from PyPEEC.lib_mesher import png_mesher
 from PyPEEC.lib_mesher import stl_mesher
 from PyPEEC.lib_mesher import voxel_resample
-from PyPEEC.lib_check import check_data_voxel, check_data_mesher
+from PyPEEC.lib_mesher import voxel_graph
+from PyPEEC.lib_check import check_data_mesher
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 
@@ -33,10 +34,13 @@ def _run_check(data_mesher):
 
     with timelogger.BlockTimer(logger, "check_data"):
         # check the mesher data
-        (mesh_type, data_voxelize, data_resampling) = check_data_mesher.check_data_mesher(data_mesher)
+        (mesh_type, data_voxelize, n_resampling) = check_data_mesher.check_data_mesher(data_mesher)
 
         # check the mesher type
         check_data_mesher.check_mesh_type(mesh_type)
+
+        # check the resampling data
+        check_data_mesher.check_n_resampling(n_resampling)
 
         # check the mesher
         if mesh_type == "png":
@@ -44,14 +48,11 @@ def _run_check(data_mesher):
         elif mesh_type == "stl":
             check_data_mesher.check_data_voxelize_stl(data_voxelize)
         elif mesh_type == "voxel":
-            pass
+            check_data_mesher.check_data_voxelize_voxel(data_voxelize)
         else:
             raise CheckError("invalid mesh type")
 
-        # check the resampling data
-        check_data_mesher.check_data_resampling(data_resampling)
-        
-        return mesh_type, data_voxelize, data_resampling
+        return mesh_type, data_voxelize, n_resampling
 
 
 def _run_png(data_voxelize, path_ref):
@@ -112,7 +113,7 @@ def _run_stl(data_voxelize, path_ref):
     return data_voxel
 
 
-def _run_resample(data_voxel, data_resampling):
+def _run_resample_graph(data_voxel, n_resampling):
     """
     Resampling of a 3D voxel structure (increases the number of voxels).
     """
@@ -122,12 +123,12 @@ def _run_resample(data_voxel, data_resampling):
     d = data_voxel["d"]
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
-    use_resampling = data_resampling["use_resampling"]
-    n_resampling = data_resampling["n_resampling"]
 
-    if use_resampling:
-        with timelogger.BlockTimer(logger, "voxel_resample"):
-            (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, n_resampling)
+    with timelogger.BlockTimer(logger, "voxel_resample"):
+        (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, n_resampling)
+
+    with timelogger.BlockTimer(logger, "voxel_graph"):
+        graph_def = voxel_graph.get_graph(n, domain_def)
 
     # assemble the data
     data_voxel = {
@@ -135,6 +136,7 @@ def _run_resample(data_voxel, data_resampling):
         "d": d,
         "c": c,
         "domain_def": domain_def,
+        "graph_def": graph_def,
     }
 
     return data_voxel
@@ -150,18 +152,23 @@ def _run_disp(data_voxel):
     d = data_voxel["d"]
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
+    graph_def = data_voxel["graph_def"]
 
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     (cx, cy, cz) = c
-    n = nx*ny*nz
+
+    # compute
+    n_voxel = nx*ny*nz
+    n_graph = len(graph_def)
 
     # plot the voxel size
     logger.info("(nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
     logger.info("(dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
     logger.info("(cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
-    logger.info("n = %d" % n)
+    logger.info("n_voxel = %d" % n_voxel)
+    logger.info("n_graph = %d" % n_graph)
 
     # plot the domain size
     for tag, idx in domain_def.items():
@@ -180,7 +187,7 @@ def run(data_mesher, path_ref):
     # run the code
     try:
         # check the input data
-        (mesh_type, data_voxelize, data_resampling) = _run_check(data_mesher)
+        (mesh_type, data_voxelize, n_resampling) = _run_check(data_mesher)
 
         # run the mesher
         if mesh_type == "png":
@@ -193,13 +200,10 @@ def run(data_mesher, path_ref):
             raise CheckError("invalid mesh type")
 
         # resample and assemble
-        data_voxel = _run_resample(data_voxel, data_resampling)
+        data_voxel = _run_resample_graph(data_voxel, n_resampling)
 
         # display the results
         _run_disp(data_voxel)
-
-        # check the output
-        check_data_voxel.check_data_voxel(data_voxel)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False, None

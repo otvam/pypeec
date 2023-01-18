@@ -10,7 +10,8 @@ from PyPEEC.lib_utils.error import CheckError
 
 def _check_data_window(data_window):
     """
-    Check the plot window options (window title, window size, and type).
+    Check the plot window options (for the viewer and plotter).
+    Check the window title, window size, and menu configuration.
     """
 
     # get the data
@@ -37,7 +38,7 @@ def _check_data_window(data_window):
 
 def _check_plot_options(plot_options):
     """
-    Check the validity of the plot options.
+    Check the validity of the plot options (for the viewer and plotter).
     The plot options are controlling the wireframe rendering.
     """
 
@@ -82,7 +83,7 @@ def _check_plot_options(plot_options):
 
 def _check_data_options(plot_type, plot_geom, data_options):
     """
-    Check the validity of the data options.
+    Check the validity of the data options (for the plotter).
     The data options are controlling the plot content.
     Three different types of plots are available:
         - material description (conductors, voltage sources, and current sources)
@@ -188,7 +189,7 @@ def _check_data_options(plot_type, plot_geom, data_options):
 
 def _check_data_plotter_item(data_plotter):
     """
-    Check the validity of the dict describing a single plot.
+    Check the validity of the dict describing a single plot (for the plotter).
     """
 
     # check type
@@ -220,6 +221,33 @@ def _check_data_plotter_item(data_plotter):
     _check_plot_options(plot_options)
 
 
+def _check_data_viewer_item(data_viewer):
+    """
+    Check the validity of the dict describing a single plot (for the viewer).
+    """
+
+    # check type
+    if not isinstance(data_viewer, dict):
+        raise CheckError("data_viewer: the plot description should be a dict")
+
+    # extract field
+    plot_type = data_viewer["plot_type"]
+    data_window = data_viewer["data_window"]
+    plot_options = data_viewer["plot_options"]
+
+    # check type
+    if not isinstance(plot_type, str):
+        raise CheckError("plot_type: plot type should be a string")
+
+    # check value
+    if plot_type not in ["domain", "graph"]:
+        raise CheckError("plot_type: specified plot type is invalid")
+
+    # check data
+    _check_data_window(data_window)
+    _check_plot_options(plot_options)
+
+
 def check_data_plotter(data_plotter):
     """
     Check the type of the data defining several plots.
@@ -237,18 +265,15 @@ def check_data_plotter(data_plotter):
 
 def check_data_viewer(data_viewer):
     """
-    Check the validity of the dict describing a 3D voxel structure plot.
+    Check the type of the data defining several plots.
     This function is used for the viewer.
     """
 
     # check type
-    if not isinstance(data_viewer, dict):
-        raise CheckError("data_viewer: the plot description should be a dict")
+    if not isinstance(data_viewer, list):
+        raise CheckError("data_viewer: plot data should be a list")
 
-    # extract field
-    data_window = data_viewer["data_window"]
-    plot_options = data_viewer["plot_options"]
+    # check items
+    for dat_tmp in data_viewer:
+        _check_data_viewer_item(dat_tmp)
 
-    # check data
-    _check_data_window(data_window)
-    _check_plot_options(plot_options)

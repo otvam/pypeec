@@ -1,6 +1,8 @@
 """
 Main script for visualizing a 3D voxel structure.
-Plot the geometry and color the different domains.
+Plot the following features:
+    - the different domain composing the voxel structure
+    - the connected components of the voxel structure
 
 The plotting is done with PyVista with the Qt framework.
 """
@@ -10,7 +12,6 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_visualization import manage_voxel
 from PyPEEC.lib_visualization import manage_plot
-from PyPEEC.lib_check import check_data_voxel
 from PyPEEC.lib_check import check_data_point
 from PyPEEC.lib_check import check_data_visualization
 from PyPEEC.lib_utils import vistagui
@@ -33,9 +34,10 @@ def _get_grid_voxel(data_voxel, data_point):
     d = data_voxel["d"]
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
+    graph_def = data_voxel["graph_def"]
 
     # get the indices of the non-empty voxels
-    (idx_v, dom_v) = manage_voxel.get_viewer_domain(domain_def)
+    (idx_v, dom_v, gra_v) = manage_voxel.get_viewer_domain(domain_def, graph_def)
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
@@ -43,7 +45,7 @@ def _get_grid_voxel(data_voxel, data_point):
     point = manage_voxel.get_point(voxel, data_point)
 
     # add the domain tag to the geometry
-    voxel = manage_voxel.set_viewer_domain(voxel, idx_v, dom_v)
+    voxel = manage_voxel.set_viewer_domain(voxel, idx_v, dom_v, gra_v)
 
     return grid, voxel, point
 
@@ -54,6 +56,7 @@ def _get_plot(grid, voxel, point, data_viewer, is_blocking):
     """
 
     # extract the data
+    plot_type = data_viewer["plot_type"]
     data_window = data_viewer["data_window"]
     plot_options = data_viewer["plot_options"]
 
@@ -61,7 +64,7 @@ def _get_plot(grid, voxel, point, data_viewer, is_blocking):
     pl = vistagui.open_plotter(data_window, is_blocking)
 
     # make the plot
-    manage_plot.get_plot_viewer(pl, voxel)
+    manage_plot.get_plot_viewer(pl, voxel, plot_type)
 
     # add the geometry and axes
     manage_plot.get_plot_options(pl, grid, voxel, point, plot_options)
@@ -82,7 +85,6 @@ def run(data_voxel, data_point, data_viewer, is_blocking):
     try:
         # check the input data
         logger.info("check the input data")
-        check_data_voxel.check_data_voxel(data_voxel)
         check_data_point.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
 
@@ -95,8 +97,10 @@ def run(data_voxel, data_point, data_viewer, is_blocking):
         (grid, voxel, point) = _get_grid_voxel(data_voxel, data_point)
 
         # make the plots
-        logger.info("generate the plot")
-        _get_plot(grid, voxel, point, data_viewer, is_blocking)
+        logger.info("generate the different plots")
+        for i, dat_tmp in enumerate(data_viewer):
+            logger.info("plotting %d / %d" % (i + 1, len(data_viewer)))
+            _get_plot(grid, voxel, point, dat_tmp, is_blocking)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False

@@ -1,6 +1,11 @@
 """
 Main script for plotting the solution of a FFT-PEEC problem.
-Plot the material description, the resistivity, the potential, and the current density.
+Plot the following features:
+    - material description (conductors and sources)
+    - resistivity
+    - potential
+    - current density
+    - magnetic field
 
 The plotting is done with PyVista with the Qt framework.
 """

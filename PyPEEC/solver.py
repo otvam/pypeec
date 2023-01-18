@@ -16,7 +16,8 @@ from PyPEEC.lib_solver import resistance_inductance
 from PyPEEC.lib_solver import equation_system
 from PyPEEC.lib_solver import equation_solver
 from PyPEEC.lib_solver import extract_solution
-from PyPEEC.lib_check import check_data_problem, check_data_voxel, check_data_solver
+from PyPEEC.lib_check import check_data_problem
+from PyPEEC.lib_check import check_data_solver
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 
@@ -33,9 +34,6 @@ def _run_check(data_voxel, data_problem):
     with timelogger.BlockTimer(logger, "check_data"):
         # check the problem data
         check_data_problem.check_data_problem(data_problem)
-
-        # check the voxel data
-        check_data_voxel.check_data_voxel(data_voxel)
 
         # combine the problem and voxel data
         data_solver = check_data_solver.get_data_solver(data_voxel, data_problem)

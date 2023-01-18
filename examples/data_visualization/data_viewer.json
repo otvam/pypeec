@@ -1,25 +1,54 @@
-{
-    "plot_options": {
-        "title": "Viewer",
-        "grid_plot": true,
-        "grid_thickness": 1.0,
-        "grid_color": "black",
-        "grid_opacity": 0.1,
-        "geom_plot": true,
-        "geom_thickness": 1.0,
-        "geom_color": "black",
-        "geom_opacity": 0.5,
-        "cloud_plot": true,
-        "cloud_color": "black",
-        "cloud_size": 5.0,
-        "cloud_opacity": 0.5
+[
+    {
+        "plot_type": "domain",
+        "plot_options": {
+            "title": "Domain",
+            "grid_plot": true,
+            "grid_thickness": 1.0,
+            "grid_color": "black",
+            "grid_opacity": 0.1,
+            "geom_plot": true,
+            "geom_thickness": 1.0,
+            "geom_color": "black",
+            "geom_opacity": 0.5,
+            "cloud_plot": true,
+            "cloud_color": "black",
+            "cloud_size": 5.0,
+            "cloud_opacity": 0.5
+        },
+        "data_window": {
+            "title": "Domain",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
+        }
     },
-    "data_window": {
-        "title": "Viewer",
-        "show_menu": false,
-        "size": [
-            800,
-            600
-        ]
+    {
+        "plot_type": "graph",
+        "plot_options": {
+            "title": "Graph",
+            "grid_plot": true,
+            "grid_thickness": 1.0,
+            "grid_color": "black",
+            "grid_opacity": 0.1,
+            "geom_plot": true,
+            "geom_thickness": 1.0,
+            "geom_color": "black",
+            "geom_opacity": 0.5,
+            "cloud_plot": true,
+            "cloud_color": "black",
+            "cloud_size": 5.0,
+            "cloud_opacity": 0.5
+        },
+        "data_window": {
+            "title": "Graph",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
+        }
     }
-}
+]

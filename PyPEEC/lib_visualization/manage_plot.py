@@ -6,7 +6,9 @@ For the viewer and the plotter, the following object are plotter:
     - the structure containing non-empty voxels (as wireframe)
     - the defined point cloud (as points)
 
-For the viewer, the domains are shown for the non-empty voxels.
+For the plotter, the following plots are available:
+    - the domains are shown for the non-empty voxels
+    - the connected components for the non-empty voxels
 
 For the plotter, the following plots are available:
     - material description for the non-empty voxels (conductors and sources)
@@ -142,9 +144,12 @@ def plot_material(pl, voxel, data_options):
     # get a colormap with three discrete color
     cmap = ["darkorange", "forestgreen", "royalblue"]
 
+    # make a copy (for avoid cross coupling)
+    voxel_tmp = voxel.copy(deep=True)
+
     # add the resulting plot to the plotter
     pl.add_mesh(
-        voxel,
+        voxel_tmp,
         scalars="material",
         opacity=opacity,
         scalar_bar_args=scalar_bar_args,
@@ -180,14 +185,14 @@ def plot_scalar(pl, obj, data_options):
     )
 
     # scale and clamp the variable
-    geom_var = obj.copy(deep=True)
-    geom_var = _get_filter_scalar(geom_var, var, filter_lim)
-    geom_var = _get_clamp_scale_scalar(geom_var, var, color_lim, scale)
+    obj_tmp = obj.copy(deep=True)
+    obj_tmp = _get_filter_scalar(obj_tmp, var, filter_lim)
+    obj_tmp = _get_clamp_scale_scalar(obj_tmp, var, color_lim, scale)
 
     # add the resulting plot to the plotter
-    if geom_var.n_cells > 0:
+    if obj_tmp.n_cells > 0:
         pl.add_mesh(
-            geom_var,
+            obj_tmp,
             scalars=var,
             opacity=opacity,
             point_size=size,
@@ -228,18 +233,18 @@ def plot_arrow(pl, d_char, obj, data_options):
     )
 
     # scale and clamp the variable
-    geom_var = obj.copy(deep=True)
-    geom_var = _get_filter_vector(geom_var, vec, arrow_threshold)
-    geom_var = _get_filter_scalar(geom_var, var, filter_lim)
-    geom_var = _get_clamp_scale_scalar(geom_var, var, color_lim, scale)
+    obj_tmp = obj.copy(deep=True)
+    obj_tmp = _get_filter_vector(obj_tmp, vec, arrow_threshold)
+    obj_tmp = _get_filter_scalar(obj_tmp, var, filter_lim)
+    obj_tmp = _get_clamp_scale_scalar(obj_tmp, var, color_lim, scale)
 
     # get arrow size
     factor = d_char*arrow_scale
 
     # add the resulting plot to the plotter
-    if geom_var.n_cells > 0:
+    if obj_tmp.n_cells > 0:
         pl.add_mesh(
-            geom_var.glyph(orient=vec, scale=False, factor=factor),
+            obj_tmp.glyph(orient=vec, scale=False, factor=factor),
             scalars=var,
             log_scale=log,
             scalar_bar_args=scalar_bar_args,
@@ -288,17 +293,30 @@ def get_plot_options(pl, grid, voxel, point, plot_options):
     pl.add_text(plot_options["title"], font_size=10)
 
 
-def get_plot_viewer(pl, voxel):
+def get_plot_viewer(pl, voxel, plot_type):
     """
-    Plot the different domains composing the voxel structure.
-    The plot is made on the unstructured grid describing the non-empty voxels.
+    Plot the voxel structure.
+    The following plot types are available:
+        - the domains are shown for the non-empty voxels
+        - the connected components for the non-empty voxels
     """
+
+    # find the variable to be plotted
+    if plot_type == "domain":
+        tag = "domain"
+    elif plot_type == "graph":
+        tag = "graph"
+    else:
+        raise ValueError("invalid plot type and plot feature")
+
+    # make a copy (for avoid cross coupling)
+    voxel_tmp = voxel.copy(deep=True)
 
     # add the resulting plot to the plotter
     pl.add_mesh(
-        voxel,
+        voxel_tmp,
         show_scalar_bar=False,
-        scalars="tag",
+        scalars=tag,
         cmap="Accent",
     )
 
