@@ -9,6 +9,8 @@
 * Conductive domain (no magnetic or dielectric media)
 * Frequency domain solution
 * Connection of current and voltage sources
+* Computation of magnetic field and impedances
+* Pure Python implementation
 
 The **PyPEEC** contains the following tools:
 * **mesher**: create a 3D voxel structure from STL or PNG files
@@ -36,7 +38,6 @@ The tests are located in the `tests` folder and can be run with `run_tests.sh`.
 
 ![plotter_current](docs/plotter_current.png)
 
-
 ## Compatibility
 
 PyPEEC is using the following packages:
@@ -62,7 +63,7 @@ The FFT-PEEC method has been first described and implemented in:
 * R. Torchio, https://github.com/UniPD-DII-ETCOMP/FFT-PEEC
 
 Other interesting papers about similar methods:
-* A.C Yucel, IEEE TMTT, 10.1109/TMTT.2017.2785842
+* A. Yucel, IEEE TMTT, 10.1109/TMTT.2017.2785842
 * P. Bettini, IOP, 10.1088/1361-6587/abce8f
 * N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864
 
@@ -74,4 +75,7 @@ Other interesting papers about similar methods:
 
 ## Copyright
 
-* (c) 2023 - Thomas Guillod - Dartmouth College
+> (c) 2023 - Thomas Guillod - Dartmouth College
+
+> **Warning**: Some dependencies are under copyleft licences.
+> Make sure to respect these licenses when distributing the package.

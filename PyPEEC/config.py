@@ -16,10 +16,10 @@ LOGGING_LEVEL = "INFO"
 LOGGING_GLOBAL_TIMER = True
 
 # matrix factorization options
-MATRIX_FACTORIZATION = "UMFPACK"  # "SuperLU" or "UMFPACK"
+MATRIX_FACTORIZATION = "SuperLU"  # "SuperLU" or "UMFPACK"
 
 # FFT options
-FFT_SOLVER = "FFTW"  # "NumPy" or "SciPy" or "FFTW"
+FFT_SOLVER = "SciPy"  # "NumPy" or "SciPy" or "FFTW"
 FFT_THREAD = 4  # used for FFTW (number of threads, 1 for no multi-threading)
 FFT_CACHE_TIMEOUT = 100  # used for FFTW (cache timeout in seconds)
 FFT_BYTE_ALIGN = 16  # used for FFTW (size for byte alignment)

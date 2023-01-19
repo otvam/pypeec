@@ -4,8 +4,8 @@
 # (c) 2023 - Dartmouth College
 
 # standard numpy and scipy
-numpy>=1.24 # used by the mesher, viewer, solver, and plotter
-scipy>=1.9 # used by the mesher and solver
+numpy>=1.24 # used everywhere
+scipy>=1.9 # used everywhere
 
 # high-performance libraries
 scikit-umfpack>=0.3 # used by the solver, optional see config file
