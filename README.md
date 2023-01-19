@@ -26,7 +26,8 @@ Different examples are located in the `examples` folder:
 * **stl_inductor**: an inductor created from STL files
 * **stl_transformer**: an transformer created from STL files
 * **png_inductor**: an inductor created from PNG files
-* **png_wire**: a straight created from PNG files
+* **png_busbar**: a L shaped coplanar busbar from PNG files
+* **png_wire**: a straight wire created from PNG files
 * **voxel_slab**: a simple slab conductor (with field computation)
 * **voxel_transformer**: a simple transformer (with field computation)
 

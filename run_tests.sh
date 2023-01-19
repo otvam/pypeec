@@ -27,6 +27,7 @@ folder=(
   "visualization"
   "voxel_slab"
   "voxel_transformer"
+  "png_busbar"
   "png_wire"
   "png_inductor"
   "stl_inductor"
@@ -40,10 +41,22 @@ echo "================================================================"
 copy_folder $folder
 
 echo "================================================================"
-echo "RUN THE TESTS"
+echo "TEST VOXEL "
 echo "================================================================"
 
-python -m unittest -v
+python -m unittest -v tests/test_voxel.py
+
+echo "================================================================"
+echo "TEST PNG "
+echo "================================================================"
+
+python -m unittest -v tests/test_png.py
+
+echo "================================================================"
+echo "TEST STL "
+echo "================================================================"
+
+python -m unittest -v tests/test_stl.py
 
 echo "================================================================"
 echo "CLEAN THE FILES"
