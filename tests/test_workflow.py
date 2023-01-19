@@ -36,24 +36,30 @@ def test_workflow(test_obj, name):
     file_plotter = os.path.join(path_root, "visualization", "data_plotter.json")
     file_viewer = os.path.join(path_root, "visualization", "data_viewer.json")
 
-    # get the temped file name
+    # get the temporary files
     fid_voxel = tempfile.NamedTemporaryFile(suffix='.pck')
     fid_solution = tempfile.NamedTemporaryFile(suffix='.pck')
     file_voxel = fid_voxel.name
     file_solution = fid_solution.name
 
-    # run the mesher
-    status = script.run_mesher(file_mesher, file_voxel)
-    test_obj.assertTrue(status, msg="mesher failure")
+    # run the code
+    try:
+        # run the mesher
+        status = script.run_mesher(file_mesher, file_voxel)
+        test_obj.assertTrue(status, msg="mesher failure")
 
-    # run the viewer
-    status = script.run_viewer(file_voxel, file_point, file_viewer, False)
-    test_obj.assertTrue(status, msg="viewer failure")
+        # run the viewer
+        status = script.run_viewer(file_voxel, file_point, file_viewer, False)
+        test_obj.assertTrue(status, msg="viewer failure")
 
-    # run the solver
-    status = script.run_solver(file_voxel, file_problem, file_solution)
-    test_obj.assertTrue(status, msg="solver failure")
+        # run the solver
+        status = script.run_solver(file_voxel, file_problem, file_solution)
+        test_obj.assertTrue(status, msg="solver failure")
 
-    # run the plotter
-    status = script.run_plotter(file_solution, file_point, file_plotter, False)
-    test_obj.assertTrue(status, msg="plotter failure")
+        # run the plotter
+        status = script.run_plotter(file_solution, file_point, file_plotter, False)
+        test_obj.assertTrue(status, msg="plotter failure")
+    finally:
+        # close the temporary files
+        fid_voxel.close()
+        fid_solution.close()

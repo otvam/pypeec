@@ -6,6 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import pyvistaqt as pvqt
+import pyvista as pv
 from qtpy.QtWidgets import QApplication
 from PyPEEC import config
 
@@ -24,17 +25,21 @@ def open_plotter(data_window, is_blocking):
     show_menu = data_window["show_menu"]
     size = data_window["size"]
 
-    # get the plotter (with the Qt framework)
-    pl = pvqt.BackgroundPlotter(
-        show=is_blocking,
-        toolbar=show_menu,
-        menu_bar=show_menu,
-        title=title,
-        window_size=tuple(size),
-    )
-
-    # set icon
-    pl.set_icon(PATH_ROOT + "/icon.png")
+    # get the plotter (with the Qt framework if blocking)
+    if is_blocking:
+        # get Qt plotter if blocking
+        pl = pvqt.BackgroundPlotter(
+            show=True,
+            toolbar=show_menu,
+            menu_bar=show_menu,
+            title=title,
+            window_size=tuple(size),
+        )
+        # set icon
+        pl.set_icon(PATH_ROOT + "/icon.png")
+    else:
+        # get standard plotter if non-blocking
+        pl = pv.Plotter(off_screen=True)
 
     return pl
 
@@ -47,6 +52,7 @@ def close_plotter(pl, is_blocking):
     # close plotter if non-blocking
     if not is_blocking:
         pl.close()
+        pl.deep_clean()
 
 
 def open_app(is_blocking):
