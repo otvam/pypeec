@@ -17,5 +17,5 @@ PATH_ROOT = os.path.dirname(__file__)
 # stl_inductor
 # stl_transformer
 # png_inductor
-# png_cylinder
+# png_wire
 EXAMPLE_NAME = "voxel_transformer"

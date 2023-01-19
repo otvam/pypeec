@@ -24,11 +24,11 @@ Different command line scripts are defined: `ppmesher`, `ppviewer`, `ppsolver`, 
 
 Different examples are located in the `examples` folder:
 * **stl_inductor**: an inductor created from STL files
+* **stl_transformer**: an transformer created from STL files
 * **png_inductor**: an inductor created from PNG files
-* **voxel_slab**: a simple slab conductor
-* **voxel_transformer**: a simple transformer
-
-The tests are located in the `tests` folder and can be run with `run_tests.sh`.
+* **png_wire**: a straight created from PNG files
+* **voxel_slab**: a simple slab conductor (with field computation)
+* **voxel_transformer**: a simple transformer (with field computation)
 
 ## Gallery
 
@@ -55,6 +55,7 @@ PyPEEC is tested on Linux x64 but should run on other platforms.
 * A Python package can be built from the (`pyproject.toml` and `setup.cfg`).
 * In order to create a Python Virtual Environment, use `requirements.txt`.
 * In order to create a Conda Environment, use `conda.yml`.
+* The tests are located in the `tests` folder and can be run with `run_tests.sh`.
 
 ## Credits
 

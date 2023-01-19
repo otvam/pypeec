@@ -5,30 +5,51 @@
 # (c) 2023 - Dartmouth College
 
 function copy_folder {
-  echo "copy / $1"
-  rm -rf tests/$1
-  rsync -ma --include '*/' --include '*.json' --exclude '*' examples/$1 tests
-  rsync -ma --include '*/' --include '*.png' --exclude '*' examples/$1 tests
-  rsync -ma --include '*/' --include '*.stl' --exclude '*' examples/$1 tests
+  folder=$1
+  for tmp in "${folder[@]}"
+  do
+    rm -rf tests/$tmp
+    rsync -ma --include '*/' --include '*.json' --exclude '*' examples/$tmp tests
+    rsync -ma --include '*/' --include '*.png' --exclude '*' examples/$tmp tests
+    rsync -ma --include '*/' --include '*.stl' --exclude '*' examples/$tmp tests
+  done
 }
+
+function clean_folder {
+  folder=$1
+  for tmp in "${folder[@]}"
+  do
+    rm -rf tests/$tmp
+  done
+}
+
+folder=(
+  "visualization"
+  "voxel_slab"
+  "voxel_transformer"
+  "png_wire"
+  "png_inductor"
+  "stl_inductor"
+  "stl_transformer"
+)
 
 echo "================================================================"
 echo "COPY THE FILES"
 echo "================================================================"
 
-copy_folder visualization
-copy_folder voxel_slab
-copy_folder voxel_transformer
-copy_folder png_cylinder
-copy_folder png_inductor
-copy_folder stl_inductor
-copy_folder stl_transformer
+copy_folder $folder
 
 echo "================================================================"
 echo "RUN THE TESTS"
 echo "================================================================"
 
 python -m unittest -v
+
+echo "================================================================"
+echo "CLEAN THE FILES"
+echo "================================================================"
+
+clean_folder $folder
 
 exit 0
 
