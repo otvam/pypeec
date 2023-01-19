@@ -12,7 +12,7 @@ import logging
 from PyPEEC import script
 
 # disable logging to prevent clutter during test evaluation
-#logging.disable(logging.CRITICAL)
+logging.disable(logging.CRITICAL)
 
 # get the path the folder
 path_root = os.path.dirname(__file__)

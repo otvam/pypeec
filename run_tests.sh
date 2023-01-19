@@ -1,11 +1,18 @@
 #!/bin/bash
-# Script for copying the examples data to the tests and running the tests.
+# Script for running the tests:
+#   - copy the data
+#   - run the tests
+#   - clean the data
+#   - check the test status
 #
 # Thomas Guillod
 # (c) 2023 - Dartmouth College
 
-function copy_folder {
-  folder=$1
+function init_test {
+  echo "================================================================"
+  echo "COPY THE FILES"
+  echo "================================================================"
+
   for tmp in "${folder[@]}"
   do
     rm -rf tests/$tmp
@@ -13,14 +20,37 @@ function copy_folder {
     rsync -ma --include '*/' --include '*.png' --exclude '*' examples/$tmp tests
     rsync -ma --include '*/' --include '*.stl' --exclude '*' examples/$tmp tests
   done
+
+  status=0
 }
 
-function clean_folder {
-  folder=$1
+function test_file {
+  echo "================================================================"
+  echo "TEST: $1"
+  echo "================================================================"
+
+  python -m unittest -v tests/$1.py
+  status=$(( $status || $? ))
+}
+
+function clean_test {
+  echo "================================================================"
+  echo "CLEAN THE FILES"
+  echo "================================================================"
+
   for tmp in "${folder[@]}"
   do
     rm -rf tests/$tmp
   done
+
+  echo "================================================================"
+  if (( $status == 0 ))
+  then
+    echo "TEST: SUCCESS"
+  else
+    echo "TEST: FAILURE"
+  fi
+  echo "================================================================"
 }
 
 folder=(
@@ -34,38 +64,10 @@ folder=(
   "stl_transformer"
 )
 
-echo "================================================================"
-echo "COPY THE FILES"
-echo "================================================================"
-
-copy_folder $folder
-
-echo "================================================================"
-echo "TEST VOXEL "
-echo "================================================================"
-
-python -m unittest -v tests/test_voxel.py
-
-echo "================================================================"
-echo "TEST PNG "
-echo "================================================================"
-
-python -m unittest -v tests/test_png.py
-
-echo "================================================================"
-echo "TEST STL "
-echo "================================================================"
-
-python -m unittest -v tests/test_stl.py
-
-echo "================================================================"
-echo "CLEAN THE FILES"
-echo "================================================================"
-
-clean_folder $folder
+init_test
+test_file test_voxel
+test_file test_png
+test_file test_stl
+clean_test
 
 exit 0
-
-
-
-
