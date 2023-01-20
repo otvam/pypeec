@@ -379,5 +379,5 @@ def get_plot_options(pl, grid, voxel, point, plot_options):
         )
 
     # add title and axes
-    pl.add_axes(line_width=2)
+    pl.add_axes(line_width=2, interactive=False)
     pl.add_text(plot_options["title"], font_size=10)

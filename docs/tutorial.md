@@ -32,11 +32,12 @@ The **PyPEEC** package contains the following tools (`PyPEEC` package)::
 
 ## Script and File Description
 
-Different command line scripts are defined (`PyPEEC.script` module):
-* `ppmesher`, calling the **mesher**
-* `ppviewer`, calling the **viewer**
-* `ppsolver`, calling the **solver**
-* `ppplotter`, calling the **plotter**
+The entry points of the different tools are located in the `PyPEEC.script` module.
+Additionally, the Python package is defining the following console scripts:
+* `ppmesher` for the **mesher**
+* `ppviewer` for the **viewer**
+* `ppsolver` for the **solver**
+* `ppplotter` for the **plotter**
 
 The following files (JSON for inputs, pickle for outputs) are used:
 * `file_mesher` (JSON, input file): description of the geometry
@@ -57,3 +58,7 @@ Different examples are located in the `examples` folder:
 * **png_wire**: a straight wire created from PNG files
 * **voxel_slab**: a simple slab conductor (with field computation)
 * **voxel_transformer**: a simple transformer (with field computation)
+
+The different examples can be either used with:
+* Python scripts, located in the `examples` folder
+* Shell scripts, located in the `examples` folder

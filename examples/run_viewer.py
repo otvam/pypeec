@@ -1,6 +1,5 @@
 """
 User script for visualizing a 3D voxel structure.
-Contain the program entry point.
 """
 
 __author__ = "Thomas Guillod"

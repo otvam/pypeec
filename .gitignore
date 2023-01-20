@@ -4,7 +4,7 @@
 **/__pycache__
 
 # exclude pickle file
-examples/**/*.pck
+*.pck
 
 # exclude the test files
 tests/**/*.json
@@ -16,12 +16,12 @@ dist/*
 PyPEEC.egg-info/*
 PyPEEC/version.py
 
-# exclude virtual env
+# exclude virtual environments
 venv/*
 cenv/*
 
-# exclude the PyCharm project
-.idea/*
-
 # exclude scratch directory for temporary tests
 scratch/*
+
+# exclude the PyCharm project
+.idea/*

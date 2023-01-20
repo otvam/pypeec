@@ -1,6 +1,5 @@
 """
 User script for plotting the solution of a FFT-PEEC problem.
-Contain the program entry point.
 """
 
 __author__ = "Thomas Guillod"

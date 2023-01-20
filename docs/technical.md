@@ -23,6 +23,5 @@ The optional UMFPACK solver is known to be difficult to install on MS Windows.
 
 * The tests are located in the `tests` folder.
 * Only integration tests currently exist (no unit tests).
-* The tests are using the `unittest` framework.
+* The tests are using the Python `unittest` framework.
 * The tests can be run with `run_tests.sh`. 
-

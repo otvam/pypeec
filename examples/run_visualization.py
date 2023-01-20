@@ -1,6 +1,6 @@
 """
 Define the options for the viewer and plotter.
-Ultimately, these options are dumped into JSON files.
+These options are dumped into JSON files.
 """
 
 __author__ = "Thomas Guillod"

@@ -1,6 +1,5 @@
 """
 User script for meshing a voxel structure.
-Contain the program entry point.
 """
 
 __author__ = "Thomas Guillod"
