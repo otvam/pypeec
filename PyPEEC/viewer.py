@@ -113,4 +113,6 @@ def run(data_voxel, data_point, data_viewer, is_blocking):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    return vistagui.run_app(app, is_blocking)
+    status = vistagui.run_app(app, is_blocking)
+
+    return status

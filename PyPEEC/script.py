@@ -178,10 +178,16 @@ def main_viewer():
         required=True,
         dest="file_viewer",
     )
+    parser.add_argument(
+        "--silent",
+        help="if set, do not display the plots",
+        action="store_false",
+        dest="is_blocking",
+    )
 
     # parse and call
     args = parser.parse_args()
-    status = run_viewer(args.file_voxel, args.file_point, args.file_viewer, True)
+    status = run_viewer(args.file_voxel, args.file_point, args.file_viewer, args.is_blocking)
     sys.exit(int(not status))
 
 
@@ -256,8 +262,14 @@ def main_plotter():
         required=True,
         dest="file_plotter",
     )
+    parser.add_argument(
+        "--silent",
+        help="if set, do not display the plots",
+        action="store_false",
+        dest="is_blocking",
+    )
 
     # parse and call
     args = parser.parse_args()
-    status = run_plotter(args.file_solution, args.file_point, args.file_plotter, True)
+    status = run_plotter(args.file_solution, args.file_point, args.file_plotter, args.is_blocking)
     sys.exit(int(not status))

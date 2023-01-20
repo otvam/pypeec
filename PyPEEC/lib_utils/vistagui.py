@@ -7,7 +7,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import pyvistaqt as pvqt
 import pyvista as pv
-from qtpy.QtWidgets import QApplication
+import qtpy.QtWidgets as qtw
 from PyPEEC import config
 
 # get config
@@ -61,7 +61,7 @@ def open_app(is_blocking):
     """
 
     if is_blocking:
-        app = QApplication([])
+        app = qtw.QApplication([])
     else:
         app = None
 
