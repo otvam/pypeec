@@ -4,6 +4,8 @@ This module is used as a common interface for different FFT libraries:
     - NumPy FFT library
     - SciPy FFT library
     - FFTW FFT library (available with pyFFTW)
+
+WARNING: Not all versions of FFTW are compiled with multithreading support.
 """
 
 __author__ = "Thomas Guillod"

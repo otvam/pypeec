@@ -5,7 +5,9 @@ This module is used as a common interface for different solvers:
     - UMFPACK: extra library (with SciKits)
 
 SuperLU is available on all platforms and easy to install.
-UMFPACK need to be compiled (easy on Linux, difficult on other platforms).
+UMFPACK need to be installed (and often compiled).
+
+WARNING: UMFPACK is difficult to install on MS Windows.
 """
 
 __author__ = "Thomas Guillod"

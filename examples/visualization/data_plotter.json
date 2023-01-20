@@ -34,7 +34,8 @@
                 800,
                 600
             ]
-        }
+        },
+        "plot_framework": "pyvista"
     },
     {
         "plot_type": "scalar",
@@ -83,7 +84,8 @@
                 800,
                 600
             ]
-        }
+        },
+        "plot_framework": "pyvista"
     },
     {
         "plot_type": "scalar",
@@ -132,7 +134,8 @@
                 800,
                 600
             ]
-        }
+        },
+        "plot_framework": "pyvista"
     },
     {
         "plot_type": "scalar",
@@ -181,7 +184,8 @@
                 800,
                 600
             ]
-        }
+        },
+        "plot_framework": "pyvista"
     },
     {
         "plot_type": "arrow",
@@ -231,7 +235,8 @@
                 800,
                 600
             ]
-        }
+        },
+        "plot_framework": "pyvista"
     },
     {
         "plot_type": "arrow",
@@ -281,7 +286,8 @@
                 800,
                 600
             ]
-        }
+        },
+        "plot_framework": "pyvista"
     },
     {
         "plot_type": "scalar",
@@ -330,7 +336,8 @@
                 800,
                 600
             ]
-        }
+        },
+        "plot_framework": "pyvista"
     },
     {
         "plot_type": "arrow",
@@ -380,7 +387,8 @@
                 800,
                 600
             ]
-        }
+        },
+        "plot_framework": "pyvista"
     },
     {
         "plot_type": "arrow",
@@ -430,6 +438,7 @@
                 800,
                 600
             ]
-        }
+        },
+        "plot_framework": "pyvista"
     }
 ]

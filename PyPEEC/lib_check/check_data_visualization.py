@@ -219,6 +219,14 @@ def _check_data_plotter_item(data_plotter):
     if not isinstance(data_plotter, dict):
         raise CheckError("data_plotter: plot description should be a dict")
 
+    # check type
+    if not isinstance(plot_framework, str):
+        raise CheckError("plot_framework: plot framework should be a string")
+
+    # check value
+    if plot_framework not in ["matplotlib", "pyvista"]:
+        raise CheckError("plot_framework: plot framework is invalid")
+
     # extract field
     plot_type = data_plotter["plot_type"]
     plot_geom = data_plotter["plot_geom"]
@@ -256,20 +264,25 @@ def _check_data_viewer_item(data_viewer):
         raise CheckError("data_viewer: the plot description should be a dict")
 
     # extract field
-    plot_type = data_viewer["plot_type"]
     data_window = data_viewer["data_window"]
-    clip_options = data_viewer["clip_options"]
-    plot_options = data_viewer["plot_options"]
+    data_plot = data_viewer["data_plot"]
 
     # check type
+    if not isinstance(data_plot, dict):
+        raise CheckError("data_plot: plot data should be a dict")
+
+    # check specific options
+    plot_type = data_plot["plot_type"]
+    clip_options = data_plot["clip_options"]
+    plot_options = data_plot["plot_options"]
+
+    # check plot type
     if not isinstance(plot_type, str):
         raise CheckError("plot_type: plot type should be a string")
-
-    # check value
     if plot_type not in ["domain", "graph"]:
         raise CheckError("plot_type: specified plot type is invalid")
 
-    # check data
+    # check options
     _check_data_window(data_window)
     _check_clip_options(clip_options)
     _check_plot_options(plot_options)

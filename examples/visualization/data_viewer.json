@@ -1,27 +1,5 @@
 [
     {
-        "plot_type": "domain",
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Domain",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
         "data_window": {
             "title": "Domain",
             "show_menu": false,
@@ -29,31 +7,33 @@
                 800,
                 600
             ]
+        },
+        "data_plot": {
+            "plot_type": "domain",
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Domain",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
         }
     },
     {
-        "plot_type": "graph",
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Graph",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
         "data_window": {
             "title": "Graph",
             "show_menu": false,
@@ -61,6 +41,30 @@
                 800,
                 600
             ]
+        },
+        "data_plot": {
+            "plot_type": "graph",
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Graph",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
         }
     }
 ]

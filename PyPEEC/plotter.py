@@ -17,7 +17,7 @@ from PyPEEC.lib_visualization import manage_voxel
 from PyPEEC.lib_visualization import manage_plot
 from PyPEEC.lib_check import check_data_point
 from PyPEEC.lib_check import check_data_visualization
-from PyPEEC.lib_utils import vistagui
+from PyPEEC.lib_utils import plotgui
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 
@@ -80,7 +80,7 @@ def _get_plot(grid, voxel, point, data_plotter, is_blocking):
     plot_options = data_plotter["plot_options"]
 
     # get the plotter (with the Qt framework)
-    pl = vistagui.open_plotter(data_window, is_blocking)
+    pl = plotgui.open_plotter(data_window, is_blocking)
 
     # find the plot type and call the corresponding function
     manage_plot.get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options, clip_options)
@@ -89,7 +89,7 @@ def _get_plot(grid, voxel, point, data_plotter, is_blocking):
     manage_plot.get_plot_options(pl, grid, voxel, point, plot_options)
 
     # close plotter if non-blocking
-    vistagui.close_plotter(pl, is_blocking)
+    plotgui.close_plotter(pl, is_blocking)
 
 
 def run(data_solution, data_point, data_plotter, is_blocking):
@@ -110,7 +110,7 @@ def run(data_solution, data_point, data_plotter, is_blocking):
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")
-        app = vistagui.open_app(is_blocking)
+        app = plotgui.open_app(is_blocking)
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
@@ -132,6 +132,6 @@ def run(data_solution, data_point, data_plotter, is_blocking):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    status =  vistagui.run_app(app, is_blocking)
+    status =  plotgui.run_app(app, is_blocking)
 
     return status

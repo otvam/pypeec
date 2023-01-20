@@ -147,6 +147,7 @@ def _get_data_plotter_item(plot_type, plot_geom, name, data_options):
         "clip_options": _get_clip_options(),
         "plot_options": _get_plot_options(name),
         "data_window": _get_data_window(name),
+        "plot_framework": "pyvista",
     }
 
     return data
@@ -161,16 +162,20 @@ def get_data_viewer():
 
     data_viewer = [
         {
-            "plot_type": "domain",
-            "clip_options": _get_clip_options(),
-            "plot_options": _get_plot_options("Domain"),
             "data_window": _get_data_window("Domain"),
+            "data_plot": {
+                "plot_type": "domain",
+                "clip_options": _get_clip_options(),
+                "plot_options": _get_plot_options("Domain"),
+            }
         },
         {
-            "plot_type": "graph",
-            "clip_options": _get_clip_options(),
-            "plot_options": _get_plot_options("Graph"),
             "data_window": _get_data_window("Graph"),
+            "data_plot": {
+                "plot_type": "graph",
+                "clip_options": _get_clip_options(),
+                "plot_options": _get_plot_options("Graph"),
+            }
         },
     ]
 

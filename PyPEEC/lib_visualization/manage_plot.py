@@ -25,6 +25,48 @@ import numpy as np
 import numpy.linalg as lna
 
 
+def _get_plot_options(pl, grid, voxel, point, plot_options):
+    """
+    Plot the geometry as wireframe (complete grid and non-empty voxels).
+    Plot the point cloud used for the field evaluation.
+    Add the axis descriptor to orientate the geometry.
+    Add a plot title.
+    """
+
+    # plot the complete grid
+    if plot_options["grid_plot"] and (grid.n_cells > 0):
+        pl.add_mesh(
+            grid,
+            style="wireframe",
+            color=plot_options["grid_color"],
+            opacity=plot_options["grid_opacity"],
+            line_width=plot_options["grid_thickness"]
+        )
+
+    # plot the non-empty voxels
+    if plot_options["geom_plot"] and (voxel.n_cells > 0):
+        pl.add_mesh(
+            voxel,
+            style="wireframe",
+            color=plot_options["geom_color"],
+            opacity=plot_options["geom_opacity"],
+            line_width=plot_options["geom_thickness"]
+        )
+
+    if plot_options["cloud_plot"] and (point.n_cells > 0):
+        pl.add_mesh(
+            point,
+            color=plot_options["cloud_color"],
+            point_size=plot_options["cloud_size"],
+            opacity=plot_options["cloud_opacity"],
+            render_points_as_spheres=True,
+        )
+
+    # add title and axes
+    pl.add_axes(line_width=2, interactive=False)
+    pl.add_text(plot_options["title"], font_size=10)
+
+
 def _get_clip_mesh(pl, obj, arg, clip_options):
     """
     Add an object (either full view or clipped).
@@ -285,13 +327,18 @@ def plot_arrow(pl, d_char, obj, data_options, clip_options):
         _get_clip_mesh(pl, glyph_tmp, arg, clip_options)
 
 
-def get_plot_viewer(pl, voxel, plot_type, clip_options):
+def get_plot_viewer(pl, grid, voxel, point, data_plot):
     """
     Plot the voxel structure (for the viewer).
     The following plot types are available:
         - the domains are shown for the non-empty voxels
         - the connected components for the non-empty voxels
     """
+
+    # get the data
+    plot_type = data_plot["plot_type"]
+    clip_options = data_plot["clip_options"]
+    plot_options = data_plot["plot_options"]
 
     # find the variable to be plotted
     if plot_type == "domain":
@@ -312,6 +359,9 @@ def get_plot_viewer(pl, voxel, plot_type, clip_options):
     )
     if voxel_tmp.n_cells > 0:
         _get_clip_mesh(pl, voxel_tmp, arg, clip_options)
+
+    # add the wireframe and axis
+    _get_plot_options(pl, grid, voxel, point, plot_options)
 
 
 def get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options, clip_options):
@@ -339,45 +389,3 @@ def get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options,
         plot_arrow(pl, d_char, point, data_options, clip_options)
     else:
         raise ValueError("invalid plot type and plot feature")
-
-
-def get_plot_options(pl, grid, voxel, point, plot_options):
-    """
-    Plot the geometry as wireframe (complete grid and non-empty voxels).
-    Plot the point cloud used for the field evaluation.
-    Add the axis descriptor to orientate the geometry.
-    Add a plot title.
-    """
-
-    # plot the complete grid
-    if plot_options["grid_plot"] and (grid.n_cells > 0):
-        pl.add_mesh(
-            grid,
-            style="wireframe",
-            color=plot_options["grid_color"],
-            opacity=plot_options["grid_opacity"],
-            line_width=plot_options["grid_thickness"]
-        )
-
-    # plot the non-empty voxels
-    if plot_options["geom_plot"] and (voxel.n_cells > 0):
-        pl.add_mesh(
-            voxel,
-            style="wireframe",
-            color=plot_options["geom_color"],
-            opacity=plot_options["geom_opacity"],
-            line_width=plot_options["geom_thickness"]
-        )
-
-    if plot_options["cloud_plot"] and (point.n_cells > 0):
-        pl.add_mesh(
-            point,
-            color=plot_options["cloud_color"],
-            point_size=plot_options["cloud_size"],
-            opacity=plot_options["cloud_opacity"],
-            render_points_as_spheres=True,
-        )
-
-    # add title and axes
-    pl.add_axes(line_width=2, interactive=False)
-    pl.add_text(plot_options["title"], font_size=10)
