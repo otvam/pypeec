@@ -6,6 +6,14 @@ Ultimately, these options are dumped into JSON files.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
+import sys
+import json
+from examples import examples_config
+
+# get config
+PATH_ROOT = examples_config.PATH_ROOT
+
 
 def _get_plot_options(name):
     """
@@ -189,3 +197,22 @@ def get_data_plotter():
     ]
 
     return data_plotter
+
+
+if __name__ == "__main__":
+    # get the filename
+    file_plotter = os.path.join(PATH_ROOT, "visualization", "data_plotter.json")
+    file_viewer = os.path.join(PATH_ROOT, "visualization", "data_viewer.json")
+
+    # get data
+    data_viewer = get_data_viewer()
+    data_plotter = get_data_plotter()
+
+    # create file
+    with open(file_viewer, "w") as fid:
+        json.dump(data_viewer, fid, indent=4)
+    with open(file_plotter, "w") as fid:
+        json.dump(data_plotter, fid, indent=4)
+
+    # run
+    sys.exit(0)

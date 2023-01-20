@@ -8,9 +8,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import os
 import sys
-import json
 from PyPEEC import script
-from examples import examples_visualization
 from examples import examples_config
 
 # get config
@@ -23,13 +21,6 @@ if __name__ == "__main__":
     file_solution = os.path.join(PATH_ROOT, EXAMPLE_NAME, "solution.pck")
     file_point = os.path.join(PATH_ROOT, EXAMPLE_NAME, "point.json")
     file_plotter = os.path.join(PATH_ROOT, "visualization", "data_plotter.json")
-
-    # get viewer data
-    data_plotter = examples_visualization.get_data_plotter()
-
-    # create file
-    with open(file_plotter, "w") as fid:
-        json.dump(data_plotter, fid, indent=4)
 
     # run
     status = script.run_plotter(file_solution, file_point, file_plotter, True)

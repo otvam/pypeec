@@ -8,6 +8,9 @@
 # Thomas Guillod
 # (c) 2023 - Dartmouth College
 
+set -o nounset
+set -o pipefail
+
 function init_test {
   echo "================================================================"
   echo "COPY THE FILES"
@@ -52,9 +55,6 @@ function clean_test {
   fi
   echo "================================================================"
 }
-
-set -o nounset
-set -o pipefail
 
 folder=(
   "visualization"
