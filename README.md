@@ -20,16 +20,13 @@ The **PyPEEC** package contains the following tools:
 
 ## Documentation
 
+* [**Gallery**](docs/gallery.md) - Gallery of screenshots
 * [**Getting Started**](docs/tutorial.md) - Explanation of the workflow of PyPEEC
 * [**Technical Details**](docs/technical.md) - Explanation of the dependencies, packing, and tests
 
-## Gallery
+## Screenshot
 
-![viewer](docs/gallery_viewer.png)
-
-![plotter_potential](docs/gallery_plotter_potential.png)
-
-![plotter_current](docs/gallery_plotter_current.png)
+![screenshot](docs/screenshot.png)
 
 ## Credits
 
