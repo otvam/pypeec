@@ -15,10 +15,10 @@ function init_test {
 
   for tmp in "${folder[@]}"
   do
-    rm -rf tests/$tmp
-    rsync -ma --include '*/' --include '*.json' --exclude '*' examples/$tmp tests
-    rsync -ma --include '*/' --include '*.png' --exclude '*' examples/$tmp tests
-    rsync -ma --include '*/' --include '*.stl' --exclude '*' examples/$tmp tests
+    rm -rf "tests/$tmp"
+    rsync -ma --include '*/' --include '*.json' --exclude '*' "examples/$tmp" "tests"
+    rsync -ma --include '*/' --include '*.png' --exclude '*' "examples/$tmp" "tests"
+    rsync -ma --include '*/' --include '*.stl' --exclude '*' "examples/$tmp" "tests"
   done
 
   status=0
@@ -29,8 +29,8 @@ function test_file {
   echo "TEST: $1"
   echo "================================================================"
 
-  python -m unittest -v tests/$1.py
-  status=$(( $status || $? ))
+  python -m unittest -v "tests/$1.py"
+  status=$(( status || $? ))
 }
 
 function clean_test {
@@ -40,11 +40,11 @@ function clean_test {
 
   for tmp in "${folder[@]}"
   do
-    rm -rf tests/$tmp
+    rm -rf "tests/$tmp"
   done
 
   echo "================================================================"
-  if (( $status == 0 ))
+  if (( status == 0 ))
   then
     echo "TEST: SUCCESS"
   else
@@ -52,6 +52,9 @@ function clean_test {
   fi
   echo "================================================================"
 }
+
+set -o nounset
+set -o pipefail
 
 folder=(
   "visualization"
