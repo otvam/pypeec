@@ -28,7 +28,7 @@ The **PyPEEC** package contains the following tools (`PyPEEC` package)::
 
 ## Workflow
 
-![viewer](workflow.png)
+![viewer](images/workflow.png)
 
 ## Script and File Description
 
