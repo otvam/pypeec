@@ -108,11 +108,18 @@ def close_pyvista(pl, is_interactive):
 
 def close_matplotlib(fig, is_interactive):
     """
+    Draw a Matplotlib figure (only if the mode is set to interactive)
     Close a Matplotlib figure (only if the mode is set to non-interactive).
     """
 
     if not is_interactive:
         plt.close(fig)
+    else:
+        gcf = plt.gcf()
+        gcf.canvas.draw()
+        gcf.canvas.flush_events()
+        plt.show(block=False)
+        gcf.canvas.flush_events()
 
 
 def open_app(is_interactive):
@@ -135,7 +142,6 @@ def run_app(app, is_interactive):
     """
 
     if is_interactive:
-        plt.show(block=False)
         exit_code = app.exec_()
         return exit_code == 0
     else:
