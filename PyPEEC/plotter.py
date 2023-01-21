@@ -145,6 +145,6 @@ def run(data_solution, data_point, data_plotter, is_interactive):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    status =  plotgui.run_app(app, is_interactive)
+    status = plotgui.run_app(app, is_interactive)
 
     return status

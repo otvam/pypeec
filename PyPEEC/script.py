@@ -1,5 +1,7 @@
 """
 Contain the program entry points.
+The import statements for the different modules are located inside the code.
+This allows for a minimization of the loaded dependencies.
 """
 
 __author__ = "Thomas Guillod"
@@ -8,10 +10,6 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import os
 import sys
 import argparse
-from PyPEEC import mesher
-from PyPEEC import viewer
-from PyPEEC import solver
-from PyPEEC import plotter
 from PyPEEC.lib_utils import fileio
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import FileError
@@ -24,6 +22,8 @@ def run_mesher(file_mesher, file_voxel):
     """
     Solve the problem and write the mesher results.
     """
+
+    from PyPEEC import mesher
 
     try:
         # load data
@@ -53,6 +53,8 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
     Load the voxel structure and plot the results.
     """
 
+    from PyPEEC import viewer
+
     try:
         # load data
         logger.info("load the data")
@@ -73,6 +75,8 @@ def run_solver(file_voxel, file_problem, file_solution):
     """
     Load the voxel structure, solve the problem and write the solver results.
     """
+
+    from PyPEEC import solver
 
     try:
         # load data
@@ -97,6 +101,8 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
     """
     Load the solver solution and plot the results.
     """
+
+    from PyPEEC import plotter
 
     try:
         # load data
@@ -123,7 +129,7 @@ def main_mesher():
     parser = argparse.ArgumentParser(
         prog="ppmesher",
         description="Transform the provided data into a 3D voxel structure.",
-        epilog = "(c) Thomas Guillod, Dartmouth College",
+        epilog="(c) Thomas Guillod, Dartmouth College",
     )
     parser.add_argument(
         "--mesher",

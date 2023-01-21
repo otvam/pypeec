@@ -112,8 +112,8 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     obj = IterCounter()
 
     # define callback
-    def fct(res_iter):
-        obj.get_callback(res_iter)
+    def fct(res_tmp):
+        obj.get_callback(res_tmp)
 
     # call the solver
     (sol, flag) = sla.gmres(

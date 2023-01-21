@@ -12,6 +12,7 @@ PyPEEC is entirely programmed in Python and is using the following packages:
 
 PyPEEC is tested on Linux x64 but should run on other platforms.
 The optional UMFPACK solver is known to be difficult to install on MS Windows.
+The interactions between Qt/PyVista/Matplotlib are likely be sensitive to the environment.
 
 ## Packaging and Environment
 
