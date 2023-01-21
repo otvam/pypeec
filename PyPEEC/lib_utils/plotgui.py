@@ -5,13 +5,16 @@ The Qt framework is used for the GUI.
 WARNING: This module is using different more or less dirty hacks.
          This module is likely to be non-portable across platforms (tested on Linux x64).
          This module is likely to break with newer/older versions of the dependencies.
+
+WARNING: Making many plots can lead to segmentation fault with PyVista.
+         Not sure if the problem lies with PyVista or Vtk.
 """
 
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-import pyvistaqt as pvqt
 import pyvista as pv
+import pyvistaqt as pvqt
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import qtpy.QtWidgets as qtw

@@ -48,6 +48,10 @@ The following files (JSON for inputs, pickle for outputs) are used:
 * `file_voxel` (pickle, output file): file with the definition of the voxel structure
 * `file_solution` (pickle, output file): file with the solution of the magnetic problem
 
+> **Warning**: WARNING: Pickling data is not secure. 
+> Only load pickle files that you trust.
+> Do not commit the pickle files in the git repository.
+
 ## Examples
 
 Different examples are located in the `examples` folder:

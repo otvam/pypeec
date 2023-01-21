@@ -1,5 +1,8 @@
 """
 Simple module for serialization and deserialization.
+
+WARNING: Pickling data is not secure.
+         Only load pickle files that you trust.
 """
 
 __author__ = "Thomas Guillod"
