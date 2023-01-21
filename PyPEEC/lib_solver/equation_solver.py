@@ -5,95 +5,13 @@ Module for checking the matrix condition number and solving a sparse equation sy
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
-import scipy.sparse.linalg as sla
 import scipy.linalg as lna
+from PyPEEC.lib_matrix import matrix_condition
+from PyPEEC.lib_matrix import matrix_gmres
 from PyPEEC.lib_utils import timelogger
 
 # get a logger
 logger = timelogger.get_logger("EQUATION")
-
-
-class IterCounter:
-    """
-    Simple class used as a callback to count the number of iteration of the matrix solver.
-    """
-
-    def __init__(self):
-        """
-        Constructor.
-        Init the number of iteration.
-        """
-
-        self.n_iter = 0
-        self.res_iter = []
-
-    def get_callback(self, res):
-        """
-        Callback increasing the iteration count.
-        """
-
-        # update and save the iteration data
-        self.n_iter += 1
-        self.res_iter.append(res)
-
-        # log the results
-        logger.info("matrix iter: i_iter = %d / res = %.3e" % (self.n_iter, res))
-
-    def get_n_iter(self):
-        """
-        Get the number of iterations.
-        """
-
-        return self.n_iter, self.res_iter
-
-
-def _get_lu_decomposition(mat):
-    """
-    Get an inverse operator (with LU decomposition) for the provided matrix and the Hermitian matrix.
-    """
-
-    # compute the LU decomposition
-    try:
-        LU_decomposition = sla.splu(mat)
-    except RuntimeError:
-        return None
-
-    # get the function for the linear operator (original matrix)
-    def fct_matvec(v):
-        return LU_decomposition.solve(v, trans="N")
-
-    # get the function for the linear operator (transposed matrix)
-    def fct_rmatvec(v):
-        return LU_decomposition.solve(v, trans="H")
-
-    # assign linear operator for inversion
-    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec)
-
-    return op
-
-
-def _get_condition_estimate(mat, accuracy):
-    """
-    Compute an estimate of the condition number (norm 1) of a sparse matrix.
-    """
-
-    # get an inverse operator
-    op = _get_lu_decomposition(mat)
-
-    # abort if LU decomposition failed
-    if op is None:
-        return float("inf")
-
-    # compute the norm of the matrix inverse (estimate)
-    nrm_inv = sla.onenormest(op, t=accuracy)
-
-    # compute the norm of the matrix (estimate)
-    nrm_ori = sla.onenormest(mat, t=accuracy)
-
-    # compute an estimate of the condition
-    cond = nrm_ori*nrm_inv
-
-    return cond
 
 
 def get_solver(sys_op, pcd_op, rhs, solver_options):
@@ -108,22 +26,11 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     restart = solver_options["restart"]
     maxiter = solver_options["maxiter"]
 
-    # object for counting the solver iterations (callback)
-    obj = IterCounter()
-
-    # define callback
-    def fct(res_tmp):
-        obj.get_callback(res_tmp)
-
     # call the solver
-    (sol, flag) = sla.gmres(
-        sys_op, rhs,
-        tol=tol, atol=atol, restart=restart, maxiter=maxiter,
-        M=pcd_op, callback=fct, callback_type="pr_norm",
+    (status, n_iter, res_iter, sol) = matrix_gmres.get_matrix_gmres(
+        sys_op, pcd_op, rhs,
+        tol, atol, restart, maxiter
     )
-
-    # get the number of iterations
-    (n_iter, res_iter) = obj.get_n_iter()
 
     # compute the absolute and relative residuum
     res_raw = sys_op(sol)-rhs
@@ -136,9 +43,6 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
 
     # get problem size
     n_dof = len(rhs)
-
-    # check for convergence
-    status = flag == 0
 
     # assign the results
     solver_status = {
@@ -177,7 +81,7 @@ def get_condition(mat, conditions_options):
 
     # computation is required
     if check:
-        value = _get_condition_estimate(mat, accuracy)
+        value = matrix_condition.get_condition_matrix(mat, accuracy)
     else:
         value = float(0)
 
