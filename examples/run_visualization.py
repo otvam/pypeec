@@ -82,7 +82,7 @@ def _get_data_plotter_geometry(name):
         "opacity": 1.0,
     }
 
-    data = _get_data_plotter_pyvista("material", name, data_options)
+    data = _get_data_plotter_pyvista("material", data_options, name)
 
     return data
 
@@ -105,7 +105,7 @@ def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
         "legend": "%s [%s]" % (name, unit),
     }
 
-    data = _get_data_plotter_pyvista("scalar_" + plot_geom, name, data_options)
+    data = _get_data_plotter_pyvista("scalar_" + plot_geom, data_options, name)
 
     return data
 
@@ -129,14 +129,14 @@ def _get_data_plotter_arrow(plot_geom, var, vec, scale, unit, name):
         "legend": "%s [%s]" % (name, unit),
     }
 
-    data = _get_data_plotter_pyvista("arrow_" + plot_geom, name, data_options)
+    data = _get_data_plotter_pyvista("arrow_" + plot_geom, data_options, name)
 
     return data
 
 
-def _get_data_plotter_pyvista(plot_type, name, data_options):
+def _get_data_plotter_pyvista(plot_type, data_options, name):
     """
-    Get the options defining a single plot for the plotter.
+    Get the options defining a single PyVista plot.
     This structure is used by the plotter.
     """
 
@@ -154,21 +154,17 @@ def _get_data_plotter_pyvista(plot_type, name, data_options):
     return data
 
 
-def _get_data_plotter_matplotlib():
+def _get_data_plotter_matplotlib(data_plot, name):
     """
-    Get the options defining the convergence plot.
+    Get the options defining a single Matplotlib plot.
+    This structure is used by the plotter.
     """
 
     data = {
         "plot_framework": "matplotlib",
-        "data_window": _get_data_window("Convergence"),
-        "data_plot": {
-            "plot_type": "convergence_linear",
-            "title": "Convergence",
-            "xlabel": "Iteration",
-            "ylabel": "Residuum",
-        },
-    }
+        "data_window": _get_data_window(name),
+        "data_plot": data_plot,
+        }
 
     return data
 
@@ -209,6 +205,7 @@ def get_data_plotter():
     This structure is used by the plotter.
     """
 
+    # get the plots
     data_plotter = [
         _get_data_plotter_geometry("Material"),
         _get_data_plotter_scalar("voxel", "rho", 1e8, "uOhm/cm", "Resistivity"),
@@ -219,6 +216,8 @@ def get_data_plotter():
         _get_data_plotter_scalar("point", "H_norm_abs", 1e0, "A/m", "Mag. Field Norm"),
         _get_data_plotter_arrow("point", "H_norm_re", "H_vec_re", 1e0, "A/m", "Re. Mag. Field"),
         _get_data_plotter_arrow("point", "H_norm_im", "H_vec_im", 1e0, "A/m", "Im. Mag. Field"),
+        _get_data_plotter_matplotlib("convergence", "Convergence"),
+        _get_data_plotter_matplotlib("residuum", "Residuum"),
     ]
 
     return data_plotter

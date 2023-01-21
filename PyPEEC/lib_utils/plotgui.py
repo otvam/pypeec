@@ -58,7 +58,7 @@ def open_pyvista(data_window, is_blocking):
     return pl
 
 
-def open_matploblib(data_window, is_blocking):
+def open_matplotlib(data_window, is_blocking):
     # get the data
     title = data_window["title"]
     show_menu = data_window["show_menu"]

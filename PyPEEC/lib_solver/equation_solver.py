@@ -126,8 +126,8 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     (n_iter, res_iter) = obj.get_n_iter()
 
     # compute the absolute and relative residuum
-    res = sys_op(sol)-rhs
-    res_abs = lna.norm(res)
+    res_raw = sys_op(sol)-rhs
+    res_abs = lna.norm(res_raw)
     rhs_abs = lna.norm(rhs)
     if rhs_abs > 0:
         res_rel = res_abs/rhs_abs
@@ -142,7 +142,7 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
 
     # assign the results
     solver_status = {
-        "res": res,
+        "res_raw": res_raw,
         "res_abs": res_abs,
         "res_rel": res_rel,
         "n_iter": n_iter,

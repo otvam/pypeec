@@ -208,6 +208,19 @@ def _check_data_options(plot_type, data_options):
             raise CheckError("filter_lim: filter limits should be composed of floats")
 
 
+def _check_data_plotter_matplotlib(data_plot):
+    """
+    Check the data describing a Matplotlib plot (for the plotter).
+    """
+
+    # check type
+    if not isinstance(data_plot, str):
+        raise CheckError("data_plot: plot data should be a string")
+
+    # check value
+    if data_plot not in ["convergence", "residuum"]:
+        raise CheckError("data_plot: specified data plot is invalid")
+
 def _check_data_plotter_pyvista(data_plot):
     """
     Check the data describing a PyVista plot (for the plotter).
@@ -260,7 +273,7 @@ def _check_data_plotter_item(data_plotter):
 
     # check the plot data for the framework
     if plot_framework== "matplotlib":
-        pass
+        _check_data_plotter_matplotlib(data_plot)
     elif plot_framework == "pyvista":
         _check_data_plotter_pyvista(data_plot)
     else:

@@ -15,6 +15,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_visualization import manage_voxel
 from PyPEEC.lib_visualization import manage_pyvista
+from PyPEEC.lib_visualization import manage_matplotlib
 from PyPEEC.lib_check import check_data_point
 from PyPEEC.lib_check import check_data_visualization
 from PyPEEC.lib_utils import plotgui
@@ -43,6 +44,7 @@ def _get_grid_voxel(data_solution, data_point):
     rho_v = data_solution["rho_v"]
     V_v = data_solution["V_v"]
     J_v = data_solution["J_v"]
+    solver_status = data_solution["solver_status"]
 
     # compute the magnetic field
     H_point = manage_voxel.get_magnetic_field(d, idx_v, J_v, voxel_point, data_point)
@@ -59,10 +61,10 @@ def _get_grid_voxel(data_solution, data_point):
     voxel = manage_voxel.set_plotter_current_density(voxel, idx_v, J_v)
     point = manage_voxel.set_plotter_magnetic_field(point, H_point)
 
-    return grid, voxel, point
+    return grid, voxel, point, solver_status
 
 
-def _get_plot(grid, voxel, point, data_plotter, is_blocking):
+def _get_plot(grid, voxel, point, solver_status, data_plotter, is_blocking):
     """
     Make a plot with the specified user settings.
     The plot contains the following elements:
@@ -81,17 +83,20 @@ def _get_plot(grid, voxel, point, data_plotter, is_blocking):
         # get the plotter (with the Qt framework)
         pl = plotgui.open_pyvista(data_window, is_blocking)
 
-        # find the plot type and call the corresponding function
+        # make the plot
         manage_pyvista.get_plot_plotter(pl, grid, voxel, point, data_plot)
 
         # close plotter if non-blocking
         plotgui.close_pyvista(pl, is_blocking)
-    elif plot_framework == "pyvista":
+    elif plot_framework == "matplotlib":
         # get the figure (with the Qt framework)
-        pl = plotgui.open_matploblib(data_window, is_blocking)
+        fig = plotgui.open_matplotlib(data_window, is_blocking)
+
+        # make the plot
+        manage_matplotlib.get_plot_plotter(fig, solver_status, data_plot)
 
         # close figure if non-blocking
-        plotgui.close_matplotlib(pl, is_blocking)
+        plotgui.close_matplotlib(fig, is_blocking)
     else:
         raise ValueError("invalid plot framework")
 
@@ -118,13 +123,13 @@ def run(data_solution, data_point, data_plotter, is_blocking):
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
-        (grid, voxel, point) = _get_grid_voxel(data_solution, data_point)
+        (grid, voxel, point, solver_status) = _get_grid_voxel(data_solution, data_point)
 
         # make the plots
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_plotter):
             logger.info("plotting %d / %d" % (i + 1, len(data_plotter)))
-            _get_plot(grid, voxel, point, dat_tmp, is_blocking)
+            _get_plot(grid, voxel, point, solver_status, dat_tmp, is_blocking)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False

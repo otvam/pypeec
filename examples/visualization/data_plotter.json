@@ -449,5 +449,29 @@
                 "cloud_opacity": 0.5
             }
         }
+    },
+    {
+        "plot_framework": "matplotlib",
+        "data_window": {
+            "title": "Convergence",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": "convergence"
+    },
+    {
+        "plot_framework": "matplotlib",
+        "data_window": {
+            "title": "Residuum",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": "residuum"
     }
 ]
