@@ -364,7 +364,7 @@ def get_plot_viewer(pl, grid, voxel, point, data_plot):
     _get_plot_options(pl, grid, voxel, point, plot_options)
 
 
-def get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options, clip_options):
+def get_plot_plotter(pl, grid, voxel, point, data_plot):
     """
     Plot the solution (for the plotter).
     The following plot types are available:
@@ -375,17 +375,27 @@ def get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options,
         - plot a vector variable on the point cloud
     """
 
-    if (plot_type == "material") and (plot_geom == "material"):
+    # get the data
+    plot_type = data_plot["plot_type"]
+    data_options = data_plot["data_options"]
+    clip_options = data_plot["clip_options"]
+    plot_options = data_plot["plot_options"]
+
+    # get the main plot
+    if plot_type == "material":
         plot_material(pl, voxel, data_options, clip_options)
-    elif (plot_type == "scalar") and (plot_geom == "voxel"):
+    elif plot_type == "scalar_voxel":
         plot_scalar(pl, voxel, data_options, clip_options)
-    elif (plot_type == "scalar") and (plot_geom == "point"):
+    elif plot_type == "scalar_point":
         plot_scalar(pl, point, data_options, clip_options)
-    elif (plot_type == "arrow") and (plot_geom == "voxel"):
+    elif plot_type == "arrow_voxel":
         d_char = min(grid.spacing)
         plot_arrow(pl, d_char, voxel, data_options, clip_options)
-    elif (plot_type == "arrow") and (plot_geom == "point"):
+    elif plot_type == "arrow_point":
         d_char = min(grid.spacing)
         plot_arrow(pl, d_char, point, data_options, clip_options)
     else:
         raise ValueError("invalid plot type and plot feature")
+
+    # add the wireframe and axis
+    _get_plot_options(pl, grid, voxel, point, plot_options)

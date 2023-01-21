@@ -1,32 +1,6 @@
 [
     {
-        "plot_type": "material",
-        "plot_geom": "material",
-        "data_options": {
-            "legend": "Material",
-            "opacity": 1.0
-        },
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Material",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Material",
             "show_menu": false,
@@ -35,48 +9,37 @@
                 600
             ]
         },
-        "plot_framework": "pyvista"
+        "data_plot": {
+            "plot_type": "material",
+            "data_options": {
+                "legend": "Material",
+                "opacity": 1.0
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Material",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
     },
     {
-        "plot_type": "scalar",
-        "plot_geom": "voxel",
-        "data_options": {
-            "var": "rho",
-            "scale": 100000000.0,
-            "log": false,
-            "color_lim": [
-                null,
-                null
-            ],
-            "filter_lim": [
-                null,
-                null
-            ],
-            "opacity": 1.0,
-            "size": 10.0,
-            "legend": "Resistivity [uOhm/cm]"
-        },
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Resistivity",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Resistivity",
             "show_menu": false,
@@ -85,48 +48,49 @@
                 600
             ]
         },
-        "plot_framework": "pyvista"
+        "data_plot": {
+            "plot_type": "scalar_voxel",
+            "data_options": {
+                "var": "rho",
+                "scale": 100000000.0,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "opacity": 1.0,
+                "size": 10.0,
+                "legend": "Resistivity [uOhm/cm]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Resistivity",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
     },
     {
-        "plot_type": "scalar",
-        "plot_geom": "voxel",
-        "data_options": {
-            "var": "V_abs",
-            "scale": 1.0,
-            "log": false,
-            "color_lim": [
-                null,
-                null
-            ],
-            "filter_lim": [
-                null,
-                null
-            ],
-            "opacity": 1.0,
-            "size": 10.0,
-            "legend": "Potential [V]"
-        },
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Potential",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Potential",
             "show_menu": false,
@@ -135,48 +99,49 @@
                 600
             ]
         },
-        "plot_framework": "pyvista"
+        "data_plot": {
+            "plot_type": "scalar_voxel",
+            "data_options": {
+                "var": "V_abs",
+                "scale": 1.0,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "opacity": 1.0,
+                "size": 10.0,
+                "legend": "Potential [V]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Potential",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
     },
     {
-        "plot_type": "scalar",
-        "plot_geom": "voxel",
-        "data_options": {
-            "var": "J_norm_abs",
-            "scale": 1e-06,
-            "log": false,
-            "color_lim": [
-                null,
-                null
-            ],
-            "filter_lim": [
-                null,
-                null
-            ],
-            "opacity": 1.0,
-            "size": 10.0,
-            "legend": "Current Norm [A/mm2]"
-        },
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Current Norm",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Current Norm",
             "show_menu": false,
@@ -185,49 +150,49 @@
                 600
             ]
         },
-        "plot_framework": "pyvista"
+        "data_plot": {
+            "plot_type": "scalar_voxel",
+            "data_options": {
+                "var": "J_norm_abs",
+                "scale": 1e-06,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "opacity": 1.0,
+                "size": 10.0,
+                "legend": "Current Norm [A/mm2]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Current Norm",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
     },
     {
-        "plot_type": "arrow",
-        "plot_geom": "voxel",
-        "data_options": {
-            "var": "J_norm_re",
-            "vec": "J_vec_re",
-            "scale": 1e-06,
-            "log": false,
-            "color_lim": [
-                null,
-                null
-            ],
-            "filter_lim": [
-                null,
-                null
-            ],
-            "arrow_threshold": 0.001,
-            "arrow_scale": 0.5,
-            "legend": "Re. Current [A/mm2]"
-        },
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Re. Current",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Re. Current",
             "show_menu": false,
@@ -236,49 +201,50 @@
                 600
             ]
         },
-        "plot_framework": "pyvista"
+        "data_plot": {
+            "plot_type": "arrow_voxel",
+            "data_options": {
+                "var": "J_norm_re",
+                "vec": "J_vec_re",
+                "scale": 1e-06,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "arrow_threshold": 0.001,
+                "arrow_scale": 0.5,
+                "legend": "Re. Current [A/mm2]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Re. Current",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
     },
     {
-        "plot_type": "arrow",
-        "plot_geom": "voxel",
-        "data_options": {
-            "var": "J_norm_im",
-            "vec": "J_vec_im",
-            "scale": 1e-06,
-            "log": false,
-            "color_lim": [
-                null,
-                null
-            ],
-            "filter_lim": [
-                null,
-                null
-            ],
-            "arrow_threshold": 0.001,
-            "arrow_scale": 0.5,
-            "legend": "Im. Current [A/mm2]"
-        },
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Im. Current",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Im. Current",
             "show_menu": false,
@@ -287,48 +253,50 @@
                 600
             ]
         },
-        "plot_framework": "pyvista"
+        "data_plot": {
+            "plot_type": "arrow_voxel",
+            "data_options": {
+                "var": "J_norm_im",
+                "vec": "J_vec_im",
+                "scale": 1e-06,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "arrow_threshold": 0.001,
+                "arrow_scale": 0.5,
+                "legend": "Im. Current [A/mm2]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Im. Current",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
     },
     {
-        "plot_type": "scalar",
-        "plot_geom": "point",
-        "data_options": {
-            "var": "H_norm_abs",
-            "scale": 1.0,
-            "log": false,
-            "color_lim": [
-                null,
-                null
-            ],
-            "filter_lim": [
-                null,
-                null
-            ],
-            "opacity": 1.0,
-            "size": 10.0,
-            "legend": "Mag. Field Norm [A/m]"
-        },
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Mag. Field Norm",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Mag. Field Norm",
             "show_menu": false,
@@ -337,49 +305,49 @@
                 600
             ]
         },
-        "plot_framework": "pyvista"
+        "data_plot": {
+            "plot_type": "scalar_point",
+            "data_options": {
+                "var": "H_norm_abs",
+                "scale": 1.0,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "opacity": 1.0,
+                "size": 10.0,
+                "legend": "Mag. Field Norm [A/m]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Mag. Field Norm",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
     },
     {
-        "plot_type": "arrow",
-        "plot_geom": "point",
-        "data_options": {
-            "var": "H_norm_re",
-            "vec": "H_vec_re",
-            "scale": 1.0,
-            "log": false,
-            "color_lim": [
-                null,
-                null
-            ],
-            "filter_lim": [
-                null,
-                null
-            ],
-            "arrow_threshold": 0.001,
-            "arrow_scale": 0.5,
-            "legend": "Re. Mag. Field [A/m]"
-        },
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Re. Mag. Field",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Re. Mag. Field",
             "show_menu": false,
@@ -388,49 +356,50 @@
                 600
             ]
         },
-        "plot_framework": "pyvista"
+        "data_plot": {
+            "plot_type": "arrow_point",
+            "data_options": {
+                "var": "H_norm_re",
+                "vec": "H_vec_re",
+                "scale": 1.0,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "arrow_threshold": 0.001,
+                "arrow_scale": 0.5,
+                "legend": "Re. Mag. Field [A/m]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Re. Mag. Field",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
     },
     {
-        "plot_type": "arrow",
-        "plot_geom": "point",
-        "data_options": {
-            "var": "H_norm_im",
-            "vec": "H_vec_im",
-            "scale": 1.0,
-            "log": false,
-            "color_lim": [
-                null,
-                null
-            ],
-            "filter_lim": [
-                null,
-                null
-            ],
-            "arrow_threshold": 0.001,
-            "arrow_scale": 0.5,
-            "legend": "Im. Mag. Field [A/m]"
-        },
-        "clip_options": {
-            "clip_plot": false,
-            "clip_invert": false,
-            "clip_axis": "z",
-            "clip_value": 0.0
-        },
-        "plot_options": {
-            "title": "Im. Mag. Field",
-            "grid_plot": true,
-            "grid_thickness": 1.0,
-            "grid_color": "black",
-            "grid_opacity": 0.1,
-            "geom_plot": true,
-            "geom_thickness": 1.0,
-            "geom_color": "black",
-            "geom_opacity": 0.5,
-            "cloud_plot": true,
-            "cloud_color": "black",
-            "cloud_size": 5.0,
-            "cloud_opacity": 0.5
-        },
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Im. Mag. Field",
             "show_menu": false,
@@ -439,6 +408,46 @@
                 600
             ]
         },
-        "plot_framework": "pyvista"
+        "data_plot": {
+            "plot_type": "arrow_point",
+            "data_options": {
+                "var": "H_norm_im",
+                "vec": "H_vec_im",
+                "scale": 1.0,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "arrow_threshold": 0.001,
+                "arrow_scale": 0.5,
+                "legend": "Im. Mag. Field [A/m]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Im. Mag. Field",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
     }
 ]

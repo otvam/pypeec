@@ -25,8 +25,7 @@ class IterCounter:
         """
 
         self.n_iter = 0
-        self.res_vec = []
-        self.iter_vec = []
+        self.res_iter = []
 
     def get_callback(self, res):
         """
@@ -35,8 +34,7 @@ class IterCounter:
 
         # update and save the iteration data
         self.n_iter += 1
-        self.iter_vec.append(self.n_iter)
-        self.res_vec.append(res)
+        self.res_iter.append(res)
 
         # log the results
         logger.info("matrix iter: i_iter = %d / res = %.3e" % (self.n_iter, res))
@@ -46,7 +44,7 @@ class IterCounter:
         Get the number of iterations.
         """
 
-        return self.n_iter, self.iter_vec, self.res_vec
+        return self.n_iter, self.res_iter
 
 
 def _get_lu_decomposition(mat):
@@ -125,7 +123,7 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     )
 
     # get the number of iterations
-    (n_iter, iter_vec, res_vec) = obj.get_n_iter()
+    (n_iter, res_iter) = obj.get_n_iter()
 
     # compute the absolute and relative residuum
     res = sys_op(sol)-rhs
@@ -144,11 +142,11 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
 
     # assign the results
     solver_status = {
-        "n_iter": n_iter,
-        "iter_vec": iter_vec,
-        "res_vec": res_vec,
+        "res": res,
         "res_abs": res_abs,
         "res_rel": res_rel,
+        "n_iter": n_iter,
+        "res_iter": res_iter,
         "n_dof": n_dof,
         "status": status,
     }

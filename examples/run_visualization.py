@@ -82,7 +82,7 @@ def _get_data_plotter_geometry(name):
         "opacity": 1.0,
     }
 
-    data = _get_data_plotter_item("material", "material", name, data_options)
+    data = _get_data_plotter_pyvista("material", name, data_options)
 
     return data
 
@@ -105,7 +105,7 @@ def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
         "legend": "%s [%s]" % (name, unit),
     }
 
-    data = _get_data_plotter_item("scalar", plot_geom, name, data_options)
+    data = _get_data_plotter_pyvista("scalar_" + plot_geom, name, data_options)
 
     return data
 
@@ -129,25 +129,45 @@ def _get_data_plotter_arrow(plot_geom, var, vec, scale, unit, name):
         "legend": "%s [%s]" % (name, unit),
     }
 
-    data = _get_data_plotter_item("arrow", plot_geom, name, data_options)
+    data = _get_data_plotter_pyvista("arrow_" + plot_geom, name, data_options)
 
     return data
 
 
-def _get_data_plotter_item(plot_type, plot_geom, name, data_options):
+def _get_data_plotter_pyvista(plot_type, name, data_options):
     """
     Get the options defining a single plot for the plotter.
     This structure is used by the plotter.
     """
 
     data = {
-        "plot_type": plot_type,
-        "plot_geom": plot_geom,
-        "data_options": data_options,
-        "clip_options": _get_clip_options(),
-        "plot_options": _get_plot_options(name),
-        "data_window": _get_data_window(name),
         "plot_framework": "pyvista",
+        "data_window": _get_data_window(name),
+        "data_plot": {
+            "plot_type": plot_type,
+            "data_options": data_options,
+            "clip_options": _get_clip_options(),
+            "plot_options": _get_plot_options(name),
+        },
+    }
+
+    return data
+
+
+def _get_data_plotter_matplotlib():
+    """
+    Get the options defining the convergence plot.
+    """
+
+    data = {
+        "plot_framework": "matplotlib",
+        "data_window": _get_data_window("Convergence"),
+        "data_plot": {
+            "plot_type": "convergence_linear",
+            "title": "Convergence",
+            "xlabel": "Iteration",
+            "ylabel": "Residuum",
+        },
     }
 
     return data

@@ -11,7 +11,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_visualization import manage_voxel
-from PyPEEC.lib_visualization import manage_plot
+from PyPEEC.lib_visualization import manage_pyvista
 from PyPEEC.lib_check import check_data_point
 from PyPEEC.lib_check import check_data_visualization
 from PyPEEC.lib_utils import plotgui
@@ -63,7 +63,7 @@ def _get_plot(grid, voxel, point, data_viewer, is_blocking):
     pl = plotgui.open_pyvista(data_window, is_blocking)
 
     # make the plot
-    manage_plot.get_plot_viewer(pl, grid, voxel, point, data_plot)
+    manage_pyvista.get_plot_viewer(pl, grid, voxel, point, data_plot)
 
     # close plotter if non-blocking
     plotgui.close_pyvista(pl, is_blocking)

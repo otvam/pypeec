@@ -14,7 +14,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_visualization import manage_voxel
-from PyPEEC.lib_visualization import manage_plot
+from PyPEEC.lib_visualization import manage_pyvista
 from PyPEEC.lib_check import check_data_point
 from PyPEEC.lib_check import check_data_visualization
 from PyPEEC.lib_utils import plotgui
@@ -72,24 +72,28 @@ def _get_plot(grid, voxel, point, data_plotter, is_blocking):
     """
 
     # extract the data
-    plot_type = data_plotter["plot_type"]
-    plot_geom = data_plotter["plot_geom"]
+    plot_framework = data_plotter["plot_framework"]
     data_window = data_plotter["data_window"]
-    data_options = data_plotter["data_options"]
-    clip_options = data_plotter["clip_options"]
-    plot_options = data_plotter["plot_options"]
+    data_plot = data_plotter["data_plot"]
 
-    # get the plotter (with the Qt framework)
-    pl = plotgui.open_plotter(data_window, is_blocking)
+    # make the plots
+    if plot_framework == "pyvista":
+        # get the plotter (with the Qt framework)
+        pl = plotgui.open_pyvista(data_window, is_blocking)
 
-    # find the plot type and call the corresponding function
-    manage_plot.get_plot_plotter(pl, grid, voxel, point, plot_type, plot_geom, data_options, clip_options)
+        # find the plot type and call the corresponding function
+        manage_pyvista.get_plot_plotter(pl, grid, voxel, point, data_plot)
 
-    # add the geometry and axes
-    manage_plot.get_plot_options(pl, grid, voxel, point, plot_options)
+        # close plotter if non-blocking
+        plotgui.close_pyvista(pl, is_blocking)
+    elif plot_framework == "pyvista":
+        # get the figure (with the Qt framework)
+        pl = plotgui.open_matploblib(data_window, is_blocking)
 
-    # close plotter if non-blocking
-    plotgui.close_plotter(pl, is_blocking)
+        # close figure if non-blocking
+        plotgui.close_matplotlib(pl, is_blocking)
+    else:
+        raise ValueError("invalid plot framework")
 
 
 def run(data_solution, data_point, data_plotter, is_blocking):
