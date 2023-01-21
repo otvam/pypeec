@@ -3,8 +3,8 @@ Module for managing plotting windows with PyVista and Matplotlib.
 The Qt framework is used for the GUI.
 
 WARNING: This module is using different more or less dirty hacks.
-         This module is likely to be non-portable.
-         This module is likely to break with some version of the dependencies.
+         This module is likely to be non-portable across platforms (tested on Linux x64).
+         This module is likely to break with newer/older versions of the dependencies.
 """
 
 __author__ = "Thomas Guillod"
@@ -28,10 +28,11 @@ pv.set_plot_theme('default')
 mpl.use('QtAgg')
 
 
-def open_pyvista(data_window, is_blocking):
+def open_pyvista(data_window, is_interactive):
     """
     Get a PyVista plotter.
-    If the call is non-blocking, the window is not shown.
+    If the mode is set to interactive, the plotter is customized (title, size, and menu).
+    If the mode is set to non-interactive, a basic plotter is returned.
     """
 
     # get the data
@@ -39,9 +40,9 @@ def open_pyvista(data_window, is_blocking):
     show_menu = data_window["show_menu"]
     size = data_window["size"]
 
-    # create the figure (blocking or non-blocking)
-    if is_blocking:
-        # get Qt plotter if blocking
+    # create the figure
+    if is_interactive:
+        # get Qt plotter if interactive
         pl = pvqt.BackgroundPlotter(
             show=True,
             toolbar=show_menu,
@@ -52,64 +53,71 @@ def open_pyvista(data_window, is_blocking):
         # set icon
         pl.set_icon(PATH_ROOT + "/icon.png")
     else:
-        # get standard plotter if non-blocking
+        # get standard plotter if non-interactive
         pl = pv.Plotter(off_screen=True)
 
     return pl
 
 
-def open_matplotlib(data_window, is_blocking):
+def open_matplotlib(data_window, is_interactive):
+    """
+    Get a Matplotlib figure.
+    If the mode is set to interactive, the figure is customized (title, size, and menu).
+    If the mode is set to non-interactive, a basic figure is returned.
+    """
+
     # get the data
     title = data_window["title"]
     show_menu = data_window["show_menu"]
     size = data_window["size"]
 
-    # create the figure (blocking or non-blocking)
-    if is_blocking:
-        (fig, ax) = plt.subplots(tight_layout=True)
+    # get the figure
+    (fig, ax) = plt.subplots(tight_layout=True)
 
-        # set the Qt options
+    # create the figure
+    if is_interactive:
+        # get the window size and icon
         (sizex, sizey) = size
         icn = qtu.QIcon(PATH_ROOT + "/icon.png")
 
+        # set the Qt options
         man = plt.get_current_fig_manager()
         man.window.setWindowTitle(title)
         man.window.setWindowIcon(icn)
         man.window.resize(sizex, sizey)
-
         if show_menu:
             man.toolbar.show()
         else:
             man.toolbar.hide()
-    else:
-        # get a default plot is non-blocking
-        (fig, ax) = plt.subplots()
 
     return fig
 
 
-def close_pyvista(pl, is_blocking):
+def close_pyvista(pl, is_interactive):
     """
-    Close a PyVista plotter (only if the call is non-blocking).
+    Close a PyVista plotter (only if the mode is set to non-interactive).
     """
 
-    # close plotter if non-blocking
-    if not is_blocking:
+    if not is_interactive:
         pl.close()
         pl.deep_clean()
 
 
-def close_matplotlib(fig, is_blocking):
-    if not is_blocking:
+def close_matplotlib(fig, is_interactive):
+    """
+    Close a Matplotlib figure (only if the mode is set to non-interactive).
+    """
+
+    if not is_interactive:
         plt.close(fig)
 
 
-def open_app(is_blocking):
+def open_app(is_interactive):
     """
-    Create a master Qt app for all the plotter windows.
+    Create a master Qt app for all the GUI windows (only if the mode is set to interactive).
     """
 
-    if is_blocking:
+    if is_interactive:
         app = qtw.QApplication([])
     else:
         app = None
@@ -117,12 +125,13 @@ def open_app(is_blocking):
     return app
 
 
-def run_app(app, is_blocking):
+def run_app(app, is_interactive):
     """
-    Enter the event loop (only if the call is non-blocking).
+    Enter the event loop (only if the mode is set to interactive).
+    This will create a blocking call until all the windows are closed.
     """
 
-    if is_blocking:
+    if is_interactive:
         plt.show(block=False)
         exit_code = app.exec_()
         return exit_code == 0

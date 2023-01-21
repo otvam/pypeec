@@ -1,12 +1,12 @@
 """
 Different functions for plotting voxel structures with PyVista.
 
-For the viewer and the plotter, the following object are plotter:
+For the viewer and the plotter, the following object are shown:
     - the complete voxel structure (as wireframe)
     - the structure containing non-empty voxels (as wireframe)
     - the defined point cloud (as points)
 
-For the plotter, the following plots are available:
+For the viewer, the following plots are available:
     - the domains are shown for the non-empty voxels
     - the connected components for the non-empty voxels
 

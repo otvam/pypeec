@@ -7,6 +7,10 @@ Plot the following features:
     - current density
     - magnetic field
 
+Two different mode are available for the plots:
+    - interactive mode: the plots are shown (blocking call at the end)
+    - silent mode: nothing is shown and the program exit (for debugging and testing)
+
 The plotting is done with PyVista with the Qt framework.
 """
 
@@ -64,7 +68,7 @@ def _get_grid_voxel(data_solution, data_point):
     return grid, voxel, point, solver_status
 
 
-def _get_plot(grid, voxel, point, solver_status, data_plotter, is_blocking):
+def _get_plot(grid, voxel, point, solver_status, data_plotter, is_interactive):
     """
     Make a plot with the specified user settings.
     The plot contains the following elements:
@@ -81,27 +85,27 @@ def _get_plot(grid, voxel, point, solver_status, data_plotter, is_blocking):
     # make the plots
     if plot_framework == "pyvista":
         # get the plotter (with the Qt framework)
-        pl = plotgui.open_pyvista(data_window, is_blocking)
+        pl = plotgui.open_pyvista(data_window, is_interactive)
 
         # make the plot
         manage_pyvista.get_plot_plotter(pl, grid, voxel, point, data_plot)
 
-        # close plotter if non-blocking
-        plotgui.close_pyvista(pl, is_blocking)
+        # close plotter if non-interactive
+        plotgui.close_pyvista(pl, is_interactive)
     elif plot_framework == "matplotlib":
         # get the figure (with the Qt framework)
-        fig = plotgui.open_matplotlib(data_window, is_blocking)
+        fig = plotgui.open_matplotlib(data_window, is_interactive)
 
         # make the plot
         manage_matplotlib.get_plot_plotter(fig, solver_status, data_plot)
 
-        # close figure if non-blocking
-        plotgui.close_matplotlib(fig, is_blocking)
+        # close figure if non-interactive
+        plotgui.close_matplotlib(fig, is_interactive)
     else:
         raise ValueError("invalid plot framework")
 
 
-def run(data_solution, data_point, data_plotter, is_blocking):
+def run(data_solution, data_point, data_plotter, is_interactive):
     """
     Main script for plotting the solution of a FFT-PEEC problem.
     """
@@ -119,7 +123,7 @@ def run(data_solution, data_point, data_plotter, is_blocking):
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")
-        app = plotgui.open_app(is_blocking)
+        app = plotgui.open_app(is_interactive)
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
@@ -129,7 +133,7 @@ def run(data_solution, data_point, data_plotter, is_blocking):
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_plotter):
             logger.info("plotting %d / %d" % (i + 1, len(data_plotter)))
-            _get_plot(grid, voxel, point, solver_status, dat_tmp, is_blocking)
+            _get_plot(grid, voxel, point, solver_status, dat_tmp, is_interactive)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -141,6 +145,6 @@ def run(data_solution, data_point, data_plotter, is_blocking):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    status =  plotgui.run_app(app, is_blocking)
+    status =  plotgui.run_app(app, is_interactive)
 
     return status

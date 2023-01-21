@@ -173,7 +173,7 @@ def get_data_viewer():
     """
     Get the options for visualizing the voxel structure.
     Each element in the list represents a different plot.
-    This structure is used by the viewer.
+    This list is used by the viewer.
     """
 
     data_viewer = [
@@ -202,7 +202,7 @@ def get_data_plotter():
     """
     Get the options for plotting the solver solution.
     Each element in the list represents a different plot.
-    This structure is used by the plotter.
+    This list is used by the plotter.
     """
 
     # get the plots

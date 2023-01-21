@@ -221,6 +221,7 @@ def _check_data_plotter_matplotlib(data_plot):
     if data_plot not in ["convergence", "residuum"]:
         raise CheckError("data_plot: specified data plot is invalid")
 
+
 def _check_data_plotter_pyvista(data_plot):
     """
     Check the data describing a PyVista plot (for the plotter).
@@ -272,7 +273,7 @@ def _check_data_plotter_item(data_plotter):
         raise CheckError("plot_framework: plot framework should be a string")
 
     # check the plot data for the framework
-    if plot_framework== "matplotlib":
+    if plot_framework == "matplotlib":
         _check_data_plotter_matplotlib(data_plot)
     elif plot_framework == "pyvista":
         _check_data_plotter_pyvista(data_plot)
@@ -344,4 +345,3 @@ def check_data_viewer(data_viewer):
     # check items
     for dat_tmp in data_viewer:
         _check_data_viewer_item(dat_tmp)
-

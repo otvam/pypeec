@@ -4,6 +4,10 @@ Plot the following features:
     - the different domain composing the voxel structure
     - the connected components of the voxel structure
 
+Two different mode are available for the plots:
+    - interactive mode: the plots are shown (blocking call at the end)
+    - silent mode: nothing is shown and the program exit (for debugging and testing)
+
 The plotting is done with PyVista with the Qt framework.
 """
 
@@ -50,7 +54,7 @@ def _get_grid_voxel(data_voxel, data_point):
     return grid, voxel, point
 
 
-def _get_plot(grid, voxel, point, data_viewer, is_blocking):
+def _get_plot(grid, voxel, point, data_viewer, is_interactive):
     """
     Make a plot with the voxel structure and the domains.
     """
@@ -60,16 +64,16 @@ def _get_plot(grid, voxel, point, data_viewer, is_blocking):
     data_plot = data_viewer["data_plot"]
 
     # get the plotter (with the Qt framework)
-    pl = plotgui.open_pyvista(data_window, is_blocking)
+    pl = plotgui.open_pyvista(data_window, is_interactive)
 
     # make the plot
     manage_pyvista.get_plot_viewer(pl, grid, voxel, point, data_plot)
 
-    # close plotter if non-blocking
-    plotgui.close_pyvista(pl, is_blocking)
+    # close plotter if non-interactive
+    plotgui.close_pyvista(pl, is_interactive)
 
 
-def run(data_voxel, data_point, data_viewer, is_blocking):
+def run(data_voxel, data_point, data_viewer, is_interactive):
     """
     Main script for visualizing a 3D voxel structure.
     """
@@ -86,7 +90,7 @@ def run(data_voxel, data_point, data_viewer, is_blocking):
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")
-        app = plotgui.open_app(is_blocking)
+        app = plotgui.open_app(is_interactive)
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
@@ -96,7 +100,7 @@ def run(data_voxel, data_point, data_viewer, is_blocking):
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_viewer):
             logger.info("plotting %d / %d" % (i + 1, len(data_viewer)))
-            _get_plot(grid, voxel, point, dat_tmp, is_blocking)
+            _get_plot(grid, voxel, point, dat_tmp, is_interactive)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -108,6 +112,6 @@ def run(data_voxel, data_point, data_viewer, is_blocking):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    status = plotgui.run_app(app, is_blocking)
+    status = plotgui.run_app(app, is_interactive)
 
     return status

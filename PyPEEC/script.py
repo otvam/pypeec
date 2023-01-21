@@ -48,7 +48,7 @@ def run_mesher(file_mesher, file_voxel):
     return status
 
 
-def run_viewer(file_voxel, file_point, file_viewer, is_blocking):
+def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
     """
     Load the voxel structure and plot the results.
     """
@@ -61,7 +61,7 @@ def run_viewer(file_voxel, file_point, file_viewer, is_blocking):
         data_viewer = fileio.load_json(file_viewer)
 
         # call the viewer
-        status = viewer.run(data_voxel, data_point, data_viewer, is_blocking)
+        status = viewer.run(data_voxel, data_point, data_viewer, is_interactive)
     except FileError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -93,7 +93,7 @@ def run_solver(file_voxel, file_problem, file_solution):
     return status
 
 
-def run_plotter(file_solution, file_point, file_plotter, is_blocking):
+def run_plotter(file_solution, file_point, file_plotter, is_interactive):
     """
     Load the solver solution and plot the results.
     """
@@ -106,7 +106,7 @@ def run_plotter(file_solution, file_point, file_plotter, is_blocking):
         data_plotter = fileio.load_json(file_plotter)
 
         # call the plotter
-        status = plotter.run(data_solution, data_point, data_plotter, is_blocking)
+        status = plotter.run(data_solution, data_point, data_plotter, is_interactive)
     except FileError as ex:
         logger.error("check error : " + str(ex))
         return False
@@ -182,12 +182,12 @@ def main_viewer():
         "--silent",
         help="if set, do not display the plots",
         action="store_false",
-        dest="is_blocking",
+        dest="is_interactive",
     )
 
     # parse and call
     args = parser.parse_args()
-    status = run_viewer(args.file_voxel, args.file_point, args.file_viewer, args.is_blocking)
+    status = run_viewer(args.file_voxel, args.file_point, args.file_viewer, args.is_interactive)
     sys.exit(int(not status))
 
 
@@ -266,10 +266,10 @@ def main_plotter():
         "--silent",
         help="if set, do not display the plots",
         action="store_false",
-        dest="is_blocking",
+        dest="is_interactive",
     )
 
     # parse and call
     args = parser.parse_args()
-    status = run_plotter(args.file_solution, args.file_point, args.file_plotter, args.is_blocking)
+    status = run_plotter(args.file_solution, args.file_point, args.file_plotter, args.is_interactive)
     sys.exit(int(not status))
