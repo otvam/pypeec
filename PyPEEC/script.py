@@ -15,7 +15,7 @@ from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import FileError
 
 # get a logger
-logger = timelogger.get_logger("script")
+logger = timelogger.get_logger("SCRIPT")
 
 
 def run_mesher(file_mesher, file_voxel):

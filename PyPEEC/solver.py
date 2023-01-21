@@ -22,7 +22,7 @@ from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 
 # get a logger
-logger = timelogger.get_logger("solver")
+logger = timelogger.get_logger("SOLVER")
 
 
 def _run_check(data_voxel, data_problem):
@@ -239,9 +239,6 @@ def run(data_voxel, data_problem):
     Main script for solving a problem with the FFT-PEEC solver.
     Handle invalid data with exceptions.
     """
-
-    # init
-    logger.info("init")
 
     # run the solver
     try:

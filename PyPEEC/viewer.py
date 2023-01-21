@@ -23,7 +23,7 @@ from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 
 # get a logger
-logger = timelogger.get_logger("viewer")
+logger = timelogger.get_logger("VIEWER")
 
 
 def _get_grid_voxel(data_voxel, data_point):
@@ -77,9 +77,6 @@ def run(data_voxel, data_point, data_viewer, is_interactive):
     """
     Main script for visualizing a 3D voxel structure.
     """
-
-    # init
-    logger.info("init")
 
     # run the code
     try:

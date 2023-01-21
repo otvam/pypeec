@@ -23,7 +23,7 @@ from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 
 # get a logger
-logger = timelogger.get_logger("mesher")
+logger = timelogger.get_logger("MESHER")
 
 
 def _run_check(data_mesher):
@@ -180,9 +180,6 @@ def run(data_mesher, path_ref):
     Main script for creating a voxel structure.
     Handle invalid data with exceptions.
     """
-
-    # init
-    logger.info("init")
 
     # run the code
     try:

@@ -27,7 +27,7 @@ from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
 
 # get a logger
-logger = timelogger.get_logger("plotter")
+logger = timelogger.get_logger("PLOTTER")
 
 
 def _get_grid_voxel(data_solution, data_point):
@@ -109,9 +109,6 @@ def run(data_solution, data_point, data_plotter, is_interactive):
     """
     Main script for plotting the solution of a FFT-PEEC problem.
     """
-
-    # init
-    logger.info("init")
 
     # run the code
     try:

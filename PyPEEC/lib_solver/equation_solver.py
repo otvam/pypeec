@@ -10,7 +10,7 @@ import scipy.linalg as lna
 from PyPEEC.lib_utils import timelogger
 
 # get a logger
-logger = timelogger.get_logger("equation")
+logger = timelogger.get_logger("EQUATION")
 
 
 class IterCounter:

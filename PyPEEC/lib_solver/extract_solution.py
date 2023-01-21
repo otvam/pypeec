@@ -9,7 +9,7 @@ import numpy as np
 from PyPEEC.lib_utils import timelogger
 
 # get a logger
-logger = timelogger.get_logger("solution")
+logger = timelogger.get_logger("SOLUTION")
 
 
 def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):

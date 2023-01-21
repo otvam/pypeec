@@ -10,7 +10,7 @@ import numpy as np
 from PyPEEC.lib_utils import timelogger
 
 # get a logger
-logger = timelogger.get_logger("problem")
+logger = timelogger.get_logger("PROBLEM")
 
 
 def get_conductor_geometry(conductor_idx):
