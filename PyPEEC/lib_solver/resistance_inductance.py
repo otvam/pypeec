@@ -9,7 +9,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-from PyPEEC.lib_matrix import fourier_transform
 
 
 def _get_circulant_tensor(nx, ny, nz, A):
@@ -106,24 +105,3 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     L_vector = L_vector[idx_f]
 
     return L_tensor, L_vector
-
-
-def get_inductance_operator(freq, L_tensor, L_vector):
-    """
-    Transform the circulant inductance tensor into a FFT circulant impedance tensor.
-    The problem contains n_f internal faces.
-    For solving the full system, circulant tensors are used: (2*nx, 2*ny, 2*nz, 3).
-    For solving the preconditioner, vectors are used: (n_f).
-    """
-
-    # get the angular frequency
-    s = 1j*2*np.pi*freq
-
-    # compute the FFT and the impedance
-    ZL_tensor = fourier_transform.get_fft_tensor(L_tensor, False)
-    ZL_tensor = s*ZL_tensor
-
-    # self-impedance for the preconditioner
-    ZL_vector = s*L_vector
-
-    return ZL_tensor, ZL_vector

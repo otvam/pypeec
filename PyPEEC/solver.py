@@ -119,11 +119,11 @@ def _run_main(data_solver):
         # get the inductance vector (preconditioner) and tensor (full problem, circulant tensor)
         (L_tensor, L_vector) = resistance_inductance.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
 
-        # get the impedance vector (preconditioner) and tensor (full problem, FFT circulant tensor)
-        (ZL_tensor, ZL_vector) = resistance_inductance.get_inductance_operator(freq, L_tensor, L_vector)
-
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
+        # get the impedance vector (preconditioner) and tensor (full problem, FFT circulant tensor)
+        (ZL_tensor, ZL_vector) = equation_system.get_impedance_matrix(freq, L_tensor, L_vector)
+
         # compute the right-hand vector with the sources
         rhs = equation_system.get_source_vector(idx_v, idx_f, I_src_c, V_src_v)
 
@@ -176,8 +176,8 @@ def _run_postproc(data_solver):
     # extract the input data
     n = data_solver["n"]
     d = data_solver["d"]
-    source_idx = data_solver["source_idx"]
     A_incidence = data_solver["A_incidence"]
+    source_idx = data_solver["source_idx"]
     idx_f = data_solver["idx_f"]
     idx_v = data_solver["idx_v"]
     idx_src_c = data_solver["idx_src_c"]
