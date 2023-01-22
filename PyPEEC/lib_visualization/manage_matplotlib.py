@@ -21,9 +21,21 @@ def _get_plot_residuum(fig, res_raw):
     # activate the figure
     plt.figure(fig)
 
-    # plot the data
+    # get absolute value and the log
     res_abs = np.abs(res_raw)
-    plt.hist(res_abs)
+    v_min = np.finfo(res_abs.dtype).eps
+    v_max = np.finfo(res_abs.dtype).max
+    res_abs = np.clip(res_abs, v_min, v_max)
+    res_log = np.log10(res_abs)
+
+    # plot the histogram
+    (hist, bins) = np.histogram(res_log)
+    bins = np.power(10.0, bins)
+    plt.hist(res_abs, bins=bins)
+
+    # get log axis
+    plt.xscale('log')
+    plt.yscale('log', nonpositive='clip')
 
     # add cosmetics
     plt.grid()
