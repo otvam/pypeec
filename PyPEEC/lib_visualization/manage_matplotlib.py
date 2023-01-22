@@ -31,7 +31,7 @@ def _get_plot_residuum(fig, res_raw):
     # plot the histogram
     (hist, bins) = np.histogram(res_log)
     bins = np.power(10.0, bins)
-    plt.hist(res_abs, bins=bins)
+    plt.hist(res_abs, bins=bins, edgecolor="black")
 
     # get log axis
     plt.xscale('log')
@@ -54,7 +54,7 @@ def _get_plot_convergence(fig, res_iter):
 
     # plot the data
     idx_iter = np.arange(1, len(res_iter)+1)
-    plt.semilogy(idx_iter, res_iter, 'sr-')
+    plt.semilogy(idx_iter, res_iter, 'rs-')
 
     # add cosmetics
     plt.grid()
