@@ -60,11 +60,13 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, tol, atol, restart, maxiter):
         obj.get_callback(res_tmp)
 
     # call the solver
+    logger.info("start solver")
     (sol, flag) = sla.gmres(
         sys_op, rhs,
         tol=tol, atol=atol, restart=restart, maxiter=maxiter,
         M=pcd_op, callback=fct, callback_type="pr_norm",
     )
+    logger.info("exit solver")
 
     # get the number of iterations
     (n_iter, res_iter) = obj.get_n_iter()

@@ -59,6 +59,7 @@ def get_condition_matrix(mat, accuracy):
     nrm_ori = sla.onenormest(mat, t=accuracy)
 
     # compute an estimate of the condition
+    logger.info("compute condition estimate")
     cond = nrm_ori*nrm_inv
 
     return cond
