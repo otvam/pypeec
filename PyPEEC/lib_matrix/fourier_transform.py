@@ -31,7 +31,10 @@ elif FFT_SOLVER == "FFTW":
     import pyfftw.interfaces.numpy_fft as fftw
     import pyfftw.interfaces.cache as cache
 
+    # the cache for the FFT dimension should be enabled
     cache.enable()
+
+    # the cache has a timeout
     cache.set_keepalive_time(FFT_CACHE_TIMEOUT)
 else:
     raise ValueError("invalid FFT library")

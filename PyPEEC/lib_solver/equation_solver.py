@@ -26,6 +26,10 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     restart = solver_options["restart"]
     maxiter = solver_options["maxiter"]
 
+    # check preconditioner
+    if pcd_op is None:
+        logger.warning("matrix solver: preconditioner is not available")
+
     # call the solver
     (status, n_iter, res_iter, sol) = matrix_gmres.get_matrix_gmres(
         sys_op, pcd_op, rhs,
