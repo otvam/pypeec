@@ -18,6 +18,7 @@ from PyPEEC.lib_mesher import png_mesher
 from PyPEEC.lib_mesher import stl_mesher
 from PyPEEC.lib_mesher import voxel_resample
 from PyPEEC.lib_mesher import voxel_graph
+from PyPEEC.lib_mesher import voxel_summary
 from PyPEEC.lib_check import check_data_mesher
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
@@ -130,6 +131,9 @@ def _run_resample_graph(data_voxel, n_resampling):
     with timelogger.BlockTimer(logger, "voxel_graph"):
         graph_def = voxel_graph.get_graph(n, domain_def)
 
+    with timelogger.BlockTimer(logger, "voxel_summary"):
+        voxel_status = voxel_summary.get_status(n, d, c, domain_def, graph_def)
+
     # assemble the data
     data_voxel = {
         "n": n,
@@ -137,42 +141,10 @@ def _run_resample_graph(data_voxel, n_resampling):
         "c": c,
         "domain_def": domain_def,
         "graph_def": graph_def,
+        "voxel_status": voxel_status,
     }
 
     return data_voxel
-
-
-def _run_disp(data_voxel):
-    """
-    Display the voxel structure statistics (number and size).
-    """
-
-    # extract the data
-    n = data_voxel["n"]
-    d = data_voxel["d"]
-    c = data_voxel["c"]
-    domain_def = data_voxel["domain_def"]
-    graph_def = data_voxel["graph_def"]
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    (dx, dy, dz) = d
-    (cx, cy, cz) = c
-
-    # compute
-    n_voxel = nx*ny*nz
-    n_graph = len(graph_def)
-
-    # plot the voxel size
-    logger.info("(nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
-    logger.info("(dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
-    logger.info("(cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
-    logger.info("n_voxel = %d" % n_voxel)
-    logger.info("n_graph = %d" % n_graph)
-
-    # plot the domain size
-    for tag, idx in domain_def.items():
-        logger.info("domain / %s = %d" % (tag, len(idx)))
 
 
 def run(data_mesher, path_ref):
@@ -219,9 +191,6 @@ def run(data_mesher, path_ref):
 
         # resample and assemble
         data_voxel = _run_resample_graph(data_voxel, n_resampling)
-
-        # display the results
-        _run_disp(data_voxel)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
         return False, None
