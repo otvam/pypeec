@@ -122,10 +122,10 @@ def get_mesh(nx, ny, domain_color, layer_stack):
         domain_def[tag] = np.array([], np.int64)
 
     # add layers
-    for dat_tmp in layer_stack:
+    for layer_stack_tmp in layer_stack:
         # get the data
-        n_add = dat_tmp["n_add"]
-        filename = dat_tmp["filename"]
+        n_add = layer_stack_tmp["n_add"]
+        filename = layer_stack_tmp["filename"]
 
         # add the layer
         (nz, domain_def) = _get_layer(nx, ny, nz, domain_color, domain_def, n_add, filename)

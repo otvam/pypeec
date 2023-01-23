@@ -202,10 +202,10 @@ def get_conflict(domain_def, domain_conflict):
     """
 
     # resolve the conflicts for all the specified domain pairs
-    for dat_tmp in domain_conflict:
+    for domain_conflict_tmp in domain_conflict:
         # extract data
-        domain_ref = dat_tmp["domain_ref"]
-        domain_fix = dat_tmp["domain_fix"]
+        domain_ref = domain_conflict_tmp["domain_ref"]
+        domain_fix = domain_conflict_tmp["domain_fix"]
 
         # solve the conflict
         domain_def = _get_solve_overlap(domain_def, domain_ref, domain_fix)

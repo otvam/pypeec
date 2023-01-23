@@ -6,7 +6,7 @@
         "nx": 49,
         "ny": 49,
         "domain_color": {
-            "coil": [0, 0, 0, 255],
+            "wire": [0, 0, 0, 255],
             "src": [255, 0, 0, 255],
             "sink": [0, 255, 0, 255]
         },
@@ -25,5 +25,8 @@
             }
         ]
     },
-    "n_resampling": [1, 1, 1]
+    "n_resampling": [1, 1, 1],
+    "domain_connection": [
+        {"domain": ["wire", "src", "sink"], "connected": true}
+    ]
 }

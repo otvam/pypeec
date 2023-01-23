@@ -31,5 +31,10 @@
             }
         ]
     },
-    "n_resampling": [1, 1, 1]
+    "n_resampling": [1, 1, 1],
+    "domain_connection": [
+        {"domain": ["pri_coil", "pri_src", "pri_sink"], "connected": true},
+        {"domain": ["sec_coil", "sec_src", "sec_sink"], "connected": true},
+        {"domain": ["pri_coil", "sec_coil"], "connected": false}
+    ]
 }

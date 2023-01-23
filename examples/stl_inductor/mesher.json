@@ -20,5 +20,8 @@
             }
         ]
     },
-    "n_resampling": [1, 1, 1]
+    "n_resampling": [1, 1, 1],
+    "domain_connection": [
+        {"domain": ["coil", "src", "sink"], "connected": true}
+    ]
 }

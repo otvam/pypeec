@@ -17,7 +17,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 from PyPEEC.lib_mesher import png_mesher
 from PyPEEC.lib_mesher import stl_mesher
 from PyPEEC.lib_mesher import voxel_resample
-from PyPEEC.lib_mesher import voxel_graph
+from PyPEEC.lib_mesher import voxel_connection
 from PyPEEC.lib_mesher import voxel_summary
 from PyPEEC.lib_check import check_data_mesher
 from PyPEEC.lib_utils import timelogger
@@ -113,7 +113,7 @@ def _run_resample_graph(data_voxel, data_mesher):
 
     # extract the data
     n_resampling = data_mesher["n_resampling"]
-    connection_check = data_mesher["connection_check"]
+    domain_connection = data_mesher["domain_connection"]
 
     # extract the data
     n = data_voxel["n"]
@@ -125,7 +125,7 @@ def _run_resample_graph(data_voxel, data_mesher):
         (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, n_resampling)
 
     with timelogger.BlockTimer(logger, "voxel_graph"):
-        connection_def = voxel_graph.get_graph(n, domain_def)
+        connection_def = voxel_connection.get_connection(n, domain_def, domain_connection)
 
     with timelogger.BlockTimer(logger, "voxel_summary"):
         voxel_status = voxel_summary.get_status(n, d, c, domain_def, connection_def)

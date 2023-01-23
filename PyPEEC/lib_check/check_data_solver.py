@@ -117,7 +117,7 @@ def _check_graph(idx_source, connection_def):
     """
 
     for idx_graph in connection_def:
-        if not np.any(np.in1d(idx_graph, idx_source)):
+        if len(np.intersect1d(idx_graph, idx_source)) == 0:
             raise CheckError("a connected component does not include at least one source")
 
 

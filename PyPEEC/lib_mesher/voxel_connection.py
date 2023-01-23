@@ -9,6 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.csgraph as csg
+from PyPEEC.lib_utils.error import RunError
 
 
 def _get_domain_indices(domain_def):
@@ -69,7 +70,40 @@ def _get_connection_matrix(n):
     return A_connection
 
 
-def get_graph(n, domain_def):
+def _check_domain_connection(domain_def, connection_def, domain_connection):
+    """
+    Check that the given connections between the domain exists.
+    """
+
+    # extract data
+    domain = domain_connection["domain"]
+    connected = domain_connection["connected"]
+
+    # init the connection matrix
+    matrix = np.full((len(connection_def), len(domain)), True, dtype=bool)
+
+    # fill the connection matrix
+    for i, idx_graph in enumerate(connection_def):
+        for j, tag in enumerate(domain):
+            idx_domain = domain_def[tag]
+            idx_shared = np.intersect1d(idx_graph, idx_domain)
+            matrix[i, j] = len(idx_shared) > 0
+
+    # check connection
+    vector = np.count_nonzero(matrix, axis=1)
+
+    # check connection
+    if connected:
+        idx_ok = vector == len(domain)
+        if not np.any(idx_ok):
+            raise RunError("domain connection: domain connection is missing")
+    else:
+        idx_ok = np.logical_or(vector == 0, vector == 1)
+        if not np.all(idx_ok):
+            raise RunError("domain connection: domain connection is illegal")
+
+
+def get_connection(n, domain_def, domain_connection):
     """
     Find the connected components of a voxel structure.
     """
@@ -94,5 +128,9 @@ def get_graph(n, domain_def):
         idx_local = np.flatnonzero(labels == i)
         idx_graph = idx[idx_local]
         connection_def.append(idx_graph)
+
+    # check the connections between the domains
+    for domain_connection_tmp in domain_connection:
+        _check_domain_connection(domain_def, connection_def, domain_connection_tmp)
 
     return connection_def

@@ -13,8 +13,9 @@
         }
     },
     "n_resampling": [1, 1, 1],
-    "connection_check": [
-        ["pri", "src", "sink"],
-        ["sec", "short"]
+    "domain_connection": [
+        {"domain": ["pri", "src", "sink"], "connected": true},
+        {"domain": ["sec", "short"], "connected": true},
+        {"domain": ["sec", "pri"], "connected": false}
     ]
 }

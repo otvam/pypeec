@@ -118,10 +118,10 @@ def _check_png_layer_stack(layer_stack):
         raise CheckError("layer_stack: layer stack definition cannot be empty")
 
     # check value
-    for dat_tmp in layer_stack:
+    for layer_stack_tmp in layer_stack:
         # get the data
-        n_add = dat_tmp["n_add"]
-        filename = dat_tmp["filename"]
+        n_add = layer_stack_tmp["n_add"]
+        filename = layer_stack_tmp["filename"]
 
         # check type
         if not isinstance(n_add, int):
@@ -180,10 +180,10 @@ def _check_stl_domain_conflict(domain_conflict):
         raise CheckError("domain_conflict: domain conflict should be a list")
 
     # check value
-    for dat_tmp in domain_conflict:
+    for domain_conflict_tmp in domain_conflict:
         # extract data
-        domain_ref = dat_tmp["domain_ref"]
-        domain_fix = dat_tmp["domain_fix"]
+        domain_ref = domain_conflict_tmp["domain_ref"]
+        domain_fix = domain_conflict_tmp["domain_fix"]
 
         # check type
         if not isinstance(domain_ref, str):
@@ -197,10 +197,10 @@ def _check_stl_domain_name(domain_conflict, domain_name):
     Check the consistency of the domain names.
     """
 
-    for dat_tmp in domain_conflict:
+    for domain_conflict_tmp in domain_conflict:
         # extract data
-        domain_ref = dat_tmp["domain_ref"]
-        domain_fix = dat_tmp["domain_fix"]
+        domain_ref = domain_conflict_tmp["domain_ref"]
+        domain_fix = domain_conflict_tmp["domain_fix"]
 
         # check value
         if domain_ref not in domain_name:
@@ -350,28 +350,38 @@ def _check_n_resampling(n_resampling):
         raise CheckError("n_resampling: number of resampling cannot be smaller than one")
 
 
-def _check_connection_check(connection_check, domain_name):
+def _check_domain_connection(domain_connection, domain_name):
     """
     Check the domain connection data.
     This list is defining the required connection between the domain
     """
 
     # check type
-    if not isinstance(connection_check, list):
-        raise CheckError("connection_check: domain connection check should be a list")
+    if not isinstance(domain_connection, list):
+        raise CheckError("domain_connection: domain connection check should be a list")
 
     # check value
-    for dat_tmp in connection_check:
+    for domain_connection_tmp in domain_connection:
         # check type
-        if not isinstance(dat_tmp, list):
-            raise CheckError("connection_check: connected domain names should be a list")
+        if not isinstance(domain_connection_tmp, dict):
+            raise CheckError("domain_connection: domain connection check should be a dict")
+
+        # extract field
+        domain = domain_connection_tmp["domain"]
+        connected = domain_connection_tmp["connected"]
+
+        # check type
+        if not isinstance(domain, list):
+            raise CheckError("domain: connected domain names should be a list")
+        if not isinstance(connected, bool):
+            raise CheckError("connected: domain connection flag should be a boolean")
 
         # check value
-        for dat_tmp_tmp in dat_tmp:
-            if not isinstance(dat_tmp_tmp, str):
-                raise CheckError("connection_check: domain name should be a string")
-            if dat_tmp_tmp not in domain_name:
-                raise CheckError("connection_check: domain name is invalid")
+        for domain_tmp in domain:
+            if not isinstance(domain_tmp, str):
+                raise CheckError("domain: domain name should be a string")
+            if domain_tmp not in domain_name:
+                raise CheckError("domain: domain name is invalid")
 
 
 def get_domain_stl_path(domain_stl, path_ref):
@@ -407,10 +417,10 @@ def get_layer_stack_path(layer_stack, path_ref):
     layer_stack_path = []
 
     # update value
-    for dat_tmp in layer_stack:
+    for layer_stack_tmp in layer_stack:
         # get the data
-        n_add = dat_tmp["n_add"]
-        filename = dat_tmp["filename"]
+        n_add = layer_stack_tmp["n_add"]
+        filename = layer_stack_tmp["filename"]
 
         # check file
         filename = path_ref + "/" + filename
@@ -439,7 +449,7 @@ def check_data_mesher(data_mesher):
     mesh_type = data_mesher["mesh_type"]
     data_voxelize = data_mesher["data_voxelize"]
     n_resampling = data_mesher["n_resampling"]
-    connection_check = data_mesher["connection_check"]
+    domain_connection = data_mesher["domain_connection"]
 
     # check type
     if not isinstance(mesh_type, str):
@@ -463,4 +473,4 @@ def check_data_mesher(data_mesher):
     _check_n_resampling(n_resampling)
 
     # check the connection data
-    _check_connection_check(connection_check, domain_name)
+    _check_domain_connection(domain_connection, domain_name)

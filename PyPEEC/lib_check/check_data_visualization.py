@@ -328,8 +328,8 @@ def check_data_plotter(data_plotter):
         raise CheckError("data_plotter: plot data should be a list")
 
     # check items
-    for dat_tmp in data_plotter:
-        _check_data_plotter_item(dat_tmp)
+    for data_plotter_tmp in data_plotter:
+        _check_data_plotter_item(data_plotter_tmp)
 
 
 def check_data_viewer(data_viewer):
@@ -343,5 +343,5 @@ def check_data_viewer(data_viewer):
         raise CheckError("data_viewer: plot data should be a list")
 
     # check items
-    for dat_tmp in data_viewer:
-        _check_data_viewer_item(dat_tmp)
+    for data_viewer_tmp in data_viewer:
+        _check_data_viewer_item(data_viewer_tmp)

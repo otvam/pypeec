@@ -13,8 +13,8 @@
         "accuracy": 2
     },
     "conductor_def": {
-        "coil": {
-            "domain": ["src", "sink", "coil"],
+        "wire": {
+            "domain": ["src", "sink", "wire"],
             "rho": 1.75e-8
         }
     },
