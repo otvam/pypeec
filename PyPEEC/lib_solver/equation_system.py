@@ -57,7 +57,9 @@ def _get_circulant_multiply(nx, ny, nz, CF, X):
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
     The vector is also shaped as a tensor.
-    The size of the FFT circulant tensor is twice the size of the vector.
+
+    The size of the matrix (FFT circulant tensor) is twice the size of the vector (tensor).
+    The size of the vector (tensor) is doubled during the FFT operation.
     The size of result is the same as the size of the vector.
     """
 
@@ -82,14 +84,11 @@ def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     The preconditioner is using a diagonal impedance matrix (no cross-coupling).
     The diagonal impedance matrix can be trivially inverted.
     Therefore, the factorization is computed on the Schur complement:
-        - with sparse matrix solver (UMFPACK solver)
+        - with matrix factorization (UMFPACK solver)
         - with LU decomposition (SuperLU solver)
-        - SuperLU is used if UMFPACK is not installed
 
-    The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
-    The diagonal admittance matrix as the following size: (n_f, n_f).
-    The Schur complement matrix as the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
+    The diagonal admittance matrix has the following size: (n_f, n_f).
+    The Schur complement matrix has the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
     """
 
     # admittance vector
@@ -112,8 +111,6 @@ def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factoriza
     Solve the preconditioner equation system.
     The Schur complement and matrix factorization are used.
 
-    The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
     The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
     The Schur complement split the system in two subsystems: n_f and n_v+n_src_c+n_src_v.
     """
@@ -138,9 +135,11 @@ def _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector,
     Multiply the full equation matrix with a given solution test vector.
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
 
-    The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
     The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
+    For the inductance matrix, the complex voxel structure is used:
+        - the vector are expanded into a tensor: n_f to (nx, ny, nz, 3)
+        - the matrix multiplication is done with the tensor
+        - the resulting tensor is reduced to a vector: (nx, ny, nz, 3) to n_f
     """
 
     # get the matrix size
@@ -194,8 +193,7 @@ def _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v):
 def get_impedance_matrix(freq, L_tensor, L_vector):
     """
     Transform the circulant inductance tensor into a FFT circulant impedance tensor.
-    The problem contains n_f internal faces.
-    The voxel structure has the following size: (nx, ny, nz).
+
     For solving the full system, circulant tensors are used: (2*nx, 2*ny, 2*nz, 3).
     For solving the preconditioner, vectors are used: n_f.
     """
@@ -217,8 +215,6 @@ def get_source_vector(idx_v, idx_f, I_src_c, V_src_v):
     """
     Construct the right-hand side with the current and voltage sources.
 
-    The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
     The right-hand size vector has the following size: n_f+n_v+n_src_c+n_src_v.
     """
 
@@ -242,8 +238,6 @@ def get_kvl_kcl_matrix(A_reduced, idx_f, idx_src_c, idx_src_v):
     """
     Construct the connection matrices for the KCL, KVL.
 
-    The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
     The A_kvl matrix has the following size: (n_f, n_v+n_src_c+n_src_v).
     The A_kcl matrix has the following size: (n_v+n_src_c+n_src_v, n_f).
     """
@@ -268,8 +262,6 @@ def get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v):
     """
     Construct the source matrix (description of the sources with internal resistances/admittances).
 
-    The problem contains n_v non-empty voxels.
-    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
     The A_src matrix has the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
     """
 
@@ -366,6 +358,8 @@ def get_singular(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     Computing the Schur complement with the diagonal impedance matrix.
     The resulting matrix is used to detect quasi-singular equations systems.
     It should be noted that the resulting matrix has no physical meaning.
+
+    The resulting matrix has the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
     """
 
     # admittance vector

@@ -1,5 +1,9 @@
 """
 Different functions for extracting the fields and terminal currents and voltages from the solution vector.
+
+The voxel structure has the following size: (nx, ny, nz).
+The problem contains n_v non-empty voxels and n_f internal faces.
+The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
 """
 
 __author__ = "Thomas Guillod"
@@ -15,10 +19,6 @@ logger = timelogger.get_logger("SOLUTION")
 def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):
     """
     Extract the face currents, voxel potentials, and voltage/current source currents.
-
-    The voxel structure has the following size: (nx, ny, nz).
-    The problem contains n_v non-empty voxels and n_f internal faces.
-    The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
 
     The solution vector is set in the following order:
         - n_f: face currents
@@ -64,9 +64,6 @@ def get_current_density(n, d, A_incidence, I_f_all):
     Get the voxel current densities from the face currents.
     Combine the currents of all the internal faces of a voxel into a single vector.
     Scale the currents into current densities.
-
-    The voxel structure has the following size: (nx, ny, nz).
-    The problem contains n_f internal faces.
 
     At the input, the face current vector has the following size: 3*nx*ny*nz.
     At the output, the current density vector has the following size: (nx*ny*nz, 3).
