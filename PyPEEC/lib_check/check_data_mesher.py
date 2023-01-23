@@ -192,7 +192,7 @@ def _check_stl_domain_conflict(domain_conflict):
             raise CheckError("domain_fix: domain name should be a string")
 
 
-def _check_stl_domain_name(domain_stl, domain_conflict):
+def _check_stl_domain_name(domain_conflict, domain_name):
     """
     Check the consistency of the domain names.
     """
@@ -203,44 +203,13 @@ def _check_stl_domain_name(domain_stl, domain_conflict):
         domain_fix = dat_tmp["domain_fix"]
 
         # check value
-        if domain_ref not in domain_stl:
-            raise CheckError("domain_ref: domain name should be a valid domain name")
-        if domain_fix not in domain_stl:
-            raise CheckError("domain_fix: domain name should be a valid domain name")
+        if domain_ref not in domain_name:
+            raise CheckError("domain_ref: domain name is invalid")
+        if domain_fix not in domain_name:
+            raise CheckError("domain_fix: domain name is invalid")
 
 
-def check_data_mesher(data_mesher):
-    """
-    Check the mesher data type and extract the data.
-    """
-
-    # check type
-    if not isinstance(data_mesher, dict):
-        raise CheckError("data_mesher: mesher data should be a dict")
-
-    # extract field
-    mesh_type = data_mesher["mesh_type"]
-    data_voxelize = data_mesher["data_voxelize"]
-    n_resampling = data_mesher["n_resampling"]
-
-    return mesh_type, data_voxelize, n_resampling
-
-
-def check_mesh_type(mesh_type):
-    """
-    Check the validity of the mesh type.
-    """
-
-    # check type
-    if not isinstance(mesh_type, str):
-        raise CheckError("mesh_type: mesher type should be a string")
-
-    # check value
-    if mesh_type not in ["stl", "png", "voxel"]:
-        raise CheckError("mesh_type: specified mesh type does not exist")
-
-
-def check_data_voxelize_png(data_voxelize):
+def _check_data_voxelize_png(data_voxelize):
     """
     Check the data used for voxelization (PNG mesher).
     """
@@ -285,8 +254,13 @@ def check_data_voxelize_png(data_voxelize):
     _check_png_domain_color(domain_color)
     _check_png_layer_stack(layer_stack)
 
+    # get name
+    domain_name = domain_color.keys()
 
-def check_data_voxelize_stl(data_voxelize):
+    return domain_name
+
+
+def _check_data_voxelize_stl(data_voxelize):
     """
     Check the data used for voxelization (STL mesher).
     """
@@ -321,10 +295,17 @@ def check_data_voxelize_stl(data_voxelize):
     # check the stl file
     _check_stl_domain_stl(domain_stl)
     _check_stl_domain_conflict(domain_conflict)
-    _check_stl_domain_name(domain_stl, domain_conflict)
+
+    # get name
+    domain_name = domain_stl.keys()
+
+    # check domain name
+    _check_stl_domain_name(domain_conflict, domain_name)
+
+    return domain_name
 
 
-def check_data_voxelize_voxel(data_voxelize):
+def _check_data_voxelize_voxel(data_voxelize):
     """
     Check the voxel structure (number, placement, and dimension).
     Check the mapping between domain names and indices.
@@ -344,11 +325,16 @@ def check_data_voxelize_voxel(data_voxelize):
     _check_voxel_size(n, d, c)
     _check_voxel_domain_def(n, domain_def)
 
+    # get name
+    domain_name = domain_def.keys()
 
-def check_n_resampling(n_resampling):
+    return domain_name
+
+
+def _check_n_resampling(n_resampling):
     """
     Check the resampling data.
-    These vector is controlling the resampling of a voxel structure.
+    This vector is controlling the resampling of a voxel structure.
     """
 
     # check size
@@ -362,6 +348,30 @@ def check_n_resampling(n_resampling):
     # check value
     if not all((x >= 1) for x in n_resampling):
         raise CheckError("n_resampling: number of resampling cannot be smaller than one")
+
+
+def _check_connection_check(connection_check, domain_name):
+    """
+    Check the domain connection data.
+    This list is defining the required connection between the domain
+    """
+
+    # check type
+    if not isinstance(connection_check, list):
+        raise CheckError("connection_check: domain connection check should be a list")
+
+    # check value
+    for dat_tmp in connection_check:
+        # check type
+        if not isinstance(dat_tmp, list):
+            raise CheckError("connection_check: connected domain names should be a list")
+
+        # check value
+        for dat_tmp_tmp in dat_tmp:
+            if not isinstance(dat_tmp_tmp, str):
+                raise CheckError("connection_check: domain name should be a string")
+            if dat_tmp_tmp not in domain_name:
+                raise CheckError("connection_check: domain name is invalid")
 
 
 def get_domain_stl_path(domain_stl, path_ref):
@@ -414,3 +424,43 @@ def get_layer_stack_path(layer_stack, path_ref):
         layer_stack_path.append({"n_add": n_add, "filename": filename})
 
     return layer_stack_path
+
+
+def check_data_mesher(data_mesher):
+    """
+    Check the mesher data type and extract the data.
+    """
+
+    # check type
+    if not isinstance(data_mesher, dict):
+        raise CheckError("data_mesher: mesher data should be a dict")
+
+    # extract field
+    mesh_type = data_mesher["mesh_type"]
+    data_voxelize = data_mesher["data_voxelize"]
+    n_resampling = data_mesher["n_resampling"]
+    connection_check = data_mesher["connection_check"]
+
+    # check type
+    if not isinstance(mesh_type, str):
+        raise CheckError("mesh_type: mesher type should be a string")
+
+    # check value
+    if mesh_type not in ["stl", "png", "voxel"]:
+        raise CheckError("mesh_type: specified mesh type does not exist")
+
+    # check the mesher
+    if mesh_type == "png":
+        domain_name = _check_data_voxelize_png(data_voxelize)
+    elif mesh_type == "stl":
+        domain_name = _check_data_voxelize_stl(data_voxelize)
+    elif mesh_type == "voxel":
+        domain_name = _check_data_voxelize_voxel(data_voxelize)
+    else:
+        raise CheckError("invalid mesh type")
+
+    # check the resampling data
+    _check_n_resampling(n_resampling)
+
+    # check the connection data
+    _check_connection_check(connection_check, domain_name)

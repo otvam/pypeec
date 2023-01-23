@@ -343,8 +343,8 @@ def get_plot_viewer(pl, grid, voxel, point, data_plot):
     # find the variable to be plotted
     if plot_type == "domain":
         tag = "domain"
-    elif plot_type == "graph":
-        tag = "graph"
+    elif plot_type == "connection":
+        tag = "connection"
     else:
         raise ValueError("invalid plot type and plot feature")
 

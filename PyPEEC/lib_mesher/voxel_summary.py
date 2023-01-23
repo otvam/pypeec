@@ -11,7 +11,7 @@ from PyPEEC.lib_utils import timelogger
 logger = timelogger.get_logger("SUMMARY")
 
 
-def get_status(n, d, c, domain_def, graph_def):
+def get_status(n, d, c, domain_def, connection_def):
     """
     Get a dict summarizing a 3D voxel structure.
     """
@@ -23,7 +23,7 @@ def get_status(n, d, c, domain_def, graph_def):
 
     # compute
     n_total = nx*ny*nz
-    n_graph = len(graph_def)
+    n_graph = len(connection_def)
     n_domain =  len(domain_def)
 
     # get the used voxels

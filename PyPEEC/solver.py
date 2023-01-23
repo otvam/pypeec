@@ -25,28 +25,12 @@ from PyPEEC.lib_utils.error import CheckError, RunError
 logger = timelogger.get_logger("SOLVER")
 
 
-def _run_check(data_voxel, data_problem):
-    """
-    Check and combine the input data.
-    Exceptions are not caught inside this function.
-    """
-
-    with timelogger.BlockTimer(logger, "check_data"):
-        # check the problem data
-        check_data_problem.check_data_problem(data_problem)
-
-        # combine the problem and voxel data
-        data_solver = check_data_solver.get_data_solver(data_voxel, data_problem)
-
-    return data_solver
-
-
 def _run_preproc(data_solver):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
     """
 
-    # extract the input data
+    # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
     c = data_solver["c"]
@@ -82,7 +66,7 @@ def _run_main(data_solver):
     Construct and solve the problem (equation system).
     """
 
-    # extract the input data
+    # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
     freq = data_solver["freq"]
@@ -173,7 +157,7 @@ def _run_postproc(data_solver):
     Extract and parse the solution.
     """
 
-    # extract the input data
+    # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
     A_incidence = data_solver["A_incidence"]
@@ -269,10 +253,22 @@ def run(data_voxel, data_problem):
 
     # run the solver
     try:
-        data_solver = _run_check(data_voxel, data_problem)
+        # check the problem data
+        check_data_problem.check_data_problem(data_problem)
+
+        # combine the problem and voxel data
+        data_solver = check_data_solver.get_data_solver(data_voxel, data_problem)
+
+        # prepare the problem
         data_solver = _run_preproc(data_solver)
+
+        # solve the problem
         data_solver = _run_main(data_solver)
+
+        # extrac the solution
         data_solver = _run_postproc(data_solver)
+
+        # assemble the output data structure
         data_solution = _run_assemble(data_solver)
     except CheckError as ex:
         logger.error("check error : " + str(ex))

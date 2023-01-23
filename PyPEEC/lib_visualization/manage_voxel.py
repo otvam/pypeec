@@ -44,12 +44,12 @@ def _get_biot_savart(pts, pts_src, J_src, vol):
     return H_pts
 
 
-def _get_graph_component(idx, graph_def):
+def _get_graph_component(idx, connection_def):
     # init the data with invalid data
     gra = np.zeros(len(idx), dtype=np.int64)
 
     # find to corresponding connected components
-    for i, idx_graph in enumerate(graph_def):
+    for i, idx_graph in enumerate(connection_def):
         # find which indices are belong to this connected component
         idx_ok = np.in1d(idx, idx_graph)
 
@@ -133,7 +133,7 @@ def get_point(voxel, data_point):
     return point
 
 
-def get_viewer_domain(domain_def, graph_def):
+def get_viewer_domain(domain_def, connection_def):
     """
     Get the indices of the non-empty voxels.
     Assign a different scalar for each domain.
@@ -152,7 +152,7 @@ def get_viewer_domain(domain_def, graph_def):
         (dom_tmp, counter) = _get_domain_tag(idx_tmp, counter)
 
         # compute to which connected component the indices are belonging
-        gra_tmp = _get_graph_component(idx_tmp, graph_def)
+        gra_tmp = _get_graph_component(idx_tmp, connection_def)
 
         # append the indices and colors
         idx_v = np.append(idx_v, idx_tmp)
@@ -196,7 +196,7 @@ def set_viewer_domain(voxel, idx_v, dom_v, gra_v):
 
     # assign the extract data to the geometry
     voxel["domain"] = dom_v
-    voxel["graph"] = gra_v
+    voxel["connection"] = gra_v
 
     return voxel
 

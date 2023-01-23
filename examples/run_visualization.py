@@ -186,11 +186,11 @@ def get_data_viewer():
             }
         },
         {
-            "data_window": _get_data_window("Graph"),
+            "data_window": _get_data_window("Connection"),
             "data_plot": {
-                "plot_type": "graph",
+                "plot_type": "connection",
                 "clip_options": _get_clip_options(),
-                "plot_options": _get_plot_options("Graph"),
+                "plot_options": _get_plot_options("Connection"),
             }
         },
     ]

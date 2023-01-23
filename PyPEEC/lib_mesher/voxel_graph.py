@@ -89,10 +89,10 @@ def get_graph(n, domain_def):
     (n, labels) = csg.connected_components(csgraph=A_graph, directed=False, return_labels=True)
 
     # get the indices of the connected components
-    graph_def = []
+    connection_def = []
     for i in range(n):
         idx_local = np.flatnonzero(labels == i)
         idx_graph = idx[idx_local]
-        graph_def.append(idx_graph)
+        connection_def.append(idx_graph)
 
-    return graph_def
+    return connection_def

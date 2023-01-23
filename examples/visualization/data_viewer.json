@@ -35,7 +35,7 @@
     },
     {
         "data_window": {
-            "title": "Graph",
+            "title": "Connection",
             "show_menu": false,
             "size": [
                 800,
@@ -43,7 +43,7 @@
             ]
         },
         "data_plot": {
-            "plot_type": "graph",
+            "plot_type": "connection",
             "clip_options": {
                 "clip_plot": false,
                 "clip_invert": false,
@@ -51,7 +51,7 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Graph",
+                "title": "Connection",
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",

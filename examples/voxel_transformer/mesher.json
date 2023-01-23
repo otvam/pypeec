@@ -12,5 +12,9 @@
             "short": [52]
         }
     },
-    "n_resampling": [1, 1, 1]
+    "n_resampling": [1, 1, 1],
+    "connection_check": [
+        ["pri", "src", "sink"],
+        ["sec", "short"]
+    ]
 }

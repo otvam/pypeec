@@ -38,10 +38,10 @@ def _get_grid_voxel(data_voxel, data_point):
     d = data_voxel["d"]
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
-    graph_def = data_voxel["graph_def"]
+    connection_def = data_voxel["connection_def"]
 
     # get the indices of the non-empty voxels
-    (idx_v, dom_v, gra_v) = manage_voxel.get_viewer_domain(domain_def, graph_def)
+    (idx_v, dom_v, gra_v) = manage_voxel.get_viewer_domain(domain_def, connection_def)
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
