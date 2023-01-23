@@ -238,6 +238,33 @@ def run(data_voxel, data_problem):
     """
     Main script for solving a problem with the FFT-PEEC solver.
     Handle invalid data with exceptions.
+
+    Parameters
+    ----------
+    data_voxel :  dict
+        The dict describes the voxel structure.
+        The voxel grid (number, size, and origin) is defined.
+        Different domains (with the indices of the voxel) are defined.
+        The connected components of the graph defined by the voxel structure are defined.
+    data_problem: dict
+        The dict describes the problem to be solved.
+        The numerical options are defined.
+        The frequency of the problem is defined.
+        The resistivity of the different domain is defined.
+        The current and voltage sources are defined.
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered
+    data_solution: dict
+        The dict describes the problem solution.
+        The voxel structure is defined.
+        The frequency of the problem is defined.
+        The status of the solution (solver convergence and condition number) is described.
+        The resistivity, potential, and current density of the different voxel is defined.
+        The terminals quantities (voltage and current) of the sources are defined.
     """
 
     # run the solver

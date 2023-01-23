@@ -76,6 +76,32 @@ def _get_plot(grid, voxel, point, data_viewer, is_interactive):
 def run(data_voxel, data_point, data_viewer, is_interactive):
     """
     Main script for visualizing a 3D voxel structure.
+    Handle invalid data with exceptions.
+
+    Parameters
+    ----------
+    data_voxel : dict
+        The dict describes the voxel structure.
+        The voxel grid (number, size, and origin) is defined.
+        Different domains (with the indices of the voxel) are defined.
+        The connected components of the graph defined by the voxel structure are defined.
+    data_point: array
+        The array describes a point cloud.
+        The cloud point will be used for field evaluation.
+    data_viewer: list
+        The list describes the different plots to be created.
+        Different types of plots are available.
+        Plot of the different domain composing the voxel structure.
+        Plot of the connected components composing the voxel structure.
+    is_interactive : boolean
+        If true, the plots are shown (blocking call).
+        If false, the plots are not shown (non-blocking call).
+
+    Returns
+    -------
+    status : status (boolean)
+        True if the call is successful.
+        False if the problems are encountered
     """
 
     # run the code

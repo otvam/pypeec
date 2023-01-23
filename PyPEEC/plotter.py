@@ -108,6 +108,39 @@ def _get_plot(grid, voxel, point, solver_status, data_plotter, is_interactive):
 def run(data_solution, data_point, data_plotter, is_interactive):
     """
     Main script for plotting the solution of a FFT-PEEC problem.
+    Handle invalid data with exceptions.
+
+    Parameters
+    ----------
+    data_solution :  dict
+        The dict describes the problem solution.
+        The voxel structure is defined.
+        The frequency of the problem is defined.
+        The status of the solution (solver convergence and condition number) is described.
+        The resistivity, potential, and current density of the different voxel is defined.
+        The terminals quantities (voltage and current) of the sources are defined.
+    data_point: array
+        The array describes a point cloud.
+        The cloud point is used for field evaluation.
+    data_plotter: list
+        The list describes the different plots to be created.
+        Different types of plots are available.
+        Plot showing the conductors and sources.
+        Scalar plot of the resistivity of the voxels.
+        Scalar plot of the potential and current density of the voxels.
+        Vector plot (with arrows) of the current density of the voxels.
+        Scalar plot of the magnetic field of the point cloud.
+        Vector plot (with arrows) of the magnetic field of the point cloud.
+        Plots describing the solver convergence.
+    is_interactive : boolean
+        If true, the plots are shown (blocking call).
+        If false, the plots are not shown (non-blocking call).
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered
     """
 
     # run the code

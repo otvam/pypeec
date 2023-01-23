@@ -20,7 +20,27 @@ logger = timelogger.get_logger("SCRIPT")
 
 def run_mesher(file_mesher, file_voxel):
     """
-    Solve the problem and write the mesher results.
+    Main script for meshing the geometry and generating a 3D voxel structure.
+    Write the resulting voxel file.
+
+    Parameters
+    ----------
+    file_mesher : filename (string)
+        This file is an input file (JSON format).
+        The dict describes the meshing and resampling process.
+        The voxel structure can be explicitly given or generated from PNG or STL files.
+    file_voxel :  filename (string)
+        This file is created during the function call (pickle format).
+        The dict describes the voxel structure.
+        The voxel grid (number, size, and origin) is defined.
+        Different domains (with the indices of the voxel) are defined.
+        The connected components of the graph defined by the voxel structure are defined.
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered
     """
 
     from PyPEEC import mesher
@@ -50,7 +70,35 @@ def run_mesher(file_mesher, file_voxel):
 
 def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
     """
-    Load the voxel structure and plot the results.
+    Main script for visualizing a 3D voxel structure.
+
+    Parameters
+    ----------
+    file_voxel : data (dict)
+        This file is an input file (pickle format).
+        The dict describes the voxel structure.
+        The voxel grid (number, size, and origin) is defined.
+        Different domains (with the indices of the voxel) are defined.
+        The connected components of the graph defined by the voxel structure are defined.
+    file_point: data (array)
+        This file is an input file (JSON format).
+        The array describes a point cloud.
+        The cloud point will be used for field evaluation.
+    file_viewer: data (dict)
+        This file is an input file (JSON format).
+        The list describes the different plots to be created.
+        Different types of plots are available.
+        Plot of the different domain composing the voxel structure.
+        Plot of the connected components composing the voxel structure.
+    is_interactive : boolean
+        If true, the plots are shown (blocking call).
+        If false, the plots are not shown (non-blocking call).
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered
     """
 
     from PyPEEC import viewer
@@ -73,7 +121,38 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
 
 def run_solver(file_voxel, file_problem, file_solution):
     """
-    Load the voxel structure, solve the problem and write the solver results.
+    Main script for solving a problem with the FFT-PEEC solver.
+    Write the resulting solution file.
+
+    Parameters
+    ----------
+    file_voxel :  filename (string)
+        This file is an input file (pickle format).
+        The dict describes the voxel structure.
+        The voxel grid (number, size, and origin) is defined.
+        Different domains (with the indices of the voxel) are defined.
+        The connected components of the graph defined by the voxel structure are defined.
+    file_problem: filename (string)
+        This file is an input file (JSON format).
+        The dict describes the problem to be solved.
+        The numerical options are defined.
+        The frequency of the problem is defined.
+        The resistivity of the different domain is defined.
+        The current and voltage sources are defined.
+    file_solution: filename (string)
+        This file is created during the function call (pickle format).
+        The dict describes the problem solution.
+        The voxel structure is defined.
+        The frequency of the problem is defined.
+        The status of the solution (solver convergence and condition number) is described.
+        The resistivity, potential, and current density of the different voxel is defined.
+        The terminals quantities (voltage and current) of the sources are defined.
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered
     """
 
     from PyPEEC import solver
@@ -99,7 +178,42 @@ def run_solver(file_voxel, file_problem, file_solution):
 
 def run_plotter(file_solution, file_point, file_plotter, is_interactive):
     """
-    Load the solver solution and plot the results.
+    Main script for plotting the solution of a FFT-PEEC problem.
+
+    Parameters
+    ----------
+    file_solution :  filename (string)
+        This file is an input file (pickle format).
+        The dict describes the problem solution.
+        The voxel structure is defined.
+        The frequency of the problem is defined.
+        The status of the solution (solver convergence and condition number) is described.
+        The resistivity, potential, and current density of the different voxel is defined.
+        The terminals quantities (voltage and current) of the sources are defined.
+    file_point: filename (string)
+        This file is an input file (JSON format).
+        The array describes a point cloud.
+        The cloud point is used for field evaluation.
+    file_plotter: filename (string)
+        This file is an input file (JSON format).
+        The list describes the different plots to be created.
+        Different types of plots are available.
+        Plot showing the conductors and sources.
+        Scalar plot of the resistivity of the voxels.
+        Scalar plot of the potential and current density of the voxels.
+        Vector plot (with arrows) of the current density of the voxels.
+        Scalar plot of the magnetic field of the point cloud.
+        Vector plot (with arrows) of the magnetic field of the point cloud.
+        Plots describing the solver convergence.
+    is_interactive : boolean
+        If true, the plots are shown (blocking call).
+        If false, the plots are not shown (non-blocking call).
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered
     """
 
     from PyPEEC import plotter
@@ -122,7 +236,8 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
 
 def main_mesher():
     """
-    User script for meshing a voxel structure.
+    User script for meshing the geometry and generating a 3D voxel structure.
+    This script is parsing the command line arguments.
     """
 
     # get the parser
@@ -154,7 +269,8 @@ def main_mesher():
 
 def main_viewer():
     """
-    User script for visualizing a 3D voxel structure..
+    User script for visualizing a 3D voxel structure.
+    This script is parsing the command line arguments.
     """
 
     # get the parser
@@ -200,6 +316,7 @@ def main_viewer():
 def main_solver():
     """
     User script for solving a problem with the FFT-PEEC solver.
+    This script is parsing the command line arguments.
     """
 
     # get the parser
@@ -239,6 +356,7 @@ def main_solver():
 def main_plotter():
     """
     User script for plotting the solution of a FFT-PEEC problem.
+    This script is parsing the command line arguments.
     """
 
     # get the parser

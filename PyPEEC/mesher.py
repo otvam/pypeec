@@ -1,5 +1,5 @@
 """
-Main script for creating a voxel structure.
+Main script for creating a 3D voxel structure.
 Check the input data and mesh the structure.
 The different parts of the code are timed.
 
@@ -177,8 +177,29 @@ def _run_disp(data_voxel):
 
 def run(data_mesher, path_ref):
     """
-    Main script for creating a voxel structure.
+    Main script for meshing the geometry and generating a 3D voxel structure.
     Handle invalid data with exceptions.
+
+    Parameters
+    ----------
+    data_mesher : dict
+        This file is an input file (JSON format).
+        The dict describes the meshing and resampling process.
+        The voxel structure can be explicitly given or generated from PNG or STL files.
+    path_ref :  path (string)
+        Path used to load the PNG and STL files.
+        Typically, this will be the path of the containing the mesher data.
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered
+    data_voxel: dict
+        The dict describes the voxel structure.
+        The voxel grid (number, size, and origin) is defined.
+        Different domains (with the indices of the voxel) are defined.
+        The connected components of the graph defined by the voxel structure are defined.
     """
 
     # run the code
