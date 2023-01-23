@@ -100,6 +100,7 @@ def get_source_voltage_geometry(source_idx):
 def get_incidence_matrix(A_incidence, idx_v):
     """
     Reduce the incidence matrix to the non-empty voxels and compute face indices.
+    The voxel structure has the following size: (nx, ny, nz).
     The problem contains n_v non-empty voxels and n_f internal faces.
     At the input, the complete incidence matrix is provided: (nx*ny*nz, 3*nx*ny*nz).
     At the output, the reduced incidence matrix is provided: (n_v, n_f).

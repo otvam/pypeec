@@ -14,16 +14,22 @@ logger = timelogger.get_logger("SOLUTION")
 
 def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):
     """
-    Extract the dace currents, voxel potentials, and voltage source currents.
+    Extract the face currents, voxel potentials, and voltage/current source currents.
 
+    The voxel structure has the following size: (nx, ny, nz).
     The problem contains n_v non-empty voxels and n_f internal faces.
     The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
 
     The solution vector is set in the following order:
-    - n_f: face currents
-    - n_v: voxel potentials
-    - n_src_c: current source currents
-    - n_src_v: voltage source currents
+        - n_f: face currents
+        - n_v: voxel potentials
+        - n_src_c: current source currents
+        - n_src_v: voltage source currents
+
+    The solution is assigned to all the faces and voxels (even the empty faces/voxels).
+    The face current vector has the following size: 3*nx*ny*nz.
+    The voxel potential vector has the following size: nx*ny*nz.
+    The voltage/current source current vector has the following size: nx*ny*nz.
     """
 
     # extract the voxel data
@@ -58,6 +64,12 @@ def get_current_density(n, d, A_incidence, I_f_all):
     Get the voxel current densities from the face currents.
     Combine the currents of all the internal faces of a voxel into a single vector.
     Scale the currents into current densities.
+
+    The voxel structure has the following size: (nx, ny, nz).
+    The problem contains n_f internal faces.
+
+    At the input, the face current vector has the following size: 3*nx*ny*nz.
+    At the output, the current density vector has the following size: (nx*ny*nz, 3).
     """
 
     # extract the voxel data
@@ -83,7 +95,7 @@ def get_current_density(n, d, A_incidence, I_f_all):
 
 def get_assign_field(idx_v, V_v_all, J_v_all):
     """
-    Assign invalid values to the empty voxels.
+    Only keep the value of the non-empty voxels (for the potential and current density).
     """
 
     # flag empty voxels

@@ -2,6 +2,7 @@
 Different functions for building the equation system.
 Two equation systems are built, one for the preconditioner and one for the full system.
 
+The voxel structure has the following size: (nx, ny, nz).
 The problem contains n_v non-empty voxels and n_f internal faces.
 The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
 
@@ -194,8 +195,9 @@ def get_impedance_matrix(freq, L_tensor, L_vector):
     """
     Transform the circulant inductance tensor into a FFT circulant impedance tensor.
     The problem contains n_f internal faces.
+    The voxel structure has the following size: (nx, ny, nz).
     For solving the full system, circulant tensors are used: (2*nx, 2*ny, 2*nz, 3).
-    For solving the preconditioner, vectors are used: (n_f).
+    For solving the preconditioner, vectors are used: n_f.
     """
 
     # get the angular frequency

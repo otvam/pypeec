@@ -14,6 +14,7 @@ def get_voxel_point(n, d, c):
     """
     Get the coordinate of the different voxels.
     The first voxel center is at the specified origin coordinate.
+    The voxel structure has the following size: (nx, ny, nz).
     The array has the following dimension: (nx*ny*nz, 3).
     """
 
@@ -53,6 +54,7 @@ def get_incidence_matrix(n):
     """
     Get the incidence matrix of the voxel structure.
     This matrix describes the relation between the voxels and the faces.
+    The voxel structure has the following size: (nx, ny, nz).
     The matrix has the following dimension: (nx*ny*nz, 3*nx*ny*nz).
     """
 

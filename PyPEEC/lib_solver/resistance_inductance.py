@@ -43,9 +43,8 @@ def _get_circulant_tensor(nx, ny, nz, A):
 def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
     """
     Extract the resistance vector of the system (diagonal of the resistance matrix).
-    The problem contains n_v non-empty voxels and n_f internal faces.
-    For solving the full system, a tensor is used: (nx, ny, nz, 3).
-    For solving the preconditioner, a vector is used: (n_f).
+    The problem contains n_f internal faces.
+    The resistance vector has the following length: n_f.
     """
 
     # extract the voxel data
@@ -75,9 +74,10 @@ def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
 def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     """
     Extract the inductance matrix of the system.
+    The voxel structure has the following size: (nx, ny, nz).
     The problem contains n_f internal faces.
     For solving the full system, a circulant tensor is used: (2*nx, 2*ny, 2*nz, 3).
-    For solving the preconditioner, a vector is used: (n_f).
+    For solving the preconditioner, a vector is used: n_f.
     """
 
     # extract the voxel data

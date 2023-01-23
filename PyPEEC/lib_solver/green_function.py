@@ -186,8 +186,9 @@ def get_green_tensor(n, d, n_green):
     Compute the Green functions for the complete voxel structure.
     For the self-coefficient and the close mutual coefficients, an analytical solution is used.
     For the remote mutual coefficients, an approximation is used.
-    The tensor has the following dimension: (nx, ny, nz).
-    The self-coefficient is at the following location: (1,1,1).
+    The voxel structure has the following size: (nx, ny, nz).
+    The created tensor has the following dimension: (nx, ny, nz).
+    The self-coefficient is at the following location: (0, 0, 0).
     All the elements are computed with respect to the first voxel.
     """
 
