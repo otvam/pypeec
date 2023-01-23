@@ -1,4 +1,4 @@
-name: cenv
+name: PyPEEC
 channels:
   - conda-forge
   - defaults
