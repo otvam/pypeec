@@ -272,12 +272,12 @@ def run(data_voxel, data_problem):
         data_solution = _run_assemble(data_solver)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
-        return False, None
+        return False, None, ex
     except RunError as ex:
         logger.error("check error : " + str(ex))
-        return False, None
+        return False, None, ex
 
     # end message
     logger.info("successful termination")
 
-    return True, data_solution
+    return True, data_solution, None

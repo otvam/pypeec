@@ -126,10 +126,10 @@ def run(data_voxel, data_point, data_viewer, is_interactive):
             _get_plot(grid, voxel, point, dat_tmp, is_interactive)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
-        return False
+        return False, ex
     except RunError as ex:
         logger.error("check error : " + str(ex))
-        return False
+        return False, ex
 
     # end message
     logger.info("successful termination")
@@ -139,4 +139,4 @@ def run(data_voxel, data_point, data_viewer, is_interactive):
     status = plotgui.run_app(app, is_interactive)
     logger.info("exiting the event loop")
 
-    return status
+    return status, None

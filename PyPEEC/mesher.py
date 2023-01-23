@@ -182,12 +182,12 @@ def run(data_mesher, path_ref):
         data_voxel = _run_resample_graph(data_voxel, data_mesher)
     except CheckError as ex:
         logger.error("check error : " + str(ex))
-        return False, None
+        return False, None, ex
     except RunError as ex:
         logger.error("check error : " + str(ex))
-        return False, None
+        return False, None, ex
 
     # end message
     logger.info("successful termination")
 
-    return True, data_voxel
+    return True, data_voxel, None

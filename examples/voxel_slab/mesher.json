@@ -12,6 +12,6 @@
     },
     "n_resampling": [1, 1, 2],
     "domain_connection": [
-        {"domain": ["cond", "src", "sink"], "connected": true},
+        {"domain": ["cond", "src", "sink"], "connected": true}
     ]
 }

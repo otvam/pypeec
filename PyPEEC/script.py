@@ -56,16 +56,16 @@ def run_mesher(file_mesher, file_voxel):
         path_ref = os.path.relpath(path_ref, path_cwd)
 
         # call the mesher
-        (status, data_voxel) = mesher.run(data_mesher, path_ref)
+        (status, data_voxel, ex) = mesher.run(data_mesher, path_ref)
 
         # save results
         logger.info("save the results")
         fileio.write_pickle(status, file_voxel, data_voxel)
     except FileError as ex:
         logger.error("check error : " + str(ex))
-        return False
+        return False, ex
 
-    return status
+    return status, ex
 
 
 def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
@@ -111,12 +111,12 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
         data_viewer = fileio.load_json(file_viewer)
 
         # call the viewer
-        status = viewer.run(data_voxel, data_point, data_viewer, is_interactive)
+        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, is_interactive)
     except FileError as ex:
         logger.error("check error : " + str(ex))
-        return False
+        return False, ex
 
-    return status
+    return status, ex
 
 
 def run_solver(file_voxel, file_problem, file_solution):
@@ -164,16 +164,16 @@ def run_solver(file_voxel, file_problem, file_solution):
         data_problem = fileio.load_json(file_problem)
 
         # call the solver
-        (status, data_solution) = solver.run(data_voxel, data_problem)
+        (status, data_solution, ex) = solver.run(data_voxel, data_problem)
 
         # save results
         logger.info("save the results")
         fileio.write_pickle(status, file_solution, data_solution)
     except FileError as ex:
         logger.error("check error : " + str(ex))
-        return False
+        return False, ex
 
-    return status
+    return status, ex
 
 
 def run_plotter(file_solution, file_point, file_plotter, is_interactive):
@@ -226,12 +226,12 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
         data_plotter = fileio.load_json(file_plotter)
 
         # call the plotter
-        status = plotter.run(data_solution, data_point, data_plotter, is_interactive)
+        (status, ex) = plotter.run(data_solution, data_point, data_plotter, is_interactive)
     except FileError as ex:
         logger.error("check error : " + str(ex))
-        return False
+        return False, ex
 
-    return status
+    return status, ex
 
 
 def main_mesher():
@@ -263,7 +263,7 @@ def main_mesher():
 
     # parse and call
     args = parser.parse_args()
-    status = run_mesher(args.file_mesher, args.file_voxel)
+    (status, ex) = run_mesher(args.file_mesher, args.file_voxel)
     sys.exit(int(not status))
 
 
@@ -309,7 +309,7 @@ def main_viewer():
 
     # parse and call
     args = parser.parse_args()
-    status = run_viewer(args.file_voxel, args.file_point, args.file_viewer, args.is_interactive)
+    (status, ex) = run_viewer(args.file_voxel, args.file_point, args.file_viewer, args.is_interactive)
     sys.exit(int(not status))
 
 
@@ -349,7 +349,7 @@ def main_solver():
 
     # parse and call
     args = parser.parse_args()
-    status = run_solver(args.file_voxel, args.file_problem, args.file_solution)
+    (status, ex) = run_solver(args.file_voxel, args.file_problem, args.file_solution)
     sys.exit(int(not status))
 
 
@@ -395,5 +395,5 @@ def main_plotter():
 
     # parse and call
     args = parser.parse_args()
-    status = run_plotter(args.file_solution, args.file_point, args.file_plotter, args.is_interactive)
+    (status, ex) = run_plotter(args.file_solution, args.file_point, args.file_plotter, args.is_interactive)
     sys.exit(int(not status))

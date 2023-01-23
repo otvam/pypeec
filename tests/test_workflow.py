@@ -45,20 +45,20 @@ def test_workflow(test_obj, name):
     # run the code
     try:
         # run the mesher
-        status = script.run_mesher(file_mesher, file_voxel)
-        test_obj.assertTrue(status, msg="mesher failure")
+        (status, ex) = script.run_mesher(file_mesher, file_voxel)
+        test_obj.assertTrue(status, msg="mesher failure : " + str(ex))
 
         # run the viewer
-        status = script.run_viewer(file_voxel, file_point, file_viewer, False)
-        test_obj.assertTrue(status, msg="viewer failure")
+        (status, ex) = script.run_viewer(file_voxel, file_point, file_viewer, False)
+        test_obj.assertTrue(status, msg="viewer failure : " + str(ex))
 
         # run the solver
-        status = script.run_solver(file_voxel, file_problem, file_solution)
-        test_obj.assertTrue(status, msg="solver failure")
+        (status, ex) = script.run_solver(file_voxel, file_problem, file_solution)
+        test_obj.assertTrue(status, msg="solver failure : " + str(ex))
 
         # run the plotter
-        status = script.run_plotter(file_solution, file_point, file_plotter, False)
-        test_obj.assertTrue(status, msg="plotter failure")
+        (status, ex) = script.run_plotter(file_solution, file_point, file_plotter, False)
+        test_obj.assertTrue(status, msg="plotter failure : " + str(ex))
     finally:
         # close the temporary files
         fid_voxel.close()
