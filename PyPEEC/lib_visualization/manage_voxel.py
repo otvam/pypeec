@@ -120,6 +120,9 @@ def get_point(voxel, data_point):
     The points cannot be located inside the non-empty voxels.
     """
 
+    # cast the array with the coordinates
+    data_point = np.array(data_point, dtype=np.float64)
+
     # create the point cloud
     point = pv.PolyData(data_point)
 

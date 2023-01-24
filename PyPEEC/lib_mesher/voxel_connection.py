@@ -121,11 +121,15 @@ def get_connection(n, domain_def, domain_connection):
     A_graph = A_graph[:, idx]
 
     # find the connected components in the graph
-    (n, labels) = csg.connected_components(csgraph=A_graph, directed=False, return_labels=True)
+    (n_comp, labels) = csg.connected_components(
+        csgraph=A_graph,
+        directed=False,
+        return_labels=True,
+    )
 
     # get the indices of the connected components
     connection_def = []
-    for i in range(n):
+    for i in range(n_comp):
         idx_local = np.flatnonzero(labels == i)
         idx_graph = idx[idx_local]
         connection_def.append(idx_graph)

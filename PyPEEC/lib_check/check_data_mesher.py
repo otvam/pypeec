@@ -37,6 +37,8 @@ def _check_voxel_domain_def(n, domain_def):
         idx = np.array(idx)
         if not (len(idx.shape) == 1):
             raise CheckError("idx: indices should be a vector")
+        if len(idx) == 0:
+            raise CheckError("idx: indices should not be empty")
         if not np.issubdtype(idx.dtype, np.integer):
             raise CheckError("idx: indices should be composed of integers")
 
@@ -373,6 +375,8 @@ def _check_domain_connection(domain_connection, domain_name):
         # check type
         if not isinstance(domain, list):
             raise CheckError("domain: connected domain names should be a list")
+        if not domain:
+            raise CheckError("domain: connected domain names should not be empty")
         if not isinstance(connected, bool):
             raise CheckError("connected: domain connection flag should be a boolean")
 
@@ -388,6 +392,14 @@ def get_domain_stl_path(domain_stl, path_ref):
     """
     Update the filename of the STL files with respect to the provided path.
     """
+
+    # if none, the specified path are already correct
+    if path_ref is None:
+        return domain_stl
+
+    # check the path
+    if not isinstance(path_ref, str):
+        raise CheckError("path_ref: path_ref should be a string or none")
 
     # init new domain description
     domain_stl_path = dict()
@@ -412,6 +424,14 @@ def get_layer_stack_path(layer_stack, path_ref):
     """
     Update the filename of the PNG images with respect to the provided path.
     """
+
+    # if none, the specified path are already correct
+    if path_ref is None:
+        return layer_stack
+
+    # check the path
+    if not isinstance(path_ref, str):
+        raise CheckError("path_ref: path_ref should be a string or none")
 
     # init new layer stack
     layer_stack_path = []
