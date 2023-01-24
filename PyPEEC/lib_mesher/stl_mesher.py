@@ -159,7 +159,7 @@ def get_mesh(n, pts_min, pts_max, domain_stl):
     (mesh_stl, coord_min, coord_max) = _get_load_stl(domain_stl)
 
     # cast to array
-    n = np.array(n, np.int64)
+    n = np.array(n, dtype=np.int64)
     pts_min = np.array(pts_min, np.float64)
     pts_max = np.array(pts_max, np.float64)
 

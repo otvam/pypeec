@@ -14,7 +14,8 @@
     },
     "conductor_def": {
         "pri": {"domain": ["pri" ,"src", "sink"], "rho": 1.75e-8},
-        "sec": {"domain": ["sec", "short"], "rho": 8.75e-8}
+        "sec": {"domain": ["sec", "short"], "rho": 8.75e-8},
+        "empty": {"domain": ["empty"], "rho": 8.75e-8}
     },
     "source_def": {
         "src": {"domain": ["src"], "source_type": "current", "I": 1.0, "G": 0.0},

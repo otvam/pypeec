@@ -9,13 +9,14 @@
             "sec": [51, 53, 50, 55, 60, 65, 70, 71, 73, 74, 69, 64, 59, 54, 72],
             "src": [1],
             "sink": [3],
-            "short": [52]
+            "short": [52],
+            "empty": []
         }
     },
     "n_resampling": [1, 1, 1],
     "domain_connection": [
         {"domain": ["pri", "src", "sink"], "connected": true},
         {"domain": ["sec", "short"], "connected": true},
-        {"domain": ["sec", "pri"], "connected": false}
+        {"domain": ["sec", "pri", "empty"], "connected": false}
     ]
 }

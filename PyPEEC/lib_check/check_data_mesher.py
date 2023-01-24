@@ -34,11 +34,9 @@ def _check_voxel_domain_def(n, domain_def):
             raise CheckError("tag: domain name should be a string")
 
         # cast indices
-        idx = np.array(idx)
+        idx = np.array(idx, dtype=np.int64)
         if not (len(idx.shape) == 1):
             raise CheckError("idx: indices should be a vector")
-        if len(idx) == 0:
-            raise CheckError("idx: indices should not be empty")
         if not np.issubdtype(idx.dtype, np.integer):
             raise CheckError("idx: indices should be composed of integers")
 
