@@ -50,7 +50,7 @@ def _get_graph_component(idx, connection_def):
 
     # find to corresponding connected components
     for i, idx_graph in enumerate(connection_def):
-        # find which indices are belong to this connected component
+        # find which indices are part of the connected component
         idx_ok = np.in1d(idx, idx_graph)
 
         # assign the component number to the corresponding indices
@@ -151,7 +151,7 @@ def get_viewer_domain(domain_def, connection_def):
         # assign the color (n different integer for each domain)
         (dom_tmp, counter) = _get_domain_tag(idx_tmp, counter)
 
-        # compute to which connected component the indices are belonging
+        # find the connected components corresponding to the indices
         gra_tmp = _get_graph_component(idx_tmp, connection_def)
 
         # append the indices and colors

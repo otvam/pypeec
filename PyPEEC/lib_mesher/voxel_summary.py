@@ -24,7 +24,7 @@ def get_status(n, d, c, domain_def, connection_def):
     # compute
     n_total = nx*ny*nz
     n_graph = len(connection_def)
-    n_domain =  len(domain_def)
+    n_domain = len(domain_def)
 
     # get the used voxels
     n_used = 0
