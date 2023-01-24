@@ -124,11 +124,8 @@ def run(data_voxel, data_point, data_viewer, is_interactive):
         for i, dat_tmp in enumerate(data_viewer):
             logger.info("plotting %d / %d" % (i + 1, len(data_viewer)))
             _get_plot(grid, voxel, point, dat_tmp, is_interactive)
-    except CheckError as ex:
-        logger.error("check error : " + str(ex))
-        return False, ex
-    except RunError as ex:
-        logger.error("check error : " + str(ex))
+    except (CheckError, RunError) as ex:
+        timelogger.log_exception(logger, ex)
         return False, ex
 
     # end message

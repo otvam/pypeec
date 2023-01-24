@@ -19,6 +19,43 @@ LOGGING_GLOBAL_TIMER = config.LOGGING_GLOBAL_TIMER
 LOGGING_GLOBAL_TIMESTAMP = time.time()
 
 
+class _DeltaTimeFormatter(logging.Formatter):
+    """
+    Class for adding elapsed time to a logger.
+    """
+
+    def __init__(self, fmt, timestamp, global_timer):
+        """
+        Constructor.
+        Create a timer.
+        """
+
+        # call parent constructor
+        super().__init__(fmt)
+
+        # create a timer
+        self.timer = _DeltaTiming()
+
+        # ensure that all the logger share the same timer
+        if global_timer:
+            self.timer.set_timestamp(timestamp)
+
+    def format(self, record):
+        """
+        Format a record to a string.
+        Add the elapsed time.
+        """
+
+        # add the elapsed time to the log record
+        record.init = self.timer.get_init()
+        record.duration = self.timer.get_duration()
+
+        # format the log record
+        msg = super().format(record)
+
+        return msg
+
+
 class _DeltaTiming:
     """
     Simple class for computing elapsed time.
@@ -106,41 +143,22 @@ class BlockTimer:
         self.logger.info(self.name + " : exit : " + duration)
 
 
-class DeltaTimeFormatter(logging.Formatter):
+def log_exception(logger, ex):
     """
-    Class for adding elapsed time to a logger.
+    Log an exception (type, message, and trace).
+    Remove the context from the exception before the logging.
     """
 
-    def __init__(self, fmt, timestamp, global_timer):
-        """
-        Constructor.
-        Create a timer.
-        """
+    # remove the expression context
+    ex.__context__ = None
 
-        # call parent constructor
-        super().__init__(fmt)
+    # get the exception data
+    ex_type = type(ex)
+    ex_trace = ex.__traceback__
+    ex_name = ex.__class__.__name__
 
-        # create a timer
-        self.timer = _DeltaTiming()
-
-        # ensure that all the logger share the same timer
-        if global_timer:
-            self.timer.set_timestamp(timestamp)
-
-    def format(self, record):
-        """
-        Format a record to a string.
-        Add the elapsed time.
-        """
-
-        # add the elapsed time to the log record
-        record.init = self.timer.get_init()
-        record.duration = self.timer.get_duration()
-
-        # format the log record
-        msg = super().format(record)
-
-        return msg
+    # log the exception
+    logger.error("check error : " + ex_name, exc_info=(ex_type, ex, ex_trace))
 
 
 def get_logger(name):
@@ -160,7 +178,7 @@ def get_logger(name):
     assert len(logger.handlers) == 0, "duplicated logger name"
 
     # get the formatter
-    fmt = DeltaTimeFormatter(
+    fmt = _DeltaTimeFormatter(
         fmt="%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s",
         timestamp=LOGGING_GLOBAL_TIMESTAMP,
         global_timer=LOGGING_GLOBAL_TIMER,

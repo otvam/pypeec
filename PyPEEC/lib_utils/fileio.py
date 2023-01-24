@@ -43,14 +43,13 @@ def load_json(filename):
     return data
 
 
-def write_pickle(status, filename, data):
+def write_pickle(filename, data):
     """
     Write a pickle file.
     """
 
-    if status:
-        try:
-            with open(filename, "wb") as fid:
-                pickle.dump(data, fid)
-        except FileNotFoundError:
-            raise FileError("cannot write the file: %s" % filename)
+    try:
+        with open(filename, "wb") as fid:
+            pickle.dump(data, fid)
+    except FileNotFoundError:
+        raise FileError("cannot write the file: %s" % filename)

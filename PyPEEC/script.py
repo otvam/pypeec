@@ -59,10 +59,11 @@ def run_mesher(file_mesher, file_voxel):
         (status, data_voxel, ex) = mesher.run(data_mesher, path_ref)
 
         # save results
-        logger.info("save the results")
-        fileio.write_pickle(status, file_voxel, data_voxel)
+        if status:
+            logger.info("save the results")
+            fileio.write_pickle(file_voxel, data_voxel)
     except FileError as ex:
-        logger.error("check error : " + str(ex))
+        timelogger.log_exception(logger, ex)
         return False, ex
 
     return status, ex
@@ -113,7 +114,7 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
         # call the viewer
         (status, ex) = viewer.run(data_voxel, data_point, data_viewer, is_interactive)
     except FileError as ex:
-        logger.error("check error : " + str(ex))
+        timelogger.log_exception(logger, ex)
         return False, ex
 
     return status, ex
@@ -167,10 +168,11 @@ def run_solver(file_voxel, file_problem, file_solution):
         (status, data_solution, ex) = solver.run(data_voxel, data_problem)
 
         # save results
-        logger.info("save the results")
-        fileio.write_pickle(status, file_solution, data_solution)
+        if status:
+            logger.info("save the results")
+            fileio.write_pickle(file_solution, data_solution)
     except FileError as ex:
-        logger.error("check error : " + str(ex))
+        timelogger.log_exception(logger, ex)
         return False, ex
 
     return status, ex
@@ -228,7 +230,7 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
         # call the plotter
         (status, ex) = plotter.run(data_solution, data_point, data_plotter, is_interactive)
     except FileError as ex:
-        logger.error("check error : " + str(ex))
+        timelogger.log_exception(logger, ex)
         return False, ex
 
     return status, ex

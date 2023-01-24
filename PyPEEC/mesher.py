@@ -180,11 +180,8 @@ def run(data_mesher, path_ref):
 
         # resample and assemble
         data_voxel = _run_resample_graph(data_voxel, data_mesher)
-    except CheckError as ex:
-        logger.error("check error : " + str(ex))
-        return False, None, ex
-    except RunError as ex:
-        logger.error("check error : " + str(ex))
+    except (CheckError, RunError) as ex:
+        timelogger.log_exception(logger, ex)
         return False, None, ex
 
     # end message

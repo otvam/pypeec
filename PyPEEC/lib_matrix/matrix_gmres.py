@@ -12,7 +12,7 @@ from PyPEEC.lib_utils import timelogger
 logger = timelogger.get_logger("GMRES")
 
 
-class IterCounter:
+class _IterCounter:
     """
     Simple class used as a callback to count the number of iteration of the matrix solver.
     """
@@ -48,12 +48,12 @@ class IterCounter:
 
 def get_matrix_gmres(sys_op, pcd_op, rhs, tol, atol, restart, maxiter):
     """
-    Solve a sparse equation system with gmres.
+    Solve a sparse equation system with GMRES.
     The equation system and the preconditioner are described with linear operator.
     """
 
     # object for counting the solver iterations (callback)
-    obj = IterCounter()
+    obj = _IterCounter()
 
     # define callback
     def fct(res_tmp):

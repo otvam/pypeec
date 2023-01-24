@@ -270,11 +270,8 @@ def run(data_voxel, data_problem):
 
         # assemble the output data structure
         data_solution = _run_assemble(data_solver)
-    except CheckError as ex:
-        logger.error("check error : " + str(ex))
-        return False, None, ex
-    except RunError as ex:
-        logger.error("check error : " + str(ex))
+    except (CheckError, RunError) as ex:
+        timelogger.log_exception(logger, ex)
         return False, None, ex
 
     # end message
