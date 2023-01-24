@@ -14,11 +14,9 @@
         }
     },
     "resampling": [1, 1, 1],
-    "domain_connection": [
-        {"domain": ["pri", "src", "sink"], "connected": true},
-        {"domain": ["sec", "short"], "connected": true},
-        {"domain": ["sec", "pri", "empty"], "connected": false},
-        {"domain": ["sec", "empty"], "connected": true},
-        {"domain": ["pri", "empty"], "connected": true}
-    ]
+    "domain_connection": {
+        "pri": {"domain": ["pri", "src", "sink", "empty"], "connected": true},
+        "sec": {"domain": ["sec", "short", "empty"], "connected": true},
+        "pri_sec": {"domain": ["sec", "pri", "empty"], "connected": false}
+    }
 }

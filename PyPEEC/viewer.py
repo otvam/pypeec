@@ -85,7 +85,7 @@ def run(data_voxel, data_point, data_viewer, is_interactive):
         The voxel grid (number, size, and origin) is defined.
         Different domains (with the indices of the voxel) are defined.
         The connected components of the graph defined by the voxel structure are defined.
-    data_point: array
+    data_point: list
         The array describes a point cloud.
         The cloud point will be used for field evaluation.
     data_viewer: list

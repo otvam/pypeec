@@ -357,18 +357,20 @@ def _check_domain_connection(domain_connection, domain_name):
     """
 
     # check type
-    if not isinstance(domain_connection, list):
-        raise CheckError("domain_connection: domain connection check should be a list")
+    if not isinstance(domain_connection, dict):
+        raise CheckError("domain_connection: domain connection check should be a dict")
 
     # check value
-    for domain_connection_tmp in domain_connection:
+    for tag, dat_tmp in domain_connection.items():
         # check type
-        if not isinstance(domain_connection_tmp, dict):
+        if not isinstance(tag, str):
+            raise CheckError("domain_connection: domain connection name should be a tring")
+        if not isinstance(dat_tmp, dict):
             raise CheckError("domain_connection: domain connection check should be a dict")
 
         # extract field
-        domain = domain_connection_tmp["domain"]
-        connected = domain_connection_tmp["connected"]
+        domain = dat_tmp["domain"]
+        connected = dat_tmp["connected"]
 
         # check type
         if not isinstance(domain, list):

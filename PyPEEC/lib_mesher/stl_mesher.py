@@ -40,9 +40,9 @@ def _get_grid(n, d, c):
     return grid
 
 
-def get_voxelize(grid, mesh):
+def _get_voxelize(grid, tag, mesh):
     """
-    Voxelixe a STL mesh with respect to a uniform grid.
+    Voxelize a STL mesh with respect to a uniform grid.
     Return the indices of the created voxels.
     """
 
@@ -50,7 +50,7 @@ def get_voxelize(grid, mesh):
     try:
         selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=True)
     except RuntimeError:
-        raise RunError("invalid mesh: mesh cannot be voxelized")
+        raise RunError("invalid mesh: mesh cannot be voxelized: %s" % tag)
 
     # create a boolean mask
     mask = selection['SelectedPoints'].view(bool)
@@ -63,9 +63,9 @@ def get_voxelize(grid, mesh):
 
     # check for empty voxels
     if voxel.n_cells == 0:
-        raise RunError("invalid mesh: empty voxel structure")
+        raise RunError("invalid mesh: empty voxel structure: %s" % tag)
     if surface.n_open_edges > 0:
-        raise RunError("invalid mesh: surface is not closed")
+        raise RunError("invalid mesh: surface is not closed: %s" % tag)
 
     # get the indices of the extracted voxels
     idx = voxel["idx"]
@@ -84,7 +84,7 @@ def _get_idx_stl(grid, mesh_stl):
     # load the STL files
     for tag, mesh in mesh_stl.items():
         # voxelize and get the indices
-        idx = get_voxelize(grid, mesh)
+        idx = _get_voxelize(grid, tag, mesh)
 
         # assign the indices to the domain
         domain_def[tag] = idx
@@ -111,7 +111,7 @@ def _get_load_stl(domain_stl):
         try:
             mesh = pv.read(filename, force_ext=".stl")
         except ValueError:
-            raise RunError("invalid stl: invalid file content: %s" % filename)
+            raise RunError("invalid stl: invalid file content: %s" % tag)
 
         # find the bounds
         (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds

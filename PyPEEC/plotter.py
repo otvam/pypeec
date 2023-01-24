@@ -119,7 +119,7 @@ def run(data_solution, data_point, data_plotter, is_interactive):
         The status of the solution (solver convergence and condition number) is described.
         The resistivity, potential, and current density of the different voxel is defined.
         The terminals quantities (voltage and current) of the sources are defined.
-    data_point: array
+    data_point: list
         The array describes a point cloud.
         The cloud point is used for field evaluation.
     data_plotter: list

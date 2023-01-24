@@ -17,7 +17,7 @@
         ]
     },
     "resampling": [1, 1, 1],
-    "domain_connection": [
-        {"domain": ["copper", "src", "sink"], "connected": true}
-    ]
+    "domain_connection": {
+        "connect": {"domain": ["copper", "src", "sink"], "connected": true}
+    }
 }

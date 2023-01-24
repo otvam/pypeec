@@ -71,14 +71,14 @@ def _get_connection_matrix(n):
     return A_connection
 
 
-def _check_domain_connection(domain_def, connection_def, domain_connection):
+def _check_domain_connection(domain_def, connection_def, tag_connection, data_connection):
     """
     Check that the given connections between the domain exists.
     """
 
     # extract data
-    domain = domain_connection["domain"]
-    connected = domain_connection["connected"]
+    domain = data_connection["domain"]
+    connected = data_connection["connected"]
 
     # remove empty domains
     domain_filtered = []
@@ -104,11 +104,11 @@ def _check_domain_connection(domain_def, connection_def, domain_connection):
     if connected:
         idx_ok = vector == len(domain_filtered)
         if not np.any(idx_ok):
-            raise RunError("domain connection: domain connection is missing")
+            raise RunError("domain connection: domain connection is missing: %s" % tag_connection)
     else:
         idx_ok = np.logical_or(vector == 0, vector == 1)
         if not np.all(idx_ok):
-            raise RunError("domain connection: domain connection is illegal")
+            raise RunError("domain connection: domain connection is illegal: %s" % tag_connection)
 
 
 def get_connection(n, domain_def, domain_connection):
@@ -142,7 +142,7 @@ def get_connection(n, domain_def, domain_connection):
         connection_def.append(idx_graph)
 
     # check the connections between the domains
-    for domain_connection_tmp in domain_connection:
-        _check_domain_connection(domain_def, connection_def, domain_connection_tmp)
+    for tag, dat_tmp in domain_connection.items():
+        _check_domain_connection(domain_def, connection_def, tag, dat_tmp)
 
     return connection_def
