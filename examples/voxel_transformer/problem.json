@@ -13,33 +13,12 @@
         "accuracy": 2
     },
     "conductor_def": {
-        "pri": {
-            "domain": ["pri" ,"src", "sink"],
-            "rho": 1.75e-8
-        },
-        "sec": {
-            "domain": ["sec", "short"],
-            "rho": 8.75e-8
-        }
+        "pri": {"domain": ["pri" ,"src", "sink"], "rho": 1.75e-8},
+        "sec": {"domain": ["sec", "short"], "rho": 8.75e-8}
     },
     "source_def": {
-        "src": {
-            "domain": ["src"],
-            "source_type": "current",
-            "I": 1.0,
-            "G": 0.0
-        },
-        "sink": {
-            "domain": ["sink"],
-            "source_type": "voltage",
-            "V": 1.0,
-            "R": 0.0
-        },
-        "short": {
-            "domain": ["short"],
-            "source_type": "voltage",
-            "V": -1.0,
-            "R": 0.0
-        }
+        "src": {"domain": ["src"], "source_type": "current", "I": 1.0, "G": 0.0},
+        "sink": {"domain": ["sink"], "source_type": "voltage", "V": 1.0, "R": 0.0},
+        "short": {"domain": ["short"], "source_type": "voltage", "V": -1.0, "R": 0.0}
     }
 }

@@ -13,39 +13,13 @@
         "accuracy": 2
     },
     "conductor_def": {
-        "pri": {
-            "domain": ["pri_src", "pri_sink", "pri_coil"],
-            "rho": 1.75e-8
-        },
-        "sec": {
-            "domain": ["sec_src", "sec_sink", "sec_coil"],
-            "rho": 1.75e-8
-        }
+        "pri": {"domain": ["pri_src", "pri_sink", "pri_coil"], "rho": 1.75e-8},
+        "sec": {"domain": ["sec_src", "sec_sink", "sec_coil"], "rho": 1.75e-8}
     },
     "source_def": {
-        "pri_src": {
-            "domain": ["pri_src"],
-            "source_type": "current",
-            "I": 1.0,
-            "G": 0.0
-        },
-        "pri_sink": {
-            "domain": ["pri_sink"],
-            "source_type": "voltage",
-            "V": 0.0,
-            "R": 0.0
-        },
-        "sec_src": {
-            "domain": ["sec_src"],
-            "source_type": "current",
-            "I": 0.0,
-            "G": 0.0
-        },
-        "sec_sink": {
-            "domain": ["sec_sink"],
-            "source_type": "voltage",
-            "V": 0.0,
-            "R": 0.0
-        }
+        "pri_src": {"domain": ["pri_src"], "source_type": "current", "I": 1.0, "G": 0.0},
+        "pri_sink": {"domain": ["pri_sink"], "source_type": "voltage", "V": 0.0, "R": 0.0},
+        "sec_src": {"domain": ["sec_src"], "source_type": "current", "I": 0.0, "G": 0.0},
+        "sec_sink": {"domain": ["sec_sink"], "source_type": "voltage", "V": 0.0, "R": 0.0}
     }
 }

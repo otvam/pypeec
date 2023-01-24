@@ -10,14 +10,8 @@
             "sink": "stl/sink.stl"
         },
         "domain_conflict": [
-            {
-                "domain_fix": "coil",
-                "domain_ref": "src"
-            },
-            {
-                "domain_fix": "coil",
-                "domain_ref": "sink"
-            }
+            {"domain_fix": "coil", "domain_ref": "src"},
+            {"domain_fix": "coil", "domain_ref": "sink"}
         ]
     },
     "n_resampling": [1, 1, 1],

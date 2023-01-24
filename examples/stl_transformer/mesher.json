@@ -13,22 +13,10 @@
             "sec_sink": "stl/sec_sink.stl"
         },
         "domain_conflict": [
-            {
-                "domain_fix": "pri_coil",
-                "domain_ref": "pri_src"
-            },
-            {
-                "domain_fix": "pri_coil",
-                "domain_ref": "pri_sink"
-            },
-            {
-                "domain_fix": "sec_coil",
-                "domain_ref": "sec_src"
-            },
-            {
-                "domain_fix": "sec_coil",
-                "domain_ref": "sec_sink"
-            }
+            {"domain_fix": "pri_coil", "domain_ref": "pri_src"},
+            {"domain_fix": "pri_coil", "domain_ref": "pri_sink"},
+            {"domain_fix": "sec_coil", "domain_ref": "sec_src"},
+            {"domain_fix": "sec_coil", "domain_ref": "sec_sink"}
         ]
     },
     "n_resampling": [1, 1, 1],
