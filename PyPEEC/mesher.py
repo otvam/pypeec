@@ -112,7 +112,7 @@ def _run_resample_graph(data_voxel, data_mesher):
     """
 
     # extract the data
-    n_resampling = data_mesher["n_resampling"]
+    resampling = data_mesher["resampling"]
     domain_connection = data_mesher["domain_connection"]
 
     # extract the data
@@ -122,7 +122,7 @@ def _run_resample_graph(data_voxel, data_mesher):
     domain_def = data_voxel["domain_def"]
 
     with timelogger.BlockTimer(logger, "voxel_resample"):
-        (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, n_resampling)
+        (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, resampling)
 
     with timelogger.BlockTimer(logger, "voxel_graph"):
         connection_def = voxel_connection.get_connection(n, domain_def, domain_connection)

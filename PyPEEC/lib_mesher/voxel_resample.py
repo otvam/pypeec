@@ -80,14 +80,14 @@ def _get_original_grid(n):
     return idx_n
 
 
-def _get_resampled_voxel(n_resampling):
+def _get_resampled_voxel(resampling):
     """
     Get the indices of the different sub-voxels composing a single original voxel (after resampling).
     The first resampled sub-voxel has the index zero.
     """
 
     # extract the voxel data
-    (rx, ry, rz) = n_resampling
+    (rx, ry, rz) = resampling
     r = rx*ry*rz
 
     # get the indices of a single resampled voxel
@@ -117,7 +117,7 @@ def _get_update_indices(n, r, idx_n, idx_r, domain_def):
     return domain_def
 
 
-def _get_update_size(n, d, n_resampling):
+def _get_update_size(n, d, resampling):
     """
     Update the number of voxels and the dimension of the voxels for the given resampling.
     """
@@ -125,7 +125,7 @@ def _get_update_size(n, d, n_resampling):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    (rx, ry, rz) = n_resampling
+    (rx, ry, rz) = resampling
 
     # update the number of voxels
     n = [nx*rx, ny*ry, nz*rz]
@@ -136,7 +136,7 @@ def _get_update_size(n, d, n_resampling):
     return n, d
 
 
-def get_remesh(n, d, domain_def, n_resampling):
+def get_remesh(n, d, domain_def, resampling):
     """
     Resampling of a voxel structure (increases the number of voxels).
     """
@@ -145,13 +145,13 @@ def get_remesh(n, d, domain_def, n_resampling):
     idx_n = _get_original_grid(n)
 
     # get the indices of a single resampled voxel
-    idx_r = _get_resampled_voxel(n_resampling)
+    idx_r = _get_resampled_voxel(resampling)
 
     # update the indices of the problem
-    domain_def = _get_update_indices(n, n_resampling, idx_n, idx_r, domain_def)
+    domain_def = _get_update_indices(n, resampling, idx_n, idx_r, domain_def)
 
     # update the voxel number and size
-    (n, d) = _get_update_size(n, d, n_resampling)
+    (n, d) = _get_update_size(n, d, resampling)
 
     return n, d, domain_def
 

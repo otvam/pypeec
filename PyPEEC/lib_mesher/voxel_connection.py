@@ -36,7 +36,7 @@ def _get_connection_matrix(n):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx*ny*nz
+    n = nx * ny * nz
 
     # voxel index array
     x = np.arange(nx, dtype=np.int64)
@@ -45,7 +45,7 @@ def _get_connection_matrix(n):
     (idx_x, idx_y, idx_z) = np.meshgrid(x, y, z, indexing="ij")
 
     # voxel index number
-    idx = idx_x+idx_y*nx+idx_z*nx*ny
+    idx = idx_x + idx_y * nx + idx_z * nx * ny
 
     # create the sparse matrix
     A_connection = sps.csc_matrix((n, n), dtype=np.int64)
@@ -53,19 +53,19 @@ def _get_connection_matrix(n):
     # connections along x direction
     idx_col = idx[0:-1, :, :].flatten()
     idx_row = idx[1:, :, :].flatten()
-    data = np.ones((nx-1)*ny*nz, dtype=np.int64)
+    data = np.ones((nx - 1) * ny * nz, dtype=np.int64)
     A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(n, n), dtype=np.int64)
 
     # connections along y direction
     idx_col = idx[:, 0:-1, :].flatten()
     idx_row = idx[:, 1:, :].flatten()
-    data = np.ones(nx*(ny-1)*nz, dtype=np.int64)
+    data = np.ones(nx * (ny - 1) * nz, dtype=np.int64)
     A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(n, n), dtype=np.int64)
 
     # connections along z direction
     idx_col = idx[:, :, 0:-1].flatten()
     idx_row = idx[:, :, 1:].flatten()
-    data = np.ones(nx*ny*(nz-1), dtype=np.int64)
+    data = np.ones(nx * ny * (nz - 1), dtype=np.int64)
     A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(n, n), dtype=np.int64)
 
     return A_connection
@@ -80,12 +80,19 @@ def _check_domain_connection(domain_def, connection_def, domain_connection):
     domain = domain_connection["domain"]
     connected = domain_connection["connected"]
 
+    # remove empty domains
+    domain_filtered = []
+    for tag in domain:
+        idx_domain = domain_def[tag]
+        if len(idx_domain) > 0:
+            domain_filtered.append(tag)
+
     # init the connection matrix
-    matrix = np.full((len(connection_def), len(domain)), True, dtype=bool)
+    matrix = np.full((len(connection_def), len(domain_filtered)), True, dtype=bool)
 
     # fill the connection matrix
     for i, idx_graph in enumerate(connection_def):
-        for j, tag in enumerate(domain):
+        for j, tag in enumerate(domain_filtered):
             idx_domain = domain_def[tag]
             idx_shared = np.intersect1d(idx_graph, idx_domain)
             matrix[i, j] = len(idx_shared) > 0
@@ -95,7 +102,7 @@ def _check_domain_connection(domain_def, connection_def, domain_connection):
 
     # check connection
     if connected:
-        idx_ok = vector == len(domain)
+        idx_ok = vector == len(domain_filtered)
         if not np.any(idx_ok):
             raise RunError("domain connection: domain connection is missing")
     else:

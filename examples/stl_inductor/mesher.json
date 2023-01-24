@@ -14,7 +14,7 @@
             {"domain_fix": "coil", "domain_ref": "sink"}
         ]
     },
-    "n_resampling": [1, 1, 1],
+    "resampling": [1, 1, 1],
     "domain_connection": [
         {"domain": ["coil", "src", "sink"], "connected": true}
     ]

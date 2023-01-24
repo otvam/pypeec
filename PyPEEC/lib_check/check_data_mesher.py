@@ -331,23 +331,23 @@ def _check_data_voxelize_voxel(data_voxelize):
     return domain_name
 
 
-def _check_n_resampling(n_resampling):
+def _check_resampling(resampling):
     """
     Check the resampling data.
     This vector is controlling the resampling of a voxel structure.
     """
 
     # check size
-    if not (len(n_resampling) == 3):
-        raise CheckError("n_resampling: invalid voxel resampling (should be a list with three elements)")
+    if not (len(resampling) == 3):
+        raise CheckError("resampling: invalid voxel resampling (should be a list with three elements)")
 
     # check type
-    if not all(np.issubdtype(type(x), np.integer) for x in n_resampling):
-        raise CheckError("n_resampling: number of resampling should be composed of integers")
+    if not all(np.issubdtype(type(x), np.integer) for x in resampling):
+        raise CheckError("resampling: number of resampling should be composed of integers")
 
     # check value
-    if not all((x >= 1) for x in n_resampling):
-        raise CheckError("n_resampling: number of resampling cannot be smaller than one")
+    if not all((x >= 1) for x in resampling):
+        raise CheckError("resampling: number of resampling cannot be smaller than one")
 
 
 def _check_domain_connection(domain_connection, domain_name):
@@ -466,7 +466,7 @@ def check_data_mesher(data_mesher):
     # extract field
     mesh_type = data_mesher["mesh_type"]
     data_voxelize = data_mesher["data_voxelize"]
-    n_resampling = data_mesher["n_resampling"]
+    resampling = data_mesher["resampling"]
     domain_connection = data_mesher["domain_connection"]
 
     # check type
@@ -488,7 +488,7 @@ def check_data_mesher(data_mesher):
         raise CheckError("invalid mesh type")
 
     # check the resampling data
-    _check_n_resampling(n_resampling)
+    _check_resampling(resampling)
 
     # check the connection data
     _check_domain_connection(domain_connection, domain_name)

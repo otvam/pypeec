@@ -13,10 +13,12 @@
             "empty": []
         }
     },
-    "n_resampling": [1, 1, 1],
+    "resampling": [1, 1, 1],
     "domain_connection": [
         {"domain": ["pri", "src", "sink"], "connected": true},
         {"domain": ["sec", "short"], "connected": true},
-        {"domain": ["sec", "pri", "empty"], "connected": false}
+        {"domain": ["sec", "pri", "empty"], "connected": false},
+        {"domain": ["sec", "empty"], "connected": true},
+        {"domain": ["pri", "empty"], "connected": true}
     ]
 }
