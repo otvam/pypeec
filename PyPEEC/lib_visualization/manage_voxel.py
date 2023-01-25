@@ -128,7 +128,7 @@ def get_point(voxel, data_point):
 
     # check that the points are not inside the grid
     surface = voxel.extract_surface()
-    selection = point.select_enclosed_points(surface, tolerance=0.0, check_surface=True)
+    selection = point.select_enclosed_points(surface, tolerance=0.0, check_surface=False)
     mask = selection['SelectedPoints'].view(bool)
     if np.any(mask):
         raise RunError("invalid points: points should not be located inside the non-empty voxels.")
