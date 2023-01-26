@@ -189,9 +189,6 @@ def _run_postproc(data_solver):
         # get the voxel loss density
         P_v = extract_solution.get_loss(n, d, idx_v, idx_f, A_incidence, V_f, I_f)
 
-        # get the voxel magnetic field
-        H_v = extract_solution.get_field(n, d, idx_v, idx_f, A_incidence, F_f)
-
         # extend the solution for the complete voxel structure (including the empty voxels)
         (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v)
 
@@ -204,7 +201,6 @@ def _run_postproc(data_solver):
     data_solver["V_v"] = V_v
     data_solver["J_v"] = J_v
     data_solver["P_v"] = P_v
-    data_solver["H_v"] = H_v
 
     return data_solver
 
@@ -232,7 +228,6 @@ def _run_assemble(data_solver):
         "V_v": data_solver["V_v"],
         "J_v": data_solver["J_v"],
         "P_v": data_solver["P_v"],
-        "H_v": data_solver["H_v"],
         "terminal": data_solver["terminal"],
     }
 
@@ -268,8 +263,7 @@ def run(data_voxel, data_problem):
         The voxel structure is defined.
         The frequency of the problem is defined.
         The status of the solution (solver convergence and condition number) is described.
-        The resistivity, potential, and current density of the different voxel are defined.
-        The loss density, and magnetic flux density of the different voxel are defined.
+        The resistivity, potential, current density, and loss density of the different voxel are defined.
         The terminals quantities (voltage and current) of the sources are defined.
         The integral quantities (total losses and energy) of the problem are defined.
     """

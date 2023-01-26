@@ -235,14 +235,13 @@ def set_plotter_voxel_material(voxel, idx_v, idx_src_c, idx_src_v):
     return voxel
 
 
-def set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v, W_v):
+def set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v):
     """
     Add the different variables to the unstructured grid:
         - resistivity (scalar field, input variable)
         - potential (scalar field, solved variable)
         - current density (scalar and vector fields, solved variable)
         - loss (scalar field, solved variable)
-        - energy (scalar field, solved variable)
     """
 
     # sort idx
@@ -252,7 +251,6 @@ def set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v, W_v):
     rho_v = rho_v[idx_s]
     V_v = V_v[idx_s]
     P_v = P_v[idx_s]
-    W_v = W_v[idx_s]
 
     # reorder vector variables
     J_v = J_v[idx_s, :]
@@ -260,7 +258,6 @@ def set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v, W_v):
     # assign data
     voxel["rho"] = rho_v
     voxel["P"] = P_v
-    voxel["W"] = W_v
 
     # assign potential
     voxel["V_re"] = np.real(V_v)
