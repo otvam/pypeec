@@ -46,7 +46,7 @@ def get_voxel_point(n, d, c):
     z = z[idx_z].flatten(order="F")
 
     # assemble the coordinate array
-    voxel_point = np.stack((x, y, z), axis=1, dtype=np.float64)
+    voxel_point = np.stack((x, y, z), axis=1)
 
     return voxel_point
 

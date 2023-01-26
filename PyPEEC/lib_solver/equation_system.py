@@ -99,7 +99,7 @@ def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factoriza
     sol_a = Y_matrix*(rhs_a-(A_kvl*sol_b))
 
     # assemble the solution
-    sol = np.concatenate((sol_a, sol_b), dtype=np.complex128)
+    sol = np.concatenate((sol_a, sol_b))
 
     return sol
 
@@ -126,7 +126,7 @@ def _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector,
     rhs_b = A_kcl*sol_a+A_src*sol_b
 
     # assemble the solution
-    rhs = np.concatenate((rhs_a, rhs_b), dtype=np.complex128)
+    rhs = np.concatenate((rhs_a, rhs_b))
 
     return rhs
 
@@ -187,7 +187,7 @@ def get_source_vector(idx_v, idx_f, I_src_c, V_src_v):
     rhs_current = np.zeros(n_v, dtype=np.complex128)
 
     # assemble
-    rhs = np.concatenate((rhs_zero, rhs_current, I_src_c, V_src_v), dtype=np.complex128)
+    rhs = np.concatenate((rhs_zero, rhs_current, I_src_c, V_src_v))
 
     return rhs
 
@@ -241,24 +241,24 @@ def get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v):
     cst_src_v = np.full(n_src_v, 1, dtype=np.float64)
 
     # connection of the current source currents and voltage source currents to the KCL
-    idx_row_connect = np.concatenate((idx_src_c_local, idx_src_v_local), dtype=np.int64)
-    idx_col_connect = np.concatenate((idx_src_c_add, idx_src_v_add), dtype=np.int64)
-    val_connect = np.concatenate((-cst_src_c, -cst_src_v), dtype=np.float64)
+    idx_row_connect = np.concatenate((idx_src_c_local, idx_src_v_local))
+    idx_col_connect = np.concatenate((idx_src_c_add, idx_src_v_add))
+    val_connect = np.concatenate((-cst_src_c, -cst_src_v))
 
     # adding the current sources (source equation with internal admittance, Norton source)
-    idx_row_current = np.concatenate((idx_src_c_add, idx_src_c_add), dtype=np.int64)
-    idx_col_current = np.concatenate((idx_src_c_add, idx_src_c_local), dtype=np.int64)
-    val_current = np.concatenate((cst_src_c, G_src_c), dtype=np.float64)
+    idx_row_current = np.concatenate((idx_src_c_add, idx_src_c_add))
+    idx_col_current = np.concatenate((idx_src_c_add, idx_src_c_local))
+    val_current = np.concatenate((cst_src_c, G_src_c))
 
     # adding the voltage sources (source equation with internal resistance, Thevenin source)
-    idx_row_voltage = np.concatenate((idx_src_v_add, idx_src_v_add), dtype=np.int64)
-    idx_col_voltage = np.concatenate((idx_src_v_local, idx_src_v_add), dtype=np.int64)
-    val_voltage = np.concatenate((cst_src_v, R_src_v), dtype=np.float64)
+    idx_row_voltage = np.concatenate((idx_src_v_add, idx_src_v_add))
+    idx_col_voltage = np.concatenate((idx_src_v_local, idx_src_v_add))
+    val_voltage = np.concatenate((cst_src_v, R_src_v))
 
     # construct the matrix with the computed indices and values
-    idx_row = np.concatenate((idx_row_connect, idx_row_current, idx_row_voltage), dtype=np.int64)
-    idx_col = np.concatenate((idx_col_connect, idx_col_current, idx_col_voltage), dtype=np.int64)
-    val = np.concatenate((val_connect, val_current, val_voltage), dtype=np.float64)
+    idx_row = np.concatenate((idx_row_connect, idx_row_current, idx_row_voltage))
+    idx_col = np.concatenate((idx_col_connect, idx_col_current, idx_col_voltage))
+    val = np.concatenate((val_connect, val_current, val_voltage))
     A_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v), dtype=np.float64)
 
     return A_src

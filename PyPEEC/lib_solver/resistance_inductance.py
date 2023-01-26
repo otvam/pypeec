@@ -71,7 +71,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     L_x = (mu*G_self)/(dy**2*dz**2)
     L_y = (mu*G_self)/(dx**2*dz**2)
     L_z = (mu*G_self)/(dx**2*dy**2)
-    L_vector = np.concatenate((L_x*np.ones(n), L_y*np.ones(n), L_z*np.ones(n)), dtype=np.float64)
+    L_vector = np.concatenate((L_x*np.ones(n), L_y*np.ones(n), L_z*np.ones(n)))
     L_vector = L_vector[idx_f]
 
     return L_tensor, L_vector

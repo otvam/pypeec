@@ -75,7 +75,7 @@ def _get_original_grid(n):
     (idx_n_x, idx_n_y, idx_n_z) = np.unravel_index(np.arange(n), (nx, ny, nz), order="F")
 
     # assemble the coordinate array
-    idx_n = np.stack((idx_n_x, idx_n_y, idx_n_z), axis=1, dtype=np.int64)
+    idx_n = np.stack((idx_n_x, idx_n_y, idx_n_z), axis=1)
 
     return idx_n
 
@@ -94,7 +94,7 @@ def _get_resampled_voxel(resampling):
     (idx_r_x, idx_r_y, idx_r_z) = np.unravel_index(np.arange(r), (rx, ry, rz), order="F")
 
     # assemble the coordinate array
-    idx_r = np.stack((idx_r_x, idx_r_y, idx_r_z), axis=1, dtype=np.int64)
+    idx_r = np.stack((idx_r_x, idx_r_y, idx_r_z), axis=1)
 
     return idx_r
 

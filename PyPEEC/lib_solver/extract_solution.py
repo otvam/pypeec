@@ -59,7 +59,7 @@ def _get_flux_vector(d, idx_v, var_v_x, var_v_y, var_v_z):
     var_v_z = var_v_z/(dx*dy)
 
     # assemble voxel current densities
-    var_v_all = np.stack((var_v_x, var_v_y, var_v_z), axis=1, dtype=np.complex128)
+    var_v_all = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
 
     # remove empty voxels
     var_v = var_v_all[idx_v, :]

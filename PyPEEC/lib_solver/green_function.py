@@ -164,7 +164,7 @@ def _get_voxel_indices(nx, ny, nz):
     mz = mz.flatten(order="F")
 
     # assemble the vectors in a matrix
-    m = np.stack((mx, my, mz), axis=1, dtype=np.int64)
+    m = np.stack((mx, my, mz), axis=1)
 
     return m
 
