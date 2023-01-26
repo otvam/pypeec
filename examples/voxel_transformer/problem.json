@@ -19,7 +19,7 @@
     },
     "source_def": {
         "src": {"domain": ["src"], "source_type": "current", "I": 1.0, "G": 0.0},
-        "sink": {"domain": ["sink"], "source_type": "voltage", "V": 1.0, "R": 0.0},
-        "short": {"domain": ["short"], "source_type": "voltage", "V": -1.0, "R": 0.0}
+        "sink": {"domain": ["sink"], "source_type": "voltage", "V": 0.0, "R": 0.0},
+        "short": {"domain": ["short"], "source_type": "voltage", "V": 1.0, "R": 0.0}
     }
 }
