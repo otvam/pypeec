@@ -122,7 +122,7 @@ def run(data_voxel, data_point, data_viewer, is_interactive):
         # make the plots
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_viewer):
-            logger.info("plotting %d / %d" % (i + 1, len(data_viewer)))
+            logger.info("plotting %d / %d" % (i+1, len(data_viewer)))
             _get_plot(grid, voxel, point, dat_tmp, is_interactive)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(logger, ex)

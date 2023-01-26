@@ -162,7 +162,9 @@ def get_circulant_tensor(mat):
     """
     Construct a circulant tensor from a 4D tensor.
     The circulant tensor is constructed for the first 3D.
-    The size of the circulant tensor is twice the size of the original tensor.
+
+    The input tensor has the size: (nx, ny, nz, nd).
+    The output FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
     """
 
     # get the tensor size
@@ -198,11 +200,18 @@ def get_circulant_multiply(mat_circulant_fft, idx, vec):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
-    The vector is also shaped as a tensor.
 
-    The size of the matrix (FFT circulant tensor) is twice the size of the vector (tensor).
-    The size of the vector (tensor) is doubled during the FFT operation.
-    The size of result is the same as the size of the vector.
+    The input vector has the size: n_i.
+    The input FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
+    The output vector has the size: n_i.
+
+    For the matrix-vector multiplication is done in several steps:
+        - the vector is expanded into a tensor: n_i to (nx, ny, nz, nd)
+        - computation the FFT of the obtained tensor: (nx, ny, nz, nd) to (2*nx, 2*ny, 2*nz, nd)
+        - multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz, nd)
+        - computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz, nd)
+        - shrinking of the obtained tensor: (2*nx, 2*ny, 2*nz, nd) to (nx, ny, nz, nd)
+        - the tensor is flattened into a vector: (nx, ny, nz, nd) to n_i
     """
 
     # get the tensor size

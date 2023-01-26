@@ -63,7 +63,7 @@ def get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol):
     # assign face currents
     I_f = sol[0:n_f]
 
-    # assign voxel voltages
+    # assign voxel potentials
     V_v = sol[n_f:n_f+n_v]
 
     # assign current source currents
@@ -77,17 +77,18 @@ def get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol):
 
 def get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v):
     """
-    Extract the voltage/current source currents.
+    Expand the potential and source currents for all the voxels.
 
-    The solution is assigned to all the faces and voxels (even the empty faces/voxels).
-    The voltage/current source current vector has the following size: nx*ny*nz.
+    The solution is assigned to all the voxels (even the empty voxels).
+    The input vectors have the following size: n_v.
+    The output vectors have the following size: nx*ny*nz.
     """
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx * ny * nz
+    n = nx*ny*nz
 
-    # assign voxel voltages
+    # assign voxel potentials
     V_v_all = np.zeros(n, dtype=np.complex128)
     V_v_all[idx_v] = V_v
 
@@ -105,10 +106,9 @@ def get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v):
 def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
     """
     Get the voxel current densities from the face currents.
-    Combine the currents of all the internal faces of a voxel into a single vector.
     Scale the currents into current densities.
 
-    At the input, the face current vector has the following size: 3*nx*ny*nz.
+    At the input, the face current vector has the following size: n_f.
     At the output, the current density vector has the following size: (nx*ny*nz, 3).
     """
 
@@ -139,11 +139,18 @@ def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
 
 
 def get_loss_density(n, d, idx_v, idx_f, A_incidence, R_vector, I_f):
+    """
+    Get the voxel loss densities from the face currents and the resistance vector.
+    Scale the losses into loss densities.
+
+    At the input, the face current vector has the following size: n_f.
+    At the output, the loss density vector has the following size: nx*ny*nz.
+    """
 
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    n = nx * ny * nz
+    n = nx*ny*nz
 
     # get the face losses
     P_f = 0.5*np.conj(I_f)*R_vector*I_f
@@ -168,11 +175,23 @@ def get_loss_density(n, d, idx_v, idx_f, A_incidence, R_vector, I_f):
 
 
 def get_energy_density(n, d, idx_v, idx_f, A_incidence, L_tensor, I_f):
+    """
+    Get the voxel energy density from the face currents and the resistance vector.
+    Scale the energy into energy density.
+
+    At the input, the face current vector has the following size: n_f.
+    At the output, the energy density vector has the following size: nx*ny*nz.
+
+    It should be noted that the following definition of the energy is used:
+        - the energy stored in the vacuum is assigned to the conductors
+        - for a non-empty voxel, the energy is the total energy produced by the voxel
+        - for an empty voxel, the energy is zero
+    """
 
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    n = nx * ny * nz
+    n = nx*ny*nz
 
     # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
     L_tensor = fourier_transform.get_circulant_tensor(L_tensor)

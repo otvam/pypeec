@@ -110,10 +110,6 @@ def _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector,
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
 
     The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
-    For the inductance matrix, the complex voxel structure is used:
-        - the vector are expanded into a tensor: n_f to (nx, ny, nz, 3)
-        - the matrix multiplication is done with the tensor
-        - the resulting tensor is reduced to a vector: (nx, ny, nz, 3) to n_f
     """
 
     # split the excitation vector

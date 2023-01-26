@@ -16,7 +16,7 @@ def _check_voxel_domain_def(n, domain_def):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx * ny * nz
+    n = nx*ny*nz
 
     # init the domain indices
     idx_domain = np.array([], dtype=np.int64)
