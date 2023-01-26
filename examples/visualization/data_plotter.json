@@ -194,7 +194,7 @@
     {
         "plot_framework": "pyvista",
         "data_window": {
-            "title": "Loss Density",
+            "title": "Losses",
             "show_menu": false,
             "size": [
                 800,
@@ -217,7 +217,7 @@
                 ],
                 "opacity": 1.0,
                 "size": 10.0,
-                "legend": "Loss Density [mW/mm3]"
+                "legend": "Losses [mW/mm3]"
             },
             "clip_options": {
                 "clip_plot": false,
@@ -226,7 +226,7 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Loss Density",
+                "title": "Losses",
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",

@@ -17,41 +17,27 @@ from PyPEEC.lib_utils import timelogger
 logger = timelogger.get_logger("SOLUTION")
 
 
-def _get_project_vector_voxel(n, A_incidence, idx_f, var_f):
-    """
-    Project a face variable into the voxels (separately for the x, y, z components).
-    A face is shared between two voxels (for the internal faces).
-    The contributions are divided 50/50 between the two voxels.
-    """
+def _get_scalar_density(n, d, A_incidence, var_f_all):
+    # extract the voxel data
+    (dx, dy, dz) = d
 
-    # extend the solution for the complete voxel structure (including the empty voxels)
-    var_f_all = np.zeros(3*n, dtype=np.complex128)
-    var_f_all[idx_f] = var_f
+    # project the faces into the voxels
+    var_v_all = 0.5*np.abs(A_incidence[:, 0*n:3*n])*var_f_all[0*n:3*n]
+
+    # scale the loss/energy into loss/energy densities.
+    var_v_all = var_v_all/(dx*dy*dz)
+
+    return var_v_all
+
+
+def _get_vector_flux(n, d, A_incidence, var_f_all):
+    # extract the voxel data
+    (dx, dy, dz) = d
 
     # project the faces into the voxels
     var_v_x = 0.5*np.abs(A_incidence[:, 0*n:1*n])*var_f_all[0*n:1*n]
     var_v_y = 0.5*np.abs(A_incidence[:, 1*n:2*n])*var_f_all[1*n:2*n]
     var_v_z = 0.5*np.abs(A_incidence[:, 2*n:3*n])*var_f_all[2*n:3*n]
-
-    return var_v_x, var_v_y, var_v_z
-
-
-def _get_density_scalar(d, idx_v, var_v_x, var_v_y, var_v_z):
-    # extract the voxel data
-    (dx, dy, dz) = d
-
-    # scale the loss/energy into loss/energy densities.
-    var_v_all = (var_v_x+var_v_y+var_v_z)/(dx*dy*dz)
-
-    # remove empty voxels
-    var_v = var_v_all[idx_v]
-
-    return var_v
-
-
-def _get_flux_vector(d, idx_v, var_v_x, var_v_y, var_v_z):
-    # extract the voxel data
-    (dx, dy, dz) = d
 
     # convert currents into current densities
     var_v_x = var_v_x/(dy*dz)
@@ -61,10 +47,31 @@ def _get_flux_vector(d, idx_v, var_v_x, var_v_y, var_v_z):
     # assemble voxel current densities
     var_v_all = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
 
-    # remove empty voxels
-    var_v = var_v_all[idx_v, :]
+    return var_v_all
 
-    return var_v
+
+def _get_vector_density(n, d, A_incidence, var_f_all):
+    # extract the voxel data
+    (dx, dy, dz) = d
+
+    # keep only the positive and negative faces
+    A_incidence_pos = A_incidence[A_incidence == +1]
+    A_incidence_neg = A_incidence[A_incidence == -1]
+
+    # project the faces into the voxels
+    var_v_x = 0.5*np.abs(A_incidence[:, 0*n:1*n])*var_f_all[0*n:1*n]
+    var_v_y = 0.5*np.abs(A_incidence[:, 1*n:2*n])*var_f_all[1*n:2*n]
+    var_v_z = 0.5*np.abs(A_incidence[:, 2*n:3*n])*var_f_all[2*n:3*n]
+
+    # convert currents into current densities
+    var_v_x = var_v_x/(dy*dz)
+    var_v_y = var_v_y/(dx*dz)
+    var_v_z = var_v_z/(dx*dy)
+
+    # assemble voxel current densities
+    var_v_all = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
+
+    return var_v_all
 
 
 def get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol):
@@ -140,11 +147,15 @@ def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
     (nx, ny, nz) = n
     n = nx*ny*nz
 
-    # project the face currents into the voxels
-    (I_v_x, I_v_y, I_v_z) = _get_project_vector_voxel(n, A_incidence, idx_f, I_f)
+    # extend the solution for the complete voxel structure (including the empty voxels)
+    I_f_all = np.zeros(3*n, dtype=np.complex128)
+    I_f_all[idx_f] = I_f
 
-    # convert currents into current densities
-    J_v = _get_flux_vector(d, idx_v, I_v_x, I_v_y, I_v_z)
+    # project the face currents into the voxels (scalar field)
+    J_v_all = _get_vector_density(n, d, A_incidence, I_f_all)
+
+    # remove empty voxels
+    J_v = J_v_all[idx_v]
 
     return J_v
 
@@ -163,12 +174,12 @@ def get_drop_flux(idx_f, R_vector, L_tensor, I_f):
     L_tensor = fourier_transform.get_circulant_tensor(L_tensor)
 
     # get the energy for the different faces
-    F_f = fourier_transform.get_circulant_multiply(L_tensor, idx_f, I_f)
+    M_f = fourier_transform.get_circulant_multiply(L_tensor, idx_f, I_f)
 
-    return V_f, F_f
+    return V_f, M_f
 
 
-def get_integral(V_f, F_f, I_f):
+def get_integral(V_f, M_f, I_f):
     """
     Sum the loss/energy in order to obtain global quantities.
     """
@@ -177,7 +188,7 @@ def get_integral(V_f, F_f, I_f):
     P_f = 0.5*np.conj(I_f)*V_f
 
     # get the energy for the different faces
-    W_f = 0.5*np.conj(I_f)*F_f
+    W_f = 0.5*np.conj(I_f)*M_f
 
     # compute the integral quantities
     P_tot = np.sum(np.real(P_f))
@@ -208,14 +219,18 @@ def get_loss(n, d, idx_v, idx_f, A_incidence, V_f, I_f):
     # get the losses for the different faces
     P_f = 0.5*np.conj(I_f)*V_f
 
+    # extend the solution for the complete voxel structure (including the empty voxels)
+    P_f_all = np.zeros(3*n, dtype=np.complex128)
+    P_f_all[idx_f] = P_f
+
     # project the loss/energy from the faces into the voxels
-    (P_v_x, P_v_y, P_v_z) = _get_project_vector_voxel(n, A_incidence, idx_f, P_f)
+    P_v_all = _get_scalar_density(n, d, A_incidence, P_f_all)
 
-    # scale the loss/energy into loss/energy densities.
-    P_v = _get_density_scalar(d, idx_v, P_v_x, P_v_y, P_v_z)
+    # remove numerical errors (losses are real)
+    P_v_all = np.real(P_v_all)
 
-    # remove numerical errors
-    P_v = np.real(P_v)
+    # remove empty voxels
+    P_v = P_v_all[idx_v]
 
     return P_v
 

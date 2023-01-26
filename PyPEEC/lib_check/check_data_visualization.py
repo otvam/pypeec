@@ -119,7 +119,7 @@ def _check_data_options(plot_type, data_options):
         raise CheckError("data_options: data options should be a dict")
 
     # list of allowed variable names
-    var_voxel_list = ["rho", "V_re", "V_im", "V_abs", "J_norm_abs", "J_norm_re", "J_norm_im", "P", "W"]
+    var_voxel_list = ["rho", "V_re", "V_im", "V_abs", "J_norm_abs", "J_norm_re", "J_norm_im", "P"]
     var_point_list = ["H_norm_abs", "H_norm_re", "H_norm_im"]
     vec_voxel_list = ["J_vec_re", "J_vec_im"]
     vec_point_list = ["H_vec_re", "H_vec_im"]

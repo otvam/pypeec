@@ -181,10 +181,10 @@ def _run_postproc(data_solver):
         J_v = extract_solution.get_current_density(n, d, idx_v, idx_f, A_incidence, I_f)
 
         # get the resistive voltage drop and magnetic flux across the faces
-        (V_f, F_f) = extract_solution.get_drop_flux(idx_f, R_vector, L_tensor, I_f)
+        (V_f, M_f) = extract_solution.get_drop_flux(idx_f, R_vector, L_tensor, I_f)
 
         # get the global quantities (energy and losses)
-        integral = extract_solution.get_integral(V_f, F_f, I_f)
+        integral = extract_solution.get_integral(V_f, M_f, I_f)
 
         # get the voxel loss density
         P_v = extract_solution.get_loss(n, d, idx_v, idx_f, A_incidence, V_f, I_f)

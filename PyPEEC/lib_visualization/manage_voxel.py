@@ -176,7 +176,7 @@ def get_magnetic_field(d, idx_v, J_v, voxel_point, data_point):
     vol = np.prod(d)
 
     # keep non-empty voxels
-    pts_v = voxel_point[idx_v, :]
+    pts_v = voxel_point[idx_v]
 
     # for each provided point, compute the magnetic field
     H_points = np.zeros((len(data_point), 3), dtype=np.complex128)
@@ -247,13 +247,11 @@ def set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v):
     # sort idx
     idx_s = np.argsort(idx_v)
 
-    # reorder scalar variables
+    # reorder variables
     rho_v = rho_v[idx_s]
     V_v = V_v[idx_s]
     P_v = P_v[idx_s]
-
-    # reorder vector variables
-    J_v = J_v[idx_s, :]
+    J_v = J_v[idx_s,]
 
     # assign data
     voxel["rho"] = rho_v
