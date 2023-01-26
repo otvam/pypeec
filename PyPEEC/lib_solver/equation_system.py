@@ -52,32 +52,6 @@ from PyPEEC.lib_matrix import matrix_factorization
 from PyPEEC.lib_matrix import fourier_transform
 
 
-def _get_circulant_multiply(nx, ny, nz, CF, X):
-    """
-    Matrix-vector multiplication with FFT.
-    The matrix is shaped as a FFT circulant tensor.
-    The vector is also shaped as a tensor.
-
-    The size of the matrix (FFT circulant tensor) is twice the size of the vector (tensor).
-    The size of the vector (tensor) is doubled during the FFT operation.
-    The size of result is the same as the size of the vector.
-    """
-
-    # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
-    CX = fourier_transform.get_fft_tensor(X, True)
-
-    # matrix vector multiplication in frequency domain with the FFT circulant tensor
-    CY = CF*CX
-
-    # compute the iFFT
-    Y = fourier_transform.get_ifft_tensor(CY, False)
-
-    # the result is in the first block of the matrix
-    Y = Y[0:nx, 0:ny, 0:nz, :]
-
-    return Y
-
-
 def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     """
     Compute the sparse matrix decomposition for the preconditioner.
@@ -158,7 +132,7 @@ def _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector,
     sol_a_all = sol_a_all.reshape((nx, ny, nz, 3), order="F")
 
     # multiply the impedance matrix with the current vector (multiplication is done with the FFT circulant tensor)
-    rhs_a_all = _get_circulant_multiply(nx, ny, nz, ZL_tensor, sol_a_all)
+    rhs_a_all = fourier_transform.get_circulant_multiply(ZL_tensor, sol_a_all)
 
     # flatten the tensor into a vector
     rhs_a_all = rhs_a_all.flatten(order="F")
@@ -201,9 +175,11 @@ def get_impedance_matrix(freq, L_tensor, L_vector):
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
-    # compute the FFT and the impedance
-    ZL_tensor = fourier_transform.get_fft_tensor(L_tensor, False)
-    ZL_tensor = s*ZL_tensor
+    # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
+    L_tensor = fourier_transform.get_circulant_tensor(L_tensor)
+
+    # compute the impedance
+    ZL_tensor = s*L_tensor
 
     # self-impedance for the preconditioner
     ZL_vector = s*L_vector

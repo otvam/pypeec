@@ -11,35 +11,6 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 
 
-def _get_circulant_tensor(nx, ny, nz, A):
-    """
-    Construct a circulant tensor from a tensor.
-    The size of the circulant tensor is twice the size of the original tensor.
-    """
-
-    # init the circulant tensor
-    C = np.zeros((2*nx, 2*ny, 2*nz), dtype=np.float64)
-
-    # cube xyz
-    C[0:nx, 0:ny, 0:nz] = A[0:nx, 0:ny, 0:nz]
-    # cube x
-    C[nx+1:2*nx, 0:ny, 0:nz] = A[nx-1:0:-1, 0:ny, 0:nz]
-    # cube y
-    C[0:nx, ny+1:2*ny, 0:nz] = A[0:nx, ny-1:0:-1, 0:nz]
-    # cube z
-    C[0:nx, 0:ny, nz+1:2*nz] = A[0:nx, 0:ny, nz-1:0:-1]
-    # cube xy
-    C[nx+1:2*nx, ny+1:2*ny, 0:nz] = A[nx-1:0:-1, ny-1:0:-1, 0:nz]
-    # cube xz
-    C[nx+1:2*nx, 0:ny, nz+1:2*nz] = A[nx-1:0:-1, 0:ny, nz-1:0:-1]
-    # cube yz
-    C[0:nx, ny+1:2*ny, nz+1:2*nz] = A[0:nx, ny-1:0:-1, nz-1:0:-1]
-    # cube xyz
-    C[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz] = A[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1]
-
-    return C
-
-
 def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
     """
     Extract the resistance vector of the system (diagonal of the resistance matrix).
@@ -78,7 +49,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
 
     The voxel structure has the following size: (nx, ny, nz).
     The problem contains n_f internal faces.
-    For solving the full system, a circulant tensor is used: (2*nx, 2*ny, 2*nz, 3).
+    For solving the full system, an inductance tensor is used: (nx, ny, nz, 3).
     For solving the preconditioner, a vector is used: n_f.
     """
 
@@ -90,11 +61,8 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     # vacuum permittivity
     mu = 4*np.pi*1e-7
 
-    # compute the circulant tensor (in order to make matrix-vector multiplication with FFT)
-    G_mutual = _get_circulant_tensor(nx, ny, nz, G_mutual)
-
-    # compute the circulant inductance tensor from the Green functions
-    L_tensor = np.zeros((2*nx, 2*ny, 2*nz, 3), dtype=np.float64)
+    # compute the inductance tensor from the Green functions
+    L_tensor = np.zeros((nx, ny, nz, 3), dtype=np.float64)
     L_tensor[:, :, :, 0] = (mu*G_mutual)/(dy**2*dz**2)
     L_tensor[:, :, :, 1] = (mu*G_mutual)/(dx**2*dz**2)
     L_tensor[:, :, :, 2] = (mu*G_mutual)/(dx**2*dy**2)
