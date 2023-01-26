@@ -138,49 +138,14 @@ def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
     return J_v
 
 
-def get_loss_density(n, d, idx_v, idx_f, A_incidence, R_vector, I_f):
+def get_loss_energy(n, d, idx_v, idx_f, A_incidence, R_vector, L_tensor, I_f):
     """
-    Get the voxel loss densities from the face currents and the resistance vector.
-    Scale the losses into loss densities.
+    Get the voxel loss/energy densities from the face currents and the resistance vector.
+    Scale the loss/energy into loss/energy densities.
+    Sum the loss/energy in order to obtain global quantities.
 
     At the input, the face current vector has the following size: n_f.
-    At the output, the loss density vector has the following size: nx*ny*nz.
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    (dx, dy, dz) = d
-    n = nx*ny*nz
-
-    # get the face losses
-    P_f = 0.5*np.conj(I_f)*R_vector*I_f
-
-    # remove numerical errors
-    P_f = np.real(P_f)
-
-    # extend the solution for the complete voxel structure (including the empty voxels)
-    P_f_all = np.zeros(3*n, dtype=np.float64)
-    P_f_all[idx_f] = P_f
-
-    # project the losses into the voxels
-    P_v_all = _get_project_scalar_voxel(A_incidence, P_f_all)
-
-    # convert losses into loss densities
-    P_v_all = P_v_all/(dx*dy*dz)
-
-    # remove empty voxels
-    P_v = P_v_all[idx_v]
-
-    return P_v
-
-
-def get_energy_density(n, d, idx_v, idx_f, A_incidence, L_tensor, I_f):
-    """
-    Get the voxel energy density from the face currents and the resistance vector.
-    Scale the energy into energy density.
-
-    At the input, the face current vector has the following size: n_f.
-    At the output, the energy density vector has the following size: nx*ny*nz.
+    At the output, the loss/energy density vector has the following size: nx*ny*nz.
 
     It should be noted that the following definition of the energy is used:
         - the energy stored in the vacuum is assigned to the conductors
@@ -193,32 +158,52 @@ def get_energy_density(n, d, idx_v, idx_f, A_incidence, L_tensor, I_f):
     (dx, dy, dz) = d
     n = nx*ny*nz
 
+    # get the losses for the different faces
+    P_f = 0.5*np.conj(I_f)*R_vector*I_f
+
     # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
     L_tensor = fourier_transform.get_circulant_tensor(L_tensor)
 
     # multiply the inductance matrix with the current vector (done with the FFT circulant tensor)
-    P_f = fourier_transform.get_circulant_multiply(L_tensor, idx_f, I_f)
+    flux_f = fourier_transform.get_circulant_multiply(L_tensor, idx_f, I_f)
 
-    # get the face energy
-    W_f = 0.5*np.conj(I_f)*P_f
+    # get the energy for the different faces
+    W_f = 0.5*np.conj(I_f)*flux_f
 
     # remove numerical errors
+    P_f = np.real(P_f)
     W_f = np.real(W_f)
 
     # extend the solution for the complete voxel structure (including the empty voxels)
+    P_f_all = np.zeros(3*n, dtype=np.float64)
     W_f_all = np.zeros(3*n, dtype=np.float64)
+    P_f_all[idx_f] = P_f
     W_f_all[idx_f] = W_f
 
-    # project the energy into the voxels
+    # project the loss/energy from the faces into the voxels
+    P_v_all = _get_project_scalar_voxel(A_incidence, P_f_all)
     W_v_all = _get_project_scalar_voxel(A_incidence, W_f_all)
 
-    # convert energy into energy density
+    # compute the integral quantities
+    P_tot = np.sum(P_v_all)
+    W_tot = np.sum(W_v_all)
+
+    # assign the integral quantities
+    integral = {"P_tot": P_tot, "W_tot": W_tot}
+
+    # display
+    logger.info("terminal: P_tot = %.3e W" % P_tot)
+    logger.info("terminal: W_tot = %.3e J" % W_tot)
+
+    # scale the loss/energy into loss/energy densities.
+    P_v_all = P_v_all/(dx*dy*dz)
     W_v_all = W_v_all/(dx*dy*dz)
 
     # remove empty voxels
+    P_v = P_v_all[idx_v]
     W_v = W_v_all[idx_v]
 
-    return W_v
+    return P_v, W_v, integral
 
 
 def get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all):
