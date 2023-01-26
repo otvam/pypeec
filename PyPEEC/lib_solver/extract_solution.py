@@ -18,19 +18,35 @@ logger = timelogger.get_logger("SOLUTION")
 
 
 def _get_scalar_density(n, d, A_incidence, var_f_all):
+    """
+    Project a face vector variable into a voxel scalar variable.
+    Scale the variable with respect to the voxel volumes (density).
+
+    At the input, the array has the following size: 3*nx*ny*nx.
+    At the output, the array has the following size: nx*ny*nx.
+    """
+
     # extract the voxel data
     (dx, dy, dz) = d
 
     # project the faces into the voxels
     var_v_all = 0.5*np.abs(A_incidence[:, 0*n:3*n])*var_f_all[0*n:3*n]
 
-    # scale the loss/energy into loss/energy densities.
+    # convert to density.
     var_v_all = var_v_all/(dx*dy*dz)
 
     return var_v_all
 
 
 def _get_vector_flux(n, d, A_incidence, var_f_all):
+    """
+    Project a face vector variable into a voxel vector variable.
+    Scale the variable with respect to the face areas (density).
+
+    At the input, the array has the following size: 3*nx*ny*nx.
+    At the output, the array has the following size: (nx*ny*nx, 3).
+    """
+
     # extract the voxel data
     (dx, dy, dz) = d
 
@@ -39,36 +55,12 @@ def _get_vector_flux(n, d, A_incidence, var_f_all):
     var_v_y = 0.5*np.abs(A_incidence[:, 1*n:2*n])*var_f_all[1*n:2*n]
     var_v_z = 0.5*np.abs(A_incidence[:, 2*n:3*n])*var_f_all[2*n:3*n]
 
-    # convert currents into current densities
+    # convert to density.
     var_v_x = var_v_x/(dy*dz)
     var_v_y = var_v_y/(dx*dz)
     var_v_z = var_v_z/(dx*dy)
 
-    # assemble voxel current densities
-    var_v_all = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
-
-    return var_v_all
-
-
-def _get_vector_density(n, d, A_incidence, var_f_all):
-    # extract the voxel data
-    (dx, dy, dz) = d
-
-    # keep only the positive and negative faces
-    A_incidence_pos = A_incidence[A_incidence == +1]
-    A_incidence_neg = A_incidence[A_incidence == -1]
-
-    # project the faces into the voxels
-    var_v_x = 0.5*np.abs(A_incidence[:, 0*n:1*n])*var_f_all[0*n:1*n]
-    var_v_y = 0.5*np.abs(A_incidence[:, 1*n:2*n])*var_f_all[1*n:2*n]
-    var_v_z = 0.5*np.abs(A_incidence[:, 2*n:3*n])*var_f_all[2*n:3*n]
-
-    # convert currents into current densities
-    var_v_x = var_v_x/(dy*dz)
-    var_v_y = var_v_y/(dx*dz)
-    var_v_z = var_v_z/(dx*dy)
-
-    # assemble voxel current densities
+    # assemble the variables
     var_v_all = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
 
     return var_v_all
@@ -140,7 +132,7 @@ def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
     Scale the currents into current densities.
 
     At the input, the face current vector has the following size: n_f.
-    At the output, the current density vector has the following size: (nx*ny*nz, 3).
+    At the output, the current density vector has the following size: (n_v, 3).
     """
 
     # extract the voxel data
@@ -152,7 +144,7 @@ def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
     I_f_all[idx_f] = I_f
 
     # project the face currents into the voxels (scalar field)
-    J_v_all = _get_vector_density(n, d, A_incidence, I_f_all)
+    J_v_all = _get_vector_flux(n, d, A_incidence, I_f_all)
 
     # remove empty voxels
     J_v = J_v_all[idx_v]
@@ -163,6 +155,7 @@ def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
 def get_drop_flux(idx_f, R_vector, L_tensor, I_f):
     """
     Get the resistive voltage drop and magnetic flux across the faces.
+
     At the input, the face current vector has the following size: n_f.
     At the output, the vectors have the following size: n_f.
     """
@@ -179,37 +172,12 @@ def get_drop_flux(idx_f, R_vector, L_tensor, I_f):
     return V_f, M_f
 
 
-def get_integral(V_f, M_f, I_f):
-    """
-    Sum the loss/energy in order to obtain global quantities.
-    """
-
-    # get the losses for the different faces
-    P_f = 0.5*np.conj(I_f)*V_f
-
-    # get the energy for the different faces
-    W_f = 0.5*np.conj(I_f)*M_f
-
-    # compute the integral quantities
-    P_tot = np.sum(np.real(P_f))
-    W_tot = np.sum(np.real(W_f))
-
-    # assign the integral quantities
-    integral = {"P_tot": P_tot, "W_tot": W_tot}
-
-    # display
-    logger.info("terminal: P_tot = %.3e W" % P_tot)
-    logger.info("terminal: W_tot = %.3e J" % W_tot)
-
-    return integral
-
-
 def get_loss(n, d, idx_v, idx_f, A_incidence, V_f, I_f):
     """
     Get the loss densities for the voxels.
 
     At the input, the face current vector has the following size: n_f.
-    At the output, the loss density vector has the following size: nx*ny*nz.
+    At the output, the loss density vector has the following size: n_v.
     """
 
     # extract the voxel data
@@ -233,6 +201,31 @@ def get_loss(n, d, idx_v, idx_f, A_incidence, V_f, I_f):
     P_v = P_v_all[idx_v]
 
     return P_v
+
+
+def get_integral(V_f, M_f, I_f):
+    """
+    Sum the loss/energy in order to obtain global quantities.
+    """
+
+    # get the losses for the different faces
+    P_f = 0.5*np.conj(I_f)*V_f
+
+    # get the energy for the different faces
+    W_f = 0.5*np.conj(I_f)*M_f
+
+    # compute the integral quantities
+    P_tot = np.sum(np.real(P_f))
+    W_tot = np.sum(np.real(W_f))
+
+    # assign the integral quantities
+    integral = {"P_tot": P_tot, "W_tot": W_tot}
+
+    # display
+    logger.info("integral: P_tot = %.3e W" % P_tot)
+    logger.info("integral: W_tot = %.3e J" % W_tot)
+
+    return integral
 
 
 def get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all):

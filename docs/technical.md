@@ -16,13 +16,12 @@ The interactions between Qt/PyVista/Matplotlib are likely be sensitive to the en
 
 ## Packaging and Environment
 
-* A Python package can be built from the (`pyproject.toml` and `setup.cfg`).
+* A Python package can be built from the `pyproject.toml` and `setup.cfg` files.
 * In order to create a Python Virtual Environment, use `requirements.txt`.
 * In order to create a Conda Environment, use `conda.yml`.
 
 ## Tests
 
-* The tests are located in the `tests` folder.
+* The tests are located in the `tests` folder (using the `unittest` framework).
 * Only integration tests currently exist (no unit tests).
-* The tests are using the Python `unittest` framework.
-* The tests can be run with `run_tests.sh`. 
+* The tests are using the Python .

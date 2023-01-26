@@ -7,10 +7,18 @@
 * FFT-PEEC method
 * Extremely fast
 * Pure Python implementation
-* Conductive domain (no magnetic or dielectric media)
+* Conductive domains
 * Frequency domain solution
 * Connection of current and voltage sources
-* Computation of magnetic field and impedances
+* Extraction of the current density and potential
+* Extraction of the losses and energy
+* Computation of the magnetic field and impedances
+
+**PyPEEC** has the following limitations:
+* No capacitive effects
+* No magnetic domains
+* No dielectric domains
+* Limited to voxel geometries
 
 The **PyPEEC** package contains the following tools:
 * **mesher**: create a 3D voxel structure from STL or PNG files
