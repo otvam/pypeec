@@ -180,8 +180,11 @@ def _run_postproc(data_solver):
         # get the voxel current densities from the face currents
         J_v = extract_solution.get_current_density(n, d, idx_v, idx_f, A_incidence, I_f)
 
-        # get the voxel loss densities from the currents
+        # get the voxel loss densities from the currents and the resistance vector
         P_v = extract_solution.get_loss_density(n, d, idx_v, idx_f, A_incidence, R_vector, I_f)
+
+        # get the energy densities from the currents and the inductance tensor
+        W_v = extract_solution.get_energy_density(n, d, idx_v, idx_f, A_incidence, L_tensor, I_f)
 
         # extend the solution for the complete voxel structure (including the empty voxels)
         (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v)
@@ -194,6 +197,7 @@ def _run_postproc(data_solver):
     data_solver["V_v"] = V_v
     data_solver["J_v"] = J_v
     data_solver["P_v"] = P_v
+    data_solver["W_v"] = W_v
 
     return data_solver
 
@@ -220,6 +224,8 @@ def _run_assemble(data_solver):
         "rho_v": data_solver["rho_v"],
         "V_v": data_solver["V_v"],
         "J_v": data_solver["J_v"],
+        "P_v": data_solver["P_v"],
+        "W_v": data_solver["W_v"],
         "terminal": data_solver["terminal"],
     }
 
