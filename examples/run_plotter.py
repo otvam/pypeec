@@ -22,5 +22,5 @@ if __name__ == "__main__":
     file_plotter = os.path.join(PATH_ROOT, "visualization", "data_plotter.json")
 
     # run
-    status = script.run_plotter(file_solution, file_point, file_plotter, True)
+    (status, ex) = script.run_plotter(file_solution, file_point, file_plotter, True)
     sys.exit(int(not status))

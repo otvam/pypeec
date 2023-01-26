@@ -22,5 +22,5 @@ if __name__ == "__main__":
     file_solution = os.path.join(PATH_ROOT, EXAMPLE_NAME, "solution.pck")
 
     # run
-    exit_code = script.run_solver(file_voxel, file_problem, file_solution)
-    sys.exit(exit_code)
+    (status, ex) = script.run_solver(file_voxel, file_problem, file_solution)
+    sys.exit(int(not status))
