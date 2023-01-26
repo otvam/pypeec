@@ -129,6 +129,35 @@ def _get_ifft_tensor(mat, double_dim):
     return _get_fct_tensor(mat, double_dim, _get_ifftn)
 
 
+def _get_prepare_vector(nx, ny, nz, nd, idx, vec):
+    """
+    Prepare a vector for the circulant FFT multiplication.
+    """
+
+    # expand the vector into a vector with all the dimention
+    vec_all = np.zeros(nx*ny*nz*nd, dtype=np.complex128)
+    vec_all[idx] = vec
+
+    # reshape the vector into a tensor
+    vec_all = vec_all.reshape((nx, ny, nz, nd), order="F")
+
+    return vec_all
+
+
+def _get_extract_vector(idx, vec_all):
+    """
+    Extract a vector from the circulant FFT multiplication result.
+    """
+
+    # flatten the tensor into a vector
+    vec_all = vec_all.flatten(order="F")
+
+    # select the elements
+    vec = vec_all[idx]
+
+    return vec
+
+
 def get_circulant_tensor(mat):
     """
     Construct a circulant tensor from a 4D tensor.
@@ -165,7 +194,7 @@ def get_circulant_tensor(mat):
     return mat_circulant_fft
 
 
-def get_circulant_multiply(mat_circulant_fft, vec):
+def get_circulant_multiply(mat_circulant_fft, idx, vec):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
@@ -177,18 +206,27 @@ def get_circulant_multiply(mat_circulant_fft, vec):
     """
 
     # get the tensor size
-    (nx, ny, nz, nd) = vec.shape
+    (nx, ny, nz, nd) = mat_circulant_fft.shape
+    nx = int(nx/2)
+    ny = int(ny/2)
+    nz = int(nz/2)
+
+    # prepare the vector (transform the vector into a tensor)
+    vec_all = _get_prepare_vector(nx, ny, nz, nd, idx, vec)
 
     # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
-    vec_fft = _get_fft_tensor(vec, True)
+    vec_all_fft = _get_fft_tensor(vec_all, True)
 
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
-    res_fft = mat_circulant_fft*vec_fft
+    res_all_fft = mat_circulant_fft*vec_all_fft
 
     # compute the iFFT
-    res = _get_ifft_tensor(res_fft, False)
+    res_all = _get_ifft_tensor(res_all_fft, False)
 
     # the result is in the first block of the matrix
-    res = res[0:nx, 0:ny, 0:nz, :]
+    res_all = res_all[0:nx, 0:ny, 0:nz, :]
+
+    # extract the vector (transform the tensor into a vector)
+    res = _get_extract_vector(idx, res_all)
 
     return res

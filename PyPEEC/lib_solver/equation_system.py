@@ -116,29 +116,15 @@ def _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector,
         - the resulting tensor is reduced to a vector: (nx, ny, nz, 3) to n_f
     """
 
-    # get the matrix size
-    (nx, ny, nz) = n
-    n = nx*ny*nz
-
     # split the excitation vector
     sol_a = sol[0:n_a]
     sol_b = sol[n_a:n_a+n_b]
 
-    # expand the current excitation into a vector with all the faces
-    sol_a_all = np.zeros(3*n, dtype=np.complex128)
-    sol_a_all[idx_f] = sol_a
-
-    # reshape the current excitation into a tensor
-    sol_a_all = sol_a_all.reshape((nx, ny, nz, 3), order="F")
-
-    # multiply the impedance matrix with the current vector (multiplication is done with the FFT circulant tensor)
-    rhs_a_all = fourier_transform.get_circulant_multiply(ZL_tensor, sol_a_all)
-
-    # flatten the tensor into a vector
-    rhs_a_all = rhs_a_all.flatten(order="F")
+    # multiply the impedance matrix with the current vector (done with the FFT circulant tensor)
+    rhs_a_tmp = fourier_transform.get_circulant_multiply(ZL_tensor, idx_f, sol_a)
 
     # form the complete KVL
-    rhs_a = rhs_a_all[idx_f]+R_vector*sol_a+A_kvl*sol_b
+    rhs_a = rhs_a_tmp+R_vector*sol_a+A_kvl*sol_b
 
     # form the complete KCL and potential fixing
     rhs_b = A_kcl*sol_a+A_src*sol_b
