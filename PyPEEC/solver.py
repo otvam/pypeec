@@ -143,11 +143,13 @@ def _run_main(data_solver):
     data_solver["rho_v"] = rho_v
     data_solver["idx_src_v"] = idx_src_v
     data_solver["idx_src_c"] = idx_src_c
+    data_solver["R_vector"] = R_vector
+    data_solver["L_tensor"] = L_tensor
     data_solver["problem_status"] = problem_status
-    data_solver["sol"] = sol
     data_solver["has_converged"] = has_converged
     data_solver["solver_status"] = solver_status
     data_solver["condition_status"] = condition_status
+    data_solver["sol"] = sol
 
     return data_solver
 
@@ -166,26 +168,32 @@ def _run_postproc(data_solver):
     idx_v = data_solver["idx_v"]
     idx_src_c = data_solver["idx_src_c"]
     idx_src_v = data_solver["idx_src_v"]
+    R_vector = data_solver["R_vector"]
+    L_tensor = data_solver["L_tensor"]
     sol = data_solver["sol"]
 
     # extract the solution
     with timelogger.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        (I_f_all, V_v_all, I_src_c, I_src_v) = extract_solution.get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol)
+        (I_f, V_v, I_src_c, I_src_v) = extract_solution.get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol)
 
         # get the voxel current densities from the face currents
-        J_v_all = extract_solution.get_current_density(n, d, A_incidence, I_f_all)
+        J_v = extract_solution.get_current_density(n, d, idx_v, idx_f, A_incidence, I_f)
+
+        # get the voxel loss densities from the currents
+        P_v = extract_solution.get_loss_density(n, d, idx_v, idx_f, A_incidence, R_vector, I_f)
+
+        # extend the solution for the complete voxel structure (including the empty voxels)
+        (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v)
 
         # parse the terminal voltages and currents for the sources
-        terminal = extract_solution.get_terminal(source_idx, V_v_all, I_src_c, I_src_v)
-
-        # assign invalid values to the empty voxels
-        (V_v, J_v) = extract_solution.get_assign_field(idx_v, V_v_all, J_v_all)
+        terminal = extract_solution.get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all)
 
     # assemble results
     data_solver["terminal"] = terminal
     data_solver["V_v"] = V_v
     data_solver["J_v"] = J_v
+    data_solver["P_v"] = P_v
 
     return data_solver
 

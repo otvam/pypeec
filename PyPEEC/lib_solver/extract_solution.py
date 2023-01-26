@@ -16,50 +16,66 @@ from PyPEEC.lib_utils import timelogger
 logger = timelogger.get_logger("SOLUTION")
 
 
-def get_sol_extract(n, idx_f, idx_v, idx_src_c, idx_src_v, sol):
+def get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol):
     """
-    Extract the face currents, voxel potentials, and voltage/current source currents.
+    Split the solution vector into different variables.
 
     The solution vector is set in the following order:
         - n_f: face currents
         - n_v: voxel potentials
         - n_src_c: current source currents
         - n_src_v: voltage source currents
+    """
+
+    # extract the voxel data
+    n_v = len(idx_v)
+    n_f = len(idx_f)
+    n_src_c = len(idx_src_c)
+    n_src_v = len(idx_src_v)
+
+    # assign face currents
+    I_f = sol[0:n_f]
+
+    # assign voxel voltages
+    V_v = sol[n_f:n_f+n_v]
+
+    # assign current source currents
+    I_src_c = sol[n_f+n_v:n_f+n_v+n_src_c]
+
+    # assign voltage source currents
+    I_src_v = sol[n_f+n_v+n_src_c:n_f+n_v+n_src_c+n_src_v]
+
+    return I_f, V_v, I_src_c, I_src_v
+
+
+def get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v):
+    """
+    Extract the voltage/current source currents.
 
     The solution is assigned to all the faces and voxels (even the empty faces/voxels).
-    The face current vector has the following size: 3*nx*ny*nz.
-    The voxel potential vector has the following size: nx*ny*nz.
     The voltage/current source current vector has the following size: nx*ny*nz.
     """
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n_v = len(idx_v)
-    n_f = len(idx_f)
-    n_src_c = len(idx_src_c)
-    n_src_v = len(idx_src_v)
-    n = nx*ny*nz
-
-    # assign face currents
-    I_f_all = np.zeros(3*n, dtype=np.complex128)
-    I_f_all[idx_f] = sol[0:n_f]
+    n = nx * ny * nz
 
     # assign voxel voltages
     V_v_all = np.zeros(n, dtype=np.complex128)
-    V_v_all[idx_v] = sol[n_f:n_f+n_v]
+    V_v_all[idx_v] = V_v
 
     # assign current source currents
-    I_src_c = np.zeros(n, dtype=np.complex128)
-    I_src_c[idx_src_c] = sol[n_f+n_v:n_f+n_v+n_src_c]
+    I_src_c_all = np.zeros(n, dtype=np.complex128)
+    I_src_c_all[idx_src_c] = I_src_c
 
     # assign voltage source currents
-    I_src_v = np.zeros(n, dtype=np.complex128)
-    I_src_v[idx_src_v] = sol[n_f+n_v+n_src_c:n_f+n_v+n_src_c+n_src_v]
+    I_src_v_all = np.zeros(n, dtype=np.complex128)
+    I_src_v_all[idx_src_v] = I_src_v
 
-    return I_f_all, V_v_all, I_src_c, I_src_v
+    return V_v_all, I_src_c_all, I_src_v_all
 
 
-def get_current_density(n, d, A_incidence, I_f_all):
+def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
     """
     Get the voxel current densities from the face currents.
     Combine the currents of all the internal faces of a voxel into a single vector.
@@ -74,35 +90,57 @@ def get_current_density(n, d, A_incidence, I_f_all):
     (dx, dy, dz) = d
     n = nx*ny*nz
 
+    # extend the solution for the complete voxel structure (including the empty voxels)
+    I_f_all = np.zeros(3 * n, dtype=np.complex128)
+    I_f_all[idx_f] = I_f
+
     # project the face currents into the voxels (0.5 because a current is going in and out)
-    I_x = 0.5*np.abs(A_incidence[:, 0:n])*I_f_all[0:n]
-    I_y = 0.5*np.abs(A_incidence[:, n:2*n])*I_f_all[n:2*n]
-    I_z = 0.5*np.abs(A_incidence[:, 2*n:3*n])*I_f_all[2*n:3*n]
+    I_v_x = 0.5*np.abs(A_incidence[:, 0*n:1*n])*I_f_all[0*n:1*n]
+    I_v_y = 0.5*np.abs(A_incidence[:, 1*n:2*n])*I_f_all[1*n:2*n]
+    I_v_z = 0.5*np.abs(A_incidence[:, 2*n:3*n])*I_f_all[2*n:3*n]
 
     # convert currents into current densities
-    J_x = I_x/(dy*dz)
-    J_y = I_y/(dx*dz)
-    J_z = I_z/(dx*dy)
+    J_v_x = I_v_x/(dy*dz)
+    J_v_y = I_v_y/(dx*dz)
+    J_v_z = I_v_z/(dx*dy)
 
     # assemble voxel current densities
-    J_v_all = np.stack((J_x, J_y, J_z), axis=1, dtype=np.complex128)
+    J_v_all = np.stack((J_v_x, J_v_y, J_v_z), axis=1, dtype=np.complex128)
 
-    return J_v_all
-
-
-def get_assign_field(idx_v, V_v_all, J_v_all):
-    """
-    Only keep the value of the non-empty voxels (for the potential and current density).
-    """
-
-    # flag empty voxels
-    V_v = V_v_all[idx_v]
+    # remove empty voxels
     J_v = J_v_all[idx_v, :]
 
-    return V_v, J_v
+    return J_v
 
 
-def get_terminal(source_idx, V_v_all, I_src_c, I_src_v):
+def get_loss_density(n, d, idx_v, idx_f, A_incidence, R_vector, I_f):
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    (dx, dy, dz) = d
+    n = nx * ny * nz
+
+    # get the face losses
+    P_f = np.conj(I_f)*R_vector*I_f
+    P_f = np.real(P_f)
+
+    # extend the solution for the complete voxel structure (including the empty voxels)
+    P_f_all = np.zeros(3 * n, dtype=np.complex128)
+    P_f_all[idx_f] = P_f
+
+    # project the losses into the voxels (0.5 because a face is shared between two voxels)
+    P_v_all = 0.5*np.abs(A_incidence)*P_f_all
+
+    # convert losses into loss densities
+    P_v_all = P_v_all/(dx*dy*dz)
+
+    # remove empty voxels
+    P_v = P_v_all[idx_v]
+
+    return P_v
+
+
+def get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
@@ -129,9 +167,9 @@ def get_terminal(source_idx, V_v_all, I_src_c, I_src_v):
 
             # current is the sum between all the voxels composing the terminal
             if source_type == "current":
-                I_tmp = np.complex128(np.sum(I_src_c[idx]))
+                I_tmp = np.complex128(np.sum(I_src_c_all[idx]))
             elif source_type == "voltage":
-                I_tmp = np.complex128(np.sum(I_src_v[idx]))
+                I_tmp = np.complex128(np.sum(I_src_v_all[idx]))
             else:
                 raise ValueError("invalid terminal type")
 
