@@ -25,16 +25,8 @@ def run_mesher(file_mesher, file_voxel):
 
     Parameters
     ----------
-    file_mesher : filename (string)
-        This file is an input file (JSON format).
-        The dict describes the meshing and resampling process.
-        The voxel structure can be explicitly given or generated from PNG or STL files.
-    file_voxel :  filename (string)
-        This file is created during the function call (pickle format).
-        The dict describes the voxel structure.
-        The voxel grid (number, size, and origin) is defined.
-        Different domains (with the indices of the voxel) are defined.
-        The connected components of the graph defined by the voxel structure are defined.
+    file_mesher : string (input file, JSON format)
+    file_voxel :  string (output file, pickle format)
 
     Returns
     -------
@@ -75,22 +67,9 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
 
     Parameters
     ----------
-    file_voxel : data (dict)
-        This file is an input file (pickle format).
-        The dict describes the voxel structure.
-        The voxel grid (number, size, and origin) is defined.
-        Different domains (with the indices of the voxel) are defined.
-        The connected components of the graph defined by the voxel structure are defined.
-    file_point: data (array)
-        This file is an input file (JSON format).
-        The array describes a point cloud.
-        The cloud point will be used for field evaluation.
-    file_viewer: data (dict)
-        This file is an input file (JSON format).
-        The list describes the different plots to be created.
-        Different types of plots are available.
-        Plot of the different domain composing the voxel structure.
-        Plot of the connected components composing the voxel structure.
+    file_voxel : string (input file, pickle format)
+    file_point: string (input file, JSON format)
+    file_viewer: string (input file, JSON format)
     is_interactive : boolean
         If true, the plots are shown (blocking call).
         If false, the plots are not shown (non-blocking call).
@@ -127,27 +106,9 @@ def run_solver(file_voxel, file_problem, file_solution):
 
     Parameters
     ----------
-    file_voxel :  filename (string)
-        This file is an input file (pickle format).
-        The dict describes the voxel structure.
-        The voxel grid (number, size, and origin) is defined.
-        Different domains (with the indices of the voxel) are defined.
-        The connected components of the graph defined by the voxel structure are defined.
-    file_problem: filename (string)
-        This file is an input file (JSON format).
-        The dict describes the problem to be solved.
-        The numerical options are defined.
-        The frequency of the problem is defined.
-        The resistivity of the different domain is defined.
-        The current and voltage sources are defined.
-    file_solution: filename (string)
-        This file is created during the function call (pickle format).
-        The dict describes the problem solution.
-        The voxel structure is defined.
-        The frequency of the problem is defined.
-        The status of the solution (solver convergence and condition number) is described.
-        The resistivity, potential, and current density of the different voxel is defined.
-        The terminals quantities (voltage and current) of the sources are defined.
+    file_voxel :  string (input file, pickle format)
+    file_problem: string (input file, JSON format)
+    file_solution: string (output file, pickle format)
 
     Returns
     -------
@@ -184,29 +145,9 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
 
     Parameters
     ----------
-    file_solution :  filename (string)
-        This file is an input file (pickle format).
-        The dict describes the problem solution.
-        The voxel structure is defined.
-        The frequency of the problem is defined.
-        The status of the solution (solver convergence and condition number) is described.
-        The resistivity, potential, and current density of the different voxel is defined.
-        The terminals quantities (voltage and current) of the sources are defined.
-    file_point: filename (string)
-        This file is an input file (JSON format).
-        The array describes a point cloud.
-        The cloud point is used for field evaluation.
-    file_plotter: filename (string)
-        This file is an input file (JSON format).
-        The list describes the different plots to be created.
-        Different types of plots are available.
-        Plot showing the conductors and sources.
-        Scalar plot of the resistivity of the voxels.
-        Scalar plot of the potential and current density of the voxels.
-        Vector plot (with arrows) of the current density of the voxels.
-        Scalar plot of the magnetic field of the point cloud.
-        Vector plot (with arrows) of the magnetic field of the point cloud.
-        Plots describing the solver convergence.
+    file_solution : string (input file, pickle format)
+    file_point: string (input file, JSON format)
+    file_plotter: string (input file, JSON format)
     is_interactive : boolean
         If true, the plots are shown (blocking call).
         If false, the plots are not shown (non-blocking call).

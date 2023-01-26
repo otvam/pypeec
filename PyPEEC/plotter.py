@@ -5,6 +5,8 @@ Plot the following features:
     - resistivity
     - potential
     - current density
+    - loss density
+    - magnetic flux density
     - magnetic field
 
 Two different mode are available for the plots:
@@ -48,6 +50,8 @@ def _get_grid_voxel(data_solution, data_point):
     rho_v = data_solution["rho_v"]
     V_v = data_solution["V_v"]
     J_v = data_solution["J_v"]
+    P_v = data_solution["P_v"]
+    W_v = data_solution["W_v"]
     solver_status = data_solution["solver_status"]
 
     # compute the magnetic field
@@ -59,10 +63,8 @@ def _get_grid_voxel(data_solution, data_point):
     point = manage_voxel.get_point(voxel, data_point)
 
     # add the problem solution to the grid
-    voxel = manage_voxel.set_plotter_material(voxel, idx_v, idx_src_c, idx_src_v)
-    voxel = manage_voxel.set_plotter_resistivity(voxel, idx_v, rho_v)
-    voxel = manage_voxel.set_plotter_potential(voxel, idx_v, V_v)
-    voxel = manage_voxel.set_plotter_current_density(voxel, idx_v, J_v)
+    voxel = manage_voxel.set_plotter_voxel_material(voxel, idx_v, idx_src_c, idx_src_v)
+    voxel = manage_voxel.set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v, W_v)
     point = manage_voxel.set_plotter_magnetic_field(point, H_point)
 
     return grid, voxel, point, solver_status
@@ -117,8 +119,10 @@ def run(data_solution, data_point, data_plotter, is_interactive):
         The voxel structure is defined.
         The frequency of the problem is defined.
         The status of the solution (solver convergence and condition number) is described.
-        The resistivity, potential, and current density of the different voxel is defined.
+        The resistivity, potential, and current density of the different voxel are defined.
+        The loss density, and magnetic flux density of the different voxel are defined.
         The terminals quantities (voltage and current) of the sources are defined.
+        The integral quantities (total losses and energy) of the problem are defined.
     data_point: list
         The array describes a point cloud.
         The cloud point is used for field evaluation.
@@ -128,6 +132,7 @@ def run(data_solution, data_point, data_plotter, is_interactive):
         Plot showing the conductors and sources.
         Scalar plot of the resistivity of the voxels.
         Scalar plot of the potential and current density of the voxels.
+        Scalar plot of the loss density and magnetic flux density of the voxels.
         Vector plot (with arrows) of the current density of the voxels.
         Scalar plot of the magnetic field of the point cloud.
         Vector plot (with arrows) of the magnetic field of the point cloud.

@@ -194,6 +194,108 @@
     {
         "plot_framework": "pyvista",
         "data_window": {
+            "title": "Loss Density",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": {
+            "plot_type": "scalar_voxel",
+            "data_options": {
+                "var": "P",
+                "scale": 1e-06,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "opacity": 1.0,
+                "size": 10.0,
+                "legend": "Loss Density [mW/mm3]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Loss Density",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
+    },
+    {
+        "plot_framework": "pyvista",
+        "data_window": {
+            "title": "Energy Density",
+            "show_menu": false,
+            "size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": {
+            "plot_type": "scalar_voxel",
+            "data_options": {
+                "var": "W",
+                "scale": 1.0,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "opacity": 1.0,
+                "size": 10.0,
+                "legend": "Energy Density [nJ/mm3]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Energy Density",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "black",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
+    },
+    {
+        "plot_framework": "pyvista",
+        "data_window": {
             "title": "Re. Current",
             "show_menu": false,
             "size": [

@@ -11,6 +11,7 @@ For the plotter, create the objects and add the solution:
     - resistivity
     - potential
     - current density
+    - loss/energy
     - magnetic field
 """
 
@@ -204,7 +205,7 @@ def set_viewer_domain(voxel, idx_v, dom_v, gra_v):
     return voxel
 
 
-def set_plotter_material(voxel, idx_v, idx_src_c, idx_src_v):
+def set_plotter_voxel_material(voxel, idx_v, idx_src_c, idx_src_v):
     """
     Add the material description to the unstructured grid.
     The following fake scalar field encoding is used:
@@ -234,54 +235,44 @@ def set_plotter_material(voxel, idx_v, idx_src_c, idx_src_v):
     return voxel
 
 
-def set_plotter_resistivity(voxel, idx_v, rho_v):
+def set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v, W_v):
     """
-    Add the resistivity (scalar field, input variable) to the unstructured grid.
+    Add the different variables to the unstructured grid:
+        - resistivity (scalar field, input variable)
+        - potential (scalar field, solved variable)
+        - current density (scalar and vector fields, solved variable)
+        - loss (scalar field, solved variable)
+        - energy (scalar field, solved variable)
     """
 
     # sort idx
     idx_s = np.argsort(idx_v)
+
+    # reorder scalar variables
     rho_v = rho_v[idx_s]
+    V_v = V_v[idx_s]
+    P_v = P_v[idx_s]
+    W_v = W_v[idx_s]
+
+    # reorder vector variables
+    J_v = J_v[idx_s, :]
 
     # assign data
     voxel["rho"] = rho_v
+    voxel["P"] = P_v
+    voxel["W"] = W_v
 
-    return voxel
-
-
-def set_plotter_potential(voxel, idx_v, V_v):
-    """
-    Add the potential (scalar field, solved variable) to the unstructured grid.
-    """
-
-    # sort idx
-    idx_s = np.argsort(idx_v)
-    V_v = V_v[idx_s]
-
-    # assign data
+    # assign potential
     voxel["V_re"] = np.real(V_v)
     voxel["V_im"] = np.imag(V_v)
     voxel["V_abs"] = np.abs(V_v)
 
-    return voxel
-
-
-def set_plotter_current_density(voxel, idx_v, J_v):
-    """
-    Add the current density (scalar and vector fields, current density) to the unstructured grid.
-    The norm (scalar field) and the direction (vector field) are added.
-    """
-
-    # sort idx
-    idx_s = np.argsort(idx_v)
-    J_v = J_v[idx_s, :]
-
-    # compute the norm
+    # assign the current density norm
     voxel["J_norm_abs"] = lna.norm(J_v, axis=1)
     voxel["J_norm_re"] = lna.norm(np.real(J_v), axis=1)
     voxel["J_norm_im"] = lna.norm(np.imag(J_v), axis=1)
 
-    # compute the direction
+    # assign the current density direction
     voxel["J_vec_re"] = np.real(J_v)
     voxel["J_vec_im"] = np.imag(J_v)
 

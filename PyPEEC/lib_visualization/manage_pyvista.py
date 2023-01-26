@@ -12,10 +12,10 @@ For the viewer, the following plots are available:
 
 For the plotter, the following plots are available:
     - material description for the non-empty voxels (conductors and sources)
-    - scalar plots for the non-empty voxels (resistivity, potential, and current density)
-    - arrow plots for the non-empty voxels (resistivity, potential, and current density)
-    - scalar plots for the point cloud (magnetic field)
-    - arrow plots for the point cloud (magnetic field)
+    - scalar plots for the non-empty voxels
+    - arrow plots for the non-empty voxels
+    - scalar plots for the point cloud
+    - arrow plots for the point cloud
 """
 
 __author__ = "Thomas Guillod"
