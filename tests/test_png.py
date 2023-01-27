@@ -28,6 +28,13 @@ class TestMesherViewer(unittest.TestCase):
 
         test_workflow.test_workflow(self, "png_busbar")
 
+    def test_png_pcb(self):
+        """
+        Test workflow for png_busbar.
+        """
+
+        test_workflow.test_workflow(self, "png_pcb")
+
     def test_png_wire(self):
         """
         Test workflow for png_wire.

@@ -15,4 +15,5 @@ PATH_ROOT="."
 #   png_inductor
 #   png_busbar
 #   png_wire
+#   png_pcb
 EXAMPLE_NAME="stl_transformer"

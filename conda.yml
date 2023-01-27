@@ -9,7 +9,7 @@ dependencies:
   - scikit-umfpack=0.3.3
   - pyfftw=0.13.1
   - matplotlib=3.6.2
-  - imageio=2.24.0
+  - pillow=9.4.0
   - pyvista=0.37.0
   - pyvistaqt=0.9.0
   - qtpy=2.3.0

@@ -13,7 +13,7 @@ pyFFTW>=0.13 # used by the solver, optional see config file
 
 # package for visualization
 matplotlib>=3.6 # used by the viewer, and plotter
-imageio>=2.23 # used by the mesher
+Pillow>=9.4 # used by the mesher
 pyvista>=0.37 # used by the mesher, viewer, and plotter
 pyvistaqt>=0.9 # used by the viewer, and plotter
 QtPy>=2.3 # used by the viewer, and plotter

@@ -11,7 +11,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-import imageio.v3 as iio
+import PIL.Image as pmg
 from PyPEEC.lib_utils.error import RunError
 
 
@@ -68,9 +68,12 @@ def _get_image(filename):
 
     # load the image
     try:
-        img = iio.imread(filename, extension=".png")
+        img = pmg.open(filename)
     except OSError:
         raise RunError("invalid png: invalid file content: %s" % filename)
+
+    # cast to array
+    img = np.array(img)
 
     # transform from image coordinate to cartesian coordinate
     img = np.swapaxes(img, 0, 1)

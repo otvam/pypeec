@@ -4,11 +4,11 @@
 
 PyPEEC is entirely programmed in Python and is using the following packages:
 * Python 3
-* Numpy and Scipy
+* NumPy and SciPy
 * scikit-umfpack (for the solver, optional)
 * pyFFTW (for the solver, optional)
-* pyvista and imageio (for the mesher)
-* matplotlib, pyvista, pyvistaqt, QtPy, PyQt5 (for the viewer and plotter)
+* PyVista and Pillow (for the mesher)
+* Matplotlib, PyVista, PyVistaQt, QtPy, PyQt5 (for the viewer and plotter)
 
 PyPEEC is tested on Linux x64 but should run on other platforms.
 The optional UMFPACK solver is known to be difficult to install on MS Windows.

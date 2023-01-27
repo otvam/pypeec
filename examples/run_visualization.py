@@ -7,7 +7,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import os
-import sys
 import json
 from examples import examples_config
 
@@ -238,6 +237,3 @@ if __name__ == "__main__":
         json.dump(data_viewer, fid, indent=4)
     with open(file_plotter, "w") as fid:
         json.dump(data_plotter, fid, indent=4)
-
-    # run
-    sys.exit(0)

@@ -60,6 +60,7 @@ Different examples are located in the `examples` folder:
 * **png_inductor**: a planar inductor created from PNG files
 * **png_busbar**: a coplanar busbar (L-shaped) created from PNG files
 * **png_wire**: a straight wire created from PNG files
+* **png_pcb**: simple PCB traces created from PNG files
 * **voxel_slab**: a simple slab conductor (with field computation)
 * **voxel_transformer**: a simple transformer (with field computation)
 
