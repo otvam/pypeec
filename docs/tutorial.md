@@ -48,10 +48,6 @@ The following files (JSON for inputs, pickle for outputs) are used:
 * `file_voxel` (pickle, output file): file with the definition of the voxel structure
 * `file_solution` (pickle, output file): file with the solution of the magnetic problem
 
-> **Warning**: WARNING: Pickling data is not secure. 
-> Only load pickle files that you trust.
-> Do not commit the pickle files in the git repository.
-
 ## Examples
 
 Different examples are located in the `examples` folder:
@@ -64,6 +60,11 @@ Different examples are located in the `examples` folder:
 * **voxel_slab**: a simple slab conductor (with field computation)
 * **voxel_transformer**: a simple transformer (with field computation)
 
-The different examples can be either used with:
-* Python scripts, located in the `examples` folder
-* Shell scripts, located in the `examples` folder
+The following files (located in the `examples` folder) are used to run the examples.
+* `run_visualization.py` is used to generate the configuration file for the viewer/plotter
+* `examples_config.py` is used to select the example (when using the Python launchers)
+* `examples_config.sh` is used to select the example (when using the Shell launchers)
+* `run_mesher.[py/sh]` is the launcher for the mesher (Python or Shell)
+* `run_viewer.[py/sh]` is the viewer for the mesher (Python or Shell)
+* `run_solver.[py/sh]` is the solver for the mesher (Python or Shell)
+* `run_plotter.[py/sh]` is the plotter for the mesher (Python or Shell)
