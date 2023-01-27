@@ -120,18 +120,18 @@ def _check_png_layer_stack(layer_stack):
     # check value
     for layer_stack_tmp in layer_stack:
         # get the data
-        n_add = layer_stack_tmp["n_add"]
+        n_layer = layer_stack_tmp["n_layer"]
         filename = layer_stack_tmp["filename"]
 
         # check type
-        if not isinstance(n_add, int):
-            raise CheckError("n_add: number of layers should be an integer")
+        if not isinstance(n_layer, int):
+            raise CheckError("n_layer: number of layers should be an integer")
         if not isinstance(filename, str):
             raise CheckError("filename: filename should be a string")
 
         # check value
-        if not (n_add >= 1):
-            raise CheckError("n_add: number of layers cannot be smaller than one")
+        if not (n_layer >= 1):
+            raise CheckError("n_layer: number of layers cannot be smaller than one")
 
 
 def _check_stl_pts(pts):
@@ -182,14 +182,14 @@ def _check_stl_domain_conflict(domain_conflict):
     # check value
     for domain_conflict_tmp in domain_conflict:
         # extract data
-        domain_ref = domain_conflict_tmp["domain_ref"]
-        domain_fix = domain_conflict_tmp["domain_fix"]
+        domain_keep = domain_conflict_tmp["domain_keep"]
+        domain_resolve = domain_conflict_tmp["domain_resolve"]
 
         # check type
-        if not isinstance(domain_ref, str):
-            raise CheckError("domain_ref: domain name should be a string")
-        if not isinstance(domain_fix, str):
-            raise CheckError("domain_fix: domain name should be a string")
+        if not isinstance(domain_keep, str):
+            raise CheckError("domain_keep: domain name should be a string")
+        if not isinstance(domain_resolve, str):
+            raise CheckError("domain_resolve: domain name should be a string")
 
 
 def _check_stl_domain_name(domain_conflict, domain_name):
@@ -199,14 +199,14 @@ def _check_stl_domain_name(domain_conflict, domain_name):
 
     for domain_conflict_tmp in domain_conflict:
         # extract data
-        domain_ref = domain_conflict_tmp["domain_ref"]
-        domain_fix = domain_conflict_tmp["domain_fix"]
+        domain_resolve = domain_conflict_tmp["domain_resolve"]
+        domain_keep = domain_conflict_tmp["domain_keep"]
 
         # check value
-        if domain_ref not in domain_name:
-            raise CheckError("domain_ref: domain name is invalid")
-        if domain_fix not in domain_name:
-            raise CheckError("domain_fix: domain name is invalid")
+        if domain_resolve not in domain_name:
+            raise CheckError("domain_resolve: domain name is invalid")
+        if domain_keep not in domain_name:
+            raise CheckError("domain_keep: domain name is invalid")
 
 
 def _check_data_voxelize_png(data_voxelize):
@@ -369,23 +369,23 @@ def _check_domain_connection(domain_connection, domain_name):
             raise CheckError("domain_connection: domain connection check should be a dict")
 
         # extract field
-        domain = dat_tmp["domain"]
+        domain_list = dat_tmp["domain_list"]
         connected = dat_tmp["connected"]
 
         # check type
-        if not isinstance(domain, list):
-            raise CheckError("domain: connected domain names should be a list")
-        if not domain:
-            raise CheckError("domain: connected domain names should not be empty")
+        if not isinstance(domain_list, list):
+            raise CheckError("domain_list: connected domain names should be a list")
+        if not domain_list:
+            raise CheckError("domain_list: connected domain names should not be empty")
         if not isinstance(connected, bool):
             raise CheckError("connected: domain connection flag should be a boolean")
 
         # check value
-        for domain_tmp in domain:
-            if not isinstance(domain_tmp, str):
-                raise CheckError("domain: domain name should be a string")
-            if domain_tmp not in domain_name:
-                raise CheckError("domain: domain name is invalid")
+        for tag in domain_list:
+            if not isinstance(tag, str):
+                raise CheckError("domain_list: domain name should be a string")
+            if tag not in domain_name:
+                raise CheckError("domain_list: domain name is invalid")
 
 
 def get_domain_stl_path(domain_stl, path_ref):
@@ -439,7 +439,7 @@ def get_layer_stack_path(layer_stack, path_ref):
     # update value
     for layer_stack_tmp in layer_stack:
         # get the data
-        n_add = layer_stack_tmp["n_add"]
+        n_layer = layer_stack_tmp["n_layer"]
         filename = layer_stack_tmp["filename"]
 
         # check file
@@ -451,7 +451,7 @@ def get_layer_stack_path(layer_stack, path_ref):
             raise CheckError("filename: file does not exist: %s" % filename)
 
         # add the new item
-        layer_stack_path.append({"n_add": n_add, "filename": filename})
+        layer_stack_path.append({"n_layer": n_layer, "filename": filename})
 
     return layer_stack_path
 

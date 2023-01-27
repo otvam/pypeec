@@ -77,12 +77,12 @@ def _check_domain_connection(domain_def, connection_def, tag_connection, data_co
     """
 
     # extract data
-    domain = data_connection["domain"]
+    domain_list = data_connection["domain_list"]
     connected = data_connection["connected"]
 
     # remove empty domains
     domain_filtered = []
-    for tag in domain:
+    for tag in domain_list:
         idx_domain = domain_def[tag]
         if len(idx_domain) > 0:
             domain_filtered.append(tag)

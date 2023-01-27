@@ -12,14 +12,14 @@
             "sink": [0, 0, 255, 255]
         },
         "layer_stack": [
-            {"n_add": 1, "filename": "png/top.png"},
-            {"n_add": 2, "filename": "png/insulation.png"},
-            {"n_add": 1, "filename": "png/bottom.png"}
+            {"n_layer": 1, "filename": "png/top.png"},
+            {"n_layer": 2, "filename": "png/insulation.png"},
+            {"n_layer": 1, "filename": "png/bottom.png"}
         ]
     },
     "resampling": [1, 1, 1],
     "domain_connection": {
-        "yop": {"domain": ["src_top", "copper", "sink"], "connected": true},
-        "bottom": {"domain": ["src_bottom", "copper", "sink"], "connected": true}
+        "yop": {"domain_list": ["src_top", "copper", "sink"], "connected": true},
+        "bottom": {"domain_list": ["src_bottom", "copper", "sink"], "connected": true}
     }
 }

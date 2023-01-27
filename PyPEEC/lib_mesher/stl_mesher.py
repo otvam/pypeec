@@ -128,7 +128,7 @@ def _get_load_stl(domain_stl):
     return mesh_stl, coord_min, coord_max
 
 
-def _get_solve_overlap(domain_def, domain_ref, domain_fix):
+def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
     """
     Detect and remove shared indices (conflict) between two domains.
     The conflict is solved in the following way:
@@ -137,14 +137,14 @@ def _get_solve_overlap(domain_def, domain_ref, domain_fix):
     """
 
     # get the indices
-    idx_ref = domain_def[domain_ref]
-    idx_fix = domain_def[domain_fix]
+    idx_keep = domain_def[domain_keep]
+    idx_resolve = domain_def[domain_resolve]
 
     # resolve the conflict
-    idx_fix = np.setdiff1d(idx_fix, idx_ref)
+    idx_resolve = np.setdiff1d(idx_resolve, idx_keep)
 
     # update the domain indices
-    domain_def[domain_fix] = idx_fix
+    domain_def[domain_resolve] = idx_resolve
 
     return domain_def
 
@@ -204,11 +204,11 @@ def get_conflict(domain_def, domain_conflict):
     # resolve the conflicts for all the specified domain pairs
     for domain_conflict_tmp in domain_conflict:
         # extract data
-        domain_ref = domain_conflict_tmp["domain_ref"]
-        domain_fix = domain_conflict_tmp["domain_fix"]
+        domain_resolve = domain_conflict_tmp["domain_resolve"]
+        domain_keep = domain_conflict_tmp["domain_keep"]
 
         # solve the conflict
-        domain_def = _get_solve_overlap(domain_def, domain_ref, domain_fix)
+        domain_def = _get_solve_overlap(domain_def, domain_resolve, domain_keep)
 
     # assemble all the indices
     idx_all = np.array([], dtype=np.int64)

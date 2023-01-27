@@ -10,12 +10,12 @@
             "sink": "stl/sink.stl"
         },
         "domain_conflict": [
-            {"domain_fix": "coil", "domain_ref": "src"},
-            {"domain_fix": "coil", "domain_ref": "sink"}
+            {"domain_resolve": "coil", "domain_keep": "src"},
+            {"domain_resolve": "coil", "domain_keep": "sink"}
         ]
     },
     "resampling": [1, 1, 1],
     "domain_connection": {
-        "connect": {"domain": ["coil", "src", "sink"], "connected": true}
+        "connect": {"domain_list": ["coil", "src", "sink"], "connected": true}
     }
 }

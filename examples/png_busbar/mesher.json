@@ -11,13 +11,13 @@
             "sink": [0, 255, 0, 255]
         },
         "layer_stack": [
-            {"n_add": 1, "filename": "png/plane.png"},
-            {"n_add": 2, "filename": "png/via.png"},
-            {"n_add": 1, "filename": "png/busbar.png"}
+            {"n_layer": 1, "filename": "png/plane.png"},
+            {"n_layer": 2, "filename": "png/via.png"},
+            {"n_layer": 1, "filename": "png/busbar.png"}
         ]
     },
     "resampling": [1, 1, 1],
     "domain_connection": {
-        "connect": {"domain": ["copper", "src", "sink"], "connected": true}
+        "connect": {"domain_list": ["copper", "src", "sink"], "connected": true}
     }
 }

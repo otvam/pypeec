@@ -40,7 +40,7 @@ def _get_idx_image(nx, ny, img, color):
     return idx_img
 
 
-def _get_idx_voxel(nx, ny, nz, n_add, idx_img):
+def _get_idx_voxel(nx, ny, nz, n_layer, idx_img):
     """
     Find the 3D voxel indices from the 2D image indices.
     The number of layers to be added is arbitrary.
@@ -50,7 +50,7 @@ def _get_idx_voxel(nx, ny, nz, n_add, idx_img):
     idx_voxel = np.array([], dtype=np.int64)
 
     # convert image indices into voxel indices
-    for n_tmp in range(n_add):
+    for n_tmp in range(n_layer):
         # convert indices
         idx_tmp = (nz+n_tmp)*nx*ny+idx_img
 
@@ -82,7 +82,7 @@ def _get_image(filename):
     return img
 
 
-def _get_layer(nx, ny, nz, domain_color, domain_def, n_add, filename):
+def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename):
     """
     Add an image to the 3D voxel structure.
     Update the domain indices and the number of layers.
@@ -97,13 +97,13 @@ def _get_layer(nx, ny, nz, domain_color, domain_def, n_add, filename):
         idx_img = _get_idx_image(nx, ny, img, color)
 
         # get voxel indices (3D indices)
-        idx_voxel = _get_idx_voxel(nx, ny, nz, n_add, idx_img)
+        idx_voxel = _get_idx_voxel(nx, ny, nz, n_layer, idx_img)
 
         # append the indices into the corresponding domain
         domain_def[tag] = np.append(domain_def[tag], idx_voxel)
 
     # update the layer stack
-    nz += n_add
+    nz += n_layer
 
     return nz, domain_def
 
@@ -127,11 +127,11 @@ def get_mesh(nx, ny, domain_color, layer_stack):
     # add layers
     for layer_stack_tmp in layer_stack:
         # get the data
-        n_add = layer_stack_tmp["n_add"]
+        n_layer = layer_stack_tmp["n_layer"]
         filename = layer_stack_tmp["filename"]
 
         # add the layer
-        (nz, domain_def) = _get_layer(nx, ny, nz, domain_color, domain_def, n_add, filename)
+        (nz, domain_def) = _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename)
 
     # assemble
     n = (nx, ny, nz)

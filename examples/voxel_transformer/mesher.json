@@ -15,8 +15,8 @@
     },
     "resampling": [1, 1, 1],
     "domain_connection": {
-        "pri": {"domain": ["pri", "src", "sink", "empty"], "connected": true},
-        "sec": {"domain": ["sec", "short", "empty"], "connected": true},
-        "pri_sec": {"domain": ["sec", "pri", "empty"], "connected": false}
+        "pri": {"domain_list": ["pri", "src", "sink", "empty"], "connected": true},
+        "sec": {"domain_list": ["sec", "short", "empty"], "connected": true},
+        "pri_sec": {"domain_list": ["sec", "pri", "empty"], "connected": false}
     }
 }

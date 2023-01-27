@@ -11,13 +11,13 @@
             "sink": [0, 255, 0, 255]
         },
         "layer_stack": [
-            {"n_add": 1, "filename": "png/return.png"},
-            {"n_add": 6, "filename": "png/via.png"},
-            {"n_add": 1, "filename": "png/coil.png"}
+            {"n_layer": 1, "filename": "png/return.png"},
+            {"n_layer": 6, "filename": "png/via.png"},
+            {"n_layer": 1, "filename": "png/coil.png"}
         ]
     },
     "resampling": [1, 1, 1],
     "domain_connection": {
-        "connect": {"domain": ["coil", "src", "sink"], "connected": true}
+        "connect": {"domain_list": ["coil", "src", "sink"], "connected": true}
     }
 }
