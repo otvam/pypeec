@@ -1,5 +1,5 @@
 """
-Generate PNG for the png_png example.
+Generate PNG files for the example.
 """
 
 __author__ = "Thomas Guillod"
@@ -47,6 +47,7 @@ if __name__ == "__main__":
     margin = 10
     thickness = 9
 
+    # ######################## get the position
     mid = (img_size-1)/2
     diag = (img_size-2*margin)/math.sqrt(2)
 
