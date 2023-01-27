@@ -21,13 +21,12 @@ def get_image(img_size):
     return (img, dr)
 
 
-def get_circle(dr, thickness, xy, color):
+def get_circle(dr, radius, xy, color):
     """
     Add a circle.
     """
 
     (x, y) = xy
-    radius = (thickness-1)/2
     pos = (x-radius, y-radius, x+radius, y+radius)
     dr.ellipse(pos, fill=color)
 
@@ -46,6 +45,7 @@ if __name__ == "__main__":
     img_size = 121
     margin = 10
     thickness = 9
+    radius = 4
 
     # ######################## get the position
     mid = (img_size-1)/2
@@ -59,11 +59,11 @@ if __name__ == "__main__":
     (img, dr) = get_image(img_size)
 
     xy_start = (margin, mid)
-    xy_end = (img_size-margin, mid)
+    xy_end = (img_size-margin-1, mid)
 
     get_line(dr, thickness, xy_start, xy_end, (0, 0, 0))
-    get_circle(dr, thickness, xy_start, (255, 0, 0))
-    get_circle(dr, thickness, xy_end, (0, 0, 255))
+    get_circle(dr, radius, xy_start, (255, 0, 0))
+    get_circle(dr, radius, xy_end, (0, 0, 255))
     img.save("top.png")
 
     # ######################## bottom layer (diagonal trace)
@@ -75,6 +75,6 @@ if __name__ == "__main__":
     xy_end = (tmp_end, tmp_end)
 
     get_line(dr, thickness, xy_start, xy_end, (0, 0, 0))
-    get_circle(dr, thickness, xy_start, (0, 255, 0))
-    get_circle(dr, thickness, xy_end, (0, 0, 255))
+    get_circle(dr, radius, xy_start, (0, 255, 0))
+    get_circle(dr, radius, xy_end, (0, 0, 255))
     img.save("bottom.png")

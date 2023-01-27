@@ -57,14 +57,15 @@ function clean_test {
 }
 
 folder=(
-  "visualization"
   "voxel_slab"
   "voxel_transformer"
-  "png_busbar"
   "png_wire"
+  "png_pcb"
+  "png_busbar"
   "png_inductor"
   "stl_inductor"
   "stl_transformer"
+  "visualization"
 )
 
 init_test
