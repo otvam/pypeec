@@ -1,23 +1,26 @@
 {
-    "n_green": 25.0,
     "freq": 0.0,
+    "green_simplify": 25.0,
     "solver_options": {
-        "tol": 1e-06,
-        "atol": 1e-12,
-        "restart": 20,
-        "maxiter": 100
+        "rel_tol": 1e-06,
+        "abs_tol": 1e-12,
+        "n_between_restart": 20,
+        "n_maximum_restart": 100
     },
     "condition_options": {
         "check": true,
         "tolerance": 1e12,
-        "accuracy": 2
+        "norm_options": {
+            "accuracy": 2,
+            "iter": 25
+        }
     },
     "conductor_def": {
-        "coil": {"domain": ["src_top", "src_bottom", "sink", "copper"], "rho": 1.75e-8}
+        "coil": {"domain_list": ["src_top", "src_bottom", "sink", "copper"], "rho": 1.75e-8}
     },
     "source_def": {
-        "src_top": {"domain": ["src_top"], "source_type": "current", "I": 1.0, "G": 0.0},
-        "src_bottom": {"domain": ["src_bottom"], "source_type": "current", "I": 1.0, "G": 0.0},
-        "sink": {"domain": ["sink"], "source_type": "voltage", "V": 0.0, "R": 0.0}
+        "src_top": {"domain_list": ["src_top"], "source_type": "current", "I": 1.0, "G": 0.0},
+        "src_bottom": {"domain_list": ["src_bottom"], "source_type": "current", "I": 1.0, "G": 0.0},
+        "sink": {"domain_list": ["sink"], "source_type": "voltage", "V": 0.0, "R": 0.0}
     }
 }

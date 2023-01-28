@@ -19,7 +19,7 @@
             {"domain_resolve": "sec_coil", "domain_keep": "sec_sink"}
         ]
     },
-    "resampling": [1, 1, 1],
+    "resampling_factor": [1, 1, 1],
     "domain_connection": {
         "pri": {"domain_list": ["pri_coil", "pri_src", "pri_sink"], "connected": true},
         "sec": {"domain_list": ["sec_coil", "sec_src", "sec_sink"], "connected": true},

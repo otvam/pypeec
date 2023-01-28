@@ -17,7 +17,7 @@
             {"n_layer": 1, "filename": "png/bottom.png"}
         ]
     },
-    "resampling": [1, 1, 1],
+    "resampling_factor": [1, 1, 1],
     "domain_connection": {
         "yop": {"domain_list": ["src_top", "copper", "sink"], "connected": true},
         "bottom": {"domain_list": ["src_bottom", "copper", "sink"], "connected": true}

@@ -44,10 +44,14 @@ def _get_inverse_operator(mat, decomposition):
     return op
 
 
-def get_condition_matrix(mat, accuracy):
+def get_condition_matrix(mat, norm_options):
     """
     Compute an estimate of the condition number (norm 1) of a sparse matrix.
     """
+
+    # get the options
+    accuracy = norm_options["accuracy"]
+    iter = norm_options["iter"]
 
     # get LU decomposition
     logger.info("compute LU decomposition")
@@ -63,11 +67,11 @@ def get_condition_matrix(mat, accuracy):
 
     # compute the norm of the matrix inverse (estimate)
     logger.info("compute estimate norm of the inverse")
-    nrm_inv = sla.onenormest(op, t=accuracy)
+    nrm_inv = sla.onenormest(op, t=accuracy, itmax=iter)
 
     # compute the norm of the matrix (estimate)
     logger.info("compute estimate norm of the matrix")
-    nrm_ori = sla.onenormest(mat, t=accuracy)
+    nrm_ori = sla.onenormest(mat, t=accuracy, itmax=iter)
 
     # compute an estimate of the condition
     logger.info("compute condition estimate")

@@ -20,21 +20,12 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     The equation system and the preconditioner are described with linear operator.
     """
 
-    # get the solver options
-    tol = solver_options["tol"]
-    atol = solver_options["atol"]
-    restart = solver_options["restart"]
-    maxiter = solver_options["maxiter"]
-
     # check preconditioner
     if pcd_op is None:
         logger.warning("matrix solver: preconditioner is not available")
 
     # call the solver
-    (status, n_iter, res_iter, sol) = matrix_gmres.get_matrix_gmres(
-        sys_op, pcd_op, rhs,
-        tol, atol, restart, maxiter
-    )
+    (status, n_iter, res_iter, sol) = matrix_gmres.get_matrix_gmres(sys_op, pcd_op, rhs, solver_options)
 
     # compute the absolute and relative residuum
     res_raw = sys_op(sol)-rhs
@@ -81,11 +72,11 @@ def get_condition(mat, conditions_options):
     # get the condition options
     check = conditions_options["check"]
     tolerance = conditions_options["tolerance"]
-    accuracy = conditions_options["accuracy"]
+    norm_options = conditions_options["norm_options"]
 
     # computation is required
     if check:
-        value = matrix_condition.get_condition_matrix(mat, accuracy)
+        value = matrix_condition.get_condition_matrix(mat, norm_options)
     else:
         value = float(0)
 

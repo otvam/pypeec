@@ -9,7 +9,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 
 
-def _get_idx_resample_tensor(r, idx_n, idx_r, idx):
+def _get_idx_resample_tensor(resampling_factor, idx_n, idx_r, idx):
     """
     Transform linear indices (original voxels) into tensor indices (resample voxels).
 
@@ -21,8 +21,8 @@ def _get_idx_resample_tensor(r, idx_n, idx_r, idx):
     The computed tensor indices have the following dimension: (rx*ry*rz, n_idx).
     """
 
-    # extract the voxel data
-    (rx, ry, rz) = r
+    # extract the resampling
+    (rx, ry, rz) = resampling_factor
 
     # get the provided indices (tensor indices instead of linear indices)
     idx_n_x = idx_n[:, 0][idx]
@@ -42,7 +42,7 @@ def _get_idx_resample_tensor(r, idx_n, idx_r, idx):
     return idx_nr_x, idx_nr_y, idx_nr_z
 
 
-def _get_idx_resample_linear(n, r, idx_nr_x, idx_nr_y, idx_nr_z):
+def _get_idx_resample_linear(n, resampling_factor, idx_nr_x, idx_nr_y, idx_nr_z):
     """
     Transform tensor indices (resample voxels) into linear indices (resample voxels).
 
@@ -51,8 +51,10 @@ def _get_idx_resample_linear(n, r, idx_nr_x, idx_nr_y, idx_nr_z):
     """
 
     # extract the voxel data
-    (rx, ry, rz) = r
     (nx, ny, nz) = n
+
+    # extract the resampling factors
+    (rx, ry, rz) = resampling_factor
 
     # convert tensor indices into linear indices
     idx_out = idx_nr_x+rx*nx*idx_nr_y+rx*nx*ry*ny*idx_nr_z
@@ -69,6 +71,8 @@ def _get_original_grid(n):
 
     # extract the voxel data
     (nx, ny, nz) = n
+
+    # get the total number of voxels
     n = nx*ny*nz
 
     # get the indices of the original grid
@@ -80,14 +84,16 @@ def _get_original_grid(n):
     return idx_n
 
 
-def _get_resampled_voxel(resampling):
+def _get_resampled_voxel(resampling_factor):
     """
     Get the indices of the different sub-voxels composing a single original voxel (after resampling).
     The first resampled sub-voxel has the index zero.
     """
 
-    # extract the voxel data
-    (rx, ry, rz) = resampling
+    # extract the resampling factors
+    (rx, ry, rz) = resampling_factor
+
+    # get the number of resampled voxels per original voxel
     r = rx*ry*rz
 
     # get the indices of a single resampled voxel
@@ -99,17 +105,17 @@ def _get_resampled_voxel(resampling):
     return idx_r
 
 
-def _get_update_indices(n, r, idx_n, idx_r, domain_def):
+def _get_update_indices(n, resampling_factor, idx_n, idx_r, domain_def):
     """
     Update the indices of the domains such that they match the resampled structure.
     """
 
     for tag, idx in domain_def.items():
         # update the old voxel indices into the new tensor indices
-        (idx_nr_x, idx_nr_y, idx_nr_z) = _get_idx_resample_tensor(r, idx_n, idx_r, idx)
+        (idx_nr_x, idx_nr_y, idx_nr_z) = _get_idx_resample_tensor(resampling_factor, idx_n, idx_r, idx)
 
         # transform the tensor indices into linear indices
-        idx = _get_idx_resample_linear(n, r, idx_nr_x, idx_nr_y, idx_nr_z)
+        idx = _get_idx_resample_linear(n, resampling_factor, idx_nr_x, idx_nr_y, idx_nr_z)
 
         # assign the new indices
         domain_def[tag] = idx
@@ -117,7 +123,7 @@ def _get_update_indices(n, r, idx_n, idx_r, domain_def):
     return domain_def
 
 
-def _get_update_size(n, d, resampling):
+def _get_update_size(n, d, resampling_factor):
     """
     Update the number of voxels and the dimension of the voxels for the given resampling.
     """
@@ -125,7 +131,9 @@ def _get_update_size(n, d, resampling):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    (rx, ry, rz) = resampling
+
+    # extract the resampling factors
+    (rx, ry, rz) = resampling_factor
 
     # update the number of voxels
     n = [nx*rx, ny*ry, nz*rz]
@@ -136,7 +144,7 @@ def _get_update_size(n, d, resampling):
     return n, d
 
 
-def get_remesh(n, d, domain_def, resampling):
+def get_remesh(n, d, domain_def, resampling_factor):
     """
     Resampling of a voxel structure (increases the number of voxels).
     """
@@ -145,13 +153,13 @@ def get_remesh(n, d, domain_def, resampling):
     idx_n = _get_original_grid(n)
 
     # get the indices of a single resampled voxel
-    idx_r = _get_resampled_voxel(resampling)
+    idx_r = _get_resampled_voxel(resampling_factor)
 
     # update the indices of the problem
-    domain_def = _get_update_indices(n, resampling, idx_n, idx_r, domain_def)
+    domain_def = _get_update_indices(n, resampling_factor, idx_n, idx_r, domain_def)
 
     # update the voxel number and size
-    (n, d) = _get_update_size(n, d, resampling)
+    (n, d) = _get_update_size(n, d, resampling_factor)
 
     return n, d, domain_def
 

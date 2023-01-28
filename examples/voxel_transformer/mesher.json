@@ -13,7 +13,7 @@
             "empty": []
         }
     },
-    "resampling": [1, 1, 1],
+    "resampling_factor": [1, 1, 1],
     "domain_connection": {
         "pri": {"domain_list": ["pri", "src", "sink", "empty"], "connected": true},
         "sec": {"domain_list": ["sec", "short", "empty"], "connected": true},

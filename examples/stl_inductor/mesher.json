@@ -14,7 +14,7 @@
             {"domain_resolve": "coil", "domain_keep": "sink"}
         ]
     },
-    "resampling": [1, 1, 1],
+    "resampling_factor": [1, 1, 1],
     "domain_connection": {
         "connect": {"domain_list": ["coil", "src", "sink"], "connected": true}
     }

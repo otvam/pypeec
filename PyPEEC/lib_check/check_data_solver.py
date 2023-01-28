@@ -9,7 +9,7 @@ import numpy as np
 from PyPEEC.lib_utils.error import CheckError
 
 
-def _get_domain_indices(domain, domain_def):
+def _get_domain_indices(domain_list, domain_def):
     """
     Get indices from a list of domain names.
     """
@@ -18,13 +18,13 @@ def _get_domain_indices(domain, domain_def):
     idx = np.array([], dtype=np.int64)
 
     # find the indices
-    for tag_domain in domain:
+    for tag in domain_list:
         # check that the domain exist
-        if tag_domain not in domain_def:
+        if tag not in domain_def:
             raise CheckError("domain: domain name should be list in the voxel definition")
 
         # append indices
-        idx = np.append(idx, domain_def[tag_domain])
+        idx = np.append(idx, domain_def[tag])
 
     return idx
 
@@ -41,11 +41,11 @@ def _get_conductor_idx(conductor_def, domain_def):
 
     for tag, dat_tmp in conductor_def.items():
         # extract the data
-        domain = dat_tmp["domain"]
+        domain_list = dat_tmp["domain_list"]
         rho = dat_tmp["rho"]
 
         # get indices
-        idx = _get_domain_indices(domain, domain_def)
+        idx = _get_domain_indices(domain_list, domain_def)
 
         # append indices
         idx_conductor = np.append(idx_conductor, idx)
@@ -69,10 +69,10 @@ def _get_source_idx(source_def, domain_def):
     for tag, dat_tmp in source_def.items():
         # extract the data
         source_type = dat_tmp["source_type"]
-        domain = dat_tmp["domain"]
+        domain_list = dat_tmp["domain_list"]
 
         # get indices
-        idx = _get_domain_indices(domain, domain_def)
+        idx = _get_domain_indices(domain_list, domain_def)
 
         # append indices
         idx_source = np.append(idx_source, idx)
@@ -130,8 +130,8 @@ def get_data_solver(data_voxel, data_problem):
     """
 
     # extract field
-    n_green = data_problem["n_green"]
     freq = data_problem["freq"]
+    green_simplify = data_problem["green_simplify"]
     solver_options = data_problem["solver_options"]
     condition_options = data_problem["condition_options"]
     conductor_def = data_problem["conductor_def"]
@@ -159,8 +159,8 @@ def get_data_solver(data_voxel, data_problem):
         "n": n,
         "d": d,
         "c": c,
-        "n_green": n_green,
         "freq": freq,
+        "green_simplify": green_simplify,
         "solver_options": solver_options,
         "condition_options": condition_options,
         "conductor_idx": conductor_idx,

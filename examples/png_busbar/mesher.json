@@ -16,7 +16,7 @@
             {"n_layer": 1, "filename": "png/busbar.png"}
         ]
     },
-    "resampling": [1, 1, 1],
+    "resampling_factor": [1, 1, 1],
     "domain_connection": {
         "connect": {"domain_list": ["copper", "src", "sink"], "connected": true}
     }

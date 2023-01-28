@@ -10,7 +10,7 @@
             "sink": [16, 17, 18, 19]
         }
     },
-    "resampling": [1, 1, 2],
+    "resampling_factor": [1, 1, 2],
     "domain_connection": {
         "connect": {"domain_list": ["cond", "src", "sink"], "connected": true}
     }

@@ -23,7 +23,7 @@ def _check_conductor_def(conductor_def):
     # check value
     for tag, dat_tmp in conductor_def.items():
         # extract the data
-        domain = dat_tmp["domain"]
+        domain_list = dat_tmp["domain_list"]
         rho = dat_tmp["rho"]
 
         # check type
@@ -37,8 +37,8 @@ def _check_conductor_def(conductor_def):
             raise CheckError("rho: conductor resistivity should be a real scalar")
         if not (rho > 0):
             raise CheckError("rho: conductor resistivity should be greater than zero")
-        if not all(np.issubdtype(type(x), str) for x in domain):
-            raise CheckError("domain: domain name should be composed of strings")
+        if not all(np.issubdtype(type(x), str) for x in domain_list):
+            raise CheckError("domain_list: domain name should be composed of strings")
 
 
 def _check_source_def(source_def):
@@ -56,7 +56,7 @@ def _check_source_def(source_def):
     for tag, dat_tmp in source_def.items():
         # extract the data
         source_type = dat_tmp["source_type"]
-        domain = dat_tmp["domain"]
+        domain_list = dat_tmp["domain_list"]
 
         # check type
         if not isinstance(tag, str):
@@ -67,8 +67,8 @@ def _check_source_def(source_def):
         # check value
         if not (source_type in ["current", "voltage"]):
             raise CheckError("source_type: source type should be voltage or current")
-        if not all(np.issubdtype(type(x), str) for x in domain):
-            raise CheckError("domain: domain name should be composed of strings")
+        if not all(np.issubdtype(type(x), str) for x in domain_list):
+            raise CheckError("domain_list: domain name should be composed of strings")
 
         # get the source value
         if source_type == "current":
@@ -93,6 +93,48 @@ def _check_source_def(source_def):
             raise CheckError("G/R: source internal conductance/resistance should be a real scalar")
 
 
+def _check_solver_options(solver_options):
+    """
+    Check the matrix solver options.
+    """
+
+    # check the type
+    if not isinstance(solver_options, dict):
+        raise CheckError("solver_options: solver options should be a dict")
+
+    # check the data
+    if not (solver_options["rel_tol"] > 0):
+        raise CheckError("rel_tol: solver relative tolerance should be greater than zero")
+    if not (solver_options["abs_tol"] > 0):
+        raise CheckError("abs_tol: solver absolute tolerance should be greater than zero")
+    if not (solver_options["n_between_restart"] >= 1):
+        raise CheckError("n_between_restart: number of iterations between restarts should be greater than zero")
+    if not (solver_options["n_maximum_restart"] >= 1):
+        raise CheckError("n_maximum_restart: number of restart cycles should be greater than zero")
+
+def _check_condition_options(condition_options):
+    """
+    Check the matrix condition number checking options.
+    """
+
+    # check the type
+    if not isinstance(condition_options, dict):
+        raise CheckError("solver options should be a dict")
+
+    # extract field
+    check = condition_options["check"]
+    tolerance = condition_options["tolerance"]
+    norm_options = condition_options["norm_options"]
+
+    if not isinstance(check, bool):
+        raise CheckError("check: the flag for checking the condition should be a boolean")
+    if not (tolerance > 0):
+        raise CheckError("tolerance: maximum condition number tolerance should be greater than zero")
+    if not (norm_options["accuracy"] > 0):
+        raise CheckError("accuracy: accuracy parameter for the norm be greater than zero")
+    if not (norm_options["iter"] > 0):
+        raise CheckError("iter: maximum number of iterations for the norm should be greater than zero")
+
 def check_data_problem(data_problem):
     """
     Check the solver problem data:
@@ -109,8 +151,8 @@ def check_data_problem(data_problem):
         raise CheckError("data_problem: problem description should be a dict")
 
     # extract field
-    n_green = data_problem["n_green"]
     freq = data_problem["freq"]
+    green_simplify = data_problem["green_simplify"]
     solver_options = data_problem["solver_options"]
     condition_options = data_problem["condition_options"]
     conductor_def = data_problem["conductor_def"]
@@ -119,36 +161,19 @@ def check_data_problem(data_problem):
     # check type
     if not np.issubdtype(type(freq), np.floating):
         raise CheckError("freq: frequency should be a float")
-    if not np.issubdtype(type(n_green), np.floating):
-        raise CheckError("n_green: voxel distance to simplify the green function should be a float")
+    if not np.issubdtype(type(green_simplify), np.floating):
+        raise CheckError("green_simplify: voxel distance to simplify the green function should be a float")
 
     # check value
     if not(freq >= 0):
         raise CheckError("freq: frequency should be positive")
-    if not (n_green > 0):
-        raise CheckError("n_green: voxel distance to simplify the green function should be positive")
+    if not (green_simplify > 0):
+        raise CheckError("green_simplify: voxel distance to simplify the green function should be positive")
 
-    # check solver options
-    if not isinstance(solver_options, dict):
-        raise CheckError("solver_options: solver options should be a dict")
-    if not (solver_options["tol"] > 0):
-        raise CheckError("tol: solver relative tolerance should be greater than zero")
-    if not (solver_options["atol"] > 0):
-        raise CheckError("solver absolute tolerance should be greater than zero")
-    if not (solver_options["restart"] >= 1):
-        raise CheckError("number of iterations between restarts should be greater than zero")
-    if not (solver_options["maxiter"] >= 1):
-        raise CheckError("number of restart cycles should be greater than zero")
 
-    # check condition options
-    if not isinstance(condition_options, dict):
-        raise CheckError("solver options should be a dict")
-    if not isinstance(condition_options["check"], bool):
-        raise CheckError("the flag for checking the condition should be a boolean")
-    if not (condition_options["tolerance"] > 0):
-        raise CheckError("maximum condition number tolerance should be greater than zero")
-    if not (condition_options["accuracy"] > 0):
-        raise CheckError("condition number accuracy should be greater than zero")
+    # check solver and condition check options
+    _check_solver_options(solver_options)
+    _check_condition_options(condition_options)
 
     # check conductor and source
     _check_conductor_def(conductor_def)
