@@ -4,7 +4,7 @@
         "data_window": {
             "title": "Material",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -43,7 +43,7 @@
         "data_window": {
             "title": "Resistivity",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -62,8 +62,7 @@
                     null,
                     null
                 ],
-                "opacity": 1.0,
-                "size": 10.0,
+                "point_size": 10.0,
                 "legend": "Resistivity [uOhm/cm]"
             },
             "clip_options": {
@@ -94,7 +93,7 @@
         "data_window": {
             "title": "Potential",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -113,8 +112,7 @@
                     null,
                     null
                 ],
-                "opacity": 1.0,
-                "size": 10.0,
+                "point_size": 10.0,
                 "legend": "Potential [V]"
             },
             "clip_options": {
@@ -145,7 +143,7 @@
         "data_window": {
             "title": "Current Norm",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -164,8 +162,7 @@
                     null,
                     null
                 ],
-                "opacity": 1.0,
-                "size": 10.0,
+                "point_size": 10.0,
                 "legend": "Current Norm [A/mm2]"
             },
             "clip_options": {
@@ -196,7 +193,7 @@
         "data_window": {
             "title": "Losses",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -215,8 +212,7 @@
                     null,
                     null
                 ],
-                "opacity": 1.0,
-                "size": 10.0,
+                "point_size": 10.0,
                 "legend": "Losses [mW/mm3]"
             },
             "clip_options": {
@@ -247,7 +243,7 @@
         "data_window": {
             "title": "Re. Current",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -255,8 +251,8 @@
         "data_plot": {
             "plot_type": "arrow_voxel",
             "data_options": {
-                "var": "J_norm_re",
-                "vec": "J_vec_re",
+                "var_scalar": "J_norm_re",
+                "var_vector": "J_vec_re",
                 "scale": 1e-06,
                 "log": false,
                 "color_lim": [
@@ -299,7 +295,7 @@
         "data_window": {
             "title": "Im. Current",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -307,8 +303,8 @@
         "data_plot": {
             "plot_type": "arrow_voxel",
             "data_options": {
-                "var": "J_norm_im",
-                "vec": "J_vec_im",
+                "var_scalar": "J_norm_im",
+                "var_vector": "J_vec_im",
                 "scale": 1e-06,
                 "log": false,
                 "color_lim": [
@@ -351,7 +347,7 @@
         "data_window": {
             "title": "Mag. Field Norm",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -370,8 +366,7 @@
                     null,
                     null
                 ],
-                "opacity": 1.0,
-                "size": 10.0,
+                "point_size": 10.0,
                 "legend": "Mag. Field Norm [A/m]"
             },
             "clip_options": {
@@ -402,7 +397,7 @@
         "data_window": {
             "title": "Re. Mag. Field",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -410,8 +405,8 @@
         "data_plot": {
             "plot_type": "arrow_point",
             "data_options": {
-                "var": "H_norm_re",
-                "vec": "H_vec_re",
+                "var_scalar": "H_norm_re",
+                "var_vector": "H_vec_re",
                 "scale": 1.0,
                 "log": false,
                 "color_lim": [
@@ -454,7 +449,7 @@
         "data_window": {
             "title": "Im. Mag. Field",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -462,8 +457,8 @@
         "data_plot": {
             "plot_type": "arrow_point",
             "data_options": {
-                "var": "H_norm_im",
-                "vec": "H_vec_im",
+                "var_scalar": "H_norm_im",
+                "var_vector": "H_vec_im",
                 "scale": 1.0,
                 "log": false,
                 "color_lim": [
@@ -506,7 +501,7 @@
         "data_window": {
             "title": "Convergence",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]
@@ -518,7 +513,7 @@
         "data_window": {
             "title": "Residuum",
             "show_menu": false,
-            "size": [
+            "window_size": [
                 800,
                 600
             ]

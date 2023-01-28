@@ -17,7 +17,7 @@ def _check_data_window(data_window):
     # get the data
     title = data_window["title"]
     show_menu = data_window["show_menu"]
-    size = data_window["size"]
+    window_size = data_window["window_size"]
 
     # check type
     if not isinstance(title, str):
@@ -26,14 +26,14 @@ def _check_data_window(data_window):
         raise CheckError("show_menu: menu toggle switch should be a boolean")
 
     # check size
-    if not len(size) == 2:
-        raise CheckError("size: invalid window size (should be a list with two elements)")
+    if not len(window_size) == 2:
+        raise CheckError("window_size: invalid window size (should be a list with two elements)")
 
     # check value
-    if not all(isinstance(x, int) for x in size):
-        raise CheckError("size: window_size: window size should be composed of integers")
-    if not all((x >= 1) for x in size):
-        raise CheckError("size: window_size: window size should be greater than zero")
+    if not all(isinstance(x, int) for x in window_size):
+        raise CheckError("window_size: window_size: window size should be composed of integers")
+    if not all((x >= 1) for x in window_size):
+        raise CheckError("window_size: window_size: window size should be greater than zero")
 
 
 def _check_plot_options(plot_options):
@@ -136,10 +136,8 @@ def _check_data_options(plot_type, data_options):
         # check type
         if not isinstance(data_options["var"], str):
             raise CheckError("var: scalar variable name should be a string")
-        if not isinstance(data_options["opacity"], float):
-            raise CheckError("opacity: opacity should be a float")
-        if not isinstance(data_options["size"], float):
-            raise CheckError("size: the marker size option should be a float")
+        if not isinstance(data_options["point_size"], float):
+            raise CheckError("point_size: the marker size option should be a float")
 
         # check compatibility
         if plot_type == "scalar_voxel":
@@ -152,12 +150,12 @@ def _check_data_options(plot_type, data_options):
             raise CheckError("plot_geom: the plot geometry option is incompatible with the plot type")
 
     # check the arrow options
-    if plot_type == ["arrow_voxel", "arrow_point"]:
+    if plot_type in ["arrow_voxel", "arrow_point"]:
         # check type
-        if not isinstance(data_options["var"], str):
-            raise CheckError("var: scalar variable name should be a string")
-        if not isinstance(data_options["vec"], str):
-            raise CheckError("vec: vector variable name should be a string")
+        if not isinstance(data_options["var_scalar"], str):
+            raise CheckError("var_scalar: scalar variable name should be a string")
+        if not isinstance(data_options["var_vector"], str):
+            raise CheckError("var_vector: vector variable name should be a string")
         if not isinstance(data_options["arrow_scale"], float):
             raise CheckError("arrow_scale: the arrow relative scaling should be a float")
         if not isinstance(data_options["arrow_threshold"], float):
@@ -171,15 +169,15 @@ def _check_data_options(plot_type, data_options):
 
         # check compatibility
         if plot_type == "arrow_voxel":
-            if not (data_options["var"] in var_voxel_list):
-                raise CheckError("var: scalar variable name is invalid for this plot type and geometry")
-            if not (data_options["vec"] in vec_voxel_list):
-                raise CheckError("var: vector variable name is invalid for this plot type and geometry")
+            if not (data_options["var_scalar"] in var_voxel_list):
+                raise CheckError("var_scalar: scalar variable name is invalid for this plot type and geometry")
+            if not (data_options["var_vector"] in vec_voxel_list):
+                raise CheckError("var_vector: vector variable name is invalid for this plot type and geometry")
         elif plot_type == "arrow_point":
-            if not (data_options["var"] in var_point_list):
-                raise CheckError("var: scalar variable name is invalid for this plot type and geometry")
-            if not (data_options["vec"] in vec_point_list):
-                raise CheckError("var: vector variable name is invalid for this plot type and geometry")
+            if not (data_options["var_scalar"] in var_point_list):
+                raise CheckError("var_scalar: scalar variable name is invalid for this plot type and geometry")
+            if not (data_options["var_vector"] in vec_point_list):
+                raise CheckError("var_vector: vector variable name is invalid for this plot type and geometry")
         else:
             raise CheckError("plot_geom: the plot geometry option is incompatible with the plot type")
 

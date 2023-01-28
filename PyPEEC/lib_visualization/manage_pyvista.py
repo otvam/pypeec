@@ -247,9 +247,8 @@ def plot_scalar(pl, obj, data_options, clip_options):
     log = data_options["log"]
     filter_lim = data_options["filter_lim"]
     color_lim = data_options["color_lim"]
+    point_size = data_options["point_size"]
     legend = data_options["legend"]
-    opacity = data_options["opacity"]
-    size = data_options["size"]
 
     # color bar options
     scalar_bar_args = dict(
@@ -267,9 +266,8 @@ def plot_scalar(pl, obj, data_options, clip_options):
     # add the resulting plot to the plotter
     arg = dict(
         scalars=var,
-        opacity=opacity,
-        point_size=size,
         log_scale=log,
+        point_size=point_size,
         scalar_bar_args=scalar_bar_args,
         render_points_as_spheres=True,
     )
@@ -289,8 +287,8 @@ def plot_arrow(pl, d_char, obj, data_options, clip_options):
     """
 
     # extract
-    var = data_options["var"]
-    vec = data_options["vec"]
+    var_scalar = data_options["var_scalar"]
+    var_vector = data_options["var_vector"]
     scale = data_options["scale"]
     log = data_options["log"]
     filter_lim = data_options["filter_lim"]
@@ -309,21 +307,17 @@ def plot_arrow(pl, d_char, obj, data_options, clip_options):
 
     # scale and clamp the variable
     obj_tmp = obj.copy(deep=True)
-    obj_tmp = _get_filter_vector(obj_tmp, vec, arrow_threshold)
-    obj_tmp = _get_filter_scalar(obj_tmp, var, filter_lim)
-    obj_tmp = _get_clamp_scale_scalar(obj_tmp, var, color_lim, scale)
+    obj_tmp = _get_filter_vector(obj_tmp, var_vector, arrow_threshold)
+    obj_tmp = _get_filter_scalar(obj_tmp, var_scalar, filter_lim)
+    obj_tmp = _get_clamp_scale_scalar(obj_tmp, var_scalar, color_lim, scale)
 
     # get arrow size
     factor = d_char*arrow_scale
 
     # add the resulting plot to the plotter
-    arg = dict(
-        scalars=var,
-        log_scale=log,
-        scalar_bar_args=scalar_bar_args,
-    )
+    arg = dict(scalars=var_scalar, log_scale=log, scalar_bar_args=scalar_bar_args)
     if obj_tmp.n_cells > 0:
-        glyph_tmp = obj_tmp.glyph(orient=vec, scale=False, factor=factor)
+        glyph_tmp = obj_tmp.glyph(orient=var_vector, scale=False, factor=factor)
         _get_clip_mesh(pl, glyph_tmp, arg, clip_options)
 
 

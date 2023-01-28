@@ -63,7 +63,7 @@ def _get_data_window(name):
     data_window = {
         "title": name,
         "show_menu": False,
-        "size": (800, 600),
+        "window_size": (800, 600),
     }
 
     return data_window
@@ -99,8 +99,7 @@ def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
         "log": False,
         "color_lim": (None, None),
         "filter_lim": (None, None),
-        "opacity": 1.0,
-        "size": 10.0,
+        "point_size": 10.0,
         "legend": "%s [%s]" % (name, unit),
     }
 
@@ -109,7 +108,7 @@ def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
     return data
 
 
-def _get_data_plotter_arrow(plot_geom, var, vec, scale, unit, name):
+def _get_data_plotter_arrow(plot_geom, var_scalar, var_vector, scale, unit, name):
     """
     Plot options for a vector variable (arrow plot).
     The variable is either plotted on the voxel structure or on a provided point cloud.
@@ -117,8 +116,8 @@ def _get_data_plotter_arrow(plot_geom, var, vec, scale, unit, name):
     """
 
     data_options = {
-        "var": var,
-        "vec": vec,
+        "var_scalar": var_scalar,
+        "var_vector": var_vector,
         "scale": scale,
         "log": False,
         "color_lim": (None, None),

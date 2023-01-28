@@ -41,7 +41,7 @@ def open_pyvista(data_window, is_interactive):
     # get the data
     title = data_window["title"]
     show_menu = data_window["show_menu"]
-    size = data_window["size"]
+    window_size = data_window["window_size"]
 
     # create the figure
     if is_interactive:
@@ -51,7 +51,7 @@ def open_pyvista(data_window, is_interactive):
             toolbar=show_menu,
             menu_bar=show_menu,
             title=title,
-            window_size=tuple(size),
+            window_size=tuple(window_size),
         )
         # set icon
         pl.set_icon(PATH_ROOT + "/icon.png")
@@ -72,7 +72,7 @@ def open_matplotlib(data_window, is_interactive):
     # get the data
     title = data_window["title"]
     show_menu = data_window["show_menu"]
-    size = data_window["size"]
+    window_size = data_window["window_size"]
 
     # get the figure
     (fig, ax) = plt.subplots(tight_layout=True)
@@ -80,14 +80,14 @@ def open_matplotlib(data_window, is_interactive):
     # create the figure
     if is_interactive:
         # get the window size and icon
-        (sizex, sizey) = size
+        (sx, sy) = window_size
         icn = qtu.QIcon(PATH_ROOT + "/icon.png")
 
         # set the Qt options
         man = plt.get_current_fig_manager()
         man.window.setWindowTitle(title)
         man.window.setWindowIcon(icn)
-        man.window.resize(sizex, sizey)
+        man.window.resize(sx, sy)
         if show_menu:
             man.toolbar.show()
         else:
