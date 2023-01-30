@@ -381,10 +381,10 @@ def _check_domain_connection(domain_connection, domain_name):
             raise CheckError("connected: domain connection flag should be a boolean")
 
         # check value
-        for tag in domain_list:
-            if not isinstance(tag, str):
+        for tag_tmp in domain_list:
+            if not isinstance(tag_tmp, str):
                 raise CheckError("domain_list: domain name should be a string")
-            if tag not in domain_name:
+            if tag_tmp not in domain_name:
                 raise CheckError("domain_list: domain name is invalid")
 
 

@@ -17,7 +17,7 @@ def get_image(img_size):
     img = Image.new("RGBA", (img_size, img_size))
     dr = ImageDraw.Draw(img)
 
-    return (img, dr)
+    return img, dr
 
 
 def get_rectangle(dr, xy_start, xy_end, color):

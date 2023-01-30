@@ -11,8 +11,8 @@
         "check": true,
         "tolerance": 1e12,
         "norm_options": {
-            "accuracy": 2,
-            "iter": 25
+            "t_accuracy": 2,
+            "n_iter_max": 25
         }
     },
     "conductor_def": {

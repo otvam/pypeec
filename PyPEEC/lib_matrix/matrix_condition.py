@@ -50,8 +50,8 @@ def get_condition_matrix(mat, norm_options):
     """
 
     # get the options
-    accuracy = norm_options["accuracy"]
-    iter = norm_options["iter"]
+    t_accuracy = norm_options["t_accuracy"]
+    n_iter_max = norm_options["n_iter_max"]
 
     # get LU decomposition
     logger.info("compute LU decomposition")
@@ -67,11 +67,11 @@ def get_condition_matrix(mat, norm_options):
 
     # compute the norm of the matrix inverse (estimate)
     logger.info("compute estimate norm of the inverse")
-    nrm_inv = sla.onenormest(op, t=accuracy, itmax=iter)
+    nrm_inv = sla.onenormest(op, t=t_accuracy, itmax=n_iter_max)
 
     # compute the norm of the matrix (estimate)
     logger.info("compute estimate norm of the matrix")
-    nrm_ori = sla.onenormest(mat, t=accuracy, itmax=iter)
+    nrm_ori = sla.onenormest(mat, t=t_accuracy, itmax=n_iter_max)
 
     # compute an estimate of the condition
     logger.info("compute condition estimate")

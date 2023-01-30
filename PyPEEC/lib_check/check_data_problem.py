@@ -130,10 +130,10 @@ def _check_condition_options(condition_options):
         raise CheckError("check: the flag for checking the condition should be a boolean")
     if not (tolerance > 0):
         raise CheckError("tolerance: maximum condition number tolerance should be greater than zero")
-    if not (norm_options["accuracy"] > 0):
-        raise CheckError("accuracy: accuracy parameter for the norm be greater than zero")
-    if not (norm_options["iter"] > 0):
-        raise CheckError("iter: maximum number of iterations for the norm should be greater than zero")
+    if not (norm_options["t_accuracy"] > 0):
+        raise CheckError("t_accuracy: accuracy parameter for the norm be greater than zero")
+    if not (norm_options["n_iter_max"] > 0):
+        raise CheckError("n_iter_max: maximum number of iterations for the norm should be greater than zero")
 
 def check_data_problem(data_problem):
     """
