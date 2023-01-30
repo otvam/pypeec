@@ -31,31 +31,40 @@ def get_prepare(idx_f, mat):
     idx_y = idx_y.flatten(order="F")
     idx_z = idx_z.flatten(order="F")
 
-    # assign the elements
-    arr = []
+    # array for the matrix along each dimension
+    mat_list = []
+
+    # assign the dense matrix for each dimension
     for i in range(nd):
+        # get the coefficients
         mat_tmp = mat[:, :, :, i].flatten(order="F")
 
-        mat_dense_tmp = np.zeros((n, n), dtype=np.float64)
-        for j in range(n):
-            idx_x_tmp = np.abs(idx_x-idx_x[j])
-            idx_y_tmp = np.abs(idx_y-idx_y[j])
-            idx_z_tmp = np.abs(idx_z-idx_z[j])
+        # get the tensor indices
+        (idx_x_1, idx_x_2) = np.meshgrid(idx_x, idx_x, indexing="ij")
+        (idx_y_1, idx_y_2) = np.meshgrid(idx_y, idx_y, indexing="ij")
+        (idx_z_1, idx_z_2) = np.meshgrid(idx_z, idx_z, indexing="ij")
+        idx_x_tmp = np.abs(idx_x_1-idx_x_2)
+        idx_y_tmp = np.abs(idx_y_1-idx_y_2)
+        idx_z_tmp = np.abs(idx_z_1-idx_z_2)
 
-            # voxel index number
-            idx = idx_x_tmp+idx_y_tmp*nx+idx_z_tmp*nx*ny
+        # get the linear indices
+        idx = idx_x_tmp+idx_y_tmp*nx+idx_z_tmp*nx*ny
 
-            mat_dense_tmp[j] = mat_tmp[idx]
+        # assemble the full matrix for the current dimension
+        mat_dense_tmp = mat_tmp[idx]
 
+        # get the indices of the non-empty face for the current dimension
         idx_tmp = np.flatnonzero(np.in1d(np.arange(i*n, (i+1)*n), idx_f))
 
+        # keep only the non-empty faces
         mat_dense_tmp = mat_dense_tmp[idx_tmp, :]
         mat_dense_tmp = mat_dense_tmp[:, idx_tmp]
-        arr.append(mat_dense_tmp)
+        mat_list.append(mat_dense_tmp)
 
-    mat_dense2 = lna.block_diag(arr[0], arr[1], arr[2])
+    # construct the block diagonal matrix
+    mat_dense = lna.block_diag(*mat_list)
 
-    return mat_dense2
+    return mat_dense
 
 
 def get_multiply(vec_f, mat_dense):

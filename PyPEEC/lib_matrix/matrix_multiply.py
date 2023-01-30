@@ -16,6 +16,10 @@ MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION
 
 
 def get_prepare(idx_f, mat):
+    """
+    Prepare the matrix for the multiplication.
+    """
+
     if MATRIX_MULTIPLICATION == "FFT":
         mat = multiply_fft.get_prepare(mat)
     elif MATRIX_MULTIPLICATION == "DIRECT":
@@ -27,6 +31,9 @@ def get_prepare(idx_f, mat):
 
 
 def get_multiply(idx_f, vec_f, mat):
+    """
+    Make a matrix-vector multiplication.
+    """
 
     if MATRIX_MULTIPLICATION == "FFT":
         res_f = multiply_fft.get_multiply(idx_f, vec_f, mat)
