@@ -19,7 +19,7 @@ LOGGING_GLOBAL_TIMER = True
 MATRIX_FACTORIZATION = "SuperLU"  # "SuperLU" or "UMFPACK"
 
 # method for dense matrix multiplication
-MATRIX_MULTIPLICATION = "DIRECT"  # "FFT" or "DIRECT"
+MATRIX_MULTIPLICATION = "FFT"  # "FFT" or "DIRECT"
 
 # FFT options
 FFT_SOLVER = "SciPy"  # "NumPy" or "SciPy" or "FFTW"

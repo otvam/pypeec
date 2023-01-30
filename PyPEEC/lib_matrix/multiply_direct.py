@@ -39,10 +39,16 @@ def get_prepare(idx_f, mat):
         # get the coefficients
         mat_tmp = mat[:, :, :, i].flatten(order="F")
 
+        # get the indices of the non-empty face for the current dimension
+        idx_tmp = np.flatnonzero(np.in1d(np.arange(i*n, (i+1)*n), idx_f))
+        idx_x_tmp = idx_x[idx_tmp]
+        idx_y_tmp = idx_y[idx_tmp]
+        idx_z_tmp = idx_z[idx_tmp]
+
         # get the tensor indices
-        (idx_x_1, idx_x_2) = np.meshgrid(idx_x, idx_x, indexing="ij")
-        (idx_y_1, idx_y_2) = np.meshgrid(idx_y, idx_y, indexing="ij")
-        (idx_z_1, idx_z_2) = np.meshgrid(idx_z, idx_z, indexing="ij")
+        (idx_x_1, idx_x_2) = np.meshgrid(idx_x_tmp, idx_x_tmp, indexing="ij")
+        (idx_y_1, idx_y_2) = np.meshgrid(idx_y_tmp, idx_y_tmp, indexing="ij")
+        (idx_z_1, idx_z_2) = np.meshgrid(idx_z_tmp, idx_z_tmp, indexing="ij")
         idx_x_tmp = np.abs(idx_x_1-idx_x_2)
         idx_y_tmp = np.abs(idx_y_1-idx_y_2)
         idx_z_tmp = np.abs(idx_z_1-idx_z_2)
@@ -53,12 +59,7 @@ def get_prepare(idx_f, mat):
         # assemble the full matrix for the current dimension
         mat_dense_tmp = mat_tmp[idx]
 
-        # get the indices of the non-empty face for the current dimension
-        idx_tmp = np.flatnonzero(np.in1d(np.arange(i*n, (i+1)*n), idx_f))
-
-        # keep only the non-empty faces
-        mat_dense_tmp = mat_dense_tmp[idx_tmp, :]
-        mat_dense_tmp = mat_dense_tmp[:, idx_tmp]
+        # append to the list containing all the dimensions
         mat_list.append(mat_dense_tmp)
 
     # construct the block diagonal matrix
