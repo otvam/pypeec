@@ -1,0 +1,122 @@
+"""
+Module for doing matrix-vector multiplication (with circulant tensors and FFT).
+"""
+
+__author__ = "Thomas Guillod"
+__copyright__ = "(c) 2023 - Dartmouth College"
+
+import numpy as np
+from PyPEEC.lib_matrix import fourier_transform
+
+
+def _get_prepare_vector(nx, ny, nz, nd, idx_f, vec_f):
+    """
+    Prepare a vector for the circulant FFT multiplication.
+    """
+
+    # expand the vector into a vector with all the dimention
+    vec_all = np.zeros(nx*ny*nz*nd, dtype=np.complex128)
+    vec_all[idx_f] = vec_f
+
+    # reshape the vector into a tensor
+    vec_all = vec_all.reshape((nx, ny, nz, nd), order="F")
+
+    return vec_all
+
+
+def _get_extract_vector(idx_f, vec_all):
+    """
+    Extract a vector from the circulant FFT multiplication result.
+    """
+
+    # flatten the tensor into a vector
+    vec_all = vec_all.flatten(order="F")
+
+    # select the elements
+    res_f = vec_all[idx_f]
+
+    return res_f
+
+
+def get_prepare(mat):
+    """
+    Construct a circulant tensor from a 4D tensor.
+    The circulant tensor is constructed for the first 3D.
+
+    The input tensor has the size: (nx, ny, nz, nd).
+    The output FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
+    """
+
+    # get the tensor size
+    (nx, ny, nz, nd) = mat.shape
+
+    # init the circulant tensor
+    mat_circulant = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.float64)
+
+    # cube xyz
+    mat_circulant[0:nx, 0:ny, 0:nz, :] = mat[0:nx, 0:ny, 0:nz, :]
+    # cube x
+    mat_circulant[nx+1:2*nx, 0:ny, 0:nz, :] = mat[nx-1:0:-1, 0:ny, 0:nz, :]
+    # cube y
+    mat_circulant[0:nx, ny+1:2*ny, 0:nz, :] = mat[0:nx, ny-1:0:-1, 0:nz, :]
+    # cube z
+    mat_circulant[0:nx, 0:ny, nz+1:2*nz, :] = mat[0:nx, 0:ny, nz-1:0:-1, :]
+    # cube xy
+    mat_circulant[nx+1:2*nx, ny+1:2*ny, 0:nz, :] = mat[nx-1:0:-1, ny-1:0:-1, 0:nz, :]
+    # cube xz
+    mat_circulant[nx+1:2*nx, 0:ny, nz+1:2*nz, :] = mat[nx-1:0:-1, 0:ny, nz-1:0:-1, :]
+    # cube yz
+    mat_circulant[0:nx, ny+1:2*ny, nz+1:2*nz, :] = mat[0:nx, ny-1:0:-1, nz-1:0:-1, :]
+    # cube xyz
+    mat_circulant[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz, :] = mat[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1, :]
+
+    # get the FFT of the circulant tensor
+    mat_circulant_fft = fourier_transform.get_fft_tensor(mat_circulant, False)
+
+    return mat_circulant_fft
+
+
+def get_multiply(idx_f, vec_f, mat_circulant_fft):
+    """
+    Matrix-vector multiplication with FFT.
+    The matrix is shaped as a FFT circulant tensor.
+
+    The index vector has the size: n_i.
+    The input vector has the size: n_i.
+    The input FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
+    The output vector has the size: n_i.
+
+    For the matrix-vector multiplication is done in several steps:
+        - the vector is expanded into a tensor: n_i to (nx, ny, nz, nd)
+        - computation the FFT of the obtained tensor: (nx, ny, nz, nd) to (2*nx, 2*ny, 2*nz, nd)
+        - multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz, nd)
+        - computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz, nd)
+        - shrinking of the obtained tensor: (2*nx, 2*ny, 2*nz, nd) to (nx, ny, nz, nd)
+        - the tensor is flattened into a vector: (nx, ny, nz, nd) to n_i
+    """
+
+    # get the tensor size
+    (nx, ny, nz, nd) = mat_circulant_fft.shape
+    nx = int(nx/2)
+    ny = int(ny/2)
+    nz = int(nz/2)
+
+    # prepare the vector (transform the vector into a tensor)
+    vec_all = _get_prepare_vector(nx, ny, nz, nd, idx_f, vec_f)
+
+    # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
+    vec_all_fft = fourier_transform.get_fft_tensor(vec_all, True)
+
+    # matrix vector multiplication in frequency domain with the FFT circulant tensor
+    res_all_fft = mat_circulant_fft*vec_all_fft
+
+    # compute the iFFT
+    res_all = fourier_transform.get_ifft_tensor(res_all_fft, False)
+
+    # the result is in the first block of the matrix
+    res_all = res_all[0:nx, 0:ny, 0:nz, :]
+
+    # extract the vector (transform the tensor into a vector)
+    res_f = _get_extract_vector(idx_f, res_all)
+
+    return res_f

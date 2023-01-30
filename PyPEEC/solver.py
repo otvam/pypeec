@@ -106,7 +106,7 @@ def _run_main(data_solver):
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
         # get the impedance vector (preconditioner) and tensor (full problem, FFT circulant tensor)
-        (ZL_tensor, ZL_vector) = equation_system.get_impedance_matrix(freq, L_tensor, L_vector)
+        (ZL_tensor, ZL_vector) = equation_system.get_impedance_matrix(freq, idx_f, L_tensor, L_vector)
 
         # compute the right-hand vector with the sources
         rhs = equation_system.get_source_vector(idx_v, idx_f, I_src_c, V_src_v)
@@ -121,7 +121,7 @@ def _run_main(data_solver):
         pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_vector)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
+        sys_op = equation_system.get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
 
         # get a matrix for detecting if the problem is quasi-singular (this matrix has no physical meaning)
         S_matrix = equation_system.get_singular(A_kvl, A_kcl, A_src, R_vector, ZL_vector)

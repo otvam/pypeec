@@ -49,7 +49,7 @@ import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.linalg as sla
 from PyPEEC.lib_matrix import matrix_factorization
-from PyPEEC.lib_matrix import fourier_transform
+from PyPEEC.lib_matrix import matrix_multiply
 
 
 def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
@@ -104,7 +104,7 @@ def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factoriza
     return sol
 
 
-def _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
+def _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
     """
     Multiply the full equation matrix with a given solution test vector.
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
@@ -117,7 +117,7 @@ def _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector,
     sol_b = sol[n_a:n_a+n_b]
 
     # multiply the impedance matrix with the current vector (done with the FFT circulant tensor)
-    rhs_a_tmp = fourier_transform.get_circulant_multiply(ZL_tensor, idx_f, sol_a)
+    rhs_a_tmp = matrix_multiply.get_multiply(idx_f, sol_a, ZL_tensor)
 
     # form the complete KVL
     rhs_a = rhs_a_tmp+R_vector*sol_a+A_kvl*sol_b
@@ -146,7 +146,7 @@ def _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v):
     return n_dof, n_a, n_b
 
 
-def get_impedance_matrix(freq, L_tensor, L_vector):
+def get_impedance_matrix(freq, idx_f, L_tensor, L_vector):
     """
     Transform the circulant inductance tensor into a FFT circulant impedance tensor.
 
@@ -158,7 +158,7 @@ def get_impedance_matrix(freq, L_tensor, L_vector):
     s = 1j*2*np.pi*freq
 
     # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-    L_tensor = fourier_transform.get_circulant_tensor(L_tensor)
+    L_tensor = matrix_multiply.get_prepare(idx_f, L_tensor)
 
     # compute the impedance
     ZL_tensor = s*L_tensor
@@ -291,7 +291,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl
     return op
 
 
-def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
+def get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
     """
     Get a linear operator that produce the matrix-vector multiplication result for the full system.
     This operator is used for the iterative solver.
@@ -302,7 +302,7 @@ def get_system_operator(n, idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_s
 
     # function describing the equation system
     def fct(sol):
-        rhs = _get_system_multiply(sol, n, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
+        rhs = _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
         return rhs
 
     # corresponding linear operator
