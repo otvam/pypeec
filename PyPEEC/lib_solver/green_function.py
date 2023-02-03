@@ -1,7 +1,12 @@
 """
 Different functions for computing Green functions with voxels.
 Analytical solutions and numerical approximations are used.
-Analytical solution (from Cletus Hoer and Carl Love, 1965).
+
+Exact Inductance Equations for Rectangular Conductors With Applications to More Complicated Geometries
+C. Hoer and C. Love, 1965
+
+Exact Closed Form Formula for Self Inductance of Conductor of Rectangular Cross Section
+Z. Piatek and B. Baron, 2021
 """
 
 __author__ = "Thomas Guillod"
@@ -41,24 +46,36 @@ def _get_green_fct(x, y, z):
     The analytical solution for points is computed for a given distances.
     """
 
+    # precompute terms
     nrm = np.sqrt(x**2+y**2+z**2)
-    val_1 = (6/5)*nrm*(
-            +x**4+y**4+z**4 +
-            -3*x**2*y**2 +
-            -3*x**2*z**2 +
-            -3*y**2*z**2
+    atanx = _get_safe_arctan((y*z)/(x*nrm))
+    atany = _get_safe_arctan((x*z)/(y*nrm))
+    atanz = _get_safe_arctan((x*y)/(z*nrm))
+    logx = _get_safe_log(x+nrm)
+    logy = _get_safe_log(y+nrm)
+    logz = _get_safe_log(z+nrm)
+
+    # compute function
+    val = 1.0*(
+            +(x**4*nrm)/60 +
+            + (y**4*nrm)/60 +
+            + (z**4*nrm)/60 +
+            - (x*y**4*logx)/24 +
+            - (x*z**4*logx)/24 +
+            - (x**4*y*logy)/24 +
+            - (y*z**4*logy)/24 +
+            - (x**4*z*logz)/24 +
+            - (y**4*z*logz)/24 +
+            - (x**2*y**2*nrm)/20 +
+            - (x**2*z**2*nrm)/20 +
+            - (y**2*z**2*nrm)/20 +
+            + (x*y**2*z**2*logx)/4 +
+            + (x**2*y*z**2*logy)/4 +
+            + (x**2*y**2*z*logz)/4 +
+            - (x*y*z**3*atanz)/6 +
+            - (x*y**3*z*atany)/6 +
+            - (x**3*y*z*atanx)/6
     )
-    val_2 = 12*x*y*z*(
-            -z**2*_get_safe_arctan((x*y)/(z*nrm)) +
-            -y**2*_get_safe_arctan((x*z)/(y*nrm)) +
-            -x**2*_get_safe_arctan((y*z)/(x*nrm))
-    )
-    val_3 = 3*(
-            -x*(y**4-6*y**2*z**2+z**4)*_get_safe_log(x+nrm) +
-            -y*(x**4-6*x**2*z**2+z**4)*_get_safe_log(y+nrm) +
-            -z*(x**4-6*x**2*y**2+y**4)*_get_safe_log(z+nrm)
-    )
-    val = (1/72)*(val_1+val_2+val_3)
 
     return val
 
