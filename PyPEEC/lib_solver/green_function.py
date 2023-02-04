@@ -2,6 +2,12 @@
 Different functions for computing Green functions with voxels.
 Analytical solutions and numerical approximations are used.
 
+The following integral is computed:
+    - g(r, r') = 1/|r-r'|
+    - G = int g(r, r') dV dV'
+    - g(x, y, z, x', y', z') = 1/sqrt((x-x')^2+(y-y')^2+(z-z')^2)
+    - G = int g(x, y, z, x', y', z') dx dy dz dx' dy' dz'
+
 Exact Inductance Equations for Rectangular Conductors With Applications to More Complicated Geometries
 C. Hoer and C. Love, 1965
 
