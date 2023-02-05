@@ -15,7 +15,7 @@ from PyPEEC import config
 MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION
 
 
-def get_prepare(idx_f, mat):
+def get_prepare(idx_sel, mat):
     """
     Prepare the matrix for the multiplication.
     """
@@ -23,23 +23,23 @@ def get_prepare(idx_f, mat):
     if MATRIX_MULTIPLICATION == "FFT":
         mat = multiply_fft.get_prepare(mat)
     elif MATRIX_MULTIPLICATION == "DIRECT":
-        mat = multiply_direct.get_prepare(idx_f, mat)
+        mat = multiply_direct.get_prepare(idx_sel, mat)
     else:
         raise ValueError("invalid multiplication library")
 
     return mat
 
 
-def get_multiply(idx_f, vec_f, mat):
+def get_multiply(idx_sel, vec_sel, mat):
     """
     Make a matrix-vector multiplication.
     """
 
     if MATRIX_MULTIPLICATION == "FFT":
-        res_f = multiply_fft.get_multiply(idx_f, vec_f, mat)
+        res_sel = multiply_fft.get_multiply(idx_sel, vec_sel, mat)
     elif MATRIX_MULTIPLICATION == "DIRECT":
-        res_f = multiply_direct.get_multiply(vec_f, mat)
+        res_sel = multiply_direct.get_multiply(vec_sel, mat)
     else:
         raise ValueError("invalid multiplication library")
 
-    return res_f
+    return res_sel

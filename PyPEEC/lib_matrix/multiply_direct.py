@@ -9,7 +9,7 @@ import numpy as np
 import scipy.linalg as lna
 
 
-def get_prepare(idx_f, mat):
+def _get_dense_diag(idx_sel, mat):
     """
     Construct a dense matrix from a 4D tensor.
 
@@ -40,7 +40,7 @@ def get_prepare(idx_f, mat):
         mat_tmp = mat[:, :, :, i].flatten(order="F")
 
         # get the indices of the non-empty face for the current dimension
-        idx_tmp = np.flatnonzero(np.in1d(np.arange(i*n, (i+1)*n), idx_f))
+        idx_tmp = np.flatnonzero(np.in1d(np.arange(i*n, (i+1)*n), idx_sel))
         idx_x_tmp = idx_x[idx_tmp]
         idx_y_tmp = idx_y[idx_tmp]
         idx_z_tmp = idx_z[idx_tmp]
@@ -68,7 +68,7 @@ def get_prepare(idx_f, mat):
     return mat_dense
 
 
-def get_multiply(vec_f, mat_dense):
+def get_multiply(vec_sel, mat_dense):
     """
     Matrix-vector multiplication.
 
@@ -77,6 +77,26 @@ def get_multiply(vec_f, mat_dense):
     The output vector has the size: n_i.
     """
 
-    res_f = np.matmul(mat_dense, vec_f)
+    res_sel = np.matmul(mat_dense, vec_sel)
 
-    return res_f
+    return res_sel
+
+
+def get_prepare(idx_sel, mat, matrix_type):
+    """
+    Construct a dense matrix from a 4D tensor.
+
+    The index vector has the size: n_i.
+    The input tensor has the size: (nx, ny, nz, nd).
+    The output dense matrix has the size: (n_i, n_i).
+    """
+
+    if matrix_type == "3D":
+        mat = np.expand_dims(mat, axis=3)
+        mat_dense = _get_dense_diag(idx_sel, mat)
+    elif matrix_type == "4D_diag":
+        mat_dense = _get_dense_diag(idx_sel, mat)
+    else:
+        raise ValueError("invallid matrix type")
+
+    return mat_dense

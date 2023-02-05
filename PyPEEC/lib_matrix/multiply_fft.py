@@ -9,14 +9,14 @@ import numpy as np
 from PyPEEC.lib_matrix import fourier_transform
 
 
-def _get_prepare_vector(nx, ny, nz, nd, idx_f, vec_f):
+def _get_prepare_vector(nx, ny, nz, nd, idx_sel, vec_sel):
     """
     Prepare a vector for the circulant FFT multiplication.
     """
 
     # expand the vector into a vector with all the dimention
     vec_all = np.zeros(nx*ny*nz*nd, dtype=np.complex128)
-    vec_all[idx_f] = vec_f
+    vec_all[idx_sel] = vec_sel
 
     # reshape the vector into a tensor
     vec_all = vec_all.reshape((nx, ny, nz, nd), order="F")
@@ -24,7 +24,7 @@ def _get_prepare_vector(nx, ny, nz, nd, idx_f, vec_f):
     return vec_all
 
 
-def _get_extract_vector(idx_f, vec_all):
+def _get_extract_vector(idx_sel, vec_all):
     """
     Extract a vector from the circulant FFT multiplication result.
     """
@@ -33,12 +33,12 @@ def _get_extract_vector(idx_f, vec_all):
     vec_all = vec_all.flatten(order="F")
 
     # select the elements
-    res_f = vec_all[idx_f]
+    res_sel = vec_all[idx_sel]
 
-    return res_f
+    return res_sel
 
 
-def get_prepare(mat):
+def _get_tensor_circulant(mat):
     """
     Construct a circulant tensor from a 4D tensor.
     The circulant tensor is constructed for the first 3D.
@@ -76,7 +76,22 @@ def get_prepare(mat):
     return mat_circulant_fft
 
 
-def get_multiply(idx_f, vec_f, mat_circulant_fft):
+def get_prepare(mat, matrix_type):
+
+    if matrix_type == "3D":
+        mat = np.expand_dims(mat, axis=3)
+        mat_circulant_fft = _get_tensor_circulant(mat)
+    elif matrix_type == "4D_diag":
+        mat_circulant_fft = _get_tensor_circulant(mat)
+    else:
+        raise ValueError("invallid matrix type")
+
+    return mat_circulant_fft
+
+
+
+
+def get_multiply(idx_sel, vec_sel, mat_circulant_fft):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
@@ -102,7 +117,7 @@ def get_multiply(idx_f, vec_f, mat_circulant_fft):
     nz = int(nz/2)
 
     # prepare the vector (transform the vector into a tensor)
-    vec_all = _get_prepare_vector(nx, ny, nz, nd, idx_f, vec_f)
+    vec_all = _get_prepare_vector(nx, ny, nz, nd, idx_sel, vec_sel)
 
     # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
     vec_all_fft = fourier_transform.get_fft_tensor(vec_all, True)
@@ -117,6 +132,6 @@ def get_multiply(idx_f, vec_f, mat_circulant_fft):
     res_all = res_all[0:nx, 0:ny, 0:nz, :]
 
     # extract the vector (transform the tensor into a vector)
-    res_f = _get_extract_vector(idx_f, res_all)
+    res_sel = _get_extract_vector(idx_sel, res_all)
 
-    return res_f
+    return res_sel
