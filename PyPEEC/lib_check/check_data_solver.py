@@ -110,15 +110,16 @@ def _check_indices(idx_conductor, idx_source):
         raise CheckError("source indices are not included in conductor indices")
 
 
-def _check_graph(idx_source, connection_def):
+def _check_graph(idx_conductor, idx_source, connection_def):
     """
     Check that there is at least one source per connected component.
     A connected components without a source would lead to a singular problem.
     """
 
     for idx_graph in connection_def:
-        if len(np.intersect1d(idx_graph, idx_source)) == 0:
-            raise CheckError("a connected component does not include at least one source")
+        if len(np.intersect1d(idx_graph, idx_conductor)) > 0:
+            if len(np.intersect1d(idx_graph, idx_source)) == 0:
+                raise CheckError("a connected component does not include at least one source")
 
 
 def get_data_solver(data_voxel, data_problem):
@@ -152,7 +153,7 @@ def get_data_solver(data_voxel, data_problem):
     _check_indices(idx_conductor, idx_source)
 
     # check graph
-    _check_graph(idx_source, connection_def)
+    _check_graph(idx_conductor, idx_source, connection_def)
 
     # assign combined data
     data_solver = {
