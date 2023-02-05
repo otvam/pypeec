@@ -2,12 +2,6 @@
 Different functions for computing Green functions with voxels.
 Analytical solutions and numerical approximations are used.
 
-The following integral is computed:
-    - g(r, r') = 1/|r-r'|
-    - G = int g(r, r') dV dV'
-    - g(x, y, z, x', y', z') = 1/sqrt((x-x')^2+(y-y')^2+(z-z')^2)
-    - G = int g(x, y, z, x', y', z') dx dy dz dx' dy' dz'
-
 Exact Inductance Equations for Rectangular Conductors With Applications to More Complicated Geometries
 C. Hoer and C. Love, 1965
 
@@ -53,13 +47,14 @@ def _get_green_fct(x, y, z):
     """
 
     # precompute terms
-    nrm = np.sqrt(x**2+y**2+z**2)
-    atanx = _get_safe_arctan((y*z)/(x*nrm))
-    atany = _get_safe_arctan((x*z)/(y*nrm))
-    atanz = _get_safe_arctan((x*y)/(z*nrm))
-    logx = _get_safe_log(x+nrm)
-    logy = _get_safe_log(y+nrm)
-    logz = _get_safe_log(z+nrm)
+    with np.errstate(all="ignore"):
+        nrm = np.sqrt(x**2+y**2+z**2)
+        atanx = _get_safe_arctan((y*z)/(x*nrm))
+        atany = _get_safe_arctan((x*z)/(y*nrm))
+        atanz = _get_safe_arctan((x*y)/(z*nrm))
+        logx = _get_safe_log(x+nrm)
+        logy = _get_safe_log(y+nrm)
+        logz = _get_safe_log(z+nrm)
 
     # compute function
     val = 1.0*(
@@ -94,21 +89,21 @@ def _get_green_preproc():
     """
 
     # get the offset vector
-    offset = np.array([-1, 0, +1, 0], dtype=np.int64)
+    offset = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float64)
     (offset_x, offset_y, offset_z) = np.meshgrid(offset, offset, offset)
     offset_x = offset_x.flatten()
     offset_y = offset_y.flatten()
     offset_z = offset_z.flatten()
 
     # get the sign indices
-    idx = np.arange(len(offset), dtype=np.int64)
+    idx = np.arange(1, 5, dtype=np.int64)
     (idx_x, idx_y, idx_z) = np.meshgrid(idx, idx, idx)
     idx_x = idx_x.flatten()
     idx_y = idx_y.flatten()
     idx_z = idx_z.flatten()
 
     # get the sign vector
-    sign = (-1)**(idx_x+1+idx_y+1+idx_z+1+1)
+    sign = (-1)**(idx_x+idx_y+idx_z+1)
 
     return offset_x, offset_y, offset_z, sign
 
@@ -136,9 +131,8 @@ def _get_green_ana(d, idx):
     y_vec = dy*(idx_y+offset_y)
     z_vec = dz*(idx_z+offset_z)
 
-    # ignore division per zero (as it handled inside the log and arctan)
-    with np.errstate(all="ignore"):
-        val = _get_green_fct(x_vec, y_vec, z_vec)
+    # compute the values
+    val = _get_green_fct(x_vec, y_vec, z_vec)
 
     # sum the value of all the points
     G = np.sum(sign*val, axis=1)
@@ -198,8 +192,8 @@ def get_green_self(d):
     The self-coefficient is used for the preconditioner.
     """
 
-    m = np.array([[0, 0, 0]], dtype=np.int64)
-    G_self = _get_green_ana(d, m)
+    idx = np.array([[0, 0, 0]], dtype=np.int64)
+    G_self = _get_green_ana(d, idx)
 
     return G_self
 
