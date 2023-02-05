@@ -9,13 +9,32 @@ import numpy as np
 import scipy.linalg as lna
 
 
+def _get_voxel_indices(nx, ny, nz):
+    """
+    Compute the indices of the complete voxel structure.
+    """
+
+    # get the indices array
+    idx_x = np.arange(nx, dtype=np.int64)
+    idx_y = np.arange(ny, dtype=np.int64)
+    idx_z = np.arange(nz, dtype=np.int64)
+    [idx_x, idx_y, idx_z] = np.meshgrid(idx_x, idx_y, idx_z, indexing="ij")
+
+    # flatten the indices into vectors
+    idx_x = idx_x.flatten(order="F")
+    idx_y = idx_y.flatten(order="F")
+    idx_z = idx_z.flatten(order="F")
+
+    return idx_x, idx_y, idx_z
+
+
 def _get_dense_diag(idx_sel, mat):
     """
     Construct a dense matrix from a 4D tensor.
 
-    The index vector has the size: n_i.
+    The index vector has the size: n_sel.
     The input tensor has the size: (nx, ny, nz, nd).
-    The output dense matrix has the size: (n_i, n_i).
+    The output dense matrix has the size: (n_sel, n_sel).
     """
 
     # get the tensor size
@@ -23,13 +42,7 @@ def _get_dense_diag(idx_sel, mat):
     n = nx*ny*nz
 
     # voxel index array
-    idx_x = np.arange(nx, dtype=np.int64)
-    idx_y = np.arange(ny, dtype=np.int64)
-    idx_z = np.arange(nz, dtype=np.int64)
-    (idx_x, idx_y, idx_z) = np.meshgrid(idx_x, idx_y, idx_z, indexing="ij")
-    idx_x = idx_x.flatten(order="F")
-    idx_y = idx_y.flatten(order="F")
-    idx_z = idx_z.flatten(order="F")
+    (idx_x, idx_y, idx_z) = _get_voxel_indices(nx, ny, nz)
 
     # array for the matrix along each dimension
     mat_list = []
@@ -72,9 +85,9 @@ def get_multiply(vec_sel, mat_dense):
     """
     Matrix-vector multiplication.
 
-    The input vector has the size: n_i.
-    The input dense matrix has the size: (n_i, n_i).
-    The output vector has the size: n_i.
+    The input vector has the size: n_sel.
+    The input dense matrix has the size: (n_sel, n_sel).
+    The output vector has the size: n_sel.
     """
 
     res_sel = np.matmul(mat_dense, vec_sel)
@@ -86,15 +99,17 @@ def get_prepare(idx_sel, mat, matrix_type):
     """
     Construct a dense matrix from a 4D tensor.
 
-    The index vector has the size: n_i.
+    The index vector has the size: n_sel.
     The input tensor has the size: (nx, ny, nz, nd).
-    The output dense matrix has the size: (n_i, n_i).
+    The output dense matrix has the size: (n_sel, n_sel).
     """
 
     if matrix_type == "3D":
         mat = np.expand_dims(mat, axis=3)
         mat_dense = _get_dense_diag(idx_sel, mat)
     elif matrix_type == "4D_diag":
+        mat_dense = _get_dense_diag(idx_sel, mat)
+    elif matrix_type == "4D_off":
         mat_dense = _get_dense_diag(idx_sel, mat)
     else:
         raise ValueError("invallid matrix type")

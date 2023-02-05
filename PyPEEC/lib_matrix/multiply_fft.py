@@ -89,25 +89,23 @@ def get_prepare(mat, matrix_type):
     return mat_circulant_fft
 
 
-
-
 def get_multiply(idx_sel, vec_sel, mat_circulant_fft):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
 
-    The index vector has the size: n_i.
-    The input vector has the size: n_i.
+    The index vector has the size: n_sel.
+    The input vector has the size: n_sel.
     The input FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
-    The output vector has the size: n_i.
+    The output vector has the size: n_sel.
 
     For the matrix-vector multiplication is done in several steps:
-        - the vector is expanded into a tensor: n_i to (nx, ny, nz, nd)
+        - the vector is expanded into a tensor: n_sel to (nx, ny, nz, nd)
         - computation the FFT of the obtained tensor: (nx, ny, nz, nd) to (2*nx, 2*ny, 2*nz, nd)
         - multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz, nd)
         - computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz, nd)
         - shrinking of the obtained tensor: (2*nx, 2*ny, 2*nz, nd) to (nx, ny, nz, nd)
-        - the tensor is flattened into a vector: (nx, ny, nz, nd) to n_i
+        - the tensor is flattened into a vector: (nx, ny, nz, nd) to n_sel
     """
 
     # get the tensor size
