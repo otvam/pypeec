@@ -1,5 +1,10 @@
 """
 Module for doing matrix-vector multiplication (direct multiplication).
+
+Three different types of matrices are supported:
+    - single: tensor representing a simple matrix (nd = 1)
+    - diag: tensor representing a block diagonal matrix (nd = 3)
+    - cross: tensor representing a block off-diagonal matrix (nd = 3)
 """
 
 __author__ = "Thomas Guillod"
@@ -27,10 +32,20 @@ def _get_voxel_indices(nx, ny, nz):
     return idx_x, idx_y, idx_z
 
 
-def _get_dense_zero(n, idx_sel, idx_row, idx_col):
+def _get_dense_zero(idx_sel, mat, idx_row, idx_col):
+    """
+    Construct a zero matrix for a given block position.
+    """
+
+    # get the
+    (nx, ny, nz, nd) = mat.shape
+    n = nx*ny*nz
+
+    # get the matrix size
     n_row = np.count_nonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_sel))
     n_col = np.count_nonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_sel))
 
+    # create an empty matrix
     mat_dense = np.zeros((n_row, n_col), dtype=np.float64)
 
     return mat_dense
@@ -38,11 +53,7 @@ def _get_dense_zero(n, idx_sel, idx_row, idx_col):
 
 def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
     """
-    Construct a dense matrix from a 4D tensor.
-
-    The index vector has the size: n_sel.
-    The input tensor has the size: (nx, ny, nz, nd).
-    The output dense matrix has the size: (n_sel, n_sel).
+    Construct a dense matrix from a tensor for a given block position.
     """
 
     # get the tensor size
@@ -59,7 +70,7 @@ def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
     idx_row = np.flatnonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_sel))
     idx_col = np.flatnonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_sel))
 
-    # get the tensor indices
+    # get the relative position between elements
     (idx_x_1, idx_x_2) = np.meshgrid(idx_x[idx_row], idx_x[idx_col], indexing="ij")
     (idx_y_1, idx_y_2) = np.meshgrid(idx_y[idx_row], idx_y[idx_col], indexing="ij")
     (idx_z_1, idx_z_2) = np.meshgrid(idx_z[idx_row], idx_z[idx_col], indexing="ij")
@@ -67,6 +78,7 @@ def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
     idx_y_tmp = idx_y_1-idx_y_2
     idx_z_tmp = idx_z_1-idx_z_2
 
+    # select the element with a positive sign
     if sign_type == "abs":
         idx_pos = np.full((len(idx_row), len(idx_col)), True, dtype=bool)
     elif sign_type == "x":
@@ -78,13 +90,13 @@ def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
     else:
         raise ValueError("invalid sign type")
 
-    # get the sign
+    # get the sign matrix
     idx_neg = np.logical_not(idx_pos)
     sign = np.empty((len(idx_row), len(idx_col)), dtype=np.int64)
     sign[idx_pos] = +1
     sign[idx_neg] = -1
 
-    # get the distances
+    # get the tensor indices
     idx_x_tmp = np.abs(idx_x_tmp)
     idx_y_tmp = np.abs(idx_y_tmp)
     idx_z_tmp = np.abs(idx_z_tmp)
@@ -94,6 +106,65 @@ def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
 
     # assemble the full matrix for the current dimension
     mat_dense = sign*mat_tmp[idx]
+
+    return mat_dense
+
+
+def get_prepare(idx_sel, mat, matrix_type):
+    """
+    Construct a dense matrix from a 4D tensor.
+
+    The index vector has the size: n_sel.
+    The input tensor has the size: (nx, ny, nz, nd).
+    The output dense matrix has the size: (n_sel, n_sel).
+    """
+
+    if matrix_type == "single":
+        mat_dense = _get_dense_diag(idx_sel, mat[:, :, :, 0], 0, 0, "abs")
+    elif matrix_type == "diag":
+        # fill the diagonal blocks
+        mat_dense_xx = _get_dense_diag(idx_sel, mat[:, :, :, 0], 0, 0, "abs")
+        mat_dense_yy = _get_dense_diag(idx_sel, mat[:, :, :, 1], 1, 1, "abs")
+        mat_dense_zz = _get_dense_diag(idx_sel, mat[:, :, :, 2], 2, 2, "abs")
+
+        # the off-diagonal blocks are empty
+        mat_dense_xy = _get_dense_zero(idx_sel, mat, 0, 1)
+        mat_dense_xz = _get_dense_zero(idx_sel, mat, 0, 2)
+        mat_dense_yx = _get_dense_zero(idx_sel, mat, 1, 0)
+        mat_dense_yz = _get_dense_zero(idx_sel, mat, 1, 2)
+        mat_dense_zx = _get_dense_zero(idx_sel, mat, 2, 0)
+        mat_dense_zy = _get_dense_zero(idx_sel, mat, 2, 1)
+
+        # assemble the matrix from the blocks
+        mat_dense = [
+            [mat_dense_xx, mat_dense_xy, mat_dense_xz],
+            [mat_dense_yx, mat_dense_yy, mat_dense_yz],
+            [mat_dense_zx, mat_dense_zy, mat_dense_zz],
+        ]
+        mat_dense = np.block(mat_dense)
+    elif matrix_type == "cross":
+        # fill the off-diagonal blocks
+        mat_dense_xy = _get_dense_diag(idx_sel, mat[:, :, :, 2], 0, 1, "z")
+        mat_dense_xz = _get_dense_diag(idx_sel, mat[:, :, :, 1], 0, 2, "y")
+        mat_dense_yx = _get_dense_diag(idx_sel, mat[:, :, :, 2], 1, 0, "z")
+        mat_dense_yz = _get_dense_diag(idx_sel, mat[:, :, :, 0], 1, 2, "x")
+        mat_dense_zx = _get_dense_diag(idx_sel, mat[:, :, :, 1], 2, 0, "y")
+        mat_dense_zy = _get_dense_diag(idx_sel, mat[:, :, :, 0], 2, 1, "x")
+
+        # the diagonal blocks are empty
+        mat_dense_xx = _get_dense_zero(idx_sel, mat, 0, 0)
+        mat_dense_yy = _get_dense_zero(idx_sel, mat, 1, 1)
+        mat_dense_zz = _get_dense_zero(idx_sel, mat, 2, 2)
+
+        # assemble the matrix from the blocks
+        mat_dense = [
+            [mat_dense_xx, +mat_dense_xy, +mat_dense_xz],
+            [-mat_dense_yx, mat_dense_yy, +mat_dense_yz],
+            [-mat_dense_zx, -mat_dense_zy, mat_dense_zz],
+        ]
+        mat_dense = np.block(mat_dense)
+    else:
+        raise ValueError("invalid matrix type")
 
     return mat_dense
 
@@ -110,60 +181,3 @@ def get_multiply(vec_sel, mat_dense):
     res_sel = np.matmul(mat_dense, vec_sel)
 
     return res_sel
-
-
-def get_prepare(idx_sel, mat, matrix_type):
-    """
-    Construct a dense matrix from a 4D tensor.
-
-    The index vector has the size: n_sel.
-    The input tensor has the size: (nx, ny, nz, nd).
-    The output dense matrix has the size: (n_sel, n_sel).
-    """
-
-    if matrix_type == "3D":
-        mat_dense = _get_dense_diag(idx_sel, mat[:, :, :, 0], 0, 0, "abs")
-    elif matrix_type == "4D_diag":
-        (nx, ny, nz, nd) = mat.shape
-        n = nx * ny * nz
-
-        mat_dense_xx = _get_dense_diag(idx_sel, mat[:, :, :, 0], 0, 0, "abs")
-        mat_dense_yy = _get_dense_diag(idx_sel, mat[:, :, :, 1], 1, 1, "abs")
-        mat_dense_zz = _get_dense_diag(idx_sel, mat[:, :, :, 2], 2, 2, "abs")
-        mat_dense_xy = _get_dense_zero(n, idx_sel, 0, 1)
-        mat_dense_xz = _get_dense_zero(n, idx_sel, 0, 2)
-        mat_dense_yx = _get_dense_zero(n, idx_sel, 1, 0)
-        mat_dense_yz = _get_dense_zero(n, idx_sel, 1, 2)
-        mat_dense_zx = _get_dense_zero(n, idx_sel, 2, 0)
-        mat_dense_zy = _get_dense_zero(n, idx_sel, 2, 1)
-
-        mat_dense = [
-            [mat_dense_xx, mat_dense_xy, mat_dense_xz],
-            [mat_dense_yx, mat_dense_yy, mat_dense_yz],
-            [mat_dense_zx, mat_dense_zy, mat_dense_zz],
-        ]
-        mat_dense = np.block(mat_dense)
-    elif matrix_type == "4D_off":
-        (nx, ny, nz, nd) = mat.shape
-        n = nx * ny * nz
-
-        mat_dense_xy = _get_dense_diag(idx_sel, mat[:, :, :, 2], 0, 1, "z")
-        mat_dense_xz = _get_dense_diag(idx_sel, mat[:, :, :, 1], 0, 2, "y")
-        mat_dense_yx = _get_dense_diag(idx_sel, mat[:, :, :, 2], 1, 0, "z")
-        mat_dense_yz = _get_dense_diag(idx_sel, mat[:, :, :, 0], 1, 2, "x")
-        mat_dense_zx = _get_dense_diag(idx_sel, mat[:, :, :, 1], 2, 0, "y")
-        mat_dense_zy = _get_dense_diag(idx_sel, mat[:, :, :, 0], 2, 1, "x")
-        mat_dense_xx = _get_dense_zero(n, idx_sel, 0, 0)
-        mat_dense_yy = _get_dense_zero(n, idx_sel, 1, 1)
-        mat_dense_zz = _get_dense_zero(n, idx_sel, 2, 2)
-
-        mat_dense = [
-            [mat_dense_xx, +mat_dense_xy, +mat_dense_xz],
-            [-mat_dense_yx, mat_dense_yy, +mat_dense_yz],
-            [-mat_dense_zx, -mat_dense_zy, mat_dense_zz],
-        ]
-        mat_dense = np.block(mat_dense)
-    else:
-        raise ValueError("invalid matrix type")
-
-    return mat_dense

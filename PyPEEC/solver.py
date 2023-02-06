@@ -10,7 +10,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_solver import voxel_geometry
-from PyPEEC.lib_solver import green_function
+from PyPEEC.lib_solver import dense_matrix
 from PyPEEC.lib_solver import problem_geometry
 from PyPEEC.lib_solver import resistance_inductance
 from PyPEEC.lib_solver import equation_system
