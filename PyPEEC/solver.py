@@ -109,11 +109,9 @@ def _run_main(data_solver):
 
         # get the inductance vector (preconditioner)
         L_vec_c = resistance_inductance.get_L_vector(n, d, idx_fc, G_self)
-        L_vec_m = resistance_inductance.get_L_vector(n, d, idx_fm, G_self)
 
         # get the inductance tensor (full problem)
         L_tsr_c = resistance_inductance.get_L_matrix(n, d, G_mutual)
-        L_tsr_m = resistance_inductance.get_L_matrix(n, d, G_mutual)
 
         # get the potential tensor (preconditioner and full problem)
         P_vec_m = resistance_inductance.get_P_vector(n, d, idx_vm, G_self)
@@ -131,16 +129,14 @@ def _run_main(data_solver):
         s = 1j*2*np.pi*freq
 
         mu = 4*np.pi*1e-7
-        eps = 8.85418*1e-12
 
         # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
         L_tsr_c = s*mu*matrix_multiply.get_prepare_diag(idx_fc, L_tsr_c)
-        L_tsr_m = s*eps*matrix_multiply.get_prepare_diag(idx_fc, L_tsr_m)
-        P_tsr_m = (1/(mu*freq))*matrix_multiply.get_prepare_single(idx_fc, P_tsr_m)
+        P_tsr_m = (1/(mu))*matrix_multiply.get_prepare_single(idx_fc, P_tsr_m)
         R_vec_m = R_vec_m/freq
 
-        K_c = (1/(mu*freq))*matrix_multiply.get_prepare_cross(idx_fc, idx_fm, K_mutual)
-        K_m = (1/(mu*freq))*matrix_multiply.get_prepare_cross(idx_fm, idx_fc, K_mutual)
+        K_c = matrix_multiply.get_prepare_cross(idx_fc, idx_fm, K_mutual)
+        K_m = matrix_multiply.get_prepare_cross(idx_fm, idx_fc, K_mutual)
 
         # compute the right-hand vector with the sources
         rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
