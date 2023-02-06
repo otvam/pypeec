@@ -73,10 +73,10 @@ def _get_original_grid(n):
     (nx, ny, nz) = n
 
     # get the total number of voxels
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # get the indices of the original grid
-    (idx_n_x, idx_n_y, idx_n_z) = np.unravel_index(np.arange(n), (nx, ny, nz), order="F")
+    (idx_n_x, idx_n_y, idx_n_z) = np.unravel_index(np.arange(nv), (nx, ny, nz), order="F")
 
     # assemble the coordinate array
     idx_n = np.stack((idx_n_x, idx_n_y, idx_n_z), axis=1)

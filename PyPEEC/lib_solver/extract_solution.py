@@ -109,18 +109,18 @@ def get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # assign voxel potentials
-    V_v_all = np.zeros(n, dtype=np.complex128)
+    V_v_all = np.zeros(nv, dtype=np.complex128)
     V_v_all[idx_v] = V_v
 
     # assign current source currents
-    I_src_c_all = np.zeros(n, dtype=np.complex128)
+    I_src_c_all = np.zeros(nv, dtype=np.complex128)
     I_src_c_all[idx_src_c] = I_src_c
 
     # assign voltage source currents
-    I_src_v_all = np.zeros(n, dtype=np.complex128)
+    I_src_v_all = np.zeros(nv, dtype=np.complex128)
     I_src_v_all[idx_src_v] = I_src_v
 
     return V_v_all, I_src_c_all, I_src_v_all
@@ -137,14 +137,14 @@ def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # extend the solution for the complete voxel structure (including the empty voxels)
-    I_f_all = np.zeros(3*n, dtype=np.complex128)
+    I_f_all = np.zeros(3*nv, dtype=np.complex128)
     I_f_all[idx_f] = I_f
 
     # project the face currents into the voxels (scalar field)
-    J_v_all = _get_vector_flux(n, d, A_incidence, I_f_all)
+    J_v_all = _get_vector_flux(nv, d, A_incidence, I_f_all)
 
     # remove empty voxels
     J_v = J_v_all[idx_v]
@@ -182,17 +182,17 @@ def get_loss(n, d, idx_v, idx_f, A_incidence, V_f, I_f):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # get the losses for the different faces
     P_f = 0.5*np.conj(I_f)*V_f
 
     # extend the solution for the complete voxel structure (including the empty voxels)
-    P_f_all = np.zeros(3*n, dtype=np.complex128)
+    P_f_all = np.zeros(3*nv, dtype=np.complex128)
     P_f_all[idx_f] = P_f
 
     # project the loss/energy from the faces into the voxels
-    P_v_all = _get_scalar_density(n, d, A_incidence, P_f_all)
+    P_v_all = _get_scalar_density(nv, d, A_incidence, P_f_all)
 
     # remove numerical errors (losses are real)
     P_v_all = np.real(P_v_all)

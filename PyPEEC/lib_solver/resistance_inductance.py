@@ -22,7 +22,7 @@ def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # get the resistivity of the faces (average between voxels)
     rho_vector = 0.5*rho_v*np.abs(A_reduced)
@@ -31,9 +31,9 @@ def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
     R_vector = np.zeros(len(rho_vector), dtype=np.float64)
 
     # get the direction of the faces (x, y, z)
-    idx_f_x = np.flatnonzero(np.in1d(idx_f, np.arange(0*n, 1*n)))
-    idx_f_y = np.flatnonzero(np.in1d(idx_f, np.arange(1*n, 2*n)))
-    idx_f_z = np.flatnonzero(np.in1d(idx_f, np.arange(2*n, 3*n)))
+    idx_f_x = np.flatnonzero(np.in1d(idx_f, np.arange(0*nv, 1*nv)))
+    idx_f_y = np.flatnonzero(np.in1d(idx_f, np.arange(1*nv, 2*nv)))
+    idx_f_z = np.flatnonzero(np.in1d(idx_f, np.arange(2*nv, 3*nv)))
 
     # resistance vector (different directions)
     R_vector[idx_f_x] = (dx/(dy*dz))*rho_vector[idx_f_x]
@@ -56,7 +56,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # vacuum permittivity
     mu = 4*np.pi*1e-7
@@ -71,7 +71,7 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     L_x = (mu*G_self)/(dy**2*dz**2)
     L_y = (mu*G_self)/(dx**2*dz**2)
     L_z = (mu*G_self)/(dx**2*dy**2)
-    L_vector = np.concatenate((L_x*np.ones(n), L_y*np.ones(n), L_z*np.ones(n)))
+    L_vector = np.concatenate((L_x*np.ones(nv), L_y*np.ones(nv), L_z*np.ones(nv)))
     L_vector = L_vector[idx_f]
 
     return L_tensor, L_vector

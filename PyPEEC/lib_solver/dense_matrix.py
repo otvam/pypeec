@@ -118,7 +118,7 @@ def get_green_tensor(n, d, green_simplify):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # get the indices of the complete voxel structure (as a matrix)
     idx = _get_voxel_indices(nx, ny, nz)
@@ -131,7 +131,7 @@ def get_green_tensor(n, d, green_simplify):
     idx_num = np.invert(idx_ana)
 
     # init the result vector
-    G_mutual = np.zeros(n, dtype=np.float64)
+    G_mutual = np.zeros(nv, dtype=np.float64)
 
     # analytical solution
     G_mutual[idx_ana] = green_function.get_green_ana(d, idx[idx_ana], "6D")
@@ -158,7 +158,7 @@ def get_coupling_tensor(n, d, coupling_simplify):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # get the indices of the complete voxel structure (as a matrix)
     idx = _get_voxel_indices(nx, ny, nz)
@@ -171,7 +171,7 @@ def get_coupling_tensor(n, d, coupling_simplify):
     idx_num = np.invert(idx_ana)
 
     # init the result vector
-    K_mutual = np.zeros((n, 3), dtype=np.float64)
+    K_mutual = np.zeros((nv, 3), dtype=np.float64)
 
     # analytical solution
     K_mutual[idx_ana, 0] = _get_coupling(d, idx[idx_ana], "ana", "yz")

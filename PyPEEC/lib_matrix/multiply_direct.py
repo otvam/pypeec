@@ -39,11 +39,11 @@ def _get_dense_zero(idx_out, idx_in, mat, idx_row, idx_col):
 
     # get the
     (nx, ny, nz, nd) = mat.shape
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # get the matrix size
-    n_row = np.count_nonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_out))
-    n_col = np.count_nonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_in))
+    n_row = np.count_nonzero(np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv), idx_out))
+    n_col = np.count_nonzero(np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv), idx_in))
 
     # create an empty matrix
     mat_dense = np.zeros((n_row, n_col), dtype=np.float64)
@@ -58,7 +58,7 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
 
     # get the tensor size
     (nx, ny, nz) = mat.shape
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # voxel index array
     (idx_x, idx_y, idx_z) = _get_voxel_indices(nx, ny, nz)
@@ -67,8 +67,8 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     mat_tmp = mat.flatten(order="F")
 
     # get the indices of the non-empty face for the current dimension
-    idx_row = np.flatnonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_out))
-    idx_col = np.flatnonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_in))
+    idx_row = np.flatnonzero(np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv), idx_out))
+    idx_col = np.flatnonzero(np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv), idx_in))
 
     # get the relative position between elements
     (idx_x_1, idx_x_2) = np.meshgrid(idx_x[idx_row], idx_x[idx_col], indexing="ij")

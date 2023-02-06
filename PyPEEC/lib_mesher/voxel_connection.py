@@ -36,7 +36,7 @@ def _get_connection_matrix(n):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # voxel index array
     x = np.arange(nx, dtype=np.int64)
@@ -48,25 +48,25 @@ def _get_connection_matrix(n):
     idx = idx_x+idx_y*nx+idx_z*nx*ny
 
     # create the sparse matrix
-    A_connection = sps.csc_matrix((n, n), dtype=np.int64)
+    A_connection = sps.csc_matrix((nv, nv), dtype=np.int64)
 
     # connections along x direction
     idx_col = idx[0:-1, :, :].flatten()
     idx_row = idx[1:, :, :].flatten()
     data = np.ones((nx-1)*ny*nz, dtype=np.int64)
-    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(n, n), dtype=np.int64)
+    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
 
     # connections along y direction
     idx_col = idx[:, 0:-1, :].flatten()
     idx_row = idx[:, 1:, :].flatten()
     data = np.ones(nx*(ny-1)*nz, dtype=np.int64)
-    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(n, n), dtype=np.int64)
+    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
 
     # connections along z direction
     idx_col = idx[:, :, 0:-1].flatten()
     idx_row = idx[:, :, 1:].flatten()
     data = np.ones(nx*ny*(nz-1), dtype=np.int64)
-    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(n, n), dtype=np.int64)
+    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
 
     return A_connection
 

@@ -16,7 +16,7 @@ def _check_voxel_domain_def(n, domain_def):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    n = nx*ny*nz
+    nv = nx*ny*nz
 
     # init the domain indices
     idx_domain = np.array([], dtype=np.int64)
@@ -41,7 +41,7 @@ def _check_voxel_domain_def(n, domain_def):
             raise CheckError("idx: indices should be composed of integers")
 
         # check for indices range
-        if not (np.all(idx >= 0) and np.all(idx < n)):
+        if not (np.all(idx >= 0) and np.all(idx < nv)):
             raise CheckError("idx: domain indices should belong to the voxel structure")
 
         # append
