@@ -23,7 +23,7 @@ MATRIX_FACTORIZATION = "SuperLU"  # "SuperLU" or "UMFPACK"
 # method for dense matrix multiplication
 #   - FFT for doing the multiplication with circulant tensors and FFT
 #   - DIRECT for standard matrix multiplication (extremely slow and memory intensive)
-MATRIX_MULTIPLICATION = "FFT"  # "FFT" or "DIRECT"
+MATRIX_MULTIPLICATION = "DIRECT"  # "FFT" or "DIRECT"
 
 # FFT options
 #   - NumPy is not very fast

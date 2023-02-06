@@ -50,6 +50,16 @@ def _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type):
     return res_sel
 
 
+def get_prepare_single(idx, mat):
+    """
+    Prepare a single matrix for the multiplication.
+    """
+
+    mat = _get_prepare(idx, idx, mat, "single")
+
+    return mat
+
+
 def get_prepare_diag(idx, mat):
     """
     Prepare a diagonal matrix for the multiplication.
@@ -60,11 +70,41 @@ def get_prepare_diag(idx, mat):
     return mat
 
 
+def get_prepare_cross(idx_out, idx_in, mat):
+    """
+    Prepare a cross matrix for the multiplication.
+    """
+
+    mat = _get_prepare(idx_out, idx_in, mat, "cross")
+
+    return mat
+
+
+def get_multiply_single(idx, vec, mat):
+    """
+    Make a matrix-vector multiplication for a single matrix.
+    """
+
+    res = _get_multiply(idx, idx, vec, mat, "single")
+
+    return res
+
+
 def get_multiply_diag(idx, vec, mat):
     """
-    Make a matrix-vector multiplication for a diogonal matrix.
+    Make a matrix-vector multiplication for a diagonal matrix.
     """
 
     res = _get_multiply(idx, idx, vec, mat, "diag")
+
+    return res
+
+
+def get_multiply_cross(idx_out, idx_in, vec, mat):
+    """
+    Make a matrix-vector multiplication for a cross matrix.
+    """
+
+    res = _get_multiply(idx_out, idx_in, vec, mat, "cross")
 
     return res

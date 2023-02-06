@@ -169,7 +169,7 @@ def get_impedance_matrix(freq, idx_f, L_tsr, L_vec):
     return ZL_tsr, ZL_vec
 
 
-def get_source_vector(idx_v, idx_f, I_src_c, V_src_v):
+def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     """
     Construct the right-hand side with the current and voltage sources.
 
@@ -177,17 +177,14 @@ def get_source_vector(idx_v, idx_f, I_src_c, V_src_v):
     """
 
     # extract the voxel data
-    n_v = len(idx_v)
-    n_f = len(idx_f)
+    n_v = len(idx_vc)+len(idx_vm)
+    n_f = len(idx_fc)+len(idx_fm)
 
-    # no excitation for the KVL
-    rhs_zero = np.zeros(n_f, dtype=np.complex128)
-
-    # current sources are connected to the KCL
-    rhs_current = np.zeros(n_v, dtype=np.complex128)
+    # excitation are handled separately
+    rhs_zero = np.zeros(n_v+n_f, dtype=np.complex128)
 
     # assemble
-    rhs = np.concatenate((rhs_zero, rhs_current, I_src_c, V_src_v))
+    rhs = np.concatenate((rhs_zero, I_src_c, V_src_v))
 
     return rhs
 
