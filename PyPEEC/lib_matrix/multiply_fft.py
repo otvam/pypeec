@@ -38,7 +38,7 @@ def _get_extract_vector(idx_sel, vec_all):
     return res_sel
 
 
-def _get_tensor_circulant(mat):
+def _get_tensor_circulant(mat, sign):
     """
     Construct a circulant tensor from a 4D tensor.
     The circulant tensor is constructed for the first 3D.
@@ -53,22 +53,22 @@ def _get_tensor_circulant(mat):
     # init the circulant tensor
     mat_circulant = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.float64)
 
-    # cube xyz
-    mat_circulant[0:nx, 0:ny, 0:nz, :] = mat[0:nx, 0:ny, 0:nz, :]
+    # cube none
+    mat_circulant[0:nx, 0:ny, 0:nz, :] = mat[0:nx, 0:ny, 0:nz, :]*sign[0:1, 0:1, 0:1, :]
     # cube x
-    mat_circulant[nx+1:2*nx, 0:ny, 0:nz, :] = mat[nx-1:0:-1, 0:ny, 0:nz, :]
+    mat_circulant[nx+1:2*nx, 0:ny, 0:nz, :] = mat[nx-1:0:-1, 0:ny, 0:nz, :]*sign[1:2, 0:1, 0:1, :]
     # cube y
-    mat_circulant[0:nx, ny+1:2*ny, 0:nz, :] = mat[0:nx, ny-1:0:-1, 0:nz, :]
+    mat_circulant[0:nx, ny+1:2*ny, 0:nz, :] = mat[0:nx, ny-1:0:-1, 0:nz, :]*sign[0:1, 1:2, 0:1, :]
     # cube z
-    mat_circulant[0:nx, 0:ny, nz+1:2*nz, :] = mat[0:nx, 0:ny, nz-1:0:-1, :]
+    mat_circulant[0:nx, 0:ny, nz+1:2*nz, :] = mat[0:nx, 0:ny, nz-1:0:-1, :]*sign[0:1, 0:1, 1:2, :]
     # cube xy
-    mat_circulant[nx+1:2*nx, ny+1:2*ny, 0:nz, :] = mat[nx-1:0:-1, ny-1:0:-1, 0:nz, :]
+    mat_circulant[nx+1:2*nx, ny+1:2*ny, 0:nz, :] = mat[nx-1:0:-1, ny-1:0:-1, 0:nz, :]*sign[1:2, 1:2, 0:1, :]
     # cube xz
-    mat_circulant[nx+1:2*nx, 0:ny, nz+1:2*nz, :] = mat[nx-1:0:-1, 0:ny, nz-1:0:-1, :]
+    mat_circulant[nx+1:2*nx, 0:ny, nz+1:2*nz, :] = mat[nx-1:0:-1, 0:ny, nz-1:0:-1, :]*sign[1:2, 0:1, 1:2, :]
     # cube yz
-    mat_circulant[0:nx, ny+1:2*ny, nz+1:2*nz, :] = mat[0:nx, ny-1:0:-1, nz-1:0:-1, :]
+    mat_circulant[0:nx, ny+1:2*ny, nz+1:2*nz, :] = mat[0:nx, ny-1:0:-1, nz-1:0:-1, :]*sign[0:1, 1:2, 1:2, :]
     # cube xyz
-    mat_circulant[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz, :] = mat[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1, :]
+    mat_circulant[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz, :] = mat[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1, :]*sign[1:2, 1:2, 1:2, :]
 
     # get the FFT of the circulant tensor
     mat_circulant_fft = fourier_transform.get_fft_tensor(mat_circulant, False)
@@ -79,17 +79,28 @@ def _get_tensor_circulant(mat):
 def get_prepare(mat, matrix_type):
 
     if matrix_type == "3D":
-        mat = np.expand_dims(mat, axis=3)
-        mat_circulant_fft = _get_tensor_circulant(mat)
+        sign = np.ones((2, 2, 2, 1), dtype=np.int64)
     elif matrix_type == "4D_diag":
-        mat_circulant_fft = _get_tensor_circulant(mat)
+        sign = np.ones((2, 2, 2, 3), dtype=np.int64)
+    elif matrix_type == "4D_off":
+        sign = np.empty((2, 2, 2, 3), dtype=np.int64)
+        sign[0, 0, 0, :] = [+1, +1, +1]
+        sign[1, 0, 0, :] = [-1, +1, +1]
+        sign[0, 1, 0, :] = [+1, -1, +1]
+        sign[0, 0, 1, :] = [+1, +1, -1]
+        sign[1, 1, 0, :] = [-1, -1, +1]
+        sign[1, 0, 1, :] = [-1, +1, -1]
+        sign[0, 1, 1, :] = [+1, -1, -1]
+        sign[1, 1, 1, :] = [-1, -1, -1]
     else:
-        raise ValueError("invallid matrix type")
+        raise ValueError("invalid matrix type")
+
+    mat_circulant_fft = _get_tensor_circulant(mat, sign)
 
     return mat_circulant_fft
 
 
-def get_multiply(idx_sel, vec_sel, mat_circulant_fft):
+def get_multiply(idx_sel, vec_sel, mat_circulant_fft, matrix_type):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.

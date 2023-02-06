@@ -36,7 +36,6 @@ def _get_dense_zero(n, idx_sel, idx_row, idx_col):
     return mat_dense
 
 
-
 def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
     """
     Construct a dense matrix from a 4D tensor.
@@ -69,21 +68,21 @@ def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
     idx_z_tmp = idx_z_1-idx_z_2
 
     if sign_type == "abs":
-        sign = np.ones((len(idx_row), len(idx_col)), dtype=np.float64)
+        idx_pos = np.full((len(idx_row), len(idx_col)), True, dtype=bool)
     elif sign_type == "x":
-        sign = np.ones((len(idx_row), len(idx_col)), dtype=np.float64)
-        idx_tmp = idx_x_tmp < 0
-        sign[idx_tmp] = -1
+        idx_pos = idx_x_tmp >= 0
     elif sign_type == "y":
-        sign = np.ones((len(idx_row), len(idx_col)), dtype=np.float64)
-        idx_tmp = idx_y_tmp < 0
-        sign[idx_tmp] = -1
+        idx_pos = idx_y_tmp >= 0
     elif sign_type == "z":
-        sign = np.ones((len(idx_row), len(idx_col)), dtype=np.float64)
-        idx_tmp = idx_z_tmp < 0
-        sign[idx_tmp] = -1
+        idx_pos = idx_z_tmp >= 0
     else:
         raise ValueError("invalid sign type")
+
+    # get the sign
+    idx_neg = np.logical_not(idx_pos)
+    sign = np.empty((len(idx_row), len(idx_col)), dtype=np.int64)
+    sign[idx_pos] = +1
+    sign[idx_neg] = -1
 
     # get the distances
     idx_x_tmp = np.abs(idx_x_tmp)
@@ -123,7 +122,7 @@ def get_prepare(idx_sel, mat, matrix_type):
     """
 
     if matrix_type == "3D":
-        mat_dense = _get_dense_diag(idx_sel, mat, 0, 0, "abs")
+        mat_dense = _get_dense_diag(idx_sel, mat[:, :, :, 0], 0, 0, "abs")
     elif matrix_type == "4D_diag":
         (nx, ny, nz, nd) = mat.shape
         n = nx * ny * nz
@@ -165,6 +164,6 @@ def get_prepare(idx_sel, mat, matrix_type):
         ]
         mat_dense = np.block(mat_dense)
     else:
-        raise ValueError("invallid matrix type")
+        raise ValueError("invalid matrix type")
 
     return mat_dense
