@@ -123,6 +123,7 @@ def _run_main(data_solver):
         # (ZL_tsr, ZL_vec) = equation_system.get_impedance_matrix(freq, idx_f, L_tsr, L_vec)
 
         import numpy as np
+        import numpy.linalg as lna
         from PyPEEC.lib_matrix import matrix_multiply
 
         # get the angular frequency
@@ -132,8 +133,12 @@ def _run_main(data_solver):
 
         # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
         L_tsr_c = s*mu*matrix_multiply.get_prepare_diag(idx_fc, L_tsr_c)
-        P_tsr_m = (1/(mu))*matrix_multiply.get_prepare_single(idx_fc, P_tsr_m)
-        R_vec_m = R_vec_m/freq
+        P_tsr_m = (1/(mu))*matrix_multiply.get_prepare_single(idx_vm, P_tsr_m)
+        R_vec_m = R_vec_m/s
+
+        vec = np.ones(len(idx_vm))
+        iden = -s*np.diag(vec)
+
 
         K_c = matrix_multiply.get_prepare_cross(idx_fc, idx_fm, K_mutual)
         K_m = matrix_multiply.get_prepare_cross(idx_fm, idx_fc, K_mutual)
@@ -141,8 +146,51 @@ def _run_main(data_solver):
         # compute the right-hand vector with the sources
         rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
 
+        A_red_c = A_red_c.toarray()
+        A_red_m = A_red_m.toarray()
+
+        (A_kcl_src, A_src_pot, A_src_src) = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
+        A_kcl_src = A_kcl_src.toarray()
+        A_src_pot = A_src_pot.toarray()
+        A_src_src = A_src_src.toarray()
+
+        Z_c = np.diag(R_vec_c)+L_tsr_c
+        Z_m = np.diag(R_vec_m)
+
+        (n_src, n_src) = A_src_src.shape
+
+        a1 = np.zeros((len(idx_fc), len(idx_vm)))
+        a2 = np.zeros((len(idx_fc), n_src))
+        E1 = np.block([[+Z_c, K_c, -1.0*A_red_c.transpose(), a1, a2]])
+
+        a1 = np.zeros((len(idx_fm), len(idx_vc)))
+        a2 = np.zeros((len(idx_fm), n_src))
+        E2 = np.block([[-K_m, Z_m, a1, -1.0*A_red_m.transpose(), a2]])
+
+        a1 = np.zeros((len(idx_vm), len(idx_fc)))
+        a2 = np.zeros((len(idx_vm), len(idx_vc)))
+        a3 = np.zeros((len(idx_vm), n_src))
+        E3 = np.block([[a1, np.matmul(P_tsr_m, A_red_m), a2, iden, a3]])
+
+        a1 = np.zeros((len(idx_vc), len(idx_fm)))
+        a2 = np.zeros((len(idx_vc), len(idx_vc)))
+        a3 = np.zeros((len(idx_vc), len(idx_vm)))
+        E4 = np.block([[A_red_c, a1, a2, a3, A_kcl_src]])
+
+        a1 = np.zeros((n_src, len(idx_fc)))
+        a2 = np.zeros((n_src, len(idx_fm)))
+        a3 = np.zeros((n_src, len(idx_vm)))
+        E5 = np.block([[a1, a2, A_src_pot, a3, A_src_src]])
+
+        mat = np.concatenate((E1, E2, E3, E4, E5))
+
+        sol = lna.solve(mat, rhs)
 
         pass
+
+
+
+
 
 
 

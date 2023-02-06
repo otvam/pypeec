@@ -109,7 +109,7 @@ def _check_source_def(source_def):
             raise CheckError("I/V: current/voltage source value should be a scalar")
         if not np.isscalar(element):
             raise CheckError("G/R: source internal conductance/resistance should be a real scalar")
-        if not (element > 0):
+        if not (element >= 0):
             raise CheckError("G/R: source internal conductance/resistance should be greater than zero")
 
 

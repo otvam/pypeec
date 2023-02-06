@@ -52,7 +52,7 @@ from PyPEEC.lib_matrix import matrix_factorization
 from PyPEEC.lib_matrix import matrix_multiply
 
 
-def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vec, ZL_vec):
+def _get_cond_fact(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_vec):
     """
     Compute the sparse matrix decomposition for the preconditioner.
     The preconditioner is using a diagonal impedance matrix (no cross-coupling).
@@ -65,22 +65,38 @@ def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vec, ZL_vec):
     The Schur complement matrix has the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
     """
 
+    # get the system size
+    (n_v, n_f) = A_kcl.shape
+    (n_src, n_src) = A_src_src.shape
+
     # admittance vector
-    Y_vec = 1/(R_vec+ZL_vec)
+    Y_vec = 1 / (R_vec + ZL_vec)
 
     # admittance matrix
     Y_mat = sps.diags(Y_vec)
 
+    # assemble the matrices around the diagonal matrix
+    A_add = sps.csc_matrix((n_f, n_src), dtype=np.int64)
+    A_12_mat = sps.bmat([[A_kvl, A_add]], dtype=np.int64)
+
+    # assemble the matrices around the diagonal matrix
+    A_add = sps.csc_matrix((n_src, n_f), dtype=np.int64)
+    A_21_mat = sps.bmat([[A_kcl], [A_add]], dtype=np.int64)
+
+    # assemble the matrices around the diagonal matrix
+    A_add = sps.csc_matrix((n_v, n_v), dtype=np.int64)
+    A_22_mat = sps.bmat([[A_add, A_kcl_src], [A_src_pot, A_src_src]], dtype=np.int64)
+
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    S_mat = A_src-A_kcl*Y_mat*A_kvl
+    S_mat = A_22_mat - A_21_mat * Y_mat * A_12_mat
 
     # compute the factorization of the sparse Schur complement
-    S_factorization = matrix_factorization.MatrixFactorization(S_mat)
+    _S_fact = matrix_factorization.MatrixFactorization(S_mat)
 
-    return Y_mat, S_factorization
+    return Y_mat, S_mat, _S_fact, A_12_mat, A_21_mat
 
 
-def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_mat, S_factorization):
+def _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat):
     """
     Solve the preconditioner equation system.
     The Schur complement and matrix factorization are used.
@@ -90,13 +106,15 @@ def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_mat, S_factorizatio
     """
 
     # split the excitation vector (Schur complement split)
-    rhs_a = rhs[0:n_a]
-    rhs_b = rhs[n_a:n_a+n_b]
+    (n_schur, n_schur) = Y_mat.shape
+
+    rhs_a = rhs[:n_schur]
+    rhs_b = rhs[n_schur:]
 
     # solve the equation system (Schur complement and matrix factorization)
-    tmp = rhs_b-(A_kcl*(Y_mat*rhs_a))
-    sol_b = S_factorization.get_solution(tmp)
-    sol_a = Y_mat*(rhs_a-(A_kvl*sol_b))
+    tmp = rhs_b-(A_21_mat*(Y_mat*rhs_a))
+    sol_b = _S_fact.get_solution(tmp)
+    sol_a = Y_mat*(rhs_a-(A_12_mat*sol_b))
 
     # assemble the solution
     sol = np.concatenate((sol_a, sol_b))
@@ -104,7 +122,7 @@ def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_mat, S_factorizatio
     return sol
 
 
-def _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vec, ZL_tsr):
+def _get_system_multiply(sol, idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_tsr):
     """
     Multiply the full equation matrix with a given solution test vector.
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
@@ -112,21 +130,29 @@ def _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vec, ZL_ts
     The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
     """
 
+    # get the system size
+    (n_v, n_f) = A_kcl.shape
+    (n_src, n_src) = A_src_src.shape
+
     # split the excitation vector
-    sol_a = sol[0:n_a]
-    sol_b = sol[n_a:n_a+n_b]
+    sol_f = sol[0:n_f]
+    sol_v = sol[n_f:n_f+n_v]
+    sol_src = sol[n_f+n_v:n_f+n_v+n_src]
 
     # multiply the impedance matrix with the current vector (done with the FFT circulant tensor)
-    rhs_a_tmp = matrix_multiply.get_multiply_diag(idx_f, sol_a, ZL_tsr)
+    rhs_f_tmp = matrix_multiply.get_multiply_diag(idx_f, sol_f, ZL_tsr)
 
     # form the complete KVL
-    rhs_a = rhs_a_tmp+R_vec*sol_a+A_kvl*sol_b
+    rhs_f = rhs_f_tmp+R_vec*sol_f+A_kvl*sol_v
 
-    # form the complete KCL and potential fixing
-    rhs_b = A_kcl*sol_a+A_src*sol_b
+    # form the complete KCL
+    rhs_v = A_kcl*sol_f+A_kcl_src*sol_src
+
+    # form the source equation
+    rhs_src = A_src_pot*sol_v+A_src_src*sol_src
 
     # assemble the solution
-    rhs = np.concatenate((rhs_a, rhs_b))
+    rhs = np.concatenate((rhs_f, rhs_v, rhs_src))
 
     return rhs
 
@@ -189,7 +215,7 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     return rhs
 
 
-def get_kvl_kcl_matrix(A_red, idx_f, idx_src_c, idx_src_v):
+def get_kvl_kcl_matrix(A_reduced):
     """
     Construct the connection matrices for the KCL, KVL.
 
@@ -197,18 +223,11 @@ def get_kvl_kcl_matrix(A_red, idx_f, idx_src_c, idx_src_v):
     The A_kcl matrix has the following size: (n_v+n_src_c+n_src_v, n_f).
     """
 
-    # extract the voxel data
-    n_f = len(idx_f)
-    n_src_c = len(idx_src_c)
-    n_src_v = len(idx_src_v)
-
     # connection matrix for the KCL
-    A_add = sps.csc_matrix((n_src_c+n_src_v, n_f), dtype=np.int64)
-    A_kcl = sps.bmat([[+1*A_red], [A_add]], dtype=np.int64)
+    A_kcl = +1*A_reduced
 
     # connection matrix for the KVL
-    A_add = sps.csc_matrix((n_f, n_src_c+n_src_v), dtype=np.int64)
-    A_kvl = sps.bmat([[-1*A_red.transpose(), A_add]], dtype=np.int64)
+    A_kvl = -1*A_reduced.transpose()
 
     return A_kvl, A_kcl
 
@@ -230,100 +249,84 @@ def get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v):
     idx_src_v_local = np.flatnonzero(np.in1d(idx_v, idx_src_v))
 
     # indices of the new source equations to be added
-    idx_src_c_add = np.arange(n_v, n_v+n_src_c, dtype=np.int64)
-    idx_src_v_add = np.arange(n_v+n_src_c, n_v+n_src_c+n_src_v, dtype=np.int64)
+    idx_src_c_add = np.arange(0, n_src_c, dtype=np.int64)
+    idx_src_v_add = np.arange(n_src_c, n_src_c+n_src_v, dtype=np.int64)
 
     # constant vector with the size of the sources
     cst_src_c = np.full(n_src_c, 1, dtype=np.float64)
     cst_src_v = np.full(n_src_v, 1, dtype=np.float64)
 
-    # connection of the current source currents and voltage source currents to the KCL
-    idx_row_connect = np.concatenate((idx_src_c_local, idx_src_v_local))
-    idx_col_connect = np.concatenate((idx_src_c_add, idx_src_v_add))
-    val_connect = np.concatenate((-cst_src_c, -cst_src_v))
+    # matrix between the KCL equations and the source variables
+    idx_row = np.concatenate((idx_src_c_local, idx_src_v_local))
+    idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
+    val = np.concatenate((-cst_src_c, -cst_src_v))
+    A_kcl_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_v, n_src_c+n_src_v), dtype=np.float64)
 
-    # adding the current sources (source equation with internal admittance, Norton source)
-    idx_row_current = np.concatenate((idx_src_c_add, idx_src_c_add))
-    idx_col_current = np.concatenate((idx_src_c_add, idx_src_c_local))
-    val_current = np.concatenate((cst_src_c, G_src_c))
+    # matrix between the source equations and the potential variables
+    idx_row = np.concatenate((idx_src_v_add, idx_src_c_add))
+    idx_col = np.concatenate((idx_src_v_local, idx_src_c_local))
+    val = np.concatenate((cst_src_v, G_src_c))
+    A_src_pot = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_v), dtype=np.float64)
 
-    # adding the voltage sources (source equation with internal resistance, Thevenin source)
-    idx_row_voltage = np.concatenate((idx_src_v_add, idx_src_v_add))
-    idx_col_voltage = np.concatenate((idx_src_v_local, idx_src_v_add))
-    val_voltage = np.concatenate((cst_src_v, R_src_v))
+    # matrix between the source equations and the source variables
+    idx_row = np.concatenate((idx_src_c_add, idx_src_v_add))
+    idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
+    val = np.concatenate((cst_src_c, R_src_v))
+    A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=np.float64)
 
-    # construct the matrix with the computed indices and values
-    idx_row = np.concatenate((idx_row_connect, idx_row_current, idx_row_voltage))
-    idx_col = np.concatenate((idx_col_connect, idx_col_current, idx_col_voltage))
-    val = np.concatenate((val_connect, val_current, val_voltage))
-    A_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v), dtype=np.float64)
-
-    return A_src
+    return A_kcl_src, A_src_pot, A_src_src
 
 
-def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_vec):
+def get_cond_operator(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_vec):
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
     """
 
-    # get the matrix size
-    (n_dof, n_a, n_b) = _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v)
+    # get the system size
+    (n_v, n_f) = A_kcl.shape
+    (n_src, n_src) = A_src_src.shape
 
-    # matrix factorization with the Schur complement
-    (Y_mat, S_factorization) = _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vec, ZL_vec)
+    # get system size
+    n_dof = n_v + n_f + n_src
+
+    # get the Schur complemement
+    (Y_mat, S_mat, _S_fact, A_12_mat, A_21_mat) = _get_cond_fact(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_vec)
 
     # if the matrix is singular, there is not preconditioner
-    if not S_factorization.get_status():
+    if not _S_fact.get_status():
         return None
 
     # function describing the preconditioner
     def fct(rhs):
-        sol = _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_mat, S_factorization)
+        sol = _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat)
         return sol
 
     # corresponding linear operator
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
 
-    return op
+    return op, S_mat
 
 
-def get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_tsr):
+def get_system_operator(idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_tsr):
     """
     Get a linear operator that produce the matrix-vector multiplication result for the full system.
     This operator is used for the iterative solver.
     """
 
-    # get the matrix size
-    (n_dof, n_a, n_b) = _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v)
+    # get the system size
+    (n_v, n_f) = A_kcl.shape
+    (n_src, n_src) = A_src_src.shape
+
+    # get system size
+    n_dof = n_v + n_f + n_src
 
     # function describing the equation system
     def fct(sol):
-        rhs = _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vec, ZL_tsr)
+        rhs = _get_system_multiply(sol, idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_tsr)
         return rhs
 
     # corresponding linear operator
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
 
     return op
-
-
-def get_singular(A_kvl, A_kcl, A_src, R_vec, ZL_vec):
-    """
-    Computing the Schur complement with the diagonal impedance matrix.
-    The resulting matrix is used to detect quasi-singular equations systems.
-    It should be noted that the resulting matrix has no physical meaning.
-
-    The resulting matrix has the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
-    """
-
-    # admittance vector
-    Y_vec = 1/(R_vec+ZL_vec)
-
-    # admittance matrix
-    Y_mat = sps.diags(Y_vec)
-
-    # computing the Schur complement
-    S_mat = A_src-A_kcl*Y_mat*A_kvl
-
-    return S_mat
