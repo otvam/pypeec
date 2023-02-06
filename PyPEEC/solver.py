@@ -103,15 +103,20 @@ def _run_main(data_solver):
     # get the resistances and inductances
     with timelogger.BlockTimer(logger, "resistance_inductance"):
         # get the resistance vector
-        R_vec_c = resistance_inductance.get_resistance_vector(n, d, A_red_c, idx_fc, rho_vc)
-        R_vec_m = resistance_inductance.get_resistance_vector(n, d, A_red_m, idx_fm, rho_vm)
+        R_vec_c = resistance_inductance.get_R_vector(n, d, A_red_c, idx_fc, rho_vc)
+        R_vec_m = resistance_inductance.get_R_vector(n, d, A_red_m, idx_fm, rho_vm)
 
         # get the inductance vector (preconditioner)
-        L_vec_c = resistance_inductance.get_inductance_vector(n, d, idx_fc, G_self)
-        L_vec_m = resistance_inductance.get_inductance_vector(n, d, idx_fm, G_self)
+        L_vec_c = resistance_inductance.get_L_vector(n, d, idx_fc, G_self)
+        L_vec_m = resistance_inductance.get_L_vector(n, d, idx_fm, G_self)
 
         # get the inductance tensor (full problem)
-        L_tsr = resistance_inductance.get_inductance_matrix(n, d, G_mutual)
+        L_tsr_c = resistance_inductance.get_L_matrix(n, d, G_mutual)
+        L_tsr_m = resistance_inductance.get_L_matrix(n, d, G_mutual)
+
+        # get the potential tensor (preconditioner and full problem)
+        P_vec_m = resistance_inductance.get_P_vector(n, d, idx_vm, G_self)
+        P_tsr_m = resistance_inductance.get_P_matrix(n, d, G_mutual)
 
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):

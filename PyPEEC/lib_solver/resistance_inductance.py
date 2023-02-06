@@ -11,7 +11,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import numpy as np
 
 
-def get_resistance_vector(n, d, A_red, idx_f, rho_v):
+def get_R_vector(n, d, A_red, idx_f, rho_v):
     """
     Extract the resistance vector of the system (diagonal of the resistance matrix).
 
@@ -43,7 +43,7 @@ def get_resistance_vector(n, d, A_red, idx_f, rho_v):
     return R_vec
 
 
-def get_inductance_matrix(n, d, G_mutual):
+def get_L_matrix(n, d, G_mutual):
     """
     Extract the inductance matrix of the system (used for the full system).
 
@@ -54,18 +54,17 @@ def get_inductance_matrix(n, d, G_mutual):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    nv = nx*ny*nz
 
     # compute the inductance tensor from the Green functions
     L_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float64)
-    L_tsr[:, :, :, 0] = (G_mutual)/(dy**2*dz**2)
-    L_tsr[:, :, :, 1] = (G_mutual)/(dx**2*dz**2)
-    L_tsr[:, :, :, 2] = (G_mutual)/(dx**2*dy**2)
+    L_tsr[:, :, :, 0] = G_mutual/(dy**2*dz**2)
+    L_tsr[:, :, :, 1] = G_mutual/(dx**2*dz**2)
+    L_tsr[:, :, :, 2] = G_mutual/(dx**2*dy**2)
 
     return L_tsr
 
 
-def get_inductance_vector(n, d, idx_f, G_self):
+def get_L_vector(n, d, idx_f, G_self):
     """
     Extract the inductance vector of the system (used for the preconditioner).
 
@@ -79,10 +78,50 @@ def get_inductance_vector(n, d, idx_f, G_self):
     nv = nx*ny*nz
 
     # self-inductance for the preconditioner
-    L_x = (G_self)/(dy**2*dz**2)
-    L_y = (G_self)/(dx**2*dz**2)
-    L_z = (G_self)/(dx**2*dy**2)
+    L_x = G_self/(dy**2*dz**2)
+    L_y = G_self/(dx**2*dz**2)
+    L_z = G_self/(dx**2*dy**2)
     L_vec = np.concatenate((L_x*np.ones(nv), L_y*np.ones(nv), L_z*np.ones(nv)))
     L_vec = L_vec[idx_f]
 
     return L_vec
+
+
+def get_P_matrix(n, d, G_mutual):
+    """
+    Extract the potential matrix of the system (used for the full system).
+
+    The voxel structure has the following size: (nx, ny, nz).
+    For solving the full system, an inductance tensor is used: (nx, ny, nz, 1).
+    """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    (dx, dy, dz) = d
+
+    # compute the inductance tensor from the Green functions
+    P_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float64)
+    P_tsr[:, :, :, 0] = G_mutual/(dx**2*dy**2*dz**2)
+
+    return P_tsr
+
+
+def get_P_vector(n, d, idx_v, G_self):
+    """
+    Extract the potential vector of the system (used for the preconditioner).
+
+    The problem contains n_f internal faces.
+    For solving the preconditioner, a vector is used: n_f.
+    """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    (dx, dy, dz) = d
+    nv = nx*ny*nz
+
+    # self-inductance for the preconditioner
+    P_v = G_self/(dx**2*dy**2*dz**2)
+    P_vec = P_v*np.ones(nv)
+    P_vec = P_vec[idx_v]
+
+    return P_vec
