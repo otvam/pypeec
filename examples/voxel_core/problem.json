@@ -15,11 +15,9 @@
             "n_iter_max": 25
         }
     },
-    "conductor_def": {
-        "cond": {"domain_list": ["cond", "src", "sink"], "rho": 0.01}
-    },
-    "magnetic_def": {
-        "cond": {"domain_list": ["core"], "chi": 1000.0}
+    "material_def": {
+        "cond": {"domain_list": ["cond", "src", "sink"], "material_type": "conductor", "rho": 0.01},
+        "core": {"domain_list": ["core"], "material_type": "magnetic", "chi": 1000.0}
     },
     "source_def": {
         "src": {"domain_list": ["src"], "source_type": "current", "I": 1.0, "G": 0.5},
