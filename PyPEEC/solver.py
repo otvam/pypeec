@@ -112,19 +112,16 @@ def _run_main(data_solver):
         rhs = equation_system.get_source_vector(idx_v, idx_f, I_src_c, V_src_v)
 
         # get the matrices defining the KCL, KVL
-        (A_kvl, A_kcl) = equation_system.get_kvl_kcl_matrix(A_reduced, idx_f, idx_src_c, idx_src_v)
+        (A_kvl, A_kcl) = equation_system.get_kvl_kcl_matrix(A_reduced)
 
         # get the matrices the sources
-        A_src = equation_system.get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v)
+        (A_kcl_src, A_src_pot, A_src_src) = equation_system.get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_vec)
+        (pcd_op, S_mat) = equation_system.get_cond_operator(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_vec)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_tsr)
-
-        # get a matrix for detecting if the problem is quasi-singular (this matrix has no physical meaning)
-        S_mat = equation_system.get_singular(A_kvl, A_kcl, A_src, R_vec, ZL_vec)
+        sys_op = equation_system.get_system_operator(idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_tsr)
 
     # solve the equation system
     with timelogger.BlockTimer(logger, "equation_solver"):
