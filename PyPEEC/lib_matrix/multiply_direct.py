@@ -148,10 +148,10 @@ def get_prepare(idx_sel, mat, matrix_type):
         n = nx * ny * nz
 
         mat_dense_xy = _get_dense_diag(idx_sel, mat[:, :, :, 2], 0, 1, "z")
-        mat_dense_xz = -_get_dense_diag(idx_sel, mat[:, :, :, 1], 0, 2, "y")
+        mat_dense_xz = _get_dense_diag(idx_sel, mat[:, :, :, 1], 0, 2, "y")
         mat_dense_yx = _get_dense_diag(idx_sel, mat[:, :, :, 2], 1, 0, "z")
         mat_dense_yz = _get_dense_diag(idx_sel, mat[:, :, :, 0], 1, 2, "x")
-        mat_dense_zx = -_get_dense_diag(idx_sel, mat[:, :, :, 1], 2, 0, "y")
+        mat_dense_zx = _get_dense_diag(idx_sel, mat[:, :, :, 1], 2, 0, "y")
         mat_dense_zy = _get_dense_diag(idx_sel, mat[:, :, :, 0], 2, 1, "x")
         mat_dense_xx = _get_dense_zero(n, idx_sel, 0, 0)
         mat_dense_yy = _get_dense_zero(n, idx_sel, 1, 1)

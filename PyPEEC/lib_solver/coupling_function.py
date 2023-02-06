@@ -238,11 +238,11 @@ def _get_coupling(d, idx, method, dimension):
 
     # scale the coefficients
     if dimension == "xy":
-        G = (G_2-G_1)/(dy*dz*dx*dz)
+        G = +(G_2-G_1)/(dy*dz*dx*dz)
     elif dimension == "xz":
-        G = (G_2-G_1)/(dy*dz*dx*dy)
+        G = -(G_2-G_1)/(dy*dz*dx*dy)
     elif dimension == "yz":
-        G = (G_2-G_1)/(dx*dz*dx*dy)
+        G = +(G_2-G_1)/(dx*dz*dx*dy)
     else:
         raise ValueError("invalid dimension")
 

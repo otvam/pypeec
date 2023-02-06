@@ -142,9 +142,9 @@ def get_multiply(idx_sel, vec_sel, mat_fft, matrix_type):
         res_all_fft[:, :, :, 1] = mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 1]
         res_all_fft[:, :, :, 2] = mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 2]
     elif matrix_type == "4D_off":
-        res_all_fft[:, :, :, 0] = +mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 1]-mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 2]
+        res_all_fft[:, :, :, 0] = +mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 1]+mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 2]
         res_all_fft[:, :, :, 1] = -mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 0]+mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 2]
-        res_all_fft[:, :, :, 2] = +mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 0]-mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 1]
+        res_all_fft[:, :, :, 2] = -mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 0]-mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 1]
     else:
         raise ValueError("invalid matrix type")
 
