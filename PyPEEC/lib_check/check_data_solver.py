@@ -37,8 +37,7 @@ def _get_material_idx(material_def, domain_def):
     """
 
     # init
-    conductor_idx = dict()
-    magnetic_idx = dict()
+    material_idx = dict()
     idx_c = np.array([], dtype=np.int64)
     idx_m = np.array([], dtype=np.int64)
 
@@ -54,15 +53,15 @@ def _get_material_idx(material_def, domain_def):
         if material_type == "conductor":
             rho = dat_tmp["rho"]
             idx_c = np.append(idx_c, idx)
-            conductor_idx[tag] = {"idx": idx, "rho": rho}
+            material_idx[tag] = {"idx": idx, "material_type": material_type, "rho": rho}
         elif material_type == "magnetic":
             chi = dat_tmp["chi"]
             idx_m = np.append(idx_m, idx)
-            magnetic_idx[tag] = {"idx": idx, "chi": chi}
+            material_idx[tag] = {"idx": idx, "material_type": material_type, "chi": chi}
         else:
-            raise CheckError("invalid source type")
+            raise CheckError("invalid material type")
 
-    return idx_c, idx_m, conductor_idx, magnetic_idx
+    return idx_c, idx_m, material_idx
 
 
 def _get_source_idx(source_def, domain_def):
@@ -127,7 +126,6 @@ def _check_indices(idx_c, idx_m, idx_s):
         raise CheckError("source indices are included in magnetic indices")
 
 
-
 def _check_source_graph(idx_c, idx_s, connection_def):
     """
     Check that there is at least one source per connected component.
@@ -149,22 +147,15 @@ def get_data_solver(data_voxel, data_problem):
     """
 
     # extract field
-    freq = data_problem["freq"]
-    green_simplify = data_problem["green_simplify"]
-    solver_options = data_problem["solver_options"]
-    condition_options = data_problem["condition_options"]
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
 
     # extract field
-    n = data_voxel["n"]
-    d = data_voxel["d"]
-    c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
     connection_def = data_voxel["connection_def"]
 
     # get conductor indices
-    (idx_c, idx_m, conductor_idx, magnetic_idx) = _get_material_idx(material_def, domain_def)
+    (idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
     (idx_s, source_idx) = _get_source_idx(source_def, domain_def)
 
     # check indices
@@ -175,14 +166,15 @@ def get_data_solver(data_voxel, data_problem):
 
     # assign combined data
     data_solver = {
-        "n": n,
-        "d": d,
-        "c": c,
-        "freq": freq,
-        "green_simplify": green_simplify,
-        "solver_options": solver_options,
-        "condition_options": condition_options,
-        "conductor_idx": conductor_idx,
+        "n": data_voxel["n"],
+        "d": data_voxel["d"],
+        "c": data_voxel["c"],
+        "freq": data_problem["freq"],
+        "green_simplify": data_problem["green_simplify"],
+        "coupling_simplify": data_problem["coupling_simplify"],
+        "solver_options": data_problem["solver_options"],
+        "condition_options": data_problem["condition_options"],
+        "material_idx": material_idx,
         "source_idx": source_idx,
     }
 

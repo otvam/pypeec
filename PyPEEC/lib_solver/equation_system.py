@@ -192,7 +192,7 @@ def get_source_vector(idx_v, idx_f, I_src_c, V_src_v):
     return rhs
 
 
-def get_kvl_kcl_matrix(A_reduced, idx_f, idx_src_c, idx_src_v):
+def get_kvl_kcl_matrix(A_red, idx_f, idx_src_c, idx_src_v):
     """
     Construct the connection matrices for the KCL, KVL.
 
@@ -207,11 +207,11 @@ def get_kvl_kcl_matrix(A_reduced, idx_f, idx_src_c, idx_src_v):
 
     # connection matrix for the KCL
     A_add = sps.csc_matrix((n_src_c+n_src_v, n_f), dtype=np.int64)
-    A_kcl = sps.bmat([[+1*A_reduced], [A_add]], dtype=np.int64)
+    A_kcl = sps.bmat([[+1*A_red], [A_add]], dtype=np.int64)
 
     # connection matrix for the KVL
     A_add = sps.csc_matrix((n_f, n_src_c+n_src_v), dtype=np.int64)
-    A_kvl = sps.bmat([[-1*A_reduced.transpose(), A_add]], dtype=np.int64)
+    A_kvl = sps.bmat([[-1*A_red.transpose(), A_add]], dtype=np.int64)
 
     return A_kvl, A_kcl
 

@@ -46,7 +46,7 @@ def _check_material_def(material_def):
         elif material_type == "magnetic":
             value = dat_tmp["chi"]
         else:
-            raise CheckError("invalid source type")
+            raise CheckError("invalid material type")
 
         # check value
         if not np.issubdtype(type(value), np.floating):
@@ -132,6 +132,7 @@ def _check_solver_options(solver_options):
     if not (solver_options["n_maximum_restart"] >= 1):
         raise CheckError("n_maximum_restart: number of restart cycles should be greater than zero")
 
+
 def _check_condition_options(condition_options):
     """
     Check the matrix condition number checking options.
@@ -155,6 +156,7 @@ def _check_condition_options(condition_options):
     if not (norm_options["n_iter_max"] > 0):
         raise CheckError("n_iter_max: maximum number of iterations for the norm should be greater than zero")
 
+
 def check_data_problem(data_problem):
     """
     Check the solver problem data:
@@ -173,6 +175,7 @@ def check_data_problem(data_problem):
     # extract field
     freq = data_problem["freq"]
     green_simplify = data_problem["green_simplify"]
+    coupling_simplify = data_problem["coupling_simplify"]
     solver_options = data_problem["solver_options"]
     condition_options = data_problem["condition_options"]
     material_def = data_problem["material_def"]
@@ -182,13 +185,17 @@ def check_data_problem(data_problem):
     if not np.issubdtype(type(freq), np.floating):
         raise CheckError("freq: frequency should be a float")
     if not np.issubdtype(type(green_simplify), np.floating):
-        raise CheckError("green_simplify: voxel distance to simplify the green function should be a float")
+        raise CheckError("green_simplify: voxel distance to simplify the green functions should be a float")
+    if not np.issubdtype(type(coupling_simplify), np.floating):
+        raise CheckError("coupling_simplify: voxel distance to simplify the coupling functions should be a float")
 
     # check value
     if not(freq >= 0):
         raise CheckError("freq: frequency should be positive")
     if not (green_simplify > 0):
-        raise CheckError("green_simplify: voxel distance to simplify the green function should be positive")
+        raise CheckError("green_simplify: voxel distance to simplify the green functions should be positive")
+    if not (coupling_simplify > 0):
+        raise CheckError("coupling_simplify: voxel distance to simplify the coupling functions should be positive")
 
     # check solver and condition check options
     _check_solver_options(solver_options)
