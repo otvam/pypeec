@@ -6,7 +6,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
-import scipy.linalg as lna
 
 
 def _get_voxel_indices(nx, ny, nz):
@@ -28,7 +27,17 @@ def _get_voxel_indices(nx, ny, nz):
     return idx_x, idx_y, idx_z
 
 
-def _get_dense_diag(idx_sel, mat):
+def _get_dense_zero(n, idx_sel, idx_row, idx_col):
+    n_row = np.count_nonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_sel))
+    n_col = np.count_nonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_sel))
+
+    mat_dense = np.zeros((n_row, n_col), dtype=np.float64)
+
+    return mat_dense
+
+
+
+def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
     """
     Construct a dense matrix from a 4D tensor.
 
@@ -38,45 +47,54 @@ def _get_dense_diag(idx_sel, mat):
     """
 
     # get the tensor size
-    (nx, ny, nz, nd) = mat.shape
+    (nx, ny, nz) = mat.shape
     n = nx*ny*nz
 
     # voxel index array
     (idx_x, idx_y, idx_z) = _get_voxel_indices(nx, ny, nz)
 
-    # array for the matrix along each dimension
-    mat_list = []
+    # get the coefficients
+    mat_tmp = mat.flatten(order="F")
 
-    # assign the dense matrix for each dimension
-    for i in range(nd):
-        # get the coefficients
-        mat_tmp = mat[:, :, :, i].flatten(order="F")
+    # get the indices of the non-empty face for the current dimension
+    idx_row = np.flatnonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_sel))
+    idx_col = np.flatnonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_sel))
 
-        # get the indices of the non-empty face for the current dimension
-        idx_tmp = np.flatnonzero(np.in1d(np.arange(i*n, (i+1)*n), idx_sel))
-        idx_x_tmp = idx_x[idx_tmp]
-        idx_y_tmp = idx_y[idx_tmp]
-        idx_z_tmp = idx_z[idx_tmp]
+    # get the tensor indices
+    (idx_x_1, idx_x_2) = np.meshgrid(idx_x[idx_row], idx_x[idx_col], indexing="ij")
+    (idx_y_1, idx_y_2) = np.meshgrid(idx_y[idx_row], idx_y[idx_col], indexing="ij")
+    (idx_z_1, idx_z_2) = np.meshgrid(idx_z[idx_row], idx_z[idx_col], indexing="ij")
+    idx_x_tmp = idx_x_1-idx_x_2
+    idx_y_tmp = idx_y_1-idx_y_2
+    idx_z_tmp = idx_z_1-idx_z_2
 
-        # get the tensor indices
-        (idx_x_1, idx_x_2) = np.meshgrid(idx_x_tmp, idx_x_tmp, indexing="ij")
-        (idx_y_1, idx_y_2) = np.meshgrid(idx_y_tmp, idx_y_tmp, indexing="ij")
-        (idx_z_1, idx_z_2) = np.meshgrid(idx_z_tmp, idx_z_tmp, indexing="ij")
-        idx_x_tmp = np.abs(idx_x_1-idx_x_2)
-        idx_y_tmp = np.abs(idx_y_1-idx_y_2)
-        idx_z_tmp = np.abs(idx_z_1-idx_z_2)
+    if sign_type == "abs":
+        sign = np.ones((len(idx_row), len(idx_col)), dtype=np.float64)
+    elif sign_type == "x":
+        sign = np.ones((len(idx_row), len(idx_col)), dtype=np.float64)
+        idx_tmp = idx_x_tmp < 0
+        sign[idx_tmp] = -1
+    elif sign_type == "y":
+        sign = np.ones((len(idx_row), len(idx_col)), dtype=np.float64)
+        idx_tmp = idx_y_tmp < 0
+        sign[idx_tmp] = -1
+    elif sign_type == "z":
+        sign = np.ones((len(idx_row), len(idx_col)), dtype=np.float64)
+        idx_tmp = idx_z_tmp < 0
+        sign[idx_tmp] = -1
+    else:
+        raise ValueError("invalid sign type")
 
-        # get the linear indices
-        idx = idx_x_tmp+idx_y_tmp*nx+idx_z_tmp*nx*ny
+    # get the distances
+    idx_x_tmp = np.abs(idx_x_tmp)
+    idx_y_tmp = np.abs(idx_y_tmp)
+    idx_z_tmp = np.abs(idx_z_tmp)
 
-        # assemble the full matrix for the current dimension
-        mat_dense_tmp = mat_tmp[idx]
+    # get the linear indices
+    idx = idx_x_tmp+idx_y_tmp*nx+idx_z_tmp*nx*ny
 
-        # append to the list containing all the dimensions
-        mat_list.append(mat_dense_tmp)
-
-    # construct the block diagonal matrix
-    mat_dense = lna.block_diag(*mat_list)
+    # assemble the full matrix for the current dimension
+    mat_dense = sign*mat_tmp[idx]
 
     return mat_dense
 
@@ -105,12 +123,47 @@ def get_prepare(idx_sel, mat, matrix_type):
     """
 
     if matrix_type == "3D":
-        mat = np.expand_dims(mat, axis=3)
-        mat_dense = _get_dense_diag(idx_sel, mat)
+        mat_dense = _get_dense_diag(idx_sel, mat, 0, 0, "abs")
     elif matrix_type == "4D_diag":
-        mat_dense = _get_dense_diag(idx_sel, mat)
+        (nx, ny, nz, nd) = mat.shape
+        n = nx * ny * nz
+
+        mat_dense_xx = _get_dense_diag(idx_sel, mat[:, :, :, 0], 0, 0, "abs")
+        mat_dense_yy = _get_dense_diag(idx_sel, mat[:, :, :, 1], 1, 1, "abs")
+        mat_dense_zz = _get_dense_diag(idx_sel, mat[:, :, :, 2], 2, 2, "abs")
+        mat_dense_xy = _get_dense_zero(n, idx_sel, 0, 1)
+        mat_dense_xz = _get_dense_zero(n, idx_sel, 0, 2)
+        mat_dense_yx = _get_dense_zero(n, idx_sel, 1, 0)
+        mat_dense_yz = _get_dense_zero(n, idx_sel, 1, 2)
+        mat_dense_zx = _get_dense_zero(n, idx_sel, 2, 0)
+        mat_dense_zy = _get_dense_zero(n, idx_sel, 2, 1)
+
+        mat_dense = [
+            [mat_dense_xx, mat_dense_xy, mat_dense_xz],
+            [mat_dense_yx, mat_dense_yy, mat_dense_yz],
+            [mat_dense_zx, mat_dense_zy, mat_dense_zz],
+        ]
+        mat_dense = np.block(mat_dense)
     elif matrix_type == "4D_off":
-        mat_dense = _get_dense_diag(idx_sel, mat)
+        (nx, ny, nz, nd) = mat.shape
+        n = nx * ny * nz
+
+        mat_dense_xy = _get_dense_diag(idx_sel, mat[:, :, :, 2], 0, 1, "z")
+        mat_dense_xz = -_get_dense_diag(idx_sel, mat[:, :, :, 1], 0, 2, "y")
+        mat_dense_yx = _get_dense_diag(idx_sel, mat[:, :, :, 2], 1, 0, "z")
+        mat_dense_yz = _get_dense_diag(idx_sel, mat[:, :, :, 0], 1, 2, "x")
+        mat_dense_zx = -_get_dense_diag(idx_sel, mat[:, :, :, 1], 2, 0, "y")
+        mat_dense_zy = _get_dense_diag(idx_sel, mat[:, :, :, 0], 2, 1, "x")
+        mat_dense_xx = _get_dense_zero(n, idx_sel, 0, 0)
+        mat_dense_yy = _get_dense_zero(n, idx_sel, 1, 1)
+        mat_dense_zz = _get_dense_zero(n, idx_sel, 2, 2)
+
+        mat_dense = [
+            [mat_dense_xx, +mat_dense_xy, +mat_dense_xz],
+            [-mat_dense_yx, mat_dense_yy, +mat_dense_yz],
+            [-mat_dense_zx, -mat_dense_zy, mat_dense_zz],
+        ]
+        mat_dense = np.block(mat_dense)
     else:
         raise ValueError("invallid matrix type")
 
