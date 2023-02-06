@@ -164,10 +164,10 @@ def get_drop_flux(idx_f, R_vector, L_tensor, I_f):
     V_f = R_vector*I_f
 
     # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-    L_tensor = matrix_multiply.get_prepare(idx_f, L_tensor)
+    L_tensor = matrix_multiply.get_prepare_diag(idx_f, L_tensor)
 
     # get the energy for the different faces
-    M_f = matrix_multiply.get_multiply(idx_f, I_f, L_tensor)
+    M_f = matrix_multiply.get_multiply_diag(idx_f, I_f, L_tensor)
 
     return V_f, M_f
 

@@ -45,12 +45,12 @@ def _run_preproc(data_solver):
         A_incidence = voxel_geometry.get_incidence_matrix(n)
 
     # get the Green functions
-    with timelogger.BlockTimer(logger, "green_function"):
+    with timelogger.BlockTimer(logger, "dense_matrix"):
         # Green function self-coefficient
-        G_self = green_function.get_green_self(d)
+        G_self = dense_matrix.get_green_self(d)
 
         # Green function mutual coefficients
-        G_mutual = green_function.get_green_tensor(n, d, green_simplify)
+        G_mutual = dense_matrix.get_green_tensor(n, d, green_simplify)
 
     # assemble results
     data_solver["voxel_point"] = voxel_point

@@ -20,7 +20,7 @@ from PyPEEC import config
 MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION
 
 
-def get_prepare(idx_sel, mat, matrix_type):
+def _get_prepare(idx_out, idx_in, mat, matrix_type):
     """
     Prepare the matrix for the multiplication.
     """
@@ -28,23 +28,43 @@ def get_prepare(idx_sel, mat, matrix_type):
     if MATRIX_MULTIPLICATION == "FFT":
         mat = multiply_fft.get_prepare(mat, matrix_type)
     elif MATRIX_MULTIPLICATION == "DIRECT":
-        mat = multiply_direct.get_prepare(idx_sel, mat, matrix_type)
+        mat = multiply_direct.get_prepare(idx_out, idx_in, mat, matrix_type)
     else:
         raise ValueError("invalid multiplication library")
 
     return mat
 
 
-def get_multiply(idx_sel, vec_sel, mat, matrix_type):
+def _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type):
     """
     Make a matrix-vector multiplication.
     """
 
     if MATRIX_MULTIPLICATION == "FFT":
-        res_sel = multiply_fft.get_multiply(idx_sel, vec_sel, mat, matrix_type)
+        res_sel = multiply_fft.get_multiply(idx_out, idx_in, vec_in, mat, matrix_type)
     elif MATRIX_MULTIPLICATION == "DIRECT":
-        res_sel = multiply_direct.get_multiply(vec_sel, mat)
+        res_sel = multiply_direct.get_multiply(vec_in, mat)
     else:
         raise ValueError("invalid multiplication library")
 
     return res_sel
+
+
+def get_prepare_diag(idx, mat):
+    """
+    Prepare a diagonal matrix for the multiplication.
+    """
+
+    mat = _get_prepare(idx, idx, mat, "diag")
+
+    return mat
+
+
+def get_multiply_diag(idx, vec, mat):
+    """
+    Make a matrix-vector multiplication for a diogonal matrix.
+    """
+
+    res = _get_multiply(idx, idx, vec, mat, "diag")
+
+    return res

@@ -117,7 +117,7 @@ def _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL
     sol_b = sol[n_a:n_a+n_b]
 
     # multiply the impedance matrix with the current vector (done with the FFT circulant tensor)
-    rhs_a_tmp = matrix_multiply.get_multiply(idx_f, sol_a, ZL_tensor)
+    rhs_a_tmp = matrix_multiply.get_multiply_diag(idx_f, sol_a, ZL_tensor)
 
     # form the complete KVL
     rhs_a = rhs_a_tmp+R_vector*sol_a+A_kvl*sol_b
@@ -158,7 +158,7 @@ def get_impedance_matrix(freq, idx_f, L_tensor, L_vector):
     s = 1j*2*np.pi*freq
 
     # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-    L_tensor = matrix_multiply.get_prepare(idx_f, L_tensor)
+    L_tensor = matrix_multiply.get_prepare_diag(idx_f, L_tensor)
 
     # compute the impedance
     ZL_tensor = s*L_tensor

@@ -32,7 +32,7 @@ def _get_voxel_indices(nx, ny, nz):
     return idx_x, idx_y, idx_z
 
 
-def _get_dense_zero(idx_sel, mat, idx_row, idx_col):
+def _get_dense_zero(idx_out, idx_in, mat, idx_row, idx_col):
     """
     Construct a zero matrix for a given block position.
     """
@@ -42,8 +42,8 @@ def _get_dense_zero(idx_sel, mat, idx_row, idx_col):
     n = nx*ny*nz
 
     # get the matrix size
-    n_row = np.count_nonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_sel))
-    n_col = np.count_nonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_sel))
+    n_row = np.count_nonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_out))
+    n_col = np.count_nonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_in))
 
     # create an empty matrix
     mat_dense = np.zeros((n_row, n_col), dtype=np.float64)
@@ -51,7 +51,7 @@ def _get_dense_zero(idx_sel, mat, idx_row, idx_col):
     return mat_dense
 
 
-def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
+def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     """
     Construct a dense matrix from a tensor for a given block position.
     """
@@ -67,8 +67,8 @@ def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
     mat_tmp = mat.flatten(order="F")
 
     # get the indices of the non-empty face for the current dimension
-    idx_row = np.flatnonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_sel))
-    idx_col = np.flatnonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_sel))
+    idx_row = np.flatnonzero(np.in1d(np.arange(idx_row*n, (idx_row+1)*n), idx_out))
+    idx_col = np.flatnonzero(np.in1d(np.arange(idx_col*n, (idx_col+1)*n), idx_in))
 
     # get the relative position between elements
     (idx_x_1, idx_x_2) = np.meshgrid(idx_x[idx_row], idx_x[idx_col], indexing="ij")
@@ -110,30 +110,31 @@ def _get_dense_diag(idx_sel, mat, idx_row, idx_col, sign_type):
     return mat_dense
 
 
-def get_prepare(idx_sel, mat, matrix_type):
+def get_prepare(idx_out, idx_in, mat, matrix_type):
     """
     Construct a dense matrix from a 4D tensor.
 
-    The index vector has the size: n_sel.
+    The output index vector has the size: n_out.
+    The input index vector has the size: n_in.
     The input tensor has the size: (nx, ny, nz, nd).
-    The output dense matrix has the size: (n_sel, n_sel).
+    The output dense matrix has the size: (n_out, n_in).
     """
 
     if matrix_type == "single":
-        mat_dense = _get_dense_diag(idx_sel, mat[:, :, :, 0], 0, 0, "abs")
+        mat_dense = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
     elif matrix_type == "diag":
         # fill the diagonal blocks
-        mat_dense_xx = _get_dense_diag(idx_sel, mat[:, :, :, 0], 0, 0, "abs")
-        mat_dense_yy = _get_dense_diag(idx_sel, mat[:, :, :, 1], 1, 1, "abs")
-        mat_dense_zz = _get_dense_diag(idx_sel, mat[:, :, :, 2], 2, 2, "abs")
+        mat_dense_xx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
+        mat_dense_yy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 1], 1, 1, "abs")
+        mat_dense_zz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 2], 2, 2, "abs")
 
         # the off-diagonal blocks are empty
-        mat_dense_xy = _get_dense_zero(idx_sel, mat, 0, 1)
-        mat_dense_xz = _get_dense_zero(idx_sel, mat, 0, 2)
-        mat_dense_yx = _get_dense_zero(idx_sel, mat, 1, 0)
-        mat_dense_yz = _get_dense_zero(idx_sel, mat, 1, 2)
-        mat_dense_zx = _get_dense_zero(idx_sel, mat, 2, 0)
-        mat_dense_zy = _get_dense_zero(idx_sel, mat, 2, 1)
+        mat_dense_xy = _get_dense_zero(idx_out, idx_in, mat, 0, 1)
+        mat_dense_xz = _get_dense_zero(idx_out, idx_in, mat, 0, 2)
+        mat_dense_yx = _get_dense_zero(idx_out, idx_in, mat, 1, 0)
+        mat_dense_yz = _get_dense_zero(idx_out, idx_in, mat, 1, 2)
+        mat_dense_zx = _get_dense_zero(idx_out, idx_in, mat, 2, 0)
+        mat_dense_zy = _get_dense_zero(idx_out, idx_in, mat, 2, 1)
 
         # assemble the matrix from the blocks
         mat_dense = [
@@ -144,17 +145,17 @@ def get_prepare(idx_sel, mat, matrix_type):
         mat_dense = np.block(mat_dense)
     elif matrix_type == "cross":
         # fill the off-diagonal blocks
-        mat_dense_xy = _get_dense_diag(idx_sel, mat[:, :, :, 2], 0, 1, "z")
-        mat_dense_xz = _get_dense_diag(idx_sel, mat[:, :, :, 1], 0, 2, "y")
-        mat_dense_yx = _get_dense_diag(idx_sel, mat[:, :, :, 2], 1, 0, "z")
-        mat_dense_yz = _get_dense_diag(idx_sel, mat[:, :, :, 0], 1, 2, "x")
-        mat_dense_zx = _get_dense_diag(idx_sel, mat[:, :, :, 1], 2, 0, "y")
-        mat_dense_zy = _get_dense_diag(idx_sel, mat[:, :, :, 0], 2, 1, "x")
+        mat_dense_xy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 2], 0, 1, "z")
+        mat_dense_xz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 1], 0, 2, "y")
+        mat_dense_yx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 2], 1, 0, "z")
+        mat_dense_yz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 1, 2, "x")
+        mat_dense_zx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 1], 2, 0, "y")
+        mat_dense_zy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 2, 1, "x")
 
         # the diagonal blocks are empty
-        mat_dense_xx = _get_dense_zero(idx_sel, mat, 0, 0)
-        mat_dense_yy = _get_dense_zero(idx_sel, mat, 1, 1)
-        mat_dense_zz = _get_dense_zero(idx_sel, mat, 2, 2)
+        mat_dense_xx = _get_dense_zero(idx_out, idx_in, mat, 0, 0)
+        mat_dense_yy = _get_dense_zero(idx_out, idx_in, mat, 1, 1)
+        mat_dense_zz = _get_dense_zero(idx_out, idx_in, mat, 2, 2)
 
         # assemble the matrix from the blocks
         mat_dense = [
@@ -173,11 +174,11 @@ def get_multiply(vec_sel, mat_dense):
     """
     Matrix-vector multiplication.
 
-    The input vector has the size: n_sel.
-    The input dense matrix has the size: (n_sel, n_sel).
-    The output vector has the size: n_sel.
+    The input vector has the size: n_in.
+    The input dense matrix has the size: (n_out, n_in).
+    The output vector has the size: n_out.
     """
 
-    res_sel = np.matmul(mat_dense, vec_sel)
+    res_out = np.matmul(mat_dense, vec_sel)
 
-    return res_sel
+    return res_out
