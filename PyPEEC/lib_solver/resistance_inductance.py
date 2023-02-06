@@ -25,10 +25,10 @@ def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
     nv = nx*ny*nz
 
     # get the resistivity of the faces (average between voxels)
-    rho_vector = 0.5*rho_v*np.abs(A_reduced)
+    rho_vec = 0.5*rho_v*np.abs(A_reduced)
 
     # init the resistance vector
-    R_vector = np.zeros(len(rho_vector), dtype=np.float64)
+    R_vec = np.zeros(len(rho_vec), dtype=np.float64)
 
     # get the direction of the faces (x, y, z)
     idx_f_x = np.flatnonzero(np.in1d(idx_f, np.arange(0*nv, 1*nv)))
@@ -36,11 +36,11 @@ def get_resistance_vector(n, d, A_reduced, idx_f, rho_v):
     idx_f_z = np.flatnonzero(np.in1d(idx_f, np.arange(2*nv, 3*nv)))
 
     # resistance vector (different directions)
-    R_vector[idx_f_x] = (dx/(dy*dz))*rho_vector[idx_f_x]
-    R_vector[idx_f_y] = (dy/(dx*dz))*rho_vector[idx_f_y]
-    R_vector[idx_f_z] = (dz/(dx*dy))*rho_vector[idx_f_z]
+    R_vec[idx_f_x] = (dx/(dy*dz))*rho_vec[idx_f_x]
+    R_vec[idx_f_y] = (dy/(dx*dz))*rho_vec[idx_f_y]
+    R_vec[idx_f_z] = (dz/(dx*dy))*rho_vec[idx_f_z]
 
-    return R_vector
+    return R_vec
 
 
 def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
@@ -62,16 +62,16 @@ def get_inductance_matrix(n, d, idx_f, G_mutual, G_self):
     mu = 4*np.pi*1e-7
 
     # compute the inductance tensor from the Green functions
-    L_tensor = np.zeros((nx, ny, nz, 3), dtype=np.float64)
-    L_tensor[:, :, :, 0] = (mu*G_mutual)/(dy**2*dz**2)
-    L_tensor[:, :, :, 1] = (mu*G_mutual)/(dx**2*dz**2)
-    L_tensor[:, :, :, 2] = (mu*G_mutual)/(dx**2*dy**2)
+    L_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float64)
+    L_tsr[:, :, :, 0] = (mu*G_mutual)/(dy**2*dz**2)
+    L_tsr[:, :, :, 1] = (mu*G_mutual)/(dx**2*dz**2)
+    L_tsr[:, :, :, 2] = (mu*G_mutual)/(dx**2*dy**2)
 
     # self-inductance for the preconditioner
     L_x = (mu*G_self)/(dy**2*dz**2)
     L_y = (mu*G_self)/(dx**2*dz**2)
     L_z = (mu*G_self)/(dx**2*dy**2)
-    L_vector = np.concatenate((L_x*np.ones(nv), L_y*np.ones(nv), L_z*np.ones(nv)))
-    L_vector = L_vector[idx_f]
+    L_vec = np.concatenate((L_x*np.ones(nv), L_y*np.ones(nv), L_z*np.ones(nv)))
+    L_vec = L_vec[idx_f]
 
-    return L_tensor, L_vector
+    return L_tsr, L_vec

@@ -152,7 +152,7 @@ def get_current_density(n, d, idx_v, idx_f, A_incidence, I_f):
     return J_v
 
 
-def get_drop_flux(idx_f, R_vector, L_tensor, I_f):
+def get_drop_flux(idx_f, R_vec, L_tsr, I_f):
     """
     Get the resistive voltage drop and magnetic flux across the faces.
 
@@ -161,13 +161,13 @@ def get_drop_flux(idx_f, R_vector, L_tensor, I_f):
     """
 
     # get the resistive voltage drop
-    V_f = R_vector*I_f
+    V_f = R_vec*I_f
 
     # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-    L_tensor = matrix_multiply.get_prepare_diag(idx_f, L_tensor)
+    L_tsr = matrix_multiply.get_prepare_diag(idx_f, L_tsr)
 
     # get the energy for the different faces
-    M_f = matrix_multiply.get_multiply_diag(idx_f, I_f, L_tensor)
+    M_f = matrix_multiply.get_multiply_diag(idx_f, I_f, L_tsr)
 
     return V_f, M_f
 

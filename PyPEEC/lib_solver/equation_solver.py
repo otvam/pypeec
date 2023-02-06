@@ -64,7 +64,7 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     return sol, status, solver_status
 
 
-def get_condition(mat, conditions_options):
+def get_condition(S_mat, conditions_options):
     """
     Compute an estimate of the condition number (norm 1) of a sparse matrix.
     """
@@ -76,7 +76,7 @@ def get_condition(mat, conditions_options):
 
     # computation is required
     if check:
-        value = matrix_condition.get_condition_matrix(mat, norm_options)
+        value = matrix_condition.get_condition_matrix(S_mat, norm_options)
     else:
         value = float(0)
 

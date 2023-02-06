@@ -98,15 +98,15 @@ def _run_main(data_solver):
     # get the resistances and inductances
     with timelogger.BlockTimer(logger, "resistance_inductance"):
         # get the resistance vector
-        R_vector = resistance_inductance.get_resistance_vector(n, d, A_reduced, idx_f, rho_v)
+        R_vec = resistance_inductance.get_resistance_vector(n, d, A_reduced, idx_f, rho_v)
 
         # get the inductance vector (preconditioner) and tensor (full problem, circulant tensor)
-        (L_tensor, L_vector) = resistance_inductance.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
+        (L_tsr, L_vec) = resistance_inductance.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
 
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
         # get the impedance vector (preconditioner) and tensor (full problem, FFT circulant tensor)
-        (ZL_tensor, ZL_vector) = equation_system.get_impedance_matrix(freq, idx_f, L_tensor, L_vector)
+        (ZL_tsr, ZL_vec) = equation_system.get_impedance_matrix(freq, idx_f, L_tsr, L_vec)
 
         # compute the right-hand vector with the sources
         rhs = equation_system.get_source_vector(idx_v, idx_f, I_src_c, V_src_v)
@@ -118,18 +118,18 @@ def _run_main(data_solver):
         A_src = equation_system.get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_vector)
+        pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_vec)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
+        sys_op = equation_system.get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_tsr)
 
         # get a matrix for detecting if the problem is quasi-singular (this matrix has no physical meaning)
-        S_matrix = equation_system.get_singular(A_kvl, A_kcl, A_src, R_vector, ZL_vector)
+        S_mat = equation_system.get_singular(A_kvl, A_kcl, A_src, R_vec, ZL_vec)
 
     # solve the equation system
     with timelogger.BlockTimer(logger, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
-        (condition_ok, condition_status) = equation_solver.get_condition(S_matrix, condition_options)
+        (condition_ok, condition_status) = equation_solver.get_condition(S_mat, condition_options)
 
         # solve the equation system
         (sol, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
@@ -143,8 +143,8 @@ def _run_main(data_solver):
     data_solver["rho_v"] = rho_v
     data_solver["idx_src_v"] = idx_src_v
     data_solver["idx_src_c"] = idx_src_c
-    data_solver["R_vector"] = R_vector
-    data_solver["L_tensor"] = L_tensor
+    data_solver["R_vec"] = R_vec
+    data_solver["L_tsr"] = L_tsr
     data_solver["problem_status"] = problem_status
     data_solver["has_converged"] = has_converged
     data_solver["solver_status"] = solver_status
@@ -168,8 +168,8 @@ def _run_postproc(data_solver):
     idx_v = data_solver["idx_v"]
     idx_src_c = data_solver["idx_src_c"]
     idx_src_v = data_solver["idx_src_v"]
-    R_vector = data_solver["R_vector"]
-    L_tensor = data_solver["L_tensor"]
+    R_vec = data_solver["R_vec"]
+    L_tsr = data_solver["L_tsr"]
     sol = data_solver["sol"]
 
     # extract the solution
@@ -181,7 +181,7 @@ def _run_postproc(data_solver):
         J_v = extract_solution.get_current_density(n, d, idx_v, idx_f, A_incidence, I_f)
 
         # get the resistive voltage drop and magnetic flux across the faces
-        (V_f, M_f) = extract_solution.get_drop_flux(idx_f, R_vector, L_tensor, I_f)
+        (V_f, M_f) = extract_solution.get_drop_flux(idx_f, R_vec, L_tsr, I_f)
 
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(V_f, M_f, I_f)

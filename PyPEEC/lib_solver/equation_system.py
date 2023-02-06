@@ -52,7 +52,7 @@ from PyPEEC.lib_matrix import matrix_factorization
 from PyPEEC.lib_matrix import matrix_multiply
 
 
-def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
+def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vec, ZL_vec):
     """
     Compute the sparse matrix decomposition for the preconditioner.
     The preconditioner is using a diagonal impedance matrix (no cross-coupling).
@@ -66,21 +66,21 @@ def _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     """
 
     # admittance vector
-    Y_vector = 1/(R_vector+ZL_vector)
+    Y_vec = 1/(R_vec+ZL_vec)
 
     # admittance matrix
-    Y_matrix = sps.diags(Y_vector)
+    Y_mat = sps.diags(Y_vec)
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    S_matrix = A_src-A_kcl*Y_matrix*A_kvl
+    S_mat = A_src-A_kcl*Y_mat*A_kvl
 
     # compute the factorization of the sparse Schur complement
-    S_factorization = matrix_factorization.MatrixFactorization(S_matrix)
+    S_factorization = matrix_factorization.MatrixFactorization(S_mat)
 
-    return Y_matrix, S_factorization
+    return Y_mat, S_factorization
 
 
-def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factorization):
+def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_mat, S_factorization):
     """
     Solve the preconditioner equation system.
     The Schur complement and matrix factorization are used.
@@ -94,9 +94,9 @@ def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factoriza
     rhs_b = rhs[n_a:n_a+n_b]
 
     # solve the equation system (Schur complement and matrix factorization)
-    tmp = rhs_b-(A_kcl*(Y_matrix*rhs_a))
+    tmp = rhs_b-(A_kcl*(Y_mat*rhs_a))
     sol_b = S_factorization.get_solution(tmp)
-    sol_a = Y_matrix*(rhs_a-(A_kvl*sol_b))
+    sol_a = Y_mat*(rhs_a-(A_kvl*sol_b))
 
     # assemble the solution
     sol = np.concatenate((sol_a, sol_b))
@@ -104,7 +104,7 @@ def _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factoriza
     return sol
 
 
-def _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
+def _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vec, ZL_tsr):
     """
     Multiply the full equation matrix with a given solution test vector.
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
@@ -117,10 +117,10 @@ def _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL
     sol_b = sol[n_a:n_a+n_b]
 
     # multiply the impedance matrix with the current vector (done with the FFT circulant tensor)
-    rhs_a_tmp = matrix_multiply.get_multiply_diag(idx_f, sol_a, ZL_tensor)
+    rhs_a_tmp = matrix_multiply.get_multiply_diag(idx_f, sol_a, ZL_tsr)
 
     # form the complete KVL
-    rhs_a = rhs_a_tmp+R_vector*sol_a+A_kvl*sol_b
+    rhs_a = rhs_a_tmp+R_vec*sol_a+A_kvl*sol_b
 
     # form the complete KCL and potential fixing
     rhs_b = A_kcl*sol_a+A_src*sol_b
@@ -146,7 +146,7 @@ def _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v):
     return n_dof, n_a, n_b
 
 
-def get_impedance_matrix(freq, idx_f, L_tensor, L_vector):
+def get_impedance_matrix(freq, idx_f, L_tsr, L_vec):
     """
     Transform the circulant inductance tensor into a FFT circulant impedance tensor.
 
@@ -158,15 +158,15 @@ def get_impedance_matrix(freq, idx_f, L_tensor, L_vector):
     s = 1j*2*np.pi*freq
 
     # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-    L_tensor = matrix_multiply.get_prepare_diag(idx_f, L_tensor)
+    L_tsr = matrix_multiply.get_prepare_diag(idx_f, L_tsr)
 
     # compute the impedance
-    ZL_tensor = s*L_tensor
+    ZL_tsr = s*L_tsr
 
     # self-impedance for the preconditioner
-    ZL_vector = s*L_vector
+    ZL_vec = s*L_vec
 
-    return ZL_tensor, ZL_vector
+    return ZL_tsr, ZL_vec
 
 
 def get_source_vector(idx_v, idx_f, I_src_c, V_src_v):
@@ -264,7 +264,7 @@ def get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v):
     return A_src
 
 
-def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_vector):
+def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_vec):
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
@@ -274,7 +274,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl
     (n_dof, n_a, n_b) = _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v)
 
     # matrix factorization with the Schur complement
-    (Y_matrix, S_factorization) = _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vector, ZL_vector)
+    (Y_mat, S_factorization) = _get_preconditioner_factorization(A_kvl, A_kcl, A_src, R_vec, ZL_vec)
 
     # if the matrix is singular, there is not preconditioner
     if not S_factorization.get_status():
@@ -282,7 +282,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl
 
     # function describing the preconditioner
     def fct(rhs):
-        sol = _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_matrix, S_factorization)
+        sol = _get_preconditioner_solve(rhs, n_a, n_b, A_kvl, A_kcl, Y_mat, S_factorization)
         return sol
 
     # corresponding linear operator
@@ -291,7 +291,7 @@ def get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl
     return op
 
 
-def get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vector, ZL_tensor):
+def get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_tsr):
     """
     Get a linear operator that produce the matrix-vector multiplication result for the full system.
     This operator is used for the iterative solver.
@@ -302,7 +302,7 @@ def get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src,
 
     # function describing the equation system
     def fct(sol):
-        rhs = _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vector, ZL_tensor)
+        rhs = _get_system_multiply(sol, n_a, n_b, idx_f, A_kvl, A_kcl, A_src, R_vec, ZL_tsr)
         return rhs
 
     # corresponding linear operator
@@ -311,7 +311,7 @@ def get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src,
     return op
 
 
-def get_singular(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
+def get_singular(A_kvl, A_kcl, A_src, R_vec, ZL_vec):
     """
     Computing the Schur complement with the diagonal impedance matrix.
     The resulting matrix is used to detect quasi-singular equations systems.
@@ -321,12 +321,12 @@ def get_singular(A_kvl, A_kcl, A_src, R_vector, ZL_vector):
     """
 
     # admittance vector
-    Y_vector = 1/(R_vector+ZL_vector)
+    Y_vec = 1/(R_vec+ZL_vec)
 
     # admittance matrix
-    Y_matrix = sps.diags(Y_vector)
+    Y_mat = sps.diags(Y_vec)
 
     # computing the Schur complement
-    S_matrix = A_src-A_kcl*Y_matrix*A_kvl
+    S_mat = A_src-A_kcl*Y_mat*A_kvl
 
-    return S_matrix
+    return S_mat
