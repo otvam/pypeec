@@ -120,6 +120,19 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     The output dense matrix has the size: (n_out, n_in).
     """
 
+    # get the permutation for sorting
+    idx_perm_out = np.argsort(idx_out)
+    idx_perm_in = np.argsort(idx_in)
+    idx_rev_out = np.empty(len(idx_perm_out), dtype=np.int64)
+    idx_rev_in = np.empty(len(idx_perm_in), dtype=np.int64)
+    idx_rev_out[idx_perm_out] = np.arange(len(idx_perm_out))
+    idx_rev_in[idx_perm_in] = np.arange(len(idx_perm_in))
+
+    # sort the indices
+    idx_out = idx_out[idx_perm_out]
+    idx_in = idx_in[idx_perm_in]
+
+    # get the matrix (sorted indices)
     if matrix_type == "single":
         mat_dense = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
     elif matrix_type == "diag":
@@ -166,6 +179,10 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
         mat_dense = np.block(mat_dense)
     else:
         raise ValueError("invalid matrix type")
+
+    # restore the original indices order
+    mat_dense = mat_dense[idx_rev_out, :]
+    mat_dense = mat_dense[:, idx_rev_in]
 
     return mat_dense
 
