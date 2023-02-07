@@ -134,11 +134,10 @@ def _run_main(data_solver):
         # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
         L_tsr_c = s*mu*matrix_multiply.get_prepare_diag(idx_fc, L_tsr_c)
         P_tsr_m = (1/(mu))*matrix_multiply.get_prepare_single(idx_vm, P_tsr_m)
-        R_vec_m = R_vec_m/s
+        R_vec_m = R_vec_m/(mu*s)
 
         vec = np.ones(len(idx_vm))
-        iden = -s*np.diag(vec)
-
+        iden = s*np.diag(vec)
 
         K_c = matrix_multiply.get_prepare_cross(idx_fc, idx_fm, K_mutual)
         K_m = matrix_multiply.get_prepare_cross(idx_fm, idx_fc, K_mutual)
@@ -185,6 +184,18 @@ def _run_main(data_solver):
         mat = np.concatenate((E1, E2, E3, E4, E5))
 
         sol = lna.solve(mat, rhs)
+
+        sol_fc = sol[0:len(idx_fc)]
+        sol_fm = sol[len(idx_fc):len(idx_fc)+len(idx_fm)]
+        sol_vc = sol[len(idx_fc)+len(idx_fm):len(idx_fc)+len(idx_fm)+len(idx_vc)]
+        sol_vm = sol[len(idx_fc)+len(idx_fm)+len(idx_vc):len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm)]
+        sol_src = sol[len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm):len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm)+n_src]
+
+        idx = np.flatnonzero(idx_vc == idx_src_c)
+        v = sol_vc[idx].item()
+        L = np.imag(v)/(2*np.pi*freq)
+
+        print(L)
 
         pass
 
