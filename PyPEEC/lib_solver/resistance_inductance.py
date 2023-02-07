@@ -100,7 +100,7 @@ def get_P_matrix(n, d, G_mutual):
     (dx, dy, dz) = d
 
     # compute the inductance tensor from the Green functions
-    P_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float64)
+    P_tsr = np.zeros((nx, ny, nz, 1), dtype=np.float64)
     P_tsr[:, :, :, 0] = G_mutual/(dx**2*dy**2*dz**2)
 
     return P_tsr

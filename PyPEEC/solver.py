@@ -137,6 +137,7 @@ def _run_main(data_solver):
         # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
         L_tsr_c = mu*matrix_multiply.get_prepare_diag(idx_fc, L_tsr_c)
         Z_tsr_c = s*L_tsr_c
+
         P_tsr_m = (1/(mu*s))*matrix_multiply.get_prepare_single(idx_vm, P_tsr_m)
         R_vec_m = R_vec_m/(mu*s)
 
@@ -164,11 +165,11 @@ def _run_main(data_solver):
 
         a1 = np.zeros((len(idx_fc), len(idx_vm)))
         a2 = np.zeros((len(idx_fc), n_src))
-        E1 = np.block([[+Z_c, +K_c, -1.0*A_red_c.transpose(), a1, a2]])
+        E1 = np.block([[+Z_c, +K_c, -1*A_red_c.transpose(), a1, a2]])
 
         a1 = np.zeros((len(idx_fm), len(idx_vc)))
         a2 = np.zeros((len(idx_fm), n_src))
-        E2 = np.block([[-K_m, +Z_m, a1, -1.0*A_red_m.transpose(), a2]])
+        E2 = np.block([[-K_m, +Z_m, a1, -1*A_red_m.transpose(), a2]])
 
         a1 = np.zeros((len(idx_vm), len(idx_fc)))
         a2 = np.zeros((len(idx_vm), len(idx_vc)))
@@ -213,8 +214,6 @@ def _run_main(data_solver):
         print(2*W_tot)
 
         print(L)
-
-        np.matmul(K_m, sol_fc)
 
         raise RunError("STOP")
 
