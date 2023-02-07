@@ -56,6 +56,9 @@ def _run_preproc(data_solver):
         # Green function mutual coefficients
         K_mutual = dense_matrix.get_coupling_tensor(n, d, coupling_simplify)
 
+        import scipy.io as io
+        io.savemat('tensor.mat', {"G": G_mutual, "K": K_mutual})
+
     # assemble results
     data_solver["voxel_point"] = voxel_point
     data_solver["A_inc"] = A_inc
@@ -132,7 +135,8 @@ def _run_main(data_solver):
         mu = 4*np.pi*1e-7
 
         # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-        L_tsr_c = s*mu*matrix_multiply.get_prepare_diag(idx_fc, L_tsr_c)
+        L_tsr_c = mu*matrix_multiply.get_prepare_diag(idx_fc, L_tsr_c)
+        Z_tsr_c = s*L_tsr_c
         P_tsr_m = (1/(mu))*matrix_multiply.get_prepare_single(idx_vm, P_tsr_m)
         R_vec_m = R_vec_m/(mu*s)
 
@@ -153,7 +157,7 @@ def _run_main(data_solver):
         A_src_pot = A_src_pot.toarray()
         A_src_src = A_src_src.toarray()
 
-        Z_c = np.diag(R_vec_c)+L_tsr_c
+        Z_c = np.diag(R_vec_c)+Z_tsr_c
         Z_m = np.diag(R_vec_m)
 
         (n_src, n_src) = A_src_src.shape
@@ -195,9 +199,22 @@ def _run_main(data_solver):
         v = sol_vc[idx].item()
         L = np.imag(v)/(2*np.pi*freq)
 
+        # get the energy for the different faces
+        M_f = matrix_multiply.get_multiply_diag(idx_fc, sol_fc, L_tsr_c)
+        Mf_m = np.matmul(K_c, sol_fm)/s
+
+
+        W_f = 0.5 * np.conj(sol_fc) * M_f
+        W_tot = np.sum(np.real(W_f))
+        print(2*W_tot)
+
+        W_f = 0.5 * np.conj(sol_fc) * (M_f+Mf_m)
+        W_tot = np.sum(np.real(W_f))
+        print(2*W_tot)
+
         print(L)
 
-        pass
+        raise RunError("STOP")
 
 
 
