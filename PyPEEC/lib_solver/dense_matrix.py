@@ -39,15 +39,16 @@ def _get_coupling(d, idx, method, dimension):
     idx_tmp = idx[:, perm]
 
     # shift for the integration of the last dimension
-    idx_add = np.array([[0, 0, 0.5]])
+    idx_add_1 = np.array([[+0.5, +0.5, +0.5]])
+    idx_add_2 = np.array([[+0.5, +0.5, -0.5]])
 
     # get the partially integrated coefficients (5D integration)
     if method == "ana":
-        G_1 = green_function.get_green_ana(d_tmp, idx_tmp+idx_add, "5D")
-        G_2 = green_function.get_green_ana(d_tmp, idx_tmp-idx_add, "5D")
+        G_1 = green_function.get_green_ana(d_tmp, idx_tmp+idx_add_1, "5D")
+        G_2 = green_function.get_green_ana(d_tmp, idx_tmp+idx_add_2, "5D")
     elif method == "num":
-        G_1 = green_function.get_green_num(d_tmp, idx_tmp+idx_add, "5D")
-        G_2 = green_function.get_green_num(d_tmp, idx_tmp-idx_add, "5D")
+        G_1 = green_function.get_green_num(d_tmp, idx_tmp+idx_add_1, "5D")
+        G_2 = green_function.get_green_num(d_tmp, idx_tmp+idx_add_2, "5D")
     else:
         raise ValueError("invalid method")
 
