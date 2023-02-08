@@ -66,7 +66,7 @@ def _get_vector_flux(n, d, A_vox, var_f_all):
     return var_v_all
 
 
-def get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol):
+def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
     """
     Split the solution vector into different variables.
 
@@ -78,24 +78,22 @@ def get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol):
     """
 
     # extract the voxel data
-    n_v = len(idx_v)
-    n_f = len(idx_f)
+    n_fc = len(idx_fc)
+    n_fm = len(idx_fm)
+    n_vc = len(idx_vc)
+    n_vm = len(idx_vm)
     n_src_c = len(idx_src_c)
     n_src_v = len(idx_src_v)
 
-    # assign face currents
-    I_f = sol[0:n_f]
+    # split the excitation vector
+    I_fc = sol[0:n_fc]
+    I_fm = sol[n_fc:n_fc+n_fm]
+    V_vc = sol[n_fc+n_fm:n_fc+n_fm+n_vc]
+    V_vm = sol[n_fc+n_fm+n_vc:n_fc+n_fm+n_vc+n_vm]
+    I_src_c = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src_c]
+    I_src_v = sol[n_fc+n_fm+n_vc+n_vm+n_src_c:n_fc+n_fm+n_vc+n_vm+n_src_c+n_src_v]
 
-    # assign voxel potentials
-    V_v = sol[n_f:n_f+n_v]
-
-    # assign current source currents
-    I_src_c = sol[n_f+n_v:n_f+n_v+n_src_c]
-
-    # assign voltage source currents
-    I_src_v = sol[n_f+n_v+n_src_c:n_f+n_v+n_src_c+n_src_v]
-
-    return I_f, V_v, I_src_c, I_src_v
+    return I_fc, I_fm, V_vc, V_vm, I_src_c, I_src_v
 
 
 def get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v):

@@ -78,9 +78,16 @@ def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
-    # admittance vector
+    # get the conductor admittance
     Y_vec_c = 1/(R_vec_c+s*L_vec_c)
-    Y_vec_m = s/R_vec_m
+
+    # get the magnetic admittance
+    if freq == 0:
+        Y_vec_m = 1/R_vec_m
+        I_vec_m = np.ones(n_vm, dtype=np.complex128)
+    else:
+        Y_vec_m = s/R_vec_m
+        I_vec_m = s*np.ones(n_vm, dtype=np.complex128)
 
     # admittance matrix
     Y_vec = np.concatenate((Y_vec_c, Y_vec_m))
@@ -89,7 +96,7 @@ def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     # potential matrix
     P_vec_m = P_vec_m
     P_mat_m = sps.diags(P_vec_m)
-    I_mat_m = s*sps.eye(n_vm, dtype=np.int64)
+    I_mat_m = sps.diags(I_vec_m)
 
     # assemble the KVL matrices
     A_add_c = sps.csc_matrix((n_fc, n_vm), dtype=np.int64)
@@ -174,41 +181,47 @@ def _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_v
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
+    # get the frequency for the magnetic equation
+    if freq == 0:
+        s_diff = 1
+    else:
+        s_diff = 1j*2*np.pi*freq
+
     # split the excitation vector
-    sol_fc = sol[0:n_fc]
-    sol_fm = sol[n_fc:n_fc+n_fm]
-    sol_vc = sol[n_fc+n_fm:n_fc+n_fm+n_vc]
-    sol_vm = sol[n_fc+n_fm+n_vc:n_fc+n_fm+n_vc+n_vm]
-    sol_src = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src]
+    I_fc = sol[0:n_fc]
+    I_fm = sol[n_fc:n_fc+n_fm]
+    V_vc = sol[n_fc+n_fm:n_fc+n_fm+n_vc]
+    V_vm = sol[n_fc+n_fm+n_vc:n_fc+n_fm+n_vc+n_vm]
+    I_src = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src]
 
     # conductor KVL equations
-    rhs_1 = s*matrix_multiply.get_multiply_diag(idx_fc, sol_fc, L_tsr_c)
-    rhs_2 = matrix_multiply.get_multiply_cross(idx_fc, idx_fm, sol_fm, K_tsr_c)
-    rhs_3 = R_vec_c*sol_fc
-    rhs_4 = A_kvl_c*sol_vc
+    rhs_1 = s*matrix_multiply.get_multiply_diag(idx_fc, I_fc, L_tsr_c)
+    rhs_2 = matrix_multiply.get_multiply_cross(idx_fc, idx_fm, I_fm, K_tsr_c)
+    rhs_3 = R_vec_c*I_fc
+    rhs_4 = A_kvl_c*V_vc
     rhs_fc = rhs_1+rhs_2+rhs_3+rhs_4
 
     # magnetic KVL equations
-    rhs_1 = matrix_multiply.get_multiply_cross(idx_fm, idx_fc, sol_fc, K_tsr_m)
-    rhs_2 = R_vec_m/s*sol_fm
-    rhs_3 = A_kvl_m*sol_vm
+    rhs_1 = matrix_multiply.get_multiply_cross(idx_fm, idx_fc, I_fc, K_tsr_m)
+    rhs_2 = R_vec_m/s_diff*I_fm
+    rhs_3 = A_kvl_m*V_vm
     rhs_fm = rhs_1+rhs_2+rhs_3
 
     # conductor KCL equations
-    rhs_1 = A_kcl_c*sol_fc
-    rhs_2 = A_vc_src*sol_src
+    rhs_1 = A_kcl_c*I_fc
+    rhs_2 = A_vc_src*I_src
     rhs_vc = rhs_1+rhs_2
 
     # magnetic KCL equations
-    rhs_1 = matrix_multiply.get_multiply_single(idx_vm, A_kcl_m*sol_fm, P_tsr_m)
-    rhs_2 = s*sol_vm
-    rhs_3 = A_vm_src*sol_src
+    rhs_1 = matrix_multiply.get_multiply_single(idx_vm, A_kcl_m*I_fm, P_tsr_m)
+    rhs_2 = s_diff*V_vm
+    rhs_3 = A_vm_src*I_src
     rhs_vm = rhs_1+rhs_2+rhs_3
 
     # form the source equation
-    rhs_1 = A_src_vc*sol_vc
-    rhs_2 = A_src_vm*sol_vm
-    rhs_3 = A_src_src*sol_src
+    rhs_1 = A_src_vc*V_vc
+    rhs_2 = A_src_vm*V_vm
+    rhs_3 = A_src_src*I_src
     rhs_src = rhs_1+rhs_2+rhs_3
 
     # assemble the solution
@@ -329,7 +342,7 @@ def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
 
     # if the matrix is singular, there is not preconditioner
     if not _S_fact.get_status():
-        return None
+        return None, S_mat
 
     # function describing the preconditioner
     def fct(rhs):

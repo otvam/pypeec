@@ -137,83 +137,6 @@ def _run_main(data_solver):
         # get the linear operator for the full system (matrix-vector multiplication)
         sys_op = equation_system.get_system_operator(freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m)
 
-
-        (A_kvl_c, A_kcl_c) = A_c
-        (A_kvl_m, A_kcl_m) = A_m
-        (A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src) = A_src
-
-        import numpy as np
-        import numpy.linalg as lna
-
-        # get the angular frequency
-        s = 1j*2*np.pi*freq
-
-        # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-        Z_tsr_c = s*L_tsr_c
-
-        P_tsr_m = (1/(s))*P_tsr_m
-        R_vec_m = R_vec_m/(s)
-
-        vec = np.ones(len(idx_vm))
-        iden = np.diag(vec)
-
-        Z_c = np.diag(R_vec_c)+Z_tsr_c
-        Z_m = np.diag(R_vec_m)
-
-        (n_src, n_src) = A_src_src.shape
-
-        a1 = np.zeros((len(idx_fc), len(idx_vm)))
-        a2 = np.zeros((len(idx_fc), n_src))
-        E1 = np.block([[+Z_c, +K_tsr_c, A_kvl_c.toarray(), a1, a2]])
-
-        a1 = np.zeros((len(idx_fm), len(idx_vc)))
-        a2 = np.zeros((len(idx_fm), n_src))
-        E2 = np.block([[K_tsr_m, +Z_m, a1, A_kvl_m.toarray(), a2]])
-
-        a1 = np.zeros((len(idx_vc), len(idx_fm)))
-        a2 = np.zeros((len(idx_vc), len(idx_vc)))
-        a3 = np.zeros((len(idx_vc), len(idx_vm)))
-        E3 = np.block([[A_kcl_c.toarray(), a1, a2, a3, A_vc_src.toarray()]])
-
-        a1 = np.zeros((len(idx_vm), len(idx_fc)))
-        a2 = np.zeros((len(idx_vm), len(idx_vc)))
-        a3 = np.zeros((len(idx_vm), n_src))
-        E4 = np.block([[a1, np.matmul(P_tsr_m, A_kcl_m.toarray()), a2, iden, A_vm_src.toarray()]])
-
-        a1 = np.zeros((n_src, len(idx_fc)))
-        a2 = np.zeros((n_src, len(idx_fm)))
-        E5 = np.block([[a1, a2, A_src_vc.toarray(), A_src_vm.toarray(), A_src_src.toarray()]])
-
-        mat = np.concatenate((E1, E2, E3, E4, E5))
-
-        sol_tmp = lna.solve(mat, rhs)
-
-        sol_fc = sol_tmp[0:len(idx_fc)]
-        sol_fm = sol_tmp[len(idx_fc):len(idx_fc)+len(idx_fm)]
-        sol_vc = sol_tmp[len(idx_fc)+len(idx_fm):len(idx_fc)+len(idx_fm)+len(idx_vc)]
-        sol_vm = sol_tmp[len(idx_fc)+len(idx_fm)+len(idx_vc):len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm)]
-        sol_src = sol_tmp[len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm):len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm)+n_src]
-
-        idx = np.flatnonzero(idx_vc == idx_src_c)
-        v = sol_vc[idx].item()
-        L = np.imag(v)/(2*np.pi*freq)
-        print(L)
-
-        # get the energy for the different faces
-        M_f = np.matmul(L_tsr_c, sol_fc)
-        Mf_m = np.matmul(K_tsr_c, sol_fm)/s
-
-        W_f = 0.5 * np.conj(sol_fc) * M_f
-        W_tot = np.sum(np.real(W_f))
-        print(2*W_tot)
-
-        W_f = 0.5 * np.conj(sol_fc) * (M_f+Mf_m)
-        W_tot = np.sum(np.real(W_f))
-        print(2*W_tot)
-
-
-        print("=====================")
-
     # solve the equation system
     with timelogger.BlockTimer(logger, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
@@ -222,45 +145,19 @@ def _run_main(data_solver):
         # solve the equation system
         (sol, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
 
-        sol_fc = sol[0:len(idx_fc)]
-        sol_fm = sol[len(idx_fc):len(idx_fc)+len(idx_fm)]
-        sol_vc = sol[len(idx_fc)+len(idx_fm):len(idx_fc)+len(idx_fm)+len(idx_vc)]
-        sol_vm = sol[len(idx_fc)+len(idx_fm)+len(idx_vc):len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm)]
-        sol_src = sol[len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm):len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm)+n_src]
-
-        idx = np.flatnonzero(idx_vc == idx_src_c)
-        v = sol_vc[idx].item()
-        L = np.imag(v)/(2*np.pi*freq)
-        print(L)
-
-        # get the energy for the different faces
-        M_f = np.matmul(L_tsr_c, sol_fc)
-        Mf_m = np.matmul(K_tsr_c, sol_fm)/s
-
-        W_f = 0.5 * np.conj(sol_fc) * M_f
-        W_tot = np.sum(np.real(W_f))
-        print(2*W_tot)
-
-        W_f = 0.5 * np.conj(sol_fc) * (M_f+Mf_m)
-        W_tot = np.sum(np.real(W_f))
-        print(2*W_tot)
-
-
-
-
-        raise RuntimeError("STOP")
-
         # compute converge
         has_converged = solver_ok and condition_ok
 
     # assemble results
-    data_solver["idx_f"] = idx_f
-    data_solver["idx_v"] = idx_v
-    data_solver["rho_v"] = rho_v
+    data_solver["idx_fc"] = idx_fc
+    data_solver["idx_fm"] = idx_fm
+    data_solver["idx_vc"] = idx_vc
+    data_solver["idx_vm"] = idx_vm
     data_solver["idx_src_v"] = idx_src_v
     data_solver["idx_src_c"] = idx_src_c
-    data_solver["R_vec"] = R_vec
-    data_solver["L_tsr"] = L_tsr
+    data_solver["R_vec_c"] = R_vec_c
+    data_solver["L_tsr_c"] = L_tsr_c
+    data_solver["K_tsr_c"] = K_tsr_c
     data_solver["problem_status"] = problem_status
     data_solver["has_converged"] = has_converged
     data_solver["solver_status"] = solver_status
@@ -278,20 +175,44 @@ def _run_postproc(data_solver):
     # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
+    freq = data_solver["freq"]
     A_vox = data_solver["A_vox"]
     source_idx = data_solver["source_idx"]
-    idx_f = data_solver["idx_f"]
-    idx_v = data_solver["idx_v"]
+    idx_fc = data_solver["idx_fc"]
+    idx_fm = data_solver["idx_fm"]
+    idx_vc = data_solver["idx_vc"]
+    idx_vm = data_solver["idx_vm"]
     idx_src_c = data_solver["idx_src_c"]
     idx_src_v = data_solver["idx_src_v"]
-    R_vec = data_solver["R_vec"]
-    L_tsr = data_solver["L_tsr"]
+    R_vec_c = data_solver["R_vec_c"]
+    L_tsr_c = data_solver["L_tsr_c"]
+    K_tsr_c = data_solver["K_tsr_c"]
     sol = data_solver["sol"]
 
     # extract the solution
     with timelogger.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        (I_f, V_v, I_src_c, I_src_v) = extract_solution.get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol)
+        (I_fc, I_fm, V_vc, V_vm, I_src_c, I_src_v) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
+
+
+        import numpy as np
+
+        s = 1j*2*np.pi*freq
+        s = 1
+
+        # get the energy for the different faces
+        M_f = np.matmul(L_tsr_c, I_fc)
+        Mf_m = np.matmul(K_tsr_c, I_fm)/s
+
+        W_f = 0.5 * np.conj(I_fc) * M_f
+        W_tot = np.sum(np.real(W_f))
+        print(2*W_tot)
+
+        W_f = 0.5 * np.conj(I_fc) * (M_f+Mf_m)
+        W_tot = np.sum(np.real(W_f))
+        print(2*W_tot)
+
+        raise RuntimeError("ok")
 
         # get the voxel current densities from the face currents
         J_v = extract_solution.get_current_density(n, d, idx_v, idx_f, A_vox, I_f)
