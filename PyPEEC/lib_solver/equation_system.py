@@ -230,7 +230,7 @@ def _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_v
     return rhs
 
 
-def _get_n_dof(A_c, A_m, A_src):
+def _get_system_size(freq, A_c, A_m, A_src):
     # get the matrices
     (A_kvl_c, A_kcl_c) = A_c
     (A_kvl_m, A_kcl_m) = A_m
@@ -241,9 +241,21 @@ def _get_n_dof(A_c, A_m, A_src):
     (n_vm, n_fm) = A_kcl_m.shape
     (n_src, n_src) = A_src_src.shape
 
+    # get the system size
     n_dof = n_vc+n_fc+n_vm+n_fm+n_src
 
-    return n_dof
+    # get the angular frequency
+    s = 1j*2*np.pi*freq
+
+    if freq == 0:
+        scaler = np.ones(n_dof, dtype=np.complex128)
+    else:
+        scaler_1 = np.ones(n_fc, dtype=np.complex128)
+        scaler_2 = s*np.ones(n_fm, dtype=np.complex128)
+        scaler_3 = np.ones(n_vc+n_vm+n_src, dtype=np.complex128)
+        scaler = np.concatenate((scaler_1, scaler_2, scaler_3))
+
+    return n_dof, scaler
 
 
 def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
@@ -344,13 +356,16 @@ def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
     if not _S_fact.get_status():
         return None, S_mat
 
+    # get the system size and the solution scaling
+    (n_dof, sol_scaler) = _get_system_size(freq, A_c, A_m, A_src)
+
     # function describing the preconditioner
     def fct(rhs):
         sol = _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat)
+        sol = sol/sol_scaler
         return sol
 
     # corresponding linear operator
-    n_dof = _get_n_dof(A_c, A_m, A_src)
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
 
     return op, S_mat
@@ -362,13 +377,18 @@ def get_system_operator(freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, 
     This operator is used for the iterative solver.
     """
 
+    # get the system size and the solution scaling
+    (n_dof, sol_scaler) = _get_system_size(freq, A_c, A_m, A_src)
+
     # function describing the equation system
     def fct(sol):
+        sol = sol*sol_scaler
         rhs = _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m)
         return rhs
 
     # corresponding linear operator
-    n_dof = _get_n_dof(A_c, A_m, A_src)
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
 
     return op
+
+

@@ -175,7 +175,6 @@ def _run_postproc(data_solver):
     # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
-    freq = data_solver["freq"]
     A_vox = data_solver["A_vox"]
     source_idx = data_solver["source_idx"]
     idx_fc = data_solver["idx_fc"]
@@ -192,17 +191,19 @@ def _run_postproc(data_solver):
     # extract the solution
     with timelogger.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        (I_fc, I_fm, V_vc, V_vm, I_src_c, I_src_v) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
+        (I_fc, I_fm, V_vc, V_vm, I_src_c, I_src) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
+
+        # get the voxel current densities from the face currents
+        J_v = extract_solution.get_current_density(n, d, idx_vc, idx_fc, A_vox, I_fc)
+        B_v = extract_solution.get_current_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
+
 
 
         import numpy as np
 
-        s = 1j*2*np.pi*freq
-        s = 1
-
         # get the energy for the different faces
         M_f = np.matmul(L_tsr_c, I_fc)
-        Mf_m = np.matmul(K_tsr_c, I_fm)/s
+        Mf_m = np.matmul(K_tsr_c, I_fm)
 
         W_f = 0.5 * np.conj(I_fc) * M_f
         W_tot = np.sum(np.real(W_f))
@@ -214,8 +215,6 @@ def _run_postproc(data_solver):
 
         raise RuntimeError("ok")
 
-        # get the voxel current densities from the face currents
-        J_v = extract_solution.get_current_density(n, d, idx_v, idx_f, A_vox, I_f)
 
         # get the resistive voltage drop and magnetic flux across the faces
         (V_f, M_f) = extract_solution.get_drop_flux(idx_f, R_vec, L_tsr, I_f)

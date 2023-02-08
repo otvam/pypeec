@@ -66,6 +66,34 @@ def _get_vector_flux(n, d, A_vox, var_f_all):
     return var_v_all
 
 
+def get_sol_face(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
+    """
+    Split the solution vector into different variables.
+
+    The solution vector is set in the following order:
+        - n_f: face currents
+        - n_v: voxel potentials
+        - n_src_c: current source currents
+        - n_src_v: voltage source currents
+    """
+
+    # extract the voxel data
+    n_fc = len(idx_fc)
+    n_fm = len(idx_fm)
+    n_vc = len(idx_vc)
+    n_vm = len(idx_vm)
+    n_src = len(idx_src_c)+len(idx_src_v)
+
+    # split the excitation vector
+    I_fc = sol[0:n_fc]
+    I_fm = sol[n_fc:n_fc+n_fm]
+    V_vc = sol[n_fc+n_fm:n_fc+n_fm+n_vc]
+    V_vm = sol[n_fc+n_fm+n_vc:n_fc+n_fm+n_vc+n_vm]
+    I_src = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src]
+
+    return I_fc, I_fm, V_vc, V_vm, I_src
+
+
 def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
     """
     Split the solution vector into different variables.
