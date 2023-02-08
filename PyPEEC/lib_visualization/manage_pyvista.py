@@ -116,7 +116,7 @@ def _get_filter_vector(obj, vec, arrow_threshold):
     nrm = lna.norm(data, axis=1)
 
     # threshold for arrow removal
-    thr = max(nrm)*arrow_threshold
+    thr = np.nanmax(nrm)*arrow_threshold
     idx = nrm > thr
 
     # filter out the arrows that are too small
