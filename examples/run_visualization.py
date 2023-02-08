@@ -31,7 +31,7 @@ def _get_plot_options(name):
         "geom_color": "black",
         "geom_opacity": 0.5,
         "cloud_plot": True,
-        "cloud_color": "black",
+        "cloud_color": "red",
         "cloud_size": 5.0,
         "cloud_opacity": 0.5,
     }

@@ -1,5 +1,5 @@
 {
-    "freq": 0.0,
+    "freq": 1e3,
     "green_simplify": 20.0,
     "coupling_simplify": 20.0,
     "solver_options": {
@@ -17,7 +17,7 @@
         }
     },
     "material_def": {
-        "cond": {"domain_list": ["cond", "src", "sink"], "material_type": "conductor", "rho": 0.01}
+        "cond": {"domain_list": ["cond", "src", "sink"], "material_type": "conductor", "rho": 1e-6}
     },
     "source_def": {
         "src": {"domain_list": ["src"], "source_type": "current", "I": 1.0, "G": 0.5},

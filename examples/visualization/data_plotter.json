@@ -29,7 +29,7 @@
                 "geom_color": "black",
                 "geom_opacity": 0.5,
                 "cloud_plot": true,
-                "cloud_color": "black",
+                "cloud_color": "red",
                 "cloud_size": 5.0,
                 "cloud_opacity": 0.5
             }
@@ -79,7 +79,7 @@
                 "geom_color": "black",
                 "geom_opacity": 0.5,
                 "cloud_plot": true,
-                "cloud_color": "black",
+                "cloud_color": "red",
                 "cloud_size": 5.0,
                 "cloud_opacity": 0.5
             }
@@ -129,7 +129,7 @@
                 "geom_color": "black",
                 "geom_opacity": 0.5,
                 "cloud_plot": true,
-                "cloud_color": "black",
+                "cloud_color": "red",
                 "cloud_size": 5.0,
                 "cloud_opacity": 0.5
             }
@@ -179,7 +179,7 @@
                 "geom_color": "black",
                 "geom_opacity": 0.5,
                 "cloud_plot": true,
-                "cloud_color": "black",
+                "cloud_color": "red",
                 "cloud_size": 5.0,
                 "cloud_opacity": 0.5
             }
@@ -231,7 +231,7 @@
                 "geom_color": "black",
                 "geom_opacity": 0.5,
                 "cloud_plot": true,
-                "cloud_color": "black",
+                "cloud_color": "red",
                 "cloud_size": 5.0,
                 "cloud_opacity": 0.5
             }
@@ -283,7 +283,7 @@
                 "geom_color": "black",
                 "geom_opacity": 0.5,
                 "cloud_plot": true,
-                "cloud_color": "black",
+                "cloud_color": "red",
                 "cloud_size": 5.0,
                 "cloud_opacity": 0.5
             }
@@ -333,7 +333,7 @@
                 "geom_color": "black",
                 "geom_opacity": 0.5,
                 "cloud_plot": true,
-                "cloud_color": "black",
+                "cloud_color": "red",
                 "cloud_size": 5.0,
                 "cloud_opacity": 0.5
             }
@@ -385,7 +385,7 @@
                 "geom_color": "black",
                 "geom_opacity": 0.5,
                 "cloud_plot": true,
-                "cloud_color": "black",
+                "cloud_color": "red",
                 "cloud_size": 5.0,
                 "cloud_opacity": 0.5
             }
@@ -437,7 +437,7 @@
                 "geom_color": "black",
                 "geom_opacity": 0.5,
                 "cloud_plot": true,
-                "cloud_color": "black",
+                "cloud_color": "red",
                 "cloud_size": 5.0,
                 "cloud_opacity": 0.5
             }
