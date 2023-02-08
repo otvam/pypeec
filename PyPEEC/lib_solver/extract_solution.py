@@ -66,7 +66,7 @@ def _get_vector_flux(n, d, A_vox, var_f_all):
     return var_v_all
 
 
-def get_sol_face(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
+def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
     """
     Split the solution vector into different variables.
 
@@ -94,37 +94,7 @@ def get_sol_face(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
     return I_fc, I_fm, V_vc, V_vm, I_src
 
 
-def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
-    """
-    Split the solution vector into different variables.
-
-    The solution vector is set in the following order:
-        - n_f: face currents
-        - n_v: voxel potentials
-        - n_src_c: current source currents
-        - n_src_v: voltage source currents
-    """
-
-    # extract the voxel data
-    n_fc = len(idx_fc)
-    n_fm = len(idx_fm)
-    n_vc = len(idx_vc)
-    n_vm = len(idx_vm)
-    n_src_c = len(idx_src_c)
-    n_src_v = len(idx_src_v)
-
-    # split the excitation vector
-    I_fc = sol[0:n_fc]
-    I_fm = sol[n_fc:n_fc+n_fm]
-    V_vc = sol[n_fc+n_fm:n_fc+n_fm+n_vc]
-    V_vm = sol[n_fc+n_fm+n_vc:n_fc+n_fm+n_vc+n_vm]
-    I_src_c = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src_c]
-    I_src_v = sol[n_fc+n_fm+n_vc+n_vm+n_src_c:n_fc+n_fm+n_vc+n_vm+n_src_c+n_src_v]
-
-    return I_fc, I_fm, V_vc, V_vm, I_src_c, I_src_v
-
-
-def get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v):
+def get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
     """
     Expand the potential and source currents for all the voxels.
 
@@ -137,9 +107,15 @@ def get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v):
     (nx, ny, nz) = n
     nv = nx*ny*nz
 
+    # split the source currents between the current and voltage sources
+    n_src_c = len(idx_src_c)
+    n_src_v = len(idx_src_v)
+    I_src_c = I_src[0:n_src_c]
+    I_src_v = I_src[n_src_c:n_src_c+n_src_v]
+
     # assign voxel potentials
     V_v_all = np.zeros(nv, dtype=np.complex128)
-    V_v_all[idx_v] = V_v
+    V_v_all[idx_vc] = V_vc
 
     # assign current source currents
     I_src_c_all = np.zeros(nv, dtype=np.complex128)
@@ -178,27 +154,7 @@ def get_current_density(n, d, idx_v, idx_f, A_vox, I_f):
     return J_v
 
 
-def get_drop_flux(idx_f, R_vec, L_tsr, I_f):
-    """
-    Get the resistive voltage drop and magnetic flux across the faces.
-
-    At the input, the face current vector has the following size: n_f.
-    At the output, the vectors have the following size: n_f.
-    """
-
-    # get the resistive voltage drop
-    V_f = R_vec*I_f
-
-    # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-    L_tsr = matrix_multiply.get_prepare_diag(idx_f, L_tsr)
-
-    # get the energy for the different faces
-    M_f = matrix_multiply.get_multiply_diag(idx_f, I_f, L_tsr)
-
-    return V_f, M_f
-
-
-def get_loss(n, d, idx_v, idx_f, A_vox, V_f, I_f):
+def get_loss(n, d, idx_vc, idx_fc, A_vox, I_fc, R_vec_c):
     """
     Get the loss densities for the voxels.
 
@@ -211,11 +167,11 @@ def get_loss(n, d, idx_v, idx_f, A_vox, V_f, I_f):
     nv = nx*ny*nz
 
     # get the losses for the different faces
-    P_f = 0.5*np.conj(I_f)*V_f
+    P_f = 0.5*np.conj(I_fc)*R_vec_c*I_fc
 
     # extend the solution for the complete voxel structure (including the empty voxels)
     P_f_all = np.zeros(3*nv, dtype=np.complex128)
-    P_f_all[idx_f] = P_f
+    P_f_all[idx_fc] = P_f
 
     # project the loss/energy from the faces into the voxels
     P_v_all = _get_scalar_density(nv, d, A_vox, P_f_all)
@@ -224,21 +180,25 @@ def get_loss(n, d, idx_v, idx_f, A_vox, V_f, I_f):
     P_v_all = np.real(P_v_all)
 
     # remove empty voxels
-    P_v = P_v_all[idx_v]
+    P_v = P_v_all[idx_vc]
 
     return P_v
 
 
-def get_integral(V_f, M_f, I_f):
+def get_integral(I_fc, I_fm, R_vec_c, L_tsr_c, K_tsr_c):
     """
     Sum the loss/energy in order to obtain global quantities.
     """
 
     # get the losses for the different faces
-    P_f = 0.5*np.conj(I_f)*V_f
+    P_f = 0.5*np.conj(I_fc)*R_vec_c*I_fc
 
     # get the energy for the different faces
-    W_f = 0.5*np.conj(I_f)*M_f
+    M_fc = matrix_multiply.get_multiply(L_tsr_c, I_fc)
+    M_fm = matrix_multiply.get_multiply(K_tsr_c, I_fm)
+
+    # get the energy for the different faces
+    W_f = 0.5*np.conj(I_fc)*(M_fc+M_fm)
 
     # compute the integral quantities
     P_tot = np.sum(np.real(P_f))

@@ -25,6 +25,7 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
     Prepare the matrix for the multiplication.
     """
 
+    # get the matrix
     if MATRIX_MULTIPLICATION == "FFT":
         mat = multiply_fft.get_prepare(mat, matrix_type)
     elif MATRIX_MULTIPLICATION == "DIRECT":
@@ -32,7 +33,10 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
     else:
         raise ValueError("invalid multiplication library")
 
-    return mat
+    # assign the properties
+    data = {"mat": mat, "idx_out": idx_out, "idx_in": idx_in, "matrix_type": matrix_type}
+
+    return data
 
 
 def _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type):
@@ -80,31 +84,18 @@ def get_prepare_cross(idx_out, idx_in, mat):
     return mat
 
 
-def get_multiply_single(idx, vec, mat):
+def get_multiply(data, vec_in):
     """
-    Make a matrix-vector multiplication for a single matrix.
-    """
-
-    res = _get_multiply(idx, idx, vec, mat, "single")
-
-    return res
-
-
-def get_multiply_diag(idx, vec, mat):
-    """
-    Make a matrix-vector multiplication for a diagonal matrix.
+    Make a matrix-vector multiplication.
     """
 
-    res = _get_multiply(idx, idx, vec, mat, "diag")
+    # extract the data
+    mat = data["mat"]
+    idx_out = data["idx_out"]
+    idx_in = data["idx_in"]
+    matrix_type = data["matrix_type"]
 
-    return res
-
-
-def get_multiply_cross(idx_out, idx_in, vec, mat):
-    """
-    Make a matrix-vector multiplication for a cross matrix.
-    """
-
-    res = _get_multiply(idx_out, idx_in, vec, mat, "cross")
+    # get the multiplication
+    res = _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type)
 
     return res

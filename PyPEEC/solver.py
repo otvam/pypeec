@@ -135,7 +135,7 @@ def _run_main(data_solver):
         (pcd_op, S_mat) = equation_system.get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m)
+        sys_op = equation_system.get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m)
 
     # solve the equation system
     with timelogger.BlockTimer(logger, "equation_solver"):
@@ -191,42 +191,22 @@ def _run_postproc(data_solver):
     # extract the solution
     with timelogger.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        (I_fc, I_fm, V_vc, V_vm, I_src_c, I_src) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
+        (I_fc, I_fm, V_vc, V_vm, I_src) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
 
         # get the voxel current densities from the face currents
-        J_v = extract_solution.get_current_density(n, d, idx_vc, idx_fc, A_vox, I_fc)
-        B_v = extract_solution.get_current_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
+        J_vc = extract_solution.get_current_density(n, d, idx_vc, idx_fc, A_vox, I_fc)
 
-
-
-        import numpy as np
-
-        # get the energy for the different faces
-        M_f = np.matmul(L_tsr_c, I_fc)
-        Mf_m = np.matmul(K_tsr_c, I_fm)
-
-        W_f = 0.5 * np.conj(I_fc) * M_f
-        W_tot = np.sum(np.real(W_f))
-        print(2*W_tot)
-
-        W_f = 0.5 * np.conj(I_fc) * (M_f+Mf_m)
-        W_tot = np.sum(np.real(W_f))
-        print(2*W_tot)
-
-        raise RuntimeError("ok")
-
-
-        # get the resistive voltage drop and magnetic flux across the faces
-        (V_f, M_f) = extract_solution.get_drop_flux(idx_f, R_vec, L_tsr, I_f)
-
-        # get the global quantities (energy and losses)
-        integral = extract_solution.get_integral(V_f, M_f, I_f)
+        # get the voxel flux densities from the face currents
+        B_vm = extract_solution.get_current_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
         # get the voxel loss density
-        P_v = extract_solution.get_loss(n, d, idx_v, idx_f, A_vox, V_f, I_f)
+        P_vm = extract_solution.get_loss(n, d, idx_vc, idx_fc, A_vox, I_fc, R_vec_c)
+
+        # get the global quantities (energy and losses)
+        integral = extract_solution.get_integral(I_fc, I_fm, R_vec_c, L_tsr_c, K_tsr_c)
 
         # extend the solution for the complete voxel structure (including the empty voxels)
-        (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v)
+        (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src)
 
         # parse the terminal voltages and currents for the sources
         terminal = extract_solution.get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all)
@@ -234,9 +214,11 @@ def _run_postproc(data_solver):
     # assemble results
     data_solver["terminal"] = terminal
     data_solver["integral"] = integral
-    data_solver["V_v"] = V_v
-    data_solver["J_v"] = J_v
-    data_solver["P_v"] = P_v
+    data_solver["V_vc"] = V_vc
+    data_solver["V_vm"] = V_vm
+    data_solver["J_vc"] = J_vc
+    data_solver["B_vm"] = B_vm
+    data_solver["P_vm"] = P_vm
 
     return data_solver
 
@@ -252,7 +234,8 @@ def _run_assemble(data_solver):
         "d": data_solver["d"],
         "c": data_solver["c"],
         "voxel_point": data_solver["voxel_point"],
-        "idx_v": data_solver["idx_v"],
+        "idx_vc": data_solver["idx_vc"],
+        "idx_vm": data_solver["idx_vm"],
         "idx_src_c": data_solver["idx_src_c"],
         "idx_src_v": data_solver["idx_src_v"],
         "freq": data_solver["freq"],
@@ -260,10 +243,11 @@ def _run_assemble(data_solver):
         "problem_status": data_solver["problem_status"],
         "solver_status": data_solver["solver_status"],
         "condition_status": data_solver["condition_status"],
-        "rho_v": data_solver["rho_v"],
-        "V_v": data_solver["V_v"],
-        "J_v": data_solver["J_v"],
-        "P_v": data_solver["P_v"],
+        "V_vc": data_solver["V_vc"],
+        "V_vm": data_solver["V_vm"],
+        "J_vc": data_solver["J_vc"],
+        "B_vm": data_solver["B_vm"],
+        "P_vm": data_solver["P_vm"],
         "terminal": data_solver["terminal"],
     }
 

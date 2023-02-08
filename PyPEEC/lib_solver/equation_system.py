@@ -160,7 +160,7 @@ def _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat):
     return sol
 
 
-def _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m):
+def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m):
     """
     Multiply the full equation matrix with a given solution test vector.
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
@@ -195,14 +195,14 @@ def _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_v
     I_src = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src]
 
     # conductor KVL equations
-    rhs_1 = s*matrix_multiply.get_multiply_diag(idx_fc, I_fc, L_tsr_c)
-    rhs_2 = matrix_multiply.get_multiply_cross(idx_fc, idx_fm, I_fm, K_tsr_c)
+    rhs_1 = s*matrix_multiply.get_multiply(L_tsr_c, I_fc)
+    rhs_2 = matrix_multiply.get_multiply(K_tsr_c, I_fm)
     rhs_3 = R_vec_c*I_fc
     rhs_4 = A_kvl_c*V_vc
     rhs_fc = rhs_1+rhs_2+rhs_3+rhs_4
 
     # magnetic KVL equations
-    rhs_1 = matrix_multiply.get_multiply_cross(idx_fm, idx_fc, I_fc, K_tsr_m)
+    rhs_1 = matrix_multiply.get_multiply(K_tsr_m, I_fc)
     rhs_2 = R_vec_m/s_diff*I_fm
     rhs_3 = A_kvl_m*V_vm
     rhs_fm = rhs_1+rhs_2+rhs_3
@@ -213,7 +213,7 @@ def _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_v
     rhs_vc = rhs_1+rhs_2
 
     # magnetic KCL equations
-    rhs_1 = matrix_multiply.get_multiply_single(idx_vm, A_kcl_m*I_fm, P_tsr_m)
+    rhs_1 = matrix_multiply.get_multiply(P_tsr_m, A_kcl_m*I_fm)
     rhs_2 = s_diff*V_vm
     rhs_3 = A_vm_src*I_src
     rhs_vm = rhs_1+rhs_2+rhs_3
@@ -371,7 +371,7 @@ def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
     return op, S_mat
 
 
-def get_system_operator(freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m):
+def get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m):
     """
     Get a linear operator that produce the matrix-vector multiplication result for the full system.
     This operator is used for the iterative solver.
@@ -383,7 +383,7 @@ def get_system_operator(freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, 
     # function describing the equation system
     def fct(sol):
         sol = sol*sol_scaler
-        rhs = _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m)
+        rhs = _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m)
         return rhs
 
     # corresponding linear operator

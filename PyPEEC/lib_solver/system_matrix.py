@@ -125,7 +125,7 @@ def get_coupling_matrix(idx_fc, idx_fm, K_tsr):
         - with dense matrices
     """
 
-    K_tsr_c = +1*matrix_multiply.get_prepare_cross(idx_fc, idx_fm, K_tsr)
-    K_tsr_m = -1*matrix_multiply.get_prepare_cross(idx_fm, idx_fc, K_tsr)
+    K_tsr_c = matrix_multiply.get_prepare_cross(idx_fc, idx_fm, +1*K_tsr)
+    K_tsr_m = matrix_multiply.get_prepare_cross(idx_fm, idx_fc, -1*K_tsr)
 
     return K_tsr_c, K_tsr_m
