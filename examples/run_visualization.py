@@ -203,8 +203,8 @@ def get_data_plotter():
     # get the plots
     data_plotter = [
         _get_data_plotter_geometry("Material"),
-        # _get_data_plotter_scalar("voxel", "rho", 1e8, "uOhm/cm", "Resistivity"),
-        # _get_data_plotter_scalar("voxel", "V_abs", 1e0, "V", "Potential"),
+        _get_data_plotter_scalar("voxel", "V_c_abs", 1e0, "V", "Potential"),
+        _get_data_plotter_scalar("voxel", "V_m_abs", 1e0, "A", "Potential"),
         # _get_data_plotter_scalar("voxel", "J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
         # _get_data_plotter_scalar("voxel", "P", 1e-6, "mW/mm3", "Losses"),
         # _get_data_plotter_arrow("voxel", "J_norm_re", "J_vec_re", 1e-6, "A/mm2", "Re. Current"),

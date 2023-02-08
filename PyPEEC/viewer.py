@@ -45,8 +45,8 @@ def _get_grid_voxel(data_voxel, data_point):
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
-    voxel = manage_voxel.get_voxel(grid, idx_v)
-    point = manage_voxel.get_point(voxel, data_point)
+    voxel = manage_voxel.get_voxel_viewer(grid, idx_v)
+    point = manage_voxel.get_point(data_point, voxel)
 
     # add the domain tag to the geometry
     voxel = manage_voxel.set_viewer_domain(voxel, idx_v, dom_v, gra_v)

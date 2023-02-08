@@ -64,16 +64,6 @@ def _get_graph_component(idx, connection_def):
     return gra
 
 
-def _get_domain_tag(idx, counter):
-    # assign the color (n different integer for each domain)
-    dom = np.full(len(idx), counter, dtype=np.int64)
-
-    # update the domain counter
-    counter += 1
-
-    return dom, counter
-
-
 def get_grid(n, d, c):
     """
     Construct a PyVista uniform grid for the complete voxel structure.
@@ -100,7 +90,7 @@ def get_grid(n, d, c):
     return grid
 
 
-def get_voxel(grid, idx_vc, idx_vm):
+def get_voxel_plotter(grid, idx_vc, idx_vm):
     """
     Construct a PyVista unstructured grid for the non-empty voxels.
     The indices of the non-empty vocels are provided.
@@ -108,14 +98,27 @@ def get_voxel(grid, idx_vc, idx_vm):
 
     # assemble idx
     idx_v = np.concatenate((idx_vc, idx_vm))
-
-    # sort indices
-    idx_sort = np.sort(idx_v)
+    idx_v = np.sort(idx_v)
 
     # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
-    voxel = grid.extract_cells(idx_sort)
+    voxel = grid.extract_cells(idx_v)
 
     return voxel, idx_v
+
+
+def get_voxel_viewer(grid, idx_v):
+    """
+    Construct a PyVista unstructured grid for the non-empty voxels.
+    The indices of the non-empty vocels are provided.
+    """
+
+    # assemble idx
+    idx_v = np.sort(idx_v)
+
+    # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
+    voxel = grid.extract_cells(idx_v)
+
+    return voxel
 
 
 def get_point(data_point, voxel):
@@ -156,7 +159,10 @@ def get_viewer_domain(domain_def, connection_def):
     counter = 1
     for tag, idx_tmp in domain_def.items():
         # assign the color (n different integer for each domain)
-        (dom_tmp, counter) = _get_domain_tag(idx_tmp, counter)
+        dom_tmp = np.full(len(idx_tmp), counter, dtype=np.int64)
+
+        # update the domain counter
+        counter += 1
 
         # find the connected components corresponding to the indices
         gra_tmp = _get_graph_component(idx_tmp, connection_def)
@@ -208,7 +214,7 @@ def set_viewer_domain(voxel, idx_v, dom_v, gra_v):
     return voxel
 
 
-def set_plotter_voxel_material(voxel, idx_vc, idx_vm, idx_src_c, idx_src_v):
+def set_plotter_voxel_material(voxel, idx_v, idx_vc, idx_vm, idx_src_c, idx_src_v):
     """
     Add the material description to the unstructured grid.
     The following fake scalar field encoding is used:
@@ -217,13 +223,10 @@ def set_plotter_voxel_material(voxel, idx_vc, idx_vm, idx_src_c, idx_src_v):
         - 2: voltage source voxels
     """
 
-    idx_v = np.concatenate((idx_vc, idx_vm))
-    idx_v = np.sort(idx_v)
-
     # init the material
-    data = np.full(len(idx_v), np.nan, dtype=np.float64)
+    data = np.empty(len(idx_v), dtype=np.int64)
 
-    # assign
+    # find position
     idx_vc_local = np.flatnonzero(np.in1d(idx_v, idx_vc))
     idx_vm_local = np.flatnonzero(np.in1d(idx_v, idx_vm))
     idx_src_c_local = np.flatnonzero(np.in1d(idx_v, idx_src_c))
@@ -241,7 +244,7 @@ def set_plotter_voxel_material(voxel, idx_vc, idx_vm, idx_src_c, idx_src_v):
     return voxel
 
 
-def set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v):
+def set_plotter_voxel_data(voxel, idx_v, idx_var, var_pot, var_flux, name_pot, name_flux):
     """
     Add the different variables to the unstructured grid:
         - resistivity (scalar field, input variable)
@@ -250,32 +253,32 @@ def set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v):
         - loss (scalar field, solved variable)
     """
 
-    # sort idx
-    idx_s = np.argsort(idx_v)
-
     # reorder variables
-    rho_v = rho_v[idx_s]
-    V_v = V_v[idx_s]
-    P_v = P_v[idx_s]
-    J_v = J_v[idx_s,]
+    idx_s = np.argsort(idx_v)
+    idx_p = np.searchsorted(idx_v[idx_s], idx_var)
+    idx_var_local = idx_s[idx_p]
 
-    # assign data
-    voxel["rho"] = rho_v
-    voxel["P"] = P_v
+    # assign potential (nan for the voxels where the variable is not defined)
+    var_pot_all = np.full(len(idx_v), np.nan+1j*np.nan, dtype=np.complex128)
+    var_pot_all[idx_var_local] = var_pot
+
+    # assign flux (nan for the voxels where the variable is not defined)
+    var_flux_all = np.full((len(idx_v), 3), np.nan+1j*np.nan, dtype=np.complex128)
+    var_flux_all[idx_var_local] = var_flux
 
     # assign potential
-    voxel["V_re"] = np.real(V_v)
-    voxel["V_im"] = np.imag(V_v)
-    voxel["V_abs"] = np.abs(V_v)
+    voxel[name_pot + "_re"] = np.real(var_pot_all)
+    voxel[name_pot + "_im"] = np.imag(var_pot_all)
+    voxel[name_pot + "_abs"] = np.abs(var_pot_all)
 
     # assign the current density norm
-    voxel["J_norm_abs"] = lna.norm(J_v, axis=1)
-    voxel["J_norm_re"] = lna.norm(np.real(J_v), axis=1)
-    voxel["J_norm_im"] = lna.norm(np.imag(J_v), axis=1)
+    voxel[name_flux + "_norm_abs"] = lna.norm(var_flux_all, axis=1)
+    voxel[name_flux + "_norm_re"] = lna.norm(np.real(var_flux_all), axis=1)
+    voxel[name_flux + "_norm_im"] = lna.norm(np.imag(var_flux_all), axis=1)
 
     # assign the current density direction
-    voxel["J_vec_re"] = np.real(J_v)
-    voxel["J_vec_im"] = np.imag(J_v)
+    voxel[name_flux + "_vec_re"] = np.real(var_flux_all)
+    voxel[name_flux + "_vec_im"] = np.imag(var_flux_all)
 
     return voxel
 

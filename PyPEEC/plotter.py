@@ -48,7 +48,7 @@ def _get_grid_voxel(data_solution, data_point):
     idx_src_c = data_solution["idx_src_c"]
     idx_src_v = data_solution["idx_src_v"]
     V_vc = data_solution["V_vc"]
-    J_vc = data_solution["J_vc"]
+    V_vm = data_solution["V_vm"]
     J_vc = data_solution["J_vc"]
     B_vm = data_solution["B_vm"]
     solver_status = data_solution["solver_status"]
@@ -58,12 +58,15 @@ def _get_grid_voxel(data_solution, data_point):
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
-    (voxel, idx_v) = manage_voxel.get_voxel(grid, idx_vc, idx_vm)
+    (voxel, idx_v) = manage_voxel.get_voxel_plotter(grid, idx_vc, idx_vm)
     point = manage_voxel.get_point(data_point, voxel)
 
     # add the problem solution to the grid
-    voxel = manage_voxel.set_plotter_voxel_material(voxel, idx_vc, idx_vm, idx_src_c, idx_src_v)
-    # voxel = manage_voxel.set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v)
+    voxel = manage_voxel.set_plotter_voxel_material(voxel, idx_v, idx_vc, idx_vm, idx_src_c, idx_src_v)
+    voxel = manage_voxel.set_plotter_voxel_data(voxel, idx_v, idx_vc, V_vc, J_vc, "V_c", "J_c")
+    voxel = manage_voxel.set_plotter_voxel_data(voxel, idx_v, idx_vm, V_vm, B_vm, "V_m", "B_m")
+
+
     # point = manage_voxel.set_plotter_magnetic_field(point, H_point)
 
     return grid, voxel, point, solver_status
