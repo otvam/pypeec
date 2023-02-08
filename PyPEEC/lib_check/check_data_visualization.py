@@ -124,13 +124,6 @@ def _check_data_options(plot_type, data_options):
     vec_voxel_list = ["J_vec_re", "J_vec_im"]
     vec_point_list = ["H_vec_re", "H_vec_im"]
 
-    # check the options compatibility
-    if plot_type == "material":
-        if not isinstance(data_options["opacity"], float):
-            raise CheckError("opacity: opacity should be a float")
-        if not isinstance(data_options["legend"], str):
-            raise CheckError("plot_legend: plot legend option should be a string")
-
     # check the scalar options
     if plot_type in ["scalar_voxel", "scalar_point"]:
         # check type

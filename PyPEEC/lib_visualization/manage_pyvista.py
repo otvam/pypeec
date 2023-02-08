@@ -196,37 +196,17 @@ def plot_material(pl, voxel, data_options, clip_options):
         - 2: voltage source voxels
     """
 
-    # extract
-    legend = data_options["legend"]
-    opacity = data_options["opacity"]
-
-    # color bar options (no label as the positions are indicated with annotations)
-    scalar_bar_args = dict(
-        n_labels=0,
-        label_font_size=15,
-        title_font_size=15,
-        title=legend,
-    )
-
-    # get annotations
-    annotations = {
-        0: "Conductor",
-        1: "Current Src.",
-        2: "Voltage Src.",
-    }
-
     # get a colormap with three discrete color
-    cmap = ["darkorange", "forestgreen", "royalblue"]
+    cmap = ["darkorange", "gainsboro", "forestgreen", "royalblue"]
 
     # make a copy (for avoid cross coupling)
     voxel_tmp = voxel.copy(deep=True)
 
     # add the resulting plot to the plotter
     arg = dict(
+        clim=[1, 4],
+        show_scalar_bar=False,
         scalars="material",
-        opacity=opacity,
-        scalar_bar_args=scalar_bar_args,
-        annotations=annotations,
         cmap=cmap,
     )
     if voxel_tmp.n_cells > 0:

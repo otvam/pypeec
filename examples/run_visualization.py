@@ -76,10 +76,7 @@ def _get_data_plotter_geometry(name):
     This structure is used by the plotter.
     """
 
-    data_options = {
-        "legend": name,
-        "opacity": 1.0,
-    }
+    data_options = {}
 
     data = _get_data_plotter_pyvista("material", data_options, name)
 
@@ -206,17 +203,17 @@ def get_data_plotter():
     # get the plots
     data_plotter = [
         _get_data_plotter_geometry("Material"),
-        _get_data_plotter_scalar("voxel", "rho", 1e8, "uOhm/cm", "Resistivity"),
-        _get_data_plotter_scalar("voxel", "V_abs", 1e0, "V", "Potential"),
-        _get_data_plotter_scalar("voxel", "J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        _get_data_plotter_scalar("voxel", "P", 1e-6, "mW/mm3", "Losses"),
-        _get_data_plotter_arrow("voxel", "J_norm_re", "J_vec_re", 1e-6, "A/mm2", "Re. Current"),
-        _get_data_plotter_arrow("voxel", "J_norm_im", "J_vec_im", 1e-6, "A/mm2", "Im. Current"),
-        _get_data_plotter_scalar("point", "H_norm_abs", 1e0, "A/m", "Mag. Field Norm"),
-        _get_data_plotter_arrow("point", "H_norm_re", "H_vec_re", 1e0, "A/m", "Re. Mag. Field"),
-        _get_data_plotter_arrow("point", "H_norm_im", "H_vec_im", 1e0, "A/m", "Im. Mag. Field"),
-        _get_data_plotter_matplotlib("convergence", "Convergence"),
-        _get_data_plotter_matplotlib("residuum", "Residuum"),
+        # _get_data_plotter_scalar("voxel", "rho", 1e8, "uOhm/cm", "Resistivity"),
+        # _get_data_plotter_scalar("voxel", "V_abs", 1e0, "V", "Potential"),
+        # _get_data_plotter_scalar("voxel", "J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
+        # _get_data_plotter_scalar("voxel", "P", 1e-6, "mW/mm3", "Losses"),
+        # _get_data_plotter_arrow("voxel", "J_norm_re", "J_vec_re", 1e-6, "A/mm2", "Re. Current"),
+        # _get_data_plotter_arrow("voxel", "J_norm_im", "J_vec_im", 1e-6, "A/mm2", "Im. Current"),
+        # _get_data_plotter_scalar("point", "H_norm_abs", 1e0, "A/m", "Mag. Field Norm"),
+        # _get_data_plotter_arrow("point", "H_norm_re", "H_vec_re", 1e0, "A/m", "Re. Mag. Field"),
+        # _get_data_plotter_arrow("point", "H_norm_im", "H_vec_im", 1e0, "A/m", "Im. Mag. Field"),
+        # _get_data_plotter_matplotlib("convergence", "Convergence"),
+        # _get_data_plotter_matplotlib("residuum", "Residuum"),
     ]
 
     return data_plotter

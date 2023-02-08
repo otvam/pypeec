@@ -154,37 +154,6 @@ def get_current_density(n, d, idx_v, idx_f, A_vox, I_f):
     return J_v
 
 
-def get_loss(n, d, idx_vc, idx_fc, A_vox, I_fc, R_vec_c):
-    """
-    Get the loss densities for the voxels.
-
-    At the input, the face current vector has the following size: n_f.
-    At the output, the loss density vector has the following size: n_v.
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
-
-    # get the losses for the different faces
-    P_f = 0.5*np.conj(I_fc)*R_vec_c*I_fc
-
-    # extend the solution for the complete voxel structure (including the empty voxels)
-    P_f_all = np.zeros(3*nv, dtype=np.complex128)
-    P_f_all[idx_fc] = P_f
-
-    # project the loss/energy from the faces into the voxels
-    P_v_all = _get_scalar_density(nv, d, A_vox, P_f_all)
-
-    # remove numerical errors (losses are real)
-    P_v_all = np.real(P_v_all)
-
-    # remove empty voxels
-    P_v = P_v_all[idx_vc]
-
-    return P_v
-
-
 def get_integral(I_fc, I_fm, R_vec_c, L_tsr_c, K_tsr_c):
     """
     Sum the loss/energy in order to obtain global quantities.

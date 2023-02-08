@@ -100,22 +100,25 @@ def get_grid(n, d, c):
     return grid
 
 
-def get_voxel(grid, idx_v):
+def get_voxel(grid, idx_vc, idx_vm):
     """
     Construct a PyVista unstructured grid for the non-empty voxels.
     The indices of the non-empty vocels are provided.
     """
 
-    # sort idx
-    idx_v = np.sort(idx_v)
+    # assemble idx
+    idx_v = np.concatenate((idx_vc, idx_vm))
+
+    # sort indices
+    idx_sort = np.sort(idx_v)
 
     # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
-    voxel = grid.extract_cells(idx_v)
+    voxel = grid.extract_cells(idx_sort)
 
-    return voxel
+    return voxel, idx_v
 
 
-def get_point(voxel, data_point):
+def get_point(data_point, voxel):
     """
     Construct a PyVista point cloud (polydata) with the defined points.
     The points cannot be located inside the non-empty voxels.
@@ -205,7 +208,7 @@ def set_viewer_domain(voxel, idx_v, dom_v, gra_v):
     return voxel
 
 
-def set_plotter_voxel_material(voxel, idx_v, idx_src_c, idx_src_v):
+def set_plotter_voxel_material(voxel, idx_vc, idx_vm, idx_src_c, idx_src_v):
     """
     Add the material description to the unstructured grid.
     The following fake scalar field encoding is used:
@@ -214,20 +217,23 @@ def set_plotter_voxel_material(voxel, idx_v, idx_src_c, idx_src_v):
         - 2: voltage source voxels
     """
 
-    # assign conductors
-    data = np.zeros(len(idx_v), dtype=np.float64)
+    idx_v = np.concatenate((idx_vc, idx_vm))
+    idx_v = np.sort(idx_v)
 
-    # get the local source indices
+    # init the material
+    data = np.full(len(idx_v), np.nan, dtype=np.float64)
+
+    # assign
+    idx_vc_local = np.flatnonzero(np.in1d(idx_v, idx_vc))
+    idx_vm_local = np.flatnonzero(np.in1d(idx_v, idx_vm))
     idx_src_c_local = np.flatnonzero(np.in1d(idx_v, idx_src_c))
     idx_src_v_local = np.flatnonzero(np.in1d(idx_v, idx_src_v))
 
     # assign the voltage and current sources
-    data[idx_src_c_local] = 1
-    data[idx_src_v_local] = 2
-
-    # sort idx
-    idx_sort = np.argsort(idx_v)
-    data = data[idx_sort]
+    data[idx_vc_local] = 1
+    data[idx_vm_local] = 2
+    data[idx_src_c_local] = 3
+    data[idx_src_v_local] = 4
 
     # assign the extract data to the geometry
     voxel["material"] = data

@@ -199,9 +199,6 @@ def _run_postproc(data_solver):
         # get the voxel flux densities from the face currents
         B_vm = extract_solution.get_current_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
-        # get the voxel loss density
-        P_vm = extract_solution.get_loss(n, d, idx_vc, idx_fc, A_vox, I_fc, R_vec_c)
-
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(I_fc, I_fm, R_vec_c, L_tsr_c, K_tsr_c)
 
@@ -218,7 +215,6 @@ def _run_postproc(data_solver):
     data_solver["V_vm"] = V_vm
     data_solver["J_vc"] = J_vc
     data_solver["B_vm"] = B_vm
-    data_solver["P_vm"] = P_vm
 
     return data_solver
 
@@ -247,7 +243,6 @@ def _run_assemble(data_solver):
         "V_vm": data_solver["V_vm"],
         "J_vc": data_solver["J_vc"],
         "B_vm": data_solver["B_vm"],
-        "P_vm": data_solver["P_vm"],
         "terminal": data_solver["terminal"],
     }
 
