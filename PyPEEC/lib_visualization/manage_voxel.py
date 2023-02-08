@@ -253,7 +253,7 @@ def set_plotter_voxel_data(voxel, idx_v, idx_var, var_pot, var_flux, name_pot, n
         - loss (scalar field, solved variable)
     """
 
-    # reorder variables
+    # find the variable indices
     idx_s = np.argsort(idx_v)
     idx_p = np.searchsorted(idx_v[idx_s], idx_var)
     idx_var_local = idx_s[idx_p]

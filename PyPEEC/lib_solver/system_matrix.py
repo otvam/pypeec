@@ -28,18 +28,18 @@ def get_R_vector(n, d, A_net, idx_f, rho_v):
     # get the resistivity of the faces (average between voxels)
     rho_vec = 0.5*rho_v*np.abs(A_net)
 
+    # get the direction of the faces (x, y, z)
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
+
     # init the resistance vector
     R_vec = np.zeros(len(rho_vec), dtype=np.float64)
 
-    # get the direction of the faces (x, y, z)
-    idx_f_x = np.flatnonzero(np.in1d(idx_f, np.arange(0*nv, 1*nv)))
-    idx_f_y = np.flatnonzero(np.in1d(idx_f, np.arange(1*nv, 2*nv)))
-    idx_f_z = np.flatnonzero(np.in1d(idx_f, np.arange(2*nv, 3*nv)))
-
     # resistance vector (different directions)
-    R_vec[idx_f_x] = (dx/(dy*dz))*rho_vec[idx_f_x]
-    R_vec[idx_f_y] = (dy/(dx*dz))*rho_vec[idx_f_y]
-    R_vec[idx_f_z] = (dz/(dx*dy))*rho_vec[idx_f_z]
+    R_vec[idx_fx] = (dx/(dy*dz))*rho_vec[idx_fx]
+    R_vec[idx_fy] = (dy/(dx*dz))*rho_vec[idx_fy]
+    R_vec[idx_fz] = (dz/(dx*dy))*rho_vec[idx_fz]
 
     return R_vec
 
