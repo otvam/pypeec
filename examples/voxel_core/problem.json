@@ -1,7 +1,7 @@
 {
     "freq": 1e2,
-    "green_simplify": 25.0,
-    "coupling_simplify": 25.0,
+    "green_simplify": 20.0,
+    "coupling_simplify": 20.0,
     "solver_options": {
         "rel_tol": 1e-06,
         "abs_tol": 1e-12,
