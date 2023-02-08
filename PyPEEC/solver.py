@@ -125,14 +125,22 @@ def _run_main(data_solver):
         rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
 
         # get the KVL and KCL connection matrices
-        (A_kvl_c, A_kcl_c) = equation_system.get_kvl_kcl_matrix(A_net_c)
-        (A_kvl_m, A_kcl_m) = equation_system.get_kvl_kcl_matrix(A_net_m)
+        A_c = equation_system.get_kvl_kcl_matrix(A_net_c)
+        A_m = equation_system.get_kvl_kcl_matrix(A_net_m)
 
         # get the source connection matrices
-        (A_kcl_src, A_src_pot, A_src_src) = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
+        A_src = equation_system.get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v)
+
+        # get the linear operator for the preconditioner (guess of the inverse)
+        (pcd_op, S_mat) = equation_system.get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
+
+        # get the linear operator for the full system (matrix-vector multiplication)
+        sys_op = equation_system.get_system_operator(freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m)
 
 
-
+        (A_kvl_c, A_kcl_c) = A_c
+        (A_kvl_m, A_kcl_m) = A_m
+        (A_kcl_src, A_src_pot, A_src_src) = A_src
 
         import numpy as np
         import numpy.linalg as lna
@@ -163,20 +171,23 @@ def _run_main(data_solver):
         a2 = np.zeros((len(idx_fm), n_src))
         E2 = np.block([[K_tsr_m, +Z_m, a1, A_kvl_m.toarray(), a2]])
 
-        a1 = np.zeros((len(idx_vm), len(idx_fc)))
-        a2 = np.zeros((len(idx_vm), len(idx_vc)))
-        a3 = np.zeros((len(idx_vm), n_src))
-        E3 = np.block([[a1, np.matmul(P_tsr_m, A_kcl_m.toarray()), a2, iden, a3]])
+        A_kcl_src = A_kcl_src.toarray()
+        Ac = A_kcl_src[:len(idx_vc)]
+        Am = A_kcl_src[len(idx_vc):]
 
         a1 = np.zeros((len(idx_vc), len(idx_fm)))
         a2 = np.zeros((len(idx_vc), len(idx_vc)))
         a3 = np.zeros((len(idx_vc), len(idx_vm)))
-        E4 = np.block([[A_kcl_c.toarray(), a1, a2, a3, A_kcl_src.toarray()]])
+        E3 = np.block([[A_kcl_c.toarray(), a1, a2, a3, Ac]])
+
+        a1 = np.zeros((len(idx_vm), len(idx_fc)))
+        a2 = np.zeros((len(idx_vm), len(idx_vc)))
+        a3 = np.zeros((len(idx_vm), n_src))
+        E4 = np.block([[a1, np.matmul(P_tsr_m, A_kcl_m.toarray()), a2, iden, Am]])
 
         a1 = np.zeros((n_src, len(idx_fc)))
         a2 = np.zeros((n_src, len(idx_fm)))
-        a3 = np.zeros((n_src, len(idx_vm)))
-        E5 = np.block([[a1, a2, A_src_pot.toarray(), a3, A_src_src.toarray()]])
+        E5 = np.block([[a1, a2, A_src_pot.toarray(), A_src_src.toarray()]])
 
         mat = np.concatenate((E1, E2, E3, E4, E5))
 
@@ -208,6 +219,7 @@ def _run_main(data_solver):
         print(L)
 
         raise RunError("STOP")
+
 
 
 

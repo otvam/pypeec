@@ -52,7 +52,7 @@ from PyPEEC.lib_matrix import matrix_factorization
 from PyPEEC.lib_matrix import matrix_multiply
 
 
-def _get_cond_fact(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_vec):
+def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     """
     Compute the sparse matrix decomposition for the preconditioner.
     The preconditioner is using a diagonal impedance matrix (no cross-coupling).
@@ -65,30 +65,59 @@ def _get_cond_fact(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_vec)
     The Schur complement matrix has the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
     """
 
+    # get the matrices
+    (A_kvl_c, A_kcl_c) = A_c
+    (A_kvl_m, A_kcl_m) = A_m
+    (A_12_src, A_21_src, A_22_src) = A_src
+
     # get the system size
-    (n_v, n_f) = A_kcl.shape
-    (n_src, n_src) = A_src_src.shape
+    (n_vc, n_fc) = A_kcl_c.shape
+    (n_vm, n_fm) = A_kcl_m.shape
+    (n_src, n_src) = A_22_src.shape
+
+    # get the angular frequency
+    s = 1j*2*np.pi*freq
 
     # admittance vector
-    Y_vec = 1 / (R_vec + ZL_vec)
+    Y_vec_c = 1/(R_vec_c+s*L_vec_c)
+    Y_vec_m = s/(R_vec_m)
+
+    # potential matrix
+    P_vec_m = P_vec_m/s
+    P_mat_m = sps.diags(P_vec_m)
+    I_mat_m = sps.eye(n_vm, dtype=np.int64)
 
     # admittance matrix
+    Y_vec = np.concatenate((Y_vec_c, Y_vec_m))
     Y_mat = sps.diags(Y_vec)
 
-    # assemble the matrices around the diagonal matrix
-    A_add = sps.csc_matrix((n_f, n_src), dtype=np.int64)
-    A_12_mat = sps.bmat([[A_kvl, A_add]], dtype=np.int64)
+    # assemble the KVL matrices
+    A_add_c = sps.csc_matrix((n_fc, n_vm), dtype=np.int64)
+    A_add_m = sps.csc_matrix((n_fm, n_vc), dtype=np.int64)
+    A_12_mat = sps.bmat([[A_kvl_c, A_add_c], [A_add_m, A_kvl_m]], dtype=np.complex128)
 
-    # assemble the matrices around the diagonal matrix
-    A_add = sps.csc_matrix((n_src, n_f), dtype=np.int64)
-    A_21_mat = sps.bmat([[A_kcl], [A_add]], dtype=np.int64)
+    # assemble the KCL matrices
+    A_add_c = sps.csc_matrix((n_vc, n_fm), dtype=np.int64)
+    A_add_m = sps.csc_matrix((n_vm, n_fc), dtype=np.int64)
+    A_21_mat = sps.bmat([[A_kcl_c, A_add_c], [A_add_m, P_mat_m*A_kcl_m]], dtype=np.complex128)
 
-    # assemble the matrices around the diagonal matrix
-    A_add = sps.csc_matrix((n_v, n_v), dtype=np.int64)
-    A_22_mat = sps.bmat([[A_add, A_kcl_src], [A_src_pot, A_src_src]], dtype=np.int64)
+    # assemble the identity matrix
+    A_add_cc = sps.csc_matrix((n_vc, n_vc), dtype=np.int64)
+    A_add_cm = sps.csc_matrix((n_vc, n_vm), dtype=np.int64)
+    A_add_m = sps.csc_matrix((n_vm, n_vc), dtype=np.int64)
+    A_22_mat = sps.bmat([[A_add_cc, A_add_cm], [A_add_m, I_mat_m]], dtype=np.complex128)
+
+    # expand for the source matrices
+    A_add = sps.csc_matrix((n_fc+n_fm, n_src), dtype=np.int64)
+    A_12_mat = sps.hstack([A_12_mat, A_add], dtype=np.complex128)
+    A_add = sps.csc_matrix((n_src, n_fc+n_fm), dtype=np.int64)
+    A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex128)
+
+    # add the source matrices
+    A_22_mat = sps.bmat([[A_22_mat, A_12_src], [A_21_src, A_22_src]], dtype=np.complex128)
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    S_mat = A_22_mat - A_21_mat * Y_mat * A_12_mat
+    S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
 
     # compute the factorization of the sparse Schur complement
     _S_fact = matrix_factorization.MatrixFactorization(S_mat)
@@ -122,7 +151,7 @@ def _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat):
     return sol
 
 
-def _get_system_multiply(sol, idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_tsr):
+def _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m):
     """
     Multiply the full equation matrix with a given solution test vector.
     For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
@@ -130,20 +159,31 @@ def _get_system_multiply(sol, idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_s
     The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
     """
 
+    # get the matrices
+    (A_kvl_c, A_kcl_c) = A_c
+    (A_kvl_m, A_kcl_m) = A_m
+    (A_12_src, A_21_src, A_22_src) = A_src
+
     # get the system size
-    (n_v, n_f) = A_kcl.shape
-    (n_src, n_src) = A_src_src.shape
+    (n_vc, n_fc) = A_kcl_c.shape
+    (n_vm, n_fm) = A_kcl_m.shape
+    (n_src, n_src) = A_22_src.shape
+
+    # get the angular frequency
+    s = 1j*2*np.pi*freq
 
     # split the excitation vector
-    sol_f = sol[0:n_f]
-    sol_v = sol[n_f:n_f+n_v]
-    sol_src = sol[n_f+n_v:n_f+n_v+n_src]
+    sol_fc = sol[0:n_fc]
+    sol_fm = sol[n_fc:n_fc+n_fm]
+    sol_vc = sol[n_fc+n_fm:n_fc+n_fm+n_vc]
+    sol_vm = sol[n_fc+n_fm+n_vc:n_fc+n_fm+n_vc+n_vm]
+    sol_src = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src]
 
     # multiply the impedance matrix with the current vector (done with the FFT circulant tensor)
-    rhs_f_tmp = matrix_multiply.get_multiply_diag(idx_f, sol_f, ZL_tsr)
+    rhs_f_tmp = matrix_multiply.get_multiply_diag(idx_fc, sol_fc, L_tsr_c)
 
     # form the complete KVL
-    rhs_f = rhs_f_tmp+R_vec*sol_f+A_kvl*sol_v
+    rhs_f = rhs_f_tmp+R_vec_c*sol_fc+A_kvl*sol_v
 
     # form the complete KCL
     rhs_v = A_kcl*sol_f+A_kcl_src*sol_src
@@ -157,19 +197,20 @@ def _get_system_multiply(sol, idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_s
     return rhs
 
 
-def _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v):
-    """
-    Get the equation system size (Schur complement and total size).
-    """
+def _get_n_dof(A_c, A_m, A_src):
+    # get the matrices
+    (A_kvl_c, A_kcl_c) = A_c
+    (A_kvl_m, A_kcl_m) = A_m
+    (A_12_src, A_21_src, A_22_src) = A_src
 
-    # get the matrix size (for the Schur complement)
-    n_a = len(idx_f)
-    n_b = len(idx_v)+len(idx_src_c)+len(idx_src_v)
+    # get the system size
+    (n_vc, n_fc) = A_kcl_c.shape
+    (n_vm, n_fm) = A_kcl_m.shape
+    (n_src, n_src) = A_22_src.shape
 
-    # get the total size
-    n_dof = n_a+n_b
+    n_dof = n_vc+n_fc+n_vm+n_fm+n_src
 
-    return n_dof, n_a, n_b
+    return n_dof
 
 
 def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
@@ -209,7 +250,7 @@ def get_kvl_kcl_matrix(A_net):
     return A_kvl, A_kcl
 
 
-def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
+def get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v):
     """
     Construct the source matrix (description of the sources with internal resistances/admittances).
 
@@ -218,6 +259,7 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
 
     # extract the voxel data
     n_vc = len(idx_vc)
+    n_vm = len(idx_vm)
     n_src_c = len(idx_src_c)
     n_src_v = len(idx_src_v)
 
@@ -237,38 +279,31 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     idx_row = np.concatenate((idx_src_c_local, idx_src_v_local))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((-cst_src_c, -cst_src_v))
-    A_kcl_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc, n_src_c+n_src_v), dtype=np.float64)
+    A_12_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc+n_vm, n_src_c+n_src_v), dtype=np.float64)
 
     # matrix between the source equations and the potential variables
     idx_row = np.concatenate((idx_src_v_add, idx_src_c_add))
     idx_col = np.concatenate((idx_src_v_local, idx_src_c_local))
     val = np.concatenate((cst_src_v, G_src_c))
-    A_src_pot = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc), dtype=np.float64)
+    A_21_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc+n_vm), dtype=np.float64)
 
     # matrix between the source equations and the source variables
     idx_row = np.concatenate((idx_src_c_add, idx_src_v_add))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((cst_src_c, R_src_v))
-    A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=np.float64)
+    A_22_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=np.float64)
 
-    return A_kcl_src, A_src_pot, A_src_src
+    return A_12_src, A_21_src, A_22_src
 
 
-def get_cond_operator(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_vec):
+def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m):
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
     """
 
-    # get the system size
-    (n_v, n_f) = A_kcl.shape
-    (n_src, n_src) = A_src_src.shape
-
-    # get system size
-    n_dof = n_v + n_f + n_src
-
-    # get the Schur complemement
-    (Y_mat, S_mat, _S_fact, A_12_mat, A_21_mat) = _get_cond_fact(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_vec)
+    # get the Schur complement
+    (Y_mat, S_mat, _S_fact, A_12_mat, A_21_mat) = _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src)
 
     # if the matrix is singular, there is not preconditioner
     if not _S_fact.get_status():
@@ -280,30 +315,25 @@ def get_cond_operator(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_v
         return sol
 
     # corresponding linear operator
+    n_dof = _get_n_dof(A_c, A_m, A_src)
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
 
     return op, S_mat
 
 
-def get_system_operator(idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_tsr):
+def get_system_operator(freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m):
     """
     Get a linear operator that produce the matrix-vector multiplication result for the full system.
     This operator is used for the iterative solver.
     """
 
-    # get the system size
-    (n_v, n_f) = A_kcl.shape
-    (n_src, n_src) = A_src_src.shape
-
-    # get system size
-    n_dof = n_v + n_f + n_src
-
     # function describing the equation system
     def fct(sol):
-        rhs = _get_system_multiply(sol, idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_tsr)
+        rhs = _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m)
         return rhs
 
     # corresponding linear operator
+    n_dof = _get_n_dof(A_c, A_m, A_src)
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
 
     return op
