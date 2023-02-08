@@ -30,18 +30,24 @@ def get_material_geometry(material_idx, extract_type):
 
         # the current source value is set such that the sum across all voxels is equal to the specified value
         if (len(idx) > 0) and (material_type == extract_type):
-            # append the indices
-            idx_v = np.append(idx_v, idx)
-
             # find the resistivity
             if material_type == "conductor":
                 rho = dat_tmp["rho"]
-                rho_v = np.append(rho_v, np.full(len(idx), rho))
             elif material_type == "magnetic":
+                # get the magnetic susceptibility
                 chi = dat_tmp["chi"]
-                rho_v = np.append(rho_v, np.full(len(idx), 1/chi))
+
+                # vacuum permeability
+                mu = 4*np.pi*1e-7
+
+                # equivalent magnetic resistivity
+                rho = 1/(mu*chi)
             else:
                 raise ValueError("invalid material type")
+
+            # append the indices and resistivities
+            idx_v = np.append(idx_v, idx)
+            rho_v = np.append(rho_v, np.full(len(idx), rho))
 
     return idx_v, rho_v
 
@@ -84,7 +90,7 @@ def get_source_geometry(source_idx, extract_type):
     return idx_src, value_src, element_src
 
 
-def get_incidence_matrix(A_inc, idx_v):
+def get_incidence_matrix(A_vox, idx_v):
     """
     Reduce the incidence matrix to the non-empty voxels and compute face indices.
 
@@ -96,16 +102,16 @@ def get_incidence_matrix(A_inc, idx_v):
     """
 
     # reduce the size of the incidence matrix (only the non-empty voxels)
-    A_red = A_inc[idx_v, :]
+    A_net = A_vox[idx_v, :]
 
     # indices of the all the internal faces (global face indices, 0:3*n)
-    idx_f = np.sum(np.abs(A_red), axis=0) == 2
+    idx_f = np.sum(np.abs(A_net), axis=0) == 2
     idx_f = np.flatnonzero(idx_f)
 
     # reduce the size of the incidence matrix (only the internal faces)
-    A_red = A_red[:, idx_f]
+    A_net = A_net[:, idx_f]
 
-    return A_red, idx_f
+    return A_net, idx_f
 
 
 def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):

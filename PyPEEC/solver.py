@@ -12,7 +12,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 from PyPEEC.lib_solver import voxel_geometry
 from PyPEEC.lib_solver import dense_matrix
 from PyPEEC.lib_solver import problem_geometry
-from PyPEEC.lib_solver import resistance_inductance
+from PyPEEC.lib_solver import system_matrix
 from PyPEEC.lib_solver import equation_system
 from PyPEEC.lib_solver import equation_solver
 from PyPEEC.lib_solver import extract_solution
@@ -43,7 +43,7 @@ def _run_preproc(data_solver):
         voxel_point = voxel_geometry.get_voxel_point(n, d, c)
 
         # compute the incidence matrix
-        A_inc = voxel_geometry.get_incidence_matrix(n)
+        A_vox = voxel_geometry.get_incidence_matrix(n)
 
     # get the Green functions
     with timelogger.BlockTimer(logger, "dense_matrix"):
@@ -54,17 +54,14 @@ def _run_preproc(data_solver):
         G_mutual = dense_matrix.get_green_tensor(n, d, green_simplify)
 
         # Green function mutual coefficients
-        K_mutual = dense_matrix.get_coupling_tensor(n, d, coupling_simplify)
-
-        import scipy.io as io
-        io.savemat('tensor.mat', {"G": G_mutual, "K": K_mutual})
+        K_tsr = dense_matrix.get_coupling_tensor(n, d, coupling_simplify)
 
     # assemble results
     data_solver["voxel_point"] = voxel_point
-    data_solver["A_inc"] = A_inc
+    data_solver["A_vox"] = A_vox
     data_solver["G_self"] = G_self
     data_solver["G_mutual"] = G_mutual
-    data_solver["K_mutual"] = K_mutual
+    data_solver["K_tsr"] = K_tsr
 
     return data_solver
 
@@ -82,10 +79,10 @@ def _run_main(data_solver):
     condition_options = data_solver["condition_options"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
-    A_inc = data_solver["A_inc"]
+    A_vox = data_solver["A_vox"]
     G_self = data_solver["G_self"]
     G_mutual = data_solver["G_mutual"]
-    K_mutual = data_solver["K_mutual"]
+    K_tsr = data_solver["K_tsr"]
 
     # parse the problem geometry (conductors and sources)
     with timelogger.BlockTimer(logger, "problem_geometry"):
@@ -98,8 +95,8 @@ def _run_main(data_solver):
         (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_geometry(source_idx, "voltage")
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
-        (A_red_c, idx_fc) = problem_geometry.get_incidence_matrix(A_inc, idx_vc)
-        (A_red_m, idx_fm) = problem_geometry.get_incidence_matrix(A_inc, idx_vm)
+        (A_net_c, idx_fc) = problem_geometry.get_incidence_matrix(A_vox, idx_vc)
+        (A_net_m, idx_fm) = problem_geometry.get_incidence_matrix(A_vox, idx_vm)
 
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
@@ -107,23 +104,35 @@ def _run_main(data_solver):
     # get the resistances and inductances
     with timelogger.BlockTimer(logger, "resistance_inductance"):
         # get the resistance vector
-        R_vec_c = resistance_inductance.get_R_vector(n, d, A_red_c, idx_fc, rho_vc)
-        R_vec_m = resistance_inductance.get_R_vector(n, d, A_red_m, idx_fm, rho_vm)
+        R_vec_c = system_matrix.get_R_vector(n, d, A_net_c, idx_fc, rho_vc)
+        R_vec_m = system_matrix.get_R_vector(n, d, A_net_m, idx_fm, rho_vm)
 
-        # get the inductance vector (preconditioner)
-        L_vec_c = resistance_inductance.get_L_vector(n, d, idx_fc, G_self)
-
-        # get the inductance tensor (full problem)
-        L_tsr_c = resistance_inductance.get_L_matrix(n, d, G_mutual)
+        # get the inductance tensor (preconditioner and full problem)
+        (L_vec_c, L_tsr_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual)
 
         # get the potential tensor (preconditioner and full problem)
-        P_vec_m = resistance_inductance.get_P_vector(n, d, idx_vm, G_self)
-        P_tsr_m = resistance_inductance.get_P_matrix(n, d, G_mutual)
+        (P_vec_m, P_tsr_m) = system_matrix.get_P_matrix(n, d, idx_vm, G_self, G_mutual)
+
+        # prepare the matrices for multiplication (FFT circulant tensors or dense matrices)
+        (L_tsr_c, P_tsr_m) = system_matrix.get_extract_matrix(idx_fc, idx_vm, L_tsr_c, P_tsr_m)
+
+        # get the coupling matrices
+        (K_tsr_c, K_tsr_m) = system_matrix.get_coupling_matrix(idx_fc, idx_fm, K_tsr)
 
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
-        # get the impedance vector (preconditioner) and tensor (full problem, FFT circulant tensor)
-        # (ZL_tsr, ZL_vec) = equation_system.get_impedance_matrix(freq, idx_f, L_tsr, L_vec)
+        # compute the right-hand vector with the sources
+        rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
+
+        # get the KVL and KCL connection matrices
+        (A_kvl_c, A_kcl_c) = equation_system.get_kvl_kcl_matrix(A_net_c)
+        (A_kvl_m, A_kcl_m) = equation_system.get_kvl_kcl_matrix(A_net_m)
+
+        # get the source connection matrices
+        (A_kcl_src, A_src_pot, A_src_src) = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
+
+
+
 
         import numpy as np
         import numpy.linalg as lna
@@ -132,31 +141,14 @@ def _run_main(data_solver):
         # get the angular frequency
         s = 1j*2*np.pi*freq
 
-        mu = 4*np.pi*1e-7
-
         # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-        L_tsr_c = mu*matrix_multiply.get_prepare_diag(idx_fc, L_tsr_c)
         Z_tsr_c = s*L_tsr_c
 
-        P_tsr_m = (1/(mu*s))*matrix_multiply.get_prepare_single(idx_vm, P_tsr_m)
-        R_vec_m = R_vec_m/(mu*s)
+        P_tsr_m = (1/(s))*P_tsr_m
+        R_vec_m = R_vec_m/(s)
 
         vec = np.ones(len(idx_vm))
         iden = np.diag(vec)
-
-        K_c = matrix_multiply.get_prepare_cross(idx_fc, idx_fm, K_mutual)
-        K_m = matrix_multiply.get_prepare_cross(idx_fm, idx_fc, K_mutual)
-
-        # compute the right-hand vector with the sources
-        rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
-
-        A_red_c = A_red_c.toarray()
-        A_red_m = A_red_m.toarray()
-
-        (A_kcl_src, A_src_pot, A_src_src) = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
-        A_kcl_src = A_kcl_src.toarray()
-        A_src_pot = A_src_pot.toarray()
-        A_src_src = A_src_src.toarray()
 
         Z_c = np.diag(R_vec_c)+Z_tsr_c
         Z_m = np.diag(R_vec_m)
@@ -165,26 +157,26 @@ def _run_main(data_solver):
 
         a1 = np.zeros((len(idx_fc), len(idx_vm)))
         a2 = np.zeros((len(idx_fc), n_src))
-        E1 = np.block([[+Z_c, +K_c, -1*A_red_c.transpose(), a1, a2]])
+        E1 = np.block([[+Z_c, +K_tsr_c, A_kvl_c.toarray(), a1, a2]])
 
         a1 = np.zeros((len(idx_fm), len(idx_vc)))
         a2 = np.zeros((len(idx_fm), n_src))
-        E2 = np.block([[-K_m, +Z_m, a1, -1*A_red_m.transpose(), a2]])
+        E2 = np.block([[K_tsr_m, +Z_m, a1, A_kvl_m.toarray(), a2]])
 
         a1 = np.zeros((len(idx_vm), len(idx_fc)))
         a2 = np.zeros((len(idx_vm), len(idx_vc)))
         a3 = np.zeros((len(idx_vm), n_src))
-        E3 = np.block([[a1, np.matmul(P_tsr_m, A_red_m), a2, iden, a3]])
+        E3 = np.block([[a1, np.matmul(P_tsr_m, A_kcl_m.toarray()), a2, iden, a3]])
 
         a1 = np.zeros((len(idx_vc), len(idx_fm)))
         a2 = np.zeros((len(idx_vc), len(idx_vc)))
         a3 = np.zeros((len(idx_vc), len(idx_vm)))
-        E4 = np.block([[A_red_c, a1, a2, a3, A_kcl_src]])
+        E4 = np.block([[A_kcl_c.toarray(), a1, a2, a3, A_kcl_src.toarray()]])
 
         a1 = np.zeros((n_src, len(idx_fc)))
         a2 = np.zeros((n_src, len(idx_fm)))
         a3 = np.zeros((n_src, len(idx_vm)))
-        E5 = np.block([[a1, a2, A_src_pot, a3, A_src_src]])
+        E5 = np.block([[a1, a2, A_src_pot.toarray(), a3, A_src_src.toarray()]])
 
         mat = np.concatenate((E1, E2, E3, E4, E5))
 
@@ -202,7 +194,7 @@ def _run_main(data_solver):
 
         # get the energy for the different faces
         M_f = np.matmul(L_tsr_c, sol_fc)
-        Mf_m = np.matmul(K_c, sol_fm)/s
+        Mf_m = np.matmul(K_tsr_c, sol_fm)/s
 
 
         W_f = 0.5 * np.conj(sol_fc) * M_f
@@ -225,7 +217,7 @@ def _run_main(data_solver):
 
 
         # get the matrices defining the KCL, KVL
-        (A_kvl, A_kcl) = equation_system.get_kvl_kcl_matrix(A_red, idx_f, idx_src_c, idx_src_v)
+        (A_kvl, A_kcl) = equation_system.get_kvl_kcl_matrix(A_net, idx_f, idx_src_c, idx_src_v)
 
         # get the matrices the sources
         A_src = equation_system.get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v)
@@ -275,7 +267,7 @@ def _run_postproc(data_solver):
     # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
-    A_inc = data_solver["A_inc"]
+    A_vox = data_solver["A_vox"]
     source_idx = data_solver["source_idx"]
     idx_f = data_solver["idx_f"]
     idx_v = data_solver["idx_v"]
@@ -291,7 +283,7 @@ def _run_postproc(data_solver):
         (I_f, V_v, I_src_c, I_src_v) = extract_solution.get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol)
 
         # get the voxel current densities from the face currents
-        J_v = extract_solution.get_current_density(n, d, idx_v, idx_f, A_inc, I_f)
+        J_v = extract_solution.get_current_density(n, d, idx_v, idx_f, A_vox, I_f)
 
         # get the resistive voltage drop and magnetic flux across the faces
         (V_f, M_f) = extract_solution.get_drop_flux(idx_f, R_vec, L_tsr, I_f)
@@ -300,7 +292,7 @@ def _run_postproc(data_solver):
         integral = extract_solution.get_integral(V_f, M_f, I_f)
 
         # get the voxel loss density
-        P_v = extract_solution.get_loss(n, d, idx_v, idx_f, A_inc, V_f, I_f)
+        P_v = extract_solution.get_loss(n, d, idx_v, idx_f, A_vox, V_f, I_f)
 
         # extend the solution for the complete voxel structure (including the empty voxels)
         (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v)

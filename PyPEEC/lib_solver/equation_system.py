@@ -172,29 +172,6 @@ def _get_matrix_size(idx_v, idx_f, idx_src_c, idx_src_v):
     return n_dof, n_a, n_b
 
 
-def get_impedance_matrix(freq, idx_f, L_tsr, L_vec):
-    """
-    Transform the circulant inductance tensor into a FFT circulant impedance tensor.
-
-    For solving the full system, circulant tensors are used: (2*nx, 2*ny, 2*nz, 3).
-    For solving the preconditioner, vectors are used: n_f.
-    """
-
-    # get the angular frequency
-    s = 1j*2*np.pi*freq
-
-    # compute the FFT circulant tensor (in order to make matrix-vector multiplication with FFT)
-    L_tsr = matrix_multiply.get_prepare_diag(idx_f, L_tsr)
-
-    # compute the impedance
-    ZL_tsr = s*L_tsr
-
-    # self-impedance for the preconditioner
-    ZL_vec = s*L_vec
-
-    return ZL_tsr, ZL_vec
-
-
 def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     """
     Construct the right-hand side with the current and voltage sources.
@@ -215,7 +192,7 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     return rhs
 
 
-def get_kvl_kcl_matrix(A_reduced):
+def get_kvl_kcl_matrix(A_net):
     """
     Construct the connection matrices for the KCL, KVL.
 
@@ -224,15 +201,15 @@ def get_kvl_kcl_matrix(A_reduced):
     """
 
     # connection matrix for the KCL
-    A_kcl = +1*A_reduced
+    A_kcl = +1*A_net
 
     # connection matrix for the KVL
-    A_kvl = -1*A_reduced.transpose()
+    A_kvl = -1*A_net.transpose()
 
     return A_kvl, A_kcl
 
 
-def get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v):
+def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     """
     Construct the source matrix (description of the sources with internal resistances/admittances).
 
@@ -240,13 +217,13 @@ def get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v):
     """
 
     # extract the voxel data
-    n_v = len(idx_v)
+    n_vc = len(idx_vc)
     n_src_c = len(idx_src_c)
     n_src_v = len(idx_src_v)
 
     # get the local source indices
-    idx_src_c_local = np.flatnonzero(np.in1d(idx_v, idx_src_c))
-    idx_src_v_local = np.flatnonzero(np.in1d(idx_v, idx_src_v))
+    idx_src_c_local = np.flatnonzero(np.in1d(idx_vc, idx_src_c))
+    idx_src_v_local = np.flatnonzero(np.in1d(idx_vc, idx_src_v))
 
     # indices of the new source equations to be added
     idx_src_c_add = np.arange(0, n_src_c, dtype=np.int64)
@@ -260,13 +237,13 @@ def get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v):
     idx_row = np.concatenate((idx_src_c_local, idx_src_v_local))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((-cst_src_c, -cst_src_v))
-    A_kcl_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_v, n_src_c+n_src_v), dtype=np.float64)
+    A_kcl_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc, n_src_c+n_src_v), dtype=np.float64)
 
     # matrix between the source equations and the potential variables
     idx_row = np.concatenate((idx_src_v_add, idx_src_c_add))
     idx_col = np.concatenate((idx_src_v_local, idx_src_c_local))
     val = np.concatenate((cst_src_v, G_src_c))
-    A_src_pot = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_v), dtype=np.float64)
+    A_src_pot = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc), dtype=np.float64)
 
     # matrix between the source equations and the source variables
     idx_row = np.concatenate((idx_src_c_add, idx_src_v_add))

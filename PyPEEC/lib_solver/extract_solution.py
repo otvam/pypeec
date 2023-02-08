@@ -17,7 +17,7 @@ from PyPEEC.lib_utils import timelogger
 logger = timelogger.get_logger("SOLUTION")
 
 
-def _get_scalar_density(n, d, A_inc, var_f_all):
+def _get_scalar_density(n, d, A_vox, var_f_all):
     """
     Project a face vector variable into a voxel scalar variable.
     Scale the variable with respect to the voxel volumes (density).
@@ -30,7 +30,7 @@ def _get_scalar_density(n, d, A_inc, var_f_all):
     (dx, dy, dz) = d
 
     # project the faces into the voxels
-    var_v_all = 0.5*np.abs(A_inc[:, 0*n:3*n])*var_f_all[0*n:3*n]
+    var_v_all = 0.5*np.abs(A_vox[:, 0*n:3*n])*var_f_all[0*n:3*n]
 
     # convert to density.
     var_v_all = var_v_all/(dx*dy*dz)
@@ -38,7 +38,7 @@ def _get_scalar_density(n, d, A_inc, var_f_all):
     return var_v_all
 
 
-def _get_vector_flux(n, d, A_inc, var_f_all):
+def _get_vector_flux(n, d, A_vox, var_f_all):
     """
     Project a face vector variable into a voxel vector variable.
     Scale the variable with respect to the face areas (density).
@@ -51,9 +51,9 @@ def _get_vector_flux(n, d, A_inc, var_f_all):
     (dx, dy, dz) = d
 
     # project the faces into the voxels
-    var_v_x = 0.5*np.abs(A_inc[:, 0*n:1*n])*var_f_all[0*n:1*n]
-    var_v_y = 0.5*np.abs(A_inc[:, 1*n:2*n])*var_f_all[1*n:2*n]
-    var_v_z = 0.5*np.abs(A_inc[:, 2*n:3*n])*var_f_all[2*n:3*n]
+    var_v_x = 0.5*np.abs(A_vox[:, 0*n:1*n])*var_f_all[0*n:1*n]
+    var_v_y = 0.5*np.abs(A_vox[:, 1*n:2*n])*var_f_all[1*n:2*n]
+    var_v_z = 0.5*np.abs(A_vox[:, 2*n:3*n])*var_f_all[2*n:3*n]
 
     # convert to density.
     var_v_x = var_v_x/(dy*dz)
@@ -126,7 +126,7 @@ def get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v):
     return V_v_all, I_src_c_all, I_src_v_all
 
 
-def get_current_density(n, d, idx_v, idx_f, A_inc, I_f):
+def get_current_density(n, d, idx_v, idx_f, A_vox, I_f):
     """
     Get the voxel current densities from the face currents.
     Scale the currents into current densities.
@@ -144,7 +144,7 @@ def get_current_density(n, d, idx_v, idx_f, A_inc, I_f):
     I_f_all[idx_f] = I_f
 
     # project the face currents into the voxels (scalar field)
-    J_v_all = _get_vector_flux(nv, d, A_inc, I_f_all)
+    J_v_all = _get_vector_flux(nv, d, A_vox, I_f_all)
 
     # remove empty voxels
     J_v = J_v_all[idx_v]
@@ -172,7 +172,7 @@ def get_drop_flux(idx_f, R_vec, L_tsr, I_f):
     return V_f, M_f
 
 
-def get_loss(n, d, idx_v, idx_f, A_inc, V_f, I_f):
+def get_loss(n, d, idx_v, idx_f, A_vox, V_f, I_f):
     """
     Get the loss densities for the voxels.
 
@@ -192,7 +192,7 @@ def get_loss(n, d, idx_v, idx_f, A_inc, V_f, I_f):
     P_f_all[idx_f] = P_f
 
     # project the loss/energy from the faces into the voxels
-    P_v_all = _get_scalar_density(nv, d, A_inc, P_f_all)
+    P_v_all = _get_scalar_density(nv, d, A_vox, P_f_all)
 
     # remove numerical errors (losses are real)
     P_v_all = np.real(P_v_all)
