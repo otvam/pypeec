@@ -68,28 +68,28 @@ def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     # get the matrices
     (A_kvl_c, A_kcl_c) = A_c
     (A_kvl_m, A_kcl_m) = A_m
-    (A_12_src, A_21_src, A_22_src) = A_src
+    (A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src) = A_src
 
     # get the system size
     (n_vc, n_fc) = A_kcl_c.shape
     (n_vm, n_fm) = A_kcl_m.shape
-    (n_src, n_src) = A_22_src.shape
+    (n_src, n_src) = A_src_src.shape
 
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
     # admittance vector
     Y_vec_c = 1/(R_vec_c+s*L_vec_c)
-    Y_vec_m = s/(R_vec_m)
-
-    # potential matrix
-    P_vec_m = P_vec_m/s
-    P_mat_m = sps.diags(P_vec_m)
-    I_mat_m = sps.eye(n_vm, dtype=np.int64)
+    Y_vec_m = s/R_vec_m
 
     # admittance matrix
     Y_vec = np.concatenate((Y_vec_c, Y_vec_m))
     Y_mat = sps.diags(Y_vec)
+
+    # potential matrix
+    P_vec_m = P_vec_m
+    P_mat_m = sps.diags(P_vec_m)
+    I_mat_m = s*sps.eye(n_vm, dtype=np.int64)
 
     # assemble the KVL matrices
     A_add_c = sps.csc_matrix((n_fc, n_vm), dtype=np.int64)
@@ -114,7 +114,9 @@ def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex128)
 
     # add the source matrices
-    A_22_mat = sps.bmat([[A_22_mat, A_12_src], [A_21_src, A_22_src]], dtype=np.complex128)
+    A_12_src = sps.vstack([A_vc_src, A_vm_src], dtype=np.complex128)
+    A_21_src = sps.hstack([A_src_vc, A_src_vm], dtype=np.complex128)
+    A_22_mat = sps.bmat([[A_22_mat, A_12_src], [A_21_src, A_src_src]], dtype=np.complex128)
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
     S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
@@ -162,12 +164,12 @@ def _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_v
     # get the matrices
     (A_kvl_c, A_kcl_c) = A_c
     (A_kvl_m, A_kcl_m) = A_m
-    (A_12_src, A_21_src, A_22_src) = A_src
+    (A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src) = A_src
 
     # get the system size
     (n_vc, n_fc) = A_kcl_c.shape
     (n_vm, n_fm) = A_kcl_m.shape
-    (n_src, n_src) = A_22_src.shape
+    (n_src, n_src) = A_src_src.shape
 
     # get the angular frequency
     s = 1j*2*np.pi*freq
@@ -179,20 +181,38 @@ def _get_system_multiply(sol, freq, idx_fc, idx_fm, idx_vm, A_c, A_m, A_src, R_v
     sol_vm = sol[n_fc+n_fm+n_vc:n_fc+n_fm+n_vc+n_vm]
     sol_src = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src]
 
-    # multiply the impedance matrix with the current vector (done with the FFT circulant tensor)
-    rhs_f_tmp = matrix_multiply.get_multiply_diag(idx_fc, sol_fc, L_tsr_c)
+    # conductor KVL equations
+    rhs_1 = s*matrix_multiply.get_multiply_diag(idx_fc, sol_fc, L_tsr_c)
+    rhs_2 = matrix_multiply.get_multiply_cross(idx_fc, idx_fm, sol_fm, K_tsr_c)
+    rhs_3 = R_vec_c*sol_fc
+    rhs_4 = A_kvl_c*sol_vc
+    rhs_fc = rhs_1+rhs_2+rhs_3+rhs_4
 
-    # form the complete KVL
-    rhs_f = rhs_f_tmp+R_vec_c*sol_fc+A_kvl*sol_v
+    # magnetic KVL equations
+    rhs_1 = matrix_multiply.get_multiply_cross(idx_fm, idx_fc, sol_fc, K_tsr_m)
+    rhs_2 = R_vec_m/s*sol_fm
+    rhs_3 = A_kvl_m*sol_vm
+    rhs_fm = rhs_1+rhs_2+rhs_3
 
-    # form the complete KCL
-    rhs_v = A_kcl*sol_f+A_kcl_src*sol_src
+    # conductor KCL equations
+    rhs_1 = A_kcl_c*sol_fc
+    rhs_2 = A_vc_src*sol_src
+    rhs_vc = rhs_1+rhs_2
+
+    # magnetic KCL equations
+    rhs_1 = matrix_multiply.get_multiply_single(idx_vm, A_kcl_m*sol_fm, P_tsr_m)
+    rhs_2 = s*sol_vm
+    rhs_3 = A_vm_src*sol_src
+    rhs_vm = rhs_1+rhs_2+rhs_3
 
     # form the source equation
-    rhs_src = A_src_pot*sol_v+A_src_src*sol_src
+    rhs_1 = A_src_vc*sol_vc
+    rhs_2 = A_src_vm*sol_vm
+    rhs_3 = A_src_src*sol_src
+    rhs_src = rhs_1+rhs_2+rhs_3
 
     # assemble the solution
-    rhs = np.concatenate((rhs_f, rhs_v, rhs_src))
+    rhs = np.concatenate((rhs_fc, rhs_fm, rhs_vc, rhs_vm, rhs_src))
 
     return rhs
 
@@ -201,12 +221,12 @@ def _get_n_dof(A_c, A_m, A_src):
     # get the matrices
     (A_kvl_c, A_kcl_c) = A_c
     (A_kvl_m, A_kcl_m) = A_m
-    (A_12_src, A_21_src, A_22_src) = A_src
+    (A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src) = A_src
 
     # get the system size
     (n_vc, n_fc) = A_kcl_c.shape
     (n_vm, n_fm) = A_kcl_m.shape
-    (n_src, n_src) = A_22_src.shape
+    (n_src, n_src) = A_src_src.shape
 
     n_dof = n_vc+n_fc+n_vm+n_fm+n_src
 
@@ -279,21 +299,23 @@ def get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v):
     idx_row = np.concatenate((idx_src_c_local, idx_src_v_local))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((-cst_src_c, -cst_src_v))
-    A_12_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc+n_vm, n_src_c+n_src_v), dtype=np.float64)
+    A_vc_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc, n_src_c+n_src_v), dtype=np.float64)
+    A_vm_src = sps.csc_matrix((n_vm, n_src_c+n_src_v), dtype=np.float64)
 
     # matrix between the source equations and the potential variables
     idx_row = np.concatenate((idx_src_v_add, idx_src_c_add))
     idx_col = np.concatenate((idx_src_v_local, idx_src_c_local))
     val = np.concatenate((cst_src_v, G_src_c))
-    A_21_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc+n_vm), dtype=np.float64)
+    A_src_vc = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc), dtype=np.float64)
+    A_src_vm = sps.csc_matrix((n_src_c+n_src_v, n_vm), dtype=np.float64)
 
     # matrix between the source equations and the source variables
     idx_row = np.concatenate((idx_src_c_add, idx_src_v_add))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((cst_src_c, R_src_v))
-    A_22_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=np.float64)
+    A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=np.float64)
 
-    return A_12_src, A_21_src, A_22_src
+    return A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src
 
 
 def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m):

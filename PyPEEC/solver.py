@@ -140,11 +140,10 @@ def _run_main(data_solver):
 
         (A_kvl_c, A_kcl_c) = A_c
         (A_kvl_m, A_kcl_m) = A_m
-        (A_kcl_src, A_src_pot, A_src_src) = A_src
+        (A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src) = A_src
 
         import numpy as np
         import numpy.linalg as lna
-        from PyPEEC.lib_matrix import matrix_multiply
 
         # get the angular frequency
         s = 1j*2*np.pi*freq
@@ -171,27 +170,57 @@ def _run_main(data_solver):
         a2 = np.zeros((len(idx_fm), n_src))
         E2 = np.block([[K_tsr_m, +Z_m, a1, A_kvl_m.toarray(), a2]])
 
-        A_kcl_src = A_kcl_src.toarray()
-        Ac = A_kcl_src[:len(idx_vc)]
-        Am = A_kcl_src[len(idx_vc):]
-
         a1 = np.zeros((len(idx_vc), len(idx_fm)))
         a2 = np.zeros((len(idx_vc), len(idx_vc)))
         a3 = np.zeros((len(idx_vc), len(idx_vm)))
-        E3 = np.block([[A_kcl_c.toarray(), a1, a2, a3, Ac]])
+        E3 = np.block([[A_kcl_c.toarray(), a1, a2, a3, A_vc_src.toarray()]])
 
         a1 = np.zeros((len(idx_vm), len(idx_fc)))
         a2 = np.zeros((len(idx_vm), len(idx_vc)))
         a3 = np.zeros((len(idx_vm), n_src))
-        E4 = np.block([[a1, np.matmul(P_tsr_m, A_kcl_m.toarray()), a2, iden, Am]])
+        E4 = np.block([[a1, np.matmul(P_tsr_m, A_kcl_m.toarray()), a2, iden, A_vm_src.toarray()]])
 
         a1 = np.zeros((n_src, len(idx_fc)))
         a2 = np.zeros((n_src, len(idx_fm)))
-        E5 = np.block([[a1, a2, A_src_pot.toarray(), A_src_src.toarray()]])
+        E5 = np.block([[a1, a2, A_src_vc.toarray(), A_src_vm.toarray(), A_src_src.toarray()]])
 
         mat = np.concatenate((E1, E2, E3, E4, E5))
 
-        sol = lna.solve(mat, rhs)
+        sol_tmp = lna.solve(mat, rhs)
+
+        sol_fc = sol_tmp[0:len(idx_fc)]
+        sol_fm = sol_tmp[len(idx_fc):len(idx_fc)+len(idx_fm)]
+        sol_vc = sol_tmp[len(idx_fc)+len(idx_fm):len(idx_fc)+len(idx_fm)+len(idx_vc)]
+        sol_vm = sol_tmp[len(idx_fc)+len(idx_fm)+len(idx_vc):len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm)]
+        sol_src = sol_tmp[len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm):len(idx_fc)+len(idx_fm)+len(idx_vc)+len(idx_vm)+n_src]
+
+        idx = np.flatnonzero(idx_vc == idx_src_c)
+        v = sol_vc[idx].item()
+        L = np.imag(v)/(2*np.pi*freq)
+        print(L)
+
+        # get the energy for the different faces
+        M_f = np.matmul(L_tsr_c, sol_fc)
+        Mf_m = np.matmul(K_tsr_c, sol_fm)/s
+
+        W_f = 0.5 * np.conj(sol_fc) * M_f
+        W_tot = np.sum(np.real(W_f))
+        print(2*W_tot)
+
+        W_f = 0.5 * np.conj(sol_fc) * (M_f+Mf_m)
+        W_tot = np.sum(np.real(W_f))
+        print(2*W_tot)
+
+
+        print("=====================")
+
+    # solve the equation system
+    with timelogger.BlockTimer(logger, "equation_solver"):
+        # estimate the condition number of the problem (to detect quasi-singular problem)
+        (condition_ok, condition_status) = equation_solver.get_condition(S_mat, condition_options)
+
+        # solve the equation system
+        (sol, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
 
         sol_fc = sol[0:len(idx_fc)]
         sol_fm = sol[len(idx_fc):len(idx_fc)+len(idx_fm)]
@@ -202,11 +231,11 @@ def _run_main(data_solver):
         idx = np.flatnonzero(idx_vc == idx_src_c)
         v = sol_vc[idx].item()
         L = np.imag(v)/(2*np.pi*freq)
+        print(L)
 
         # get the energy for the different faces
         M_f = np.matmul(L_tsr_c, sol_fc)
         Mf_m = np.matmul(K_tsr_c, sol_fm)/s
-
 
         W_f = 0.5 * np.conj(sol_fc) * M_f
         W_tot = np.sum(np.real(W_f))
@@ -216,40 +245,10 @@ def _run_main(data_solver):
         W_tot = np.sum(np.real(W_f))
         print(2*W_tot)
 
-        print(L)
-
-        raise RunError("STOP")
 
 
 
-
-
-
-
-
-
-        # get the matrices defining the KCL, KVL
-        (A_kvl, A_kcl) = equation_system.get_kvl_kcl_matrix(A_net, idx_f, idx_src_c, idx_src_v)
-
-        # get the matrices the sources
-        A_src = equation_system.get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v)
-
-        # get the linear operator for the preconditioner (guess of the inverse)
-        pcd_op = equation_system.get_preconditioner_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_vec)
-
-        # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(idx_v, idx_f, idx_src_c, idx_src_v, A_kvl, A_kcl, A_src, R_vec, ZL_tsr)
-
-        # get a matrix for detecting if the problem is quasi-singular (this matrix has no physical meaning)
-        S_mat = equation_system.get_singular(A_kvl, A_kcl, A_src, R_vec, ZL_vec)
-
-    # solve the equation system
-    with timelogger.BlockTimer(logger, "equation_solver"):
-        # estimate the condition number of the problem (to detect quasi-singular problem)
-        (condition_ok, condition_status) = equation_solver.get_condition(S_mat, condition_options)
-
-        # solve the equation system
-        (sol, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
+        raise RuntimeError("STOP")
 
         # compute converge
         has_converged = solver_ok and condition_ok
