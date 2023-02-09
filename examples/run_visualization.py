@@ -206,7 +206,7 @@ def get_data_plotter():
         # _get_data_plotter_scalar("voxel", "V_c_abs", 1e0, "V", "El. Potential"),
         # _get_data_plotter_scalar("voxel", "V_m_abs", 1e0, "A", "Mag. Potential"),
         _get_data_plotter_scalar("voxel", "J_c_norm_abs", 1e-6, "A/mm2", "Current"),
-        # _get_data_plotter_arrow("voxel", "J_c_norm_re", "J_c_vec_re", 1e-6, "A/mm2", "Re. Current"),
+        _get_data_plotter_arrow("voxel", "J_c_norm_re", "J_c_vec_re", 1e-6, "A/mm2", "Re. Current"),
         # _get_data_plotter_arrow("voxel", "J_c_norm_im", "J_c_vec_im", 1e-6, "A/mm2", "Im. Current"),
         _get_data_plotter_scalar("voxel", "B_m_norm_abs", 1e3, "mT", "Flux Density"),
         # _get_data_plotter_arrow("voxel", "B_m_norm_re", "B_m_vec_re", 1e3, "mT", "Re. Flux Density"),
