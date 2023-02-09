@@ -12,12 +12,28 @@ Three different types of matrices are supported:
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import scipy.sparse.linalg as sla
 from PyPEEC.lib_matrix import multiply_fft
 from PyPEEC.lib_matrix import multiply_direct
 from PyPEEC import config
 
 # get config
 MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION
+
+
+def _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type):
+    """
+    Make a matrix-vector multiplication.
+    """
+
+    if MATRIX_MULTIPLICATION == "FFT":
+        res_out = multiply_fft.get_multiply(idx_out, idx_in, vec_in, mat, matrix_type)
+    elif MATRIX_MULTIPLICATION == "DIRECT":
+        res_out = multiply_direct.get_multiply(vec_in, mat)
+    else:
+        raise ValueError("invalid multiplication library")
+
+    return res_out
 
 
 def _get_prepare(idx_out, idx_in, mat, matrix_type):
@@ -33,69 +49,42 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
     else:
         raise ValueError("invalid multiplication library")
 
-    # assign the properties
-    data = {"mat": mat, "idx_out": idx_out, "idx_in": idx_in, "matrix_type": matrix_type}
+    # function describing the preconditioner
+    def fct(vec_in):
+        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type)
+        return res_out
 
-    return data
+    # corresponding linear operator
+    op = sla.LinearOperator((len(idx_out), len(idx_in)), matvec=fct)
 
-
-def _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type):
-    """
-    Make a matrix-vector multiplication.
-    """
-
-    if MATRIX_MULTIPLICATION == "FFT":
-        res_sel = multiply_fft.get_multiply(idx_out, idx_in, vec_in, mat, matrix_type)
-    elif MATRIX_MULTIPLICATION == "DIRECT":
-        res_sel = multiply_direct.get_multiply(vec_in, mat)
-    else:
-        raise ValueError("invalid multiplication library")
-
-    return res_sel
+    return op
 
 
-def get_prepare_single(idx, mat):
+def get_operator_single(idx, mat):
     """
     Prepare a single matrix for the multiplication.
     """
 
-    mat = _get_prepare(idx, idx, mat, "single")
+    op = _get_prepare(idx, idx, mat, "single")
 
-    return mat
+    return op
 
 
-def get_prepare_diag(idx, mat):
+def get_operator_diag(idx, mat):
     """
     Prepare a diagonal matrix for the multiplication.
     """
 
-    mat = _get_prepare(idx, idx, mat, "diag")
+    op = _get_prepare(idx, idx, mat, "diag")
 
-    return mat
+    return op
 
 
-def get_prepare_cross(idx_out, idx_in, mat):
+def get_operator_cross(idx_out, idx_in, mat):
     """
     Prepare a cross matrix for the multiplication.
     """
 
-    mat = _get_prepare(idx_out, idx_in, mat, "cross")
+    op = _get_prepare(idx_out, idx_in, mat, "cross")
 
-    return mat
-
-
-def get_multiply(data, vec_in):
-    """
-    Make a matrix-vector multiplication.
-    """
-
-    # extract the data
-    mat = data["mat"]
-    idx_out = data["idx_out"]
-    idx_in = data["idx_in"]
-    matrix_type = data["matrix_type"]
-
-    # get the multiplication
-    res = _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type)
-
-    return res
+    return op

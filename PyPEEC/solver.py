@@ -114,10 +114,10 @@ def _run_main(data_solver):
         (P_vec_m, P_tsr_m) = system_matrix.get_P_matrix(n, d, idx_vm, G_self, G_mutual)
 
         # prepare the matrices for multiplication (FFT circulant tensors or dense matrices)
-        (L_tsr_c, P_tsr_m) = system_matrix.get_extract_matrix(idx_fc, idx_vm, L_tsr_c, P_tsr_m)
+        (L_op_c, P_op_m) = system_matrix.get_extract_matrix(idx_fc, idx_vm, L_tsr_c, P_tsr_m)
 
         # get the coupling matrices
-        (K_tsr_c, K_tsr_m) = system_matrix.get_coupling_matrix(idx_fc, idx_fm, K_tsr)
+        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(idx_fc, idx_fm, K_tsr)
 
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
@@ -135,7 +135,7 @@ def _run_main(data_solver):
         (pcd_op, S_mat) = equation_system.get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_tsr_c, P_tsr_m, K_tsr_c, K_tsr_m)
+        sys_op = equation_system.get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m, K_op_c, K_op_m)
 
     # solve the equation system
     with timelogger.BlockTimer(logger, "equation_solver"):
@@ -156,8 +156,8 @@ def _run_main(data_solver):
     data_solver["idx_src_v"] = idx_src_v
     data_solver["idx_src_c"] = idx_src_c
     data_solver["R_vec_c"] = R_vec_c
-    data_solver["L_tsr_c"] = L_tsr_c
-    data_solver["K_tsr_c"] = K_tsr_c
+    data_solver["L_op_c"] = L_op_c
+    data_solver["K_op_c"] = K_op_c
     data_solver["problem_status"] = problem_status
     data_solver["has_converged"] = has_converged
     data_solver["solver_status"] = solver_status
@@ -184,8 +184,8 @@ def _run_postproc(data_solver):
     idx_src_c = data_solver["idx_src_c"]
     idx_src_v = data_solver["idx_src_v"]
     R_vec_c = data_solver["R_vec_c"]
-    L_tsr_c = data_solver["L_tsr_c"]
-    K_tsr_c = data_solver["K_tsr_c"]
+    L_op_c = data_solver["L_op_c"]
+    K_op_c = data_solver["K_op_c"]
     sol = data_solver["sol"]
 
     # extract the solution
@@ -200,7 +200,7 @@ def _run_postproc(data_solver):
         B_vm = extract_solution.get_current_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
         # get the global quantities (energy and losses)
-        integral = extract_solution.get_integral(I_fc, I_fm, R_vec_c, L_tsr_c, K_tsr_c)
+        integral = extract_solution.get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c)
 
         # extend the solution for the complete voxel structure (including the empty voxels)
         (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src)

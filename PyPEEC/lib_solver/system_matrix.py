@@ -112,10 +112,10 @@ def get_extract_matrix(idx_fc, idx_vm, L_tsr_c, P_tsr_m):
         - with dense matrices
     """
 
-    L_tsr_c = matrix_multiply.get_prepare_diag(idx_fc, L_tsr_c)
-    P_tsr_m = matrix_multiply.get_prepare_single(idx_vm, P_tsr_m)
+    L_op_c = matrix_multiply.get_operator_diag(idx_fc, L_tsr_c)
+    P_op_m = matrix_multiply.get_operator_single(idx_vm, P_tsr_m)
 
-    return L_tsr_c, P_tsr_m
+    return L_op_c, P_op_m
 
 
 def get_coupling_matrix(idx_fc, idx_fm, K_tsr):
@@ -125,7 +125,7 @@ def get_coupling_matrix(idx_fc, idx_fm, K_tsr):
         - with dense matrices
     """
 
-    K_tsr_c = matrix_multiply.get_prepare_cross(idx_fc, idx_fm, +1*K_tsr)
-    K_tsr_m = matrix_multiply.get_prepare_cross(idx_fm, idx_fc, -1*K_tsr)
+    K_op_c = matrix_multiply.get_operator_cross(idx_fc, idx_fm, +1*K_tsr)
+    K_op_m = matrix_multiply.get_operator_cross(idx_fm, idx_fc, -1*K_tsr)
 
-    return K_tsr_c, K_tsr_m
+    return K_op_c, K_op_m

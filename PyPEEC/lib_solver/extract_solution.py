@@ -154,7 +154,7 @@ def get_current_density(n, d, idx_v, idx_f, A_vox, I_f):
     return J_v
 
 
-def get_integral(I_fc, I_fm, R_vec_c, L_tsr_c, K_tsr_c):
+def get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c):
     """
     Sum the loss/energy in order to obtain global quantities.
     """
@@ -163,8 +163,8 @@ def get_integral(I_fc, I_fm, R_vec_c, L_tsr_c, K_tsr_c):
     P_f = 0.5*np.conj(I_fc)*R_vec_c*I_fc
 
     # get the energy for the different faces
-    M_fc = matrix_multiply.get_multiply(L_tsr_c, I_fc)
-    M_fm = matrix_multiply.get_multiply(K_tsr_c, I_fm)
+    M_fc = L_op_c(I_fc)
+    M_fm = K_op_c(I_fm)
 
     # get the energy for the different faces
     W_f = 0.5*np.conj(I_fc)*(M_fc+M_fm)
