@@ -7,7 +7,7 @@
 * FFT-PEEC method
 * Extremely fast
 * Pure Python implementation
-* Conductive domains
+* Conductive and magnetic domains
 * Frequency domain solution
 * Connection of current and voltage sources
 * Extraction of the current density and potential
@@ -16,7 +16,6 @@
 
 **PyPEEC** has the following limitations:
 * No capacitive effects
-* No magnetic domains
 * No dielectric domains
 * Limited to voxel geometries
 
