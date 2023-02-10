@@ -49,7 +49,6 @@ import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.linalg as sla
 from PyPEEC.lib_matrix import matrix_factorization
-from PyPEEC.lib_matrix import matrix_multiply
 
 
 def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):

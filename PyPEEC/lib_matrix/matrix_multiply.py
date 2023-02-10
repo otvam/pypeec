@@ -49,7 +49,7 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
     else:
         raise ValueError("invalid multiplication library")
 
-    # function describing the preconditioner
+    # function describing the matrix-vector multiplication
     def fct(vec_in):
         res_out = _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type)
         return res_out

@@ -117,7 +117,10 @@ def _run_main(data_solver):
         (L_op_c, P_op_m) = system_matrix.get_extract_matrix(idx_fc, idx_vm, L_tsr_c, P_tsr_m)
 
         # get the coupling matrices
-        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(idx_fc, idx_fm, K_tsr)
+        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr)
+
+        pass
+
 
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
