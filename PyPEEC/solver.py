@@ -40,7 +40,7 @@ def _run_preproc(data_solver):
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
         # get the coordinate of the voxels
-        voxel_point = voxel_geometry.get_voxel_point(n, d, c)
+        coord_vox = voxel_geometry.get_voxel_coord(n, d, c)
 
         # compute the incidence matrix
         A_vox = voxel_geometry.get_incidence_matrix(n)
@@ -57,7 +57,7 @@ def _run_preproc(data_solver):
         K_tsr = dense_matrix.get_coupling_tensor(n, d, coupling_simplify)
 
     # assemble results
-    data_solver["voxel_point"] = voxel_point
+    data_solver["coord_vox"] = coord_vox
     data_solver["A_vox"] = A_vox
     data_solver["G_self"] = G_self
     data_solver["G_mutual"] = G_mutual
@@ -198,8 +198,8 @@ def _run_postproc(data_solver):
         B_vm = extract_solution.get_flow_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
         # get the divergence of the face flows
-        I_src_vc = extract_solution.get_flow_divergence(n, d, idx_vc, idx_fc, A_vox, I_fc)
-        Q_src_vm = extract_solution.get_flow_divergence(n, d, idx_vm, idx_fm, A_vox, I_fm)
+        S_vc = extract_solution.get_flow_divergence(n, d, idx_vc, idx_fc, A_vox, I_fc)
+        Q_vm = extract_solution.get_flow_divergence(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c)
@@ -217,8 +217,8 @@ def _run_postproc(data_solver):
     data_solver["V_vm"] = V_vm
     data_solver["J_vc"] = J_vc
     data_solver["B_vm"] = B_vm
-    data_solver["I_src_vc"] = I_src_vc
-    data_solver["Q_src_vm"] = Q_src_vm
+    data_solver["S_vc"] = S_vc
+    data_solver["Q_vm"] = Q_vm
 
     return data_solver
 
@@ -233,7 +233,7 @@ def _run_assemble(data_solver):
         "n": data_solver["n"],
         "d": data_solver["d"],
         "c": data_solver["c"],
-        "voxel_point": data_solver["voxel_point"],
+        "coord_vox": data_solver["coord_vox"],
         "idx_vc": data_solver["idx_vc"],
         "idx_vm": data_solver["idx_vm"],
         "idx_src_c": data_solver["idx_src_c"],
@@ -249,8 +249,8 @@ def _run_assemble(data_solver):
         "V_vm": data_solver["V_vm"],
         "J_vc": data_solver["J_vc"],
         "B_vm": data_solver["B_vm"],
-        "I_src_vc": data_solver["I_src_vc"],
-        "Q_src_vm": data_solver["Q_src_vm"],
+        "S_vc": data_solver["S_vc"],
+        "Q_vm": data_solver["Q_vm"],
     }
 
     return data_solution

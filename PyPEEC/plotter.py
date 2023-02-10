@@ -18,6 +18,7 @@ The plotting is done with PyVista with the Qt framework.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+from PyPEEC.lib_visualization import manage_compute
 from PyPEEC.lib_visualization import manage_voxel
 from PyPEEC.lib_visualization import manage_pyvista
 from PyPEEC.lib_visualization import manage_matplotlib
@@ -42,7 +43,7 @@ def _get_grid_voxel(data_solution, data_point):
     n = data_solution["n"]
     d = data_solution["d"]
     c = data_solution["c"]
-    voxel_point = data_solution["voxel_point"]
+    coord_vox = data_solution["coord_vox"]
     idx_vc = data_solution["idx_vc"]
     idx_vm = data_solution["idx_vm"]
     idx_src_c = data_solution["idx_src_c"]
@@ -51,12 +52,12 @@ def _get_grid_voxel(data_solution, data_point):
     V_vm = data_solution["V_vm"]
     J_vc = data_solution["J_vc"]
     B_vm = data_solution["B_vm"]
-    I_src_vc = data_solution["I_src_vc"]
-    Q_src_vm = data_solution["Q_src_vm"]
+    S_vc = data_solution["S_vc"]
+    Q_vm = data_solution["Q_vm"]
     solver_status = data_solution["solver_status"]
 
     # compute the magnetic field
-    # H_point = manage_voxel.get_magnetic_field(d, idx_v, J_vv, voxel_point, data_point)
+    H_point = manage_compute.get_magnetic_field(d, idx_vc, idx_vm, J_vc, Q_vm, coord_vox, data_point)
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
@@ -68,16 +69,16 @@ def _get_grid_voxel(data_solution, data_point):
 
     # set the conductor variables
     voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vc, V_vc, "V_c")
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vc, I_src_vc, "I_src_c")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vc, S_vc, "S_c")
     voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx_v, idx_vc, J_vc, "J_c")
 
     # set the magnetic variables
     voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vm, V_vm, "V_m")
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vm, Q_src_vm, "Q_src_m")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vm, Q_vm, "Q_m")
     voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx_v, idx_vm, B_vm, "B_m")
 
-
-    # point = manage_voxel.set_plotter_magnetic_field(point, H_point)
+    # add the magnetic field
+    point = manage_voxel.set_plotter_magnetic_field(point, H_point)
 
     return grid, voxel, point, solver_status
 
