@@ -129,8 +129,6 @@ def _check_data_options(plot_type, data_options):
         "J_c_vec_re", "J_c_vec_im",
         "B_m_vec_re", "B_m_vec_im",
     ]
-
-
     var_point_list = ["H_norm_abs", "H_norm_re", "H_norm_im"]
     vec_point_list = ["H_vec_re", "H_vec_im"]
 

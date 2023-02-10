@@ -119,9 +119,6 @@ def _run_main(data_solver):
         # get the coupling matrices
         (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr)
 
-        pass
-
-
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
         # compute the right-hand vector with the sources

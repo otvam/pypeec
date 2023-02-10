@@ -191,7 +191,7 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     return obj
 
 
-def plot_material(pl, voxel, data_options, clip_options):
+def plot_material(pl, voxel, clip_options):
     """
     Plot the material description (conductors, voltage sources, and current sources).
     The plot is made on the unstructured grid describing the non-empty voxels.
@@ -362,7 +362,7 @@ def get_plot_plotter(pl, grid, voxel, point, data_plot):
 
     # get the main plot
     if plot_type == "material":
-        plot_material(pl, voxel, data_options, clip_options)
+        plot_material(pl, voxel, clip_options)
     elif plot_type == "scalar_voxel":
         plot_scalar(pl, voxel, data_options, clip_options)
     elif plot_type == "scalar_point":

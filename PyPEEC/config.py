@@ -37,7 +37,7 @@ FFT_SOLVER = "SciPy"  # "NumPy" or "SciPy" or "FFTW"
 FFT_SPLIT_TENSOR = False  # split (or not) the tensors for the FFT
 
 # FFT library options
-FFTS_WORKER = None # number of workers for SciPy (None for default)
+FFTS_WORKER = None  # number of workers for SciPy (None for default)
 FFTW_THREAD = 4  # used for FFTW (number of threads, 1 for no multi-threading)
 FFTW_CACHE_TIMEOUT = 100  # used for FFTW (cache timeout in seconds)
 FFTW_BYTE_ALIGN = 16  # used for FFTW (size for byte alignment)

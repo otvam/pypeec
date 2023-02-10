@@ -124,7 +124,8 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     (nx, ny, nz) = n
 
     # count
-    n_total = nx*ny*nz
+    n_voxel = nx*ny*nz
+    n_face = 3*nx*ny*nz
     n_voxel_conductor = len(idx_vc)
     n_voxel_magnetic = len(idx_vm)
     n_face_conductor = len(idx_fc)
@@ -133,12 +134,13 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     n_src_voltage = len(idx_src_v)
 
     # fraction of voxels
-    ratio_voxel = (n_voxel_conductor+n_voxel_magnetic)/n_total
-    ratio_face = (n_face_conductor+n_face_magnetic)/(3*n_total)
+    ratio_voxel = (n_voxel_conductor+n_voxel_magnetic)/n_voxel
+    ratio_face = (n_face_conductor+n_face_magnetic)/n_face
 
     # assign data
     problem_status = {
-        "n_total": n_total,
+        "n_voxel": n_voxel,
+        "n_face": n_face,
         "n_voxel_conductor": n_voxel_conductor,
         "n_voxel_magnetic": n_voxel_magnetic,
         "n_face_conductor": n_face_conductor,
@@ -150,7 +152,8 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     }
 
     # display status
-    logger.info("problem size: n_total = %d" % n_total)
+    logger.info("problem size: n_voxel = %d" % n_voxel)
+    logger.info("problem size: n_face = %d" % n_face)
     logger.info("problem size: n_voxel_conductor = %d" % n_voxel_conductor)
     logger.info("problem size: n_voxel_magnetic = %d" % n_voxel_magnetic)
     logger.info("problem size: n_face_conductor = %d" % n_face_conductor)

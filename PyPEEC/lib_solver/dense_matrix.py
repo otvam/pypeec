@@ -38,15 +38,12 @@ def _get_coupling(d, idx, method, dimension):
     d_tmp = d[perm]
     idx_tmp = idx[:, perm]
 
-    # shift because the flow variable is located between the voxels
-    idx_shift = np.array([[0.0, 0.0, 0.0]])
-
     # shift for the integration of the last dimension
     idx_add = np.array([[0.0, 0.0, 0.5]])
 
     # compute the evaluation coordinate
-    idx_1 = idx_tmp+idx_shift+idx_add
-    idx_2 = idx_tmp+idx_shift-idx_add
+    idx_1 = idx_tmp+idx_add
+    idx_2 = idx_tmp-idx_add
 
     # get the partially integrated coefficients (5D integration)
     if method == "ana":

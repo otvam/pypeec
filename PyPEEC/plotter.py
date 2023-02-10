@@ -66,7 +66,6 @@ def _get_grid_voxel(data_solution, data_point):
     voxel = manage_voxel.set_plotter_voxel_data(voxel, idx_v, idx_vc, V_vc, J_vc, "V_c", "J_c")
     voxel = manage_voxel.set_plotter_voxel_data(voxel, idx_v, idx_vm, V_vm, B_vm, "V_m", "B_m")
 
-
     # point = manage_voxel.set_plotter_magnetic_field(point, H_point)
 
     return grid, voxel, point, solver_status
