@@ -48,7 +48,7 @@ def _get_face_voxel_matrix(n, idx_v, idx_f, A_net):
     idx_fv = np.concatenate((idx_x, idx_y, idx_z))
     A_fv_net = sps.block_diag((A_net_x, A_net_y, A_net_z))
 
-    # scale the matrix for flux conversion
+    # scale the matrix for flow conversion
     A_fv_net = 0.5*np.abs(A_fv_net)
 
     return A_fv_net, idx_fv

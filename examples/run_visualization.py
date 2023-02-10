@@ -205,6 +205,8 @@ def get_data_plotter():
         _get_data_plotter_geometry("Material"),
         _get_data_plotter_scalar("voxel", "V_c_abs", 1e0, "V", "El. Potential"),
         _get_data_plotter_scalar("voxel", "V_m_abs", 1e0, "A", "Mag. Potential"),
+        _get_data_plotter_scalar("voxel", "I_src_c_abs", 1e-9, "A/mm3", "El. Source"),
+        _get_data_plotter_scalar("voxel", "Q_src_m_abs", 1e0, "mT/mm", "Mag. Source"),
         _get_data_plotter_scalar("voxel", "J_c_norm_abs", 1e-6, "A/mm2", "Current"),
         _get_data_plotter_arrow("voxel", "J_c_norm_re", "J_c_vec_re", 1e-6, "A/mm2", "Re. Current"),
         _get_data_plotter_arrow("voxel", "J_c_norm_im", "J_c_vec_im", 1e-6, "A/mm2", "Im. Current"),

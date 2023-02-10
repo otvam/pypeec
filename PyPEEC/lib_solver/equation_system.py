@@ -392,5 +392,3 @@ def get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m,
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
 
     return op
-
-

@@ -193,11 +193,13 @@ def _run_postproc(data_solver):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
         (I_fc, I_fm, V_vc, V_vm, I_src) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
 
-        # get the voxel current densities from the face currents
-        J_vc = extract_solution.get_current_density(n, d, idx_vc, idx_fc, A_vox, I_fc)
+        # get the voxel flow densities from the face flows
+        J_vc = extract_solution.get_flow_density(n, d, idx_vc, idx_fc, A_vox, I_fc)
+        B_vm = extract_solution.get_flow_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
-        # get the voxel flux densities from the face currents
-        B_vm = extract_solution.get_current_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
+        # get the divergence of the face flows
+        I_src_vc = extract_solution.get_flow_divergence(n, d, idx_vc, idx_fc, A_vox, I_fc)
+        Q_src_vm = extract_solution.get_flow_divergence(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c)
@@ -215,6 +217,8 @@ def _run_postproc(data_solver):
     data_solver["V_vm"] = V_vm
     data_solver["J_vc"] = J_vc
     data_solver["B_vm"] = B_vm
+    data_solver["I_src_vc"] = I_src_vc
+    data_solver["Q_src_vm"] = Q_src_vm
 
     return data_solver
 
@@ -239,11 +243,14 @@ def _run_assemble(data_solver):
         "problem_status": data_solver["problem_status"],
         "solver_status": data_solver["solver_status"],
         "condition_status": data_solver["condition_status"],
+        "terminal": data_solver["terminal"],
+        "integral": data_solver["integral"],
         "V_vc": data_solver["V_vc"],
         "V_vm": data_solver["V_vm"],
         "J_vc": data_solver["J_vc"],
         "B_vm": data_solver["B_vm"],
-        "terminal": data_solver["terminal"],
+        "I_src_vc": data_solver["I_src_vc"],
+        "Q_src_vm": data_solver["Q_src_vm"],
     }
 
     return data_solution

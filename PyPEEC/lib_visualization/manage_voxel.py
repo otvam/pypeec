@@ -244,7 +244,7 @@ def set_plotter_voxel_material(voxel, idx_v, idx_vc, idx_vm, idx_src_c, idx_src_
     return voxel
 
 
-def set_plotter_voxel_data(voxel, idx_v, idx_var, var_pot, var_flux, name_pot, name_flux):
+def set_plotter_voxel_scalar(voxel, idx_v, idx_var, var_pot, name_pot):
     """
     Add the different variables to the unstructured grid:
         - resistivity (scalar field, input variable)
@@ -262,14 +262,31 @@ def set_plotter_voxel_data(voxel, idx_v, idx_var, var_pot, var_flux, name_pot, n
     var_pot_all = np.full(len(idx_v), np.nan+1j*np.nan, dtype=np.complex128)
     var_pot_all[idx_var_local] = var_pot
 
-    # assign flux (nan for the voxels where the variable is not defined)
-    var_flux_all = np.full((len(idx_v), 3), np.nan+1j*np.nan, dtype=np.complex128)
-    var_flux_all[idx_var_local] = var_flux
-
     # assign potential
     voxel[name_pot + "_re"] = np.real(var_pot_all)
     voxel[name_pot + "_im"] = np.imag(var_pot_all)
     voxel[name_pot + "_abs"] = np.abs(var_pot_all)
+
+    return voxel
+
+
+def set_plotter_voxel_vector(voxel, idx_v, idx_var, var_flow, name_flux):
+    """
+    Add the different variables to the unstructured grid:
+        - resistivity (scalar field, input variable)
+        - potential (scalar field, solved variable)
+        - current density (scalar and vector fields, solved variable)
+        - loss (scalar field, solved variable)
+    """
+
+    # find the variable indices
+    idx_s = np.argsort(idx_v)
+    idx_p = np.searchsorted(idx_v[idx_s], idx_var)
+    idx_var_local = idx_s[idx_p]
+
+    # assign flux (nan for the voxels where the variable is not defined)
+    var_flux_all = np.full((len(idx_v), 3), np.nan+1j*np.nan, dtype=np.complex128)
+    var_flux_all[idx_var_local] = var_flow
 
     # assign the current density norm
     voxel[name_flux + "_norm_abs"] = lna.norm(var_flux_all, axis=1)

@@ -16,28 +16,7 @@ from PyPEEC.lib_utils import timelogger
 logger = timelogger.get_logger("SOLUTION")
 
 
-def _get_scalar_density(n, d, A_vox, var_f_all):
-    """
-    Project a face vector variable into a voxel scalar variable.
-    Scale the variable with respect to the voxel volumes (density).
-
-    At the input, the array has the following size: 3*nx*ny*nx.
-    At the output, the array has the following size: nx*ny*nx.
-    """
-
-    # extract the voxel data
-    (dx, dy, dz) = d
-
-    # project the faces into the voxels
-    var_v_all = 0.5*np.abs(A_vox[:, 0*n:3*n])*var_f_all[0*n:3*n]
-
-    # convert to density.
-    var_v_all = var_v_all/(dx*dy*dz)
-
-    return var_v_all
-
-
-def _get_vector_flux(n, d, A_vox, var_f_all):
+def _get_vector_density(n, d, A_vox, var_f_all):
     """
     Project a face vector variable into a voxel vector variable.
     Scale the variable with respect to the face areas (density).
@@ -61,6 +40,19 @@ def _get_vector_flux(n, d, A_vox, var_f_all):
 
     # assemble the variables
     var_v_all = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
+
+    return var_v_all
+
+
+def _get_vector_divergence(d, A_vox, var_f_all):
+    # extract the voxel data
+    (dx, dy, dz) = d
+
+    # compute the divergence
+    var_v_all = A_vox * var_f_all
+
+    # convert to density.
+    var_v_all = var_v_all/(dx*dy*dz)
 
     return var_v_all
 
@@ -127,7 +119,7 @@ def get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
     return V_v_all, I_src_c_all, I_src_v_all
 
 
-def get_current_density(n, d, idx_v, idx_f, A_vox, I_f):
+def get_flow_density(n, d, idx_v, idx_f, A_vox, I_f):
     """
     Get the voxel current densities from the face currents.
     Scale the currents into current densities.
@@ -145,12 +137,30 @@ def get_current_density(n, d, idx_v, idx_f, A_vox, I_f):
     I_f_all[idx_f] = I_f
 
     # project the face currents into the voxels (scalar field)
-    J_v_all = _get_vector_flux(nv, d, A_vox, I_f_all)
+    I_flow_v_all = _get_vector_density(nv, d, A_vox, I_f_all)
 
     # remove empty voxels
-    J_v = J_v_all[idx_v]
+    I_flow_v = I_flow_v_all[idx_v]
 
-    return J_v
+    return I_flow_v
+
+
+def get_flow_divergence(n, d, idx_v, idx_f, A_vox, I_f):
+    # extract the voxel data
+    (nx, ny, nz) = n
+    nv = nx*ny*nz
+
+    # extend the solution for the complete voxel structure (including the empty voxels)
+    I_f_all = np.zeros(3*nv, dtype=np.complex128)
+    I_f_all[idx_f] = I_f
+
+    # compute the divergence
+    I_div_v_all = _get_vector_divergence(d, A_vox, I_f_all)
+
+    # remove empty voxels
+    I_div_v = I_div_v_all[idx_v]
+
+    return I_div_v
 
 
 def get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c):

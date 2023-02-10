@@ -138,6 +138,106 @@
     {
         "plot_framework": "pyvista",
         "data_window": {
+            "title": "El. Source",
+            "show_menu": false,
+            "window_size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": {
+            "plot_type": "scalar_voxel",
+            "data_options": {
+                "var": "I_src_c_abs",
+                "scale": 1e-09,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "point_size": 10.0,
+                "legend": "El. Source [A/mm3]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "El. Source",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "red",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
+    },
+    {
+        "plot_framework": "pyvista",
+        "data_window": {
+            "title": "Mag. Source",
+            "show_menu": false,
+            "window_size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": {
+            "plot_type": "scalar_voxel",
+            "data_options": {
+                "var": "Q_src_m_abs",
+                "scale": 1.0,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "point_size": 10.0,
+                "legend": "Mag. Source [mT/mm]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Mag. Source",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "red",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
+    },
+    {
+        "plot_framework": "pyvista",
+        "data_window": {
             "title": "Current",
             "show_menu": false,
             "window_size": [

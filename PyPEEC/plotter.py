@@ -51,6 +51,8 @@ def _get_grid_voxel(data_solution, data_point):
     V_vm = data_solution["V_vm"]
     J_vc = data_solution["J_vc"]
     B_vm = data_solution["B_vm"]
+    I_src_vc = data_solution["I_src_vc"]
+    Q_src_vm = data_solution["Q_src_vm"]
     solver_status = data_solution["solver_status"]
 
     # compute the magnetic field
@@ -63,8 +65,17 @@ def _get_grid_voxel(data_solution, data_point):
 
     # add the problem solution to the grid
     voxel = manage_voxel.set_plotter_voxel_material(voxel, idx_v, idx_vc, idx_vm, idx_src_c, idx_src_v)
-    voxel = manage_voxel.set_plotter_voxel_data(voxel, idx_v, idx_vc, V_vc, J_vc, "V_c", "J_c")
-    voxel = manage_voxel.set_plotter_voxel_data(voxel, idx_v, idx_vm, V_vm, B_vm, "V_m", "B_m")
+
+    # set the conductor variables
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vc, V_vc, "V_c")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vc, I_src_vc, "I_src_c")
+    voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx_v, idx_vc, J_vc, "J_c")
+
+    # set the magnetic variables
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vm, V_vm, "V_m")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vm, Q_src_vm, "Q_src_m")
+    voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx_v, idx_vm, B_vm, "B_m")
+
 
     # point = manage_voxel.set_plotter_magnetic_field(point, H_point)
 
