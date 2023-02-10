@@ -4,9 +4,11 @@ Module for doing matrix-vector multiplication:
     - multiplication with FFT and circulant tensors
 
 Three different types of matrices are supported:
-    - single: tensor representing a simple matrix (nd = 1)
-    - diag: tensor representing a block diagonal matrix (nd = 3)
-    - cross: tensor representing a block off-diagonal matrix (nd = 3)
+    - single: tensor representing a simple matrix (number of dimensions = 1)
+    - diag: tensor representing a block diagonal matrix (number of dimensions = 3)
+    - cross: tensor representing a block off-diagonal matrix (number of dimensions = 3)
+
+A SciPy linear operator is returned for performing the multplication.
 """
 
 __author__ = "Thomas Guillod"
@@ -62,7 +64,7 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
 
 def get_operator_single(idx, mat):
     """
-    Prepare a single matrix for the multiplication.
+    Get the linear matrix-vector operator for a single-type matrix.
     """
 
     op = _get_prepare(idx, idx, mat, "single")
@@ -72,7 +74,7 @@ def get_operator_single(idx, mat):
 
 def get_operator_diag(idx, mat):
     """
-    Prepare a diagonal matrix for the multiplication.
+    Get the linear matrix-vector operator for a diagonal-type matrix.
     """
 
     op = _get_prepare(idx, idx, mat, "diag")
@@ -82,7 +84,7 @@ def get_operator_diag(idx, mat):
 
 def get_operator_cross(idx_out, idx_in, mat):
     """
-    Prepare a cross matrix for the multiplication.
+    Get the linear matrix-vector operator for a cross-type matrix.
     """
 
     op = _get_prepare(idx_out, idx_in, mat, "cross")

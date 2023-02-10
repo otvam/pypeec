@@ -2,9 +2,9 @@
 Module for doing matrix-vector multiplication (direct multiplication).
 
 Three different types of matrices are supported:
-    - single: tensor representing a simple matrix (nd = 1)
-    - diag: tensor representing a block diagonal matrix (nd = 3)
-    - cross: tensor representing a block off-diagonal matrix (nd = 3)
+    - single: tensor representing a simple matrix (number of dimensions = 1)
+    - diag: tensor representing a block diagonal matrix (number of dimensions = 3)
+    - cross: tensor representing a block off-diagonal matrix (number of dimensions = 3)
 """
 
 __author__ = "Thomas Guillod"

@@ -3,6 +3,8 @@ Different functions for post-processing the solution before plotting.
 For the viewer, extract the domain description and the graph components.
 For the plotter, extract the material description.
 For the plotter, compute the magnetic field for the point cloud.
+
+WARNING: The magnetic field computation is only accurate far away from the source.
 """
 
 __author__ = "Thomas Guillod"
@@ -17,7 +19,6 @@ def _get_biot_savart(pts, pts_src, J_src, vol):
     """
     Compute the magnetic field at a specified point.
     The field is created by many currents.
-    The computation is only accurate far away from the source.
     """
 
     # get the distance between the points and the voxels
@@ -39,7 +40,6 @@ def _get_magnetic_charge(pts, pts_src, Q_src, vol):
     """
     Compute the magnetic field at a specified point.
     The field is created by many magnetic charge.
-    The computation is only accurate far away from the source.
     """
 
     # vacuum permeability
