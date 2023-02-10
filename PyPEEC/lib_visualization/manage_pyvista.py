@@ -116,7 +116,12 @@ def _get_filter_vector(obj, vec, arrow_threshold):
     nrm = lna.norm(data, axis=1)
 
     # threshold for arrow removal
-    thr = np.nanmax(nrm)*arrow_threshold
+    if np.any(np.isfinite(nrm)):
+        thr = np.nanmax(nrm)*arrow_threshold
+    else:
+        thr = np.nan
+
+    # indices to be kept
     idx = nrm > thr
 
     # filter out the arrows that are too small
@@ -144,7 +149,7 @@ def _get_filter_scalar(obj, var, filter_lim):
     # get var
     data = obj[var]
 
-    # find the filter
+    # indices to be kept
     idx = np.logical_and(data >= f_min, data <= f_max)
 
     # filter data

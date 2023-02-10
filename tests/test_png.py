@@ -14,6 +14,13 @@ class TestMesherViewer(unittest.TestCase):
     Test the workflow different examples.
     """
 
+    def test_png_shield(self):
+        """
+        Test workflow for png_shield.
+        """
+
+        test_workflow.test_workflow(self, "png_shield")
+
     def test_png_inductor(self):
         """
         Test workflow for png_inductor.
