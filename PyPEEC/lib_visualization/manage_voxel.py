@@ -4,15 +4,10 @@ Different functions for extracting PyVista object from the voxel structure:
     - the structure containing non-empty voxels (unstructured grid)
     - the defined point cloud (polydata object)
 
-For the viewer, create the objects and add the domain definition.
-
-For the plotter, create the objects and add the solution:
-    - material description (conductors and sources)
-    - resistivity
-    - potential
-    - current density
-    - loss/energy
-    - magnetic field
+Afterwards, different variables are associated with the PyVista object:
+    - descriptive variables (integers)
+    - scalar variables
+    - vector variables
 """
 
 __author__ = "Thomas Guillod"
@@ -50,26 +45,10 @@ def get_grid(n, d, c):
     return grid
 
 
-def get_voxel_plotter(grid, idx_vc, idx_vm):
+def get_voxel(grid, idx_v):
     """
     Construct a PyVista unstructured grid for the non-empty voxels.
-    The indices of the non-empty vocels are provided.
-    """
-
-    # assemble idx
-    idx_v = np.concatenate((idx_vc, idx_vm))
-    idx_v = np.sort(idx_v)
-
-    # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
-    voxel = grid.extract_cells(idx_v)
-
-    return voxel, idx_v
-
-
-def get_voxel_viewer(grid, idx_v):
-    """
-    Construct a PyVista unstructured grid for the non-empty voxels.
-    The indices of the non-empty vocels are provided.
+    The indices of the non-empty voxels are provided.
     """
 
     # assemble idx
@@ -103,71 +82,52 @@ def get_point(data_point, voxel):
     return point
 
 
-def set_viewer_domain(voxel, idx_v, dom_v, gra_v):
+def set_viewer_domain(voxel, idx, domain, connection):
     """
-    Add the domains to the unstructured grid.
-    Add the connected components to the unstructured grid.
-    A fake scalar field is used to encode the domains and connected components.
+    Add the domain and connected component description to the unstructured grid.
+    Integers are used to encode the different tags.
     """
 
     # sort idx
-    idx_sort = np.argsort(idx_v)
-    dom_v = dom_v[idx_sort]
-    gra_v = gra_v[idx_sort]
+    idx_sort = np.argsort(idx)
+    domain = domain[idx_sort]
+    connection = connection[idx_sort]
 
-    # assign the extract data to the geometry
-    voxel["domain"] = dom_v
-    voxel["connection"] = gra_v
+    # assign the data to the geometry
+    voxel["domain"] = domain
+    voxel["connection"] = connection
 
     return voxel
 
 
-def set_plotter_voxel_material(voxel, idx_v, idx_vc, idx_vm, idx_src_c, idx_src_v):
+def set_plotter_voxel_material(voxel, idx, material):
     """
-    Add the material description to the unstructured grid.
-    The following fake scalar field encoding is used:
-        - 0: conducting voxels
-        - 1: current source voxels
-        - 2: voltage source voxels
+    Add the material and source description to the unstructured grid.
+    Integers are used to encode the different tags.
     """
 
     # init the material
-    data = np.empty(len(idx_v), dtype=np.int64)
+    idx_sort = np.argsort(idx)
+    material = material[idx_sort]
 
-    # find position
-    idx_vc_local = np.flatnonzero(np.in1d(idx_v, idx_vc))
-    idx_vm_local = np.flatnonzero(np.in1d(idx_v, idx_vm))
-    idx_src_c_local = np.flatnonzero(np.in1d(idx_v, idx_src_c))
-    idx_src_v_local = np.flatnonzero(np.in1d(idx_v, idx_src_v))
-
-    # assign the voltage and current sources
-    data[idx_vc_local] = 1
-    data[idx_vm_local] = 2
-    data[idx_src_c_local] = 3
-    data[idx_src_v_local] = 4
-
-    # assign the extract data to the geometry
-    voxel["material"] = data
+    # assign the data to the geometry
+    voxel["material"] = material
 
     return voxel
 
 
-def set_plotter_voxel_scalar(voxel, idx_v, idx_var, var_pot, name_pot):
+def set_plotter_voxel_scalar(voxel, idx, idx_var, var_pot, name_pot):
     """
-    Add the different variables to the unstructured grid:
-        - resistivity (scalar field, input variable)
-        - potential (scalar field, solved variable)
-        - current density (scalar and vector fields, solved variable)
-        - loss (scalar field, solved variable)
+    Add a scalar variable to the unstructured grid (complex variable).
     """
 
     # find the variable indices
-    idx_s = np.argsort(idx_v)
-    idx_p = np.searchsorted(idx_v[idx_s], idx_var)
+    idx_s = np.argsort(idx)
+    idx_p = np.searchsorted(idx[idx_s], idx_var)
     idx_var_local = idx_s[idx_p]
 
     # assign potential (nan for the voxels where the variable is not defined)
-    var_pot_all = np.full(len(idx_v), np.nan+1j*np.nan, dtype=np.complex128)
+    var_pot_all = np.full(len(idx), np.nan+1j*np.nan, dtype=np.complex128)
     var_pot_all[idx_var_local] = var_pot
 
     # assign potential
@@ -178,22 +138,19 @@ def set_plotter_voxel_scalar(voxel, idx_v, idx_var, var_pot, name_pot):
     return voxel
 
 
-def set_plotter_voxel_vector(voxel, idx_v, idx_var, var_flow, name_flux):
+def set_plotter_voxel_vector(voxel, idx, idx_var, var_flow, name_flux):
     """
-    Add the different variables to the unstructured grid:
-        - resistivity (scalar field, input variable)
-        - potential (scalar field, solved variable)
-        - current density (scalar and vector fields, solved variable)
-        - loss (scalar field, solved variable)
+    Add a vector variable to the unstructured grid (complex variable).
+    The norm (scalar field) and the direction (vector field) are added.
     """
 
     # find the variable indices
-    idx_s = np.argsort(idx_v)
-    idx_p = np.searchsorted(idx_v[idx_s], idx_var)
+    idx_s = np.argsort(idx)
+    idx_p = np.searchsorted(idx[idx_s], idx_var)
     idx_var_local = idx_s[idx_p]
 
     # assign flux (nan for the voxels where the variable is not defined)
-    var_flux_all = np.full((len(idx_v), 3), np.nan+1j*np.nan, dtype=np.complex128)
+    var_flux_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=np.complex128)
     var_flux_all[idx_var_local] = var_flow
 
     # assign the current density norm
@@ -210,7 +167,7 @@ def set_plotter_voxel_vector(voxel, idx_v, idx_var, var_flow, name_flux):
 
 def set_plotter_magnetic_field(point, H_point):
     """
-    Add the magnetic field (scalar and vector fields, current density) to the point cloud.
+    Add the magnetic field to the point cloud.
     The norm (scalar field) and the direction (vector field) are added.
     """
 

@@ -1,18 +1,8 @@
 """
-Different functions for extracting PyVista object from the voxel structure:
-    - the complete voxel structure (uniform grid)
-    - the structure containing non-empty voxels (unstructured grid)
-    - the defined point cloud (polydata object)
-
-For the viewer, create the objects and add the domain definition.
-
-For the plotter, create the objects and add the solution:
-    - material description (conductors and sources)
-    - resistivity
-    - potential
-    - current density
-    - loss/energy
-    - magnetic field
+Different functions for post-processing the solution before plotting.
+For the viewer, extract the domain description and the graph components.
+For the plotter, extract the material description.
+For the plotter, compute the magnetic field for the point cloud.
 """
 
 __author__ = "Thomas Guillod"
@@ -26,7 +16,8 @@ from PyPEEC.lib_utils.error import RunError
 def _get_biot_savart(pts, pts_src, J_src, vol):
     """
     Compute the magnetic field at a specified point.
-    The field is created by many current densities.
+    The field is created by many currents.
+    The computation is only accurate far away from the source.
     """
 
     # get the distance between the points and the voxels
@@ -45,6 +36,12 @@ def _get_biot_savart(pts, pts_src, J_src, vol):
 
 
 def _get_magnetic_charge(pts, pts_src, Q_src, vol):
+    """
+    Compute the magnetic field at a specified point.
+    The field is created by many magnetic charge.
+    The computation is only accurate far away from the source.
+    """
+
     # vacuum permeability
     mu = 4*np.pi*1e-7
 
@@ -67,8 +64,13 @@ def _get_magnetic_charge(pts, pts_src, Q_src, vol):
 
 
 def _get_graph_component(idx, connection_def):
+    """
+    Find the connected components for a specific domain.
+    Assign a different scalar for each connected component.
+    """
+
     # init the data with invalid data
-    gra = np.zeros(len(idx), dtype=np.int64)
+    tag = np.zeros(len(idx), dtype=np.int64)
 
     # find to corresponding connected components
     for i, idx_graph in enumerate(connection_def):
@@ -76,51 +78,78 @@ def _get_graph_component(idx, connection_def):
         idx_ok = np.in1d(idx, idx_graph)
 
         # assign the component number to the corresponding indices
-        gra[idx_ok] = i+1
+        tag[idx_ok] = i+1
 
     # check that everything was assigned
-    if not np.all(gra):
+    if not np.all(tag):
         raise RunError("invalid graph: some voxels are not part of the graph")
 
-    return gra
+    return tag
 
 
-def get_viewer_domain(domain_def, connection_def):
+def get_geometry_tag(domain_def, connection_def):
     """
     Get the indices of the non-empty voxels.
-    Assign a different scalar for each domain.
-    Assign a different scalar for each connected component.
+    Assign a different integer for each domain.
+    Assign a different integer for each connected component.
     """
 
     # init
-    idx_v = np.empty(0, dtype=np.int64)
-    dom_v = np.empty(0, dtype=np.int64)
-    gra_v = np.empty(0, dtype=np.int64)
+    idx = np.empty(0, dtype=np.int64)
+    domain = np.empty(0, dtype=np.int64)
+    connection = np.empty(0, dtype=np.int64)
 
     # get the indices and colors
     counter = 1
     for tag, idx_tmp in domain_def.items():
         # assign the color (n different integer for each domain)
-        dom_tmp = np.full(len(idx_tmp), counter, dtype=np.int64)
+        domain_tmp = np.full(len(idx_tmp), counter, dtype=np.int64)
+
+        # find the connected components corresponding to the indices
+        connection_tmp = _get_graph_component(idx_tmp, connection_def)
+
+        # append the indices and colors
+        idx = np.append(idx, idx_tmp)
+        domain = np.append(domain, domain_tmp)
+        connection = np.append(connection, connection_tmp)
 
         # update the domain counter
         counter += 1
 
-        # find the connected components corresponding to the indices
-        gra_tmp = _get_graph_component(idx_tmp, connection_def)
+    return idx, domain, connection
 
-        # append the indices and colors
-        idx_v = np.append(idx_v, idx_tmp)
-        dom_v = np.append(dom_v, dom_tmp)
-        gra_v = np.append(gra_v, gra_tmp)
 
-    return idx_v, dom_v, gra_v
+def get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v):
+    """
+    Assign a different integer for the material and source types.
+    """
+
+    # get the indices
+    idx = np.concatenate((idx_vc, idx_vm))
+
+    # find position
+    idx_vc_local = np.flatnonzero(np.in1d(idx, idx_vc))
+    idx_vm_local = np.flatnonzero(np.in1d(idx, idx_vm))
+    idx_src_c_local = np.flatnonzero(np.in1d(idx, idx_src_c))
+    idx_src_v_local = np.flatnonzero(np.in1d(idx, idx_src_v))
+
+    # init the material
+    material = np.empty(len(idx), dtype=np.int64)
+
+    # assign the voltage and current sources
+    material[idx_vc_local] = 1
+    material[idx_vm_local] = 2
+    material[idx_src_c_local] = 3
+    material[idx_src_v_local] = 4
+
+    return idx, material
 
 
 def get_magnetic_field(d, idx_vc, idx_vm, J_vc, S_vm, coord_vox, data_point):
     """
     Compute the magnetic field for the provided points.
-    The Biot-Savart law is used for te computation.
+    The Biot-Savart law is used for the conductor material contribution.
+    The magnetic charge is used for the magnetic material contribution.
     """
 
     # extract the voxel volume

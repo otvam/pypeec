@@ -56,26 +56,29 @@ def _get_grid_voxel(data_solution, data_point):
     Q_vm = data_solution["Q_vm"]
     solver_status = data_solution["solver_status"]
 
+    # get the voxel indices and the material description
+    (idx, material) = manage_compute.get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v)
+
     # compute the magnetic field
     H_point = manage_compute.get_magnetic_field(d, idx_vc, idx_vm, J_vc, Q_vm, coord_vox, data_point)
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
-    (voxel, idx_v) = manage_voxel.get_voxel_plotter(grid, idx_vc, idx_vm)
+    voxel = manage_voxel.get_voxel(grid, idx)
     point = manage_voxel.get_point(data_point, voxel)
 
     # add the problem solution to the grid
-    voxel = manage_voxel.set_plotter_voxel_material(voxel, idx_v, idx_vc, idx_vm, idx_src_c, idx_src_v)
+    voxel = manage_voxel.set_plotter_voxel_material(voxel, idx, material)
 
     # set the conductor variables
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vc, V_vc, "V_c")
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vc, S_vc, "S_c")
-    voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx_v, idx_vc, J_vc, "J_c")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, V_vc, "V_c")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, S_vc, "S_c")
+    voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx, idx_vc, J_vc, "J_c")
 
     # set the magnetic variables
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vm, V_vm, "V_m")
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx_v, idx_vm, Q_vm, "Q_m")
-    voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx_v, idx_vm, B_vm, "B_m")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vm, V_vm, "V_m")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vm, Q_vm, "Q_m")
+    voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx, idx_vm, B_vm, "B_m")
 
     # add the magnetic field
     point = manage_voxel.set_plotter_magnetic_field(point, H_point)

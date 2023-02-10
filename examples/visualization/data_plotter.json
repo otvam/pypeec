@@ -311,7 +311,7 @@
                     null
                 ],
                 "arrow_threshold": 0.001,
-                "arrow_scale": 10.5,
+                "arrow_scale": 0.5,
                 "legend": "Re. Current [A/mm2]"
             },
             "clip_options": {
@@ -322,6 +322,58 @@
             },
             "plot_options": {
                 "title": "Re. Current",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "red",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
+    },
+    {
+        "plot_framework": "pyvista",
+        "data_window": {
+            "title": "Im. Current",
+            "show_menu": false,
+            "window_size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": {
+            "plot_type": "arrow_voxel",
+            "data_options": {
+                "var_scalar": "J_c_norm_im",
+                "var_vector": "J_c_vec_im",
+                "scale": 1e-06,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "arrow_threshold": 0.001,
+                "arrow_scale": 0.5,
+                "legend": "Im. Current [A/mm2]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Im. Current",
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -413,7 +465,7 @@
                     null
                 ],
                 "arrow_threshold": 0.001,
-                "arrow_scale": 10.5,
+                "arrow_scale": 0.5,
                 "legend": "Re. Flux Density [mT]"
             },
             "clip_options": {
@@ -424,6 +476,58 @@
             },
             "plot_options": {
                 "title": "Re. Flux Density",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "red",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
+    },
+    {
+        "plot_framework": "pyvista",
+        "data_window": {
+            "title": "Im. Flux Density",
+            "show_menu": false,
+            "window_size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": {
+            "plot_type": "arrow_voxel",
+            "data_options": {
+                "var_scalar": "B_m_norm_im",
+                "var_vector": "B_m_vec_im",
+                "scale": 1000.0,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "arrow_threshold": 0.001,
+                "arrow_scale": 0.5,
+                "legend": "Im. Flux Density [mT]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Im. Flux Density",
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -515,7 +619,7 @@
                     null
                 ],
                 "arrow_threshold": 0.001,
-                "arrow_scale": 10.5,
+                "arrow_scale": 0.5,
                 "legend": "Re. Mag. Field [A/m]"
             },
             "clip_options": {
@@ -540,5 +644,81 @@
                 "cloud_opacity": 0.5
             }
         }
+    },
+    {
+        "plot_framework": "pyvista",
+        "data_window": {
+            "title": "Im. Mag. Field",
+            "show_menu": false,
+            "window_size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": {
+            "plot_type": "arrow_point",
+            "data_options": {
+                "var_scalar": "H_norm_im",
+                "var_vector": "H_vec_im",
+                "scale": 1.0,
+                "log": false,
+                "color_lim": [
+                    null,
+                    null
+                ],
+                "filter_lim": [
+                    null,
+                    null
+                ],
+                "arrow_threshold": 0.001,
+                "arrow_scale": 0.5,
+                "legend": "Im. Mag. Field [A/m]"
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Im. Mag. Field",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "red",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
+    },
+    {
+        "plot_framework": "matplotlib",
+        "data_window": {
+            "title": "Convergence",
+            "show_menu": false,
+            "window_size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": "convergence"
+    },
+    {
+        "plot_framework": "matplotlib",
+        "data_window": {
+            "title": "Residuum",
+            "show_menu": false,
+            "window_size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": "residuum"
     }
 ]

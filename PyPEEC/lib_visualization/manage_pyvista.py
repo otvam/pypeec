@@ -193,12 +193,7 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
 
 def plot_material(pl, voxel, clip_options):
     """
-    Plot the material description (conductors, voltage sources, and current sources).
-    The plot is made on the unstructured grid describing the non-empty voxels.
-    The following fake scalar field encoding is used:
-        - 0: conducting voxels
-        - 1: current source voxels
-        - 2: voltage source voxels
+    Plot the material and source description.
     """
 
     # get a colormap with three discrete color
@@ -347,7 +342,7 @@ def get_plot_plotter(pl, grid, voxel, point, data_plot):
     """
     Plot the solution (for the plotter).
     The following plot types are available:
-        - plot the material description (conductors and sources) on the voxel structure
+        - plot the material and source description on the voxel structure
         - plot a scalar variable on the voxel structure
         - plot a scalar variable on the point cloud
         - plot a vector variable on the voxel structure
