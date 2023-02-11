@@ -3,43 +3,57 @@ Different functions for building the equation system.
 Two equation systems are built, one for the preconditioner and one for the full system.
 
 The voxel structure has the following size: (nx, ny, nz).
-The problem contains n_v non-empty voxels and n_f internal faces.
+The problem contains n_vc non-empty electric voxels and n_vm non-empty magnetic voxels.
+The problem contains n_fc internal electric faces and n_fm internal magnetic faces.
 The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
 
 The equations are set in the following order:
-    - n_f: equations are the KVL
-    - n_v: equations are the KCL
-    - n_src_c equations are the current source voxels (source equation with internal admittance)
-    - n_src_v equations are the voltage source voxels (source equation with internal resistance)
+    - n_fc: the electric KVL equations
+    - n_fm: the magnetic KVL equations
+    - n_vc: the electric KCL equations
+    - n_vm: the magnetic KCL equations
+    - n_src_c: the current source voxels equations (source equation with internal admittance)
+    - n_src_v: the voltage source voxels equations (source equation with internal resistance)
 
 The complete equation matrix is:
     [
-        Z, A_kvl ;
-        A_kcl, A_src ;
+        R_c+s*L_c,   K_c,            A_kvl_c,     0,          0 ;
+        K_m,         R_m,            0,           A_kvl_m,    0 ;
+        A_kcl_c,     0,              0,           0,          A_vc_src ;
+        0,           P_m*A_kcl_m,    0,           s*I,        A_vm_src ;
+        0,           0,              A_src_vc,    A_src_vm,   A_src_src ;
     ]
 
 The complete solution vector is:
     [
-        n_f: face currents
-        n_v: voxel potentials
+        n_fc: electric face currents
+        n_fm: magnetic face fluxes
+        n_vc: electric voxel potentials
+        n_vm: magnetic voxel potentials
         n_src_c: current source currents
         n_src_v: voltage source currents
     ]
 
 The complete right-hand size vector is:
     [
-        n_f: zero excitation
-        n_v: zero excitation
+        n_fc: zero excitation
+        n_fm: zero excitation
+        n_vc: zero excitation
+        n_vm: zero excitation
         n_src_c: current source excitations
         n_src_v: voltage source excitations
     ]
 
-For the preconditioner, the impedance matrix (Z) is diagonal.
+For the DC problem (zero frequency), division per zero are occurring.
+Therefore, the problem is formulated slightly differently for this case.
+
+For the preconditioner, the diagonal of the inductance and potential matrix is used.
+For the preconditioner, the electric-magnetic coupling matrices are neglected.
 The preconditioner is solved with the Schur complement and the matrix factorization.
 
-For the full system, the impedance matrix (Z) is dense.
-The matrix-vector multiplication is done with FFT circulant tensors.
+For the full system, the complete dense matrix are used.
 The system is meant to be solved with an iterative solver.
+Therefore, the full system matrix is not built and a matrix-vector operator is returned.
 """
 
 __author__ = "Thomas Guillod"
@@ -53,15 +67,31 @@ from PyPEEC.lib_matrix import matrix_factorization
 
 def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     """
-    Compute the sparse matrix decomposition for the preconditioner.
-    The preconditioner is using a diagonal impedance matrix (no cross-coupling).
-    The diagonal impedance matrix can be trivially inverted.
-    Therefore, the factorization is computed on the Schur complement:
+    Compute the sparse matrices using for the preconditioner.
+
+    For the preconditioner, the diagonal of the inductance and potential matrix is used.
+    For the preconditioner, the electric-magnetic coupling matrices are neglected.
+
+    The preconditioner matrix has the following form:
+        [
+            Z_mat,       A_12_mat;
+            A_21_mat,    A_22_mat;
+        ]
+
+    The matrix impedance matrix (Z_mat) is diagonal.
+    Therefore, the factorization is computed on the Schur complement.
+    The Schur complement is computed as:
+        - Y_mat = 1/Z_mat
+        - S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
+
+    Two different methods are used to invert the Schur complement (S_mat):
         - with matrix factorization (UMFPACK solver)
         - with LU decomposition (SuperLU solver)
 
-    The diagonal admittance matrix has the following size: (n_f, n_f).
-    The Schur complement matrix has the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
+    The equation system has the following size: n_fc+n_fm+n_vc+n_vm+n_src_c+n_src_v.
+    The Schur complement split the system in two subsystems:
+        - n_fc+n_fm (diagonal block)
+        - n_vc+n_vm+n_src_c+n_src_v
     """
 
     # get the matrices
@@ -80,7 +110,7 @@ def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     # get the electric admittance
     Y_vec_c = 1/(R_vec_c+s*L_vec_c)
 
-    # get the magnetic admittance
+    # get the magnetic admittance (avoid singularity for DC solution)
     if freq == 0:
         Y_vec_m = 1/R_vec_m
         I_vec_m = np.ones(n_vm, dtype=np.complex128)
@@ -128,18 +158,20 @@ def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
 
     # compute the factorization of the sparse Schur complement
-    _S_fact = matrix_factorization.MatrixFactorization(S_mat)
+    S_fact = matrix_factorization.MatrixFactorization(S_mat)
 
-    return Y_mat, S_mat, _S_fact, A_12_mat, A_21_mat
+    return Y_mat, S_mat, S_fact, A_12_mat, A_21_mat
 
 
 def _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat):
     """
     Solve the preconditioner equation system.
-    The Schur complement and matrix factorization are used.
+    The matrix factorization of the Schur complement is used.
 
-    The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
-    The Schur complement split the system in two subsystems: n_f and n_v+n_src_c+n_src_v.
+    The equation system has the following size: n_fc+n_fm+n_vc+n_vm+n_src_c+n_src_v.
+    The Schur complement split the system in two subsystems:
+        - n_fc+n_fm (diagonal block)
+        - n_vc+n_vm+n_src_c+n_src_v
     """
 
     # split the excitation vector (Schur complement split)
@@ -162,9 +194,9 @@ def _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat):
 def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m, K_op_c, K_op_m):
     """
     Multiply the full equation matrix with a given solution test vector.
-    For the multiplication of inductance matrix and the current, the FFT circulant tensor is used.
 
-    The equation system has the following size: n_f+n_v+n_src_c+n_src_v.
+    For the multiplication of the dense matrix, the provided linear operators are used.
+    The equation system has the following size: n_fc+n_fm+n_vc+n_vm+n_src_c+n_src_v.
     """
 
     # get the matrices
@@ -180,7 +212,7 @@ def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
-    # get the frequency for the magnetic equation
+    # get the derivative operator (avoid singularity for DC solution)
     if freq == 0:
         s_diff = 1
     else:
@@ -230,6 +262,18 @@ def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P
 
 
 def _get_system_size(freq, A_c, A_m, A_src):
+    """
+    Get the size of the equation system and a scaling vector for the solution.
+
+    The equation system has the following size: n_fc+n_fm+n_vc+n_vm+n_src_c+n_src_v.
+    The scaling vector is required for the following reasons:
+        - for avoid division per zero, the DC and AC system are slightly different
+        - the DC system is using the magnetic flux as a variable
+        - the AC system is using the derivative of the magnetic flux as a variable
+        - the solution is using the magnetic flux as a variable
+        - the scaling vector is used to match this discrepancy
+    """
+
     # get the matrices
     (A_kvl_c, A_kcl_c) = A_c
     (A_kvl_m, A_kcl_m) = A_m
@@ -261,7 +305,8 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     """
     Construct the right-hand side with the current and voltage sources.
 
-    The right-hand size vector has the following size: n_f+n_v+n_src_c+n_src_v.
+    The right-hand size vector has the following size: n_fc+n_fm+n_vc+n_vm+n_src_c+n_src_v.
+    The excitations are only located in the last equations: n_src_c+n_src_v.
     """
 
     # extract the voxel data
@@ -279,10 +324,10 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
 
 def get_kvl_kcl_matrix(A_net):
     """
-    Construct the connection matrices for the KCL, KVL.
+    Construct the connection matrices for the KVL and KCL equations.
 
-    The A_kvl matrix has the following size: (n_f, n_v+n_src_c+n_src_v).
-    The A_kcl matrix has the following size: (n_v+n_src_c+n_src_v, n_f).
+    The A_kvl matrix has the following size: (n_f, n_v).
+    The A_kcl matrix has the following size: (n_v, n_f).
     """
 
     # connection matrix for the KCL
@@ -296,9 +341,19 @@ def get_kvl_kcl_matrix(A_net):
 
 def get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v):
     """
-    Construct the source matrix (description of the sources with internal resistances/admittances).
+    Construct the source matrices.
+    The source matrices describes the sources (internal resistances/admittances).
+    The source matrices connect the sources to the rest of the system.
 
-    The A_src matrix has the following size: (n_v+n_src_c+n_src_v, n_v+n_src_c+n_src_v).
+    The source matrices have the following sizes:
+        - A_vc_src: (n_vc, n_src_c+n_src_v)
+        - A_vm_src: (n_vm, n_src_c+n_src_v)
+        - A_src_vc: (n_src_c+n_src_v, n_vc)
+        - A_vm_src: (n_src_c+n_src_v, n_vm)
+        - A_src_src: (n_src_c+n_src_v, n_src_c+n_src_v)
+
+    It should be noted that the matrices connecting the magnetic voxels are all-zeros.
+    This is explained by the fact that the sources are only connected to electric voxels.
     """
 
     # extract the voxel data
@@ -349,6 +404,8 @@ def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
+    The Schur complement matrix of the preconditioner is also returned.
+    This matrix is used to assess the condition number of the system.
     """
 
     # get the Schur complement
