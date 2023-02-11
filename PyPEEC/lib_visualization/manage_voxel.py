@@ -4,15 +4,10 @@ Different functions for extracting PyVista object from the voxel structure:
     - the structure containing non-empty voxels (unstructured grid)
     - the defined point cloud (polydata object)
 
-For the viewer, create the objects and add the domain definition.
-
-For the plotter, create the objects and add the solution:
-    - material description (conductors and sources)
-    - resistivity
-    - potential
-    - current density
-    - loss/energy
-    - magnetic field
+Afterwards, different variables are associated with the PyVista object:
+    - descriptive variables (integers)
+    - scalar variables
+    - vector variables
 """
 
 __author__ = "Thomas Guillod"
@@ -22,56 +17,6 @@ import numpy as np
 import numpy.linalg as lna
 import pyvista as pv
 from PyPEEC.lib_utils.error import RunError
-
-
-def _get_biot_savart(pts, pts_src, J_src, vol):
-    """
-    Compute the magnetic field at a specified point.
-    The field is created by many current densities.
-    """
-
-    # get the distance between the points and the voxels
-    vec = pts-pts_src
-
-    # get the norm of the distance
-    nrm = lna.norm(vec, axis=1, keepdims=True)
-
-    # compute the Biot-Savart contributions
-    H_all = (vol/(4*np.pi))*(np.cross(J_src, vec, axis=1)/(nrm**3))
-
-    # sum the contributions
-    H_pts = np.sum(H_all, axis=0)
-
-    return H_pts
-
-
-def _get_graph_component(idx, connection_def):
-    # init the data with invalid data
-    gra = np.zeros(len(idx), dtype=np.int64)
-
-    # find to corresponding connected components
-    for i, idx_graph in enumerate(connection_def):
-        # find which indices are part of the connected component
-        idx_ok = np.in1d(idx, idx_graph)
-
-        # assign the component number to the corresponding indices
-        gra[idx_ok] = i+1
-
-    # check that everything was assigned
-    if not np.all(gra):
-        raise RunError("invalid graph: some voxels are not part of the graph")
-
-    return gra
-
-
-def _get_domain_tag(idx, counter):
-    # assign the color (n different integer for each domain)
-    dom = np.full(len(idx), counter, dtype=np.int64)
-
-    # update the domain counter
-    counter += 1
-
-    return dom, counter
 
 
 def get_grid(n, d, c):
@@ -103,10 +48,10 @@ def get_grid(n, d, c):
 def get_voxel(grid, idx_v):
     """
     Construct a PyVista unstructured grid for the non-empty voxels.
-    The indices of the non-empty vocels are provided.
+    The indices of the non-empty voxels are provided.
     """
 
-    # sort idx
+    # assemble idx
     idx_v = np.sort(idx_v)
 
     # transform the uniform grid into an unstructured grid (keeping the non-empty voxels)
@@ -115,7 +60,7 @@ def get_voxel(grid, idx_v):
     return voxel
 
 
-def get_point(voxel, data_point):
+def get_point(data_point, voxel):
     """
     Construct a PyVista point cloud (polydata) with the defined points.
     The points cannot be located inside the non-empty voxels.
@@ -137,146 +82,92 @@ def get_point(voxel, data_point):
     return point
 
 
-def get_viewer_domain(domain_def, connection_def):
+def set_viewer_domain(voxel, idx, domain, connection):
     """
-    Get the indices of the non-empty voxels.
-    Assign a different scalar for each domain.
-    Assign a different scalar for each connected component.
-    """
-
-    # init
-    idx_v = np.empty(0, dtype=np.int64)
-    dom_v = np.empty(0, dtype=np.int64)
-    gra_v = np.empty(0, dtype=np.int64)
-
-    # get the indices and colors
-    counter = 1
-    for tag, idx_tmp in domain_def.items():
-        # assign the color (n different integer for each domain)
-        (dom_tmp, counter) = _get_domain_tag(idx_tmp, counter)
-
-        # find the connected components corresponding to the indices
-        gra_tmp = _get_graph_component(idx_tmp, connection_def)
-
-        # append the indices and colors
-        idx_v = np.append(idx_v, idx_tmp)
-        dom_v = np.append(dom_v, dom_tmp)
-        gra_v = np.append(gra_v, gra_tmp)
-
-    return idx_v, dom_v, gra_v
-
-
-def get_magnetic_field(d, idx_v, J_v, voxel_point, data_point):
-    """
-    Compute the magnetic field for the provided points.
-    The Biot-Savart law is used for te computation.
-    """
-
-    # extract the voxel volume
-    vol = np.prod(d)
-
-    # keep non-empty voxels
-    pts_v = voxel_point[idx_v]
-
-    # for each provided point, compute the magnetic field
-    H_points = np.zeros((len(data_point), 3), dtype=np.complex128)
-    for i, pts_tmp in enumerate(data_point):
-        H_points[i, :] = _get_biot_savart(pts_tmp, pts_v, J_v, vol)
-
-    return H_points
-
-
-def set_viewer_domain(voxel, idx_v, dom_v, gra_v):
-    """
-    Add the domains to the unstructured grid.
-    Add the connected components to the unstructured grid.
-    A fake scalar field is used to encode the domains and connected components.
+    Add the domain and connected component description to the unstructured grid.
+    Integers are used to encode the different tags.
     """
 
     # sort idx
-    idx_sort = np.argsort(idx_v)
-    dom_v = dom_v[idx_sort]
-    gra_v = gra_v[idx_sort]
+    idx_sort = np.argsort(idx)
+    domain = domain[idx_sort]
+    connection = connection[idx_sort]
 
-    # assign the extract data to the geometry
-    voxel["domain"] = dom_v
-    voxel["connection"] = gra_v
+    # assign the data to the geometry
+    voxel["domain"] = domain
+    voxel["connection"] = connection
 
     return voxel
 
 
-def set_plotter_voxel_material(voxel, idx_v, idx_src_c, idx_src_v):
+def set_plotter_voxel_material(voxel, idx, material):
     """
-    Add the material description to the unstructured grid.
-    The following fake scalar field encoding is used:
-        - 0: conducting voxels
-        - 1: current source voxels
-        - 2: voltage source voxels
+    Add the material and source description to the unstructured grid.
+    Integers are used to encode the different tags.
     """
 
-    # assign conductors
-    data = np.zeros(len(idx_v), dtype=np.float64)
+    # init the material
+    idx_sort = np.argsort(idx)
+    material = material[idx_sort]
 
-    # get the local source indices
-    idx_src_c_local = np.flatnonzero(np.in1d(idx_v, idx_src_c))
-    idx_src_v_local = np.flatnonzero(np.in1d(idx_v, idx_src_v))
-
-    # assign the voltage and current sources
-    data[idx_src_c_local] = 1
-    data[idx_src_v_local] = 2
-
-    # sort idx
-    idx_sort = np.argsort(idx_v)
-    data = data[idx_sort]
-
-    # assign the extract data to the geometry
-    voxel["material"] = data
+    # assign the data to the geometry
+    voxel["material"] = material
 
     return voxel
 
 
-def set_plotter_voxel_data(voxel, idx_v, rho_v, V_v, J_v, P_v):
+def set_plotter_voxel_scalar(voxel, idx, idx_var, var_pot, name_pot):
     """
-    Add the different variables to the unstructured grid:
-        - resistivity (scalar field, input variable)
-        - potential (scalar field, solved variable)
-        - current density (scalar and vector fields, solved variable)
-        - loss (scalar field, solved variable)
+    Add a scalar variable to the unstructured grid (complex variable).
     """
 
-    # sort idx
-    idx_s = np.argsort(idx_v)
+    # find the variable indices
+    idx_s = np.argsort(idx)
+    idx_p = np.searchsorted(idx[idx_s], idx_var)
+    idx_var_local = idx_s[idx_p]
 
-    # reorder variables
-    rho_v = rho_v[idx_s]
-    V_v = V_v[idx_s]
-    P_v = P_v[idx_s]
-    J_v = J_v[idx_s,]
-
-    # assign data
-    voxel["rho"] = rho_v
-    voxel["P"] = P_v
+    # assign potential (nan for the voxels where the variable is not defined)
+    var_pot_all = np.full(len(idx), np.nan+1j*np.nan, dtype=np.complex128)
+    var_pot_all[idx_var_local] = var_pot
 
     # assign potential
-    voxel["V_re"] = np.real(V_v)
-    voxel["V_im"] = np.imag(V_v)
-    voxel["V_abs"] = np.abs(V_v)
+    voxel[name_pot + "_re"] = np.real(var_pot_all)
+    voxel[name_pot + "_im"] = np.imag(var_pot_all)
+    voxel[name_pot + "_abs"] = np.abs(var_pot_all)
+
+    return voxel
+
+
+def set_plotter_voxel_vector(voxel, idx, idx_var, var_flow, name_flux):
+    """
+    Add a vector variable to the unstructured grid (complex variable).
+    The norm (scalar field) and the direction (vector field) are added.
+    """
+
+    # find the variable indices
+    idx_s = np.argsort(idx)
+    idx_p = np.searchsorted(idx[idx_s], idx_var)
+    idx_var_local = idx_s[idx_p]
+
+    # assign flux (nan for the voxels where the variable is not defined)
+    var_flux_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=np.complex128)
+    var_flux_all[idx_var_local] = var_flow
 
     # assign the current density norm
-    voxel["J_norm_abs"] = lna.norm(J_v, axis=1)
-    voxel["J_norm_re"] = lna.norm(np.real(J_v), axis=1)
-    voxel["J_norm_im"] = lna.norm(np.imag(J_v), axis=1)
+    voxel[name_flux + "_norm_abs"] = lna.norm(var_flux_all, axis=1)
+    voxel[name_flux + "_norm_re"] = lna.norm(np.real(var_flux_all), axis=1)
+    voxel[name_flux + "_norm_im"] = lna.norm(np.imag(var_flux_all), axis=1)
 
     # assign the current density direction
-    voxel["J_vec_re"] = np.real(J_v)
-    voxel["J_vec_im"] = np.imag(J_v)
+    voxel[name_flux + "_vec_re"] = np.real(var_flux_all)
+    voxel[name_flux + "_vec_im"] = np.imag(var_flux_all)
 
     return voxel
 
 
 def set_plotter_magnetic_field(point, H_point):
     """
-    Add the magnetic field (scalar and vector fields, current density) to the point cloud.
+    Add the magnetic field to the point cloud.
     The norm (scalar field) and the direction (vector field) are added.
     """
 

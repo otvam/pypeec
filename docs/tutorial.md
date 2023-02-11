@@ -54,11 +54,13 @@ Different examples are located in the `examples` folder:
 * **stl_inductor**: a 3D inductor created from STL files
 * **stl_transformer**: a planar transformer created from STL files
 * **png_inductor**: a planar inductor created from PNG files
+* **png_shield**: a conductor loop with a magnetic shield created from PNG files
 * **png_busbar**: a coplanar busbar (L-shaped) created from PNG files
 * **png_wire**: a straight wire created from PNG files
 * **png_pcb**: simple PCB traces created from PNG files
-* **voxel_slab**: a simple slab conductor (with field computation)
-* **voxel_transformer**: a simple transformer (with field computation)
+* **voxel_slab**: a simple slab conductor in free space
+* **voxel_core**: a simple slab conductor surrounded by a magnetic core
+* **voxel_transformer**: a simple transformer
 
 The following files (located in the `examples` folder) are used to run the examples.
 * `run_visualization.py` is used to generate the configuration file for the viewer/plotter

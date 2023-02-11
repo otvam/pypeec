@@ -31,7 +31,7 @@ def _get_plot_options(name):
         "geom_color": "black",
         "geom_opacity": 0.5,
         "cloud_plot": True,
-        "cloud_color": "black",
+        "cloud_color": "red",
         "cloud_size": 5.0,
         "cloud_opacity": 0.5,
     }
@@ -71,15 +71,12 @@ def _get_data_window(name):
 
 def _get_data_plotter_geometry(name):
     """
-    Plot options for the material description (conductors and sources).
+    Plot options for the material description.
     The result is plotted on the voxel structure.
     This structure is used by the plotter.
     """
 
-    data_options = {
-        "legend": name,
-        "opacity": 1.0,
-    }
+    data_options = {}
 
     data = _get_data_plotter_pyvista("material", data_options, name)
 
@@ -206,12 +203,16 @@ def get_data_plotter():
     # get the plots
     data_plotter = [
         _get_data_plotter_geometry("Material"),
-        _get_data_plotter_scalar("voxel", "rho", 1e8, "uOhm/cm", "Resistivity"),
-        _get_data_plotter_scalar("voxel", "V_abs", 1e0, "V", "Potential"),
-        _get_data_plotter_scalar("voxel", "J_norm_abs", 1e-6, "A/mm2", "Current Norm"),
-        _get_data_plotter_scalar("voxel", "P", 1e-6, "mW/mm3", "Losses"),
-        _get_data_plotter_arrow("voxel", "J_norm_re", "J_vec_re", 1e-6, "A/mm2", "Re. Current"),
-        _get_data_plotter_arrow("voxel", "J_norm_im", "J_vec_im", 1e-6, "A/mm2", "Im. Current"),
+        _get_data_plotter_scalar("voxel", "V_c_abs", 1e0, "V", "El. Potential"),
+        _get_data_plotter_scalar("voxel", "V_m_abs", 1e0, "A", "Mag. Potential"),
+        _get_data_plotter_scalar("voxel", "S_c_abs", 1e-9, "A/mm3", "El. Source"),
+        _get_data_plotter_scalar("voxel", "Q_m_abs", 1e0, "mT/mm", "Mag. Source"),
+        _get_data_plotter_scalar("voxel", "J_c_norm_abs", 1e-6, "A/mm2", "Current"),
+        _get_data_plotter_arrow("voxel", "J_c_norm_re", "J_c_vec_re", 1e-6, "A/mm2", "Re. Current"),
+        _get_data_plotter_arrow("voxel", "J_c_norm_im", "J_c_vec_im", 1e-6, "A/mm2", "Im. Current"),
+        _get_data_plotter_scalar("voxel", "B_m_norm_abs", 1e3, "mT", "Flux Density"),
+        _get_data_plotter_arrow("voxel", "B_m_norm_re", "B_m_vec_re", 1e3, "mT", "Re. Flux Density"),
+        _get_data_plotter_arrow("voxel", "B_m_norm_im", "B_m_vec_im", 1e3, "mT", "Im. Flux Density"),
         _get_data_plotter_scalar("point", "H_norm_abs", 1e0, "A/m", "Mag. Field Norm"),
         _get_data_plotter_arrow("point", "H_norm_re", "H_vec_re", 1e0, "A/m", "Re. Mag. Field"),
         _get_data_plotter_arrow("point", "H_norm_im", "H_vec_im", 1e0, "A/m", "Im. Mag. Field"),

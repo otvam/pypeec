@@ -62,8 +62,8 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, solver_options):
     obj = _IterCounter()
 
     # define callback
-    def fct(res_tmp):
-        obj.get_callback(res_tmp)
+    def fct(res):
+        obj.get_callback(res)
 
     # call the solver
     logger.info("start solver")

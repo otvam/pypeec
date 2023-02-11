@@ -39,15 +39,19 @@ def _get_coupling(d, idx, method, dimension):
     idx_tmp = idx[:, perm]
 
     # shift for the integration of the last dimension
-    idx_add = np.array([[0, 0, 0.5]])
+    idx_add = np.array([[0.0, 0.0, 0.5]])
+
+    # compute the evaluation coordinate
+    idx_1 = idx_tmp+idx_add
+    idx_2 = idx_tmp-idx_add
 
     # get the partially integrated coefficients (5D integration)
     if method == "ana":
-        G_1 = green_function.get_green_ana(d_tmp, idx_tmp+idx_add, "5D")
-        G_2 = green_function.get_green_ana(d_tmp, idx_tmp-idx_add, "5D")
+        G_1 = green_function.get_green_ana(d_tmp, idx_1, "5D")
+        G_2 = green_function.get_green_ana(d_tmp, idx_2, "5D")
     elif method == "num":
-        G_1 = green_function.get_green_num(d_tmp, idx_tmp+idx_add, "5D")
-        G_2 = green_function.get_green_num(d_tmp, idx_tmp-idx_add, "5D")
+        G_1 = green_function.get_green_num(d_tmp, idx_1, "5D")
+        G_2 = green_function.get_green_num(d_tmp, idx_2, "5D")
     else:
         raise ValueError("invalid method")
 
@@ -171,20 +175,20 @@ def get_coupling_tensor(n, d, coupling_simplify):
     idx_num = np.invert(idx_ana)
 
     # init the result vector
-    K_mutual = np.zeros((nv, 3), dtype=np.float64)
+    K_tsr = np.zeros((nv, 3), dtype=np.float64)
 
     # analytical solution
-    K_mutual[idx_ana, 0] = _get_coupling(d, idx[idx_ana], "ana", "yz")
-    K_mutual[idx_ana, 1] = _get_coupling(d, idx[idx_ana], "ana", "xz")
-    K_mutual[idx_ana, 2] = _get_coupling(d, idx[idx_ana], "ana", "xy")
+    K_tsr[idx_ana, 0] = _get_coupling(d, idx[idx_ana], "ana", "yz")
+    K_tsr[idx_ana, 1] = _get_coupling(d, idx[idx_ana], "ana", "xz")
+    K_tsr[idx_ana, 2] = _get_coupling(d, idx[idx_ana], "ana", "xy")
 
     # numerical solution
-    K_mutual[idx_num, 0] = _get_coupling(d, idx[idx_num], "num", "yz")
-    K_mutual[idx_num, 1] = _get_coupling(d, idx[idx_num], "num", "xz")
-    K_mutual[idx_num, 2] = _get_coupling(d, idx[idx_num], "num", "xy")
+    K_tsr[idx_num, 0] = _get_coupling(d, idx[idx_num], "num", "yz")
+    K_tsr[idx_num, 1] = _get_coupling(d, idx[idx_num], "num", "xz")
+    K_tsr[idx_num, 2] = _get_coupling(d, idx[idx_num], "num", "xy")
 
     # transform the vector into a tensor
-    K_mutual = K_mutual.flatten(order="F")
-    K_mutual = K_mutual.reshape((nx, ny, nz, 3), order="F")
+    K_tsr = K_tsr.flatten(order="F")
+    K_tsr = K_tsr.reshape((nx, ny, nz, 3), order="F")
 
-    return K_mutual
+    return K_tsr

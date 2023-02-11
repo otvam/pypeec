@@ -14,6 +14,7 @@ The plotting is done with PyVista with the Qt framework.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+from PyPEEC.lib_visualization import manage_compute
 from PyPEEC.lib_visualization import manage_voxel
 from PyPEEC.lib_visualization import manage_pyvista
 from PyPEEC.lib_check import check_data_point
@@ -40,16 +41,16 @@ def _get_grid_voxel(data_voxel, data_point):
     domain_def = data_voxel["domain_def"]
     connection_def = data_voxel["connection_def"]
 
-    # get the indices of the non-empty voxels
-    (idx_v, dom_v, gra_v) = manage_voxel.get_viewer_domain(domain_def, connection_def)
+    # get the indices of the non-empty voxels and the domain and connection description
+    (idx, domain, connection) = manage_compute.get_geometry_tag(domain_def, connection_def)
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
-    voxel = manage_voxel.get_voxel(grid, idx_v)
-    point = manage_voxel.get_point(voxel, data_point)
+    voxel = manage_voxel.get_voxel(grid, idx)
+    point = manage_voxel.get_point(data_point, voxel)
 
     # add the domain tag to the geometry
-    voxel = manage_voxel.set_viewer_domain(voxel, idx_v, dom_v, gra_v)
+    voxel = manage_voxel.set_viewer_domain(voxel, idx, domain, connection)
 
     return grid, voxel, point
 

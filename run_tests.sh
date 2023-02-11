@@ -59,10 +59,12 @@ function clean_test {
 folder=(
   "voxel_slab"
   "voxel_transformer"
+  "voxel_core"
   "png_wire"
   "png_pcb"
   "png_busbar"
   "png_inductor"
+  "png_shield"
   "stl_inductor"
   "stl_transformer"
   "visualization"

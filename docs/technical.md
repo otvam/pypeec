@@ -39,10 +39,13 @@ Moreover, the memory consumption is not heavily optimized (no customized garbage
 
 # Warnings
 
+> **Warning**: For problems with magnetic domains, the preconditioner is not heavily optimized.
+> This might lead to a very slow convergence of the matrix solver.
+
+> **Warning**: For large problems, the code might allocate huge amount of memory.
+> This might crash your operating system.
+
 > **Warning**: Python pickle files are using to store the mesher and solver results.
 > Pickling data is not secure. 
 > Only load pickle files that you trust.
 > Do not commit the pickle files in the git repository.
-
-> **Warning**: For large problems, the code might allocate huge amount of memory.
-> This might crash your operating system.

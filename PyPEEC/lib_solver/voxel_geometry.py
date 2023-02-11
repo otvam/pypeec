@@ -10,7 +10,7 @@ import numpy as np
 import scipy.sparse as sps
 
 
-def get_voxel_point(n, d, c):
+def get_voxel_coord(n, d, c):
     """
     Get the coordinate of the different voxels.
     The first voxel center is at the specified origin coordinate.
@@ -46,9 +46,9 @@ def get_voxel_point(n, d, c):
     z = z[idx_z].flatten(order="F")
 
     # assemble the coordinate array
-    voxel_point = np.stack((x, y, z), axis=1)
+    coord_vox = np.stack((x, y, z), axis=1)
 
-    return voxel_point
+    return coord_vox
 
 
 def get_incidence_matrix(n):
@@ -58,6 +58,8 @@ def get_incidence_matrix(n):
 
     The voxel structure has the following size: (nx, ny, nz).
     The matrix has the following dimension: (nx*ny*nz, 3*nx*ny*nz).
+    The columns represent the face with the following order: x, y, and, z.
+    The rows represent the voxels.
     """
 
     # extract the voxel data
@@ -74,31 +76,31 @@ def get_incidence_matrix(n):
     idx = idx_x+idx_y*nx+idx_z*nx*ny
 
     # create the sparse matrix
-    A_incidence = sps.csc_matrix((nv, 3*nv), dtype=np.int64)
+    A_vox = sps.csc_matrix((nv, 3*nv), dtype=np.int64)
 
     # assign the diagonal, each voxel is connected to three faces with positive indices
     data = np.ones(nv)
     idx_row_col = np.arange(nv)
-    A_incidence += sps.csc_matrix((data, (idx_row_col, 0*nv+idx_row_col)), shape=(nv, 3*nv), dtype=np.int64)
-    A_incidence += sps.csc_matrix((data, (idx_row_col, 1*nv+idx_row_col)), shape=(nv, 3*nv), dtype=np.int64)
-    A_incidence += sps.csc_matrix((data, (idx_row_col, 2*nv+idx_row_col)), shape=(nv, 3*nv), dtype=np.int64)
+    A_vox += sps.csc_matrix((data, (idx_row_col, 0*nv+idx_row_col)), shape=(nv, 3*nv), dtype=np.int64)
+    A_vox += sps.csc_matrix((data, (idx_row_col, 1*nv+idx_row_col)), shape=(nv, 3*nv), dtype=np.int64)
+    A_vox += sps.csc_matrix((data, (idx_row_col, 2*nv+idx_row_col)), shape=(nv, 3*nv), dtype=np.int64)
 
     # faces along x direction (faces with negative indices)
     idx_col = idx[0:-1, :, :].flatten()
     idx_row = idx[1:, :, :].flatten()
     data = -np.ones((nx-1)*ny*nz, dtype=np.int64)
-    A_incidence += sps.csc_matrix((data, (idx_row, 0*nv+idx_col)), shape=(nv, 3*nv), dtype=np.int64)
+    A_vox += sps.csc_matrix((data, (idx_row, 0*nv+idx_col)), shape=(nv, 3*nv), dtype=np.int64)
 
     # faces along y direction (faces with negative indices)
     idx_col = idx[:, 0:-1, :].flatten()
     idx_row = idx[:, 1:, :].flatten()
     data = -np.ones(nx*(ny-1)*nz, dtype=np.int64)
-    A_incidence += sps.csc_matrix((data, (idx_row, 1*nv+idx_col)), shape=(nv, 3*nv), dtype=np.int64)
+    A_vox += sps.csc_matrix((data, (idx_row, 1*nv+idx_col)), shape=(nv, 3*nv), dtype=np.int64)
 
     # faces along z direction (faces with negative indices)
     idx_col = idx[:, :, 0:-1].flatten()
     idx_row = idx[:, :, 1:].flatten()
     data = -np.ones(nx*ny*(nz-1), dtype=np.int64)
-    A_incidence += sps.csc_matrix((data, (idx_row, 2*nv+idx_col)), shape=(nv, 3*nv), dtype=np.int64)
+    A_vox += sps.csc_matrix((data, (idx_row, 2*nv+idx_col)), shape=(nv, 3*nv), dtype=np.int64)
 
-    return A_incidence
+    return A_vox

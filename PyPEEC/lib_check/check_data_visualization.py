@@ -109,9 +109,9 @@ def _check_data_options(plot_type, data_options):
     Check the validity of the data options (for the plotter).
     The data options are controlling the plot content.
     Three different types of plots are available:
-        - material description (conductors, voltage sources, and current sources)
-        - scalar plots (resistivity, potential, and current density)
-        - arrow plots (current density)
+        - material description
+        - scalar plots
+        - arrow plots
     """
 
     # check type
@@ -119,17 +119,20 @@ def _check_data_options(plot_type, data_options):
         raise CheckError("data_options: data options should be a dict")
 
     # list of allowed variable names
-    var_voxel_list = ["rho", "V_re", "V_im", "V_abs", "J_norm_abs", "J_norm_re", "J_norm_im", "P"]
+    var_voxel_list = [
+        "V_c_re", "V_c_im", "V_c_abs",
+        "V_m_re", "V_m_im", "V_m_abs",
+        "S_c_re", "S_c_im", "S_c_abs",
+        "Q_m_re", "Q_m_im", "Q_m_abs",
+        "J_c_norm_abs", "J_c_norm_re", "J_c_norm_im",
+        "B_m_norm_abs", "B_m_norm_re", "B_m_norm_im",
+    ]
+    vec_voxel_list = [
+        "J_c_vec_re", "J_c_vec_im",
+        "B_m_vec_re", "B_m_vec_im",
+    ]
     var_point_list = ["H_norm_abs", "H_norm_re", "H_norm_im"]
-    vec_voxel_list = ["J_vec_re", "J_vec_im"]
     vec_point_list = ["H_vec_re", "H_vec_im"]
-
-    # check the options compatibility
-    if plot_type == "material":
-        if not isinstance(data_options["opacity"], float):
-            raise CheckError("opacity: opacity should be a float")
-        if not isinstance(data_options["legend"], str):
-            raise CheckError("plot_legend: plot legend option should be a string")
 
     # check the scalar options
     if plot_type in ["scalar_voxel", "scalar_point"]:

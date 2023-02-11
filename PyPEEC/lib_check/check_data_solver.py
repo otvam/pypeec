@@ -29,31 +29,39 @@ def _get_domain_indices(domain_list, domain_def):
     return idx
 
 
-def _get_conductor_idx(conductor_def, domain_def):
+def _get_material_idx(material_def, domain_def):
     """
-    Get the indices of the conductors.
+    Get the indices of the material.
     Create a new dict with the indices in place of the domain names.
+    Split the electric and magnetic materials.
     """
 
     # init
-    conductor_idx = dict()
-    idx_conductor = np.array([], dtype=np.int64)
+    material_idx = dict()
+    idx_c = np.array([], dtype=np.int64)
+    idx_m = np.array([], dtype=np.int64)
 
-    for tag, dat_tmp in conductor_def.items():
+    for tag, dat_tmp in material_def.items():
         # extract the data
+        material_type = dat_tmp["material_type"]
         domain_list = dat_tmp["domain_list"]
-        rho = dat_tmp["rho"]
 
         # get indices
         idx = _get_domain_indices(domain_list, domain_def)
 
-        # append indices
-        idx_conductor = np.append(idx_conductor, idx)
+        # assign the indices
+        if material_type == "electric":
+            rho = dat_tmp["rho"]
+            idx_c = np.append(idx_c, idx)
+            material_idx[tag] = {"idx": idx, "material_type": material_type, "rho": rho}
+        elif material_type == "magnetic":
+            chi = dat_tmp["chi"]
+            idx_m = np.append(idx_m, idx)
+            material_idx[tag] = {"idx": idx, "material_type": material_type, "chi": chi}
+        else:
+            raise CheckError("invalid material type")
 
-        # assign data
-        conductor_idx[tag] = {"idx": idx, "rho": rho}
-
-    return idx_conductor, conductor_idx
+    return idx_c, idx_m, material_idx
 
 
 def _get_source_idx(source_def, domain_def):
@@ -64,7 +72,7 @@ def _get_source_idx(source_def, domain_def):
 
     # init
     source_idx = dict()
-    idx_source = np.array([], dtype=np.int64)
+    idx_s = np.array([], dtype=np.int64)
 
     for tag, dat_tmp in source_def.items():
         # extract the data
@@ -75,7 +83,7 @@ def _get_source_idx(source_def, domain_def):
         idx = _get_domain_indices(domain_list, domain_def)
 
         # append indices
-        idx_source = np.append(idx_source, idx)
+        idx_s = np.append(idx_s, idx)
 
         # get the source value
         if source_type == "current":
@@ -89,36 +97,44 @@ def _get_source_idx(source_def, domain_def):
         else:
             raise CheckError("invalid source type")
 
-    return idx_source, source_idx
+    return idx_s, source_idx
 
 
-def _check_indices(idx_conductor, idx_source):
+def _check_indices(idx_c, idx_m, idx_s):
     """
-    Check that the conductor and source indices are valid.
+    Check that the material and source indices are valid.
     The indices should be unique and compatible with the voxel size.
-    The source indices should be included in the conductor indices.
+    The source indices should be included in the electric indices.
     """
 
     # check for unicity
-    if not (len(np.unique(idx_conductor)) == len(idx_conductor)):
-        raise CheckError("conductor indices should be unique")
-    if not (len(np.unique(idx_source)) == len(idx_source)):
+    if not (len(np.unique(idx_c)) == len(idx_c)):
+        raise CheckError("electric indices should be unique")
+    if not (len(np.unique(idx_m)) == len(idx_m)):
+        raise CheckError("magnetic indices should be unique")
+    if not (len(np.unique(idx_s)) == len(idx_s)):
         raise CheckError("source indices should be unique")
 
-    # check that the terminal indices are conductor indices
-    if not np.all(np.in1d(idx_source, idx_conductor)):
-        raise CheckError("source indices are not included in conductor indices")
+    # check for invalid material
+    if len(np.intersect1d(idx_c, idx_m)) != 0:
+        raise CheckError("magnetic and electric indices should be unique")
+
+    # check that the terminal indices are material indices
+    if not np.all(np.in1d(idx_s, idx_c)):
+        raise CheckError("source indices are not included in electric indices")
+    if np.any(np.in1d(idx_s, idx_m)):
+        raise CheckError("source indices are included in magnetic indices")
 
 
-def _check_graph(idx_conductor, idx_source, connection_def):
+def _check_source_graph(idx_c, idx_s, connection_def):
     """
     Check that there is at least one source per connected component.
     A connected components without a source would lead to a singular problem.
     """
 
     for idx_graph in connection_def:
-        if len(np.intersect1d(idx_graph, idx_conductor)) > 0:
-            if len(np.intersect1d(idx_graph, idx_source)) == 0:
+        if len(np.intersect1d(idx_graph, idx_c)) > 0:
+            if len(np.intersect1d(idx_graph, idx_s)) == 0:
                 raise CheckError("a connected component does not include at least one source")
 
 
@@ -126,45 +142,39 @@ def get_data_solver(data_voxel, data_problem):
     """
     Combine the voxel data and the problem data.
     The voxel data contains the mapping between domain names and indices.
-    The problem data contains domain names used for the conductors and sources.
-    The new dict contains the indices used for the conductors and sources.
+    The problem data contains domain names used for the materials and sources.
+    The new dict contains the indices used for the materials and sources.
     """
 
     # extract field
-    freq = data_problem["freq"]
-    green_simplify = data_problem["green_simplify"]
-    solver_options = data_problem["solver_options"]
-    condition_options = data_problem["condition_options"]
-    conductor_def = data_problem["conductor_def"]
+    material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
 
     # extract field
-    n = data_voxel["n"]
-    d = data_voxel["d"]
-    c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
     connection_def = data_voxel["connection_def"]
 
-    # get conductor indices
-    (idx_conductor, conductor_idx) = _get_conductor_idx(conductor_def, domain_def)
-    (idx_source, source_idx) = _get_source_idx(source_def, domain_def)
+    # get material and source indices
+    (idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
+    (idx_s, source_idx) = _get_source_idx(source_def, domain_def)
 
     # check indices
-    _check_indices(idx_conductor, idx_source)
+    _check_indices(idx_c, idx_m, idx_s)
 
     # check graph
-    _check_graph(idx_conductor, idx_source, connection_def)
+    _check_source_graph(idx_c, idx_s, connection_def)
 
     # assign combined data
     data_solver = {
-        "n": n,
-        "d": d,
-        "c": c,
-        "freq": freq,
-        "green_simplify": green_simplify,
-        "solver_options": solver_options,
-        "condition_options": condition_options,
-        "conductor_idx": conductor_idx,
+        "n": data_voxel["n"],
+        "d": data_voxel["d"],
+        "c": data_voxel["c"],
+        "freq": data_problem["freq"],
+        "green_simplify": data_problem["green_simplify"],
+        "coupling_simplify": data_problem["coupling_simplify"],
+        "solver_options": data_problem["solver_options"],
+        "condition_options": data_problem["condition_options"],
+        "material_idx": material_idx,
         "source_idx": source_idx,
     }
 

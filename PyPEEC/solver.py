@@ -10,9 +10,9 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_solver import voxel_geometry
-from PyPEEC.lib_solver import dense_matrix
+from PyPEEC.lib_solver import system_tensor
 from PyPEEC.lib_solver import problem_geometry
-from PyPEEC.lib_solver import resistance_inductance
+from PyPEEC.lib_solver import system_matrix
 from PyPEEC.lib_solver import equation_system
 from PyPEEC.lib_solver import equation_solver
 from PyPEEC.lib_solver import extract_solution
@@ -35,28 +35,33 @@ def _run_preproc(data_solver):
     d = data_solver["d"]
     c = data_solver["c"]
     green_simplify = data_solver["green_simplify"]
+    coupling_simplify = data_solver["coupling_simplify"]
 
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
         # get the coordinate of the voxels
-        voxel_point = voxel_geometry.get_voxel_point(n, d, c)
+        coord_vox = voxel_geometry.get_voxel_coord(n, d, c)
 
         # compute the incidence matrix
-        A_incidence = voxel_geometry.get_incidence_matrix(n)
+        A_vox = voxel_geometry.get_incidence_matrix(n)
 
     # get the Green functions
     with timelogger.BlockTimer(logger, "dense_matrix"):
         # Green function self-coefficient
-        G_self = dense_matrix.get_green_self(d)
+        G_self = system_tensor.get_green_self(d)
 
         # Green function mutual coefficients
-        G_mutual = dense_matrix.get_green_tensor(n, d, green_simplify)
+        G_mutual = system_tensor.get_green_tensor(n, d, green_simplify)
+
+        # Green function mutual coefficients
+        K_tsr = system_tensor.get_coupling_tensor(n, d, coupling_simplify)
 
     # assemble results
-    data_solver["voxel_point"] = voxel_point
-    data_solver["A_incidence"] = A_incidence
+    data_solver["coord_vox"] = coord_vox
+    data_solver["A_vox"] = A_vox
     data_solver["G_self"] = G_self
     data_solver["G_mutual"] = G_mutual
+    data_solver["K_tsr"] = K_tsr
 
     return data_solver
 
@@ -72,56 +77,62 @@ def _run_main(data_solver):
     freq = data_solver["freq"]
     solver_options = data_solver["solver_options"]
     condition_options = data_solver["condition_options"]
-    conductor_idx = data_solver["conductor_idx"]
+    material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
-    A_incidence = data_solver["A_incidence"]
+    A_vox = data_solver["A_vox"]
     G_self = data_solver["G_self"]
     G_mutual = data_solver["G_mutual"]
+    K_tsr = data_solver["K_tsr"]
 
-    # parse the problem geometry (conductors and sources)
+    # parse the problem geometry (materials and sources)
     with timelogger.BlockTimer(logger, "problem_geometry"):
-        # parse the conductors
-        (idx_v, rho_v) = problem_geometry.get_conductor_geometry(conductor_idx)
+        # parse the materials
+        (idx_vc, rho_vc) = problem_geometry.get_material_geometry(material_idx, "electric")
+        (idx_vm, rho_vm) = problem_geometry.get_material_geometry(material_idx, "magnetic")
 
-        # parse the current sources
-        (idx_src_c, I_src_c, G_src_c) = problem_geometry.get_source_current_geometry(source_idx)
-
-        # parse the voltage sources
-        (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_voltage_geometry(source_idx)
+        # parse the sources
+        (idx_src_c, I_src_c, G_src_c) = problem_geometry.get_source_geometry(source_idx, "current")
+        (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_geometry(source_idx, "voltage")
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
-        (A_reduced, idx_f) = problem_geometry.get_incidence_matrix(A_incidence, idx_v)
+        (A_net_c, idx_fc) = problem_geometry.get_incidence_matrix(A_vox, idx_vc)
+        (A_net_m, idx_fm) = problem_geometry.get_incidence_matrix(A_vox, idx_vm)
 
         # get a summary of the problem size
-        problem_status = problem_geometry.get_status(n, idx_v, idx_f, idx_src_c, idx_src_v)
+        problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
 
     # get the resistances and inductances
     with timelogger.BlockTimer(logger, "resistance_inductance"):
         # get the resistance vector
-        R_vec = resistance_inductance.get_resistance_vector(n, d, A_reduced, idx_f, rho_v)
+        R_vec_c = system_matrix.get_R_vector(n, d, A_net_c, idx_fc, rho_vc)
+        R_vec_m = system_matrix.get_R_vector(n, d, A_net_m, idx_fm, rho_vm)
 
-        # get the inductance vector (preconditioner) and tensor (full problem, circulant tensor)
-        (L_tsr, L_vec) = resistance_inductance.get_inductance_matrix(n, d, idx_f, G_mutual, G_self)
+        # get the inductance tensor (preconditioner and full problem)
+        (L_vec_c, L_op_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual)
+
+        # get the potential tensor (preconditioner and full problem)
+        (P_vec_m, P_op_m) = system_matrix.get_P_matrix(n, d, idx_vm, G_self, G_mutual)
+
+        # get the coupling matrices
+        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr)
 
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
-        # get the impedance vector (preconditioner) and tensor (full problem, FFT circulant tensor)
-        (ZL_tsr, ZL_vec) = equation_system.get_impedance_matrix(freq, idx_f, L_tsr, L_vec)
-
         # compute the right-hand vector with the sources
-        rhs = equation_system.get_source_vector(idx_v, idx_f, I_src_c, V_src_v)
+        rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
 
-        # get the matrices defining the KCL, KVL
-        (A_kvl, A_kcl) = equation_system.get_kvl_kcl_matrix(A_reduced)
+        # get the KVL and KCL connection matrices
+        A_c = equation_system.get_kvl_kcl_matrix(A_net_c)
+        A_m = equation_system.get_kvl_kcl_matrix(A_net_m)
 
-        # get the matrices the sources
-        (A_kcl_src, A_src_pot, A_src_src) = equation_system.get_source_matrix(idx_v, idx_src_c, idx_src_v, G_src_c, R_src_v)
+        # get the source connection matrices
+        A_src = equation_system.get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        (pcd_op, S_mat) = equation_system.get_cond_operator(A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_vec)
+        (pcd_op, S_mat) = equation_system.get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(idx_f, A_kvl, A_kcl, A_kcl_src, A_src_pot, A_src_src, R_vec, ZL_tsr)
+        sys_op = equation_system.get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m, K_op_c, K_op_m)
 
     # solve the equation system
     with timelogger.BlockTimer(logger, "equation_solver"):
@@ -135,13 +146,15 @@ def _run_main(data_solver):
         has_converged = solver_ok and condition_ok
 
     # assemble results
-    data_solver["idx_f"] = idx_f
-    data_solver["idx_v"] = idx_v
-    data_solver["rho_v"] = rho_v
+    data_solver["idx_fc"] = idx_fc
+    data_solver["idx_fm"] = idx_fm
+    data_solver["idx_vc"] = idx_vc
+    data_solver["idx_vm"] = idx_vm
     data_solver["idx_src_v"] = idx_src_v
     data_solver["idx_src_c"] = idx_src_c
-    data_solver["R_vec"] = R_vec
-    data_solver["L_tsr"] = L_tsr
+    data_solver["R_vec_c"] = R_vec_c
+    data_solver["L_op_c"] = L_op_c
+    data_solver["K_op_c"] = K_op_c
     data_solver["problem_status"] = problem_status
     data_solver["has_converged"] = has_converged
     data_solver["solver_status"] = solver_status
@@ -159,35 +172,37 @@ def _run_postproc(data_solver):
     # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
-    A_incidence = data_solver["A_incidence"]
+    A_vox = data_solver["A_vox"]
     source_idx = data_solver["source_idx"]
-    idx_f = data_solver["idx_f"]
-    idx_v = data_solver["idx_v"]
+    idx_fc = data_solver["idx_fc"]
+    idx_fm = data_solver["idx_fm"]
+    idx_vc = data_solver["idx_vc"]
+    idx_vm = data_solver["idx_vm"]
     idx_src_c = data_solver["idx_src_c"]
     idx_src_v = data_solver["idx_src_v"]
-    R_vec = data_solver["R_vec"]
-    L_tsr = data_solver["L_tsr"]
+    R_vec_c = data_solver["R_vec_c"]
+    L_op_c = data_solver["L_op_c"]
+    K_op_c = data_solver["K_op_c"]
     sol = data_solver["sol"]
 
     # extract the solution
     with timelogger.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        (I_f, V_v, I_src_c, I_src_v) = extract_solution.get_sol_extract(idx_f, idx_v, idx_src_c, idx_src_v, sol)
+        (I_fc, I_fm, V_vc, V_vm, I_src) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
 
-        # get the voxel current densities from the face currents
-        J_v = extract_solution.get_current_density(n, d, idx_v, idx_f, A_incidence, I_f)
+        # get the voxel flow densities from the face flows
+        J_vc = extract_solution.get_flow_density(n, d, idx_vc, idx_fc, A_vox, I_fc)
+        B_vm = extract_solution.get_flow_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
-        # get the resistive voltage drop and magnetic flux across the faces
-        (V_f, M_f) = extract_solution.get_drop_flux(idx_f, R_vec, L_tsr, I_f)
+        # get the divergence of the face flows
+        S_vc = extract_solution.get_flow_divergence(n, d, idx_vc, idx_fc, A_vox, I_fc)
+        Q_vm = extract_solution.get_flow_divergence(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
         # get the global quantities (energy and losses)
-        integral = extract_solution.get_integral(V_f, M_f, I_f)
-
-        # get the voxel loss density
-        P_v = extract_solution.get_loss(n, d, idx_v, idx_f, A_incidence, V_f, I_f)
+        integral = extract_solution.get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c)
 
         # extend the solution for the complete voxel structure (including the empty voxels)
-        (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_v, idx_src_c, idx_src_v, V_v, I_src_c, I_src_v)
+        (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src)
 
         # parse the terminal voltages and currents for the sources
         terminal = extract_solution.get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all)
@@ -195,9 +210,12 @@ def _run_postproc(data_solver):
     # assemble results
     data_solver["terminal"] = terminal
     data_solver["integral"] = integral
-    data_solver["V_v"] = V_v
-    data_solver["J_v"] = J_v
-    data_solver["P_v"] = P_v
+    data_solver["V_vc"] = V_vc
+    data_solver["V_vm"] = V_vm
+    data_solver["J_vc"] = J_vc
+    data_solver["B_vm"] = B_vm
+    data_solver["S_vc"] = S_vc
+    data_solver["Q_vm"] = Q_vm
 
     return data_solver
 
@@ -212,8 +230,9 @@ def _run_assemble(data_solver):
         "n": data_solver["n"],
         "d": data_solver["d"],
         "c": data_solver["c"],
-        "voxel_point": data_solver["voxel_point"],
-        "idx_v": data_solver["idx_v"],
+        "coord_vox": data_solver["coord_vox"],
+        "idx_vc": data_solver["idx_vc"],
+        "idx_vm": data_solver["idx_vm"],
         "idx_src_c": data_solver["idx_src_c"],
         "idx_src_v": data_solver["idx_src_v"],
         "freq": data_solver["freq"],
@@ -221,11 +240,14 @@ def _run_assemble(data_solver):
         "problem_status": data_solver["problem_status"],
         "solver_status": data_solver["solver_status"],
         "condition_status": data_solver["condition_status"],
-        "rho_v": data_solver["rho_v"],
-        "V_v": data_solver["V_v"],
-        "J_v": data_solver["J_v"],
-        "P_v": data_solver["P_v"],
         "terminal": data_solver["terminal"],
+        "integral": data_solver["integral"],
+        "V_vc": data_solver["V_vc"],
+        "V_vm": data_solver["V_vm"],
+        "J_vc": data_solver["J_vc"],
+        "B_vm": data_solver["B_vm"],
+        "S_vc": data_solver["S_vc"],
+        "Q_vm": data_solver["Q_vm"],
     }
 
     return data_solution
@@ -247,7 +269,7 @@ def run(data_voxel, data_problem):
         The dict describes the problem to be solved.
         The numerical options are defined.
         The frequency of the problem is defined.
-        The resistivity of the different domain is defined.
+        The electric and magnetic materials are defined.
         The current and voltage sources are defined.
 
     Returns

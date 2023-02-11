@@ -124,7 +124,7 @@ def _get_green_5D_fct(x, y, z):
     # compute function
     val = 1.0*(
             +(z**3*nrm)/15 +
-            + (z**5*inv)/60+
+            + (z**5*inv)/60 +
             - (x**4*logz)/24 +
             - (y**4*logz)/24 +
             - (x*z**3*logx)/6 +
@@ -144,8 +144,8 @@ def _get_green_5D_fct(x, y, z):
             + (x**2*y**2*z*inv)/5 +
             - (x*z**5*inv*invx)/24 +
             - (y*z**5*inv*invy)/24 +
-            - (x**4*y**2*z*inv*invxz)/(6) +
-            - (x**2*y**4*z*inv*invyz)/(6) +
+            - (x**4*y**2*z*inv*invxz)/6 +
+            - (x**2*y**4*z*inv*invyz)/6 +
             + (x*y**2*z**3*inv*invx)/4 +
             + (x**2*y*z**3*inv*invy)/4 +
             - (x*y**4*z*inv*invx)/24 +
@@ -258,9 +258,9 @@ def get_green_num(d, idx, int_type):
 
     # compute the approximation
     if int_type == "6D":
-        G = (vol * vol) / (4 * np.pi * dis)
+        G = (vol*vol)/(4*np.pi*dis)
     elif int_type == "5D":
-        G = (dx * dy * vol) / (4 * np.pi * dis)
+        G = (dx*dy*vol)/(4*np.pi*dis)
     else:
         raise ValueError("invalid integral type")
 

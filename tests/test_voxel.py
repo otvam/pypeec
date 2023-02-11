@@ -21,6 +21,13 @@ class TestMesherViewer(unittest.TestCase):
 
         test_workflow.test_workflow(self, "voxel_slab")
 
+    def test_voxel_core(self):
+        """
+        Test workflow for voxel_core.
+        """
+
+        test_workflow.test_workflow(self, "voxel_core")
+
     def test_voxel_transformer(self):
         """
         Test workflow for voxel_transformer.

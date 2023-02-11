@@ -11,7 +11,7 @@ For the viewer, the following plots are available:
     - the connected components for the non-empty voxels
 
 For the plotter, the following plots are available:
-    - material description for the non-empty voxels (conductors and sources)
+    - material description for the non-empty voxels
     - scalar plots for the non-empty voxels
     - arrow plots for the non-empty voxels
     - scalar plots for the point cloud
@@ -116,7 +116,12 @@ def _get_filter_vector(obj, vec, arrow_threshold):
     nrm = lna.norm(data, axis=1)
 
     # threshold for arrow removal
-    thr = max(nrm)*arrow_threshold
+    if np.any(np.isfinite(nrm)):
+        thr = np.nanmax(nrm)*arrow_threshold
+    else:
+        thr = np.nan
+
+    # indices to be kept
     idx = nrm > thr
 
     # filter out the arrows that are too small
@@ -144,7 +149,7 @@ def _get_filter_scalar(obj, var, filter_lim):
     # get var
     data = obj[var]
 
-    # find the filter
+    # indices to be kept
     idx = np.logical_and(data >= f_min, data <= f_max)
 
     # filter data
@@ -186,47 +191,22 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     return obj
 
 
-def plot_material(pl, voxel, data_options, clip_options):
+def plot_material(pl, voxel, clip_options):
     """
-    Plot the material description (conductors, voltage sources, and current sources).
-    The plot is made on the unstructured grid describing the non-empty voxels.
-    The following fake scalar field encoding is used:
-        - 0: conducting voxels
-        - 1: current source voxels
-        - 2: voltage source voxels
+    Plot the material and source description.
     """
-
-    # extract
-    legend = data_options["legend"]
-    opacity = data_options["opacity"]
-
-    # color bar options (no label as the positions are indicated with annotations)
-    scalar_bar_args = dict(
-        n_labels=0,
-        label_font_size=15,
-        title_font_size=15,
-        title=legend,
-    )
-
-    # get annotations
-    annotations = {
-        0: "Conductor",
-        1: "Current Src.",
-        2: "Voltage Src.",
-    }
 
     # get a colormap with three discrete color
-    cmap = ["darkorange", "forestgreen", "royalblue"]
+    cmap = ["darkorange", "gainsboro", "forestgreen", "royalblue"]
 
     # make a copy (for avoid cross coupling)
     voxel_tmp = voxel.copy(deep=True)
 
     # add the resulting plot to the plotter
     arg = dict(
+        clim=[1, 4],
+        show_scalar_bar=False,
         scalars="material",
-        opacity=opacity,
-        scalar_bar_args=scalar_bar_args,
-        annotations=annotations,
         cmap=cmap,
     )
     if voxel_tmp.n_cells > 0:
@@ -235,7 +215,7 @@ def plot_material(pl, voxel, data_options, clip_options):
 
 def plot_scalar(pl, obj, data_options, clip_options):
     """
-    Plot a scalar variable (resistivity, potential, current density, or magnetic field).
+    Plot a scalar variable.
     The plot is either made on:
         - the unstructured grid describing the non-empty voxels
         - the polydata (point cloud) used to evaluate the field
@@ -277,7 +257,7 @@ def plot_scalar(pl, obj, data_options, clip_options):
 
 def plot_arrow(pl, d_char, obj, data_options, clip_options):
     """
-    Plot a vector variable (current density or magnetic field) with an arrow plot (quiver plot).
+    Plot a vector variable with an arrow plot (quiver plot).
     The plot is either made on:
         - the unstructured grid describing the non-empty voxels
         - the polydata (point cloud) used to evaluate the field
@@ -362,7 +342,7 @@ def get_plot_plotter(pl, grid, voxel, point, data_plot):
     """
     Plot the solution (for the plotter).
     The following plot types are available:
-        - plot the material description (conductors and sources) on the voxel structure
+        - plot the material and source description on the voxel structure
         - plot a scalar variable on the voxel structure
         - plot a scalar variable on the point cloud
         - plot a vector variable on the voxel structure
@@ -377,7 +357,7 @@ def get_plot_plotter(pl, grid, voxel, point, data_plot):
 
     # get the main plot
     if plot_type == "material":
-        plot_material(pl, voxel, data_options, clip_options)
+        plot_material(pl, voxel, clip_options)
     elif plot_type == "scalar_voxel":
         plot_scalar(pl, voxel, data_options, clip_options)
     elif plot_type == "scalar_point":

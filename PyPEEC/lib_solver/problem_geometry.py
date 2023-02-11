@@ -1,5 +1,5 @@
 """
-Different functions for handling the specified geometry (conductors and sources).
+Different functions for handling the specified geometry (materials and sources).
 Create and manage the indices of the different voxels and faces.
 """
 
@@ -13,9 +13,11 @@ from PyPEEC.lib_utils import timelogger
 logger = timelogger.get_logger("PROBLEM")
 
 
-def get_conductor_geometry(conductor_idx):
+def get_material_geometry(material_idx, extract_type):
     """
-    Get the indices of the conducting voxels and the corresponding resistivities.
+    Get the indices of the material voxels and the corresponding resistivities.
+    For electric materials, the provided resistivity is used.
+    For magnetic materials, an equivalent resistivity is computed from the susceptibility.
     """
 
     # array for the indices and resistivities
@@ -23,28 +25,44 @@ def get_conductor_geometry(conductor_idx):
     rho_v = np.array([], dtype=np.float64)
 
     # populate the arrays
-    for tag, dat_tmp in conductor_idx.items():
+    for tag, dat_tmp in material_idx.items():
         # get the data
+        material_type = dat_tmp["material_type"]
         idx = dat_tmp["idx"]
-        rho = dat_tmp["rho"]
 
-        # append (all voxels in a group have the same resistivities)
-        idx_v = np.append(idx_v, idx)
-        rho_v = np.append(rho_v, np.full(len(idx), rho))
+        # the current source value is set such that the sum across all voxels is equal to the specified value
+        if (len(idx) > 0) and (material_type == extract_type):
+            # find the resistivity
+            if material_type == "electric":
+                rho = dat_tmp["rho"]
+            elif material_type == "magnetic":
+                # get the magnetic susceptibility
+                chi = dat_tmp["chi"]
+
+                # vacuum permeability
+                mu = 4*np.pi*1e-7
+
+                # equivalent magnetic resistivity
+                rho = 1/(mu*chi)
+            else:
+                raise ValueError("invalid material type")
+
+            # append the indices and resistivities
+            idx_v = np.append(idx_v, idx)
+            rho_v = np.append(rho_v, np.full(len(idx), rho))
 
     return idx_v, rho_v
 
 
-def get_source_current_geometry(source_idx):
+def get_source_geometry(source_idx, extract_type):
     """
-    Get the indices of the source voxels and the corresponding source excitations.
-    The current sources have internal admittances.
+    Get the indices of the source voxels and the corresponding source parameters.
     """
 
     # array for the current source indices and source values
-    idx_src_c = np.array([], dtype=np.int64)
-    I_src_c = np.array([], dtype=np.complex128)
-    G_src_c = np.array([], dtype=np.float64)
+    idx_src = np.array([], dtype=np.int64)
+    value_src = np.array([], dtype=np.complex128)
+    element_src = np.array([], dtype=np.float64)
 
     # populate the arrays with the current sources
     for tag, dat_tmp in source_idx.items():
@@ -53,51 +71,28 @@ def get_source_current_geometry(source_idx):
         idx = dat_tmp["idx"]
 
         # the current source value is set such that the sum across all voxels is equal to the specified value
-        if (len(idx) > 0) and (source_type == "current"):
-            # get the data
-            I = dat_tmp["I"]
-            G = dat_tmp["G"]
+        if (len(idx) > 0) and (source_type == extract_type):
+            # append the indices
+            idx_src = np.append(idx_src, idx)
 
-            # append the local current sources
-            idx_src_c = np.append(idx_src_c, idx)
-            I_src_c = np.append(I_src_c, np.full(len(idx), I/len(idx)))
-            G_src_c = np.append(G_src_c, np.full(len(idx), G/len(idx)))
+            # find the source value
+            if source_type == "current":
+                I = dat_tmp["I"]
+                G = dat_tmp["G"]
+                value_src = np.append(value_src, np.full(len(idx), I/len(idx)))
+                element_src = np.append(element_src, np.full(len(idx), G/len(idx)))
+            elif source_type == "voltage":
+                V = dat_tmp["V"]
+                R = dat_tmp["R"]
+                value_src = np.append(value_src, np.full(len(idx), V))
+                element_src = np.append(element_src, np.full(len(idx), R*len(idx)))
+            else:
+                raise ValueError("invalid source type")
 
-    return idx_src_c, I_src_c, G_src_c
-
-
-def get_source_voltage_geometry(source_idx):
-    """
-    Get the indices of the source voxels and the corresponding source excitations.
-    The voltage sources have internal resistances.
-    """
-
-    # array for the voltage source indices and source values
-    idx_src_v = np.array([], dtype=np.int64)
-    V_src_v = np.array([], dtype=np.complex128)
-    R_src_v = np.array([], dtype=np.float64)
-
-    # populate the arrays with the current sources
-    for tag, dat_tmp in source_idx.items():
-        # get the data
-        source_type = dat_tmp["source_type"]
-        idx = dat_tmp["idx"]
-
-        # the voltage source value is set to the specified value for all the voxels
-        if (len(idx) > 0) and (source_type == "voltage"):
-            # get the data
-            V = dat_tmp["V"]
-            R = dat_tmp["R"]
-
-            # append the local voltage sources
-            idx_src_v = np.append(idx_src_v, idx)
-            V_src_v = np.append(V_src_v, np.full(len(idx), V))
-            R_src_v = np.append(R_src_v, np.full(len(idx), R*len(idx)))
-
-    return idx_src_v, V_src_v, R_src_v
+    return idx_src, value_src, element_src
 
 
-def get_incidence_matrix(A_incidence, idx_v):
+def get_incidence_matrix(A_vox, idx_v):
     """
     Reduce the incidence matrix to the non-empty voxels and compute face indices.
 
@@ -109,19 +104,19 @@ def get_incidence_matrix(A_incidence, idx_v):
     """
 
     # reduce the size of the incidence matrix (only the non-empty voxels)
-    A_reduced = A_incidence[idx_v, :]
+    A_net = A_vox[idx_v, :]
 
     # indices of the all the internal faces (global face indices, 0:3*n)
-    idx_f = np.sum(np.abs(A_reduced), axis=0) == 2
+    idx_f = np.sum(np.abs(A_net), axis=0) == 2
     idx_f = np.flatnonzero(idx_f)
 
     # reduce the size of the incidence matrix (only the internal faces)
-    A_reduced = A_reduced[:, idx_f]
+    A_net = A_net[:, idx_f]
 
-    return A_reduced, idx_f
+    return A_net, idx_f
 
 
-def get_status(n, idx_v, idx_f, idx_src_c, idx_src_v):
+def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     """
     Get a dict summarizing the problem size.
     Total number of voxels, number of non-empty voxels, number of faces, and number of sources.
@@ -131,31 +126,43 @@ def get_status(n, idx_v, idx_f, idx_src_c, idx_src_v):
     (nx, ny, nz) = n
 
     # count
-    n_total = nx*ny*nz
-    n_conductor = len(idx_v)
-    n_faces = len(idx_f)
-    n_src = len(idx_src_c)+len(idx_src_v)
+    n_voxel = nx*ny*nz
+    n_face = 3*nx*ny*nz
+    n_voxel_electric = len(idx_vc)
+    n_voxel_magnetic = len(idx_vm)
+    n_face_electric = len(idx_fc)
+    n_face_magnetic = len(idx_fm)
+    n_src_current = len(idx_src_c)
+    n_src_voltage = len(idx_src_v)
 
     # fraction of voxels
-    ratio_conductor = n_conductor/n_total
-    ratio_src = n_src/n_total
+    ratio_voxel = (n_voxel_electric+n_voxel_magnetic)/n_voxel
+    ratio_face = (n_face_electric+n_face_magnetic)/n_face
 
     # assign data
     problem_status = {
-        "n_total": n_total,
-        "n_conductor": n_conductor,
-        "n_faces": n_faces,
-        "n_src": n_src,
-        "ratio_conductor": ratio_conductor,
-        "ratio_src": ratio_src,
+        "n_voxel": n_voxel,
+        "n_face": n_face,
+        "n_voxel_electric": n_voxel_electric,
+        "n_voxel_magnetic": n_voxel_magnetic,
+        "n_face_electric": n_face_electric,
+        "n_face_magnetic": n_face_magnetic,
+        "n_src_current": n_src_current,
+        "n_src_voltage": n_src_voltage,
+        "ratio_voxel": ratio_voxel,
+        "ratio_face": ratio_face,
     }
 
     # display status
-    logger.info("problem size: n_total = %d" % n_total)
-    logger.info("problem size: n_conductor = %d" % n_conductor)
-    logger.info("problem size: n_faces = %d" % n_faces)
-    logger.info("problem size: n_src = %d" % n_src)
-    logger.info("problem size: ratio_conductor = %.3e" % ratio_conductor)
-    logger.info("problem size: ratio_src = %.3e" % ratio_src)
+    logger.info("problem size: n_voxel = %d" % n_voxel)
+    logger.info("problem size: n_face = %d" % n_face)
+    logger.info("problem size: n_voxel_electric = %d" % n_voxel_electric)
+    logger.info("problem size: n_voxel_magnetic = %d" % n_voxel_magnetic)
+    logger.info("problem size: n_face_electric = %d" % n_face_electric)
+    logger.info("problem size: n_face_magnetic = %d" % n_face_magnetic)
+    logger.info("problem size: n_src_current = %d" % n_src_current)
+    logger.info("problem size: n_src_voltage = %d" % n_src_voltage)
+    logger.info("problem size: ratio_voxel = %.3e" % ratio_voxel)
+    logger.info("problem size: ratio_face = %.3e" % ratio_face)
 
     return problem_status
