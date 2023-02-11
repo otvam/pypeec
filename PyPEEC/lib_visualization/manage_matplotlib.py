@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 def _get_plot_residuum(fig, res_raw):
     """
-    Plot the final residuum (absolute value) with an histogram.
+    Plot the final residuum (absolute value) with a histogram.
     """
 
     # activate the figure

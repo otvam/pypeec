@@ -10,7 +10,7 @@
     },
     "condition_options": {
         "check": true,
-        "tolerance": 1e12,
+        "tolerance": 1e15,
         "norm_options": {
             "t_accuracy": 2,
             "n_iter_max": 25

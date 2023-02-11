@@ -34,8 +34,8 @@ Moreover, the memory consumption is not heavily optimized (no customized garbage
 ## Tests
 
 * The tests are located in the `tests` folder (using the `unittest` framework).
-* Only integration tests currently exist (no unit tests).
-* The tests are using the Python .
+* * Only integration tests currently exist (no unit tests).
+* The tests are just checking that the code is running with the examples.
 
 # Warnings
 
@@ -45,7 +45,7 @@ Moreover, the memory consumption is not heavily optimized (no customized garbage
 > **Warning**: For large problems, the code might allocate huge amount of memory.
 > This might crash your operating system.
 
-> **Warning**: Python pickle files are using to store the mesher and solver results.
+> **Warning**: Python Pickle files are using to store the mesher and solver results.
 > Pickling data is not secure. 
-> Only load pickle files that you trust.
-> Do not commit the pickle files in the git repository.
+> Only load Pickle files that you trust.
+> Do not commit the Pickle files in the git repository.

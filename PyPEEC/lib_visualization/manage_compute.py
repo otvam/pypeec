@@ -4,7 +4,8 @@ For the viewer, extract the domain description and the graph components.
 For the plotter, extract the material description.
 For the plotter, compute the magnetic field for the point cloud.
 
-WARNING: The magnetic field computation is only accurate far away from the source.
+WARNING: The magnetic field computation is done with lumped variables.
+         Therefore, the computation is only accurate far away from the source voxels.
 """
 
 __author__ = "Thomas Guillod"

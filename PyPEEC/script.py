@@ -26,7 +26,7 @@ def run_mesher(file_mesher, file_voxel):
     Parameters
     ----------
     file_mesher : string (input file, JSON format)
-    file_voxel :  string (output file, pickle format)
+    file_voxel :  string (output file, Pickle format)
 
     Returns
     -------
@@ -67,7 +67,7 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
 
     Parameters
     ----------
-    file_voxel : string (input file, pickle format)
+    file_voxel : string (input file, Pickle format)
     file_point: string (input file, JSON format)
     file_viewer: string (input file, JSON format)
     is_interactive : boolean
@@ -106,9 +106,9 @@ def run_solver(file_voxel, file_problem, file_solution):
 
     Parameters
     ----------
-    file_voxel :  string (input file, pickle format)
+    file_voxel :  string (input file, Pickle format)
     file_problem: string (input file, JSON format)
-    file_solution: string (output file, pickle format)
+    file_solution: string (output file, Pickle format)
 
     Returns
     -------
@@ -145,7 +145,7 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
 
     Parameters
     ----------
-    file_solution : string (input file, pickle format)
+    file_solution : string (input file, Pickle format)
     file_point: string (input file, JSON format)
     file_plotter: string (input file, JSON format)
     is_interactive : boolean

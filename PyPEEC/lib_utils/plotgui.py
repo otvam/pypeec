@@ -7,7 +7,7 @@ WARNING: This module is using different more or less dirty hacks.
          This module is likely to break with newer/older versions of the dependencies.
 
 WARNING: Making many plots can lead to segmentation fault with PyVista.
-         Not sure if the problem lies with PyVista or Vtk.
+         Not sure if the problem lies with PyPEEC, PyVista or Vtk.
 """
 
 __author__ = "Thomas Guillod"

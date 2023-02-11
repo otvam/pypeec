@@ -175,7 +175,8 @@ def get_logger(name):
 
     # get the logger (only one logger per name is allowed)
     logger = logging.getLogger(name)
-    assert len(logger.handlers) == 0, "duplicated logger name"
+    if len(logger.handlers) != 0:
+        raise RuntimeError("duplicated logger name")
 
     # get the formatter
     fmt = _DeltaTimeFormatter(

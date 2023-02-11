@@ -29,7 +29,7 @@ The **PyPEEC** package contains the following tools:
 
 * [**Gallery**](docs/gallery.md) - Gallery of screenshots
 * [**Getting Started**](docs/tutorial.md) - Explanation of the workflow of PyPEEC
-* [**Technical Details**](docs/technical.md) - Explanation of the dependencies, packing, and tests
+* [**Technical Details**](docs/technical.md) - Explanation of the dependencies, packaging, and tests
 
 ## Screenshot
 
