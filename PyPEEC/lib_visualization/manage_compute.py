@@ -148,7 +148,7 @@ def get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v):
 def get_magnetic_field(d, idx_vc, idx_vm, J_vc, S_vm, coord_vox, data_point):
     """
     Compute the magnetic field for the provided points.
-    The Biot-Savart law is used for the conductor material contribution.
+    The Biot-Savart law is used for the electric material contribution.
     The magnetic charge is used for the magnetic material contribution.
     """
 

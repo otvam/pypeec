@@ -1,5 +1,5 @@
 """
-Different functions for handling the specified geometry (conductors and sources).
+Different functions for handling the specified geometry (materials and sources).
 Create and manage the indices of the different voxels and faces.
 """
 
@@ -16,6 +16,8 @@ logger = timelogger.get_logger("PROBLEM")
 def get_material_geometry(material_idx, extract_type):
     """
     Get the indices of the material voxels and the corresponding resistivities.
+    For electric materials, the provided resistivity is used.
+    For magnetic materials, an equivalent resistivity is computed from the susceptibility.
     """
 
     # array for the indices and resistivities
@@ -31,7 +33,7 @@ def get_material_geometry(material_idx, extract_type):
         # the current source value is set such that the sum across all voxels is equal to the specified value
         if (len(idx) > 0) and (material_type == extract_type):
             # find the resistivity
-            if material_type == "conductor":
+            if material_type == "electric":
                 rho = dat_tmp["rho"]
             elif material_type == "magnetic":
                 # get the magnetic susceptibility
@@ -54,7 +56,7 @@ def get_material_geometry(material_idx, extract_type):
 
 def get_source_geometry(source_idx, extract_type):
     """
-    Get the indices of the source voxels and the corresponding source excitations.
+    Get the indices of the source voxels and the corresponding source parameters.
     """
 
     # array for the current source indices and source values
@@ -126,24 +128,24 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     # count
     n_voxel = nx*ny*nz
     n_face = 3*nx*ny*nz
-    n_voxel_conductor = len(idx_vc)
+    n_voxel_electric = len(idx_vc)
     n_voxel_magnetic = len(idx_vm)
-    n_face_conductor = len(idx_fc)
+    n_face_electric = len(idx_fc)
     n_face_magnetic = len(idx_fm)
     n_src_current = len(idx_src_c)
     n_src_voltage = len(idx_src_v)
 
     # fraction of voxels
-    ratio_voxel = (n_voxel_conductor+n_voxel_magnetic)/n_voxel
-    ratio_face = (n_face_conductor+n_face_magnetic)/n_face
+    ratio_voxel = (n_voxel_electric+n_voxel_magnetic)/n_voxel
+    ratio_face = (n_face_electric+n_face_magnetic)/n_face
 
     # assign data
     problem_status = {
         "n_voxel": n_voxel,
         "n_face": n_face,
-        "n_voxel_conductor": n_voxel_conductor,
+        "n_voxel_electric": n_voxel_electric,
         "n_voxel_magnetic": n_voxel_magnetic,
-        "n_face_conductor": n_face_conductor,
+        "n_face_electric": n_face_electric,
         "n_face_magnetic": n_face_magnetic,
         "n_src_current": n_src_current,
         "n_src_voltage": n_src_voltage,
@@ -154,9 +156,9 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     # display status
     logger.info("problem size: n_voxel = %d" % n_voxel)
     logger.info("problem size: n_face = %d" % n_face)
-    logger.info("problem size: n_voxel_conductor = %d" % n_voxel_conductor)
+    logger.info("problem size: n_voxel_electric = %d" % n_voxel_electric)
     logger.info("problem size: n_voxel_magnetic = %d" % n_voxel_magnetic)
-    logger.info("problem size: n_face_conductor = %d" % n_face_conductor)
+    logger.info("problem size: n_face_electric = %d" % n_face_electric)
     logger.info("problem size: n_face_magnetic = %d" % n_face_magnetic)
     logger.info("problem size: n_src_current = %d" % n_src_current)
     logger.info("problem size: n_src_voltage = %d" % n_src_voltage)

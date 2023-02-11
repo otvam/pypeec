@@ -1,8 +1,11 @@
 """
-Different functions for handling the resistance and inductance matrix.
-The resistance matrix is constructed with the non-empty voxels.
-The inductance matrix is computed with a FFT circulant tensor.
-Thr circulant tensor allows for matrix-vector multiplication with FFT.
+Different functions for handling creating the PEEC dense matrices:
+    - resistance matrix
+    - inductance and potential matrix
+    - magnetic-electric coupling matrices
+
+SciPy linear operators are returned for performing the matrix-vector multiplications.
+The multiplication can either be done with the dense matrices or with FFT circulant tensors.
 """
 
 __author__ = "Thomas Guillod"
@@ -15,30 +18,45 @@ from PyPEEC.lib_matrix import matrix_multiply
 
 
 def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
+    """
+    Create a matrix to project a variable into a voxel variable.
+    The variable is a vector and a single component (x, y, or z) is projected.
+    Create an index vector for the non-zero voxel vector components.
+    """
+
     # extract the voxel data
     (nx, ny, nz) = n
     nv = nx*ny*nz
 
-    # get the local indices
+    # get the local indices (face indices of the incidence matrix)
     idx_local = np.in1d(idx_f, np.arange(offset*nv, (offset+1)*nv))
 
     # slice matrix (columns)
     A_net = A_net[:, idx_local]
 
-    # get face indices
+    # get face indices (get the non-zero entry of the projected voxel variable)
     nnz = A_net.getnnz(axis=1)
     idx_local = np.flatnonzero(nnz > 0)
 
     # slice matrix (rows)
     A_net = A_net[idx_local, :]
 
-    # add offset
+    # scale the matrix for vector projection
+    A_net = 0.5*np.abs(A_net)
+
+    # add index offset (such that the x, z, and z indices are not identical)
     idx = offset*nv+idx_v[idx_local]
 
     return A_net, idx
 
 
 def _get_face_voxel_matrix(n, idx_v, idx_f, A_net):
+    """
+    Create a matrix to project a face vector into a voxel vector.
+    All the vector components (x, y, and z) are projected.
+    Create an index vector for the non-zero voxel vector components.
+    """
+
     # get the incidence matrix between the faces and voxels
     (A_net_x, idx_x) = _get_face_voxel_indices(n, idx_v, idx_f, A_net, 0)
     (A_net_y, idx_y) = _get_face_voxel_indices(n, idx_v, idx_f, A_net, 1)
@@ -47,9 +65,6 @@ def _get_face_voxel_matrix(n, idx_v, idx_f, A_net):
     # assemble incidence matrix and indices
     idx_fv = np.concatenate((idx_x, idx_y, idx_z))
     A_fv_net = sps.block_diag((A_net_x, A_net_y, A_net_z))
-
-    # scale the matrix for flow conversion
-    A_fv_net = 0.5*np.abs(A_fv_net)
 
     return A_fv_net, idx_fv
 
@@ -86,12 +101,18 @@ def get_R_vector(n, d, A_net, idx_f, rho_v):
     return R_vec
 
 
-def get_L_matrix(n, d, idx_fc, G_self, G_mutual):
+def get_L_matrix(n, d, idx_f, G_self, G_mutual):
     """
     Extract the inductance matrix of the system (used for the full system).
 
+    The problem contains n_f internal faces.
     The voxel structure has the following size: (nx, ny, nz).
-    For solving the full system, an inductance tensor is used: (nx, ny, nz, 3).
+    The green tensor has the following size: (nx, ny, nz).
+
+    The green tensor is transformed into an inductance tensor: (nx, ny, nz, 3).
+    The tensor is then used to create a matrix-vector linear operator:
+        - input size: n_f
+        - output size: n_f
     """
 
     # vacuum permeability
@@ -107,7 +128,7 @@ def get_L_matrix(n, d, idx_fc, G_self, G_mutual):
     L_y = mu*G_self/(dx**2*dz**2)
     L_z = mu*G_self/(dx**2*dy**2)
     L_vec = np.concatenate((L_x*np.ones(nv), L_y*np.ones(nv), L_z*np.ones(nv)))
-    L_vec = L_vec[idx_fc]
+    L_vec = L_vec[idx_f]
 
     # compute the inductance tensor from the Green functions
     L_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float64)
@@ -115,16 +136,24 @@ def get_L_matrix(n, d, idx_fc, G_self, G_mutual):
     L_tsr[:, :, :, 1] = mu*G_mutual/(dx**2*dz**2)
     L_tsr[:, :, :, 2] = mu*G_mutual/(dx**2*dy**2)
 
-    return L_vec, L_tsr
+    # get the matrix-vector operator
+    L_op = matrix_multiply.get_operator_diag(idx_f, L_tsr)
+
+    return L_vec, L_op
 
 
-def get_P_matrix(n, d, idx_vm, G_self, G_mutual):
+def get_P_matrix(n, d, idx_v, G_self, G_mutual):
     """
     Extract the potential matrix of the system.
 
+    The problem contains n_v non-empty voxels.
     The voxel structure has the following size: (nx, ny, nz).
-    For solving the preconditioner, a vector is used: n_f.
-    For solving the full system, an inductance tensor is used: (nx, ny, nz, 1).
+    The green tensor has the following size: (nx, ny, nz).
+
+    The green tensor is transformed into a potential tensor: (nx, ny, nz, 1).
+    The tensor is then used to create a matrix-vector linear operator:
+        - input size: n_v
+        - output size: n_v
     """
 
     # vacuum permeability
@@ -138,33 +167,45 @@ def get_P_matrix(n, d, idx_vm, G_self, G_mutual):
     # self-inductance for the preconditioner
     P_v = G_self/(mu*dx**2*dy**2*dz**2)
     P_vec = P_v*np.ones(nv)
-    P_vec = P_vec[idx_vm]
+    P_vec = P_vec[idx_v]
 
     # compute the inductance tensor from the Green functions
     P_tsr = np.zeros((nx, ny, nz, 1), dtype=np.float64)
     P_tsr[:, :, :, 0] = G_mutual/(mu*dx**2*dy**2*dz**2)
 
-    return P_vec, P_tsr
+    # get the matrix-vector operator
+    P_op = matrix_multiply.get_operator_single(idx_v, P_tsr)
 
-
-def get_extract_matrix(idx_fc, idx_vm, L_tsr_c, P_tsr_m):
-    """
-    Prepare the matrix for the multiplication:
-        - with FFT circulant tensors
-        - with dense matrices
-    """
-
-    L_op_c = matrix_multiply.get_operator_diag(idx_fc, L_tsr_c)
-    P_op_m = matrix_multiply.get_operator_single(idx_vm, P_tsr_m)
-
-    return L_op_c, P_op_m
+    return P_vec, P_op
 
 
 def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr):
     """
-    Prepare the matrix for the multiplication:
-        - with FFT circulant tensors
-        - with dense matrices
+    Extract the magnetic-electric coupling matrices.
+
+    The problem contains n_fc internal electric faces.
+    The problem contains n_fm internal magnetic faces.
+    The voxel structure has the following size: (nx, ny, nz).
+    The coupling tensor has the following size: (nx, ny, nz, 3).
+
+    Ideally, the coupling matrix would directly operate between the faces.
+    The face to face coupling matrix is not a Toeplitz matrix with Toeplitz blocks.
+    The voxel to voxel coupling matrix is a Toeplitz matrix with Toeplitz blocks.
+    Therefore, the following procedure is used:
+        - the face vector is projected into a voxel vector
+        - the multiplication is done with the coupling tensor
+        - voxel vector is projected into a face vector
+
+    It should be noted that this projection has a negative impact on the achieved accuracy.
+    However, this step is currently required for obtaining Toeplitz matrices.
+
+    For the electric coupling, the matrix-vector linear operator has the following size:
+        - input size: n_fm
+        - output size: n_fc
+
+    For the magnetic coupling, the matrix-vector linear operator has the following size:
+        - input size: n_fc
+        - output size: n_fm
     """
 
     # get the face voxel incidence matrix
@@ -194,4 +235,3 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
     K_op_m = sla.LinearOperator((len(idx_fm), len(idx_fc)), matvec=fct_m)
 
     return K_op_c, K_op_m
-

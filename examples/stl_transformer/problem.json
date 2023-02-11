@@ -17,8 +17,8 @@
         }
     },
     "material_def": {
-        "pri": {"domain_list": ["pri_src", "pri_sink", "pri_coil"], "material_type": "conductor", "rho": 1.75e-8},
-        "sec": {"domain_list": ["sec_src", "sec_sink", "sec_coil"], "material_type": "conductor", "rho": 1.75e-8}
+        "pri": {"domain_list": ["pri_src", "pri_sink", "pri_coil"], "material_type": "electric", "rho": 1.75e-8},
+        "sec": {"domain_list": ["sec_src", "sec_sink", "sec_coil"], "material_type": "electric", "rho": 1.75e-8}
     },
     "source_def": {
         "pri_src": {"domain_list": ["pri_src"], "source_type": "current", "I": 1.0, "G": 0.0},

@@ -35,12 +35,12 @@ def _check_voxel_domain_def(n, domain_def):
 
         # cast indices
         idx = np.array(idx, dtype=np.int64)
+
+        # check for indices type and range
         if not (len(idx.shape) == 1):
             raise CheckError("idx: indices should be a vector")
         if not np.issubdtype(idx.dtype, np.integer):
             raise CheckError("idx: indices should be composed of integers")
-
-        # check for indices range
         if not (np.all(idx >= 0) and np.all(idx < nv)):
             raise CheckError("idx: domain indices should belong to the voxel structure")
 
@@ -95,7 +95,7 @@ def _check_png_domain_color(domain_color):
     for tag, color in domain_color.items():
         # check tag
         if not isinstance(tag, str):
-            raise CheckError("tag: conductor name should be a string")
+            raise CheckError("tag: domain name should be a string")
 
         # check size
         if not (len(color) == 4):
@@ -163,7 +163,7 @@ def _check_stl_domain_stl(domain_stl):
     for tag, filename in domain_stl.items():
         # check tag
         if not isinstance(tag, str):
-            raise CheckError("tag: conductor name should be a string")
+            raise CheckError("tag: domain name should be a string")
 
         # check type
         if not isinstance(filename, str):

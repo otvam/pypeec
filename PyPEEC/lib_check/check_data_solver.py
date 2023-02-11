@@ -33,7 +33,7 @@ def _get_material_idx(material_def, domain_def):
     """
     Get the indices of the material.
     Create a new dict with the indices in place of the domain names.
-    Split the conductor and magnetic materials.
+    Split the electric and magnetic materials.
     """
 
     # init
@@ -50,7 +50,7 @@ def _get_material_idx(material_def, domain_def):
         idx = _get_domain_indices(domain_list, domain_def)
 
         # assign the indices
-        if material_type == "conductor":
+        if material_type == "electric":
             rho = dat_tmp["rho"]
             idx_c = np.append(idx_c, idx)
             material_idx[tag] = {"idx": idx, "material_type": material_type, "rho": rho}
@@ -102,14 +102,14 @@ def _get_source_idx(source_def, domain_def):
 
 def _check_indices(idx_c, idx_m, idx_s):
     """
-    Check that the conductor and source indices are valid.
+    Check that the material and source indices are valid.
     The indices should be unique and compatible with the voxel size.
-    The source indices should be included in the conductor indices.
+    The source indices should be included in the electric indices.
     """
 
     # check for unicity
     if not (len(np.unique(idx_c)) == len(idx_c)):
-        raise CheckError("conductor indices should be unique")
+        raise CheckError("electric indices should be unique")
     if not (len(np.unique(idx_m)) == len(idx_m)):
         raise CheckError("magnetic indices should be unique")
     if not (len(np.unique(idx_s)) == len(idx_s)):
@@ -117,11 +117,11 @@ def _check_indices(idx_c, idx_m, idx_s):
 
     # check for invalid material
     if len(np.intersect1d(idx_c, idx_m)) != 0:
-        raise CheckError("magnetic and conductor indices should be unique")
+        raise CheckError("magnetic and electric indices should be unique")
 
-    # check that the terminal indices are conductor indices
+    # check that the terminal indices are material indices
     if not np.all(np.in1d(idx_s, idx_c)):
-        raise CheckError("source indices are not included in conductor indices")
+        raise CheckError("source indices are not included in electric indices")
     if np.any(np.in1d(idx_s, idx_m)):
         raise CheckError("source indices are included in magnetic indices")
 
@@ -142,8 +142,8 @@ def get_data_solver(data_voxel, data_problem):
     """
     Combine the voxel data and the problem data.
     The voxel data contains the mapping between domain names and indices.
-    The problem data contains domain names used for the conductors and sources.
-    The new dict contains the indices used for the conductors and sources.
+    The problem data contains domain names used for the materials and sources.
+    The new dict contains the indices used for the materials and sources.
     """
 
     # extract field
@@ -154,7 +154,7 @@ def get_data_solver(data_voxel, data_problem):
     domain_def = data_voxel["domain_def"]
     connection_def = data_voxel["connection_def"]
 
-    # get conductor indices
+    # get material and source indices
     (idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
     (idx_s, source_idx) = _get_source_idx(source_def, domain_def)
 

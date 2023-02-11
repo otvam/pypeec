@@ -35,13 +35,13 @@ def _check_material_def(material_def):
             raise CheckError("domain_list: domain definition a list")
 
         # check value
-        if not (material_type in ["conductor", "magnetic"]):
-            raise CheckError("material_type: material type should be conductor or magnetic")
+        if not (material_type in ["electric", "magnetic"]):
+            raise CheckError("material_type: material type should be electric or magnetic")
         if not all(np.issubdtype(type(x), str) for x in domain_list):
             raise CheckError("domain_list: domain name should be composed of strings")
 
         # get the source value
-        if material_type == "conductor":
+        if material_type == "electric":
             value = dat_tmp["rho"]
         elif material_type == "magnetic":
             value = dat_tmp["chi"]
@@ -164,7 +164,7 @@ def check_data_problem(data_problem):
         - frequency
         - solver options
         - matrix condition options
-        - conductor definition
+        - material definition
         - source definition
     """
 
@@ -201,6 +201,6 @@ def check_data_problem(data_problem):
     _check_solver_options(solver_options)
     _check_condition_options(condition_options)
 
-    # check conductor and source
+    # check material and source
     _check_material_def(material_def)
     _check_source_def(source_def)

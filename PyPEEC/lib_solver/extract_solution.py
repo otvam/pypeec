@@ -2,7 +2,8 @@
 Different functions for extracting the fields and terminal currents and voltages from the solution vector.
 
 The voxel structure has the following size: (nx, ny, nz).
-The problem contains n_v non-empty voxels and n_f internal faces.
+The problem contains n_vc non-empty electric voxels and n_vm non-empty magnetic voxels.
+The problem contains n_fc internal electric faces and n_fm internal magnetic faces.
 The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
 """
 
@@ -19,7 +20,7 @@ logger = timelogger.get_logger("SOLUTION")
 def _get_vector_density(n, d, A_vox, var_f_all):
     """
     Project a face vector variable into a voxel vector variable.
-    Scale the variable with respect to the face areas (density).
+    Scale the variable with respect to the face area (density).
 
     At the input, the array has the following size: 3*nx*ny*nx.
     At the output, the array has the following size: (nx*ny*nx, 3).
@@ -45,6 +46,14 @@ def _get_vector_density(n, d, A_vox, var_f_all):
 
 
 def _get_vector_divergence(d, A_vox, var_f_all):
+    """
+    Compute the divergence of a face vector with respect to the voxels.
+    Scale the variable with respect to the voxel volume (density).
+
+    At the input, the array has the following size: 3*nx*ny*nx.
+    At the output, the array has the following size: nx*ny*nx.
+    """
+
     # extract the voxel data
     (dx, dy, dz) = d
 
@@ -62,8 +71,10 @@ def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
     Split the solution vector into different variables.
 
     The solution vector is set in the following order:
-        - n_f: face currents
-        - n_v: voxel potentials
+        - n_fc: electric face currents
+        - n_fm: magnetic face fluxes
+        - n_vc: electric voxel potentials
+        - n_vm: magnetic voxel potentials
         - n_src_c: current source currents
         - n_src_v: voltage source currents
     """
@@ -85,12 +96,94 @@ def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
     return I_fc, I_fm, V_vc, V_vm, I_src
 
 
+def get_flow_density(n, d, idx_v, idx_f, A_vox, I_f):
+    """
+    Get the voxel flow from the face flow.
+    Scale the flow with respect to the face area (density).
+
+    At the input, the face flow vector has the following size: n_f.
+    At the output, the voxel flow vector has the following size: (n_v, 3).
+    """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    nv = nx*ny*nz
+
+    # extend the solution for the complete voxel structure (including the empty voxels)
+    I_f_all = np.zeros(3*nv, dtype=np.complex128)
+    I_f_all[idx_f] = I_f
+
+    # project the face currents into the voxels (scalar field)
+    I_flow_v_all = _get_vector_density(nv, d, A_vox, I_f_all)
+
+    # remove empty voxels
+    I_flow_v = I_flow_v_all[idx_v]
+
+    return I_flow_v
+
+
+def get_flow_divergence(n, d, idx_v, idx_f, A_vox, I_f):
+    """
+    Get the divergence of a face flow with respect to the voxels.
+    Scale the divergence with respect to the voxel volume (density).
+
+    At the input, the face flow vector has the following size: n_f.
+    At the output, the divergence vector has the following size: n_v.
+    """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    nv = nx*ny*nz
+
+    # extend the solution for the complete voxel structure (including the empty voxels)
+    I_f_all = np.zeros(3*nv, dtype=np.complex128)
+    I_f_all[idx_f] = I_f
+
+    # compute the divergence
+    I_div_v_all = _get_vector_divergence(d, A_vox, I_f_all)
+
+    # remove empty voxels
+    I_div_v = I_div_v_all[idx_v]
+
+    return I_div_v
+
+
+def get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c):
+    """
+    Sum the loss/energy in order to obtain global quantities.
+    """
+
+    # get the losses for the different faces
+    P_f = 0.5*np.conj(I_fc)*R_vec_c*I_fc
+
+    # get the electric and magnetic energy contributions
+    M_fc = L_op_c(I_fc)
+    M_fm = K_op_c(I_fm)
+
+    # get the energy for the different faces
+    W_f = 0.5*np.conj(I_fc)*(M_fc+M_fm)
+
+    # compute the integral quantities
+    P_tot = np.sum(np.real(P_f))
+    W_tot = np.sum(np.real(W_f))
+
+    # assign the integral quantities
+    integral = {"P_tot": P_tot, "W_tot": W_tot}
+
+    # display
+    logger.info("integral: P_tot = %.3e W" % P_tot)
+    logger.info("integral: W_tot = %.3e J" % W_tot)
+
+    return integral
+
+
 def get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
     """
-    Expand the potential and source currents for all the voxels.
+    Expand the electric potential and source currents for all the voxels.
 
     The solution is assigned to all the voxels (even the empty voxels).
-    The input vectors have the following size: n_v.
+    The input electric potential vector has the following size: n_vc.
+    The input source current vector has the following size: n_src_c+n_src_v.
     The output vectors have the following size: nx*ny*nz.
     """
 
@@ -117,79 +210,6 @@ def get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
     I_src_v_all[idx_src_v] = I_src_v
 
     return V_v_all, I_src_c_all, I_src_v_all
-
-
-def get_flow_density(n, d, idx_v, idx_f, A_vox, I_f):
-    """
-    Get the voxel current densities from the face currents.
-    Scale the currents into current densities.
-
-    At the input, the face current vector has the following size: n_f.
-    At the output, the current density vector has the following size: (n_v, 3).
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
-
-    # extend the solution for the complete voxel structure (including the empty voxels)
-    I_f_all = np.zeros(3*nv, dtype=np.complex128)
-    I_f_all[idx_f] = I_f
-
-    # project the face currents into the voxels (scalar field)
-    I_flow_v_all = _get_vector_density(nv, d, A_vox, I_f_all)
-
-    # remove empty voxels
-    I_flow_v = I_flow_v_all[idx_v]
-
-    return I_flow_v
-
-
-def get_flow_divergence(n, d, idx_v, idx_f, A_vox, I_f):
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
-
-    # extend the solution for the complete voxel structure (including the empty voxels)
-    I_f_all = np.zeros(3*nv, dtype=np.complex128)
-    I_f_all[idx_f] = I_f
-
-    # compute the divergence
-    I_div_v_all = _get_vector_divergence(d, A_vox, I_f_all)
-
-    # remove empty voxels
-    I_div_v = I_div_v_all[idx_v]
-
-    return I_div_v
-
-
-def get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c):
-    """
-    Sum the loss/energy in order to obtain global quantities.
-    """
-
-    # get the losses for the different faces
-    P_f = 0.5*np.conj(I_fc)*R_vec_c*I_fc
-
-    # get the energy for the different faces
-    M_fc = L_op_c(I_fc)
-    M_fm = K_op_c(I_fm)
-
-    # get the energy for the different faces
-    W_f = 0.5*np.conj(I_fc)*(M_fc+M_fm)
-
-    # compute the integral quantities
-    P_tot = np.sum(np.real(P_f))
-    W_tot = np.sum(np.real(W_f))
-
-    # assign the integral quantities
-    integral = {"P_tot": P_tot, "W_tot": W_tot}
-
-    # display
-    logger.info("integral: P_tot = %.3e W" % P_tot)
-    logger.info("integral: W_tot = %.3e J" % W_tot)
-
-    return integral
 
 
 def get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all):

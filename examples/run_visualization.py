@@ -71,7 +71,7 @@ def _get_data_window(name):
 
 def _get_data_plotter_geometry(name):
     """
-    Plot options for the material description (conductors and sources).
+    Plot options for the material description.
     The result is plotted on the voxel structure.
     This structure is used by the plotter.
     """

@@ -1,18 +1,19 @@
 """
 Main script for plotting the solution of a FFT-PEEC problem.
 Plot the following features:
-    - material description (conductors and sources)
-    - resistivity
-    - potential
-    - current density
-    - loss density
+    - material description
+    - potential (electric and magnetic)
+    - current density divergence and magnetic charges
+    - current density and flux density
     - magnetic field
+    - solver convergence
 
 Two different mode are available for the plots:
     - interactive mode: the plots are shown (blocking call at the end)
     - silent mode: nothing is shown and the program exit (for debugging and testing)
 
-The plotting is done with PyVista with the Qt framework.
+The 3D plots are done with PyVista with the Qt framework.
+The 2D plots are done with Matplotlib with the Qt framework.
 """
 
 __author__ = "Thomas Guillod"
@@ -36,7 +37,7 @@ def _get_grid_voxel(data_solution, data_point):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
-    Add the solver results (material description, resistivity, and field) to the grid.
+    Add the solver results to the grid.
     """
 
     # extract the data
@@ -70,7 +71,7 @@ def _get_grid_voxel(data_solution, data_point):
     # add the problem solution to the grid
     voxel = manage_voxel.set_plotter_voxel_material(voxel, idx, material)
 
-    # set the conductor variables
+    # set the electric variables
     voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, V_vc, "V_c")
     voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, S_vc, "S_c")
     voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx, idx_vc, J_vc, "J_c")
@@ -135,7 +136,7 @@ def run(data_solution, data_point, data_plotter, is_interactive):
         The voxel structure is defined.
         The frequency of the problem is defined.
         The status of the solution (solver convergence and condition number) is described.
-        The resistivity, potential, current density, and loss density of the different voxel are defined.
+        The potential, current density, and flux density of the different voxel are defined.
         The terminals quantities (voltage and current) of the sources are defined.
         The integral quantities (total losses and energy) of the problem are defined.
     data_point: list
@@ -144,13 +145,13 @@ def run(data_solution, data_point, data_plotter, is_interactive):
     data_plotter: list
         The list describes the different plots to be created.
         Different types of plots are available.
-        Plot showing the conductors and sources.
-        Scalar plot of the resistivity of the voxels.
-        Scalar plot of the potential and current density of the voxels.
-        Scalar plot of the loss density of the voxels.
-        Vector plot (with arrows) of the current density of the voxels.
-        Scalar plot of the magnetic field of the point cloud.
-        Vector plot (with arrows) of the magnetic field of the point cloud.
+        Plot showing the materials and sources.
+        Scalar plot of the potential (electric and magnetic) on the voxels.
+        Scalar plot of the current density divergence and magnetic charges on the voxels.
+        Scalar plot of the current density and flux density on the voxels.
+        Vector plot (with arrows) of the current density and flux density on the voxels.
+        Scalar plot of the magnetic field on the point cloud.
+        Vector plot (with arrows) of the magnetic field on the point cloud.
         Plots describing the solver convergence.
     is_interactive : boolean
         If true, the plots are shown (blocking call).

@@ -17,7 +17,7 @@
         }
     },
     "material_def": {
-        "coil": {"domain_list": ["src", "sink", "coil"], "material_type": "conductor", "rho": 1.75e-8},
+        "coil": {"domain_list": ["src", "sink", "coil"], "material_type": "electric", "rho": 1.75e-8},
         "core": {"domain_list": ["core"], "material_type": "magnetic", "chi": 100.0}
     },
     "source_def": {

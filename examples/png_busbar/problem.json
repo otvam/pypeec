@@ -17,7 +17,7 @@
         }
     },
     "material_def": {
-        "coil": {"domain_list": ["src", "sink", "copper"], "material_type": "conductor", "rho": 1.75e-8}
+        "coil": {"domain_list": ["src", "sink", "copper"], "material_type": "electric", "rho": 1.75e-8}
     },
     "source_def": {
         "src": {"domain_list": ["src"], "source_type": "current", "I": 1.0, "G": 0.0},

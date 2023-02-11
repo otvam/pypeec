@@ -58,6 +58,8 @@ def get_incidence_matrix(n):
 
     The voxel structure has the following size: (nx, ny, nz).
     The matrix has the following dimension: (nx*ny*nz, 3*nx*ny*nz).
+    The columns represent the face with the following order: x, y, and, z.
+    The rows represent the voxels.
     """
 
     # extract the voxel data

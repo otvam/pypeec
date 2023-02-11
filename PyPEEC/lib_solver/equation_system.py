@@ -77,7 +77,7 @@ def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
-    # get the conductor admittance
+    # get the electric admittance
     Y_vec_c = 1/(R_vec_c+s*L_vec_c)
 
     # get the magnetic admittance
@@ -193,7 +193,7 @@ def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P
     V_vm = sol[n_fc+n_fm+n_vc:n_fc+n_fm+n_vc+n_vm]
     I_src = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src]
 
-    # conductor KVL equations
+    # electric KVL equations
     rhs_1 = s*L_op_c(I_fc)
     rhs_2 = K_op_c(I_fm)
     rhs_3 = R_vec_c*I_fc
@@ -206,7 +206,7 @@ def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P
     rhs_3 = A_kvl_m*V_vm
     rhs_fm = rhs_1+rhs_2+rhs_3
 
-    # conductor KCL equations
+    # electric KCL equations
     rhs_1 = A_kcl_c*I_fc
     rhs_2 = A_vc_src*I_src
     rhs_vc = rhs_1+rhs_2

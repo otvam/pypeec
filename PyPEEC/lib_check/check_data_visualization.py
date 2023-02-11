@@ -109,9 +109,9 @@ def _check_data_options(plot_type, data_options):
     Check the validity of the data options (for the plotter).
     The data options are controlling the plot content.
     Three different types of plots are available:
-        - material description (conductors, voltage sources, and current sources)
-        - scalar plots (resistivity, potential, and current density)
-        - arrow plots (current density)
+        - material description
+        - scalar plots
+        - arrow plots
     """
 
     # check type

@@ -8,7 +8,7 @@ Three different types of matrices are supported:
     - diag: tensor representing a block diagonal matrix (number of dimensions = 3)
     - cross: tensor representing a block off-diagonal matrix (number of dimensions = 3)
 
-A SciPy linear operator is returned for performing the multplication.
+A SciPy linear operator is returned for performing the matrix-vector multiplication.
 """
 
 __author__ = "Thomas Guillod"

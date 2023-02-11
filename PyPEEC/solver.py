@@ -10,7 +10,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
 from PyPEEC.lib_solver import voxel_geometry
-from PyPEEC.lib_solver import dense_matrix
+from PyPEEC.lib_solver import system_tensor
 from PyPEEC.lib_solver import problem_geometry
 from PyPEEC.lib_solver import system_matrix
 from PyPEEC.lib_solver import equation_system
@@ -48,13 +48,13 @@ def _run_preproc(data_solver):
     # get the Green functions
     with timelogger.BlockTimer(logger, "dense_matrix"):
         # Green function self-coefficient
-        G_self = dense_matrix.get_green_self(d)
+        G_self = system_tensor.get_green_self(d)
 
         # Green function mutual coefficients
-        G_mutual = dense_matrix.get_green_tensor(n, d, green_simplify)
+        G_mutual = system_tensor.get_green_tensor(n, d, green_simplify)
 
         # Green function mutual coefficients
-        K_tsr = dense_matrix.get_coupling_tensor(n, d, coupling_simplify)
+        K_tsr = system_tensor.get_coupling_tensor(n, d, coupling_simplify)
 
     # assemble results
     data_solver["coord_vox"] = coord_vox
@@ -84,10 +84,10 @@ def _run_main(data_solver):
     G_mutual = data_solver["G_mutual"]
     K_tsr = data_solver["K_tsr"]
 
-    # parse the problem geometry (conductors and sources)
+    # parse the problem geometry (materials and sources)
     with timelogger.BlockTimer(logger, "problem_geometry"):
-        # parse the conductors
-        (idx_vc, rho_vc) = problem_geometry.get_material_geometry(material_idx, "conductor")
+        # parse the materials
+        (idx_vc, rho_vc) = problem_geometry.get_material_geometry(material_idx, "electric")
         (idx_vm, rho_vm) = problem_geometry.get_material_geometry(material_idx, "magnetic")
 
         # parse the sources
@@ -108,13 +108,10 @@ def _run_main(data_solver):
         R_vec_m = system_matrix.get_R_vector(n, d, A_net_m, idx_fm, rho_vm)
 
         # get the inductance tensor (preconditioner and full problem)
-        (L_vec_c, L_tsr_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual)
+        (L_vec_c, L_op_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual)
 
         # get the potential tensor (preconditioner and full problem)
-        (P_vec_m, P_tsr_m) = system_matrix.get_P_matrix(n, d, idx_vm, G_self, G_mutual)
-
-        # prepare the matrices for multiplication (FFT circulant tensors or dense matrices)
-        (L_op_c, P_op_m) = system_matrix.get_extract_matrix(idx_fc, idx_vm, L_tsr_c, P_tsr_m)
+        (P_vec_m, P_op_m) = system_matrix.get_P_matrix(n, d, idx_vm, G_self, G_mutual)
 
         # get the coupling matrices
         (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr)
@@ -272,7 +269,7 @@ def run(data_voxel, data_problem):
         The dict describes the problem to be solved.
         The numerical options are defined.
         The frequency of the problem is defined.
-        The resistivity of the different domain is defined.
+        The electric and magnetic materials are defined.
         The current and voltage sources are defined.
 
     Returns

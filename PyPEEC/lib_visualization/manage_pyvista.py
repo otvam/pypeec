@@ -11,7 +11,7 @@ For the viewer, the following plots are available:
     - the connected components for the non-empty voxels
 
 For the plotter, the following plots are available:
-    - material description for the non-empty voxels (conductors and sources)
+    - material description for the non-empty voxels
     - scalar plots for the non-empty voxels
     - arrow plots for the non-empty voxels
     - scalar plots for the point cloud
@@ -215,7 +215,7 @@ def plot_material(pl, voxel, clip_options):
 
 def plot_scalar(pl, obj, data_options, clip_options):
     """
-    Plot a scalar variable (resistivity, potential, current density, or magnetic field).
+    Plot a scalar variable.
     The plot is either made on:
         - the unstructured grid describing the non-empty voxels
         - the polydata (point cloud) used to evaluate the field
@@ -257,7 +257,7 @@ def plot_scalar(pl, obj, data_options, clip_options):
 
 def plot_arrow(pl, d_char, obj, data_options, clip_options):
     """
-    Plot a vector variable (current density or magnetic field) with an arrow plot (quiver plot).
+    Plot a vector variable with an arrow plot (quiver plot).
     The plot is either made on:
         - the unstructured grid describing the non-empty voxels
         - the polydata (point cloud) used to evaluate the field
