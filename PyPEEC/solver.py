@@ -126,7 +126,7 @@ def _run_main(data_solver):
         A_m = equation_system.get_kvl_kcl_matrix(A_net_m)
 
         # get the source connection matrices
-        A_src = equation_system.get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v)
+        A_src = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
         (pcd_op, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m, K_op_c, K_op_m)

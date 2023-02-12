@@ -66,7 +66,8 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
 
 def get_condition(S_mat_c, S_mat_m, conditions_options):
     """
-    Compute an estimate of the condition number (norm 1) of a sparse matrix.
+    Compute an estimate of the condition number (norm 1) of preconditioner Schur complements.
+    The condition number is used to detect problematic (quasi-singular) systems.
     """
 
     # get the condition options

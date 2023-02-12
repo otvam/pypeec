@@ -72,11 +72,10 @@ def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
 
     The solution vector is set in the following order:
         - n_fc: electric face currents
-        - n_fm: magnetic face fluxes
         - n_vc: electric voxel potentials
+        - n_src: source currents
+        - n_fm: magnetic face fluxes
         - n_vm: magnetic voxel potentials
-        - n_src_c: current source currents
-        - n_src_v: voltage source currents
     """
 
     # extract the voxel data
