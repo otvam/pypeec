@@ -217,7 +217,11 @@ def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P
     # get the derivative operator (avoid singularity for DC solution)
     if freq == 0:
         s_diff = 1
+        k_c_fact = 0
+        k_m_fact = 1
     else:
+        k_c_fact = 1
+        k_m_fact = 1
         s_diff = 1j*2*np.pi*freq
 
     # split the excitation vector
@@ -229,13 +233,13 @@ def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P
 
     # electric KVL equations
     rhs_1 = s*L_op_c(I_fc)
-    rhs_2 = K_op_c(I_fm)
+    rhs_2 = k_c_fact*K_op_c(I_fm)
     rhs_3 = R_vec_c*I_fc
     rhs_4 = A_kvl_c*V_vc
     rhs_fc = rhs_1+rhs_2+rhs_3+rhs_4
 
     # magnetic KVL equations
-    rhs_1 = K_op_m(I_fc)
+    rhs_1 = k_m_fact*K_op_m(I_fc)
     rhs_2 = R_vec_m/s_diff*I_fm
     rhs_3 = A_kvl_m*V_vm
     rhs_fm = rhs_1+rhs_2+rhs_3
