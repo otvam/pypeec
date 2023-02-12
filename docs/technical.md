@@ -34,8 +34,8 @@ Moreover, the memory consumption is not heavily optimized (no customized garbage
 ## Tests
 
 * The tests are located in the `tests` folder (using the `unittest` framework).
-* * Only integration tests currently exist (no unit tests).
-* The tests are just checking that the code is running with the examples.
+* Only integration tests currently exist (no unit tests).
+* The tests are checking the examples are running and correct.
 
 # Warnings
 
