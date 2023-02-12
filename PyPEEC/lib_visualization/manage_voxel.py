@@ -116,7 +116,7 @@ def set_plotter_voxel_material(voxel, idx, material):
     return voxel
 
 
-def set_plotter_voxel_scalar(voxel, idx, idx_var, var_pot, name_pot):
+def set_plotter_voxel_scalar(voxel, idx, idx_var, var, name):
     """
     Add a scalar variable to the unstructured grid (complex variable).
     """
@@ -127,18 +127,21 @@ def set_plotter_voxel_scalar(voxel, idx, idx_var, var_pot, name_pot):
     idx_var_local = idx_s[idx_p]
 
     # assign potential (nan for the voxels where the variable is not defined)
-    var_pot_all = np.full(len(idx), np.nan+1j*np.nan, dtype=np.complex128)
-    var_pot_all[idx_var_local] = var_pot
+    var_all = np.full(len(idx), np.nan+1j*np.nan, dtype=np.complex128)
+    var_all[idx_var_local] = var
+
+    # sort the variable
+    var_all = var_all[idx_s]
 
     # assign potential
-    voxel[name_pot + "_re"] = np.real(var_pot_all)
-    voxel[name_pot + "_im"] = np.imag(var_pot_all)
-    voxel[name_pot + "_abs"] = np.abs(var_pot_all)
+    voxel[name + "_re"] = np.real(var_all)
+    voxel[name + "_im"] = np.imag(var_all)
+    voxel[name + "_abs"] = np.abs(var_all)
 
     return voxel
 
 
-def set_plotter_voxel_vector(voxel, idx, idx_var, var_flow, name_flux):
+def set_plotter_voxel_vector(voxel, idx, idx_var, var, name):
     """
     Add a vector variable to the unstructured grid (complex variable).
     The norm (scalar field) and the direction (vector field) are added.
@@ -150,17 +153,20 @@ def set_plotter_voxel_vector(voxel, idx, idx_var, var_flow, name_flux):
     idx_var_local = idx_s[idx_p]
 
     # assign flux (nan for the voxels where the variable is not defined)
-    var_flux_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=np.complex128)
-    var_flux_all[idx_var_local] = var_flow
+    var_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=np.complex128)
+    var_all[idx_var_local] = var
+
+    # sort the variable
+    var_all = var_all[idx_s]
 
     # assign the current density norm
-    voxel[name_flux + "_norm_abs"] = lna.norm(var_flux_all, axis=1)
-    voxel[name_flux + "_norm_re"] = lna.norm(np.real(var_flux_all), axis=1)
-    voxel[name_flux + "_norm_im"] = lna.norm(np.imag(var_flux_all), axis=1)
+    voxel[name + "_norm_abs"] = lna.norm(var_all, axis=1)
+    voxel[name + "_norm_re"] = lna.norm(np.real(var_all), axis=1)
+    voxel[name + "_norm_im"] = lna.norm(np.imag(var_all), axis=1)
 
     # assign the current density direction
-    voxel[name_flux + "_vec_re"] = np.real(var_flux_all)
-    voxel[name_flux + "_vec_im"] = np.imag(var_flux_all)
+    voxel[name + "_vec_re"] = np.real(var_all)
+    voxel[name + "_vec_im"] = np.imag(var_all)
 
     return voxel
 
