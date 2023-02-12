@@ -74,7 +74,7 @@ def _check_voxel_size(n, d, c):
         raise CheckError("c: center coordinate should be composed of real floats")
 
     # check value
-    if not all((x >= 1) for x in n):
+    if not all((x > 0) for x in n):
         raise CheckError("n: number of voxels cannot be smaller than one")
     if not all((x > 0) for x in d):
         raise CheckError("d: dimension of the voxels should be positive")
@@ -132,20 +132,6 @@ def _check_png_layer_stack(layer_stack):
         # check value
         if not (n_layer >= 1):
             raise CheckError("n_layer: number of layers cannot be smaller than one")
-
-
-def _check_stl_pts(pts):
-    """
-    Check that the points defining the voxel structure bounds are valid (STL mesher).
-    """
-
-    # check size
-    if not (len(pts) == 3):
-        raise CheckError("pts: invalid point size (should be a list with three elements)")
-
-    # check type
-    if not all(np.issubdtype(type(x), np.floating) or (x is None) for x in pts):
-        raise CheckError("pts: the coordinates of a point should be composed of real floats")
 
 
 def _check_stl_domain_stl(domain_stl):
@@ -245,9 +231,9 @@ def _check_data_voxelize_png(data_voxelize):
     # check value
     if not all((x > 0) for x in d):
         raise CheckError("d: dimension of the voxels should be positive")
-    if not (nx >= 1):
+    if not (nx > 0):
         raise CheckError("nx: of voxel in x direction cannot be smaller than one")
-    if not (ny >= 1):
+    if not (ny > 0):
         raise CheckError("ny: of voxel in y direction cannot be smaller than one")
 
     # check domains and layers
@@ -271,26 +257,53 @@ def _check_data_voxelize_stl(data_voxelize):
 
     # extract field
     n = data_voxelize["n"]
+    d = data_voxelize["d"]
+    c = data_voxelize["c"]
     pts_min = data_voxelize["pts_min"]
     pts_max = data_voxelize["pts_max"]
     domain_stl = data_voxelize["domain_stl"]
     domain_conflict = data_voxelize["domain_conflict"]
 
-    # check size
-    if not (len(n) == 3):
-        raise CheckError("n: invalid voxel number (should be a list with three elements)")
+    # check voxel numer
+    if n is not None:
+        if not (len(n) == 3):
+            raise CheckError("n: invalid voxel number (should be a list with three elements)")
+        if not all(np.issubdtype(type(x), np.integer) for x in n):
+            raise CheckError("n: the number of voxels should be composed of integers")
+        if not all((x > 0) for x in n):
+            raise CheckError("n: number of voxels cannot be smaller than one")
 
-    # check type
-    if not all(np.issubdtype(type(x), np.integer) for x in n):
-        raise CheckError("n: number of voxels should be composed of integers")
+    # check voxel size
+    if d is not None:
+        if not (len(d) == 3):
+            raise CheckError("d: invalid voxel size (should be a list with three elements)")
+        if not all(np.issubdtype(type(x), np.floating) for x in d):
+            raise CheckError("d: dimension of the voxels should be composed of real floats")
+        if not all((x > 0) for x in d):
+            raise CheckError("d: dimension of the voxels should be composed of real floats")
 
-    # check value
-    if not all((x >= 1) for x in n):
-        raise CheckError("n: number of voxels cannot be smaller than one")
+    # check voxel center
+    if c is not None:
+        if not (len(c) == 3):
+            raise CheckError("c: invalid center coordinate size (should be a list with three elements)")
+        if not all(np.issubdtype(type(x), np.floating) for x in c):
+            raise CheckError("c: center coordinate should be composed of real floats")
 
-    # check the points
-    _check_stl_pts(pts_min)
-    _check_stl_pts(pts_max)
+    # check voxel boundaries
+    if pts_min is not None:
+        if not (len(pts_min) == 3):
+            raise CheckError("pts_min: invalid point size (should be a list with three elements)")
+        if not all(np.issubdtype(type(x), np.floating) for x in pts_min):
+            raise CheckError("pts_min: the coordinates of a point should be composed of real floats")
+    if pts_max is not None:
+        if not (len(pts_max) == 3):
+            raise CheckError("pts_max: invalid point size (should be a list with three elements)")
+        if not all(np.issubdtype(type(x), np.floating) for x in pts_max):
+            raise CheckError("pts_max: the coordinates of a point should be composed of real floats")
+
+    # check that the size is defined
+    if (d is not None) != (n is None):
+        raise CheckError("n/d: inconsistent definition of the voxel number/size")
 
     # check the stl file
     _check_stl_domain_stl(domain_stl)

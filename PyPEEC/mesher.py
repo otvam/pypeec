@@ -84,6 +84,8 @@ def _run_stl(data_voxelize, path_ref):
 
     # extract the data
     n = data_voxelize["n"]
+    d = data_voxelize["d"]
+    c = data_voxelize["c"]
     pts_min = data_voxelize["pts_min"]
     pts_max = data_voxelize["pts_max"]
     domain_stl = data_voxelize["domain_stl"]
@@ -92,7 +94,7 @@ def _run_stl(data_voxelize, path_ref):
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
         domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
-        (d, c, domain_def) = stl_mesher.get_mesh(n, pts_min, pts_max, domain_stl)
+        (n, d, c, domain_def) = stl_mesher.get_mesh(n, d, c, pts_min, pts_max, domain_stl)
         domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
 
     # assemble the data
