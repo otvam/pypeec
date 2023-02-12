@@ -65,7 +65,8 @@ folder=(
   "png_busbar"
   "png_inductor"
   "png_shield"
-  "stl_inductor"
+  "stl_inductor_air"
+  "stl_inductor_core"
   "stl_transformer"
   "visualization"
 )

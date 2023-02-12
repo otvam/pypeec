@@ -102,8 +102,8 @@ def _get_load_stl(domain_stl):
     mesh_stl = dict()
 
     # init the coordinate (minimum and maximum coordinates)
-    coord_min = np.full(3, +np.inf, dtype=np.float64)
-    coord_max = np.full(3, -np.inf, dtype=np.float64)
+    pts_min = np.full(3, +np.inf, dtype=np.float64)
+    pts_max = np.full(3, -np.inf, dtype=np.float64)
 
     # load the STL files and find the bounding box
     for tag, filename in domain_stl.items():
@@ -119,13 +119,13 @@ def _get_load_stl(domain_stl):
         tmp_max = np.array((x_max, y_max, z_max), dtype=np.float64)
 
         # update the bounds
-        coord_min = np.minimum(coord_min, tmp_min)
-        coord_max = np.maximum(coord_max, tmp_max)
+        pts_min = np.minimum(pts_min, tmp_min)
+        pts_max = np.maximum(pts_max, tmp_max)
 
         # assign the mesh
         mesh_stl[tag] = mesh
 
-    return mesh_stl, coord_min, coord_max
+    return mesh_stl, pts_min, pts_max
 
 
 def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
@@ -149,49 +149,64 @@ def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
     return domain_def
 
 
-def get_mesh(n, pts_min, pts_max, domain_stl):
+def get_mesh(n, d, c, pts_min, pts_max, domain_stl):
     """
     Transform STL files into a 3D voxel structure.
     Each STL file corresponds to a domain of the 3D voxel structure.
     """
 
     # load the mesh and get the STL bounds
-    (mesh_stl, coord_min, coord_max) = _get_load_stl(domain_stl)
-
-    # cast to array
-    n = np.array(n, dtype=np.int64)
-    pts_min = np.array(pts_min, np.float64)
-    pts_max = np.array(pts_max, np.float64)
+    (mesh_stl, pts_min_stl, pts_max_stl) = _get_load_stl(domain_stl)
 
     # if provided, the user specified bounds are used, otherwise the STL bounds
-    pts_min = np.array(pts_min, np.float64)
-    pts_max = np.array(pts_max, np.float64)
-    idx_replace_min = np.isnan(pts_min)
-    idx_replace_max = np.isnan(pts_max)
-    pts_min[idx_replace_min] = coord_min[idx_replace_min]
-    pts_max[idx_replace_max] = coord_max[idx_replace_max]
+    if pts_min is None:
+        pts_min = pts_min_stl
+    else:
+        pts_min = np.array(pts_min, np.float64)
+    if pts_max is None:
+        pts_max = pts_max_stl
+    else:
+        pts_max = np.array(pts_max, np.float64)
 
-    # extract the voxel size
+    # extract the number of voxels
+    if (n is not None) and (d is None):
+        n = np.array(n, dtype=np.int64)
+    elif (n is None) and (d is not None):
+        d = np.array(d, dtype=np.float64)
+        n = np.rint((pts_max-pts_min)/d)
+        n = n.astype(np.int64)
+    else:
+        raise ValueError("inconsistent definition of the voxel number/size")
+
+    # get the voxel size
     d = (pts_max-pts_min)/n
-
-    # extract the center
-    c = (pts_max+pts_min)/2
 
     # check voxel validity
     if not np.all(d > 0):
         RunError("invalid voxel dimension: should be positive")
+    # check voxel validity
+    if not np.all(n > 0):
+        RunError("invalid voxel number: should be positive")
+
+    # extract the center
+    c_stl = (pts_max+pts_min)/2
 
     # get the uniform grid
-    grid = _get_grid(n, d, c)
+    grid = _get_grid(n, d, c_stl)
 
     # voxelize the meshes and get the indices
     domain_def = _get_idx_stl(grid, mesh_stl)
 
-    # cast back the voxel size and center to a list
+    # if provided, the user specified voxel center is used, otherwise the geometrical center
+    if c is None:
+        c = pts_min_stl
+
+    # cast to lists
+    n = n.tolist()
     d = d.tolist()
     c = c.tolist()
 
-    return d, c, domain_def
+    return n, d, c, domain_def
 
 
 def get_conflict(domain_def, domain_conflict):

@@ -10,10 +10,13 @@ PATH_ROOT="."
 # name of the considered example
 #   voxel_slab
 #   voxel_transformer
-#   stl_inductor
+#   voxel_core
+#   stl_inductor_air
+#   stl_inductor_core
 #   stl_transformer
 #   png_inductor
+#   png_shield
 #   png_busbar
 #   png_wire
 #   png_pcb
-EXAMPLE_NAME="stl_transformer"
+EXAMPLE_NAME="voxel_transformer"

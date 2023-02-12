@@ -51,7 +51,8 @@ The following files (JSON for inputs, pickle for outputs) are used:
 ## Examples
 
 Different examples are located in the `examples` folder:
-* **stl_inductor**: a 3D inductor created from STL files
+* **stl_inductor_air**: a 3D air-core inductor created from STL files
+* **stl_inductor_core**: a 3D inductor with a magnetic core created from STL files
 * **stl_transformer**: a planar transformer created from STL files
 * **png_inductor**: a planar inductor created from PNG files
 * **png_shield**: a conductor loop with a magnetic shield created from PNG files

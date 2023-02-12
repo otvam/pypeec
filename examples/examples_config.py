@@ -15,11 +15,12 @@ PATH_ROOT = os.path.dirname(__file__)
 #   voxel_slab
 #   voxel_transformer
 #   voxel_core
-#   stl_inductor
+#   stl_inductor_air
+#   stl_inductor_core
 #   stl_transformer
 #   png_inductor
 #   png_shield
 #   png_busbar
 #   png_wire
 #   png_pcb
-EXAMPLE_NAME = "voxel_transformer"
+EXAMPLE_NAME = "png_inductor"

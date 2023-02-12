@@ -1,9 +1,11 @@
 {
     "mesh_type": "stl",
     "data_voxelize": {
-        "n": [75, 150, 10],
-        "pts_min": [null, null, null],
-        "pts_max": [null, null, null],
+        "d": [600e-6, 600e-6, 250e-6],
+        "c": null,
+        "n": null,
+        "pts_min": null,
+        "pts_max": null,
         "domain_stl": {
             "pri_coil": "stl/pri_coil.stl",
             "pri_src": "stl/pri_src.stl",
