@@ -64,7 +64,7 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     return sol, status, solver_status
 
 
-def get_condition(S_mat, conditions_options):
+def get_condition(S_mat_c, S_mat_m, conditions_options):
     """
     Compute an estimate of the condition number (norm 1) of a sparse matrix.
     """
@@ -76,23 +76,27 @@ def get_condition(S_mat, conditions_options):
 
     # computation is required
     if check:
-        value = matrix_condition.get_condition_matrix(S_mat, norm_options)
+        value_electric = matrix_condition.get_condition_matrix(S_mat_c, norm_options)
+        value_magnetic = matrix_condition.get_condition_matrix(S_mat_m, norm_options)
     else:
-        value = float(0)
+        value_electric = 0.0
+        value_magnetic = 0.0
 
     # check the condition
-    status = value < tolerance
+    status = (value_electric < tolerance) and (value_magnetic < tolerance)
 
     # assign the results
     condition_status = {
         "check": check,
-        "value": value,
+        "value_electric": value_electric,
+        "value_magnetic": value_magnetic,
         "status": status,
     }
 
     # display status
     logger.info("matrix condition: check = %s" % check)
-    logger.info("matrix condition: value = %.3e" % value)
+    logger.info("matrix condition: value_electric = %.3e" % value_electric)
+    logger.info("matrix condition: value_magnetic = %.3e" % value_magnetic)
     logger.info("matrix condition: status = %s" % status)
     if status:
         logger.info("matrix condition: matrix condition is good")

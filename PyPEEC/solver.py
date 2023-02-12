@@ -129,7 +129,7 @@ def _run_main(data_solver):
         A_src = equation_system.get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        (pcd_op, S_mat) = equation_system.get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m, K_op_c, K_op_m)
+        (pcd_op, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m, K_op_c, K_op_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
         sys_op = equation_system.get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m, K_op_c, K_op_m)
@@ -137,7 +137,7 @@ def _run_main(data_solver):
     # solve the equation system
     with timelogger.BlockTimer(logger, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
-        (condition_ok, condition_status) = equation_solver.get_condition(S_mat, condition_options)
+        (condition_ok, condition_status) = equation_solver.get_condition(S_mat_c, S_mat_m, condition_options)
 
         # solve the equation system
         (sol, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
