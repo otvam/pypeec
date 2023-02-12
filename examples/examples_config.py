@@ -23,4 +23,4 @@ PATH_ROOT = os.path.dirname(__file__)
 #   png_busbar
 #   png_wire
 #   png_pcb
-EXAMPLE_NAME = "png_inductor"
+EXAMPLE_NAME = "voxel_core"

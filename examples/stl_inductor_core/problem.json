@@ -3,9 +3,9 @@
     "green_simplify": 20.0,
     "coupling_simplify": 20.0,
     "solver_options": {
-        "rel_tol": 1e-06,
-        "abs_tol": 1e-12,
-        "n_between_restart": 20,
+        "rel_tol": 1e-4,
+        "abs_tol": 1e-8,
+        "n_between_restart": 50,
         "n_maximum_restart": 100
     },
     "condition_options": {
@@ -17,7 +17,8 @@
         }
     },
     "material_def": {
-        "coil": {"domain_list": ["src", "sink", "coil"], "material_type": "electric", "rho": 1.75e-8}
+        "coil": {"domain_list": ["src", "sink", "coil"], "material_type": "electric", "rho": 1.75e-8},
+        "core": {"domain_list": ["core"], "material_type": "magnetic", "chi": 50.0}
     },
     "source_def": {
         "src": {"domain_list": ["src"], "source_type": "current", "I": 1.0, "G": 0.0},

@@ -2,8 +2,11 @@
     "mesh_type": "stl",
     "data_voxelize": {
         "n": [72, 70, 32],
-        "pts_min": [null, null, null],
-        "pts_max": [null, null, null],
+        "d": null,
+        "c": null,
+        "pts_min": null,
+        "pts_max": null,
+        "offset": null,
         "domain_stl": {
             "core": "stl/core.stl",
             "coil": "stl/coil.stl",
@@ -17,5 +20,7 @@
     },
     "resampling_factor": [1, 1, 1],
     "domain_connection": {
+        "coil": {"domain_list": ["coil", "src", "sink"], "connected": true},
+        "core": {"domain_list": ["coil", "core"], "connected": false}
     }
 }

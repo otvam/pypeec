@@ -12,7 +12,7 @@ import logging
 from PyPEEC import script
 
 # disable logging to prevent clutter during test evaluation
-logging.disable(logging.CRITICAL)
+logging.disable(logging.INFO)
 
 # get the path the folder
 path_root = os.path.dirname(__file__)
@@ -28,6 +28,9 @@ def test_workflow(test_obj, name):
 
     The intermediate file are stored with temporary files.
     """
+
+    # start the test
+    print("run")
 
     # get input file name
     file_mesher = os.path.join(path_root, name, "mesher.json")
