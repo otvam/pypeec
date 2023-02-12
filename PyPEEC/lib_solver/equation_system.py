@@ -65,6 +65,23 @@ import scipy.sparse.linalg as sla
 from PyPEEC.lib_matrix import matrix_factorization
 
 
+def _get_split_sol(sol, A_c, A_m, A_src):
+    # get the matrices
+    (A_kvl_c, A_kcl_c) = A_c
+    (A_kvl_m, A_kcl_m) = A_m
+    (A_vc_src, A_src_vc, A_src_src) = A_src
+
+    # get the system size
+    (n_vc, n_fc) = A_kcl_c.shape
+    (n_vm, n_fm) = A_kcl_m.shape
+    (n_src, n_src) = A_src_src.shape
+
+    sol_c = sol[0:n_fc+n_vc+n_src]
+    sol_m = sol[n_fc+n_vc+n_src:n_fc+n_vc+n_src+n_fm+n_vm]
+
+    return sol_c, sol_m
+
+
 def _get_split_rhs(rhs, A_c, A_m, A_src):
     # get the matrices
     (A_kvl_c, A_kcl_c) = A_c
@@ -90,23 +107,39 @@ def _get_split_rhs(rhs, A_c, A_m, A_src):
     return rhs_c, rhs_m
 
 
-# def _get_update_rhs_m(rhs_m, sol_c, A_c, A_m, K_op_m):
-#     # get the matrices
-#     (A_kvl_c, A_kcl_c) = A_c
-#     (A_kvl_m, A_kcl_m) = A_m
-#
-#     # get the system size
-#     (n_vc, n_fc) = A_kcl_c.shape
-#     (n_vm, n_fm) = A_kcl_m.shape
-#
-#     # split the electric solution vector
-#     I_fc = sol_c[0:n_fc]
-#
-#     rhs_add = K_op_m(I_fc)
-#
-#     rhs_m[0:n_fm] = rhs_m[0:n_fm]-rhs_add
-#
-#     return rhs_m
+def _get_update_rhs(sol_c, sol_m, freq, A_c, A_m, A_src, K_op_c, K_op_m):
+    # get the matrices
+    (A_kvl_c, A_kcl_c) = A_c
+    (A_kvl_m, A_kcl_m) = A_m
+    (A_vc_src, A_src_vc, A_src_src) = A_src
+
+    # get the system size
+    (n_vc, n_fc) = A_kcl_c.shape
+    (n_vm, n_fm) = A_kcl_m.shape
+    (n_src, n_src) = A_src_src.shape
+
+    # get the derivative operator (avoid singularity for DC solution)
+    if freq == 0:
+        k_c_fact = 0
+        k_m_fact = 1
+    else:
+        k_c_fact = 1
+        k_m_fact = 1
+
+    # split the electric solution vector
+    I_fc = sol_c[0:n_fc]
+    I_fm = sol_m[0:n_fm]
+
+    rhs_add_fc = k_c_fact*K_op_c(I_fm)
+    rhs_add_vc = np.zeros(n_vc, dtype=np.complex128)
+    rhs_add_src = np.zeros(n_src, dtype=np.complex128)
+    rhs_add_c = np.concatenate((rhs_add_fc, rhs_add_vc, rhs_add_src))
+
+    rhs_add_fm = k_m_fact*K_op_m(I_fc)
+    rhs_add_vm = np.zeros(n_vm, dtype=np.complex128)
+    rhs_add_m = np.concatenate((rhs_add_fm, rhs_add_vm))
+
+    return rhs_add_c, rhs_add_m
 
 
 def _get_assemble_sol(sol_c, sol_m, A_c, A_m, A_src):
@@ -463,6 +496,92 @@ def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P
     return rhs
 
 
+def _get_system_multiply_electric(sol, rhs_add, freq, A_c, A_src, R_vec_c, L_op_c):
+    """
+    Multiply the full equation matrix with a given solution test vector.
+
+    For the multiplication of the dense matrix, the provided linear operators are used.
+    The equation system has the following size: n_fc+n_fm+n_vc+n_vm+n_src_c+n_src_v.
+    """
+
+    # get the matrices
+    (A_kvl_c, A_kcl_c) = A_c
+    (A_vc_src, A_src_vc, A_src_src) = A_src
+
+    # get the system size
+    (n_vc, n_fc) = A_kcl_c.shape
+    (n_src, n_src) = A_src_src.shape
+
+    # get the angular frequency
+    s = 1j*2*np.pi*freq
+
+    # split the solution vector
+    I_fc = sol[0:n_fc]
+    V_vc = sol[n_fc:n_fc+n_vc]
+    I_src = sol[n_fc+n_vc:n_fc+n_vc+n_src]
+
+    # electric KVL equations
+    rhs_1 = s*L_op_c(I_fc)
+    rhs_2 = R_vec_c*I_fc
+    rhs_3 = A_kvl_c*V_vc
+    rhs_fc = rhs_1+rhs_2+rhs_3
+
+    # electric KCL equations
+    rhs_1 = A_kcl_c*I_fc
+    rhs_2 = A_vc_src*I_src
+    rhs_vc = rhs_1+rhs_2
+
+    # form the source equation
+    rhs_1 = A_src_vc*V_vc
+    rhs_2 = A_src_src*I_src
+    rhs_src = rhs_1+rhs_2
+
+    # assemble the solution
+    rhs = np.concatenate((rhs_fc, rhs_vc, rhs_src))+rhs_add
+
+    return rhs
+
+
+def _get_system_multiply_magnetic(sol, rhs_add, freq, A_m, R_vec_m, P_op_m):
+    """
+    Multiply the full equation matrix with a given solution test vector.
+
+    For the multiplication of the dense matrix, the provided linear operators are used.
+    The equation system has the following size: n_fc+n_fm+n_vc+n_vm+n_src_c+n_src_v.
+    """
+
+    # get the matrices
+    (A_kvl_m, A_kcl_m) = A_m
+
+    # get the system size
+    (n_vm, n_fm) = A_kcl_m.shape
+
+    # get the derivative operator (avoid singularity for DC solution)
+    if freq == 0:
+        s_diff = 1
+    else:
+        s_diff = 1j*2*np.pi*freq
+
+    # split the solution vector
+    I_fm = sol[0:n_fm]
+    V_vm = sol[n_fm:n_fm+n_vm]
+
+    # magnetic KVL equations
+    rhs_1 = R_vec_m/s_diff*I_fm
+    rhs_2 = A_kvl_m*V_vm
+    rhs_fm = rhs_1+rhs_2
+
+    # magnetic KCL equations
+    rhs_1 = P_op_m(A_kcl_m*I_fm)
+    rhs_2 = s_diff*V_vm
+    rhs_vm = rhs_1+rhs_2
+
+    # assemble the solution
+    rhs = np.concatenate((rhs_fm, rhs_vm))+rhs_add
+
+    return rhs
+
+
 def _get_system_size(freq, A_c, A_m, A_src):
     """
     Get the size of the equation system and a scaling vector for the solution.
@@ -667,6 +786,28 @@ def get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m,
         sol = sol*sol_scaler
         rhs = _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m, K_op_c, K_op_m)
         return rhs
+
+    def fct_new(sol):
+        sol = sol*sol_scaler
+
+        (sol_c, sol_m) = _get_split_sol(sol, A_c, A_m, A_src)
+
+        (rhs_add_c, rhs_add_m) = _get_update_rhs(sol_c, sol_m, freq, A_c, A_m, A_src, K_op_c, K_op_m)
+
+        rhs_c = _get_system_multiply_electric(sol_c, rhs_add_c, freq, A_c, A_src, R_vec_c, L_op_c)
+        rhs_m = _get_system_multiply_magnetic(sol_m, rhs_add_m, freq, A_m, R_vec_m, P_op_m)
+
+        rhs = np.concatenate((rhs_c, rhs_m))
+
+        return rhs
+
+
+    test = np.arange(n_dof)
+    sol_test = fct(test)
+    sol_test_cmp = fct_new(test)
+
+    pass
+
 
     # corresponding linear operator
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
