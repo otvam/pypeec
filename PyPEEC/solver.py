@@ -129,7 +129,7 @@ def _run_main(data_solver):
         A_src = equation_system.get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        (pcd_op, S_mat) = equation_system.get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
+        (pcd_op, S_mat) = equation_system.get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m, K_op_c, K_op_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
         sys_op = equation_system.get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m, K_op_c, K_op_m)

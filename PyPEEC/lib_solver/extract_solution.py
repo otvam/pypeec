@@ -86,12 +86,12 @@ def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
     n_vm = len(idx_vm)
     n_src = len(idx_src_c)+len(idx_src_v)
 
-    # split the excitation vector
+    # split the solution vector
     I_fc = sol[0:n_fc]
-    I_fm = sol[n_fc:n_fc+n_fm]
-    V_vc = sol[n_fc+n_fm:n_fc+n_fm+n_vc]
-    V_vm = sol[n_fc+n_fm+n_vc:n_fc+n_fm+n_vc+n_vm]
-    I_src = sol[n_fc+n_fm+n_vc+n_vm:n_fc+n_fm+n_vc+n_vm+n_src]
+    V_vc = sol[n_fc:n_fc+n_vc]
+    I_src = sol[n_fc+n_vc:n_fc+n_vc+n_src]
+    I_fm = sol[n_fc+n_vc+n_src:n_fc+n_vc+n_src+n_fm]
+    V_vm = sol[n_fc+n_vc+n_src+n_fm:n_fc+n_vc+n_src+n_fm+n_vm]
 
     return I_fc, I_fm, V_vc, V_vm, I_src
 
