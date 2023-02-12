@@ -97,7 +97,7 @@ def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     # get the matrices
     (A_kvl_c, A_kcl_c) = A_c
     (A_kvl_m, A_kcl_m) = A_m
-    (A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src) = A_src
+    (A_vc_src, A_src_vc, A_src_src) = A_src
 
     # get the system size
     (n_vc, n_fc) = A_kcl_c.shape
@@ -149,7 +149,9 @@ def _get_cond_fact(freq, A_c, A_m, R_vec_c, R_vec_m, L_vec_c, P_vec_m, A_src):
     A_add = sps.csc_matrix((n_src, n_fc+n_fm), dtype=np.int64)
     A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex128)
 
-    # add the source matrices
+    # add the source
+    A_vm_src = sps.csc_matrix((n_vm, n_src), dtype=np.float64)
+    A_src_vm = sps.csc_matrix((n_src, n_vm), dtype=np.float64)
     A_12_src = sps.vstack([A_vc_src, A_vm_src], dtype=np.complex128)
     A_21_src = sps.hstack([A_src_vc, A_src_vm], dtype=np.complex128)
     A_22_mat = sps.bmat([[A_22_mat, A_12_src], [A_21_src, A_src_src]], dtype=np.complex128)
@@ -202,7 +204,7 @@ def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P
     # get the matrices
     (A_kvl_c, A_kcl_c) = A_c
     (A_kvl_m, A_kcl_m) = A_m
-    (A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src) = A_src
+    (A_vc_src, A_src_vc, A_src_src) = A_src
 
     # get the system size
     (n_vc, n_fc) = A_kcl_c.shape
@@ -246,14 +248,12 @@ def _get_system_multiply(sol, freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P
     # magnetic KCL equations
     rhs_1 = P_op_m(A_kcl_m*I_fm)
     rhs_2 = s_diff*V_vm
-    rhs_3 = A_vm_src*I_src
-    rhs_vm = rhs_1+rhs_2+rhs_3
+    rhs_vm = rhs_1+rhs_2
 
     # form the source equation
     rhs_1 = A_src_vc*V_vc
-    rhs_2 = A_src_vm*V_vm
-    rhs_3 = A_src_src*I_src
-    rhs_src = rhs_1+rhs_2+rhs_3
+    rhs_2 = A_src_src*I_src
+    rhs_src = rhs_1+rhs_2
 
     # assemble the solution
     rhs = np.concatenate((rhs_fc, rhs_fm, rhs_vc, rhs_vm, rhs_src))
@@ -277,7 +277,7 @@ def _get_system_size(freq, A_c, A_m, A_src):
     # get the matrices
     (A_kvl_c, A_kcl_c) = A_c
     (A_kvl_m, A_kcl_m) = A_m
-    (A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src) = A_src
+    (A_vc_src, A_src_vc, A_src_src) = A_src
 
     # get the system size
     (n_vc, n_fc) = A_kcl_c.shape
@@ -347,9 +347,7 @@ def get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v):
 
     The source matrices have the following sizes:
         - A_vc_src: (n_vc, n_src_c+n_src_v)
-        - A_vm_src: (n_vm, n_src_c+n_src_v)
         - A_src_vc: (n_src_c+n_src_v, n_vc)
-        - A_vm_src: (n_src_c+n_src_v, n_vm)
         - A_src_src: (n_src_c+n_src_v, n_src_c+n_src_v)
 
     It should be noted that the matrices connecting the magnetic voxels are all-zeros.
@@ -382,14 +380,12 @@ def get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v):
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((-cst_src_c, -cst_src_v))
     A_vc_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc, n_src_c+n_src_v), dtype=np.float64)
-    A_vm_src = sps.csc_matrix((n_vm, n_src_c+n_src_v), dtype=np.float64)
 
     # matrix between the source equations and the potential variables
     idx_row = np.concatenate((idx_src_v_add, idx_src_c_add))
     idx_col = np.concatenate((idx_src_v_local, idx_src_c_local))
     val = np.concatenate((cst_src_v, G_src_c))
     A_src_vc = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc), dtype=np.float64)
-    A_src_vm = sps.csc_matrix((n_src_c+n_src_v, n_vm), dtype=np.float64)
 
     # matrix between the source equations and the source variables
     idx_row = np.concatenate((idx_src_c_add, idx_src_v_add))
@@ -397,7 +393,7 @@ def get_source_matrix(idx_vc, idx_vm, idx_src_c, idx_src_v, G_src_c, R_src_v):
     val = np.concatenate((cst_src_c, R_src_v))
     A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=np.float64)
 
-    return A_vc_src, A_vm_src, A_src_vc, A_src_vm, A_src_src
+    return A_vc_src, A_src_vc, A_src_src
 
 
 def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m):
