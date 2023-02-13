@@ -21,7 +21,7 @@
     },
     "material_def": {
         "coil": {"domain_list": ["src", "sink", "coil"], "material_type": "electric", "rho": 1.75e-8},
-        "core": {"domain_list": ["core"], "material_type": "magnetic", "chi": 50.0}
+        "core": {"domain_list": ["core"], "material_type": "magnetic","chi_re": 50.0, "chi_im": 0.0}
     },
     "source_def": {
         "src": {"domain_list": ["src"], "source_type": "current", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0},

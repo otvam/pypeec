@@ -20,7 +20,7 @@
         }
     },
     "material_def": {
-        "cond": {"domain_list": ["cond", "src", "sink"], "material_type": "electric", "rho": 1e-6}
+        "cond": {"domain_list": ["cond", "src", "sink"], "material_type": "electric", "rho": 2e-8}
     },
     "source_def": {
         "src": {"domain_list": ["src"], "source_type": "current", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0},

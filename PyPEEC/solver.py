@@ -153,6 +153,7 @@ def _run_main(data_solver):
     data_solver["idx_src_v"] = idx_src_v
     data_solver["idx_src_c"] = idx_src_c
     data_solver["R_vec_c"] = R_vec_c
+    data_solver["R_vec_m"] = R_vec_m
     data_solver["L_op_c"] = L_op_c
     data_solver["K_op_c"] = K_op_c
     data_solver["problem_status"] = problem_status
@@ -172,6 +173,7 @@ def _run_postproc(data_solver):
     # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
+    freq = data_solver["freq"]
     A_vox = data_solver["A_vox"]
     source_idx = data_solver["source_idx"]
     idx_fc = data_solver["idx_fc"]
@@ -181,6 +183,7 @@ def _run_postproc(data_solver):
     idx_src_c = data_solver["idx_src_c"]
     idx_src_v = data_solver["idx_src_v"]
     R_vec_c = data_solver["R_vec_c"]
+    R_vec_m = data_solver["R_vec_m"]
     L_op_c = data_solver["L_op_c"]
     K_op_c = data_solver["K_op_c"]
     sol = data_solver["sol"]
@@ -199,7 +202,7 @@ def _run_postproc(data_solver):
         Q_vm = extract_solution.get_flow_divergence(n, d, idx_vm, idx_fm, A_vox, I_fm)
 
         # get the global quantities (energy and losses)
-        integral = extract_solution.get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c)
+        integral = extract_solution.get_integral(freq, I_fc, I_fm, R_vec_c, R_vec_m, L_op_c, K_op_c)
 
         # extend the solution for the complete voxel structure (including the empty voxels)
         (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src)

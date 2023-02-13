@@ -42,19 +42,24 @@ def _check_material_def(material_def):
 
         # get the source value
         if material_type == "electric":
-            value = dat_tmp["rho"]
+            rho = dat_tmp["rho"]
+            if not np.issubdtype(type(rho), np.floating):
+                raise CheckError("rho: material parameter should be a float")
+            if not (rho > 0):
+                raise CheckError("rho: material parameter should be greater than zero")
         elif material_type == "magnetic":
-            value = dat_tmp["chi"]
+            chi_re = dat_tmp["chi_re"]
+            chi_im = dat_tmp["chi_im"]
+            if not np.issubdtype(type(chi_re), np.floating):
+                raise CheckError("chi_re: material parameter should be a float")
+            if not np.issubdtype(type(chi_im), np.floating):
+                raise CheckError("chi_im: material parameter should be a float")
+            if not (chi_re >= 0):
+                raise CheckError("chi_re: material parameter should be greater than zero")
+            if not (chi_im >= 0):
+                raise CheckError("chi_im: material parameter should be greater than zero")
         else:
             raise CheckError("invalid material type")
-
-        # check value
-        if not np.issubdtype(type(value), np.floating):
-            raise CheckError("rho/chi: material parameter should be a float")
-        if not np.isscalar(value):
-            raise CheckError("rho/chi: material parameter should be a real scalar")
-        if not (value > 0):
-            raise CheckError("rho/chi: material parameter should be greater than zero")
 
 
 def _check_source_def(source_def):
@@ -103,12 +108,6 @@ def _check_source_def(source_def):
             raise CheckError("I/V: current/voltage source value should be a complex number")
         if not np.issubdtype(type(element), np.number):
             raise CheckError("G/R: source internal conductance/resistance should be a float")
-
-        # check the source value
-        if not np.isscalar(value):
-            raise CheckError("I/V: current/voltage source value should be a scalar")
-        if not np.isscalar(element):
-            raise CheckError("G/R: source internal conductance/resistance should be a real scalar")
 
 
 def _check_solver_options(solver_options):

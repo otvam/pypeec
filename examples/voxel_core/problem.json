@@ -20,8 +20,8 @@
         }
     },
     "material_def": {
-        "cond": {"domain_list": ["cond", "src", "sink"], "material_type": "electric", "rho": 1e-6},
-        "core": {"domain_list": ["core"], "material_type": "magnetic", "chi": 100.0}
+        "cond": {"domain_list": ["cond", "src", "sink"], "material_type": "electric", "rho": 2e-8},
+        "core": {"domain_list": ["core"], "material_type": "magnetic", "chi_re": 100.0, "chi_im": 50.0}
     },
     "source_def": {
         "src": {"domain_list": ["src"], "source_type": "current", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0},

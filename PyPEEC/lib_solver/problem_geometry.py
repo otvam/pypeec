@@ -22,7 +22,7 @@ def get_material_geometry(material_idx, extract_type):
 
     # array for the indices and resistivities
     idx_v = np.array([], dtype=np.int64)
-    rho_v = np.array([], dtype=np.float64)
+    rho_v = np.array([], dtype=np.complex128)
 
     # populate the arrays
     for tag, dat_tmp in material_idx.items():

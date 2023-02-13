@@ -55,7 +55,7 @@ def _get_material_idx(material_def, domain_def):
             idx_c = np.append(idx_c, idx)
             material_idx[tag] = {"idx": idx, "material_type": material_type, "rho": rho}
         elif material_type == "magnetic":
-            chi = dat_tmp["chi"]
+            chi = dat_tmp["chi_re"]-1j*dat_tmp["chi_im"]
             idx_m = np.append(idx_m, idx)
             material_idx[tag] = {"idx": idx, "material_type": material_type, "chi": chi}
         else:

@@ -91,7 +91,7 @@ def get_R_vector(n, d, A_net, idx_f, rho_v):
     idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
 
     # init the resistance vector
-    R_vec = np.zeros(len(rho_vec), dtype=np.float64)
+    R_vec = np.zeros(len(rho_vec), dtype=np.complex128)
 
     # resistance vector (different directions)
     R_vec[idx_fx] = (dx/(dy*dz))*rho_vec[idx_fx]

@@ -147,29 +147,45 @@ def get_flow_divergence(n, d, idx_v, idx_f, A_vox, I_f):
     return I_div_v
 
 
-def get_integral(I_fc, I_fm, R_vec_c, L_op_c, K_op_c):
+def get_integral(freq, I_fc, I_fm, R_vec_c, R_vec_m, L_op_c, K_op_c):
     """
     Sum the loss/energy in order to obtain global quantities.
     """
 
-    # get the losses for the different faces
-    P_f = 0.5*np.conj(I_fc)*R_vec_c*I_fc
+    # get the angular frequency
+    s = 1j*2*np.pi*freq
 
-    # get the electric and magnetic energy contributions
-    M_fc = L_op_c(I_fc)
-    M_fm = K_op_c(I_fm)
+    # get the magnetic losses linked with the electric domains
+    P_fc = 0.5*np.conj(I_fc)*R_vec_c*I_fc
 
-    # get the energy for the different faces
-    W_f = 0.5*np.conj(I_fc)*(M_fc+M_fm)
+    # get the magnetic losses linked with the magnetic domains
+    P_fm = 0.5*np.conj(s*I_fm)*R_vec_m*(I_fm)
+
+    # get the magnetic energy linked with the electric domains
+    W_fc = 0.5*np.conj(I_fc)*L_op_c(I_fc)
+
+    # get the magnetic energy linked with the magnetic domains
+    W_fm = 0.5*np.conj(I_fc)*K_op_c(I_fm)
 
     # compute the integral quantities
-    P_tot = np.sum(np.real(P_f))
-    W_tot = np.sum(np.real(W_f))
+    P_electric = np.sum(np.real(P_fc))
+    P_magnetic = np.sum(np.real(P_fm))
+    W_electric = np.sum(np.real(W_fc))
+    W_magnetic = np.sum(np.real(W_fm))
+    P_tot = P_electric+P_magnetic
+    W_tot = W_electric+W_magnetic
 
     # assign the integral quantities
-    integral = {"P_tot": P_tot, "W_tot": W_tot}
+    integral = {
+        "P_electric": P_electric, "P_magnetic": P_magnetic, "P_tot": P_tot,
+        "W_electric": W_electric, "W_magnetic": W_magnetic, "W_tot": W_tot,
+    }
 
     # display
+    logger.info("integral: P_electric = %.3e W" % P_electric)
+    logger.info("integral: P_magnetic = %.3e W" % P_magnetic)
+    logger.info("integral: W_electric = %.3e J" % W_electric)
+    logger.info("integral: W_magnetic = %.3e J" % W_magnetic)
     logger.info("integral: P_tot = %.3e W" % P_tot)
     logger.info("integral: W_tot = %.3e J" % W_tot)
 
