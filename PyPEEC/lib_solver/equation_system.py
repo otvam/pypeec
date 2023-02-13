@@ -242,10 +242,7 @@ def _get_cond_fact_electric(freq, A_c, R_vec_c, L_vec_c, A_src):
     A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=np.complex128)
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
-
-    # compute the factorization of the sparse Schur complement
-    S_fact = matrix_factorization.MatrixFactorization(S_mat)
+    (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat)
 
     return Y_mat, S_mat, S_fact, A_12_mat, A_21_mat
 
@@ -291,15 +288,26 @@ def _get_cond_fact_magnetic(freq, A_m, R_vec_m, P_vec_m):
     A_22_mat = I_mat_m
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
-
-    # compute the factorization of the sparse Schur complement
-    S_fact = matrix_factorization.MatrixFactorization(S_mat)
+    (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat)
 
     return Y_mat, S_mat, S_fact, A_12_mat, A_21_mat
 
 
-def _get_cond_solve(rhs, cpl, Y_mat, _S_fact, A_12_mat, A_21_mat):
+def _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat):
+    """
+    Compute the Schur complement of a matrix.
+    """
+
+    # computing the Schur complement (with respect to the diagonal admittance matrix)
+    S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
+
+    # compute the factorization of the sparse Schur complement
+    S_fact = matrix_factorization.get_factorize(S_mat)
+
+    return S_mat, S_fact
+
+
+def _get_cond_solve(rhs, cpl, Y_mat, S_fact, A_12_mat, A_21_mat):
     """
     Solve the preconditioner equation system.
     The matrix factorization of the Schur complement is used.
@@ -317,7 +325,7 @@ def _get_cond_solve(rhs, cpl, Y_mat, _S_fact, A_12_mat, A_21_mat):
 
     # solve the equation system (Schur complement and matrix factorization)
     tmp = rhs_cpl_b-(A_21_mat*(Y_mat*rhs_cpl_a))
-    sol_b = _S_fact.get_solution(tmp)
+    sol_b = matrix_factorization.get_solve(S_fact, tmp)
     sol_a = Y_mat*(rhs_cpl_a-(A_12_mat*sol_b))
 
     # assemble the solution
@@ -528,7 +536,7 @@ def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
     (Y_mat_m, S_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_m, R_vec_m, P_vec_m)
 
     # if the matrix is singular, there is not preconditioner
-    if (not S_fact_c.get_status()) or (not S_fact_m.get_status()):
+    if (S_fact_c is None) or (S_fact_m is None):
         return None, S_mat_c, S_mat_m
 
     # the electric-magnetic couplings are neglected

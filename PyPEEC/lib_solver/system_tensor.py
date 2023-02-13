@@ -141,7 +141,7 @@ def get_green_tensor(n, d, green_simplify):
     G_mutual[idx_ana] = green_function.get_green_ana(d, idx[idx_ana], "6D")
 
     # numerical solution
-    G_mutual[idx_num] = green_function.get_green_ana(d, idx[idx_num], "6D")
+    G_mutual[idx_num] = green_function.get_green_num(d, idx[idx_num], "6D")
 
     # transform the vector into a tensor
     G_mutual = G_mutual.reshape((nx, ny, nz), order="F")

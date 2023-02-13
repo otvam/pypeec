@@ -18,6 +18,10 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import numpy as np
 import numpy.linalg as lna
+from PyPEEC.lib_utils import timelogger
+
+# get a logger
+logger = timelogger.get_logger("GREEN")
 
 
 def _get_safe_inv(x):
@@ -206,6 +210,13 @@ def get_green_ana(d, idx, int_type):
     The 5D or 6D integrals can be computed.
     """
 
+    # check if empty
+    if len(idx) == 0:
+        return np.array([], dtype=np.float64)
+
+    # display
+    logger.info("analytical solution: %s / %d" % (int_type, len(idx)))
+
     # extract the voxel data
     (dx, dy, dz) = d
 
@@ -246,6 +257,13 @@ def get_green_num(d, idx, int_type):
     A numerical approximation is used.
     Only valid if the distance between the two voxels is large.
     """
+
+    # check if empty
+    if len(idx) == 0:
+        return np.array([], dtype=np.float64)
+
+    # display
+    logger.info("numerical approximation: %s / %d" % (int_type, len(idx)))
 
     # extract the voxel data
     (dx, dy, dz) = d

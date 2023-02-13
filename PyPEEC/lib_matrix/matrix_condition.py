@@ -53,17 +53,25 @@ def get_condition_matrix(mat, norm_options):
     t_accuracy = norm_options["t_accuracy"]
     n_iter_max = norm_options["n_iter_max"]
 
+    # check shape
+    nnz = mat.size
+    (nx, ny) = mat.shape
+
     # check if the matrix is empty
-    if mat.shape == (0, 0):
+    if (nx, ny) == (0, 0):
         return 0.0
+
+    # display
+    logger.info("matrix size: (%d, %d) / %d" % (nx, ny, nnz))
 
     # get LU decomposition
     logger.info("compute LU decomposition")
+
     decomposition = _get_decomposition(mat)
 
     # abort if LU decomposition failed
     if decomposition is None:
-        logger.info("condition estimate is infinite")
+        logger.warning("condition estimate is infinite")
         return float("inf")
 
     # get the inverse operator

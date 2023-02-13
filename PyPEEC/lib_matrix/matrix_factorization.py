@@ -15,6 +15,10 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 
 import warnings
 from PyPEEC import config
+from PyPEEC.lib_utils import timelogger
+
+# get a logger
+logger = timelogger.get_logger("FACTOR")
 
 # get config
 MATRIX_FACTORIZATION = config.MATRIX_FACTORIZATION
@@ -30,50 +34,56 @@ else:
     raise ValueError("invalid matrix factorization library")
 
 
-class MatrixFactorization:
+def get_factorize(mat):
     """
-    Simple class for factorizing and solving sparse matrices.
+    Factorize a sparse matrix.
     """
 
-    def __init__(self, A):
-        """
-        Constructor.
-        Factorize the sparse matrix.
-        """
+    # check shape
+    nnz = mat.size
+    (nx, ny) = mat.shape
 
-        try:
-            if MATRIX_FACTORIZATION == "SuperLU":
-                self.status = True
-                self.factor = sla.splu(A)
-            elif MATRIX_FACTORIZATION == "UMFPACK":
-                self.status = True
-                self.factor = umf.splu(A)
-            else:
-                raise ValueError("invalid matrix factorization library")
-        except RuntimeError:
-            self.status = False
-            self.factor = None
+    # check if the matrix is empty
+    if (nx, ny) == (0, 0):
+        return sla.splu(mat)
 
-    def get_status(self):
-        """
-        Get if the matrix factorization is successful.
-        """
+    # display
+    logger.info("matrix size: (%d, %d) / %d" % (nx, ny, nnz))
 
-        return self.status
+    # factorize the matrix
+    try:
+        logger.info("matrix factorization")
 
-    def get_solution(self, rhs):
-        """
-        Solve an equation system with the factorization.
-        """
-
-        if self.status:
-            if MATRIX_FACTORIZATION == "SuperLU":
-                sol = self.factor.solve(rhs)
-            elif MATRIX_FACTORIZATION == "UMFPACK":
-                sol = self.factor.solve(rhs)
-            else:
-                raise ValueError("invalid matrix factorization library")
+        if MATRIX_FACTORIZATION == "SuperLU":
+            factor = sla.splu(mat)
+        elif MATRIX_FACTORIZATION == "UMFPACK":
+            factor = umf.splu(mat)
         else:
-            sol = None
+            raise ValueError("invalid matrix factorization library")
 
-        return sol
+        logger.info("factorization success")
+    except RuntimeError:
+        logger.warning("factorization failure")
+        factor = None
+
+    return factor
+
+
+def get_solve(factor, rhs):
+    """
+    Solve an equation system with a given factorization.
+    """
+
+    # check that the factorization is valid
+    if factor is None:
+        raise RuntimeError("invalid factorization")
+
+    # solve the equation system
+    if MATRIX_FACTORIZATION == "SuperLU":
+        sol = factor.solve(rhs)
+    elif MATRIX_FACTORIZATION == "UMFPACK":
+        sol = factor.solve(rhs)
+    else:
+        raise ValueError("invalid matrix factorization library")
+
+    return sol
