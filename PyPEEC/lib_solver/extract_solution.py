@@ -58,7 +58,7 @@ def _get_scalar_density(d, A_vox, var_f_all):
     (dx, dy, dz) = d
 
     # compute the divergence
-    var_v_all = A_vox*var_f_all
+    var_v_all = 0.5*np.abs(A_vox)*var_f_all
 
     # convert to density.
     var_v_all = var_v_all/(dx*dy*dz)

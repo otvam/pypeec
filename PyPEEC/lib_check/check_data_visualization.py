@@ -126,6 +126,7 @@ def _check_data_options(plot_type, data_options):
         "Q_m_re", "Q_m_im", "Q_m_abs",
         "J_c_norm_abs", "J_c_norm_re", "J_c_norm_im",
         "B_m_norm_abs", "B_m_norm_re", "B_m_norm_im",
+        "P_c_abs", "P_m_abs",
     ]
     vec_voxel_list = [
         "J_c_vec_re", "J_c_vec_im",

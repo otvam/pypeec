@@ -1,4 +1,4 @@
-# PyPEEC - 3D Electromagnetic PEEC Solver
+# PyPEEC - 3D Magnetic PEEC Solver
 
 ## Summary
 
@@ -13,6 +13,7 @@
 * Extraction of the losses and energy
 * Computation of the magnetic field and impedances
 * Fast with moderate memory requirements
+* Programmed in PyThon
 
 **PyPEEC** has the following limitations:
 * No capacitive effects

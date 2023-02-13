@@ -55,6 +55,8 @@ def _get_grid_voxel(data_solution, data_point):
     B_vm = data_solution["B_vm"]
     S_vc = data_solution["S_vc"]
     Q_vm = data_solution["Q_vm"]
+    P_vc = data_solution["P_vc"]
+    P_vm = data_solution["P_vm"]
     solver_status = data_solution["solver_status"]
 
     # get the voxel indices and the material description
@@ -74,11 +76,13 @@ def _get_grid_voxel(data_solution, data_point):
     # set the electric variables
     voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, V_vc, "V_c")
     voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, S_vc, "S_c")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, P_vc, "P_c")
     voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx, idx_vc, J_vc, "J_c")
 
     # set the magnetic variables
     voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vm, V_vm, "V_m")
     voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vm, Q_vm, "Q_m")
+    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vm, P_vm, "P_m")
     voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx, idx_vm, B_vm, "B_m")
 
     # add the magnetic field
