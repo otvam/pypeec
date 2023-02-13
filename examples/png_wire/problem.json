@@ -3,10 +3,13 @@
     "green_simplify": 20.0,
     "coupling_simplify": 20.0,
     "solver_options": {
-        "rel_tol": 1e-6,
-        "abs_tol": 1e-12,
-        "n_between_restart": 20,
-        "n_maximum_restart": 100
+        "tolerance": 1e-6,
+        "gmres_options": {
+            "rel_tol": 1e-6,
+            "abs_tol": 1e-12,
+            "n_between_restart": 20,
+            "n_maximum_restart": 100
+        }
     },
     "condition_options": {
         "check": true,

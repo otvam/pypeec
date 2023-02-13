@@ -122,14 +122,17 @@ def _check_solver_options(solver_options):
     if not isinstance(solver_options, dict):
         raise CheckError("solver_options: solver options should be a dict")
 
+    # extract field
+    gmres_options = solver_options["gmres_options"]
+
     # check the data
-    if not (solver_options["rel_tol"] > 0):
+    if not (gmres_options["rel_tol"] > 0):
         raise CheckError("rel_tol: solver relative tolerance should be greater than zero")
-    if not (solver_options["abs_tol"] > 0):
+    if not (gmres_options["abs_tol"] > 0):
         raise CheckError("abs_tol: solver absolute tolerance should be greater than zero")
-    if not (solver_options["n_between_restart"] >= 1):
+    if not (gmres_options["n_between_restart"] >= 1):
         raise CheckError("n_between_restart: number of iterations between restarts should be greater than zero")
-    if not (solver_options["n_maximum_restart"] >= 1):
+    if not (gmres_options["n_maximum_restart"] >= 1):
         raise CheckError("n_maximum_restart: number of restart cycles should be greater than zero")
 
 

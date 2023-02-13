@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def _get_plot_residuum(fig, res_raw):
+def _get_plot_residuum(fig, res_all):
     """
     Plot the final residuum (absolute value) with a histogram.
     """
@@ -22,7 +22,7 @@ def _get_plot_residuum(fig, res_raw):
     plt.figure(fig)
 
     # get absolute value and the log
-    res_abs = np.abs(res_raw)
+    res_abs = np.abs(res_all)
     v_min = np.finfo(res_abs.dtype).eps
     v_max = np.finfo(res_abs.dtype).max
     res_abs = np.clip(res_abs, v_min, v_max)
@@ -69,13 +69,13 @@ def get_plot_plotter(fig, solver_status, data_plot):
     """
 
     # get the data
-    res_raw = solver_status["res_raw"]
+    res_all = solver_status["res_all"]
     res_iter = solver_status["res_iter"]
 
     # get the main plot
     if data_plot == "convergence":
         _get_plot_convergence(fig, res_iter)
     elif data_plot == "residuum":
-        _get_plot_residuum(fig, res_raw)
+        _get_plot_residuum(fig, res_all)
     else:
         raise ValueError("invalid plot type and plot feature")

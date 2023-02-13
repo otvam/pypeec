@@ -20,42 +20,45 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     The equation system and the preconditioner are described with linear operator.
     """
 
+    # get the condition options
+    tolerance = solver_options["tolerance"]
+    gmres_options = solver_options["gmres_options"]
+
     # check preconditioner
     if pcd_op is None:
         logger.warning("matrix solver: preconditioner is not available")
 
     # call the solver
-    (status, n_iter, res_iter, sol) = matrix_gmres.get_matrix_gmres(sys_op, pcd_op, rhs, solver_options)
+    (status_gmres, n_iter, res_iter, sol) = matrix_gmres.get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options)
 
-    # compute the absolute and relative residuum
-    res_raw = sys_op(sol)-rhs
-    res_abs = lna.norm(res_raw)
-    rhs_abs = lna.norm(rhs)
-    if rhs_abs > 0:
-        res_rel = res_abs/rhs_abs
-    else:
-        res_rel = float("nan")
+    # compute and check the residuum
+    res_all = sys_op(sol)-rhs
+    res_norm = lna.norm(res_all)
+    status_res = res_norm < tolerance
 
     # get problem size
     n_dof = len(rhs)
 
     # assign the results
     solver_status = {
-        "res_raw": res_raw,
-        "res_abs": res_abs,
-        "res_rel": res_rel,
+        "res_all": res_all,
+        "res_norm": res_norm,
         "n_iter": n_iter,
         "res_iter": res_iter,
         "n_dof": n_dof,
-        "status": status,
+        "status_gmres": status_gmres,
+        "status_res": status_res,
     }
+
+    # solver success
+    status = status_gmres and status_res
 
     # display status
     logger.info("matrix solver: n_dof = %d" % n_dof)
     logger.info("matrix solver: n_iter = %d" % n_iter)
-    logger.info("matrix solver: res_abs = %.3e" % res_abs)
-    logger.info("matrix solver: res_rel = %.3e" % res_rel)
-    logger.info("matrix solver: status = %s" % status)
+    logger.info("matrix solver: res_norm = %.3e" % res_norm)
+    logger.info("matrix solver: status_gmres = %s" % status_gmres)
+    logger.info("matrix solver: status_res = %s" % status_res)
     if status:
         logger.info("matrix solver: convergence achieved")
     else:
@@ -75,16 +78,15 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
     tolerance = conditions_options["tolerance"]
     norm_options = conditions_options["norm_options"]
 
-    # computation is required
+    # check the condition
     if check:
         value_electric = matrix_condition.get_condition_matrix(S_mat_c, norm_options)
         value_magnetic = matrix_condition.get_condition_matrix(S_mat_m, norm_options)
+        status = (value_electric < tolerance) and (value_magnetic < tolerance)
     else:
-        value_electric = 0.0
-        value_magnetic = 0.0
-
-    # check the condition
-    status = (value_electric < tolerance) and (value_magnetic < tolerance)
+        value_electric = float("nan")
+        value_magnetic = float("nan")
+        status = True
 
     # assign the results
     condition_status = {

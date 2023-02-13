@@ -53,6 +53,10 @@ def get_condition_matrix(mat, norm_options):
     t_accuracy = norm_options["t_accuracy"]
     n_iter_max = norm_options["n_iter_max"]
 
+    # check if the matrix is empty
+    if mat.shape == (0, 0):
+        return 0.0
+
     # get LU decomposition
     logger.info("compute LU decomposition")
     decomposition = _get_decomposition(mat)

@@ -46,17 +46,17 @@ class _IterCounter:
         return self.n_iter, self.res_iter
 
 
-def get_matrix_gmres(sys_op, pcd_op, rhs, solver_options):
+def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
     """
     Solve a sparse equation system with GMRES.
     The equation system and the preconditioner are described with linear operator.
     """
 
     # get the options
-    rel_tol = solver_options["rel_tol"]
-    abs_tol = solver_options["abs_tol"]
-    n_between_restart = solver_options["n_between_restart"]
-    n_maximum_restart = solver_options["n_maximum_restart"]
+    rel_tol = gmres_options["rel_tol"]
+    abs_tol = gmres_options["abs_tol"]
+    n_between_restart = gmres_options["n_between_restart"]
+    n_maximum_restart = gmres_options["n_maximum_restart"]
 
     # object for counting the solver iterations (callback)
     obj = _IterCounter()
