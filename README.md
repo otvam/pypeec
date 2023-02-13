@@ -1,11 +1,10 @@
-# PyPEEC - 3D FFT-PEEC Solver
+# PyPEEC - 3D Electromagnetic PEEC Solver
 
 ## Summary
 
 **PyPEEC** is a **magnetic field solver** with the following characteristics:
 * 3D voxel geometry
-* FFT-PEEC method
-* Extremely fast
+* PEEC method with FFT acceleration
 * Pure Python implementation
 * Conductive and magnetic domains
 * Frequency domain solution
@@ -13,6 +12,7 @@
 * Extraction of the current density and potential
 * Extraction of the losses and energy
 * Computation of the magnetic field and impedances
+* Fast with moderate memory requirements
 
 **PyPEEC** has the following limitations:
 * No capacitive effects
@@ -37,14 +37,15 @@ The **PyPEEC** package contains the following tools:
 
 ## Credits
 
-The FFT-PEEC method has been first described and implemented in:
+The FFT-accelerated PEEC method with voxels has been first described and implemented in:
 * R. Torchio, IEEE TPEL, 10.1109/TPEL.2021.3092431
 * R. Torchio, https://github.com/UniPD-DII-ETCOMP/FFT-PEEC
 
-Other interesting papers about similar methods:
+Other interesting papers and code about similar methods:
 * A. Yucel, IEEE TMTT, 10.1109/TMTT.2017.2785842
 * P. Bettini, IOP, 10.1088/1361-6587/abce8f
 * N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864
+* A. Yucel, https://github.com/acyucel/VoxHenry
 
 ## Author
 

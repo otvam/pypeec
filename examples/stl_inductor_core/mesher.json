@@ -6,7 +6,6 @@
         "c": null,
         "pts_min": null,
         "pts_max": null,
-        "offset": null,
         "domain_stl": {
             "core": "stl/core.stl",
             "coil": "stl/coil.stl",
