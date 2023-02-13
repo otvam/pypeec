@@ -25,8 +25,8 @@
         "empty": {"domain_list": ["empty"], "material_type": "electric", "rho": 8.75e-8}
     },
     "source_def": {
-        "src": {"domain_list": ["src"], "source_type": "current", "I": 1.0, "G": 0.0},
-        "sink": {"domain_list": ["sink"], "source_type": "voltage", "V": 0.0, "R": 0.0},
-        "short": {"domain_list": ["short"], "source_type": "voltage", "V": 1.0, "R": 0.0}
+        "src": {"domain_list": ["src"], "source_type": "current", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0},
+        "sink": {"domain_list": ["sink"], "source_type": "voltage", "V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0},
+        "short": {"domain_list": ["short"], "source_type": "voltage", "V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
     }
 }

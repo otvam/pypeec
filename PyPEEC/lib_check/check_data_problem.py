@@ -90,18 +90,18 @@ def _check_source_def(source_def):
 
         # get the source value
         if source_type == "current":
-            value = dat_tmp["I"]
-            element = dat_tmp["G"]
+            value = dat_tmp["I_re"]+1j*dat_tmp["I_im"]
+            element = dat_tmp["Y_re"]+1j*dat_tmp["Y_im"]
         elif source_type == "voltage":
-            value = dat_tmp["V"]
-            element = dat_tmp["R"]
+            value = dat_tmp["V_re"]+1j*dat_tmp["V_im"]
+            element = dat_tmp["Z_re"]+1j*dat_tmp["Z_im"]
         else:
             raise CheckError("invalid source type")
 
         # check the source type
         if not np.issubdtype(type(value), np.number):
             raise CheckError("I/V: current/voltage source value should be a complex number")
-        if not np.issubdtype(type(element), np.floating):
+        if not np.issubdtype(type(element), np.number):
             raise CheckError("G/R: source internal conductance/resistance should be a float")
 
         # check the source value
@@ -109,8 +109,6 @@ def _check_source_def(source_def):
             raise CheckError("I/V: current/voltage source value should be a scalar")
         if not np.isscalar(element):
             raise CheckError("G/R: source internal conductance/resistance should be a real scalar")
-        if not (element >= 0):
-            raise CheckError("G/R: source internal conductance/resistance should be greater than zero")
 
 
 def _check_solver_options(solver_options):

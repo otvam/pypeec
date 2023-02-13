@@ -62,7 +62,7 @@ def get_source_geometry(source_idx, extract_type):
     # array for the current source indices and source values
     idx_src = np.array([], dtype=np.int64)
     value_src = np.array([], dtype=np.complex128)
-    element_src = np.array([], dtype=np.float64)
+    element_src = np.array([], dtype=np.complex128)
 
     # populate the arrays with the current sources
     for tag, dat_tmp in source_idx.items():
@@ -78,14 +78,14 @@ def get_source_geometry(source_idx, extract_type):
             # find the source value
             if source_type == "current":
                 I = dat_tmp["I"]
-                G = dat_tmp["G"]
+                Y = dat_tmp["Y"]
                 value_src = np.append(value_src, np.full(len(idx), I/len(idx)))
-                element_src = np.append(element_src, np.full(len(idx), G/len(idx)))
+                element_src = np.append(element_src, np.full(len(idx), Y/len(idx)))
             elif source_type == "voltage":
                 V = dat_tmp["V"]
-                R = dat_tmp["R"]
+                Z = dat_tmp["Z"]
                 value_src = np.append(value_src, np.full(len(idx), V))
-                element_src = np.append(element_src, np.full(len(idx), R*len(idx)))
+                element_src = np.append(element_src, np.full(len(idx), Z*len(idx)))
             else:
                 raise ValueError("invalid source type")
 

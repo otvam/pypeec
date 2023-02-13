@@ -87,13 +87,13 @@ def _get_source_idx(source_def, domain_def):
 
         # get the source value
         if source_type == "current":
-            I = dat_tmp["I"]
-            G = dat_tmp["G"]
-            source_idx[tag] = {"idx": idx, "source_type": source_type, "I": I, "G": G}
+            I = dat_tmp["I_re"]+1j*dat_tmp["I_im"]
+            Y = dat_tmp["Y_re"]+1j*dat_tmp["Y_im"]
+            source_idx[tag] = {"idx": idx, "source_type": source_type, "I": I, "Y": Y}
         elif source_type == "voltage":
-            V = dat_tmp["V"]
-            R = dat_tmp["R"]
-            source_idx[tag] = {"idx": idx, "source_type": source_type, "V": V, "R": R}
+            V = dat_tmp["V_re"]+1j*dat_tmp["V_im"]
+            Z = dat_tmp["Z_re"]+1j*dat_tmp["Z_im"]
+            source_idx[tag] = {"idx": idx, "source_type": source_type, "V": V, "Z": Z}
         else:
             raise CheckError("invalid source type")
 

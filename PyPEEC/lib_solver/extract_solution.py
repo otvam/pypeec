@@ -250,6 +250,6 @@ def get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all):
         # display
         V_str = "%.3e + %.3ej" % (V_tmp.real, V_tmp.imag)
         I_str = "%.3e + %.3ej" % (I_tmp.real, I_tmp.imag)
-        logger.info("terminal: %s : V = %s V : I = %s A" % (tag, V_str, I_str))
+        logger.info("terminal: %s : V = %s V / I = %s A" % (tag, V_str, I_str))
 
     return terminal
