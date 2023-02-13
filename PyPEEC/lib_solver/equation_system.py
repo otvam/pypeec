@@ -151,7 +151,7 @@ def _get_split_vector(sol, n_vc, n_fc, n_vm, n_fm, n_src):
     return sol_c, sol_m
 
 
-def _get_coupling_electric(sol_m, freq, n_vc, n_fm, n_src, K_op_c):
+def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
     """
     Compute the magnetic to electric couplings.
     The magnetic face currents are multiplied with the couplings matrices.
@@ -160,21 +160,22 @@ def _get_coupling_electric(sol_m, freq, n_vc, n_fm, n_src, K_op_c):
     The vectors have the following size: n_fc+n_vc+n_src_c+n_src_v.
     """
 
-    # get the derivative operator (avoid singularity for DC solution)
-    if freq == 0:
-        k_c_fact = 0
-    else:
-        k_c_fact = 1
-
-    # split the electric solution vector
+    # extract the face current
     I_fm = sol_m[0:n_fm]
 
-    rhs_add_fc = k_c_fact*K_op_c(I_fm)
-    rhs_add_vc = np.zeros(n_vc, dtype=np.complex128)
-    rhs_add_src = np.zeros(n_src, dtype=np.complex128)
-    rhs_add_c = np.concatenate((rhs_add_fc, rhs_add_vc, rhs_add_src))
+    # compute the couplings
+    if freq == 0:
+        cpl_fc = np.zeros(n_fc, dtype=np.complex128)
+    else:
+        cpl_fc = K_op_c(I_fm)
 
-    return rhs_add_c
+    cpl_vc = np.zeros(n_vc, dtype=np.complex128)
+    cpl_src = np.zeros(n_src, dtype=np.complex128)
+
+    # assemble the vectors
+    cpl_c = np.concatenate((cpl_fc, cpl_vc, cpl_src))
+
+    return cpl_c
 
 
 def _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m):
@@ -186,14 +187,17 @@ def _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m):
     The vectors have the following size: n_fm+n_vm.
     """
 
-    # split the electric solution vector
+    # extract the face current
     I_fc = sol_c[0:n_fc]
 
-    rhs_add_fm = K_op_m(I_fc)
-    rhs_add_vm = np.zeros(n_vm, dtype=np.complex128)
-    rhs_add_m = np.concatenate((rhs_add_fm, rhs_add_vm))
+    # compute the couplings
+    cpl_fm = K_op_m(I_fc)
+    cpl_vm = np.zeros(n_vm, dtype=np.complex128)
 
-    return rhs_add_m
+    # assemble the vectors
+    cpl_m = np.concatenate((cpl_fm, cpl_vm))
+
+    return cpl_m
 
 
 def _get_cond_fact_electric(freq, A_c, R_vec_c, L_vec_c, A_src):
@@ -295,7 +299,7 @@ def _get_cond_fact_magnetic(freq, A_m, R_vec_m, P_vec_m):
     return Y_mat, S_mat, S_fact, A_12_mat, A_21_mat
 
 
-def _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat):
+def _get_cond_solve(rhs, cpl, Y_mat, _S_fact, A_12_mat, A_21_mat):
     """
     Solve the preconditioner equation system.
     The matrix factorization of the Schur complement is used.
@@ -304,13 +308,17 @@ def _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat):
     # split the system (Schur complement split)
     (n_schur, n_schur) = Y_mat.shape
 
-    rhs_a = rhs[:n_schur]
-    rhs_b = rhs[n_schur:]
+    # add the electric-magnetic couplings
+    rhs_cpl = rhs-cpl
+
+    # split the rhs vector
+    rhs_cpl_a = rhs_cpl[:n_schur]
+    rhs_cpl_b = rhs_cpl[n_schur:]
 
     # solve the equation system (Schur complement and matrix factorization)
-    tmp = rhs_b-(A_21_mat*(Y_mat*rhs_a))
+    tmp = rhs_cpl_b-(A_21_mat*(Y_mat*rhs_cpl_a))
     sol_b = _S_fact.get_solution(tmp)
-    sol_a = Y_mat*(rhs_a-(A_12_mat*sol_b))
+    sol_a = Y_mat*(rhs_cpl_a-(A_12_mat*sol_b))
 
     # assemble the solution
     sol = np.concatenate((sol_a, sol_b))
@@ -318,7 +326,7 @@ def _get_cond_solve(rhs, Y_mat, _S_fact, A_12_mat, A_21_mat):
     return sol
 
 
-def _get_system_multiply_electric(sol, rhs_add, freq, A_c, A_src, R_vec_c, L_op_c):
+def _get_system_multiply_electric(sol, cpl, freq, A_c, A_src, R_vec_c, L_op_c):
     """
     Multiply the full electric equation matrix with a given solution test vector.
 
@@ -359,12 +367,12 @@ def _get_system_multiply_electric(sol, rhs_add, freq, A_c, A_src, R_vec_c, L_op_
     rhs_src = rhs_1+rhs_2
 
     # assemble the solution
-    rhs = np.concatenate((rhs_fc, rhs_vc, rhs_src))+rhs_add
+    rhs = np.concatenate((rhs_fc, rhs_vc, rhs_src))+cpl
 
     return rhs
 
 
-def _get_system_multiply_magnetic(sol, rhs_add, freq, A_m, R_vec_m, P_op_m):
+def _get_system_multiply_magnetic(sol, cpl, freq, A_m, R_vec_m, P_op_m):
     """
     Multiply the full magnetic equation matrix with a given solution test vector.
 
@@ -399,7 +407,7 @@ def _get_system_multiply_magnetic(sol, rhs_add, freq, A_m, R_vec_m, P_op_m):
     rhs_vm = rhs_1+rhs_2
 
     # assemble the solution
-    rhs = np.concatenate((rhs_fm, rhs_vm))+rhs_add
+    rhs = np.concatenate((rhs_fm, rhs_vm))+cpl
 
     return rhs
 
@@ -523,14 +531,18 @@ def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
     if (not S_fact_c.get_status()) or (not S_fact_m.get_status()):
         return None, S_mat_c, S_mat_m
 
+    # the electric-magnetic couplings are neglected
+    cpl = np.zeros(n_dof, dtype=np.complex128)
+    (cpl_c, cpl_m) = _get_split_vector(cpl, n_vc, n_fc, n_vm, n_fm, n_src)
+
     # function describing the preconditioner
     def fct(rhs):
         # split the rhs vector into an electric and magnetic vector
         (rhs_c, rhs_m) = _get_split_vector(rhs, n_vc, n_fc, n_vm, n_fm, n_src)
 
         # solve the system (electric and magnetic)
-        sol_c = _get_cond_solve(rhs_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
-        sol_m = _get_cond_solve(rhs_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
+        sol_c = _get_cond_solve(rhs_c, cpl_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
+        sol_m = _get_cond_solve(rhs_m, cpl_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
 
         # scale and assemble the solution
         sol_c = sol_c/scaler_c
@@ -565,12 +577,12 @@ def get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m,
         sol_m = sol_m*scaler_m
 
         # compute the electric-magnetic coupling
-        rhs_add_c = _get_coupling_electric(sol_m, freq, n_vc, n_fm, n_src, K_op_c)
-        rhs_add_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
+        cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
+        cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
 
         # compute the system multiplication
-        rhs_c = _get_system_multiply_electric(sol_c, rhs_add_c, freq, A_c, A_src, R_vec_c, L_op_c)
-        rhs_m = _get_system_multiply_magnetic(sol_m, rhs_add_m, freq, A_m, R_vec_m, P_op_m)
+        rhs_c = _get_system_multiply_electric(sol_c, cpl_c, freq, A_c, A_src, R_vec_c, L_op_c)
+        rhs_m = _get_system_multiply_magnetic(sol_m, cpl_m, freq, A_m, R_vec_m, P_op_m)
 
         # assemble the rhs
         rhs = np.concatenate((rhs_c, rhs_m))
