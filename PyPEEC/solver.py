@@ -193,16 +193,24 @@ def _run_postproc(data_solver):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
         (I_fc, I_fm, V_vc, V_vm, I_src) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
 
+        # get the losses and energy
+        (P_fc, P_fm) = extract_solution.get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m)
+        (W_fc, W_fm) = extract_solution.get_energy(I_fc, I_fm, L_op_c, K_op_c)
+
         # get the voxel flow densities from the face flows
-        J_vc = extract_solution.get_flow_density(n, d, idx_vc, idx_fc, A_vox, I_fc)
-        B_vm = extract_solution.get_flow_density(n, d, idx_vm, idx_fm, A_vox, I_fm)
+        J_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, I_fc, "vector")
+        B_vm = extract_solution.get_face_to_voxel(n, d, idx_vm, idx_fm, A_vox, I_fm, "vector")
+
+        # get the voxel loss densities from the face losses
+        P_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, P_fc, "scalar")
+        P_vm = extract_solution.get_face_to_voxel(n, d, idx_vm, idx_fm, A_vox, P_fm, "scalar")
 
         # get the divergence of the face flows
-        S_vc = extract_solution.get_flow_divergence(n, d, idx_vc, idx_fc, A_vox, I_fc)
-        Q_vm = extract_solution.get_flow_divergence(n, d, idx_vm, idx_fm, A_vox, I_fm)
+        S_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, I_fc, "divergence")
+        Q_vm = extract_solution.get_face_to_voxel(n, d, idx_vm, idx_fm, A_vox, I_fm, "divergence")
 
         # get the global quantities (energy and losses)
-        integral = extract_solution.get_integral(freq, I_fc, I_fm, R_vec_c, R_vec_m, L_op_c, K_op_c)
+        integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
 
         # extend the solution for the complete voxel structure (including the empty voxels)
         (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src)
@@ -217,6 +225,8 @@ def _run_postproc(data_solver):
     data_solver["V_vm"] = V_vm
     data_solver["J_vc"] = J_vc
     data_solver["B_vm"] = B_vm
+    data_solver["P_vc"] = P_vc
+    data_solver["P_vm"] = P_vm
     data_solver["S_vc"] = S_vc
     data_solver["Q_vm"] = Q_vm
 
@@ -249,6 +259,8 @@ def _run_assemble(data_solver):
         "V_vm": data_solver["V_vm"],
         "J_vc": data_solver["J_vc"],
         "B_vm": data_solver["B_vm"],
+        "P_vc": data_solver["P_vc"],
+        "P_vm": data_solver["P_vm"],
         "S_vc": data_solver["S_vc"],
         "Q_vm": data_solver["Q_vm"],
     }

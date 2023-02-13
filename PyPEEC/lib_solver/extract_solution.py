@@ -45,7 +45,28 @@ def _get_vector_density(n, d, A_vox, var_f_all):
     return var_v_all
 
 
-def _get_vector_divergence(d, A_vox, var_f_all):
+def _get_scalar_density(d, A_vox, var_f_all):
+    """
+    Project a face vector variable into a voxel scalar variable.
+    Scale the variable with respect to the voxel volume (density).
+
+    At the input, the array has the following size: 3*nx*ny*nx.
+    At the output, the array has the following size: nx*ny*nx.
+    """
+
+    # extract the voxel data
+    (dx, dy, dz) = d
+
+    # compute the divergence
+    var_v_all = A_vox*var_f_all
+
+    # convert to density.
+    var_v_all = var_v_all/(dx*dy*dz)
+
+    return var_v_all
+
+
+def _get_divergence_density(d, A_vox, var_f_all):
     """
     Compute the divergence of a face vector with respect to the voxels.
     Scale the variable with respect to the voxel volume (density).
@@ -58,7 +79,7 @@ def _get_vector_divergence(d, A_vox, var_f_all):
     (dx, dy, dz) = d
 
     # compute the divergence
-    var_v_all = A_vox * var_f_all
+    var_v_all = A_vox*var_f_all
 
     # convert to density.
     var_v_all = var_v_all/(dx*dy*dz)
@@ -95,39 +116,15 @@ def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
     return I_fc, I_fm, V_vc, V_vm, I_src
 
 
-def get_flow_density(n, d, idx_v, idx_f, A_vox, I_f):
+def get_face_to_voxel(n, d, idx_v, idx_f, A_vox, I_f, var_type):
     """
-    Get the voxel flow from the face flow.
-    Scale the flow with respect to the face area (density).
+    Get the voxel variable from the face variable.
+    Scale the variable with respect to the area/volume (density).
 
-    At the input, the face flow vector has the following size: n_f.
-    At the output, the voxel flow vector has the following size: (n_v, 3).
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
-
-    # extend the solution for the complete voxel structure (including the empty voxels)
-    I_f_all = np.zeros(3*nv, dtype=np.complex128)
-    I_f_all[idx_f] = I_f
-
-    # project the face currents into the voxels (scalar field)
-    I_flow_v_all = _get_vector_density(nv, d, A_vox, I_f_all)
-
-    # remove empty voxels
-    I_flow_v = I_flow_v_all[idx_v]
-
-    return I_flow_v
-
-
-def get_flow_divergence(n, d, idx_v, idx_f, A_vox, I_f):
-    """
-    Get the divergence of a face flow with respect to the voxels.
-    Scale the divergence with respect to the voxel volume (density).
-
-    At the input, the face flow vector has the following size: n_f.
-    At the output, the divergence vector has the following size: n_v.
+    The different transformations are available:
+        - vector: project a vector face variable into a vector voxel variable
+        - scalar: project a vector face variable into a scalar voxel variable
+        - divergence: divergence of a face vector with respect to the voxels
     """
 
     # extract the voxel data
@@ -138,18 +135,25 @@ def get_flow_divergence(n, d, idx_v, idx_f, A_vox, I_f):
     I_f_all = np.zeros(3*nv, dtype=np.complex128)
     I_f_all[idx_f] = I_f
 
-    # compute the divergence
-    I_div_v_all = _get_vector_divergence(d, A_vox, I_f_all)
+    # transform the face variable in a voxel variable
+    if var_type == "vector":
+        I_v_all = _get_vector_density(nv, d, A_vox, I_f_all)
+    elif var_type == "scalar":
+        I_v_all = _get_scalar_density(d, A_vox, I_f_all)
+    elif var_type == "divergence":
+        I_v_all = _get_divergence_density(d, A_vox, I_f_all)
+    else:
+        raise ValueError("invalid variable type")
 
     # remove empty voxels
-    I_div_v = I_div_v_all[idx_v]
+    I_v = I_v_all[idx_v]
 
-    return I_div_v
+    return I_v
 
 
-def get_integral(freq, I_fc, I_fm, R_vec_c, R_vec_m, L_op_c, K_op_c):
+def get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m):
     """
-    Sum the loss/energy in order to obtain global quantities.
+    Get the losses for the electric and magnetic domains.
     """
 
     # get the angular frequency
@@ -157,21 +161,41 @@ def get_integral(freq, I_fc, I_fm, R_vec_c, R_vec_m, L_op_c, K_op_c):
 
     # get the magnetic losses linked with the electric domains
     P_fc = 0.5*np.conj(I_fc)*R_vec_c*I_fc
+    P_fc = np.real(P_fc)
 
     # get the magnetic losses linked with the magnetic domains
-    P_fm = 0.5*np.conj(s*I_fm)*R_vec_m*(I_fm)
+    P_fm = 0.5*np.conj(s*I_fm)*R_vec_m*I_fm
+    P_fm = np.real(P_fm)
+
+    return P_fc, P_fm
+
+
+def get_energy(I_fc, I_fm, L_op_c, K_op_c):
+    """
+    Get the energy for the electric and magnetic domains.
+    """
 
     # get the magnetic energy linked with the electric domains
     W_fc = 0.5*np.conj(I_fc)*L_op_c(I_fc)
+    W_fc = np.real(W_fc)
 
     # get the magnetic energy linked with the magnetic domains
     W_fm = 0.5*np.conj(I_fc)*K_op_c(I_fm)
+    W_fm = np.real(W_fm)
+
+    return W_fc, W_fm
+
+
+def get_integral(P_fc, P_fm, W_fc, W_fm):
+    """
+    Sum the loss/energy in order to obtain global quantities.
+    """
 
     # compute the integral quantities
-    P_electric = np.sum(np.real(P_fc))
-    P_magnetic = np.sum(np.real(P_fm))
-    W_electric = np.sum(np.real(W_fc))
-    W_magnetic = np.sum(np.real(W_fm))
+    P_electric = np.sum(P_fc)
+    P_magnetic = np.sum(P_fm)
+    W_electric = np.sum(W_fc)
+    W_magnetic = np.sum(W_fm)
     P_tot = P_electric+P_magnetic
     W_tot = W_electric+W_magnetic
 
