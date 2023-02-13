@@ -65,7 +65,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 24010, "n_used_ref": 18770,
-            "P_tot_ref": 2.09764005e-05, "W_tot_ref": 6.16038326e-10, "tol": 1e-4,
+            "P_tot_ref": 2.09630131e-05, "W_tot_ref": 6.15475121e-10, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "png_wire", res)
 

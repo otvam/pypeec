@@ -73,11 +73,14 @@ def _get_coupling(d, idx, method, dimension):
     return G
 
 
-def _get_voxel_indices(nx, ny, nz):
+def _get_voxel_indices(n):
     """
     Compute the indices of the complete voxel structure.
     Return the indices as a matrix.
     """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
 
     # get the indices array
     idx_x = np.arange(nx, dtype=np.int64)
@@ -94,6 +97,23 @@ def _get_voxel_indices(nx, ny, nz):
     idx = np.stack((idx_x, idx_y, idx_z), axis=1)
 
     return idx
+
+
+def _get_voxel_distances(d, idx):
+    """
+    Compute the normalized distance between the voxels and the reference voxel at the origin.
+    """
+
+    # scale the distances
+    d_idx = d*idx
+
+    # compute the distances
+    d_cell = lna.norm(d_idx, axis=1)
+
+    # normalize the distances
+    n_cell = d_cell/max(d)
+
+    return n_cell
 
 
 def get_green_self(d):
@@ -125,10 +145,10 @@ def get_green_tensor(n, d, green_simplify):
     nv = nx*ny*nz
 
     # get the indices of the complete voxel structure (as a matrix)
-    idx = _get_voxel_indices(nx, ny, nz)
+    idx = _get_voxel_indices(n)
 
     # compute the normalized distance between the voxels and the reference voxel at the origin
-    n_cell = lna.norm(idx, axis=1)
+    n_cell = _get_voxel_distances(d, idx)
 
     # check where the analytical solution should be used
     idx_ana = n_cell <= green_simplify
@@ -165,10 +185,10 @@ def get_coupling_tensor(n, d, coupling_simplify):
     nv = nx*ny*nz
 
     # get the indices of the complete voxel structure (as a matrix)
-    idx = _get_voxel_indices(nx, ny, nz)
+    idx = _get_voxel_indices(n)
 
     # compute the normalized distance between the voxels and the reference voxel at the origin
-    n_cell = lna.norm(idx, axis=1)
+    n_cell = _get_voxel_distances(d, idx)
 
     # check where the analytical solution should be used
     idx_ana = n_cell <= coupling_simplify
