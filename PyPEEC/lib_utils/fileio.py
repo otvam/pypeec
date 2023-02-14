@@ -22,7 +22,7 @@ def _load_yaml(filename):
 
     try:
         with open(filename, 'r') as fid:
-            data = yaml.load(fid, yaml.SafeLoader)
+            data = yaml.safe_load(fid)
     except FileNotFoundError:
         raise FileError("cannot open the file: %s" % filename)
     except yaml.YAMLError:
@@ -57,7 +57,7 @@ def load_config(filename):
     if ext in [".json", ".js"]:
         data = _load_json(filename)
     elif ext in [".yaml", ".yml"]:
-        data = None
+        data = _load_yaml(filename)
     else:
         raise FileError("invalid file extension: %s" % filename)
 
