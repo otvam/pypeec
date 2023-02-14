@@ -153,7 +153,6 @@ def run(data_mesher, path_ref):
     Parameters
     ----------
     data_mesher : dict
-        This file is an input file (JSON format).
         The dict describes the meshing and resampling process.
         The voxel structure can be explicitly given or generated from PNG or STL files.
     path_ref :  path (string)

@@ -12,9 +12,13 @@ The voxelization is done with PyVista.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import vtk
 import numpy as np
 import pyvista as pv
 from PyPEEC.lib_utils.error import RunError
+
+# prevent VTK to mess up the output
+vtk.vtkObject.GlobalWarningDisplayOff()
 
 
 def _get_grid(n, d, c):
@@ -111,6 +115,10 @@ def _get_load_stl(domain_stl):
         try:
             mesh = pv.read(filename, force_ext=".stl")
         except ValueError:
+            raise RunError("invalid stl: invalid file type: %s" % tag)
+
+        # check that the file is valid
+        if mesh.n_cells == 0:
             raise RunError("invalid stl: invalid file content: %s" % tag)
 
         # find the bounds

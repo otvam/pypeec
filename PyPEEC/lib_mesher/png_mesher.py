@@ -68,7 +68,7 @@ def _get_image(filename):
 
     # load the image
     try:
-        img = pmg.open(filename)
+        img = pmg.open(filename, formats=["png"])
     except OSError:
         raise RunError("invalid png: invalid file content: %s" % filename)
 
