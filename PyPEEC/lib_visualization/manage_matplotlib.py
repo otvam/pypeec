@@ -28,20 +28,28 @@ def _get_plot_residuum(fig, res_all):
     res_abs = np.clip(res_abs, v_min, v_max)
     res_log = np.log10(res_abs)
 
+    # counts the elements
+    n_tot = len(res_all)
+    n_plt = len(res_abs)
+
+    # get the bins
+    bins = np.histogram_bin_edges(res_log, bins="auto")
+    bins = np.logspace(min(res_log), max(res_log), num=len(bins))
+    bins[0] = res_abs[0]
+    bins[-1] = res_abs[-1]
+
     # plot the histogram
-    (hist, bins) = np.histogram(res_log)
-    bins = np.power(10.0, bins)
     plt.hist(res_abs, bins=bins, edgecolor="black")
 
     # get log axis
     plt.xscale('log')
-    plt.yscale('log', nonpositive='clip')
+    plt.yscale('log')
 
     # add cosmetics
     plt.grid()
     plt.xlabel('residuum (a.u.)')
     plt.ylabel('counts (a.u.)')
-    plt.title("Solver Residuum")
+    plt.title("Solver Residuum / n_tot = %d / n_plt = %d" % (n_tot, n_plt))
 
 
 def _get_plot_convergence(fig, res_iter):
@@ -52,15 +60,18 @@ def _get_plot_convergence(fig, res_iter):
     # activate the figure
     plt.figure(fig)
 
+    # counts
+    n_iter = len(res_iter)
+
     # plot the data
-    idx_iter = np.arange(1, len(res_iter)+1)
+    idx_iter = np.arange(1, n_iter+1)
     plt.semilogy(idx_iter, res_iter, 'rs-')
 
     # add cosmetics
     plt.grid()
     plt.xlabel('iterations (#)')
     plt.ylabel('residuum (a.u.)')
-    plt.title("Solver Convergence")
+    plt.title("Solver Convergence / n_iter = %d" % n_iter)
 
 
 def get_plot_plotter(fig, solver_status, data_plot):
