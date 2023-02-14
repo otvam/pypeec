@@ -3,6 +3,9 @@
 # Thomas Guillod
 # (c) 2023 - Dartmouth College
 
+# parsing files
+PyYAML>=6.0 # YAML parser
+
 # standard numpy and scipy
 numpy>=1.24 # used everywhere
 scipy>=1.9 # used everywhere

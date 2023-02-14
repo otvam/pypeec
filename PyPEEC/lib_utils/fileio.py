@@ -11,6 +11,7 @@ __copyright__ = "(c) 2023 - Dartmouth College"
 import os
 import json
 import pickle
+import yaml
 from PyPEEC.lib_utils.error import FileError
 
 
@@ -19,7 +20,15 @@ def _load_yaml(filename):
     Load a YAML file.
     """
 
-    pass
+    try:
+        with open(filename, 'r') as fid:
+            data = yaml.load(fid, yaml.SafeLoader)
+    except FileNotFoundError:
+        raise FileError("cannot open the file: %s" % filename)
+    except yaml.YAMLError:
+        raise FileError("invalid YAML file: %s" % filename)
+
+    return data
 
 
 def _load_json(filename):
