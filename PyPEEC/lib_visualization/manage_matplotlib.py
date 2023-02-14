@@ -35,8 +35,8 @@ def _get_plot_residuum(fig, res_all):
     # get the bins
     bins = np.histogram_bin_edges(res_log, bins="auto")
     bins = np.logspace(min(res_log), max(res_log), num=len(bins))
-    bins[0] = res_abs[0]
-    bins[-1] = res_abs[-1]
+    bins[0] = min(res_abs)
+    bins[-1] = max(res_abs)
 
     # plot the histogram
     plt.hist(res_abs, bins=bins, edgecolor="black")
