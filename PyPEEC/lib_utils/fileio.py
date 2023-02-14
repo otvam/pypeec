@@ -8,26 +8,21 @@ WARNING: Pickling data is not secure.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) 2023 - Dartmouth College"
 
+import os
 import json
 import pickle
 from PyPEEC.lib_utils.error import FileError
 
 
-def load_pickle(filename):
+def _load_yaml(filename):
     """
-    Load a pickle file.
+    Load a YAML file.
     """
 
-    try:
-        with open(filename, "rb") as fid:
-            data = pickle.load(fid)
-    except (FileNotFoundError, EOFError):
-        raise FileError("file not found: %s" % filename)
-
-    return data
+    pass
 
 
-def load_json(filename):
+def _load_json(filename):
     """
     Load a JSON file.
     """
@@ -37,8 +32,49 @@ def load_json(filename):
             data = json.load(fid)
     except FileNotFoundError:
         raise FileError("cannot open the file: %s" % filename)
-    except ValueError:
+    except json.JSONDecodeError:
         raise FileError("invalid JSON file: %s" % filename)
+
+    return data
+
+
+def load_config(filename):
+    """
+    Load a config file (JSON or YAML).
+    """
+
+    # check extension
+    (name, ext) = os.path.splitext(filename)
+    if ext in [".json", ".js"]:
+        data = _load_json(filename)
+    elif ext in [".yaml", ".yml"]:
+        data = None
+    else:
+        raise FileError("invalid file extension: %s" % filename)
+
+    return data
+
+
+def load_pickle(filename):
+    """
+    Load a pickle file.
+    """
+
+    # check extension
+    (name, ext) = os.path.splitext(filename)
+    if ext != ".pck":
+        raise FileError("invalid file extension: %s" % filename)
+
+    # load the Pickle file
+    try:
+        with open(filename, "rb") as fid:
+            data = pickle.load(fid)
+    except pickle.UnpicklingError:
+        raise FileError("invalid Pickle file: %s" % filename)
+    except EOFError:
+        raise FileError("file not found: %s" % filename)
+    except FileNotFoundError:
+        raise FileError("invalid Pickle file: %s" % filename)
 
     return data
 
@@ -48,8 +84,15 @@ def write_pickle(filename, data):
     Write a pickle file.
     """
 
+    # check extension
+    (name, ext) = os.path.splitext(filename)
+    if ext != ".pck":
+        raise FileError("invalid file extension: %s" % filename)
+
     try:
         with open(filename, "wb") as fid:
             pickle.dump(data, fid)
+    except pickle.PicklingError:
+        raise FileError("invalid data for Pickle: %s" % filename)
     except FileNotFoundError:
         raise FileError("cannot write the file: %s" % filename)

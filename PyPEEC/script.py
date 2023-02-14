@@ -25,7 +25,7 @@ def run_mesher(file_mesher, file_voxel):
 
     Parameters
     ----------
-    file_mesher : string (input file, JSON format)
+    file_mesher : string (input file, JSON/YAML format)
     file_voxel :  string (output file, Pickle format)
 
     Returns
@@ -40,7 +40,7 @@ def run_mesher(file_mesher, file_voxel):
     try:
         # load data
         logger.info("load the data")
-        data_mesher = fileio.load_json(file_mesher)
+        data_mesher = fileio.load_config(file_mesher)
 
         # get the path for relative file loading
         path_ref = os.path.dirname(file_mesher)
@@ -68,8 +68,8 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
     Parameters
     ----------
     file_voxel : string (input file, Pickle format)
-    file_point: string (input file, JSON format)
-    file_viewer: string (input file, JSON format)
+    file_point: string (input file, JSON/YAML format)
+    file_viewer: string (input file, JSON/YAML format)
     is_interactive : boolean
         If true, the plots are shown (blocking call).
         If false, the plots are not shown (non-blocking call).
@@ -87,8 +87,8 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
         # load data
         logger.info("load the data")
         data_voxel = fileio.load_pickle(file_voxel)
-        data_point = fileio.load_json(file_point)
-        data_viewer = fileio.load_json(file_viewer)
+        data_point = fileio.load_config(file_point)
+        data_viewer = fileio.load_config(file_viewer)
 
         # call the viewer
         (status, ex) = viewer.run(data_voxel, data_point, data_viewer, is_interactive)
@@ -107,7 +107,7 @@ def run_solver(file_voxel, file_problem, file_solution):
     Parameters
     ----------
     file_voxel :  string (input file, Pickle format)
-    file_problem: string (input file, JSON format)
+    file_problem: string (input file, JSON/YAML format)
     file_solution: string (output file, Pickle format)
 
     Returns
@@ -123,7 +123,7 @@ def run_solver(file_voxel, file_problem, file_solution):
         # load data
         logger.info("load the data")
         data_voxel = fileio.load_pickle(file_voxel)
-        data_problem = fileio.load_json(file_problem)
+        data_problem = fileio.load_config(file_problem)
 
         # call the solver
         (status, data_solution, ex) = solver.run(data_voxel, data_problem)
@@ -146,8 +146,8 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
     Parameters
     ----------
     file_solution : string (input file, Pickle format)
-    file_point: string (input file, JSON format)
-    file_plotter: string (input file, JSON format)
+    file_point: string (input file, JSON/YAML format)
+    file_plotter: string (input file, JSON/YAML format)
     is_interactive : boolean
         If true, the plots are shown (blocking call).
         If false, the plots are not shown (non-blocking call).
@@ -165,8 +165,8 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
         # load data
         logger.info("load the data")
         data_solution = fileio.load_pickle(file_solution)
-        data_point = fileio.load_json(file_point)
-        data_plotter = fileio.load_json(file_plotter)
+        data_point = fileio.load_config(file_point)
+        data_plotter = fileio.load_config(file_plotter)
 
         # call the plotter
         (status, ex) = plotter.run(data_solution, data_point, data_plotter, is_interactive)
