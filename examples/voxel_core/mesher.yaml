@@ -1,0 +1,14 @@
+"mesh_type": "voxel"
+"data_voxelize":
+    "n": [5, 5, 5]
+    "d": [10.0e-3, 10.0e-3, 10.0e-3]
+    "c": [0.0, 0.0, 0.0]
+    "domain_def":
+        "core": [2, 7, 17, 22, 27, 52, 77, 102, 107, 112, 117, 122, 47, 72, 97]
+        "cond": [61, 62, 63]
+        "src": [60]
+        "sink": [64]
+"resampling_factor": [1, 1, 1]
+"domain_connection":
+    "cond": {"domain_list": ["cond", "src", "sink"], "connected": true}
+    "core": {"domain_list": ["cond", "core"], "connected": false}
