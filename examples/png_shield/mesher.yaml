@@ -1,0 +1,19 @@
+"mesh_type": "png"
+"data_voxelize":
+    "d": [500.0e-6, 500.0e-6, 500.0e-6]
+    "c": [0.0e-3, 0.0e-3, 1750.0e-6]
+    "nx": 51
+    "ny": 51
+    "domain_color":
+        "coil": [0, 0, 0, 255]
+        "core": [0, 0, 255, 255]
+        "src": [255, 0, 0, 255]
+        "sink": [0, 255, 0, 255]
+    "layer_stack":
+        - {"n_layer": 1, "filename": "png/coil.png"}
+        - {"n_layer": 6, "filename": "png/air.png"}
+        - {"n_layer": 1, "filename": "png/shield.png"}
+"resampling_factor": [1, 1, 1]
+"domain_connection":
+    "cond": {"domain_list": ["coil", "src", "sink"], "connected": true}
+    "core": {"domain_list": ["coil", "core"], "connected": false}

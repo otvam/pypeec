@@ -1,0 +1,17 @@
+"mesh_type": "png"
+"data_voxelize":
+    "d": [50.0e-6, 50.0e-6, 500.0e-6]
+    "c": [0.0, 0.0, 0.0]
+    "nx": 49
+    "ny": 49
+    "domain_color":
+        "wire": [0, 0, 0, 255]
+        "src": [255, 0, 0, 255]
+        "sink": [0, 255, 0, 255]
+    "layer_stack":
+        - {"n_layer": 1, "filename": "png/src.png"}
+        - {"n_layer": 8, "filename": "png/wire.png"}
+        - {"n_layer": 1, "filename": "png/sink.png"}
+"resampling_factor": [1, 1, 1]
+"domain_connection":
+    "connect": {"domain_list": ["wire", "src", "sink"], "connected": true}
