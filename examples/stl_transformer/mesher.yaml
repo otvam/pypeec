@@ -1,0 +1,24 @@
+"mesh_type": "stl"
+"data_voxelize":
+    "d": [600.0e-6, 600.0e-6, 250.0e-6]
+    "c": null
+    "n": null
+    "pts_min": null
+    "pts_max": null
+    "domain_stl":
+        "pri_coil": "stl/pri_coil.stl"
+        "pri_src": "stl/pri_src.stl"
+        "pri_sink": "stl/pri_sink.stl"
+        "sec_coil": "stl/sec_coil.stl"
+        "sec_src": "stl/sec_src.stl"
+        "sec_sink": "stl/sec_sink.stl"
+    "domain_conflict":
+        - {"domain_resolve": "pri_coil", "domain_keep": "pri_src"}
+        - {"domain_resolve": "pri_coil", "domain_keep": "pri_sink"}
+        - {"domain_resolve": "sec_coil", "domain_keep": "sec_src"}
+        - {"domain_resolve": "sec_coil", "domain_keep": "sec_sink"}
+"resampling_factor": [1, 1, 1]
+"domain_connection":
+    "pri": {"domain_list": ["pri_coil", "pri_src", "pri_sink"], "connected": true}
+    "sec": {"domain_list": ["sec_coil", "sec_src", "sec_sink"], "connected": true}
+    "pri_sec": {"domain_list": ["pri_coil", "sec_coil"], "connected": false}
