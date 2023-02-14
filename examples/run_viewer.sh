@@ -11,7 +11,7 @@ set -o pipefail
 source examples_config.sh
 
 # get the filename
-FILE_POINT="$PATH_ROOT/$EXAMPLE_NAME/point.json"
+FILE_POINT="$PATH_ROOT/$EXAMPLE_NAME/point.yaml"
 FILE_VIEWER="$PATH_ROOT/visualization/data_viewer.json"
 FILE_VOXEL="$PATH_ROOT/$EXAMPLE_NAME/voxel.pck"
 

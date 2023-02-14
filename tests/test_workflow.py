@@ -34,9 +34,9 @@ def _run_workflow(test_obj, name):
     print("run")
 
     # get input file name
-    file_mesher = os.path.join(path_root, name, "mesher.json")
-    file_point = os.path.join(path_root, name, "point.json")
-    file_problem = os.path.join(path_root, name, "problem.json")
+    file_mesher = os.path.join(path_root, name, "mesher.yaml")
+    file_point = os.path.join(path_root, name, "point.yaml")
+    file_problem = os.path.join(path_root, name, "problem.yaml")
     file_plotter = os.path.join(path_root, "visualization", "data_plotter.json")
     file_viewer = os.path.join(path_root, "visualization", "data_viewer.json")
 

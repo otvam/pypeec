@@ -11,7 +11,7 @@ set -o pipefail
 source examples_config.sh
 
 # get the filename
-FILE_PROBLEM="$PATH_ROOT/$EXAMPLE_NAME/problem.json"
+FILE_PROBLEM="$PATH_ROOT/$EXAMPLE_NAME/problem.yaml"
 FILE_VOXEL="$PATH_ROOT/$EXAMPLE_NAME/voxel.pck"
 FILE_SOLUTION="$PATH_ROOT/$EXAMPLE_NAME/solution.pck"
 

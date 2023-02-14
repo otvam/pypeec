@@ -19,6 +19,7 @@ function init_test {
   for tmp in "${folder[@]}"
   do
     rm -rf "tests/$tmp"
+    rsync -ma --include '*/' --include '*.yaml' --exclude '*' "examples/$tmp" "tests"
     rsync -ma --include '*/' --include '*.json' --exclude '*' "examples/$tmp" "tests"
     rsync -ma --include '*/' --include '*.png' --exclude '*' "examples/$tmp" "tests"
     rsync -ma --include '*/' --include '*.stl' --exclude '*' "examples/$tmp" "tests"

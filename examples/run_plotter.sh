@@ -11,7 +11,7 @@ set -o pipefail
 source examples_config.sh
 
 # get the filename
-FILE_POINT="$PATH_ROOT/$EXAMPLE_NAME/point.json"
+FILE_POINT="$PATH_ROOT/$EXAMPLE_NAME/point.yaml"
 FILE_PLOTTER="$PATH_ROOT/visualization/data_plotter.json"
 FILE_SOLUTION="$PATH_ROOT/$EXAMPLE_NAME/solution.pck"
 

@@ -18,7 +18,7 @@ EXAMPLE_NAME = examples_config.EXAMPLE_NAME
 if __name__ == "__main__":
     # get the filename
     file_voxel = os.path.join(PATH_ROOT, EXAMPLE_NAME, "voxel.pck")
-    file_point = os.path.join(PATH_ROOT, EXAMPLE_NAME, "point.json")
+    file_point = os.path.join(PATH_ROOT, EXAMPLE_NAME, "point.yaml")
     file_viewer = os.path.join(PATH_ROOT, "visualization", "data_viewer.json")
 
     # run viewer

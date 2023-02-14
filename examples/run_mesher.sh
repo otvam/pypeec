@@ -11,7 +11,7 @@ set -o pipefail
 source examples_config.sh
 
 # get the filename
-FILE_MESHER="$PATH_ROOT/$EXAMPLE_NAME/mesher.json"
+FILE_MESHER="$PATH_ROOT/$EXAMPLE_NAME/mesher.yaml"
 FILE_VOXEL="$PATH_ROOT/$EXAMPLE_NAME/voxel.pck"
 
 # run
