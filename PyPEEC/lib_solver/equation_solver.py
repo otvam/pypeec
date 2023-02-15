@@ -3,7 +3,7 @@ Module for checking the matrix condition number and solving a sparse equation sy
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import scipy.linalg as lna
 from PyPEEC.lib_matrix import matrix_condition

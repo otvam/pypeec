@@ -7,7 +7,7 @@ The solver is implemented with NumPy and Scipy.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from PyPEEC.lib_solver import voxel_geometry
 from PyPEEC.lib_solver import system_tensor

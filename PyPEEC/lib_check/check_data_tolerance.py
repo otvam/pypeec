@@ -3,7 +3,7 @@ Module for checking the solver tolerance data.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from PyPEEC.lib_utils.error import CheckError

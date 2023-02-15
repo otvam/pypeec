@@ -5,7 +5,7 @@ This allows for a minimization of the loaded dependencies.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
 import sys
@@ -205,7 +205,7 @@ def main_mesher():
     parser = argparse.ArgumentParser(
         prog="ppmesher",
         description="PyPEEC mesher: transform the provided data into a 3D voxel structure.",
-        epilog="(c) Thomas Guillod, Dartmouth College",
+        epilog="(c) Thomas Guillod - Dartmouth College",
     )
     parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
     parser.add_argument(
@@ -239,7 +239,7 @@ def main_viewer():
     parser = argparse.ArgumentParser(
         prog="ppviewer",
         description="PyPEEC viewer: visualization of a 3D voxel structure.",
-        epilog="(c) Thomas Guillod, Dartmouth College",
+        epilog="(c) Thomas Guillod - Dartmouth College",
     )
     parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
     parser.add_argument(
@@ -286,7 +286,7 @@ def main_solver():
     parser = argparse.ArgumentParser(
         prog="ppsolver",
         description="PyPEEC solver: solve a problem with the PEEC method.",
-        epilog="(c) Thomas Guillod, Dartmouth College",
+        epilog="(c) Thomas Guillod - Dartmouth College",
     )
     parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
     parser.add_argument(
@@ -334,7 +334,7 @@ def main_plotter():
     parser = argparse.ArgumentParser(
         prog="ppplotter",
         description="PyPEEC plotter: plot the solution of a PEEC problem.",
-        epilog="(c) Thomas Guillod, Dartmouth College",
+        epilog="(c) Thomas Guillod - Dartmouth College",
     )
     parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
     parser.add_argument(

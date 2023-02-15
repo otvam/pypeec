@@ -3,7 +3,7 @@ User script for plotting the solution of a PEEC problem.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
 import sys

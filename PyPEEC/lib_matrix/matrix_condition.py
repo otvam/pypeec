@@ -3,7 +3,7 @@ Module for estimating the condition number of sparse matrices.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import scipy.sparse.linalg as sla
 from PyPEEC.lib_utils import timelogger

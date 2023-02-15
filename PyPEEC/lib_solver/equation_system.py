@@ -75,7 +75,7 @@ For the full equation system, the complete dense matrix are used:
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import scipy.sparse as sps

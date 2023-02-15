@@ -9,7 +9,7 @@ WARNING: The magnetic field computation is done with lumped variables.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import numpy.linalg as lna

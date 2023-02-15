@@ -3,7 +3,7 @@ Test the example with the PNG mesher.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import unittest
 from tests import test_workflow

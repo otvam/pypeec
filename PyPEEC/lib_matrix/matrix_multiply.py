@@ -12,7 +12,7 @@ A SciPy linear operator is returned for performing the matrix-vector multiplicat
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import scipy.sparse.linalg as sla
 from PyPEEC.lib_matrix import multiply_fft

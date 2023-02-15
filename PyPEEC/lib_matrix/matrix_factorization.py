@@ -11,7 +11,7 @@ WARNING: UMFPACK is difficult to install on MS Windows.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import warnings
 from PyPEEC import config

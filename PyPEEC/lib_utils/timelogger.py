@@ -4,7 +4,7 @@ Provide a class for timing (and logging) code blocks.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import time
 import datetime

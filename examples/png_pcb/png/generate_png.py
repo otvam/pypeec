@@ -3,7 +3,7 @@ Generate PNG files for the example.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import math
 from PIL import Image

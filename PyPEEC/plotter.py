@@ -17,7 +17,7 @@ The 2D plots are done with Matplotlib with the Qt framework.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from PyPEEC.lib_visualization import manage_compute
 from PyPEEC.lib_visualization import manage_voxel

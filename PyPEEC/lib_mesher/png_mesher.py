@@ -8,7 +8,7 @@ The following axis definition is used:
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) 2023 - Dartmouth College"
+__copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import PIL.Image as pmg
