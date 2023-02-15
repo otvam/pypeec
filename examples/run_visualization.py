@@ -227,8 +227,8 @@ def get_data_plotter():
 
 if __name__ == "__main__":
     # get the filename
-    file_plotter = os.path.join(PATH_ROOT, "visualization", "data_plotter.json")
-    file_viewer = os.path.join(PATH_ROOT, "visualization", "data_viewer.json")
+    file_plotter = os.path.join(PATH_ROOT, "config", "data_plotter.json")
+    file_viewer = os.path.join(PATH_ROOT, "config", "data_viewer.json")
 
     # get data
     data_viewer = get_data_viewer()

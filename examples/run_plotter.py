@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # get the filename
     file_solution = os.path.join(PATH_ROOT, EXAMPLE_NAME, "solution.pck")
     file_point = os.path.join(PATH_ROOT, EXAMPLE_NAME, "point.yaml")
-    file_plotter = os.path.join(PATH_ROOT, "visualization", "data_plotter.json")
+    file_plotter = os.path.join(PATH_ROOT, "config", "data_plotter.json")
 
     # run
     (status, ex) = script.run_plotter(file_solution, file_point, file_plotter, True)

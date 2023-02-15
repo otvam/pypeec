@@ -37,8 +37,9 @@ def _run_workflow(test_obj, name):
     file_mesher = os.path.join(path_root, name, "mesher.yaml")
     file_point = os.path.join(path_root, name, "point.yaml")
     file_problem = os.path.join(path_root, name, "problem.yaml")
-    file_plotter = os.path.join(path_root, "visualization", "data_plotter.json")
-    file_viewer = os.path.join(path_root, "visualization", "data_viewer.json")
+    file_plotter = os.path.join(path_root, "config", "data_plotter.json")
+    file_viewer = os.path.join(path_root, "config", "data_viewer.json")
+    file_tolerance = os.path.join(path_root, "config", "data_tolerance.json")
 
     # get the temporary files
     fid_voxel = tempfile.NamedTemporaryFile(suffix='.pck')
@@ -61,7 +62,7 @@ def _run_workflow(test_obj, name):
         test_obj.assertTrue(status, msg="viewer failure : " + str(ex))
 
         # run the solver
-        (status, ex) = script.run_solver(file_voxel, file_problem, file_solution)
+        (status, ex) = script.run_solver(file_voxel, file_problem, file_tolerance, file_solution)
         test_obj.assertTrue(status, msg="solver failure : " + str(ex))
 
         # run the plotter

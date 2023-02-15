@@ -17,6 +17,7 @@ from PyPEEC.lib_solver import equation_system
 from PyPEEC.lib_solver import equation_solver
 from PyPEEC.lib_solver import extract_solution
 from PyPEEC.lib_check import check_data_problem
+from PyPEEC.lib_check import check_data_tolerance
 from PyPEEC.lib_check import check_data_solver
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import CheckError, RunError
@@ -268,7 +269,7 @@ def _run_assemble(data_solver):
     return data_solution
 
 
-def run(data_voxel, data_problem):
+def run(data_voxel, data_problem, data_tolerance):
     """
     Main script for solving a problem with the FFT-PEEC solver.
     Handle invalid data with exceptions.
@@ -281,11 +282,14 @@ def run(data_voxel, data_problem):
         Different domains (with the indices of the voxel) are defined.
         The connected components of the graph defined by the voxel structure are defined.
     data_problem: dict
-        The dict describes the problem to be solved.
-        The numerical options are defined.
         The frequency of the problem is defined.
         The electric and magnetic materials are defined.
         The current and voltage sources are defined.
+    data_tolerance: dict
+        The dict describes the numerical options.
+        The tolerances for simplifying the Green functions are defined.
+        The tolerances for the matrix condition numbers are defined.
+        The options for the iterative solver are defined.
 
     Returns
     -------
@@ -304,11 +308,12 @@ def run(data_voxel, data_problem):
 
     # run the solver
     try:
-        # check the problem data
+        # check the problem and tolerance data
         check_data_problem.check_data_problem(data_problem)
+        check_data_tolerance.check_data_tolerance(data_tolerance)
 
         # combine the problem and voxel data
-        data_solver = check_data_solver.get_data_solver(data_voxel, data_problem)
+        data_solver = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
         # prepare the problem
         data_solver = _run_preproc(data_solver)

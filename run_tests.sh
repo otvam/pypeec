@@ -69,7 +69,7 @@ folder=(
   "stl_inductor_air"
   "stl_inductor_core"
   "stl_transformer"
-  "visualization"
+  "config"
 )
 
 init_test

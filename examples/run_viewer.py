@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # get the filename
     file_voxel = os.path.join(PATH_ROOT, EXAMPLE_NAME, "voxel.pck")
     file_point = os.path.join(PATH_ROOT, EXAMPLE_NAME, "point.yaml")
-    file_viewer = os.path.join(PATH_ROOT, "visualization", "data_viewer.json")
+    file_viewer = os.path.join(PATH_ROOT, "config", "data_viewer.json")
 
     # run viewer
     (status, ex) = script.run_viewer(file_voxel, file_point, file_viewer, True)

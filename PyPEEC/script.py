@@ -99,7 +99,7 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
     return status, ex
 
 
-def run_solver(file_voxel, file_problem, file_solution):
+def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     """
     Main script for solving a problem with the FFT-PEEC solver.
     Write the resulting solution file.
@@ -108,6 +108,7 @@ def run_solver(file_voxel, file_problem, file_solution):
     ----------
     file_voxel :  string (input file, Pickle format)
     file_problem: string (input file, JSON/YAML format)
+    file_tolerance: string (input file, JSON/YAML format)
     file_solution: string (output file, Pickle format)
 
     Returns
@@ -124,9 +125,10 @@ def run_solver(file_voxel, file_problem, file_solution):
         logger.info("load the data")
         data_voxel = fileio.load_pickle(file_voxel)
         data_problem = fileio.load_config(file_problem)
+        data_tolerance = fileio.load_config(file_tolerance)
 
         # call the solver
-        (status, data_solution, ex) = solver.run(data_voxel, data_problem)
+        (status, data_solution, ex) = solver.run(data_voxel, data_problem, data_tolerance)
 
         # save results
         if status:
@@ -192,7 +194,7 @@ def main_mesher():
     parser.add_argument(
         "--mesher",
         metavar="file",
-        help="mesher file (input / JSON)",
+        help="mesher file (input / JSON/YAML)",
         required=True,
         dest="file_mesher",
     )
@@ -232,14 +234,14 @@ def main_viewer():
     parser.add_argument(
         "--point",
         metavar="file",
-        help="point file (input / JSON)",
+        help="point file (input / JSON/YAML)",
         required=True,
         dest="file_point",
     )
     parser.add_argument(
         "--viewer",
         metavar="file",
-        help="viewer file (input / JSON)",
+        help="viewer file (input / JSON/YAML)",
         required=True,
         dest="file_viewer",
     )
@@ -278,7 +280,14 @@ def main_solver():
     parser.add_argument(
         "--problem",
         metavar="file",
-        help="problem file (input / JSON)",
+        help="problem file (input / JSON/YAML)",
+        required=True,
+        dest="file_problem",
+    )
+    parser.add_argument(
+        "--tolerance",
+        metavar="file",
+        help="tolerance file (input / JSON/YAML)",
         required=True,
         dest="file_problem",
     )
@@ -292,7 +301,7 @@ def main_solver():
 
     # parse and call
     args = parser.parse_args()
-    (status, ex) = run_solver(args.file_voxel, args.file_problem, args.file_solution)
+    (status, ex) = run_solver(args.file_voxel, args.file_problem, args.file_tolerance, args.file_solution)
     sys.exit(int(not status))
 
 
@@ -318,14 +327,14 @@ def main_plotter():
     parser.add_argument(
         "--point",
         metavar="file",
-        help="point file (input / JSON)",
+        help="point file (input / JSON/YAML)",
         required=True,
         dest="file_point",
     )
     parser.add_argument(
         "--plotter",
         metavar="file",
-        help="plotter file (input / JSON)",
+        help="plotter file (input / JSON/YAML)",
         required=True,
         dest="file_plotter",
     )

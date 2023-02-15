@@ -138,11 +138,12 @@ def _check_source_graph(idx_c, idx_s, connection_def):
                 raise CheckError("a connected component does not include at least one source")
 
 
-def get_data_solver(data_voxel, data_problem):
+def get_data_solver(data_voxel, data_problem, data_tolerance):
     """
-    Combine the voxel data and the problem data.
+    Combine the voxel data, the problem data, and the tolerance data.
     The voxel data contains the mapping between domain names and indices.
     The problem data contains domain names used for the materials and sources.
+    The tolerance data contains numerical options.
     The new dict contains the indices used for the materials and sources.
     """
 
@@ -169,11 +170,11 @@ def get_data_solver(data_voxel, data_problem):
         "n": data_voxel["n"],
         "d": data_voxel["d"],
         "c": data_voxel["c"],
+        "green_simplify": data_tolerance["green_simplify"],
+        "coupling_simplify": data_tolerance["coupling_simplify"],
+        "solver_options": data_tolerance["solver_options"],
+        "condition_options": data_tolerance["condition_options"],
         "freq": data_problem["freq"],
-        "green_simplify": data_problem["green_simplify"],
-        "coupling_simplify": data_problem["coupling_simplify"],
-        "solver_options": data_problem["solver_options"],
-        "condition_options": data_problem["condition_options"],
         "material_idx": material_idx,
         "source_idx": source_idx,
     }
