@@ -54,13 +54,13 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     status = status_gmres and status_res
 
     # display status
-    logger.info("matrix solver: n_dof = %d" % n_dof)
-    logger.info("matrix solver: n_iter = %d" % n_iter)
-    logger.info("matrix solver: res_norm = %.3e" % res_norm)
-    logger.info("matrix solver: status_gmres = %s" % status_gmres)
-    logger.info("matrix solver: status_res = %s" % status_res)
+    logger.debug("matrix solver: n_dof = %d" % n_dof)
+    logger.debug("matrix solver: n_iter = %d" % n_iter)
+    logger.debug("matrix solver: res_norm = %.3e" % res_norm)
+    logger.debug("matrix solver: status_gmres = %s" % status_gmres)
+    logger.debug("matrix solver: status_res = %s" % status_res)
     if status:
-        logger.info("matrix solver: convergence achieved")
+        logger.debug("matrix solver: convergence achieved")
     else:
         logger.warning("matrix solver: convergence issues")
 
@@ -97,12 +97,12 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
     }
 
     # display status
-    logger.info("matrix condition: check = %s" % check)
-    logger.info("matrix condition: value_electric = %.3e" % value_electric)
-    logger.info("matrix condition: value_magnetic = %.3e" % value_magnetic)
-    logger.info("matrix condition: status = %s" % status)
+    logger.debug("matrix condition: check = %s" % check)
+    logger.debug("matrix condition: value_electric = %.3e" % value_electric)
+    logger.debug("matrix condition: value_magnetic = %.3e" % value_magnetic)
+    logger.debug("matrix condition: status = %s" % status)
     if status:
-        logger.info("matrix condition: matrix condition is good")
+        logger.debug("matrix condition: matrix condition is good")
     else:
         logger.warning("matrix condition: matrix condition is problematic")
 

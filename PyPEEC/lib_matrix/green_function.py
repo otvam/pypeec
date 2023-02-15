@@ -215,7 +215,7 @@ def get_green_ana(d, idx, int_type):
         return np.array([], dtype=np.float64)
 
     # display
-    logger.info("analytical solution: %s / %d" % (int_type, len(idx)))
+    logger.debug("analytical solution: %s / %d" % (int_type, len(idx)))
 
     # extract the voxel data
     (dx, dy, dz) = d
@@ -263,7 +263,7 @@ def get_green_num(d, idx, int_type):
         return np.array([], dtype=np.float64)
 
     # display
-    logger.info("numerical approximation: %s / %d" % (int_type, len(idx)))
+    logger.debug("numerical approximation: %s / %d" % (int_type, len(idx)))
 
     # extract the voxel data
     (dx, dy, dz) = d

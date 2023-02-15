@@ -36,7 +36,7 @@ class _IterCounter:
         self.res_iter.append(res)
 
         # log the results
-        logger.info("matrix iter: i_iter = %d / res = %.3e" % (self.n_iter, res))
+        logger.debug("matrix iter: i_iter = %d / res = %.3e" % (self.n_iter, res))
 
     def get_n_iter(self):
         """
@@ -66,14 +66,14 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
         obj.get_callback(res)
 
     # call the solver
-    logger.info("start matrix solver")
+    logger.debug("start matrix solver")
     (sol, flag) = sla.gmres(
         sys_op, rhs,
         tol=rel_tol, atol=abs_tol,
         restart=n_between_restart, maxiter=n_maximum_restart,
         M=pcd_op, callback=fct, callback_type="pr_norm",
     )
-    logger.info("exit matrix solver")
+    logger.debug("exit matrix solver")
 
     # get the number of iterations
     (n_iter, res_iter) = obj.get_n_iter()

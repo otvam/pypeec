@@ -49,11 +49,11 @@ def get_factorize(mat):
         return sla.splu(mat)
 
     # display
-    logger.info("matrix size: (%d, %d) / %d" % (nx, ny, nnz))
+    logger.debug("matrix size: (%d, %d) / %d" % (nx, ny, nnz))
 
     # factorize the matrix
     try:
-        logger.info("matrix factorization")
+        logger.debug("matrix factorization")
 
         if MATRIX_FACTORIZATION == "SuperLU":
             factor = sla.splu(mat)
@@ -62,7 +62,7 @@ def get_factorize(mat):
         else:
             raise ValueError("invalid matrix factorization library")
 
-        logger.info("factorization success")
+        logger.debug("factorization success")
     except RuntimeError:
         logger.warning("factorization failure")
         factor = None

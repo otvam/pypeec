@@ -62,10 +62,10 @@ def get_condition_matrix(mat, norm_options):
         return 0.0
 
     # display
-    logger.info("matrix size: (%d, %d) / %d" % (nx, ny, nnz))
+    logger.debug("matrix size: (%d, %d) / %d" % (nx, ny, nnz))
 
     # get LU decomposition
-    logger.info("compute LU decomposition")
+    logger.debug("compute LU decomposition")
 
     decomposition = _get_decomposition(mat)
 
@@ -78,15 +78,15 @@ def get_condition_matrix(mat, norm_options):
     op = _get_inverse_operator(mat, decomposition)
 
     # compute the norm of the matrix inverse (estimate)
-    logger.info("compute estimate norm of the inverse")
+    logger.debug("compute estimate norm of the inverse")
     nrm_inv = sla.onenormest(op, t=t_accuracy, itmax=n_iter_max)
 
     # compute the norm of the matrix (estimate)
-    logger.info("compute estimate norm of the matrix")
+    logger.debug("compute estimate norm of the matrix")
     nrm_ori = sla.onenormest(mat, t=t_accuracy, itmax=n_iter_max)
 
     # compute an estimate of the condition
-    logger.info("compute condition estimate")
+    logger.debug("compute condition estimate")
     cond = nrm_ori*nrm_inv
 
     return cond

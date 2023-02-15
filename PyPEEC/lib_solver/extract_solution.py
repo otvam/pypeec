@@ -206,12 +206,12 @@ def get_integral(P_fc, P_fm, W_fc, W_fm):
     }
 
     # display
-    logger.info("integral: P_electric = %.3e W" % P_electric)
-    logger.info("integral: P_magnetic = %.3e W" % P_magnetic)
-    logger.info("integral: W_electric = %.3e J" % W_electric)
-    logger.info("integral: W_magnetic = %.3e J" % W_magnetic)
-    logger.info("integral: P_tot = %.3e W" % P_tot)
-    logger.info("integral: W_tot = %.3e J" % W_tot)
+    logger.debug("integral: P_electric = %.3e W" % P_electric)
+    logger.debug("integral: P_magnetic = %.3e W" % P_magnetic)
+    logger.debug("integral: W_electric = %.3e J" % W_electric)
+    logger.debug("integral: W_magnetic = %.3e J" % W_magnetic)
+    logger.debug("integral: P_tot = %.3e W" % P_tot)
+    logger.debug("integral: W_tot = %.3e J" % W_tot)
 
     return integral
 
@@ -284,12 +284,18 @@ def get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all):
             else:
                 raise ValueError("invalid terminal type")
 
+        # compute the apparent power
+        S_tmp = 0.5*V_tmp*np.conj(I_tmp)
+
         # assign the current and voltage
-        terminal[tag] = {"V": V_tmp, "I": I_tmp}
+        terminal[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp}
 
         # display
-        V_str = "%.3e + %.3ej" % (V_tmp.real, V_tmp.imag)
-        I_str = "%.3e + %.3ej" % (I_tmp.real, I_tmp.imag)
-        logger.info("terminal: %s : V = %s V / I = %s A" % (tag, V_str, I_str))
+        V_str = "%+.3e + %+.3ej" % (V_tmp.real, V_tmp.imag)
+        I_str = "%+.3e + %+.3ej" % (I_tmp.real, I_tmp.imag)
+        S_str = "%+.3e + %+.3ej" % (S_tmp.real, S_tmp.imag)
+        logger.debug("terminal: %s : V = %s V" % (tag, V_str))
+        logger.debug("terminal: %s : I = %s A" % (tag, I_str))
+        logger.debug("terminal: %s : S = %s VA" % (tag, S_str))
 
     return terminal

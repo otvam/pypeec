@@ -154,15 +154,15 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     }
 
     # display status
-    logger.info("problem size: n_voxel = %d" % n_voxel)
-    logger.info("problem size: n_face = %d" % n_face)
-    logger.info("problem size: n_voxel_electric = %d" % n_voxel_electric)
-    logger.info("problem size: n_voxel_magnetic = %d" % n_voxel_magnetic)
-    logger.info("problem size: n_face_electric = %d" % n_face_electric)
-    logger.info("problem size: n_face_magnetic = %d" % n_face_magnetic)
-    logger.info("problem size: n_src_current = %d" % n_src_current)
-    logger.info("problem size: n_src_voltage = %d" % n_src_voltage)
-    logger.info("problem size: ratio_voxel = %.3e" % ratio_voxel)
-    logger.info("problem size: ratio_face = %.3e" % ratio_face)
+    logger.debug("problem size: n_voxel = %d" % n_voxel)
+    logger.debug("problem size: n_face = %d" % n_face)
+    logger.debug("problem size: n_voxel_electric = %d" % n_voxel_electric)
+    logger.debug("problem size: n_voxel_magnetic = %d" % n_voxel_magnetic)
+    logger.debug("problem size: n_face_electric = %d" % n_face_electric)
+    logger.debug("problem size: n_face_magnetic = %d" % n_face_magnetic)
+    logger.debug("problem size: n_src_current = %d" % n_src_current)
+    logger.debug("problem size: n_src_voltage = %d" % n_src_voltage)
+    logger.debug("problem size: ratio_voxel = %.3e" % ratio_voxel)
+    logger.debug("problem size: ratio_face = %.3e" % ratio_face)
 
     return problem_status

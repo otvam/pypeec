@@ -44,19 +44,19 @@ def get_status(n, d, c, domain_def, connection_def):
     }
 
     # display status
-    logger.info("voxel size: (nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
-    logger.info("voxel size: (dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
-    logger.info("voxel size: (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
+    logger.debug("voxel size: (nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
+    logger.debug("voxel size: (dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
+    logger.debug("voxel size: (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
 
     # plot the voxel number
-    logger.info("voxel size: n_graph = %d" % n_graph)
-    logger.info("voxel size: n_domain = %d" % n_domain)
-    logger.info("voxel size: n_total = %d" % n_total)
-    logger.info("voxel size: n_used = %d" % n_used)
-    logger.info("voxel size: ratio = %.3e" % ratio)
+    logger.debug("voxel size: n_graph = %d" % n_graph)
+    logger.debug("voxel size: n_domain = %d" % n_domain)
+    logger.debug("voxel size: n_total = %d" % n_total)
+    logger.debug("voxel size: n_used = %d" % n_used)
+    logger.debug("voxel size: ratio = %.3e" % ratio)
 
     # plot the domain size
     for tag, idx in domain_def.items():
-        logger.info("domain size: %s = %d" % (tag, len(idx)))
+        logger.debug("domain size: %s = %d" % (tag, len(idx)))
 
     return voxel_status
