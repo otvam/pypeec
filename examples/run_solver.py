@@ -1,5 +1,5 @@
 """
-User script for solving a problem with the FFT-PEEC solver.
+User script for solving a problem with the PEEC solver.
 """
 
 __author__ = "Thomas Guillod"

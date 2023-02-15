@@ -1,5 +1,5 @@
 """
-Main script for plotting the solution of a FFT-PEEC problem.
+Main script for plotting the solution of a PEEC problem.
 Plot the following features:
     - material description
     - potential (electric and magnetic)
@@ -130,7 +130,7 @@ def _get_plot(grid, voxel, point, solver_status, data_plotter, is_interactive):
 
 def run(data_solution, data_point, data_plotter, is_interactive):
     """
-    Main script for plotting the solution of a FFT-PEEC problem.
+    Main script for plotting the solution of a PEEC problem.
     Handle invalid data with exceptions.
 
     Parameters

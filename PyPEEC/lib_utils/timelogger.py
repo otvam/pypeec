@@ -14,7 +14,6 @@ from PyPEEC import config
 # get config
 LOGGING_LEVEL = config.LOGGING_LEVEL
 LOGGING_INDENTATION = config.LOGGING_INDENTATION
-LOGGING_GLOBAL_TIMER = config.LOGGING_GLOBAL_TIMER
 LOGGING_COLOR = config.LOGGING_COLOR
 LOGGING_CL_DEBUG = config.LOGGING_CL_DEBUG
 LOGGING_CL_INFO = config.LOGGING_CL_INFO
@@ -28,6 +27,29 @@ LOGGING_GLOBAL_TIMESTAMP = time.time()
 
 # logging indentation level (updated inside the blocks)
 LOGGING_CURRENT_LEVEL = 0
+
+
+def _get_format_timestamp(timestamp):
+    """
+    Format a timestamp into a string.
+    """
+
+    timestamp = datetime.datetime.fromtimestamp(timestamp)
+    timestamp = timestamp.strftime("%H:%M:%S,%f")[:-3]
+
+    return timestamp
+
+
+def _get_format_duration(timestamp):
+    """
+    Compute the elapsed time and format the duration into a string.
+    """
+
+    duration = time.time()-timestamp
+    duration = datetime.datetime.utcfromtimestamp(duration)
+    duration = duration.strftime("%H:%M:%S,%f")[:-3]
+
+    return duration
 
 
 class _DeltaTimeFormatter(logging.Formatter):
@@ -56,15 +78,6 @@ class _DeltaTimeFormatter(logging.Formatter):
         # define the black formatter
         self.fmt_black = logging.Formatter(fmt)
 
-        # create a timer
-        self.timer = _DeltaTiming()
-
-        # ensure that all the logger share the same timer
-        if LOGGING_GLOBAL_TIMER:
-            self.timer.set_timestamp(LOGGING_GLOBAL_TIMESTAMP)
-        else:
-            self.timer.set_now()
-
     def format(self, record):
         """
         Format a record to a string.
@@ -76,8 +89,8 @@ class _DeltaTimeFormatter(logging.Formatter):
         msg = record.msg
 
         # add the elapsed time to the log record
-        record.init = self.timer.get_init()
-        record.duration = self.timer.get_duration()
+        record.timestamp = _get_format_timestamp(LOGGING_GLOBAL_TIMESTAMP)
+        record.duration = _get_format_duration(LOGGING_GLOBAL_TIMESTAMP)
 
         # get the message padding for the desired indentation
         pad = " " * (LOGGING_CURRENT_LEVEL*LOGGING_INDENTATION)
@@ -92,56 +105,6 @@ class _DeltaTimeFormatter(logging.Formatter):
             msg = self.fmt_black.format(record)
 
         return msg
-
-
-class _DeltaTiming:
-    """
-    Simple class for computing elapsed time.
-    The results are converted to string format.
-    """
-
-    def __init__(self):
-        """
-        Constructor.
-        Initialize the timer.
-        """
-
-        self.timestamp = None
-
-    def set_now(self):
-        """
-        Set the timer to the current time.
-        """
-
-        self.timestamp = time.time()
-
-    def set_timestamp(self, timestamp):
-        """
-        Set the timer with a provided timestamp.
-        """
-
-        self.timestamp = timestamp
-
-    def get_init(self):
-        """
-        Get the timer starting time (as a string).
-        """
-
-        init = datetime.datetime.fromtimestamp(self.timestamp)
-        init = init.strftime("%H:%M:%S,%f")[:-3]
-
-        return init
-
-    def get_duration(self):
-        """
-        Get the timer elapsed time (as a string).
-        """
-
-        duration = time.time()-self.timestamp
-        duration = datetime.datetime.utcfromtimestamp(duration)
-        duration = duration.strftime("%H:%M:%S,%f")[:-3]
-
-        return duration
 
 
 class BlockTimer:
@@ -160,7 +123,7 @@ class BlockTimer:
 
         self.logger = logger
         self.name = name
-        self.timer = _DeltaTiming()
+        self.timestamp = None
 
     def __enter__(self):
         """
@@ -169,7 +132,7 @@ class BlockTimer:
         """
 
         # start the timer and display
-        self.timer.set_now()
+        self.timestamp = time.time()
         self.logger.info(self.name + " : enter : timing")
 
         # increase the indentation of the block
@@ -187,7 +150,7 @@ class BlockTimer:
         LOGGING_CURRENT_LEVEL -= 1
 
         # stop the timer and display
-        duration = self.timer.get_duration()
+        duration = _get_format_duration(self.timestamp)
         self.logger.info(self.name + " : exit : " + duration)
 
 

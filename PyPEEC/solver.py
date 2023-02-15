@@ -1,5 +1,5 @@
 """
-Main script for solving a problem with the FFT-PEEC solver.
+Main script for solving a problem with the PEEC solver.
 Check the input data, solve the problem, and parse the results.
 The different parts of the code are timed.
 
@@ -271,7 +271,7 @@ def _run_assemble(data_solver):
 
 def run(data_voxel, data_problem, data_tolerance):
     """
-    Main script for solving a problem with the FFT-PEEC solver.
+    Main script for solving a problem with the PEEC solver.
     Handle invalid data with exceptions.
 
     Parameters

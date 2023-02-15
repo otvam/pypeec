@@ -14,8 +14,16 @@ from PyPEEC.lib_utils import fileio
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import FileError
 
+# get the version
+try:
+    from PyPEEC import version
+    VERSION = version.__version__
+except ImportError:
+    VERSION = "x.x.x"
+
 # get a logger
 logger = timelogger.get_logger("SCRIPT")
+logger.info("init the PyPEEC framework")
 
 
 def run_mesher(file_mesher, file_voxel):
@@ -37,9 +45,11 @@ def run_mesher(file_mesher, file_voxel):
 
     from PyPEEC import mesher
 
+    logger.info("init the PyPEEC mesher")
+
     try:
         # load data
-        logger.info("load the data")
+        logger.info("load the input data")
         data_mesher = fileio.load_config(file_mesher)
 
         # get the path for relative file loading
@@ -83,9 +93,11 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
 
     from PyPEEC import viewer
 
+    logger.info("init the PyPEEC viewer")
+
     try:
         # load data
-        logger.info("load the data")
+        logger.info("load the input data")
         data_voxel = fileio.load_pickle(file_voxel)
         data_point = fileio.load_config(file_point)
         data_viewer = fileio.load_config(file_viewer)
@@ -101,7 +113,7 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
 
 def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     """
-    Main script for solving a problem with the FFT-PEEC solver.
+    Main script for solving a problem with the PEEC solver.
     Write the resulting solution file.
 
     Parameters
@@ -120,9 +132,11 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
 
     from PyPEEC import solver
 
+    logger.info("init the PyPEEC solver")
+
     try:
         # load data
-        logger.info("load the data")
+        logger.info("load the input data")
         data_voxel = fileio.load_pickle(file_voxel)
         data_problem = fileio.load_config(file_problem)
         data_tolerance = fileio.load_config(file_tolerance)
@@ -143,7 +157,7 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
 
 def run_plotter(file_solution, file_point, file_plotter, is_interactive):
     """
-    Main script for plotting the solution of a FFT-PEEC problem.
+    Main script for plotting the solution of a PEEC problem.
 
     Parameters
     ----------
@@ -163,9 +177,11 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
 
     from PyPEEC import plotter
 
+    logger.info("init the PyPEEC plotter")
+
     try:
         # load data
-        logger.info("load the data")
+        logger.info("load the input data")
         data_solution = fileio.load_pickle(file_solution)
         data_point = fileio.load_config(file_point)
         data_plotter = fileio.load_config(file_plotter)
@@ -188,9 +204,10 @@ def main_mesher():
     # get the parser
     parser = argparse.ArgumentParser(
         prog="ppmesher",
-        description="Transform the provided data into a 3D voxel structure.",
+        description="PyPEEC mesher: transform the provided data into a 3D voxel structure.",
         epilog="(c) Thomas Guillod, Dartmouth College",
     )
+    parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
     parser.add_argument(
         "--mesher",
         metavar="file",
@@ -221,9 +238,10 @@ def main_viewer():
     # get the parser
     parser = argparse.ArgumentParser(
         prog="ppviewer",
-        description="Visualization of a 3D voxel structure.",
+        description="PyPEEC viewer: visualization of a 3D voxel structure.",
         epilog="(c) Thomas Guillod, Dartmouth College",
     )
+    parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
     parser.add_argument(
         "--voxel",
         metavar="file",
@@ -260,16 +278,17 @@ def main_viewer():
 
 def main_solver():
     """
-    User script for solving a problem with the FFT-PEEC solver.
+    User script for solving a problem with the PEEC solver.
     This script is parsing the command line arguments.
     """
 
     # get the parser
     parser = argparse.ArgumentParser(
         prog="ppsolver",
-        description="Solve a problem with the FFT-PEEC method.",
+        description="PyPEEC solver: solve a problem with the PEEC method.",
         epilog="(c) Thomas Guillod, Dartmouth College",
     )
+    parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
     parser.add_argument(
         "--voxel",
         metavar="file",
@@ -307,16 +326,17 @@ def main_solver():
 
 def main_plotter():
     """
-    User script for plotting the solution of a FFT-PEEC problem.
+    User script for plotting the solution of a PEEC problem.
     This script is parsing the command line arguments.
     """
 
     # get the parser
     parser = argparse.ArgumentParser(
         prog="ppplotter",
-        description="Plot the solution of a FFT-PEEC problem.",
+        description="PyPEEC plotter: plot the solution of a PEEC problem.",
         epilog="(c) Thomas Guillod, Dartmouth College",
     )
+    parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
     parser.add_argument(
         "--solution",
         metavar="file",

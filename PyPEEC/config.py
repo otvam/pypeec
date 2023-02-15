@@ -13,7 +13,6 @@ PATH_ROOT = os.path.dirname(__file__)
 
 # logging information
 LOGGING_LEVEL = "DEBUG"  # logging level for the handlers
-LOGGING_GLOBAL_TIMER = True  # use (or not) a global timer for the different handlers
 LOGGING_INDENTATION = 4  # indentation level for the blocks
 LOGGING_COLOR = True  # use (or not) colors for the logs
 
