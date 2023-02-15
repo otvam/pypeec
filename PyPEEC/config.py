@@ -12,8 +12,9 @@ import os
 PATH_ROOT = os.path.dirname(__file__)
 
 # logging information
-LOGGING_LEVEL = "INFO"
-LOGGING_GLOBAL_TIMER = True
+LOGGING_LEVEL = "INFO"  # logging level for the handlers
+LOGGING_GLOBAL_TIMER = True  # use a global timer (or not) for the different handlers
+LOGGING_INDENTATION = 4  # indentation level for the blocks
 
 # matrix factorization options
 #   - SuperLU is typically slower but integrated with SciPy

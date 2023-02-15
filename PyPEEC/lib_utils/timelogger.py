@@ -13,10 +13,14 @@ from PyPEEC import config
 
 # get config
 LOGGING_LEVEL = config.LOGGING_LEVEL
+LOGGING_INDENTATION = config.LOGGING_INDENTATION
 LOGGING_GLOBAL_TIMER = config.LOGGING_GLOBAL_TIMER
 
 # global timestamp (constant over the complete run)
 LOGGING_GLOBAL_TIMESTAMP = time.time()
+
+# logging indentation level (updated inside the blocks)
+LOGGING_CURRENT_LEVEL = 0
 
 
 class _DeltaTimeFormatter(logging.Formatter):
@@ -24,7 +28,7 @@ class _DeltaTimeFormatter(logging.Formatter):
     Class for adding elapsed time to a logger.
     """
 
-    def __init__(self, fmt, timestamp, global_timer):
+    def __init__(self, fmt):
         """
         Constructor.
         Create a timer.
@@ -34,12 +38,65 @@ class _DeltaTimeFormatter(logging.Formatter):
         super().__init__(fmt)
 
         # create a timer
-        if global_timer:
-            self.timestamp = timestamp
-        else:
-            self.timestamp = time.time()
+        self.timer = _DeltaTiming()
 
-    def _get_time_init(self):
+        # ensure that all the logger share the same timer
+        if LOGGING_GLOBAL_TIMER:
+            self.timer.set_timestamp(LOGGING_GLOBAL_TIMESTAMP)
+        else:
+            self.timer.set_now()
+
+    def format(self, record):
+        """
+        Format a record to a string.
+        Add the elapsed time.
+        """
+
+        # add the elapsed time to the log record
+        record.init = self.timer.get_init()
+        record.duration = self.timer.get_duration()
+
+        # get the message padding for the desired indentation
+        pad = " " * (LOGGING_CURRENT_LEVEL*LOGGING_INDENTATION)
+
+        # add the padding to the message
+        record.msg = pad + record.msg
+
+        # format the log record
+        msg = super().format(record)
+
+        return msg
+
+
+class _DeltaTiming:
+    """
+    Simple class for computing elapsed time.
+    The results are converted to string format.
+    """
+
+    def __init__(self):
+        """
+        Constructor.
+        Initialize the timer.
+        """
+
+        self.timestamp = None
+
+    def set_now(self):
+        """
+        Set the timer to the current time.
+        """
+
+        self.timestamp = time.time()
+
+    def set_timestamp(self, timestamp):
+        """
+        Set the timer with a provided timestamp.
+        """
+
+        self.timestamp = timestamp
+
+    def get_init(self):
         """
         Get the timer starting time (as a string).
         """
@@ -49,7 +106,7 @@ class _DeltaTimeFormatter(logging.Formatter):
 
         return init
 
-    def _get_time_duration(self):
+    def get_duration(self):
         """
         Get the timer elapsed time (as a string).
         """
@@ -60,20 +117,52 @@ class _DeltaTimeFormatter(logging.Formatter):
 
         return duration
 
-    def format(self, record):
+
+class BlockTimer:
+    """
+    Class for timing block of code.
+    Uses enter and exit magic methods.
+    Display the results with a logger.
+    """
+
+    def __init__(self, logger, name):
         """
-        Format a record to a string.
-        Add the elapsed time.
+        Constructor.
+        Assign block name and logger.
+        Create a timer.
         """
 
-        # add the elapsed time to the log record
-        record.init = self._get_time_init()
-        record.duration = self._get_time_duration()
+        self.logger = logger
+        self.name = name
+        self.timer = _DeltaTiming()
 
-        # format the log record
-        msg = super().format(record)
+    def __enter__(self):
+        """
+        Enter magic method.
+        Reset the timer and log the results.
+        """
 
-        return msg
+        # start the timer and display
+        self.timer.set_now()
+        self.logger.info(self.name + " : enter : timing")
+
+        # increase the indentation of the block
+        global LOGGING_CURRENT_LEVEL
+        LOGGING_CURRENT_LEVEL += 1
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """
+        Exit magic method.
+        Get the elapsed time and log the results.
+        """
+
+        # restore the indentation to the previous state
+        global LOGGING_CURRENT_LEVEL
+        LOGGING_CURRENT_LEVEL -= 1
+
+        # stop the timer and display
+        duration = self.timer.get_duration()
+        self.logger.info(self.name + " : exit : " + duration)
 
 
 def log_exception(logger, ex):
@@ -112,11 +201,7 @@ def get_logger(name):
         raise RuntimeError("duplicated logger name")
 
     # get the formatter
-    fmt = _DeltaTimeFormatter(
-        fmt="%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s",
-        timestamp=LOGGING_GLOBAL_TIMESTAMP,
-        global_timer=LOGGING_GLOBAL_TIMER,
-    )
+    fmt = _DeltaTimeFormatter("%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s")
 
     # get the handle
     handler = logging.StreamHandler()
