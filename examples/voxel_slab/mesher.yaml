@@ -1,12 +1,12 @@
 "mesh_type": "voxel"
 "data_voxelize":
-    "n": [2, 2, 5]
-    "d": [10.0e-3, 10.0e-3, 30.0e-3]
+    "n": [1, 1, 7]
+    "d": [10.0e-3, 10.0e-3, 10.0e-3]
     "c": [0.0, 0.0, 0.0]
     "domain_def":
-        "cond": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-        "src": [0, 1, 2, 3]
-        "sink": [16, 17, 18, 19]
-"resampling_factor": [1, 1, 2]
+        "cond": [1, 2, 3, 4, 5]
+        "src": [0]
+        "sink": [6]
+"resampling_factor": [2, 2, 1]
 "domain_connection":
     "connect": {"domain_list": ["cond", "src", "sink"], "connected": true}
