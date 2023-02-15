@@ -406,13 +406,13 @@ def get_domain_stl_path(domain_stl, path_ref):
     Update the filename of the STL files with respect to the provided path.
     """
 
-    # if none, the specified path are already correct
+    # if None, the specified path are already correct
     if path_ref is None:
         return domain_stl
 
     # check the path
     if not isinstance(path_ref, str):
-        raise CheckError("path_ref: path_ref should be a string or none")
+        raise CheckError("path_ref: path_ref should be a string or None")
 
     # init new domain description
     domain_stl_path = dict()
@@ -438,13 +438,13 @@ def get_layer_stack_path(layer_stack, path_ref):
     Update the filename of the PNG images with respect to the provided path.
     """
 
-    # if none, the specified path are already correct
+    # if None, the specified path are already correct
     if path_ref is None:
         return layer_stack
 
     # check the path
     if not isinstance(path_ref, str):
-        raise CheckError("path_ref: path_ref should be a string or none")
+        raise CheckError("path_ref: path_ref should be a string or None")
 
     # init new layer stack
     layer_stack_path = []

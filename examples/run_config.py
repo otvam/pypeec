@@ -16,24 +16,24 @@ PATH_ROOT = examples_config.PATH_ROOT
 
 def _get_plot_options(name):
     """
-    The plot options are controlling the wireframe rendering.
+    The plot options are controlling the 3D wireframe rendering.
     This structure is used by the viewer and the plotter.
     """
 
     plot_options = {
-        "title": name,
-        "grid_plot": True,
-        "grid_thickness": 1.0,
-        "grid_color": "black",
-        "grid_opacity": 0.1,
-        "geom_plot": True,
-        "geom_thickness": 1.0,
-        "geom_color": "black",
-        "geom_opacity": 0.5,
-        "cloud_plot": True,
-        "cloud_color": "red",
-        "cloud_size": 5.0,
-        "cloud_opacity": 0.5,
+        "title": name,  # name displayed on the window corner
+        "grid_plot": True,  # plot (or not) the complete voxel geometry as wireframe
+        "grid_thickness": 1.0,  # line thickness for the complete voxel geometry
+        "grid_color": "black",  # line opacity for the complete voxel geometry
+        "grid_opacity": 0.1,  # line color for the complete voxel geometry
+        "geom_plot": True,  # plot (or not) the non-empty voxels as wireframe
+        "geom_thickness": 1.0,  # line thickness for the non-empty voxels
+        "geom_color": "black",  # line color for the non-empty voxels
+        "geom_opacity": 0.5,  # line opacity for the non-empty voxels
+        "cloud_plot": True,  # plot (or not) the provided point cloud as dots
+        "cloud_color": "red",  # color of the point cloud dots
+        "cloud_size": 5.0,  # size of the point cloud dots
+        "cloud_opacity": 0.5,  # opacity of the point cloud dots
     }
 
     return plot_options
@@ -41,14 +41,14 @@ def _get_plot_options(name):
 
 def _get_clip_options():
     """
-    Define the display (with/without clipping plane).
+    Define the 3D display (with/without clipping plane).
     """
 
     clip_options = {
-        "clip_plot": False,
-        "clip_invert": False,
-        "clip_axis": "z",
-        "clip_value": 0.0,
+        "clip_plot": False,  # add (or not) a widget for interactive clipping
+        "clip_invert": False,  # invert (or not) the clipping direction
+        "clip_axis": "z",  # normal of the clipping direction
+        "clip_value": 0.0,  # initial position for the clipping
     }
 
     return clip_options
@@ -61,9 +61,9 @@ def _get_data_window(name):
     """
 
     data_window = {
-        "title": name,
-        "show_menu": False,
-        "window_size": (800, 600),
+        "title": name,  # window name
+        "show_menu": False,  # show (or not) the window menu
+        "window_size": (800, 600),  # initial window size
     }
 
     return data_window
@@ -91,13 +91,13 @@ def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
     """
 
     data_options = {
-        "var": var,
-        "scale": scale,
-        "log": False,
-        "color_lim": (None, None),
-        "filter_lim": (None, None),
-        "point_size": 10.0,
-        "legend": "%s [%s]" % (name, unit),
+        "var": var,  # name of the scalar variable to be plotted (color scale)
+        "scale": scale,  # scaling of the variable (scaling done just before plotting)
+        "log": False,  # use (or not) a log scale for the color axis
+        "color_lim": (None, None),  # clamping range for the color axis (None for complete range)
+        "filter_lim": (None, None),  # hide voxels/points with values outside this range (None for complete range)
+        "point_size": 10.0,  # size of the marker used for plotting on the point cloud
+        "legend": "%s [%s]" % (name, unit),  # legend of the color axis
     }
 
     data = _get_data_plotter_pyvista("scalar_" + plot_geom, data_options, name)
@@ -113,15 +113,15 @@ def _get_data_plotter_arrow(plot_geom, var_scalar, var_vector, scale, unit, name
     """
 
     data_options = {
-        "var_scalar": var_scalar,
-        "var_vector": var_vector,
-        "scale": scale,
-        "log": False,
-        "color_lim": (None, None),
-        "filter_lim": (None, None),
-        "arrow_threshold": 1e-3,
-        "arrow_scale": 0.5,
-        "legend": "%s [%s]" % (name, unit),
+        "var_scalar": var_scalar,  # name of the scalar variable to be plotted (arrow color)
+        "var_vector": var_vector,  # name of the vector variable to be plotted (arrow direction)
+        "scale": scale,  # scaling of the scalar variable (scaling done just before plotting)
+        "log": False,  # use (or not) a log scale for the color axis
+        "color_lim": (None, None),  # clamping range for the color axis (None for complete range)
+        "filter_lim": (None, None),  # hide arrows with scalar values outside this range (None for complete range)
+        "arrow_threshold": 1e-3,  # relative threshold for arrows with small scalar values
+        "arrow_scale": 0.75,  # relative arrow length (with respect to the voxel size)
+        "legend": "%s [%s]" % (name, unit),  # legend of the color axis
     }
 
     data = _get_data_plotter_pyvista("arrow_" + plot_geom, data_options, name)
@@ -170,28 +170,39 @@ def get_data_tolerance():
     This dict is used by the solver.
     """
 
+    # iterative solver options
     solver_options = {
-        "tolerance": 1e-6,
-        "gmres_options": {
-            "rel_tol": 1e-6,
-            "abs_tol": 1e-12,
-            "n_between_restart": 20,
-            "n_maximum_restart": 100,
+        "tolerance": 1e-6,  # tolerance for checking the solution residuum
+        "gmres_options": {  # options for the GMRES iterative solver
+            "rel_tol": 1e-6,  # relative preconditioned tolerance for GMRES stopping
+            "abs_tol": 1e-12,  # absolute preconditioned tolerance for GMRES stopping
+            "n_between_restart": 20,  # number of GMRES iterations between restarts
+            "n_maximum_restart": 100,  # maximum number of GMRES restart
         }
     }
+
+    # matrix condition check options
     condition_options = {
-        "check": True,
-        "tolerance": 1e15,
-        "norm_options": {
-            "t_accuracy": 2,
-            "n_iter_max": 25,
+        "check": True,  # check (or not) the condition number of the matrices
+        "tolerance": 1e15,  # maximum allowable condition number for the matrices
+        "norm_options": {  # options for computing the one-norm estimate
+            "t_accuracy": 2,  # accuracy parameter for the one-norm estimate
+            "n_iter_max": 25,  # maximum number of iterations for the one-norm estimate
         }
     }
+
+    # control where numerical approximations are used for the Green anc coupling functions
+    #   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used
+    #   - if the normalized voxel distance is larger than the threshold, numerical approximations are used
+    green_simplify = 20.0
+    coupling_simplify = 20.0
+
+    # assemble the data
     data_tolerance = {
-        "green_simplify": 20.0,
-        "coupling_simplify": 20.0,
+        "green_simplify": green_simplify,
+        "coupling_simplify": coupling_simplify,
         "solver_options": solver_options,
-        "condition_options":condition_options,
+        "condition_options": condition_options,
     }
 
     return data_tolerance
