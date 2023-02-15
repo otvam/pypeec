@@ -15,6 +15,13 @@ from PyPEEC import config
 LOGGING_LEVEL = config.LOGGING_LEVEL
 LOGGING_INDENTATION = config.LOGGING_INDENTATION
 LOGGING_GLOBAL_TIMER = config.LOGGING_GLOBAL_TIMER
+LOGGING_COLOR = config.LOGGING_COLOR
+LOGGING_CL_DEBUG = config.LOGGING_CL_DEBUG
+LOGGING_CL_INFO = config.LOGGING_CL_INFO
+LOGGING_CL_WARNING = config.LOGGING_CL_WARNING
+LOGGING_CL_ERROR = config.LOGGING_CL_ERROR
+LOGGING_CL_CRITICAL = config.LOGGING_CL_CRITICAL
+LOGGING_CL_RESET = config.LOGGING_CL_RESET
 
 # global timestamp (constant over the complete run)
 LOGGING_GLOBAL_TIMESTAMP = time.time()
@@ -37,6 +44,18 @@ class _DeltaTimeFormatter(logging.Formatter):
         # call parent constructor
         super().__init__(fmt)
 
+        # define the color formatters
+        self.fmt_color = {
+            logging.DEBUG: logging.Formatter(LOGGING_CL_DEBUG + fmt + LOGGING_CL_RESET),
+            logging.INFO: logging.Formatter(LOGGING_CL_INFO + fmt + LOGGING_CL_RESET),
+            logging.WARNING: logging.Formatter(LOGGING_CL_WARNING + fmt + LOGGING_CL_RESET),
+            logging.ERROR: logging.Formatter(LOGGING_CL_ERROR + fmt + LOGGING_CL_RESET),
+            logging.CRITICAL: logging.Formatter(LOGGING_CL_CRITICAL + fmt + LOGGING_CL_RESET),
+        }
+
+        # define the black formatter
+        self.fmt_black = logging.Formatter(fmt)
+
         # create a timer
         self.timer = _DeltaTiming()
 
@@ -52,6 +71,10 @@ class _DeltaTimeFormatter(logging.Formatter):
         Add the elapsed time.
         """
 
+        # get log
+        lvl = record.levelno
+        msg = record.msg
+
         # add the elapsed time to the log record
         record.init = self.timer.get_init()
         record.duration = self.timer.get_duration()
@@ -60,10 +83,13 @@ class _DeltaTimeFormatter(logging.Formatter):
         pad = " " * (LOGGING_CURRENT_LEVEL*LOGGING_INDENTATION)
 
         # add the padding to the message
-        record.msg = pad + record.msg
+        record.msg = pad + msg
 
-        # format the log record
-        msg = super().format(record)
+        # get the formatter
+        if LOGGING_COLOR:
+            msg = self.fmt_color[lvl].format(record)
+        else:
+            msg = self.fmt_black.format(record)
 
         return msg
 

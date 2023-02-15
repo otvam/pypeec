@@ -12,9 +12,18 @@ import os
 PATH_ROOT = os.path.dirname(__file__)
 
 # logging information
-LOGGING_LEVEL = "INFO"  # logging level for the handlers
-LOGGING_GLOBAL_TIMER = True  # use a global timer (or not) for the different handlers
+LOGGING_LEVEL = "DEBUG"  # logging level for the handlers
+LOGGING_GLOBAL_TIMER = True  # use (or not) a global timer for the different handlers
 LOGGING_INDENTATION = 4  # indentation level for the blocks
+LOGGING_COLOR = True  # use (or not) colors for the logs
+
+# logging color
+LOGGING_CL_DEBUG = '\x1b[38;5;247m'
+LOGGING_CL_INFO = '\x1b[38;5;15m'
+LOGGING_CL_WARNING = '\x1b[38;5;202m'
+LOGGING_CL_ERROR = '\x1b[38;5;196m'
+LOGGING_CL_CRITICAL = '\x1b[38;5;196m'
+LOGGING_CL_RESET = '\x1b[0m'
 
 # matrix factorization options
 #   - SuperLU is typically slower but integrated with SciPy
