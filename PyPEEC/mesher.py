@@ -62,9 +62,9 @@ def _run_png(data_voxelize, path_ref):
     layer_stack = data_voxelize["layer_stack"]
 
     # get the voxel geometry and the incidence matrix
-    with timelogger.BlockTimer(logger, "png_mesher"):
-        layer_stack = check_data_mesher.get_layer_stack_path(layer_stack, path_ref)
-        (n, domain_def) = png_mesher.get_mesh(nx, ny, domain_color, layer_stack)
+    logger.info("enter png_mesher")
+    layer_stack = check_data_mesher.get_layer_stack_path(layer_stack, path_ref)
+    (n, domain_def) = png_mesher.get_mesh(nx, ny, domain_color, layer_stack)
 
     # assemble the data
     data_voxel = {
@@ -92,10 +92,10 @@ def _run_stl(data_voxelize, path_ref):
     domain_conflict = data_voxelize["domain_conflict"]
 
     # get the voxel geometry and the incidence matrix
-    with timelogger.BlockTimer(logger, "voxel_geometry"):
-        domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
-        (n, d, c, domain_def) = stl_mesher.get_mesh(n, d, c, pts_min, pts_max, domain_stl)
-        domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
+    logger.info("enter voxel_geometry")
+    domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
+    (n, d, c, domain_def) = stl_mesher.get_mesh(n, d, c, pts_min, pts_max, domain_stl)
+    domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
 
     # assemble the data
     data_voxel = {
@@ -123,14 +123,14 @@ def _run_resample_graph(data_voxel, data_mesher):
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
 
-    with timelogger.BlockTimer(logger, "voxel_resample"):
-        (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, resampling_factor)
+    logger.info("enter voxel_resample")
+    (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, resampling_factor)
 
-    with timelogger.BlockTimer(logger, "voxel_connection"):
-        connection_def = voxel_connection.get_connection(n, domain_def, domain_connection)
+    logger.info("enter voxel_connection")
+    connection_def = voxel_connection.get_connection(n, domain_def, domain_connection)
 
-    with timelogger.BlockTimer(logger, "voxel_summary"):
-        voxel_status = voxel_summary.get_status(n, d, c, domain_def, connection_def)
+    logger.info("enter voxel_summary")
+    voxel_status = voxel_summary.get_status(n, d, c, domain_def, connection_def)
 
     # assemble the data
     data_voxel = {

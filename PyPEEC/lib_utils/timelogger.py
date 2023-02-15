@@ -34,57 +34,12 @@ class _DeltaTimeFormatter(logging.Formatter):
         super().__init__(fmt)
 
         # create a timer
-        self.timer = _DeltaTiming()
-
-        # ensure that all the logger share the same timer
         if global_timer:
-            self.timer.set_timestamp(timestamp)
+            self.timestamp = timestamp
+        else:
+            self.timestamp = time.time()
 
-    def format(self, record):
-        """
-        Format a record to a string.
-        Add the elapsed time.
-        """
-
-        # add the elapsed time to the log record
-        record.init = self.timer.get_init()
-        record.duration = self.timer.get_duration()
-
-        # format the log record
-        msg = super().format(record)
-
-        return msg
-
-
-class _DeltaTiming:
-    """
-    Simple class for computing elapsed time.
-    The results are converted to string format.
-    """
-
-    def __init__(self):
-        """
-        Constructor.
-        Initialize the timer.
-        """
-
-        self.timestamp = time.time()
-
-    def set_now(self):
-        """
-        Set the timer to the current time.
-        """
-
-        self.timestamp = time.time()
-
-    def set_timestamp(self, timestamp):
-        """
-        Set the timer with a provided timestamp.
-        """
-
-        self.timestamp = timestamp
-
-    def get_init(self):
+    def _get_time_init(self):
         """
         Get the timer starting time (as a string).
         """
@@ -94,7 +49,7 @@ class _DeltaTiming:
 
         return init
 
-    def get_duration(self):
+    def _get_time_duration(self):
         """
         Get the timer elapsed time (as a string).
         """
@@ -105,42 +60,20 @@ class _DeltaTiming:
 
         return duration
 
-
-class BlockTimer:
-    """
-    Class for timing block of code.
-    Uses enter and exit magic methods.
-    Display the results with a logger.
-    """
-
-    def __init__(self, logger, name):
+    def format(self, record):
         """
-        Constructor.
-        Assign block name and logger.
-        Create a timer.
+        Format a record to a string.
+        Add the elapsed time.
         """
 
-        self.logger = logger
-        self.name = name
-        self.timer = _DeltaTiming()
+        # add the elapsed time to the log record
+        record.init = self._get_time_init()
+        record.duration = self._get_time_duration()
 
-    def __enter__(self):
-        """
-        Enter magic method.
-        Reset the timer and log the results.
-        """
+        # format the log record
+        msg = super().format(record)
 
-        self.timer.set_now()
-        self.logger.info(self.name + " : enter : timing")
-
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        """
-        Exit magic method.
-        Get the elapsed time and log the results.
-        """
-
-        duration = self.timer.get_duration()
-        self.logger.info(self.name + " : exit : " + duration)
+        return msg
 
 
 def log_exception(logger, ex):
