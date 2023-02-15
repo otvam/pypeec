@@ -10,7 +10,6 @@ import os
 import pickle
 import tempfile
 import logging
-from PyPEEC import script
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.INFO)
@@ -29,6 +28,9 @@ def _run_workflow(test_obj, name):
 
     The intermediate file are stored with temporary files.
     """
+
+    # import PyPEEC
+    from PyPEEC import script
 
     # start the test
     print("run")

@@ -4,6 +4,7 @@
 
 ![viewer_1](gallery/viewer_1.png)
 ![viewer_2](gallery/viewer_2.png)
+![viewer_2](gallery/viewer_3.png)
 
 ## Plotter (Solver Results)
 
@@ -14,3 +15,5 @@
 ![plotter_5](gallery/plotter_5.png)
 ![plotter_6](gallery/plotter_6.png)
 ![plotter_7](gallery/plotter_7.png)
+![plotter_6](gallery/plotter_8.png)
+![plotter_7](gallery/plotter_9.png)
