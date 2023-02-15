@@ -1,6 +1,6 @@
 """
-Define the options for the viewer and plotter.
-These options are dumped into JSON files.
+Generate the configuration files (tolerance, viewer, and plotter files).
+These configurations are dumped into JSON files.
 """
 
 __author__ = "Thomas Guillod"
@@ -164,6 +164,39 @@ def _get_data_plotter_matplotlib(data_plot, name):
     return data
 
 
+def get_data_tolerance():
+    """
+    Get the numerical options for the solver.
+    This dict is used by the solver.
+    """
+
+    solver_options = {
+        "tolerance": 1e-6,
+        "gmres_options": {
+            "rel_tol": 1e-6,
+            "abs_tol": 1e-12,
+            "n_between_restart": 20,
+            "n_maximum_restart": 100,
+        }
+    }
+    condition_options = {
+        "check": True,
+        "tolerance": 1e15,
+        "norm_options": {
+            "t_accuracy": 2,
+            "n_iter_max": 25,
+        }
+    }
+    data_tolerance = {
+        "green_simplify": 20.0,
+        "coupling_simplify": 20.0,
+        "solver_options": solver_options,
+        "condition_options":condition_options,
+    }
+
+    return data_tolerance
+
+
 def get_data_viewer():
     """
     Get the options for visualizing the voxel structure.
@@ -227,14 +260,18 @@ def get_data_plotter():
 
 if __name__ == "__main__":
     # get the filename
+    file_tolerance = os.path.join(PATH_ROOT, "config", "data_tolerance.json")
     file_plotter = os.path.join(PATH_ROOT, "config", "data_plotter.json")
     file_viewer = os.path.join(PATH_ROOT, "config", "data_viewer.json")
 
     # get data
+    data_tolerance = get_data_tolerance()
     data_viewer = get_data_viewer()
     data_plotter = get_data_plotter()
 
     # create file
+    with open(file_tolerance, "w") as fid:
+        json.dump(data_tolerance, fid, indent=4)
     with open(file_viewer, "w") as fid:
         json.dump(data_viewer, fid, indent=4)
     with open(file_plotter, "w") as fid:

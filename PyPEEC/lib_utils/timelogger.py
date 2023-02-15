@@ -13,10 +13,14 @@ from PyPEEC import config
 
 # get config
 LOGGING_LEVEL = config.LOGGING_LEVEL
+LOGGING_INDENTATION = config.LOGGING_INDENTATION
 LOGGING_GLOBAL_TIMER = config.LOGGING_GLOBAL_TIMER
 
 # global timestamp (constant over the complete run)
 LOGGING_GLOBAL_TIMESTAMP = time.time()
+
+# logging indentation level (updated inside the blocks)
+LOGGING_CURRENT_LEVEL = 0
 
 
 class _DeltaTimeFormatter(logging.Formatter):
@@ -24,7 +28,7 @@ class _DeltaTimeFormatter(logging.Formatter):
     Class for adding elapsed time to a logger.
     """
 
-    def __init__(self, fmt, timestamp, global_timer):
+    def __init__(self, fmt):
         """
         Constructor.
         Create a timer.
@@ -37,8 +41,10 @@ class _DeltaTimeFormatter(logging.Formatter):
         self.timer = _DeltaTiming()
 
         # ensure that all the logger share the same timer
-        if global_timer:
-            self.timer.set_timestamp(timestamp)
+        if LOGGING_GLOBAL_TIMER:
+            self.timer.set_timestamp(LOGGING_GLOBAL_TIMESTAMP)
+        else:
+            self.timer.set_now()
 
     def format(self, record):
         """
@@ -49,6 +55,12 @@ class _DeltaTimeFormatter(logging.Formatter):
         # add the elapsed time to the log record
         record.init = self.timer.get_init()
         record.duration = self.timer.get_duration()
+
+        # get the message padding for the desired indentation
+        pad = " " * (LOGGING_CURRENT_LEVEL*LOGGING_INDENTATION)
+
+        # add the padding to the message
+        record.msg = pad + record.msg
 
         # format the log record
         msg = super().format(record)
@@ -68,7 +80,7 @@ class _DeltaTiming:
         Initialize the timer.
         """
 
-        self.timestamp = time.time()
+        self.timestamp = None
 
     def set_now(self):
         """
@@ -130,8 +142,13 @@ class BlockTimer:
         Reset the timer and log the results.
         """
 
+        # start the timer and display
         self.timer.set_now()
         self.logger.info(self.name + " : enter : timing")
+
+        # increase the indentation of the block
+        global LOGGING_CURRENT_LEVEL
+        LOGGING_CURRENT_LEVEL += 1
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """
@@ -139,6 +156,11 @@ class BlockTimer:
         Get the elapsed time and log the results.
         """
 
+        # restore the indentation to the previous state
+        global LOGGING_CURRENT_LEVEL
+        LOGGING_CURRENT_LEVEL -= 1
+
+        # stop the timer and display
         duration = self.timer.get_duration()
         self.logger.info(self.name + " : exit : " + duration)
 
@@ -179,11 +201,7 @@ def get_logger(name):
         raise RuntimeError("duplicated logger name")
 
     # get the formatter
-    fmt = _DeltaTimeFormatter(
-        fmt="%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s",
-        timestamp=LOGGING_GLOBAL_TIMESTAMP,
-        global_timer=LOGGING_GLOBAL_TIMER,
-    )
+    fmt = _DeltaTimeFormatter("%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s")
 
     # get the handle
     handler = logging.StreamHandler()
