@@ -25,8 +25,8 @@ def _load_yaml(filename):
             data = yaml.safe_load(fid)
     except FileNotFoundError:
         raise FileError("cannot open the file: %s" % filename)
-    except yaml.YAMLError:
-        raise FileError("invalid YAML file: %s" % filename)
+    except yaml.YAMLError as ex:
+        raise FileError("invalid YAML file: %s\n%s" % (filename, str(ex)))
 
     return data
 
@@ -41,8 +41,8 @@ def _load_json(filename):
             data = json.load(fid)
     except FileNotFoundError:
         raise FileError("cannot open the file: %s" % filename)
-    except json.JSONDecodeError:
-        raise FileError("invalid JSON file: %s" % filename)
+    except json.JSONDecodeError as ex:
+        raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
 
     return data
 
