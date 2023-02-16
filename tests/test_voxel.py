@@ -21,7 +21,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 28, "n_used_ref": 28,
-            "P_tot_ref": 7.49997749e-07, "W_tot_ref": 3.56186529e-09, "tol": 1e-4,
+            "P_tot_ref": 7.49997749e-07, "W_tot_ref": 1.78093265e-09, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "voxel_slab", res)
 
@@ -32,7 +32,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 175, "n_used_ref": 55,
-            "P_tot_ref": 5.45468125e-05, "W_tot_ref": 2.07097476e-08, "tol": 1e-4,
+            "P_tot_ref": 5.45468125e-05, "W_tot_ref": 1.03548738e-08, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "voxel_core", res)
 
@@ -43,7 +43,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 75, "n_used_ref": 31,
-            "P_tot_ref": 4.59670260e-04, "W_tot_ref": 1.98280381e-09, "tol": 1e-4,
+            "P_tot_ref": 4.59670260e-04, "W_tot_ref": 9.91401905e-10, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "voxel_transformer", res)
 

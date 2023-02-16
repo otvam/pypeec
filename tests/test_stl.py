@@ -21,7 +21,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 94424, "n_used_ref": 25152,
-            "P_tot_ref": 1.10047653e-03, "W_tot_ref": 9.03440977e-09, "tol": 1e-4,
+            "P_tot_ref": 2.20095306e-03, "W_tot_ref": 9.03438792e-09, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "stl_inductor_air", res)
 
@@ -32,7 +32,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 161280, "n_used_ref": 33523,
-            "P_tot_ref": 1.03039405e-03, "W_tot_ref": 3.85162914e-08, "tol": 1e-4,
+            "P_tot_ref": 2.06078810e-03, "W_tot_ref": 3.85162524e-08, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "stl_inductor_core", res)
 
@@ -43,7 +43,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 102510, "n_used_ref": 23480,
-            "P_tot_ref": 1.47073968e-03, "W_tot_ref": 6.07217219e-08, "tol": 1e-4,
+            "P_tot_ref": 1.47073968e-03, "W_tot_ref": 3.03608609e-08, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "stl_transformer", res)
 

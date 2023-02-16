@@ -21,20 +21,31 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 20808, "n_used_ref": 3210,
-            "P_tot_ref": 1.85947889e-04, "W_tot_ref": 7.91119313e-09, "tol": 1e-4,
+            "P_tot_ref": 3.71895778e-04, "W_tot_ref": 7.91119490e-09, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "png_shield", res)
 
-    def test_png_inductor(self):
+    def test_png_inductor_spiral(self):
         """
-        Test workflow for png_inductor.
+        Test workflow for png_inductor_spiral.
         """
 
         res = {
             "n_total_ref": 225280, "n_used_ref": 16896,
-            "P_tot_ref": 1.55220537e-02, "W_tot_ref": 8.93909937e-09, "tol": 1e-4,
+            "P_tot_ref": 1.55220537e-02, "W_tot_ref": 4.46954969e-09, "tol": 1e-4,
         }
-        test_workflow.test_workflow(self, "png_inductor", res)
+        test_workflow.test_workflow(self, "png_inductor_spiral", res)
+
+    def test_png_inductor_gap(self):
+        """
+        Test workflow for png_inductor_gap.
+        """
+
+        res = {
+            "n_total_ref": 87480, "n_used_ref": 34196,
+            "P_tot_ref": 6.66909878e-05, "W_tot_ref": 3.71206337e-08, "tol": 1e-4,
+        }
+        test_workflow.test_workflow(self, "png_inductor_gap", res)
 
     def test_png_busbar(self):
         """
@@ -43,7 +54,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 9604, "n_used_ref": 3341,
-            "P_tot_ref": 2.29063158e-03, "W_tot_ref": 4.30449191e-10, "tol": 1e-4,
+            "P_tot_ref": 2.29063158e-03, "W_tot_ref": 2.15224596e-10, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "png_busbar", res)
 
@@ -54,7 +65,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 58564, "n_used_ref": 1945,
-            "P_tot_ref": 3.82645737e-03, "W_tot_ref": 4.67362768e-09, "tol": 1e-4,
+            "P_tot_ref": 7.65291474e-03, "W_tot_ref": 4.67362770e-09, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "png_pcb", res)
 
@@ -65,7 +76,7 @@ class TestMesherViewer(unittest.TestCase):
 
         res = {
             "n_total_ref": 24010, "n_used_ref": 18770,
-            "P_tot_ref": 2.09630131e-05, "W_tot_ref": 6.15475121e-10, "tol": 1e-4,
+            "P_tot_ref": 2.09630131e-05, "W_tot_ref": 3.07737561e-10, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "png_wire", res)
 

@@ -276,9 +276,9 @@ def get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all):
 
     # get the factor for getting the average values
     if freq == 0:
-        fact = 0.5
+        fact = 1.0
     else:
-        fact = 0.25
+        fact = 0.5
 
     # parse the current source terminals
     for tag, dat_tmp in source_idx.items():
@@ -303,7 +303,7 @@ def get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all):
                 raise ValueError("invalid terminal type")
 
         # compute the apparent power
-        S_tmp = freq*V_tmp*np.conj(I_tmp)
+        S_tmp = fact*V_tmp*np.conj(I_tmp)
 
         # assign the current and voltage
         terminal[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp}

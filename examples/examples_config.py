@@ -18,7 +18,8 @@ PATH_ROOT = os.path.dirname(__file__)
 #   stl_inductor_air
 #   stl_inductor_core
 #   stl_transformer
-#   png_inductor
+#   png_inductor_spiral
+#   png_inductor_gap
 #   png_shield
 #   png_busbar
 #   png_wire
