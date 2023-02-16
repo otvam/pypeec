@@ -196,7 +196,7 @@ def _run_postproc(data_solver):
 
         # get the losses and energy
         (P_fc, P_fm) = extract_solution.get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m)
-        (W_fc, W_fm) = extract_solution.get_energy(I_fc, I_fm, L_op_c, K_op_c)
+        (W_fc, W_fm) = extract_solution.get_energy(freq, I_fc, I_fm, L_op_c, K_op_c)
 
         # get the voxel flow densities from the face flows
         J_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, I_fc, "vector")
@@ -217,7 +217,7 @@ def _run_postproc(data_solver):
         (V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src)
 
         # parse the terminal voltages and currents for the sources
-        terminal = extract_solution.get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all)
+        terminal = extract_solution.get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all)
 
     # assemble results
     data_solver["terminal"] = terminal

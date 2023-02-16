@@ -159,28 +159,40 @@ def get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m):
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
+    # get the factor for getting the average values
+    if freq == 0:
+        fact = 1.0
+    else:
+        fact = 0.5
+
     # get the magnetic losses linked with the electric domains
-    P_fc = 0.5*np.conj(I_fc)*R_vec_c*I_fc
+    P_fc = fact*np.conj(I_fc)*R_vec_c*I_fc
     P_fc = np.real(P_fc)
 
     # get the magnetic losses linked with the magnetic domains
-    P_fm = 0.5*np.conj(s*I_fm)*R_vec_m*I_fm
+    P_fm = fact*np.conj(s*I_fm)*R_vec_m*I_fm
     P_fm = np.real(P_fm)
 
     return P_fc, P_fm
 
 
-def get_energy(I_fc, I_fm, L_op_c, K_op_c):
+def get_energy(freq, I_fc, I_fm, L_op_c, K_op_c):
     """
     Get the energy for the electric and magnetic domains.
     """
 
+    # get the factor for getting the average values
+    if freq == 0:
+        fact = 0.5
+    else:
+        fact = 0.25
+
     # get the magnetic energy linked with the electric domains
-    W_fc = 0.5*np.conj(I_fc)*L_op_c(I_fc)
+    W_fc = fact*np.conj(I_fc)*L_op_c(I_fc)
     W_fc = np.real(W_fc)
 
     # get the magnetic energy linked with the magnetic domains
-    W_fm = 0.5*np.conj(I_fc)*K_op_c(I_fm)
+    W_fm = fact*np.conj(I_fc)*K_op_c(I_fm)
     W_fm = np.real(W_fm)
 
     return W_fc, W_fm
@@ -251,7 +263,7 @@ def get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
     return V_v_all, I_src_c_all, I_src_v_all
 
 
-def get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all):
+def get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
@@ -261,6 +273,12 @@ def get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all):
 
     # init terminal dict
     terminal = dict()
+
+    # get the factor for getting the average values
+    if freq == 0:
+        fact = 0.5
+    else:
+        fact = 0.25
 
     # parse the current source terminals
     for tag, dat_tmp in source_idx.items():
@@ -285,7 +303,7 @@ def get_terminal(source_idx, V_v_all, I_src_c_all, I_src_v_all):
                 raise ValueError("invalid terminal type")
 
         # compute the apparent power
-        S_tmp = 0.5*V_tmp*np.conj(I_tmp)
+        S_tmp = freq*V_tmp*np.conj(I_tmp)
 
         # assign the current and voltage
         terminal[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp}
