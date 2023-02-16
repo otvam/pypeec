@@ -6,11 +6,6 @@
 # exclude pickle file
 *.pck
 
-# exclude the test files
-tests/**/*.json
-tests/**/*.png
-tests/**/*.stl
-
 # remove packinging files
 dist/*
 PyPEEC.egg-info/*

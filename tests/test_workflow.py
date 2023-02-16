@@ -36,12 +36,12 @@ def _run_workflow(test_obj, name):
     print("run")
 
     # get input file name
-    file_mesher = os.path.join(path_root, name, "mesher.yaml")
-    file_point = os.path.join(path_root, name, "point.yaml")
-    file_problem = os.path.join(path_root, name, "problem.yaml")
-    file_plotter = os.path.join(path_root, "config", "data_plotter.json")
-    file_viewer = os.path.join(path_root, "config", "data_viewer.json")
-    file_tolerance = os.path.join(path_root, "config", "data_tolerance.json")
+    file_mesher = os.path.join(path_root, "..", "examples", name, "mesher.yaml")
+    file_point = os.path.join(path_root, "..", "examples", name, "point.yaml")
+    file_problem = os.path.join(path_root, "..", "examples", name, "problem.yaml")
+    file_plotter = os.path.join(path_root, "..", "examples", "config", "data_plotter.json")
+    file_viewer = os.path.join(path_root, "..", "examples", "config", "data_viewer.json")
+    file_tolerance = os.path.join(path_root, "..", "examples", "config", "data_tolerance.json")
 
     # get the temporary files
     fid_voxel = tempfile.NamedTemporaryFile(suffix='.pck')
