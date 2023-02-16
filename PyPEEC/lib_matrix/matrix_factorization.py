@@ -35,6 +35,7 @@ else:
 warnings.filterwarnings("ignore", module="scipy.sparse.linalg")
 warnings.filterwarnings("ignore", module="scikits.umfpack")
 
+
 def get_factorize(mat):
     """
     Factorize a sparse matrix.
@@ -46,7 +47,8 @@ def get_factorize(mat):
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
-        return sla.splu(mat)
+        factor = sla.splu(mat)
+        return factor
 
     # display
     logger.debug("matrix size: (%d, %d) / %d" % (nx, ny, nnz))

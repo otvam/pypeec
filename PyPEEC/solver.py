@@ -37,6 +37,7 @@ def _run_preproc(data_solver):
     c = data_solver["c"]
     green_simplify = data_solver["green_simplify"]
     coupling_simplify = data_solver["coupling_simplify"]
+    has_coupling = data_solver["has_coupling"]
 
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
@@ -55,7 +56,7 @@ def _run_preproc(data_solver):
         G_mutual = system_tensor.get_green_tensor(n, d, green_simplify)
 
         # Green function mutual coefficients
-        K_tsr = system_tensor.get_coupling_tensor(n, d, coupling_simplify)
+        K_tsr = system_tensor.get_coupling_tensor(n, d, coupling_simplify, has_coupling)
 
     # assemble results
     data_solver["coord_vox"] = coord_vox
@@ -78,6 +79,9 @@ def _run_main(data_solver):
     freq = data_solver["freq"]
     solver_options = data_solver["solver_options"]
     condition_options = data_solver["condition_options"]
+    has_electric = data_solver["has_electric"]
+    has_magnetic = data_solver["has_magnetic"]
+    has_coupling = data_solver["has_coupling"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
     A_vox = data_solver["A_vox"]
@@ -105,17 +109,17 @@ def _run_main(data_solver):
     # get the resistances and inductances
     with timelogger.BlockTimer(logger, "system_matrix"):
         # get the resistance vector
-        R_vec_c = system_matrix.get_R_vector(n, d, A_net_c, idx_fc, rho_vc)
-        R_vec_m = system_matrix.get_R_vector(n, d, A_net_m, idx_fm, rho_vm)
+        R_vec_c = system_matrix.get_R_vector(n, d, A_net_c, idx_fc, rho_vc, has_electric)
+        R_vec_m = system_matrix.get_R_vector(n, d, A_net_m, idx_fm, rho_vm, has_magnetic)
 
         # get the inductance tensor (preconditioner and full problem)
-        (L_vec_c, L_op_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual)
+        (L_vec_c, L_op_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual, has_electric)
 
         # get the potential tensor (preconditioner and full problem)
-        (P_vec_m, P_op_m) = system_matrix.get_P_matrix(n, d, idx_vm, G_self, G_mutual)
+        (P_vec_m, P_op_m) = system_matrix.get_P_matrix(n, d, idx_vm, G_self, G_mutual, has_magnetic)
 
         # get the coupling matrices
-        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr)
+        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling)
 
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):

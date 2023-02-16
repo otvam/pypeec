@@ -169,7 +169,7 @@ def get_green_tensor(n, d, green_simplify):
     return G_mutual
 
 
-def get_coupling_tensor(n, d, coupling_simplify):
+def get_coupling_tensor(n, d, coupling_simplify, has_coupling):
     """
     Compute the coupling functions for the complete voxel structure.
     For the close coefficients, an analytical solution is used.
@@ -183,6 +183,10 @@ def get_coupling_tensor(n, d, coupling_simplify):
     # extract the voxel data
     (nx, ny, nz) = n
     nv = nx*ny*nz
+
+    # check if the tensor is required
+    if not has_coupling:
+        return None
 
     # get the indices of the complete voxel structure (as a matrix)
     idx = _get_voxel_indices(n)

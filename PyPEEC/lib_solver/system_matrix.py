@@ -69,13 +69,34 @@ def _get_face_voxel_matrix(n, idx_v, idx_f, A_net):
     return A_fv_net, idx_fv
 
 
-def get_R_vector(n, d, A_net, idx_f, rho_v):
+def _get_operator_zeros(idx_out, idx_in):
+    """
+    Get a linear operator returning zeros.
+    """
+
+    # function returning zeros
+    def fct(_):
+        var_out = np.zeros(len(idx_out), dtype=np.complex128)
+        return var_out
+
+    # fake operator
+    op = sla.LinearOperator((len(idx_out), len(idx_in)), matvec=fct)
+
+    return op
+
+
+def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
     """
     Extract the resistance vector of the system (diagonal of the resistance matrix).
 
     The problem contains n_f internal faces.
     The resistance vector has the following length: n_f.
     """
+
+    # check if the vector is required
+    if not has_domain:
+        R_vec = np.zeros(len(idx_f), dtype=np.complex128)
+        return R_vec
 
     # extract the voxel data
     (nx, ny, nz) = n
@@ -101,7 +122,7 @@ def get_R_vector(n, d, A_net, idx_f, rho_v):
     return R_vec
 
 
-def get_L_matrix(n, d, idx_f, G_self, G_mutual):
+def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     """
     Extract the inductance matrix of the system (used for the full system).
 
@@ -114,6 +135,12 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual):
         - input size: n_f
         - output size: n_f
     """
+
+    # check if the matrix is required
+    if not has_domain:
+        L_vec = np.zeros(len(idx_f), dtype=np.float64)
+        L_op = _get_operator_zeros(idx_f, idx_f)
+        return L_vec, L_op
 
     # vacuum permeability
     mu = 4*np.pi*1e-7
@@ -142,7 +169,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual):
     return L_vec, L_op
 
 
-def get_P_matrix(n, d, idx_v, G_self, G_mutual):
+def get_P_matrix(n, d, idx_v, G_self, G_mutual, has_domain):
     """
     Extract the potential matrix of the system.
 
@@ -155,6 +182,12 @@ def get_P_matrix(n, d, idx_v, G_self, G_mutual):
         - input size: n_v
         - output size: n_v
     """
+
+    # check if the matrix is required
+    if not has_domain:
+        P_vec = np.zeros(len(idx_v), dtype=np.float64)
+        P_op = _get_operator_zeros(idx_v, idx_v)
+        return P_vec, P_op
 
     # vacuum permeability
     mu = 4*np.pi*1e-7
@@ -179,7 +212,7 @@ def get_P_matrix(n, d, idx_v, G_self, G_mutual):
     return P_vec, P_op
 
 
-def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr):
+def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling):
     """
     Extract the magnetic-electric coupling matrices.
 
@@ -207,6 +240,12 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
         - input size: n_fc
         - output size: n_fm
     """
+
+    # check if the matrix is required
+    if not has_coupling:
+        K_op_c = _get_operator_zeros(idx_fc, idx_fm)
+        K_op_m = _get_operator_zeros(idx_fm, idx_fc)
+        return K_op_c, K_op_m
 
     # get the face voxel incidence matrix
     (A_fv_net_c, idx_fvc) = _get_face_voxel_matrix(n, idx_vc, idx_fc, A_net_c)

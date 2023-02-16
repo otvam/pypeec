@@ -119,11 +119,15 @@ def _check_indices(idx_c, idx_m, idx_s):
     if len(np.intersect1d(idx_c, idx_m)) != 0:
         raise CheckError("magnetic and electric indices should be unique")
 
-    # check that the terminal indices are material indices
+    # check that the problem is not empty
+    if len(idx_c) == 0:
+        raise CheckError("electric indices should not be empty")
+    if len(idx_s) == 0:
+        raise CheckError("sources indices should not be empty")
+
+    # check that the terminal indices are electric indices
     if not np.all(np.in1d(idx_s, idx_c)):
         raise CheckError("source indices are not included in electric indices")
-    if np.any(np.in1d(idx_s, idx_m)):
-        raise CheckError("source indices are included in magnetic indices")
 
 
 def _check_source_graph(idx_c, idx_s, connection_def):
@@ -165,6 +169,11 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     # check graph
     _check_source_graph(idx_c, idx_s, connection_def)
 
+    # check the existence of magnetic domains
+    has_electric = len(idx_c) > 0
+    has_magnetic = len(idx_m) > 0
+    has_coupling = has_electric and has_magnetic
+
     # assign combined data
     data_solver = {
         "n": data_voxel["n"],
@@ -177,6 +186,9 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         "freq": data_problem["freq"],
         "material_idx": material_idx,
         "source_idx": source_idx,
+        "has_electric": has_electric,
+        "has_magnetic": has_magnetic,
+        "has_coupling": has_coupling,
     }
 
     return data_solver
