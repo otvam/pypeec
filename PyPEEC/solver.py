@@ -47,7 +47,7 @@ def _run_preproc(data_solver):
         A_vox = voxel_geometry.get_incidence_matrix(n)
 
     # get the Green functions
-    with timelogger.BlockTimer(logger, "dense_matrix"):
+    with timelogger.BlockTimer(logger, "system_tensor"):
         # Green function self-coefficient
         G_self = system_tensor.get_green_self(d)
 
@@ -103,7 +103,7 @@ def _run_main(data_solver):
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
 
     # get the resistances and inductances
-    with timelogger.BlockTimer(logger, "resistance_inductance"):
+    with timelogger.BlockTimer(logger, "system_matrix"):
         # get the resistance vector
         R_vec_c = system_matrix.get_R_vector(n, d, A_net_c, idx_fc, rho_vc)
         R_vec_m = system_matrix.get_R_vector(n, d, A_net_m, idx_fm, rho_vm)
@@ -143,7 +143,7 @@ def _run_main(data_solver):
         # solve the equation system
         (sol, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
 
-        # compute converge
+        # compute convergence
         has_converged = solver_ok and condition_ok
 
     # assemble results
