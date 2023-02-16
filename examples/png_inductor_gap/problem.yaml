@@ -1,0 +1,7 @@
+"freq": 0.0
+"material_def":
+    "coil": {"domain_list": ["src", "sink", "coil"], "material_type": "electric", "rho": 1.75e-8}
+    "core": {"domain_list": ["core"], "material_type": "magnetic", "chi_re": 1000.0, "chi_im": 0.0}
+"source_def":
+    "src": {"domain_list": ["src"], "source_type": "current", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
+    "sink": {"domain_list": ["sink"], "source_type": "voltage", "V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}

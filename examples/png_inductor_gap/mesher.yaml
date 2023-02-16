@@ -1,0 +1,23 @@
+"mesh_type": "png"
+"data_voxelize":
+    "d": [500.0e-6, 500.0e-6, 500.0e-6]
+    "c": [0.0e-3, 0.0e-3, 0.0e-6]
+    "nx": 54
+    "ny": 54
+    "domain_color":
+        "coil": [0, 0, 0, 255]
+        "core": [0, 0, 255, 255]
+        "src": [255, 0, 0, 255]
+        "sink": [0, 255, 0, 255]
+    "layer_stack":
+        - {"n_layer": 9, "filename": "png/base.png"}
+        - {"n_layer": 1, "filename": "png/side.png"}
+        - {"n_layer": 4, "filename": "png/coil.png"}
+        - {"n_layer": 2, "filename": "png/gap.png"}
+        - {"n_layer": 4, "filename": "png/coil.png"}
+        - {"n_layer": 1, "filename": "png/side.png"}
+        - {"n_layer": 9, "filename": "png/base.png"}
+"resampling_factor": [1, 1, 1]
+"domain_connection":
+    "cond": {"domain_list": ["coil", "src", "sink"], "connected": true}
+    "core": {"domain_list": ["coil", "core"], "connected": false}
