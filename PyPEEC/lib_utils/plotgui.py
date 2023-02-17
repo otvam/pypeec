@@ -13,16 +13,13 @@ WARNING: Making many plots can lead to segmentation fault with PyVista.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import importlib.resources as resources
 import pyvista as pv
 import pyvistaqt as pvqt
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import qtpy.QtWidgets as qtw
 import qtpy.QtGui as qtu
-from PyPEEC import config
-
-# get config
-PATH_ROOT = config.PATH_ROOT
 
 # set defaults for PyVista
 pv.set_plot_theme('default')
@@ -54,7 +51,8 @@ def open_pyvista(data_window, is_interactive):
             window_size=tuple(window_size),
         )
         # set icon
-        pl.set_icon(PATH_ROOT + "/icon.png")
+        path_icon = resources.files('PyPEEC').joinpath('icon.png')
+        pl.set_icon(str(path_icon))
     else:
         # get standard plotter if non-interactive
         pl = pv.Plotter(off_screen=True)
@@ -79,9 +77,12 @@ def open_matplotlib(data_window, is_interactive):
 
     # create the figure
     if is_interactive:
-        # get the window size and icon
+        # get the window size
         (sx, sy) = window_size
-        icn = qtu.QIcon(PATH_ROOT + "/icon.png")
+
+        # get the icon
+        path_icon = resources.files('PyPEEC').joinpath('icon.png')
+        icn = qtu.QIcon(str(path_icon))
 
         # set the Qt options
         man = plt.get_current_fig_manager()

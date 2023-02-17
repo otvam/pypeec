@@ -6,15 +6,10 @@ Defined with global variables.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import os
-
-# get the path of the root of the code
-PATH_ROOT = os.path.dirname(__file__)
-
 # logging information
 LOGGING_LEVEL = "DEBUG"  # logging level for the handlers
 LOGGING_INDENTATION = 4  # indentation level for the blocks
-LOGGING_COLOR = True  # use (or not) colors for the logs
+LOGGING_COLOR = False  # use (or not) colors for the logs
 
 # logging color
 LOGGING_CL_DEBUG = '\x1b[38;5;247m'
