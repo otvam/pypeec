@@ -23,7 +23,6 @@ except ImportError:
 
 # get a logger
 logger = timelogger.get_logger("SCRIPT")
-logger.info("init the PyPEEC framework")
 
 
 def run_mesher(file_mesher, file_voxel):
@@ -42,6 +41,8 @@ def run_mesher(file_mesher, file_voxel):
         True if the call is successful.
         False if the problems are encountered
     """
+
+    logger.info("load the PyPEEC framework")
 
     from PyPEEC import mesher
 
@@ -91,6 +92,8 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
         False if the problems are encountered
     """
 
+    logger.info("load the PyPEEC framework")
+
     from PyPEEC import viewer
 
     logger.info("init the PyPEEC viewer")
@@ -129,6 +132,8 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
         True if the call is successful.
         False if the problems are encountered
     """
+
+    logger.info("load the PyPEEC framework")
 
     from PyPEEC import solver
 
@@ -174,6 +179,8 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
         True if the call is successful.
         False if the problems are encountered
     """
+
+    logger.info("load the PyPEEC framework")
 
     from PyPEEC import plotter
 
