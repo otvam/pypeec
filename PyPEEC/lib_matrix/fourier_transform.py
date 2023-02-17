@@ -14,19 +14,19 @@ import numpy as np
 from PyPEEC import config
 
 # get config
-FFT_SOLVER = config.FFT_SOLVER
-FFT_SPLIT_TENSOR = config.FFT_SPLIT_TENSOR
-FFTS_WORKER = config.FFTS_WORKER
-FFTW_THREAD = config.FFTW_THREAD
-FFTW_CACHE_TIMEOUT = config.FFTW_CACHE_TIMEOUT
-FFTW_BYTE_ALIGN = config.FFTW_BYTE_ALIGN
+SOLVER = config.FFT_OPTIONS["SOLVER"]
+SPLIT_TENSOR = config.FFT_OPTIONS["SPLIT_TENSOR"]
+FFTS_WORKER = config.FFT_OPTIONS["FFTS_WORKER"]
+FFTW_THREAD = config.FFT_OPTIONS["FFTW_THREAD"]
+FFTW_CACHE_TIMEOUT = config.FFT_OPTIONS["FFTW_CACHE_TIMEOUT"]
+FFTW_BYTE_ALIGN = config.FFT_OPTIONS["FFTW_BYTE_ALIGN"]
 
 # import the right library
-if FFT_SOLVER == "NumPy":
+if SOLVER == "NumPy":
     import numpy.fft as fftn
-elif FFT_SOLVER == "SciPy":
+elif SOLVER == "SciPy":
     import scipy.fft as ffts
-elif FFT_SOLVER == "FFTW":
+elif SOLVER == "FFTW":
     import pyfftw
     import pyfftw.interfaces.numpy_fft as fftw
     import pyfftw.interfaces.cache as cache
@@ -46,11 +46,11 @@ def _get_fftn(mat, shape, axes):
     The size of the output tensor is specified.
     """
 
-    if FFT_SOLVER == "NumPy":
+    if SOLVER == "NumPy":
         mat_trf = fftn.fftn(mat, shape, axes=axes)
-    elif FFT_SOLVER == "SciPy":
+    elif SOLVER == "SciPy":
         mat_trf = ffts.fftn(mat, shape, axes=axes, workers=FFTS_WORKER)
-    elif FFT_SOLVER == "FFTW":
+    elif SOLVER == "FFTW":
         mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
         mat_trf = fftw.fftn(mat, shape, axes=axes, threads=FFTW_THREAD)
     else:
@@ -65,11 +65,11 @@ def _get_ifftn(mat, shape, axes):
     The size of the output tensor is specified.
     """
 
-    if FFT_SOLVER == "NumPy":
+    if SOLVER == "NumPy":
         mat_trf = fftn.ifftn(mat, shape, axes=axes)
-    elif FFT_SOLVER == "SciPy":
+    elif SOLVER == "SciPy":
         mat_trf = ffts.ifftn(mat, shape, axes=axes, workers=FFTS_WORKER)
-    elif FFT_SOLVER == "FFTW":
+    elif SOLVER == "FFTW":
         mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
         mat_trf = fftw.ifftn(mat, shape, axes=axes, threads=FFTW_THREAD)
     else:
@@ -96,7 +96,7 @@ def _get_fct_tensor(mat, double_dim, fct):
         nz = 2*nz
 
     # compute the tensor (with a loop or directly)
-    if FFT_SPLIT_TENSOR:
+    if SPLIT_TENSOR:
         mat_trf = np.empty((nx, ny, nz, nd), dtype=np.complex128)
         for i in range(nd):
             mat_trf[:, :, :, i] = fct(mat[:, :, :, i], (nx, ny, nz), (0, 1, 2))

@@ -1,0 +1,39 @@
+# logging options
+LOGGING_OPTIONS:
+    LEVEL: "DEBUG"  # logging level for the handlers
+    INDENTATION: 4  # indentation level for the blocks
+    COLOR: false  # use (or not) colors for the logs
+    CL_DEBUG: '[38;5;247m' # terminal color code
+    CL_INFO: '[38;5;15m' # terminal color code
+    CL_WARNING: '[38;5;202m' # terminal color code
+    CL_ERROR: '[38;5;196m' # terminal color code
+    CL_CRITICAL: '[38;5;196m' # terminal color code
+    CL_RESET: '[0m' # terminal color code
+
+# FFT options
+FFT_OPTIONS:
+    #   - NumPy is not very fast
+    #   - SciPy is typically faster than NumPy
+    #   - FFTW is typically faster but has to be installed separately
+    SOLVER: "SciPy"  # "NumPy" or "SciPy" or "FFTW"
+
+    # FFT handlin
+    #   - if true, then the FFT is done separately for each dimension
+    #   - if false, then the FFT is done at once for the complete tensor
+    SPLIT_TENSOR: false  # split (or not) the tensors for the FFT
+
+    # FFT library options
+    FFTS_WORKER: null  # number of workers for SciPy (None for default)
+    FFTW_THREAD: 4  # used for FFTW (number of threads, 1 for no multi-threading)
+    FFTW_CACHE_TIMEOUT: 100  # used for FFTW (cache timeout in seconds)
+    FFTW_BYTE_ALIGN: 16  # used for FFTW (size for byte alignment)
+
+# matrix factorization options
+#   - SuperLU is typically slower but integrated with SciPy
+#   - UMFPACK is typically faster but has to be installed separately
+MATRIX_FACTORIZATION: "SuperLU"  # "SuperLU" or "UMFPACK"
+
+# method for dense matrix multiplication
+#   - FFT for doing the multiplication with circulant tensors and FFT
+#   - DIRECT for standard matrix multiplication (extremely slow and memory intensive)
+MATRIX_MULTIPLICATION: "FFT"  # "FFT" or "DIRECT"

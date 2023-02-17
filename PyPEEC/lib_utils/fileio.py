@@ -15,7 +15,7 @@ import yaml
 from PyPEEC.lib_utils.error import FileError
 
 
-def _load_yaml(filename):
+def load_yaml(filename):
     """
     Load a YAML file.
     """
@@ -31,7 +31,7 @@ def _load_yaml(filename):
     return data
 
 
-def _load_json(filename):
+def load_json(filename):
     """
     Load a JSON file.
     """
@@ -55,9 +55,9 @@ def load_config(filename):
     # check extension
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        data = _load_json(filename)
+        data = load_json(filename)
     elif ext in [".yaml", ".yml"]:
-        data = _load_yaml(filename)
+        data = load_yaml(filename)
     else:
         raise FileError("invalid file extension: %s" % filename)
 

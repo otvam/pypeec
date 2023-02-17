@@ -12,21 +12,21 @@ import logging
 from PyPEEC import config
 
 # get config
-LOGGING_LEVEL = config.LOGGING_LEVEL
-LOGGING_INDENTATION = config.LOGGING_INDENTATION
-LOGGING_COLOR = config.LOGGING_COLOR
-LOGGING_CL_DEBUG = config.LOGGING_CL_DEBUG
-LOGGING_CL_INFO = config.LOGGING_CL_INFO
-LOGGING_CL_WARNING = config.LOGGING_CL_WARNING
-LOGGING_CL_ERROR = config.LOGGING_CL_ERROR
-LOGGING_CL_CRITICAL = config.LOGGING_CL_CRITICAL
-LOGGING_CL_RESET = config.LOGGING_CL_RESET
+LEVEL = config.LOGGING_OPTIONS["LEVEL"]
+INDENTATION = config.LOGGING_OPTIONS["INDENTATION"]
+COLOR = config.LOGGING_OPTIONS["COLOR"]
+CL_DEBUG = config.LOGGING_OPTIONS["CL_DEBUG"]
+CL_INFO = config.LOGGING_OPTIONS["CL_INFO"]
+CL_WARNING = config.LOGGING_OPTIONS["CL_WARNING"]
+CL_ERROR = config.LOGGING_OPTIONS["CL_ERROR"]
+CL_CRITICAL = config.LOGGING_OPTIONS["CL_CRITICAL"]
+CL_RESET = config.LOGGING_OPTIONS["CL_RESET"]
 
 # global timestamp (constant over the complete run)
-LOGGING_GLOBAL_TIMESTAMP = time.time()
+GLOBAL_TIMESTAMP = time.time()
 
 # logging indentation level (updated inside the blocks)
-LOGGING_CURRENT_LEVEL = 0
+CURRENT_LEVEL = 0
 
 
 def _get_format_timestamp(timestamp):
@@ -66,13 +66,16 @@ class _DeltaTimeFormatter(logging.Formatter):
         # call parent constructor
         super().__init__(fmt)
 
+        # color escape
+        ESC = '\x1b'
+
         # define the color formatters
         self.fmt_color = {
-            logging.DEBUG: logging.Formatter(LOGGING_CL_DEBUG + fmt + LOGGING_CL_RESET),
-            logging.INFO: logging.Formatter(LOGGING_CL_INFO + fmt + LOGGING_CL_RESET),
-            logging.WARNING: logging.Formatter(LOGGING_CL_WARNING + fmt + LOGGING_CL_RESET),
-            logging.ERROR: logging.Formatter(LOGGING_CL_ERROR + fmt + LOGGING_CL_RESET),
-            logging.CRITICAL: logging.Formatter(LOGGING_CL_CRITICAL + fmt + LOGGING_CL_RESET),
+            logging.DEBUG: logging.Formatter(ESC + CL_DEBUG + fmt + ESC + CL_RESET),
+            logging.INFO: logging.Formatter(ESC + CL_INFO + fmt + ESC + CL_RESET),
+            logging.WARNING: logging.Formatter(ESC + CL_WARNING + fmt + ESC + CL_RESET),
+            logging.ERROR: logging.Formatter(ESC + CL_ERROR + fmt + ESC + CL_RESET),
+            logging.CRITICAL: logging.Formatter(ESC + CL_CRITICAL + fmt + ESC + CL_RESET),
         }
 
         # define the black formatter
@@ -89,17 +92,17 @@ class _DeltaTimeFormatter(logging.Formatter):
         msg = record.msg
 
         # add the elapsed time to the log record
-        record.timestamp = _get_format_timestamp(LOGGING_GLOBAL_TIMESTAMP)
-        record.duration = _get_format_duration(LOGGING_GLOBAL_TIMESTAMP)
+        record.timestamp = _get_format_timestamp(GLOBAL_TIMESTAMP)
+        record.duration = _get_format_duration(GLOBAL_TIMESTAMP)
 
         # get the message padding for the desired indentation
-        pad = " " * (LOGGING_CURRENT_LEVEL*LOGGING_INDENTATION)
+        pad = " " * (CURRENT_LEVEL*INDENTATION)
 
         # add the padding to the message
         record.msg = pad + msg
 
         # get the formatter
-        if LOGGING_COLOR:
+        if COLOR:
             msg = self.fmt_color[lvl].format(record)
         else:
             msg = self.fmt_black.format(record)
@@ -136,8 +139,8 @@ class BlockTimer:
         self.logger.info(self.name + " : enter : timing")
 
         # increase the indentation of the block
-        global LOGGING_CURRENT_LEVEL
-        LOGGING_CURRENT_LEVEL += 1
+        global CURRENT_LEVEL
+        CURRENT_LEVEL += 1
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """
@@ -146,8 +149,8 @@ class BlockTimer:
         """
 
         # restore the indentation to the previous state
-        global LOGGING_CURRENT_LEVEL
-        LOGGING_CURRENT_LEVEL -= 1
+        global CURRENT_LEVEL
+        CURRENT_LEVEL -= 1
 
         # stop the timer and display
         duration = _get_format_duration(self.timestamp)
@@ -197,7 +200,7 @@ def get_logger(name):
     handler.setFormatter(fmt)
 
     # get the logger
-    logger.setLevel(LOGGING_LEVEL)
+    logger.setLevel(LEVEL)
     logger.addHandler(handler)
 
     return logger
