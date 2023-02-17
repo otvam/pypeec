@@ -57,7 +57,7 @@ def _get_voxelize(grid, tag, mesh):
         raise RunError("invalid mesh: mesh cannot be voxelized: %s" % tag)
 
     # create a boolean mask
-    mask = selection['SelectedPoints'].view(bool)
+    mask = selection["SelectedPoints"].view(bool)
 
     # transform the grid into an unstructured grid (keeping the non-empty voxels)
     voxel = grid.extract_points(mask)

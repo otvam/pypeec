@@ -25,6 +25,15 @@ The optional libraries FFTW and UMFPACK can be used to speed up the solver.
 However, this code is pure Python and advanced optimizations (MKL, GPU, etc.) are not implemented.
 Moreover, the memory consumption is not heavily optimized (no customized garbage collection).
 
+## Configuration
+
+The configuration files are loaded in the following order:
+* `pypeec.yaml` located in the current working directory
+* `.pypeec.yaml` located in the current working directory
+* `pypeec.yaml` located in the user home directory
+* `.pypeec.yaml` located in the user home directory
+* `pypeec.yaml` located in the `PyPEEC` directory (default configuration)
+
 ## Packaging and Environment
 
 * A Python package can be built from the `pyproject.toml` and `setup.cfg` files.

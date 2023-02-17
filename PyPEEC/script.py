@@ -214,7 +214,7 @@ def main_mesher():
         description="PyPEEC mesher: transform the provided data into a 3D voxel structure.",
         epilog="(c) Thomas Guillod - Dartmouth College",
     )
-    parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
+    parser.add_argument("-v", "--version", action="version", version="PyPEEC %s" % VERSION)
     parser.add_argument(
         "--mesher",
         metavar="file",
@@ -248,7 +248,7 @@ def main_viewer():
         description="PyPEEC viewer: visualization of a 3D voxel structure.",
         epilog="(c) Thomas Guillod - Dartmouth College",
     )
-    parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
+    parser.add_argument("-v", "--version", action="version", version="PyPEEC %s" % VERSION)
     parser.add_argument(
         "--voxel",
         metavar="file",
@@ -295,7 +295,7 @@ def main_solver():
         description="PyPEEC solver: solve a problem with the PEEC method.",
         epilog="(c) Thomas Guillod - Dartmouth College",
     )
-    parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
+    parser.add_argument("-v", "--version", action="version", version="PyPEEC %s" % VERSION)
     parser.add_argument(
         "--voxel",
         metavar="file",
@@ -343,7 +343,7 @@ def main_plotter():
         description="PyPEEC plotter: plot the solution of a PEEC problem.",
         epilog="(c) Thomas Guillod - Dartmouth College",
     )
-    parser.add_argument('-v', '--version', action='version', version="PyPEEC %s" % VERSION)
+    parser.add_argument("-v", "--version", action="version", version="PyPEEC %s" % VERSION)
     parser.add_argument(
         "--solution",
         metavar="file",

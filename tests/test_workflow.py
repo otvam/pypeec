@@ -44,8 +44,8 @@ def _run_workflow(test_obj, name):
     file_tolerance = os.path.join(path_root, "..", "examples", "config", "data_tolerance.json")
 
     # get the temporary files
-    fid_voxel = tempfile.NamedTemporaryFile(suffix='.pck')
-    fid_solution = tempfile.NamedTemporaryFile(suffix='.pck')
+    fid_voxel = tempfile.NamedTemporaryFile(suffix=".pck")
+    fid_solution = tempfile.NamedTemporaryFile(suffix=".pck")
     file_voxel = fid_voxel.name
     file_solution = fid_solution.name
 

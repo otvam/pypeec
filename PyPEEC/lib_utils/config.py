@@ -28,15 +28,23 @@ def get_config(filename):
 
 
 # get the file name
-filename_user = pathlib.Path("config.yaml")
-filename_default = resources.files("PyPEEC").joinpath("config.yaml")
+filename_list = [
+    pathlib.Path("pypeec.yaml"),
+    pathlib.Path(".pypeec.yaml"),
+    pathlib.Path.home().joinpath("pypeec.yaml"),
+    pathlib.Path.home().joinpath(".pypeec.yaml"),
+    resources.files("PyPEEC").joinpath("pypeec.yaml"),
+    ]
 
 # load the config
-if filename_user.is_file():
-    data = get_config(filename_user)
-elif filename_default.is_file():
-    data = get_config(filename_default)
-else:
+data = None
+for filename_tmp in filename_list:
+    if filename_tmp.is_file():
+        data = get_config(filename_tmp)
+        break
+
+# check that a config has been loaded
+if data is None:
     print("INVALID CONFIGURATION FILE")
     print("==========================")
     print("file not found")

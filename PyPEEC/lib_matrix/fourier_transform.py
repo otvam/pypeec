@@ -11,7 +11,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
-from PyPEEC import config
+from PyPEEC.lib_utils import config
 
 # get config
 SOLVER = config.FFT_OPTIONS["SOLVER"]

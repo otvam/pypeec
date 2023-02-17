@@ -42,13 +42,13 @@ def _get_plot_residuum(fig, res_all):
     plt.hist(res_abs, bins=bins, edgecolor="black")
 
     # get log axis
-    plt.xscale('log')
-    plt.yscale('log')
+    plt.xscale("log")
+    plt.yscale("log")
 
     # add cosmetics
     plt.grid()
-    plt.xlabel('residuum (a.u.)')
-    plt.ylabel('counts (a.u.)')
+    plt.xlabel("residuum (a.u.)")
+    plt.ylabel("counts (a.u.)")
     plt.title("Solver Residuum / n_tot = %d / n_plt = %d" % (n_tot, n_plt))
 
 
@@ -65,12 +65,12 @@ def _get_plot_convergence(fig, res_iter):
 
     # plot the data
     idx_iter = np.arange(1, n_iter+1)
-    plt.semilogy(idx_iter, res_iter, 'rs-')
+    plt.semilogy(idx_iter, res_iter, "rs-")
 
     # add cosmetics
     plt.grid()
-    plt.xlabel('iterations (#)')
-    plt.ylabel('residuum (a.u.)')
+    plt.xlabel("iterations (#)")
+    plt.ylabel("residuum (a.u.)")
     plt.title("Solver Convergence / n_iter = %d" % n_iter)
 
 

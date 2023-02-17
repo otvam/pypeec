@@ -21,7 +21,7 @@ def load_yaml(filename):
     """
 
     try:
-        with open(filename, 'r') as fid:
+        with open(filename, "r") as fid:
             data = yaml.safe_load(fid)
     except FileNotFoundError:
         raise FileError("cannot open the file: %s" % filename)
@@ -37,7 +37,7 @@ def load_json(filename):
     """
 
     try:
-        with open(filename, 'r') as fid:
+        with open(filename, "r") as fid:
             data = json.load(fid)
     except FileNotFoundError:
         raise FileError("cannot open the file: %s" % filename)

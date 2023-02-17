@@ -9,7 +9,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import time
 import datetime
 import logging
-from PyPEEC import config
+from PyPEEC.lib_utils import config
 
 # get config
 LEVEL = config.LOGGING_OPTIONS["LEVEL"]
@@ -67,7 +67,7 @@ class _DeltaTimeFormatter(logging.Formatter):
         super().__init__(fmt)
 
         # color escape
-        ESC = '\x1b'
+        ESC = "\x1b"
 
         # define the color formatters
         self.fmt_color = {

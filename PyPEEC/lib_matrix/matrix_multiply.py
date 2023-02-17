@@ -17,7 +17,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import scipy.sparse.linalg as sla
 from PyPEEC.lib_matrix import multiply_fft
 from PyPEEC.lib_matrix import multiply_direct
-from PyPEEC import config
+from PyPEEC.lib_utils import config
 
 # get config
 MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION

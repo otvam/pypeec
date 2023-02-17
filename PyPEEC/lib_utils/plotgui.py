@@ -22,10 +22,10 @@ import qtpy.QtWidgets as qtw
 import qtpy.QtGui as qtu
 
 # set defaults for PyVista
-pv.set_plot_theme('default')
+pv.set_plot_theme("default")
 
 # set default for Matplotlib
-mpl.use('QtAgg')
+mpl.use("QtAgg")
 
 
 def open_pyvista(data_window, is_interactive):
@@ -51,7 +51,7 @@ def open_pyvista(data_window, is_interactive):
             window_size=tuple(window_size),
         )
         # set icon
-        path_icon = resources.files('PyPEEC').joinpath('icon.png')
+        path_icon = resources.files("PyPEEC").joinpath("pypeec.png")
         pl.set_icon(str(path_icon))
     else:
         # get standard plotter if non-interactive
@@ -81,7 +81,7 @@ def open_matplotlib(data_window, is_interactive):
         (sx, sy) = window_size
 
         # get the icon
-        path_icon = resources.files('PyPEEC').joinpath('icon.png')
+        path_icon = resources.files("PyPEEC").joinpath("pypeec.png")
         icn = qtu.QIcon(str(path_icon))
 
         # set the Qt options

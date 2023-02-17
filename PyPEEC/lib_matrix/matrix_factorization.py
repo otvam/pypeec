@@ -14,7 +14,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import warnings
-from PyPEEC import config
+from PyPEEC.lib_utils import config
 from PyPEEC.lib_utils import timelogger
 
 # get a logger
