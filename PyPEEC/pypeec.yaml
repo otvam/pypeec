@@ -1,3 +1,7 @@
+# PyPEEC default configuration file.
+#
+# (c) Thomas Guillod - Dartmouth College
+
 # logging options
 LOGGING_OPTIONS:
     LEVEL: "DEBUG"  # logging level for the handlers

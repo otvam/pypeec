@@ -1,7 +1,6 @@
 # Configuration file for bootstraping the package.
 #
-# Thomas Guillod
-# (c) 2023 - Dartmouth College
+# (c) Thomas Guillod - Dartmouth College
 
 [build-system]
 build-backend = "setuptools.build_meta"

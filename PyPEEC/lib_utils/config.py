@@ -27,7 +27,7 @@ def get_config(filename):
     return data
 
 
-# get the file name
+# get the configuration file names
 filename_list = [
     pathlib.Path("pypeec.yaml"),
     pathlib.Path(".pypeec.yaml"),
@@ -36,7 +36,7 @@ filename_list = [
     resources.files("PyPEEC").joinpath("pypeec.yaml"),
     ]
 
-# load the config
+# load the configuration data
 data = None
 for filename_tmp in filename_list:
     if filename_tmp.is_file():

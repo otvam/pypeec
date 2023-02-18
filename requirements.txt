@@ -1,7 +1,6 @@
-# Script for defining the dependencies.
+# Definition of the Python Virtual Environment.
 #
-# Thomas Guillod
-# (c) 2023 - Dartmouth College
+# (c) Thomas Guillod - Dartmouth College
 
 # parsing files
 PyYAML>=6.0 # YAML parser

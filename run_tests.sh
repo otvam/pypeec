@@ -5,8 +5,7 @@
 #   - clean the data
 #   - check the test status
 #
-# Thomas Guillod
-# (c) 2023 - Dartmouth College
+# (c) Thomas Guillod - Dartmouth College
 
 set -o nounset
 set -o pipefail

@@ -27,7 +27,7 @@ Moreover, the memory consumption is not heavily optimized (no customized garbage
 
 ## Configuration
 
-The configuration files are loaded in the following order:
+The configuration files are loaded with the following priorities:
 * `pypeec.yaml` located in the current working directory
 * `.pypeec.yaml` located in the current working directory
 * `pypeec.yaml` located in the user home directory
@@ -57,4 +57,4 @@ The configuration files are loaded in the following order:
 > **Warning**: Python Pickle files are using to store the mesher and solver results.
 > Pickling data is not secure. 
 > Only load Pickle files that you trust.
-> Do not commit the Pickle files in the git repository.
+> Do not commit the Pickle files in the Git repository.
