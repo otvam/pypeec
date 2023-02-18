@@ -20,7 +20,7 @@ if __name__ == "__main__":
     file_problem = os.path.join(PATH_ROOT, EXAMPLE_NAME, "problem.yaml")
     file_voxel = os.path.join(PATH_ROOT, EXAMPLE_NAME, "voxel.pck")
     file_solution = os.path.join(PATH_ROOT, EXAMPLE_NAME, "solution.pck")
-    file_tolerance = os.path.join(PATH_ROOT, "config", "data_tolerance.json")
+    file_tolerance = os.path.join(PATH_ROOT, "config", "tolerance.json")
 
     # run
     (status, ex) = script.run_solver(file_voxel, file_problem, file_tolerance, file_solution)

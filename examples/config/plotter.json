@@ -411,7 +411,7 @@
                     null
                 ],
                 "arrow_threshold": 0.001,
-                "arrow_scale": 0.5,
+                "arrow_scale": 0.75,
                 "legend": "Re. Current [A/mm2]"
             },
             "clip_options": {
@@ -463,7 +463,7 @@
                     null
                 ],
                 "arrow_threshold": 0.001,
-                "arrow_scale": 0.5,
+                "arrow_scale": 0.75,
                 "legend": "Im. Current [A/mm2]"
             },
             "clip_options": {
@@ -565,7 +565,7 @@
                     null
                 ],
                 "arrow_threshold": 0.001,
-                "arrow_scale": 0.5,
+                "arrow_scale": 0.75,
                 "legend": "Re. Flux Density [mT]"
             },
             "clip_options": {
@@ -617,7 +617,7 @@
                     null
                 ],
                 "arrow_threshold": 0.001,
-                "arrow_scale": 0.5,
+                "arrow_scale": 0.75,
                 "legend": "Im. Flux Density [mT]"
             },
             "clip_options": {
@@ -719,7 +719,7 @@
                     null
                 ],
                 "arrow_threshold": 0.001,
-                "arrow_scale": 0.5,
+                "arrow_scale": 0.75,
                 "legend": "Re. Mag. Field [A/m]"
             },
             "clip_options": {
@@ -771,7 +771,7 @@
                     null
                 ],
                 "arrow_threshold": 0.001,
-                "arrow_scale": 0.5,
+                "arrow_scale": 0.75,
                 "legend": "Im. Mag. Field [A/m]"
             },
             "clip_options": {
