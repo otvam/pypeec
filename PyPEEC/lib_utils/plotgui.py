@@ -13,6 +13,7 @@ WARNING: Making many plots can lead to segmentation fault with PyVista.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import signal
 import importlib.resources as resources
 import pyvista as pv
 import pyvistaqt as pvqt
@@ -143,6 +144,10 @@ def run_app(app, is_interactive):
     """
 
     if is_interactive:
+        # signal for quitting the event loop with interrupt signal
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+        # enter the event loop
         exit_code = app.exec_()
         return exit_code == 0
     else:
