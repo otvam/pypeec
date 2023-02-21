@@ -33,12 +33,19 @@ The **PyPEEC** package contains the following tools (`PyPEEC` package)::
 
 ## Script and File Description
 
-The entry points of the different tools are located in the `PyPEEC.script` module.
-Additionally, the Python package is defining the following console scripts:
-* `ppmesher` for the **mesher**
-* `ppviewer` for the **viewer**
-* `ppsolver` for the **solver**
-* `ppplotter` for the **plotter**
+The entry points of the different tools are located in the `PyPEEC.main` module:
+* `run_mesher` for the **mesher**
+* `run_viewer` for the **viewer**
+* `run_solver` for the **solver**
+* `run_plotter` for the **plotter**
+
+Additionally, the console scripts are located in the `PyPEEC.script` module:
+* `run_mesher` for the **mesher** (command line alias `ppmesher`)
+* `run_viewer` for the **viewer** (command line alias `ppviewer`)
+* `run_solver` for the **solver** (command line alias `ppsolver`)
+* `run_plotter` for the **plotter** (command line alias `ppplotter`)
+
+## File Description
 
 The following input files (JSON or YAML format) are used:
 * `file_mesher` (JSON/YAML, input file): description of the geometry

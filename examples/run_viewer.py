@@ -7,7 +7,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
 import sys
-from PyPEEC import script
+from PyPEEC import main
 from examples import examples_config
 
 # get config
@@ -22,5 +22,5 @@ if __name__ == "__main__":
     file_viewer = os.path.join(PATH_ROOT, "config", "viewer.json")
 
     # run viewer
-    (status, ex) = script.run_viewer(file_voxel, file_point, file_viewer, True)
+    (status, ex) = main.run_viewer(file_voxel, file_point, file_viewer, True)
     sys.exit(int(not status))

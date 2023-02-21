@@ -30,7 +30,7 @@ def _run_workflow(test_obj, name):
     """
 
     # import PyPEEC
-    from PyPEEC import script
+    from PyPEEC import main
 
     # start the test
     print("run")
@@ -52,7 +52,7 @@ def _run_workflow(test_obj, name):
     # run the code
     try:
         # run the mesher
-        (status, ex) = script.run_mesher(file_mesher, file_voxel)
+        (status, ex) = main.run_mesher(file_mesher, file_voxel)
         test_obj.assertTrue(status, msg="mesher failure : " + str(ex))
 
         # load the voxel file
@@ -60,15 +60,15 @@ def _run_workflow(test_obj, name):
             data_voxel = pickle.load(fid)
 
         # run the viewer
-        (status, ex) = script.run_viewer(file_voxel, file_point, file_viewer, False)
+        (status, ex) = main.run_viewer(file_voxel, file_point, file_viewer, False)
         test_obj.assertTrue(status, msg="viewer failure : " + str(ex))
 
         # run the solver
-        (status, ex) = script.run_solver(file_voxel, file_problem, file_tolerance, file_solution)
+        (status, ex) = main.run_solver(file_voxel, file_problem, file_tolerance, file_solution)
         test_obj.assertTrue(status, msg="solver failure : " + str(ex))
 
         # run the plotter
-        (status, ex) = script.run_plotter(file_solution, file_point, file_plotter, False)
+        (status, ex) = main.run_plotter(file_solution, file_point, file_plotter, False)
         test_obj.assertTrue(status, msg="plotter failure : " + str(ex))
 
         # check the solution file

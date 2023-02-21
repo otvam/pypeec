@@ -7,7 +7,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
 import sys
-from PyPEEC import script
+from PyPEEC import main
 from examples import examples_config
 
 # get config
@@ -23,5 +23,5 @@ if __name__ == "__main__":
     file_tolerance = os.path.join(PATH_ROOT, "config", "tolerance.json")
 
     # run
-    (status, ex) = script.run_solver(file_voxel, file_problem, file_tolerance, file_solution)
+    (status, ex) = main.run_solver(file_voxel, file_problem, file_tolerance, file_solution)
     sys.exit(int(not status))

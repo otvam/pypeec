@@ -7,7 +7,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
 import sys
-from PyPEEC import script
+from PyPEEC import main
 from examples import examples_config
 
 # get config
@@ -22,5 +22,5 @@ if __name__ == "__main__":
     file_plotter = os.path.join(PATH_ROOT, "config", "plotter.json")
 
     # run
-    (status, ex) = script.run_plotter(file_solution, file_point, file_plotter, True)
+    (status, ex) = main.run_plotter(file_solution, file_point, file_plotter, True)
     sys.exit(int(not status))
