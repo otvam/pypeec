@@ -28,8 +28,8 @@ elif SOLVER == "SciPy":
     import scipy.fft as ffts
 elif SOLVER == "FFTW":
     import pyfftw
-    import pyfftw.interfaces.numpy_fft as fftw
     import pyfftw.interfaces.cache as cache
+    import pyfftw.interfaces.numpy_fft as fftw
 
     # the cache for the FFT dimension should be enabled
     cache.enable()

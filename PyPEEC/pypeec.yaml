@@ -4,9 +4,18 @@
 
 # logging options
 LOGGING_OPTIONS:
+    # logger format with the following custom attributes
+    #   - timestamp: current timestamp (formatted as a string)
+    #   - duration: elapsed time (formatted as a string)
     FORMAT: '%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s'  # logger format
-    LEVEL: "DEBUG"  # logging level for the handlers
-    INDENTATION: 4  # indentation level for the blocks
+
+    # logging level for the handlers
+    LEVEL: "DEBUG"  # string with a valid Python logging level
+
+    # indentation level for the blocks
+    INDENTATION: 4  # integer with the number of spaces per indentation
+
+    # options for coloring the log output
     COLOR: false  # use (or not) colors for the logs
     CL_DEBUG: '[38;5;247m' # terminal color code
     CL_INFO: '[38;5;15m' # terminal color code
@@ -22,7 +31,7 @@ FFT_OPTIONS:
     #   - FFTW is typically faster but has to be installed separately
     SOLVER: "SciPy"  # "NumPy" or "SciPy" or "FFTW"
 
-    # FFT handlin
+    # FFT handling
     #   - if true, then the FFT is done separately for each dimension
     #   - if false, then the FFT is done at once for the complete tensor
     SPLIT_TENSOR: false  # split (or not) the tensors for the FFT
