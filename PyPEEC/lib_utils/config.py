@@ -7,53 +7,42 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import sys
-import pathlib
 import importlib.resources as resources
 from PyPEEC.lib_utils import fileio
 from PyPEEC.lib_utils.error import FileError
 
 
-def get_config(filename):
-    try:
-        data = fileio.load_yaml(filename)
-    except FileError as ex:
-        print("INVALID CONFIGURATION FILE")
-        print("==========================")
-        print(str(ex))
-        print("==========================")
-        print("EXIT")
-        sys.exit(1)
+def set_config(file_config):
+    """
+    Load a config file and store the data in global variables.
+    """
 
-    return data
+    # define the global config variables
+    global LOGGING_OPTIONS
+    global MATRIX_FACTORIZATION
+    global MATRIX_MULTIPLICATION
+    global FFT_OPTIONS
+
+    # parse the file
+    data = fileio.load_yaml(file_config)
+
+    # assign data
+    LOGGING_OPTIONS = data["LOGGING_OPTIONS"]
+    MATRIX_FACTORIZATION = data["MATRIX_FACTORIZATION"]
+    MATRIX_MULTIPLICATION = data["MATRIX_MULTIPLICATION"]
+    FFT_OPTIONS = data["FFT_OPTIONS"]
 
 
-# get the configuration file names
-filename_list = [
-    pathlib.Path("pypeec.yaml"),
-    pathlib.Path(".pypeec.yaml"),
-    pathlib.Path.home().joinpath("pypeec.yaml"),
-    pathlib.Path.home().joinpath(".pypeec.yaml"),
-    resources.files("PyPEEC").joinpath("pypeec.yaml"),
-    ]
+# get the default config file
+file_config = resources.files("PyPEEC").joinpath("pypeec.yaml")
 
-# load the configuration data
-data = None
-for filename_tmp in filename_list:
-    if filename_tmp.is_file():
-        data = get_config(filename_tmp)
-        break
-
-# check that a config has been loaded
-if data is None:
+# load the default config files
+try:
+    set_config(file_config)
+except FileError as ex:
     print("INVALID CONFIGURATION FILE")
     print("==========================")
-    print("file not found")
+    print(str(ex))
     print("==========================")
     print("EXIT")
     sys.exit(1)
-
-# assign data
-LOGGING_OPTIONS = data["LOGGING_OPTIONS"]
-MATRIX_FACTORIZATION = data["MATRIX_FACTORIZATION"]
-MATRIX_MULTIPLICATION = data["MATRIX_MULTIPLICATION"]
-FFT_OPTIONS = data["FFT_OPTIONS"]

@@ -8,12 +8,39 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
+from PyPEEC.lib_utils import config
 from PyPEEC.lib_utils import fileio
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import FileError
 
 # get a logger
 logger = timelogger.get_logger("SCRIPT")
+
+
+def set_config(file_config):
+    """
+    Set and load a custom configuration file.
+
+    Parameters
+    ----------
+    file_config : string (input file, YAML format)
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered
+    """
+
+    logger.info("set the PyPEEC config")
+
+    try:
+        config.set_config(file_config)
+    except FileError as ex:
+        timelogger.log_exception(logger, ex)
+        return False
+
+    return True
 
 
 def run_mesher(file_mesher, file_voxel):
@@ -33,12 +60,11 @@ def run_mesher(file_mesher, file_voxel):
         False if the problems are encountered
     """
 
-    logger.info("load the PyPEEC framework")
-
+    # load the tool
+    logger.info("init the PyPEEC mesher")
     from PyPEEC import mesher
 
-    logger.info("init the PyPEEC mesher")
-
+    # run the tool
     try:
         # load data
         logger.info("load the input data")
@@ -83,12 +109,11 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
         False if the problems are encountered
     """
 
-    logger.info("load the PyPEEC framework")
-
+    # load the tool
+    logger.info("init the PyPEEC viewer")
     from PyPEEC import viewer
 
-    logger.info("init the PyPEEC viewer")
-
+    # run the tool
     try:
         # load data
         logger.info("load the input data")
@@ -124,12 +149,11 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
         False if the problems are encountered
     """
 
-    logger.info("load the PyPEEC framework")
-
+    # load the tool
+    logger.info("init the PyPEEC solver")
     from PyPEEC import solver
 
-    logger.info("init the PyPEEC solver")
-
+    # run the tool
     try:
         # load data
         logger.info("load the input data")
@@ -171,12 +195,11 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
         False if the problems are encountered
     """
 
-    logger.info("load the PyPEEC framework")
-
+    # load the tool
+    logger.info("init the PyPEEC plotter")
     from PyPEEC import plotter
 
-    logger.info("init the PyPEEC plotter")
-
+    # run the tool
     try:
         # load data
         logger.info("load the input data")

@@ -27,12 +27,11 @@ Moreover, the memory consumption is not heavily optimized (no customized garbage
 
 ## Configuration
 
-The configuration files are loaded with the following priorities:
-* `pypeec.yaml` located in the current working directory
-* `.pypeec.yaml` located in the current working directory
-* `pypeec.yaml` located in the user home directory
-* `.pypeec.yaml` located in the user home directory
-* `pypeec.yaml` located in the `PyPEEC` directory (default configuration)
+The default configuration file is `PyPEEC/pypeec.yaml`.
+The default configuration file is loaded at the startup.
+Afterwards, a custom configuration file can be set:
+* with a function call (see `PyPEEC.main` module)
+* with a command line option (see `PyPEEC.script` module)
 
 ## Packaging and Environment
 
