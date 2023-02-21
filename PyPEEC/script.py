@@ -1,7 +1,6 @@
 """
-Contain the program entry points.
-The import statements for the different modules are located inside the code.
-This allows for a minimization of the loaded dependencies.
+Contain the console scripts (mesher, viewer, solver, and plotter).
+Parse the command line arguments and call the corresponding entry point.
 """
 
 __author__ = "Thomas Guillod"
