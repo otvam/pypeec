@@ -17,14 +17,14 @@ def set_config(file_config):
     Load a config file and store the data in global variables.
     """
 
-    # define the global config variables
+    # parse the file
+    data = fileio.load_yaml(file_config)
+
+    # call the global variables
     global LOGGING_OPTIONS
     global MATRIX_FACTORIZATION
     global MATRIX_MULTIPLICATION
     global FFT_OPTIONS
-
-    # parse the file
-    data = fileio.load_yaml(file_config)
 
     # assign data
     LOGGING_OPTIONS = data["LOGGING_OPTIONS"]
@@ -33,12 +33,18 @@ def set_config(file_config):
     FFT_OPTIONS = data["FFT_OPTIONS"]
 
 
+# init the global variables
+LOGGING_OPTIONS = None
+MATRIX_FACTORIZATION = None
+MATRIX_MULTIPLICATION = None
+FFT_OPTIONS = None
+
 # get the default config file
-file_config = resources.files("PyPEEC").joinpath("pypeec.yaml")
+default_file_config = resources.files("PyPEEC").joinpath("pypeec.yaml")
 
 # load the default config files
 try:
-    set_config(file_config)
+    set_config(default_file_config)
 except FileError as ex:
     print("INVALID CONFIGURATION FILE")
     print("==========================")

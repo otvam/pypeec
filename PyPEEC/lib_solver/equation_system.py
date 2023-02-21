@@ -138,7 +138,7 @@ def _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src):
 
 def _get_split_vector(sol, n_vc, n_fc, n_vm, n_fm, n_src):
     """
-    Split a vector into a electric vector and magnetic vector.
+    Split a vector into an electric vector and magnetic vector.
 
     The input vector has the following size: n_fc+n_vc+n_src_c+n_src_v+n_fm+n_vm.
     The electric vector has the following size: n_fc+n_vc+n_src_c+n_src_v.

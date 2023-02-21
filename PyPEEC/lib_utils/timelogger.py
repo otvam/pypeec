@@ -14,6 +14,7 @@ from PyPEEC.lib_utils import config
 # get config
 LEVEL = config.LOGGING_OPTIONS["LEVEL"]
 INDENTATION = config.LOGGING_OPTIONS["INDENTATION"]
+FORMAT = config.LOGGING_OPTIONS["FORMAT"]
 COLOR = config.LOGGING_OPTIONS["COLOR"]
 CL_DEBUG = config.LOGGING_OPTIONS["CL_DEBUG"]
 CL_INFO = config.LOGGING_OPTIONS["CL_INFO"]
@@ -57,29 +58,29 @@ class _DeltaTimeFormatter(logging.Formatter):
     Class for adding elapsed time to a logger.
     """
 
-    def __init__(self, fmt):
+    def __init__(self):
         """
         Constructor.
         Create a timer.
         """
 
         # call parent constructor
-        super().__init__(fmt)
+        super().__init__()
 
         # color escape
         ESC = "\x1b"
 
         # define the color formatters
         self.fmt_color = {
-            logging.DEBUG: logging.Formatter(ESC + CL_DEBUG + fmt + ESC + CL_RESET),
-            logging.INFO: logging.Formatter(ESC + CL_INFO + fmt + ESC + CL_RESET),
-            logging.WARNING: logging.Formatter(ESC + CL_WARNING + fmt + ESC + CL_RESET),
-            logging.ERROR: logging.Formatter(ESC + CL_ERROR + fmt + ESC + CL_RESET),
-            logging.CRITICAL: logging.Formatter(ESC + CL_CRITICAL + fmt + ESC + CL_RESET),
+            logging.DEBUG: logging.Formatter(ESC + CL_DEBUG + FORMAT + ESC + CL_RESET),
+            logging.INFO: logging.Formatter(ESC + CL_INFO + FORMAT + ESC + CL_RESET),
+            logging.WARNING: logging.Formatter(ESC + CL_WARNING + FORMAT + ESC + CL_RESET),
+            logging.ERROR: logging.Formatter(ESC + CL_ERROR + FORMAT + ESC + CL_RESET),
+            logging.CRITICAL: logging.Formatter(ESC + CL_CRITICAL + FORMAT + ESC + CL_RESET),
         }
 
         # define the black formatter
-        self.fmt_black = logging.Formatter(fmt)
+        self.fmt_black = logging.Formatter(FORMAT)
 
     def format(self, record):
         """
@@ -193,7 +194,7 @@ def get_logger(name):
         raise RuntimeError("duplicated logger name")
 
     # get the formatter
-    fmt = _DeltaTimeFormatter("%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s")
+    fmt = _DeltaTimeFormatter()
 
     # get the handle
     handler = logging.StreamHandler()
