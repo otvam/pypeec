@@ -27,10 +27,10 @@ FFT_OPTIONS:
     SPLIT_TENSOR: false  # split (or not) the tensors for the FFT
 
     # FFT library options
-    FFTS_WORKER: null  # number of workers for SciPy (None for default)
-    FFTW_THREAD: 4  # used for FFTW (number of threads, 1 for no multi-threading)
-    FFTW_CACHE_TIMEOUT: 100  # used for FFTW (cache timeout in seconds)
-    FFTW_BYTE_ALIGN: 16  # used for FFTW (size for byte alignment)
+    FFTS_WORKER: 4  # number of workers for SciPy
+    FFTW_THREAD: 4  # number of threads for FFTW
+    FFTW_CACHE_TIMEOUT: 100  # cache timeout in seconds for FFTW
+    FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW
 
 # matrix factorization options
 #   - SuperLU is typically slower but integrated with SciPy
