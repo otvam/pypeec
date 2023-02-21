@@ -8,9 +8,9 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
+from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils import config
 from PyPEEC.lib_utils import fileio
-from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils.error import FileError
 
 # get a logger
@@ -32,7 +32,7 @@ def set_config(file_config):
         False if the problems are encountered
     """
 
-    logger.info("set the PyPEEC config")
+    logger.info("set the PyPEEC configuration")
 
     try:
         config.set_config(file_config)

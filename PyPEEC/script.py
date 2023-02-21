@@ -18,6 +18,61 @@ except ImportError:
     VERSION = "x.x.x"
 
 
+def _get_parser(prog, description):
+    """
+    Create a command line parser with a description.
+    """
+
+    # get the parser
+    parser = argparse.ArgumentParser(
+        prog=prog,
+        description=description,
+        epilog="(c) Thomas Guillod - Dartmouth College",
+    )
+
+    # display the version
+    parser.add_argument(
+        "-v", "--version",
+        action="version",
+        version="PyPEEC %s" % VERSION,
+    )
+
+    # switch for a custom config file
+    parser.add_argument(
+        "--config",
+        metavar="file",
+        help="config file (input / YAML)",
+        required=False,
+        dest="file_config",
+    )
+
+    return parser
+
+
+def _get_arguments(parser):
+    """
+    Load the config file (if specified).
+    """
+
+    # parse and call
+    args = parser.parse_args()
+
+    # get the config file
+    file_config = args.file_config
+
+    # load the config
+    if file_config is not None:
+        status = main.set_config(file_config)
+    else:
+        status = True
+
+    # exit if problematic
+    if not status:
+        sys.exit(int(not status))
+
+    return args
+
+
 def run_mesher():
     """
     User script for meshing the geometry and generating a 3D voxel structure.
@@ -25,12 +80,9 @@ def run_mesher():
     """
 
     # get the parser
-    parser = argparse.ArgumentParser(
-        prog="ppmesher",
-        description="PyPEEC mesher: transform the provided data into a 3D voxel structure.",
-        epilog="(c) Thomas Guillod - Dartmouth College",
-    )
-    parser.add_argument("-v", "--version", action="version", version="PyPEEC %s" % VERSION)
+    parser = _get_parser("ppmesher", "PyPEEC mesher: transform the provided data into a 3D voxel structure")
+
+    # add the arguments
     parser.add_argument(
         "--mesher",
         metavar="file",
@@ -46,8 +98,10 @@ def run_mesher():
         dest="file_voxel",
     )
 
-    # parse and call
-    args = parser.parse_args()
+    # parse the config and get arguments
+    args = _get_arguments(parser)
+
+    # run the code
     (status, ex) = main.run_mesher(args.file_mesher, args.file_voxel)
     sys.exit(int(not status))
 
@@ -59,12 +113,9 @@ def run_viewer():
     """
 
     # get the parser
-    parser = argparse.ArgumentParser(
-        prog="ppviewer",
-        description="PyPEEC viewer: visualization of a 3D voxel structure.",
-        epilog="(c) Thomas Guillod - Dartmouth College",
-    )
-    parser.add_argument("-v", "--version", action="version", version="PyPEEC %s" % VERSION)
+    parser = _get_parser("ppviewer", "PyPEEC viewer: visualization of a 3D voxel structure")
+
+    # add the arguments
     parser.add_argument(
         "--voxel",
         metavar="file",
@@ -93,8 +144,10 @@ def run_viewer():
         dest="is_interactive",
     )
 
-    # parse and call
-    args = parser.parse_args()
+    # parse the config and get arguments
+    args = _get_arguments(parser)
+
+    # run the code
     (status, ex) = main.run_viewer(args.file_voxel, args.file_point, args.file_viewer, args.is_interactive)
     sys.exit(int(not status))
 
@@ -106,12 +159,9 @@ def run_solver():
     """
 
     # get the parser
-    parser = argparse.ArgumentParser(
-        prog="ppsolver",
-        description="PyPEEC solver: solve a problem with the PEEC method.",
-        epilog="(c) Thomas Guillod - Dartmouth College",
-    )
-    parser.add_argument("-v", "--version", action="version", version="PyPEEC %s" % VERSION)
+    parser = _get_parser("ppsolver", "PyPEEC solver: solve a problem with the PEEC method")
+
+    # add the arguments
     parser.add_argument(
         "--voxel",
         metavar="file",
@@ -141,8 +191,10 @@ def run_solver():
         dest="file_solution",
     )
 
-    # parse and call
-    args = parser.parse_args()
+    # parse the config and get arguments
+    args = _get_arguments(parser)
+
+    # run the code
     (status, ex) = main.run_solver(args.file_voxel, args.file_problem, args.file_tolerance, args.file_solution)
     sys.exit(int(not status))
 
@@ -154,12 +206,9 @@ def run_plotter():
     """
 
     # get the parser
-    parser = argparse.ArgumentParser(
-        prog="ppplotter",
-        description="PyPEEC plotter: plot the solution of a PEEC problem.",
-        epilog="(c) Thomas Guillod - Dartmouth College",
-    )
-    parser.add_argument("-v", "--version", action="version", version="PyPEEC %s" % VERSION)
+    parser = _get_parser("ppplotter", "PyPEEC plotter: plot the solution of a PEEC problem")
+
+    # add the arguments
     parser.add_argument(
         "--solution",
         metavar="file",
@@ -188,7 +237,9 @@ def run_plotter():
         dest="is_interactive",
     )
 
-    # parse and call
-    args = parser.parse_args()
+    # parse the config and get arguments
+    args = _get_arguments(parser)
+
+    # run the code
     (status, ex) = main.run_plotter(args.file_solution, args.file_point, args.file_plotter, args.is_interactive)
     sys.exit(int(not status))
