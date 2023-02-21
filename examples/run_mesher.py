@@ -5,7 +5,7 @@ User script for meshing a voxel structure.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import os
+import os.path
 import sys
 from PyPEEC import main
 from examples import examples_config

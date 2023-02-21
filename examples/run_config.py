@@ -6,7 +6,7 @@ These configurations are dumped into JSON files.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import os
+import os.path
 import json
 from examples import examples_config
 

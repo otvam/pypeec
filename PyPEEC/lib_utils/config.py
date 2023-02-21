@@ -7,7 +7,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import sys
-import importlib.resources as resources
+import importlib.resources
 from PyPEEC.lib_utils import fileio
 from PyPEEC.lib_utils.error import FileError
 
@@ -18,7 +18,7 @@ def set_config(file_config):
     """
 
     # parse the file
-    data = fileio.load_yaml(file_config)
+    data = fileio.load_config(file_config)
 
     # call the global variables
     global LOGGING_OPTIONS
@@ -40,7 +40,7 @@ MATRIX_MULTIPLICATION = None
 FFT_OPTIONS = None
 
 # get the default config file
-default_file_config = resources.files("PyPEEC").joinpath("pypeec.yaml")
+default_file_config = importlib.resources.files("PyPEEC").joinpath("pypeec.yaml")
 
 # load the default config files
 try:

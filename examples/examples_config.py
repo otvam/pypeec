@@ -6,7 +6,7 @@ Defined with global variables.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import os
+import os.path
 
 # get the path of the root of the code
 PATH_ROOT = os.path.dirname(__file__)

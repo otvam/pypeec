@@ -13,20 +13,20 @@ WARNING: Making many plots can lead to segmentation fault with PyVista.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import importlib.resources
 import signal
-import importlib.resources as resources
-import pyvista as pv
-import pyvistaqt as pvqt
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import qtpy.QtWidgets as qtw
-import qtpy.QtGui as qtu
+import pyvista
+import pyvistaqt
+import matplotlib
+import matplotlib.pyplot
+import qtpy.QtWidgets
+import qtpy.QtGui
 
 # set defaults for PyVista
-pv.set_plot_theme("default")
+pyvista.set_plot_theme("default")
 
 # set default for Matplotlib
-mpl.use("QtAgg")
+matplotlib.use("QtAgg")
 
 
 def open_pyvista(data_window, is_interactive):
@@ -44,7 +44,7 @@ def open_pyvista(data_window, is_interactive):
     # create the figure
     if is_interactive:
         # get Qt plotter if interactive
-        pl = pvqt.BackgroundPlotter(
+        pl = pyvistaqt.BackgroundPlotter(
             show=True,
             toolbar=show_menu,
             menu_bar=show_menu,
@@ -52,11 +52,11 @@ def open_pyvista(data_window, is_interactive):
             window_size=tuple(window_size),
         )
         # set icon
-        path_icon = resources.files("PyPEEC").joinpath("pypeec.png")
+        path_icon = importlib.resources.files("PyPEEC").joinpath("pypeec.png")
         pl.set_icon(str(path_icon))
     else:
         # get standard plotter if non-interactive
-        pl = pv.Plotter(off_screen=True)
+        pl = pyvista.Plotter(off_screen=True)
 
     return pl
 
@@ -74,7 +74,7 @@ def open_matplotlib(data_window, is_interactive):
     window_size = data_window["window_size"]
 
     # get the figure
-    (fig, ax) = plt.subplots(tight_layout=True)
+    (fig, ax) = matplotlib.pyplot.subplots(tight_layout=True)
 
     # create the figure
     if is_interactive:
@@ -82,11 +82,11 @@ def open_matplotlib(data_window, is_interactive):
         (sx, sy) = window_size
 
         # get the icon
-        path_icon = resources.files("PyPEEC").joinpath("pypeec.png")
-        icn = qtu.QIcon(str(path_icon))
+        path_icon = importlib.resources.files("PyPEEC").joinpath("pypeec.png")
+        icn = qtpy.QtGui.QIcon(str(path_icon))
 
         # set the Qt options
-        man = plt.get_current_fig_manager()
+        man = matplotlib.pyplot.get_current_fig_manager()
         man.window.setWindowTitle(title)
         man.window.setWindowIcon(icn)
         man.window.resize(sx, sy)
@@ -115,12 +115,12 @@ def close_matplotlib(fig, is_interactive):
     """
 
     if not is_interactive:
-        plt.close(fig)
+        matplotlib.pyplot.close(fig)
     else:
-        gcf = plt.gcf()
+        gcf = matplotlib.pyplot.gcf()
         gcf.canvas.draw()
         gcf.canvas.flush_events()
-        plt.show(block=False)
+        matplotlib.pyplot.show(block=False)
         gcf.canvas.flush_events()
 
 
@@ -130,7 +130,7 @@ def open_app(is_interactive):
     """
 
     if is_interactive:
-        app = qtw.QApplication([])
+        app = qtpy.QtWidgets.QApplication([])
     else:
         app = None
 

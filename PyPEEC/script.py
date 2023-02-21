@@ -10,7 +10,7 @@ import sys
 import argparse
 from PyPEEC import main
 
-# get the version
+# get the version number
 try:
     from PyPEEC import version
     VERSION = version.__version__
@@ -41,7 +41,7 @@ def _get_parser(prog, description):
     parser.add_argument(
         "--config",
         metavar="file",
-        help="config file (input / YAML)",
+        help="config file (input / JSON or YAML)",
         required=False,
         dest="file_config",
     )
@@ -86,7 +86,7 @@ def run_mesher():
     parser.add_argument(
         "--mesher",
         metavar="file",
-        help="mesher file (input / JSON/YAML)",
+        help="mesher file (input / JSON or YAML)",
         required=True,
         dest="file_mesher",
     )
@@ -126,14 +126,14 @@ def run_viewer():
     parser.add_argument(
         "--point",
         metavar="file",
-        help="point file (input / JSON/YAML)",
+        help="point file (input / JSON or YAML)",
         required=True,
         dest="file_point",
     )
     parser.add_argument(
         "--viewer",
         metavar="file",
-        help="viewer file (input / JSON/YAML)",
+        help="viewer file (input / JSON or YAML)",
         required=True,
         dest="file_viewer",
     )
@@ -172,14 +172,14 @@ def run_solver():
     parser.add_argument(
         "--problem",
         metavar="file",
-        help="problem file (input / JSON/YAML)",
+        help="problem file (input / JSON or YAML)",
         required=True,
         dest="file_problem",
     )
     parser.add_argument(
         "--tolerance",
         metavar="file",
-        help="tolerance file (input / JSON/YAML)",
+        help="tolerance file (input / JSON or YAML)",
         required=True,
         dest="file_problem",
     )
@@ -219,14 +219,14 @@ def run_plotter():
     parser.add_argument(
         "--point",
         metavar="file",
-        help="point file (input / JSON/YAML)",
+        help="point file (input / JSON or YAML)",
         required=True,
         dest="file_point",
     )
     parser.add_argument(
         "--plotter",
         metavar="file",
-        help="plotter file (input / JSON/YAML)",
+        help="plotter file (input / JSON or YAML)",
         required=True,
         dest="file_plotter",
     )

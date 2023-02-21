@@ -4,9 +4,9 @@
 
 # logging options
 LOGGING_OPTIONS:
+    FORMAT: '%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s'  # logger format
     LEVEL: "DEBUG"  # logging level for the handlers
     INDENTATION: 4  # indentation level for the blocks
-    FORMAT: '%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s'  # logger format
     COLOR: false  # use (or not) colors for the logs
     CL_DEBUG: '[38;5;247m' # terminal color code
     CL_INFO: '[38;5;15m' # terminal color code

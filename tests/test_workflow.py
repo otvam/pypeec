@@ -6,7 +6,7 @@ True unit tests are not implemented.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import os
+import os.path
 import pickle
 import tempfile
 import logging

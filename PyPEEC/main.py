@@ -8,13 +8,14 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
+import os.path
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils import config
 from PyPEEC.lib_utils import fileio
 from PyPEEC.lib_utils.error import FileError
 
 # get a logger
-logger = timelogger.get_logger("SCRIPT")
+logger = timelogger.get_logger("MAIN")
 
 
 def set_config(file_config):
@@ -23,7 +24,7 @@ def set_config(file_config):
 
     Parameters
     ----------
-    file_config : string (input file, YAML format)
+    file_config : string (input file, JSON or YAML format)
 
     Returns
     -------
@@ -50,7 +51,7 @@ def run_mesher(file_mesher, file_voxel):
 
     Parameters
     ----------
-    file_mesher : string (input file, JSON/YAML format)
+    file_mesher : string (input file, JSON or YAML format)
     file_voxel :  string (output file, Pickle format)
 
     Returns
@@ -61,7 +62,7 @@ def run_mesher(file_mesher, file_voxel):
     """
 
     # load the tool
-    logger.info("init the PyPEEC mesher")
+    logger.info("load the mesher")
     from PyPEEC import mesher
 
     # run the tool
@@ -71,8 +72,8 @@ def run_mesher(file_mesher, file_voxel):
         data_mesher = fileio.load_config(file_mesher)
 
         # get the path for relative file loading
-        path_ref = os.path.dirname(file_mesher)
         path_cwd = os.getcwd()
+        path_ref = os.path.dirname(file_mesher)
         path_ref = os.path.relpath(path_ref, path_cwd)
 
         # call the mesher
@@ -96,8 +97,8 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
     Parameters
     ----------
     file_voxel : string (input file, Pickle format)
-    file_point: string (input file, JSON/YAML format)
-    file_viewer: string (input file, JSON/YAML format)
+    file_point: string (input file, JSON or YAML format)
+    file_viewer: string (input file, JSON or YAML format)
     is_interactive : boolean
         If true, the plots are shown (blocking call).
         If false, the plots are not shown (non-blocking call).
@@ -110,7 +111,7 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
     """
 
     # load the tool
-    logger.info("init the PyPEEC viewer")
+    logger.info("load the viewer")
     from PyPEEC import viewer
 
     # run the tool
@@ -138,8 +139,8 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     Parameters
     ----------
     file_voxel :  string (input file, Pickle format)
-    file_problem: string (input file, JSON/YAML format)
-    file_tolerance: string (input file, JSON/YAML format)
+    file_problem: string (input file, JSON or YAML format)
+    file_tolerance: string (input file, JSON or YAML format)
     file_solution: string (output file, Pickle format)
 
     Returns
@@ -150,7 +151,7 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     """
 
     # load the tool
-    logger.info("init the PyPEEC solver")
+    logger.info("load the solver")
     from PyPEEC import solver
 
     # run the tool
@@ -182,8 +183,8 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
     Parameters
     ----------
     file_solution : string (input file, Pickle format)
-    file_point: string (input file, JSON/YAML format)
-    file_plotter: string (input file, JSON/YAML format)
+    file_point: string (input file, JSON or YAML format)
+    file_plotter: string (input file, JSON or YAML format)
     is_interactive : boolean
         If true, the plots are shown (blocking call).
         If false, the plots are not shown (non-blocking call).
@@ -196,7 +197,7 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
     """
 
     # load the tool
-    logger.info("init the PyPEEC plotter")
+    logger.info("load the plotter")
     from PyPEEC import plotter
 
     # run the tool

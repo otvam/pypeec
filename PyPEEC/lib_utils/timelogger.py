@@ -168,12 +168,10 @@ def log_exception(logger, ex):
     ex.__context__ = None
 
     # get the exception data
-    ex_type = type(ex)
-    ex_trace = ex.__traceback__
-    ex_name = ex.__class__.__name__
+    name = ex.__class__.__name__
 
     # log the exception
-    logger.error("check error : " + ex_name, exc_info=(ex_type, ex, ex_trace))
+    logger.error("exception error : " + name, exc_info=ex)
 
 
 def get_logger(name):
@@ -188,20 +186,20 @@ def get_logger(name):
     The elapsed time measurement method and the logging level are specified in the config.
     """
 
-    # get the logger (only one logger per name is allowed)
-    logger = logging.getLogger(name)
-    if len(logger.handlers) != 0:
-        raise RuntimeError("duplicated logger name")
-
-    # get the formatter
-    fmt = _DeltaTimeFormatter()
-
-    # get the handle
-    handler = logging.StreamHandler()
-    handler.setFormatter(fmt)
-
     # get the logger
-    logger.setLevel(LEVEL)
-    logger.addHandler(handler)
+    logger = logging.getLogger(name)
+
+    # create the logger (if not already done)
+    if len(logger.handlers) == 0:
+        # get the formatter
+        fmt = _DeltaTimeFormatter()
+
+        # get the handle
+        handler = logging.StreamHandler()
+        handler.setFormatter(fmt)
+
+        # get the logger
+        logger.setLevel(LEVEL)
+        logger.addHandler(handler)
 
     return logger
