@@ -2,8 +2,8 @@
 
 ## Dependencies
 
-PyPEEC is entirely programmed in Python and is using the following packages:
-* Python 3
+**PyPEEC** is entirely programmed in **Python 3** and is using the following packages:
+* PyYAML
 * NumPy and SciPy
 * scikit-umfpack (for the solver, optional)
 * pyFFTW (for the solver, optional)
@@ -43,15 +43,16 @@ The configuration files are loaded with the following priorities:
 ## Tests
 
 * The tests are located in the `tests` folder (using the `unittest` framework).
+* The shell script `run_tests.sh` is used to run the tests.
+* The tests are checking that the examples are running correctly.
 * Only integration tests currently exist (no unit tests).
-* The tests are checking the examples are running and correct.
 
 # Warnings
 
 > **Warning**: For problems with magnetic domains, the preconditioner is not heavily optimized.
 > This might lead to a very slow convergence of the matrix solver.
 
-> **Warning**: For large problems, the code might allocate huge amount of memory.
+> **Warning**: For large problems, the code might allocate huge amounts of memory.
 > This might crash your operating system.
 
 > **Warning**: Python Pickle files are using to store the mesher and solver results.

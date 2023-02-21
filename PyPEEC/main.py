@@ -1,5 +1,5 @@
 """
-Contain the program entry points.
+Contain the program entry points (mesher, viewer, solver, and plotter).
 The import statements for the different modules are located inside the code.
 This allows for a minimization of the loaded dependencies.
 """

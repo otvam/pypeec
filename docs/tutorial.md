@@ -13,7 +13,7 @@ The **PyPEEC** package contains the following tools (`PyPEEC` package)::
   * Visualization of the connected components composing the voxel structure
 * **solver** (`PyPEEC.solver` module)
   * Computation of the incidence matrix
-  * Computation of the Green tensors
+  * Computation of the Green and coupling tensors
   * Computation of the resistance, inductance, and potential matrices
   * Computation of the electric-magnetic coupling matrices
   * Creation of the equation system
@@ -21,7 +21,7 @@ The **PyPEEC** package contains the following tools (`PyPEEC` package)::
   * Extraction of a matrix-vector linear operator for the full system
   * Check the condition number of the system
   * Solve the equation system with the pre-conditioner and the linear operator
-  * Extract the solution (terminal voltages and currents, scalar field, and vector field)
+  * Extract the solution (terminal voltages and currents, scalar fields, and vector fields)
 * **plotter** (`PyPEEC.plotter` module)
     * Plot the material description (materials and sources)
     * Plot the scalar and vector fields of the different voxels
@@ -31,7 +31,7 @@ The **PyPEEC** package contains the following tools (`PyPEEC` package)::
 
 ![viewer](images/workflow.png)
 
-## Script and File Description
+## Entry Points and Scripts
 
 The entry points of the different tools are located in the `PyPEEC.main` module:
 * `run_mesher` for the **mesher**
@@ -39,13 +39,13 @@ The entry points of the different tools are located in the `PyPEEC.main` module:
 * `run_solver` for the **solver**
 * `run_plotter` for the **plotter**
 
-Additionally, the console scripts are located in the `PyPEEC.script` module:
+Additionally, console scripts are located in the `PyPEEC.script` module:
 * `run_mesher` for the **mesher** (command line alias `ppmesher`)
 * `run_viewer` for the **viewer** (command line alias `ppviewer`)
 * `run_solver` for the **solver** (command line alias `ppsolver`)
 * `run_plotter` for the **plotter** (command line alias `ppplotter`)
 
-## File Description
+## Input/Output File Description
 
 The following input files (JSON or YAML format) are used:
 * `file_mesher` (JSON/YAML, input file): description of the geometry
@@ -59,7 +59,7 @@ The following files (Pickle format) are generated:
 * `file_voxel` (Pickle, output file): file with the definition of the voxel structure
 * `file_solution` (Pickle, output file): file with the solution of the magnetic problem
 
-## Examples
+## Definition of the Example Problems
 
 Different examples are located in the `examples` folder:
 * voxel structure generated from STL files
@@ -78,11 +78,13 @@ Different examples are located in the `examples` folder:
   * **voxel_core**: a simple slab conductor surrounded by a magnetic core
   * **voxel_transformer**: a simple coil with a secondary short-circuit winding
 
+## Running the Example Problems
+
 The following files (located in the `examples` folder) are used to run the examples.
-* `run_visualization.py` is used to generate the configuration file for the viewer/plotter
+* `run_conifg.py` is used to regenerate the configuration files
 * `examples_config.py` is used to select the example (when using the Python launchers)
 * `examples_config.sh` is used to select the example (when using the Shell launchers)
-* `run_mesher.[py/sh]` is the launcher for the mesher (Python or Shell)
-* `run_viewer.[py/sh]` is the viewer for the mesher (Python or Shell)
-* `run_solver.[py/sh]` is the solver for the mesher (Python or Shell)
-* `run_plotter.[py/sh]` is the plotter for the mesher (Python or Shell)
+* `run_mesher.[py/sh]` runs the mesher (Python or Shell)
+* `run_viewer.[py/sh]` runs the viewer (Python or Shell)
+* `run_solver.[py/sh]` runs the solver (Python or Shell)
+* `run_plotter.[py/sh]` runs the plotter (Python or Shell)
