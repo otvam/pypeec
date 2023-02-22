@@ -18,15 +18,15 @@ except ImportError:
     VERSION = "x.x.x"
 
 
-def _get_parser(prog, description):
+def _get_parser():
     """
     Create a command line parser with a description.
     """
 
     # get the parser
     parser = argparse.ArgumentParser(
-        prog=prog,
-        description=description,
+        prog="pypeec",
+        description="PyPEEC - 3D PEEC Solver",
         epilog="(c) Thomas Guillod - Dartmouth College",
     )
 
@@ -37,83 +37,62 @@ def _get_parser(prog, description):
         version="PyPEEC %s" % VERSION,
     )
 
+    # silent mode
+    parser.add_argument(
+        "-s", "--silent",
+        help="if set, do not display the plots",
+        action="store_false",
+        dest="is_interactive",
+    )
+
     # switch for a custom config file
     parser.add_argument(
         "-c", "--config",
-        metavar="file",
-        help="config file (input / JSON or YAML)",
+        help="config file (custom configuration file / JSON or YAML)",
         required=False,
         dest="file_config",
     )
 
-    return parser
+    # add subparsers
+    subparsers = parser.add_subparsers(
+        required=True,
+        dest="command",
+        title="command",
+    )
+
+    return parser, subparsers
 
 
-def _get_arguments(parser):
+def _get_arg_mesher(subparsers):
     """
-    Load the config file (if specified).
-    """
-
-    # parse and call
-    args = parser.parse_args()
-
-    # get the config file
-    file_config = args.file_config
-
-    # load the config
-    if file_config is not None:
-        status = main.set_config(file_config)
-    else:
-        status = True
-
-    # exit if problematic
-    if not status:
-        sys.exit(int(not status))
-
-    return args
-
-
-def run_mesher():
-    """
-    User script for meshing the geometry and generating a 3D voxel structure.
-    This script is parsing the command line arguments.
+    Add the mesher arguments.
     """
 
-    # get the parser
-    parser = _get_parser("ppmesher", "PyPEEC mesher: transform the provided data into a 3D voxel structure")
+    # add the subparser
+    parser = subparsers.add_parser('mesher', help="transform the provided data into a 3D voxel structure")
 
     # add the arguments
     parser.add_argument(
         "-me", "--mesher",
-        metavar="file",
         help="mesher file (input / JSON or YAML)",
         required=True,
         dest="file_mesher",
     )
     parser.add_argument(
         "-vo", "--voxel",
-        metavar="file",
         help="voxel file (output / pickle)",
         required=True,
         dest="file_voxel",
     )
 
-    # parse the config and get arguments
-    args = _get_arguments(parser)
 
-    # run the code
-    (status, ex) = main.run_mesher(args.file_mesher, args.file_voxel)
-    sys.exit(int(not status))
-
-
-def run_viewer():
+def _get_arg_viewer(subparsers):
     """
-    User script for visualizing a 3D voxel structure.
-    This script is parsing the command line arguments.
+    Add the viewer arguments.
     """
 
-    # get the parser
-    parser = _get_parser("ppviewer", "PyPEEC viewer: visualization of a 3D voxel structure")
+    # add the subparser
+    parser = subparsers.add_parser('viewer', help="visualization of a 3D voxel structure")
 
     # add the arguments
     parser.add_argument(
@@ -144,22 +123,14 @@ def run_viewer():
         dest="is_interactive",
     )
 
-    # parse the config and get arguments
-    args = _get_arguments(parser)
 
-    # run the code
-    (status, ex) = main.run_viewer(args.file_voxel, args.file_point, args.file_viewer, args.is_interactive)
-    sys.exit(int(not status))
-
-
-def run_solver():
+def _get_arg_solver(subparsers):
     """
-    User script for solving a problem with the PEEC solver.
-    This script is parsing the command line arguments.
+    Add the solver arguments.
     """
 
-    # get the parser
-    parser = _get_parser("ppsolver", "PyPEEC solver: solve a problem with the PEEC method")
+    # add the subparser
+    parser = subparsers.add_parser('solver', help="solve a problem with the PEEC method")
 
     # add the arguments
     parser.add_argument(
@@ -191,22 +162,14 @@ def run_solver():
         dest="file_solution",
     )
 
-    # parse the config and get arguments
-    args = _get_arguments(parser)
 
-    # run the code
-    (status, ex) = main.run_solver(args.file_voxel, args.file_problem, args.file_tolerance, args.file_solution)
-    sys.exit(int(not status))
-
-
-def run_plotter():
+def _get_arg_plotter(subparsers):
     """
-    User script for plotting the solution of a PEEC problem.
-    This script is parsing the command line arguments.
+    Add the plotter arguments.
     """
 
-    # get the parser
-    parser = _get_parser("ppplotter", "PyPEEC plotter: plot the solution of a PEEC problem")
+    # add the subparser
+    parser = subparsers.add_parser('plotter', help="plot the solution of a PEEC problem")
 
     # add the arguments
     parser.add_argument(
@@ -237,9 +200,66 @@ def run_plotter():
         dest="is_interactive",
     )
 
+
+def _get_arguments(parser):
+    """
+    Load the config file (if specified).
+    """
+
+    # parse and call
+    args = parser.parse_args()
+
+    # get the config file
+    command = args.command
+    is_interactive = args.is_interactive
+    file_config = args.file_config
+
+    # load the config
+    if file_config is not None:
+        status = main.set_config(file_config)
+    else:
+        status = True
+
+    # exit if problematic
+    if not status:
+        sys.exit(int(not status))
+
+    return command, is_interactive, args
+
+
+def run_script():
+    """
+    User script for running PyPEEC.
+    This script is parsing the command line arguments.
+    """
+
+    # get the parser
+    (parser, subparsers) = _get_parser()
+
+    # add the sub-command arguments
+    _get_arg_mesher(subparsers)
+    _get_arg_viewer(subparsers)
+    _get_arg_solver(subparsers)
+    _get_arg_plotter(subparsers)
+
     # parse the config and get arguments
-    args = _get_arguments(parser)
+    (command, is_interactive, args) = _get_arguments(parser)
 
     # run the code
-    (status, ex) = main.run_plotter(args.file_solution, args.file_point, args.file_plotter, args.is_interactive)
+    if command == "mesher":
+        (status, ex) = main.run_mesher(args.file_mesher, args.file_voxel)
+    elif command == "viewer":
+        (status, ex) = main.run_viewer(args.file_voxel, args.file_point, args.file_viewer, is_interactive)
+    elif command == "solver":
+        (status, ex) = main.run_solver(args.file_voxel, args.file_problem, args.file_tolerance, args.file_solution)
+    elif command == "plotter":
+        (status, ex) = main.run_plotter(args.file_solution, args.file_point, args.file_plotter, is_interactive)
+    else:
+        raise ValueError("invalid command")
+
+    # exit the program
     sys.exit(int(not status))
+
+
+if __name__ == "__main__":
+    run_script()
