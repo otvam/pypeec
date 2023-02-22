@@ -301,7 +301,7 @@ def plot_arrow(pl, d_char, obj, data_options, clip_options):
         _get_clip_mesh(pl, glyph_tmp, arg, clip_options)
 
 
-def get_plot_viewer(pl, grid, voxel, point, data_plot):
+def get_plot_viewer(pl, grid, voxel, point, mesh_all, data_plot):
     """
     Plot the voxel structure (for the viewer).
     The following plot types are available:
@@ -331,8 +331,25 @@ def get_plot_viewer(pl, grid, voxel, point, data_plot):
         scalars=tag,
         cmap="Accent",
     )
+
+    arg = dict(
+        show_scalar_bar=False,
+        opacity=0.5,
+        color='blue',
+    )
+
     if voxel_tmp.n_cells > 0:
         _get_clip_mesh(pl, voxel_tmp, arg, clip_options)
+
+
+    arg = dict(
+        show_scalar_bar=False,
+        opacity=0.5,
+        color='red',
+    )
+
+    if voxel_tmp.n_cells > 0:
+        _get_clip_mesh(pl, mesh_all, arg, clip_options)
 
     # add the wireframe and axis
     _get_plot_options(pl, grid, voxel, point, plot_options)

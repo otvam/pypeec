@@ -415,7 +415,7 @@ def get_domain_stl_path(domain_stl, path_ref):
         raise CheckError("path_ref: path_ref should be a string or None")
 
     # init new domain description
-    domain_stl_path = dict()
+    domain_stl_path = {}
 
     # check value
     for tag, filename in domain_stl.items():

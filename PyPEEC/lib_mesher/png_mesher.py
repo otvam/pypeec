@@ -120,7 +120,7 @@ def get_mesh(nx, ny, domain_color, layer_stack):
     nz = 0
 
     # init domain definition dict
-    domain_def = dict()
+    domain_def = {}
     for tag, color in domain_color.items():
         domain_def[tag] = np.array([], np.int64)
 

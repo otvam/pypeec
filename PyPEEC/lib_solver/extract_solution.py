@@ -272,7 +272,7 @@ def get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all):
     """
 
     # init terminal dict
-    terminal = dict()
+    terminal = {}
 
     # get the factor for getting the average values
     if freq == 0:

@@ -83,7 +83,7 @@ def _get_idx_stl(grid, mesh_stl):
     """
 
     # init the domain dict
-    domain_def = dict()
+    domain_def = {}
 
     # load the STL files
     for tag, mesh in mesh_stl.items():
@@ -96,6 +96,28 @@ def _get_idx_stl(grid, mesh_stl):
     return domain_def
 
 
+def _get_merge_stl(c, c_stl, mesh_stl):
+    """
+    Load meshes from STL files and find the minimum and maximum coordinates.
+    The minimum and maximum coordinates defines a bounding box for all the meshes.
+    """
+
+    # init STL mesh list
+    mesh_all = []
+
+    # load the STL files and find the bounding box
+    for mesh in mesh_stl.values():
+        mesh_all.append(mesh)
+
+    # merge the meshes
+    mesh_all = pv.MultiBlock(mesh_all).combine()
+
+    # place at the new origin
+    mesh_all = mesh_all.translate(c-c_stl)
+
+    return mesh_all
+
+
 def _get_load_stl(domain_stl):
     """
     Load meshes from STL files and find the minimum and maximum coordinates.
@@ -103,7 +125,7 @@ def _get_load_stl(domain_stl):
     """
 
     # init STL mesh dict
-    mesh_stl = dict()
+    mesh_stl = {}
 
     # init the coordinate (minimum and maximum coordinates)
     pts_min = np.full(3, +np.inf, dtype=np.float64)
@@ -207,14 +229,19 @@ def get_mesh(n, d, c, pts_min, pts_max, domain_stl):
 
     # if provided, the user specified voxel center is used, otherwise the geometrical center
     if c is None:
-        c = pts_min_stl
+        c = c_stl
+    else:
+        c = np.array(c, np.float64)
+
+    # merge meshes
+    mesh_all = _get_merge_stl(c, c_stl, mesh_stl)
 
     # cast to lists
     n = n.tolist()
     d = d.tolist()
     c = c.tolist()
 
-    return n, d, c, domain_def
+    return n, d, c, domain_def, mesh_all
 
 
 def get_conflict(domain_def, domain_conflict):

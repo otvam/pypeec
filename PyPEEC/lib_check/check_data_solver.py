@@ -37,7 +37,7 @@ def _get_material_idx(material_def, domain_def):
     """
 
     # init
-    material_idx = dict()
+    material_idx = {}
     idx_c = np.array([], dtype=np.int64)
     idx_m = np.array([], dtype=np.int64)
 
@@ -71,7 +71,7 @@ def _get_source_idx(source_def, domain_def):
     """
 
     # init
-    source_idx = dict()
+    source_idx = {}
     idx_s = np.array([], dtype=np.int64)
 
     for tag, dat_tmp in source_def.items():
