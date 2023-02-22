@@ -113,7 +113,7 @@ def _get_merge_stl(c, c_stl, mesh_stl):
     reference = pv.MultiBlock(reference).combine()
 
     # place at the new origin
-    reference = reference.translate(c-c_stl)
+    reference = reference.translate(c-c_stl, inplace=True)
 
     return reference
 

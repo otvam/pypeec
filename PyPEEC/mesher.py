@@ -36,14 +36,15 @@ def _run_mesher(data_mesher, path_ref):
     mesh_type = data_mesher["mesh_type"]
     data_voxelize = data_mesher["data_voxelize"]
 
-    if mesh_type == "png":
+    # voxelize the geometry
+    if mesh_type == "voxel":
+        reference = None
+        data_voxel = data_voxelize
+    elif mesh_type == "png":
         reference = None
         data_voxel = _run_png(data_voxelize, path_ref)
     elif mesh_type == "stl":
         (reference, data_voxel) = _run_stl(data_voxelize, path_ref)
-    elif mesh_type == "voxel":
-        reference = None
-        data_voxel = data_voxelize
     else:
         raise CheckError("invalid mesh type")
 
