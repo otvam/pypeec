@@ -9,10 +9,6 @@ PyYAML>=6.0 # YAML parser
 numpy>=1.24 # used everywhere
 scipy>=1.9 # used everywhere
 
-# high-performance libraries
-scikit-umfpack>=0.3 # used by the solver, optional see config file
-pyFFTW>=0.13 # used by the solver, optional see config file
-
 # package for visualization
 Pillow>=9.4 # used by the mesher
 matplotlib>=3.6 # used by the viewer, and plotter
@@ -21,3 +17,7 @@ pyvista>=0.37 # used by the mesher, viewer, and plotter
 pyvistaqt>=0.9 # used by the viewer, and plotter
 QtPy>=2.3 # used by the viewer, and plotter
 PyQt5>=5.15 # used by the viewer, and plotter
+
+# high-performance libraries (optional)
+scikit-umfpack[HPC]>=0.3 # used by the solver, optional see config file
+pyFFTW[HPC]>=0.13 # used by the solver, optional see config file
