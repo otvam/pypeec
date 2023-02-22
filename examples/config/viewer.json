@@ -10,6 +10,10 @@
         },
         "data_plot": {
             "plot_type": "domain",
+            "data_options": {
+                "colormap": "Accent",
+                "opacity": 1.0
+            },
             "clip_options": {
                 "clip_plot": false,
                 "clip_invert": false,
@@ -44,6 +48,50 @@
         },
         "data_plot": {
             "plot_type": "connection",
+            "data_options": {
+                "colormap": "Accent",
+                "opacity": 1.0
+            },
+            "clip_options": {
+                "clip_plot": false,
+                "clip_invert": false,
+                "clip_axis": "z",
+                "clip_value": 0.0
+            },
+            "plot_options": {
+                "title": "Connection",
+                "grid_plot": true,
+                "grid_thickness": 1.0,
+                "grid_color": "black",
+                "grid_opacity": 0.1,
+                "geom_plot": true,
+                "geom_thickness": 1.0,
+                "geom_color": "black",
+                "geom_opacity": 0.5,
+                "cloud_plot": true,
+                "cloud_color": "red",
+                "cloud_size": 5.0,
+                "cloud_opacity": 0.5
+            }
+        }
+    },
+    {
+        "data_window": {
+            "title": "Tolerance",
+            "show_menu": false,
+            "window_size": [
+                800,
+                600
+            ]
+        },
+        "data_plot": {
+            "plot_type": "tolerance",
+            "data_options": {
+                "color_voxel": "red",
+                "color_reference": "blue",
+                "opacity_voxel": 0.5,
+                "opacity_reference": 0.5
+            },
             "clip_options": {
                 "clip_plot": false,
                 "clip_invert": false,

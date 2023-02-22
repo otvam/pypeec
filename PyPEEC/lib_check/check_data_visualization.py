@@ -311,7 +311,7 @@ def _check_data_viewer_item(data_viewer):
     # check plot type
     if not isinstance(plot_type, str):
         raise CheckError("plot_type: plot type should be a string")
-    if plot_type not in ["domain", "connection"]:
+    if plot_type not in ["domain", "connection", "tolerance"]:
         raise CheckError("plot_type: specified plot type is invalid")
 
     # check options

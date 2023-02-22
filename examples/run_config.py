@@ -76,7 +76,12 @@ def _get_data_plotter_geometry(name):
     This structure is used by the plotter.
     """
 
-    data_options = {}
+    data_options = {
+        "color_electric": "darkorange",
+        "color_magnetic": "gainsboro",
+        "color_current_source": "forestgreen",
+        "color_voltage_source": "royalblue",
+    }
 
     data = _get_data_plotter_pyvista("material", data_options, name)
 
@@ -220,6 +225,10 @@ def get_data_viewer():
             "data_window": _get_data_window("Domain"),
             "data_plot": {
                 "plot_type": "domain",
+                "data_options": {
+                    "colormap": "Accent",
+                    "opacity": 1.0,
+                },
                 "clip_options": _get_clip_options(),
                 "plot_options": _get_plot_options("Domain"),
             }
@@ -228,6 +237,24 @@ def get_data_viewer():
             "data_window": _get_data_window("Connection"),
             "data_plot": {
                 "plot_type": "connection",
+                "data_options": {
+                    "colormap": "Accent",
+                    "opacity": 1.0,
+                },
+                "clip_options": _get_clip_options(),
+                "plot_options": _get_plot_options("Connection"),
+            }
+        },
+        {
+            "data_window": _get_data_window("Tolerance"),
+            "data_plot": {
+                "plot_type": "tolerance",
+                "data_options": {
+                    "color_voxel": "red",
+                    "color_reference": "blue",
+                    "opacity_voxel": 0.5,
+                    "opacity_reference": 0.5,
+                },
                 "clip_options": _get_clip_options(),
                 "plot_options": _get_plot_options("Connection"),
             }

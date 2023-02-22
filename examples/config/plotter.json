@@ -11,7 +11,12 @@
         },
         "data_plot": {
             "plot_type": "material",
-            "data_options": {},
+            "data_options": {
+                "color_electric": "darkorange",
+                "color_magnetic": "gainsboro",
+                "color_current_source": "forestgreen",
+                "color_voltage_source": "royalblue"
+            },
             "clip_options": {
                 "clip_plot": false,
                 "clip_invert": false,

@@ -191,13 +191,18 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     return obj
 
 
-def plot_material(pl, voxel, clip_options):
+def plot_material(pl, voxel, data_options, clip_options):
     """
     Plot the material and source description.
     """
 
     # get a colormap with three discrete color
-    cmap = ["darkorange", "gainsboro", "forestgreen", "royalblue"]
+    cmap = [
+        data_options["color_electric"],
+        data_options["color_magnetic"],
+        data_options["color_current_source"],
+        data_options["color_voltage_source"],
+    ]
 
     # make a copy (for avoid cross coupling)
     voxel_tmp = voxel.copy(deep=True)
@@ -301,7 +306,7 @@ def plot_arrow(pl, d_char, obj, data_options, clip_options):
         _get_clip_mesh(pl, glyph_tmp, arg, clip_options)
 
 
-def get_plot_viewer(pl, grid, voxel, point, mesh_all, data_plot):
+def plot_geometry(pl, voxel, data_options, clip_options, tag):
     """
     Plot the voxel structure (for the viewer).
     The following plot types are available:
@@ -309,18 +314,9 @@ def get_plot_viewer(pl, grid, voxel, point, mesh_all, data_plot):
         - the connected components for the non-empty voxels
     """
 
-    # get the data
-    plot_type = data_plot["plot_type"]
-    clip_options = data_plot["clip_options"]
-    plot_options = data_plot["plot_options"]
-
-    # find the variable to be plotted
-    if plot_type == "domain":
-        tag = "domain"
-    elif plot_type == "connection":
-        tag = "connection"
-    else:
-        raise ValueError("invalid plot type and plot feature")
+    # extract
+    colormap = data_options["colormap"]
+    opacity = data_options["opacity"]
 
     # make a copy (for avoid cross coupling)
     voxel_tmp = voxel.copy(deep=True)
@@ -329,27 +325,72 @@ def get_plot_viewer(pl, grid, voxel, point, mesh_all, data_plot):
     arg = dict(
         show_scalar_bar=False,
         scalars=tag,
-        cmap="Accent",
+        cmap=colormap,
+        opacity=opacity,
     )
-
-    arg = dict(
-        show_scalar_bar=False,
-        opacity=0.5,
-        color='blue',
-    )
-
     if voxel_tmp.n_cells > 0:
         _get_clip_mesh(pl, voxel_tmp, arg, clip_options)
 
 
+def plot_tolerance(pl, voxel, reference, data_options, clip_options):
+    # get the data
+    color_voxel = data_options["color_voxel"]
+    color_reference = data_options["color_reference"]
+    opacity_voxel = data_options["opacity_voxel"]
+    opacity_reference = data_options["opacity_reference"]
+    
+    # make a copy (for avoid cross coupling)
+    voxel_tmp = voxel.copy(deep=True)
+
+    # if the reference is not provided, use the voxel structure
+    if reference is None:
+        reference_tmp = voxel.copy(deep=True)
+    else:
+        reference_tmp = reference.copy(deep=True)
+
+    # add the resulting plot to the plotter
     arg = dict(
         show_scalar_bar=False,
-        opacity=0.5,
-        color='red',
+        color=color_voxel,
+        opacity=opacity_voxel,
     )
-
     if voxel_tmp.n_cells > 0:
-        _get_clip_mesh(pl, mesh_all, arg, clip_options)
+        _get_clip_mesh(pl, voxel_tmp, arg, clip_options)
+
+    # add the resulting plot to the plotter
+    arg = dict(
+        show_scalar_bar=False,
+        color=color_reference,
+        opacity=opacity_reference,
+    )
+    if voxel_tmp.n_cells > 0:
+        _get_clip_mesh(pl, reference_tmp, arg, clip_options)
+
+
+def get_plot_viewer(pl, grid, voxel, point, reference, data_plot):
+    """
+    Plot the voxel structure (for the viewer).
+    The following plot types are available:
+        - the domains are shown for the non-empty voxels
+        - the connected components for the non-empty voxels
+        - the meshing tolerance between the reference and voxelized structures
+    """
+
+    # get the data
+    plot_type = data_plot["plot_type"]
+    data_options = data_plot["data_options"]
+    clip_options = data_plot["clip_options"]
+    plot_options = data_plot["plot_options"]
+
+    # get the main plot
+    if plot_type == "domain":
+        plot_geometry(pl, voxel, data_options, clip_options, "domain")
+    elif plot_type == "connection":
+        plot_geometry(pl, voxel, data_options, clip_options, "connection")
+    elif plot_type == "tolerance":
+        plot_tolerance(pl, voxel, reference, data_options, clip_options)
+    else:
+        raise ValueError("invalid plot type and plot feature")
 
     # add the wireframe and axis
     _get_plot_options(pl, grid, voxel, point, plot_options)
@@ -374,7 +415,7 @@ def get_plot_plotter(pl, grid, voxel, point, data_plot):
 
     # get the main plot
     if plot_type == "material":
-        plot_material(pl, voxel, clip_options)
+        plot_material(pl, voxel, data_options, clip_options)
     elif plot_type == "scalar_voxel":
         plot_scalar(pl, voxel, data_options, clip_options)
     elif plot_type == "scalar_point":

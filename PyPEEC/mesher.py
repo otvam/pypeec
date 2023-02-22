@@ -37,17 +37,17 @@ def _run_mesher(data_mesher, path_ref):
     data_voxelize = data_mesher["data_voxelize"]
 
     if mesh_type == "png":
-        mesh_all = None
+        reference = None
         data_voxel = _run_png(data_voxelize, path_ref)
     elif mesh_type == "stl":
-        (mesh_all, data_voxel) = _run_stl(data_voxelize, path_ref)
+        (reference, data_voxel) = _run_stl(data_voxelize, path_ref)
     elif mesh_type == "voxel":
-        mesh_all = None
+        reference = None
         data_voxel = data_voxelize
     else:
         raise CheckError("invalid mesh type")
 
-    return mesh_all, data_voxel
+    return reference, data_voxel
 
 
 def _run_png(data_voxelize, path_ref):
@@ -96,7 +96,7 @@ def _run_stl(data_voxelize, path_ref):
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
         domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
-        (n, d, c, domain_def, mesh_all) = stl_mesher.get_mesh(n, d, c, pts_min, pts_max, domain_stl)
+        (n, d, c, domain_def, reference) = stl_mesher.get_mesh(n, d, c, pts_min, pts_max, domain_stl)
         domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
 
     # assemble the data
@@ -107,10 +107,10 @@ def _run_stl(data_voxelize, path_ref):
         "domain_def": domain_def,
     }
 
-    return mesh_all, data_voxel
+    return reference, data_voxel
 
 
-def _run_resample_graph(mesh_all, data_voxel, data_mesher):
+def _run_resample_graph(reference, data_voxel, data_mesher):
     """
     Resampling of a 3D voxel structure (increases the number of voxels).
     """
@@ -142,7 +142,7 @@ def _run_resample_graph(mesh_all, data_voxel, data_mesher):
         "domain_def": domain_def,
         "connection_def": connection_def,
         "voxel_status": voxel_status,
-        "mesh_all": mesh_all,
+        "reference": reference,
     }
 
     return data_voxel
@@ -180,10 +180,10 @@ def run(data_mesher, path_ref):
         check_data_mesher.check_data_mesher(data_mesher)
 
         # run the mesher
-        (mesh_all, data_voxel) = _run_mesher(data_mesher, path_ref)
+        (reference, data_voxel) = _run_mesher(data_mesher, path_ref)
 
         # resample and assemble
-        data_voxel = _run_resample_graph(mesh_all, data_voxel, data_mesher)
+        data_voxel = _run_resample_graph(reference, data_voxel, data_mesher)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(logger, ex)
         return False, None, ex

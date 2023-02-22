@@ -98,24 +98,24 @@ def _get_idx_stl(grid, mesh_stl):
 
 def _get_merge_stl(c, c_stl, mesh_stl):
     """
-    Load meshes from STL files and find the minimum and maximum coordinates.
-    The minimum and maximum coordinates defines a bounding box for all the meshes.
+    Merge the STL files into a single mesh.
+    Translate the mesh with the provided origin.
     """
 
     # init STL mesh list
-    mesh_all = []
+    reference = []
 
     # load the STL files and find the bounding box
     for mesh in mesh_stl.values():
-        mesh_all.append(mesh)
+        reference.append(mesh)
 
     # merge the meshes
-    mesh_all = pv.MultiBlock(mesh_all).combine()
+    reference = pv.MultiBlock(reference).combine()
 
     # place at the new origin
-    mesh_all = mesh_all.translate(c-c_stl)
+    reference = reference.translate(c-c_stl)
 
-    return mesh_all
+    return reference
 
 
 def _get_load_stl(domain_stl):
@@ -234,14 +234,14 @@ def get_mesh(n, d, c, pts_min, pts_max, domain_stl):
         c = np.array(c, np.float64)
 
     # merge meshes
-    mesh_all = _get_merge_stl(c, c_stl, mesh_stl)
+    reference = _get_merge_stl(c, c_stl, mesh_stl)
 
     # cast to lists
     n = n.tolist()
     d = d.tolist()
     c = c.tolist()
 
-    return n, d, c, domain_def, mesh_all
+    return n, d, c, domain_def, reference
 
 
 def get_conflict(domain_def, domain_conflict):

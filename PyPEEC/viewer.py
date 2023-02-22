@@ -40,7 +40,7 @@ def _get_grid_voxel(data_voxel, data_point):
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
     connection_def = data_voxel["connection_def"]
-    mesh_all = data_voxel["mesh_all"]
+    reference = data_voxel["reference"]
 
     # get the indices of the non-empty voxels and the domain and connection description
     (idx, domain, connection) = manage_compute.get_geometry_tag(domain_def, connection_def)
@@ -53,10 +53,10 @@ def _get_grid_voxel(data_voxel, data_point):
     # add the domain tag to the geometry
     voxel = manage_voxel.set_viewer_domain(voxel, idx, domain, connection)
 
-    return grid, voxel, point, mesh_all
+    return grid, voxel, point, reference
 
 
-def _get_plot(grid, voxel, point, mesh_all, data_viewer, is_interactive):
+def _get_plot(grid, voxel, point, reference, data_viewer, is_interactive):
     """
     Make a plot with the voxel structure and the domains.
     """
@@ -69,7 +69,7 @@ def _get_plot(grid, voxel, point, mesh_all, data_viewer, is_interactive):
     pl = plotgui.open_pyvista(data_window, is_interactive)
 
     # make the plot
-    manage_pyvista.get_plot_viewer(pl, grid, voxel, point, mesh_all, data_plot)
+    manage_pyvista.get_plot_viewer(pl, grid, voxel, point, reference, data_plot)
 
     # close plotter if non-interactive
     plotgui.close_pyvista(pl, is_interactive)
@@ -119,13 +119,13 @@ def run(data_voxel, data_point, data_viewer, is_interactive):
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
-        (grid, voxel, point, mesh_all) = _get_grid_voxel(data_voxel, data_point)
+        (grid, voxel, point, reference) = _get_grid_voxel(data_voxel, data_point)
 
         # make the plots
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_viewer):
             logger.info("plotting %d / %d" % (i+1, len(data_viewer)))
-            _get_plot(grid, voxel, point, mesh_all, dat_tmp, is_interactive)
+            _get_plot(grid, voxel, point, reference, dat_tmp, is_interactive)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(logger, ex)
         return False, ex
