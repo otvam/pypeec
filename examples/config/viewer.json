@@ -1,5 +1,6 @@
 [
     {
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Domain",
             "show_menu": false,
@@ -38,6 +39,7 @@
         }
     },
     {
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Connection",
             "show_menu": false,
@@ -76,6 +78,7 @@
         }
     },
     {
+        "plot_framework": "pyvista",
         "data_window": {
             "title": "Tolerance",
             "show_menu": false,
@@ -99,7 +102,7 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Connection",
+                "title": "Tolerance",
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",

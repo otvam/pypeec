@@ -69,7 +69,60 @@ def _get_data_window(name):
     return data_window
 
 
-def _get_data_plotter_geometry(name):
+def _get_data_viewer_domain(name):
+    """
+    Plot options for the domain description.
+    The result is plotted on the voxel structure.
+    This structure is used by the viewer.
+    """
+
+    data_options = {
+        "colormap": "Accent",  # colormap used to plot the different voxel groups
+        "opacity": 1.0,  # opacity of the face color
+    }
+
+    data = _get_data_pyvista("domain", data_options, name)
+
+    return data
+
+
+def _get_data_viewer_connection(name):
+    """
+    Plot options for the connection description.
+    The result is plotted on the voxel structure.
+    This structure is used by the viewer.
+    """
+
+    data_options = {
+        "colormap": "Accent",  # colormap used to plot the different voxel groups
+        "opacity": 1.0,  # opacity of the face color
+    }
+
+    data = _get_data_pyvista("connection", data_options, name)
+
+    return data
+
+
+def _get_data_viewer_tolerance(name):
+        """
+        Plot options for the tolerance description.
+        The result is plotted on the voxel structure.
+        This structure is used by the viewer.
+        """
+
+        data_options = {
+            "color_voxel": "red",  # face color for the voxelized structure
+            "color_reference": "blue",  # face color for the reference structure
+            "opacity_voxel": 0.5,  # face opacity for the voxelized structure
+            "opacity_reference": 0.5,  # face opacity for the reference structure
+        }
+
+        data = _get_data_pyvista("tolerance", data_options, name)
+
+        return data
+
+
+def _get_data_plotter_material(name):
     """
     Plot options for the material description.
     The result is plotted on the voxel structure.
@@ -77,13 +130,13 @@ def _get_data_plotter_geometry(name):
     """
 
     data_options = {
-        "color_electric": "darkorange",
-        "color_magnetic": "gainsboro",
-        "color_current_source": "forestgreen",
-        "color_voltage_source": "royalblue",
+        "color_electric": "darkorange",  # color of the electric domains
+        "color_magnetic": "gainsboro",  # color of the magnetic domains
+        "color_current_source": "forestgreen",  # color of the current source domains
+        "color_voltage_source": "royalblue",  # color of the voltage source domains
     }
 
-    data = _get_data_plotter_pyvista("material", data_options, name)
+    data = _get_data_pyvista("material", data_options, name)
 
     return data
 
@@ -105,7 +158,7 @@ def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
         "legend": "%s [%s]" % (name, unit),  # legend of the color axis
     }
 
-    data = _get_data_plotter_pyvista("scalar_" + plot_geom, data_options, name)
+    data = _get_data_pyvista("scalar_" + plot_geom, data_options, name)
 
     return data
 
@@ -129,12 +182,12 @@ def _get_data_plotter_arrow(plot_geom, var_scalar, var_vector, scale, unit, name
         "legend": "%s [%s]" % (name, unit),  # legend of the color axis
     }
 
-    data = _get_data_plotter_pyvista("arrow_" + plot_geom, data_options, name)
+    data = _get_data_pyvista("arrow_" + plot_geom, data_options, name)
 
     return data
 
 
-def _get_data_plotter_pyvista(plot_type, data_options, name):
+def _get_data_pyvista(plot_type, data_options, name):
     """
     Get the options defining a single PyVista plot.
     This structure is used by the plotter.
@@ -154,7 +207,7 @@ def _get_data_plotter_pyvista(plot_type, data_options, name):
     return data
 
 
-def _get_data_plotter_matplotlib(data_plot, name):
+def _get_data_matplotlib(data_plot, name):
     """
     Get the options defining a single Matplotlib plot.
     This structure is used by the plotter.
@@ -220,45 +273,11 @@ def get_data_viewer():
     This list is used by the viewer.
     """
 
+    # get the plots
     data_viewer = [
-        {
-            "data_window": _get_data_window("Domain"),
-            "data_plot": {
-                "plot_type": "domain",
-                "data_options": {
-                    "colormap": "Accent",
-                    "opacity": 1.0,
-                },
-                "clip_options": _get_clip_options(),
-                "plot_options": _get_plot_options("Domain"),
-            }
-        },
-        {
-            "data_window": _get_data_window("Connection"),
-            "data_plot": {
-                "plot_type": "connection",
-                "data_options": {
-                    "colormap": "Accent",
-                    "opacity": 1.0,
-                },
-                "clip_options": _get_clip_options(),
-                "plot_options": _get_plot_options("Connection"),
-            }
-        },
-        {
-            "data_window": _get_data_window("Tolerance"),
-            "data_plot": {
-                "plot_type": "tolerance",
-                "data_options": {
-                    "color_voxel": "red",
-                    "color_reference": "blue",
-                    "opacity_voxel": 0.5,
-                    "opacity_reference": 0.5,
-                },
-                "clip_options": _get_clip_options(),
-                "plot_options": _get_plot_options("Connection"),
-            }
-        },
+        _get_data_viewer_domain("Domain"),
+        _get_data_viewer_connection("Connection"),
+        _get_data_viewer_tolerance("Tolerance"),
     ]
 
     return data_viewer
@@ -273,7 +292,7 @@ def get_data_plotter():
 
     # get the plots
     data_plotter = [
-        _get_data_plotter_geometry("Material"),
+        _get_data_plotter_material("Material"),
         _get_data_plotter_scalar("voxel", "V_c_abs", 1e0, "V", "El. Potential"),
         _get_data_plotter_scalar("voxel", "V_m_abs", 1e0, "A", "Mag. Potential"),
         _get_data_plotter_scalar("voxel", "S_c_abs", 1e-9, "A/mm3", "El. Source"),
@@ -289,8 +308,8 @@ def get_data_plotter():
         _get_data_plotter_scalar("point", "H_norm_abs", 1e0, "A/m", "Mag. Field Norm"),
         _get_data_plotter_arrow("point", "H_norm_re", "H_vec_re", 1e0, "A/m", "Re. Mag. Field"),
         _get_data_plotter_arrow("point", "H_norm_im", "H_vec_im", 1e0, "A/m", "Im. Mag. Field"),
-        _get_data_plotter_matplotlib("convergence", "Convergence"),
-        _get_data_plotter_matplotlib("residuum", "Residuum"),
+        _get_data_matplotlib("convergence", "Convergence"),
+        _get_data_matplotlib("residuum", "Residuum"),
     ]
 
     return data_plotter

@@ -104,7 +104,7 @@ def _check_clip_options(clip_options):
         raise CheckError("clip_value: the value of the clip plane should be a float")
 
 
-def _check_data_options(plot_type, data_options):
+def _check_data_options_plotter(plot_type, data_options):
     """
     Check the validity of the data options (for the plotter).
     The data options are controlling the plot content.
@@ -134,6 +134,17 @@ def _check_data_options(plot_type, data_options):
     ]
     var_point_list = ["H_norm_abs", "H_norm_re", "H_norm_im"]
     vec_point_list = ["H_vec_re", "H_vec_im"]
+
+    # check the material options
+    if plot_type == "material":
+        if not isinstance(data_options["color_electric"], str):
+            raise CheckError("color_electric: color name should be a string")
+        if not isinstance(data_options["color_magnetic"], str):
+            raise CheckError("color_magnetic: color name should be a string")
+        if not isinstance(data_options["color_current_source"], str):
+            raise CheckError("color_current_source: color name should be a string")
+        if not isinstance(data_options["color_voltage_source"], str):
+            raise CheckError("color_voltage_source: color name should be a string")
 
     # check the scalar options
     if plot_type in ["scalar_voxel", "scalar_point"]:
@@ -210,6 +221,40 @@ def _check_data_options(plot_type, data_options):
             raise CheckError("filter_lim: filter limits should be composed of floats")
 
 
+def _check_data_options_viewer(plot_type, data_options):
+    """
+    Check the validity of the data options (for the viewer).
+    The data options are controlling the plot content.
+    Three different types of plots are available:
+        - domain description
+        - connection description
+        - tolerance plot
+    """
+
+    # check type
+    if not isinstance(data_options, dict):
+        raise CheckError("data_options: data options should be a dict")
+
+    # check the material options
+    if plot_type == "tolerance":
+        if not isinstance(data_options["color_voxel"], str):
+            raise CheckError("color_voxel: color name should be a string")
+        if not isinstance(data_options["color_reference"], str):
+            raise CheckError("color_reference: color name should be a string")
+        if not isinstance(data_options["opacity_voxel"], float):
+            raise CheckError("opacity_voxel: the opacity option should be a float")
+        if not isinstance(data_options["opacity_reference"], float):
+            raise CheckError("opacity_reference: the opacity option should be a float")
+
+    # check the scalar options
+    if plot_type in ["domain", "connection"]:
+        # check type
+        if not isinstance(data_options["colormap"], str):
+            raise CheckError("colormap: colormap name should be a string")
+        if not isinstance(data_options["opacity"], float):
+            raise CheckError("opacity: the opacity option should be a float")
+
+
 def _check_data_plotter_matplotlib(data_plot):
     """
     Check the data describing a Matplotlib plot (for the plotter).
@@ -248,7 +293,7 @@ def _check_data_plotter_pyvista(data_plot):
         raise CheckError("plot_type: specified plot type is invalid")
 
     # check data
-    _check_data_options(plot_type, data_options)
+    _check_data_options_plotter(plot_type, data_options)
     _check_clip_options(clip_options)
     _check_plot_options(plot_options)
 
@@ -306,6 +351,7 @@ def _check_data_viewer_item(data_viewer):
     # get the data
     plot_type = data_plot["plot_type"]
     clip_options = data_plot["clip_options"]
+    data_options = data_plot["data_options"]
     plot_options = data_plot["plot_options"]
 
     # check plot type
@@ -315,6 +361,7 @@ def _check_data_viewer_item(data_viewer):
         raise CheckError("plot_type: specified plot type is invalid")
 
     # check options
+    _check_data_options_viewer(plot_type, data_options)
     _check_clip_options(clip_options)
     _check_plot_options(plot_options)
 
