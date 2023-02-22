@@ -39,7 +39,7 @@ def _get_parser(prog, description):
 
     # switch for a custom config file
     parser.add_argument(
-        "--config",
+        "-c", "--config",
         metavar="file",
         help="config file (input / JSON or YAML)",
         required=False,
@@ -84,14 +84,14 @@ def run_mesher():
 
     # add the arguments
     parser.add_argument(
-        "--mesher",
+        "-me", "--mesher",
         metavar="file",
         help="mesher file (input / JSON or YAML)",
         required=True,
         dest="file_mesher",
     )
     parser.add_argument(
-        "--voxel",
+        "-vo", "--voxel",
         metavar="file",
         help="voxel file (output / pickle)",
         required=True,
@@ -117,28 +117,28 @@ def run_viewer():
 
     # add the arguments
     parser.add_argument(
-        "--voxel",
+        "-vo", "--voxel",
         metavar="file",
         help="voxel file (input / pickle)",
         required=True,
         dest="file_voxel",
     )
     parser.add_argument(
-        "--point",
+        "-po", "--point",
         metavar="file",
         help="point file (input / JSON or YAML)",
         required=True,
         dest="file_point",
     )
     parser.add_argument(
-        "--viewer",
+        "-vi", "--viewer",
         metavar="file",
         help="viewer file (input / JSON or YAML)",
         required=True,
         dest="file_viewer",
     )
     parser.add_argument(
-        "--silent",
+        "-s", "--silent",
         help="if set, do not display the plots",
         action="store_false",
         dest="is_interactive",
@@ -163,28 +163,28 @@ def run_solver():
 
     # add the arguments
     parser.add_argument(
-        "--voxel",
+        "-vo", "--voxel",
         metavar="file",
         help="voxel file (input / pickle)",
         required=True,
         dest="file_voxel",
     )
     parser.add_argument(
-        "--problem",
+        "-pr", "--problem",
         metavar="file",
         help="problem file (input / JSON or YAML)",
         required=True,
         dest="file_problem",
     )
     parser.add_argument(
-        "--tolerance",
+        "-to", "--tolerance",
         metavar="file",
         help="tolerance file (input / JSON or YAML)",
         required=True,
         dest="file_problem",
     )
     parser.add_argument(
-        "--solution",
+        "-so", "--solution",
         metavar="file",
         help="solution file (output / pickle)",
         required=True,
@@ -210,28 +210,28 @@ def run_plotter():
 
     # add the arguments
     parser.add_argument(
-        "--solution",
+        "-so", "--solution",
         metavar="file",
         help="solution file (input / pickle)",
         required=True,
         dest="file_solution",
     )
     parser.add_argument(
-        "--point",
+        "-po", "--point",
         metavar="file",
         help="point file (input / JSON or YAML)",
         required=True,
         dest="file_point",
     )
     parser.add_argument(
-        "--plotter",
+        "-pl", "--plotter",
         metavar="file",
         help="plotter file (input / JSON or YAML)",
         required=True,
         dest="file_plotter",
     )
     parser.add_argument(
-        "--silent",
+        "-s", "--silent",
         help="if set, do not display the plots",
         action="store_false",
         dest="is_interactive",
