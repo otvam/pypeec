@@ -52,7 +52,7 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 > This might lead to a very slow convergence of the matrix solver.
 
 > **Warning**: For large problems, the code might allocate huge amounts of memory.
-> This might crash your operating system.
+> This might crash the program and/or your operating system.
 
 > **Warning**: Python Pickle files are using to store the mesher and solver results.
 > Pickling data is not secure. 

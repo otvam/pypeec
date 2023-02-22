@@ -57,6 +57,9 @@ Other interesting papers and code about similar methods:
 ## Copyright
 
 > (c) 2023 - Thomas Guillod - Dartmouth College
+> 
+> All rights reserved
 
 > **Warning**: Some dependencies are under copyleft licences.
+>
 > Make sure to respect these licenses when distributing the package.
