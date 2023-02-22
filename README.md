@@ -1,8 +1,8 @@
-# PyPEEC - 3D Magnetic PEEC Solver
+# PyPEEC - 3D PEEC Solver
 
 ## Summary
 
-**PyPEEC** is a **magnetic field solver** with the following characteristics:
+**PyPEEC** is a **3D magnetic field solver** with the following characteristics:
 * 3D voxel geometry
 * PEEC method with FFT acceleration
 * Pure Python implementation
@@ -11,9 +11,9 @@
 * Connection of current and voltage sources
 * Extraction of the current density and potential
 * Extraction of the losses and energy
-* Computation of the magnetic field and impedances
+* Extraction of the terminal impedances
+* Computation of the magnetic field 
 * Fast with moderate memory requirements
-* Programmed in PyThon
 
 **PyPEEC** has the following limitations:
 * No capacitive effects
