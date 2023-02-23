@@ -36,7 +36,7 @@ def _get_grid(n, d, c):
     grid.spacing = d
 
     # add indices for tracking the voxels after voxelization
-    grid["idx"] = np.arange(np.prod(n), dtype=np.int64)
+    grid["idx"] = np.arange(np.prod(n), dtype=np.int_)
 
     # cast is required for voxelization
     grid = grid.cast_to_unstructured_grid()
@@ -128,8 +128,8 @@ def _get_load_stl(domain_stl):
     mesh_stl = {}
 
     # init the coordinate (minimum and maximum coordinates)
-    pts_min = np.full(3, +np.inf, dtype=np.float64)
-    pts_max = np.full(3, -np.inf, dtype=np.float64)
+    pts_min = np.full(3, +np.inf, dtype=np.float_)
+    pts_max = np.full(3, -np.inf, dtype=np.float_)
 
     # load the STL files and find the bounding box
     for tag, filename in domain_stl.items():
@@ -145,8 +145,8 @@ def _get_load_stl(domain_stl):
 
         # find the bounds
         (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
-        tmp_min = np.array((x_min, y_min, z_min), dtype=np.float64)
-        tmp_max = np.array((x_max, y_max, z_max), dtype=np.float64)
+        tmp_min = np.array((x_min, y_min, z_min), dtype=np.float_)
+        tmp_max = np.array((x_max, y_max, z_max), dtype=np.float_)
 
         # update the bounds
         pts_min = np.minimum(pts_min, tmp_min)
@@ -192,19 +192,19 @@ def get_mesh(n, d, c, pts_min, pts_max, domain_stl):
     if pts_min is None:
         pts_min = pts_min_stl
     else:
-        pts_min = np.array(pts_min, np.float64)
+        pts_min = np.array(pts_min, np.float_)
     if pts_max is None:
         pts_max = pts_max_stl
     else:
-        pts_max = np.array(pts_max, np.float64)
+        pts_max = np.array(pts_max, np.float_)
 
     # extract the number of voxels
     if (n is not None) and (d is None):
-        n = np.array(n, dtype=np.int64)
+        n = np.array(n, dtype=np.int_)
     elif (n is None) and (d is not None):
-        d = np.array(d, dtype=np.float64)
+        d = np.array(d, dtype=np.float_)
         n = np.rint((pts_max-pts_min)/d)
-        n = n.astype(np.int64)
+        n = n.astype(np.int_)
     else:
         raise ValueError("inconsistent definition of the voxel number/size")
 
@@ -231,7 +231,7 @@ def get_mesh(n, d, c, pts_min, pts_max, domain_stl):
     if c is None:
         c = c_stl
     else:
-        c = np.array(c, np.float64)
+        c = np.array(c, np.float_)
 
     # merge meshes
     reference = _get_merge_stl(c, c_stl, mesh_stl)
@@ -261,7 +261,7 @@ def get_conflict(domain_def, domain_conflict):
         domain_def = _get_solve_overlap(domain_def, domain_resolve, domain_keep)
 
     # assemble all the indices
-    idx_all = np.array([], dtype=np.int64)
+    idx_all = np.array([], dtype=np.int_)
     for idx in domain_def.values():
         idx_all = np.append(idx_all, idx)
 

@@ -19,7 +19,7 @@ def _get_domain_indices(domain_def):
     """
 
     # init
-    idx = np.empty(0, dtype=np.int64)
+    idx = np.empty(0, dtype=np.int_)
 
     # get the indices and colors
     for idx_tmp in domain_def.values():
@@ -39,34 +39,34 @@ def _get_connection_matrix(n):
     nv = nx*ny*nz
 
     # voxel index array
-    x = np.arange(nx, dtype=np.int64)
-    y = np.arange(ny, dtype=np.int64)
-    z = np.arange(nz, dtype=np.int64)
+    x = np.arange(nx, dtype=np.int_)
+    y = np.arange(ny, dtype=np.int_)
+    z = np.arange(nz, dtype=np.int_)
     (idx_x, idx_y, idx_z) = np.meshgrid(x, y, z, indexing="ij")
 
     # voxel index number
     idx = idx_x+idx_y*nx+idx_z*nx*ny
 
     # create the sparse matrix
-    A_connection = sps.csc_matrix((nv, nv), dtype=np.int64)
+    A_connection = sps.csc_matrix((nv, nv), dtype=np.int_)
 
     # connections along x direction
     idx_col = idx[0:-1, :, :].flatten()
     idx_row = idx[1:, :, :].flatten()
-    data = np.ones((nx-1)*ny*nz, dtype=np.int64)
-    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
+    data = np.ones((nx-1)*ny*nz, dtype=np.int_)
+    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
 
     # connections along y direction
     idx_col = idx[:, 0:-1, :].flatten()
     idx_row = idx[:, 1:, :].flatten()
-    data = np.ones(nx*(ny-1)*nz, dtype=np.int64)
-    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
+    data = np.ones(nx*(ny-1)*nz, dtype=np.int_)
+    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
 
     # connections along z direction
     idx_col = idx[:, :, 0:-1].flatten()
     idx_row = idx[:, :, 1:].flatten()
-    data = np.ones(nx*ny*(nz-1), dtype=np.int64)
-    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
+    data = np.ones(nx*ny*(nz-1), dtype=np.int_)
+    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
 
     return A_connection
 

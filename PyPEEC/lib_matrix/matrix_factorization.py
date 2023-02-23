@@ -25,15 +25,19 @@ MATRIX_FACTORIZATION = config.MATRIX_FACTORIZATION
 
 # import the right library
 if MATRIX_FACTORIZATION == "SuperLU":
+    # import the SciPy SuperLU library
     import scipy.sparse.linalg as sla
+
+    # prevent problematic matrices to trigger warnings
+    warnings.filterwarnings("ignore", module="scipy.sparse.linalg")
 elif MATRIX_FACTORIZATION == "UMFPACK":
+    # import the UMFPACK binding
     import scikits.umfpack as umf
+
+    # prevent problematic matrices to trigger warnings
+    warnings.filterwarnings("ignore", module="scikits.umfpack")
 else:
     raise ValueError("invalid matrix factorization library")
-
-# prevent problematic matrices to trigger warnings
-warnings.filterwarnings("ignore", module="scipy.sparse.linalg")
-warnings.filterwarnings("ignore", module="scikits.umfpack")
 
 
 def get_factorize(mat):

@@ -15,7 +15,7 @@ def _get_domain_indices(domain_list, domain_def):
     """
 
     # init array
-    idx = np.array([], dtype=np.int64)
+    idx = np.array([], dtype=np.int_)
 
     # find the indices
     for tag in domain_list:
@@ -38,8 +38,8 @@ def _get_material_idx(material_def, domain_def):
 
     # init
     material_idx = {}
-    idx_c = np.array([], dtype=np.int64)
-    idx_m = np.array([], dtype=np.int64)
+    idx_c = np.array([], dtype=np.int_)
+    idx_m = np.array([], dtype=np.int_)
 
     for tag, dat_tmp in material_def.items():
         # extract the data
@@ -72,7 +72,7 @@ def _get_source_idx(source_def, domain_def):
 
     # init
     source_idx = {}
-    idx_s = np.array([], dtype=np.int64)
+    idx_s = np.array([], dtype=np.int_)
 
     for tag, dat_tmp in source_def.items():
         # extract the data

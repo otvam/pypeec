@@ -25,7 +25,7 @@ def _get_idx_image(nx, ny, img, color):
         raise RunError("invalid image:  size is not compatible with the voxel structure")
 
     # get the color vector
-    color_tmp = np.array(color, dtype=np.int64)
+    color_tmp = np.array(color, dtype=np.int_)
     color_tmp = np.expand_dims(color_tmp, axis=(0, 1))
     if not (color_tmp.shape == (1, 1, 4)):
         raise RunError("invalid color: colors should be a specified with for values")
@@ -47,7 +47,7 @@ def _get_idx_voxel(nx, ny, nz, n_layer, idx_img):
     """
 
     # init idx
-    idx_voxel = np.array([], dtype=np.int64)
+    idx_voxel = np.array([], dtype=np.int_)
 
     # convert image indices into voxel indices
     for n_tmp in range(n_layer):
@@ -122,7 +122,7 @@ def get_mesh(nx, ny, domain_color, layer_stack):
     # init domain definition dict
     domain_def = {}
     for tag, color in domain_color.items():
-        domain_def[tag] = np.array([], np.int64)
+        domain_def[tag] = np.array([], np.int_)
 
     # add layers
     for layer_stack_tmp in layer_stack:

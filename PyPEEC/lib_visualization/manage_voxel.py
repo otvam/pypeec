@@ -67,7 +67,7 @@ def get_point(data_point, voxel):
     """
 
     # cast the array with the coordinates
-    data_point = np.array(data_point, dtype=np.float64)
+    data_point = np.array(data_point, dtype=np.float_)
 
     # create the point cloud
     point = pv.PolyData(data_point)
@@ -127,7 +127,7 @@ def set_plotter_voxel_scalar(voxel, idx, idx_var, var, name):
     idx_var_local = idx_s[idx_p]
 
     # assign potential (nan for the voxels where the variable is not defined)
-    var_all = np.full(len(idx), np.nan+1j*np.nan, dtype=np.complex128)
+    var_all = np.full(len(idx), np.nan+1j*np.nan, dtype=np.complex_)
     var_all[idx_var_local] = var
 
     # sort the variable
@@ -153,7 +153,7 @@ def set_plotter_voxel_vector(voxel, idx, idx_var, var, name):
     idx_var_local = idx_s[idx_p]
 
     # assign flux (nan for the voxels where the variable is not defined)
-    var_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=np.complex128)
+    var_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=np.complex_)
     var_all[idx_var_local] = var
 
     # sort the variable

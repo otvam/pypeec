@@ -76,7 +76,7 @@ def _get_operator_zeros(idx_out, idx_in):
 
     # function returning zeros
     def fct(_):
-        var_out = np.zeros(len(idx_out), dtype=np.complex128)
+        var_out = np.zeros(len(idx_out), dtype=np.complex_)
         return var_out
 
     # fake operator
@@ -95,7 +95,7 @@ def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
 
     # check if the vector is required
     if not has_domain:
-        R_vec = np.zeros(len(idx_f), dtype=np.complex128)
+        R_vec = np.zeros(len(idx_f), dtype=np.complex_)
         return R_vec
 
     # extract the voxel data
@@ -112,7 +112,7 @@ def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
     idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
 
     # init the resistance vector
-    R_vec = np.zeros(len(rho_vec), dtype=np.complex128)
+    R_vec = np.zeros(len(rho_vec), dtype=np.complex_)
 
     # resistance vector (different directions)
     R_vec[idx_fx] = (dx/(dy*dz))*rho_vec[idx_fx]
@@ -138,7 +138,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
 
     # check if the matrix is required
     if not has_domain:
-        L_vec = np.zeros(len(idx_f), dtype=np.float64)
+        L_vec = np.zeros(len(idx_f), dtype=np.float_)
         L_op = _get_operator_zeros(idx_f, idx_f)
         return L_vec, L_op
 
@@ -158,7 +158,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     L_vec = L_vec[idx_f]
 
     # compute the inductance tensor from the Green functions
-    L_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float64)
+    L_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float_)
     L_tsr[:, :, :, 0] = mu*G_mutual/(dy**2*dz**2)
     L_tsr[:, :, :, 1] = mu*G_mutual/(dx**2*dz**2)
     L_tsr[:, :, :, 2] = mu*G_mutual/(dx**2*dy**2)
@@ -185,7 +185,7 @@ def get_P_matrix(n, d, idx_v, G_self, G_mutual, has_domain):
 
     # check if the matrix is required
     if not has_domain:
-        P_vec = np.zeros(len(idx_v), dtype=np.float64)
+        P_vec = np.zeros(len(idx_v), dtype=np.float_)
         P_op = _get_operator_zeros(idx_v, idx_v)
         return P_vec, P_op
 
@@ -203,7 +203,7 @@ def get_P_matrix(n, d, idx_v, G_self, G_mutual, has_domain):
     P_vec = P_vec[idx_v]
 
     # compute the inductance tensor from the Green functions
-    P_tsr = np.zeros((nx, ny, nz, 1), dtype=np.float64)
+    P_tsr = np.zeros((nx, ny, nz, 1), dtype=np.float_)
     P_tsr[:, :, :, 0] = G_mutual/(mu*dx**2*dy**2*dz**2)
 
     # get the matrix-vector operator

@@ -132,7 +132,7 @@ def get_face_to_voxel(n, d, idx_v, idx_f, A_vox, I_f, var_type):
     nv = nx*ny*nz
 
     # extend the solution for the complete voxel structure (including the empty voxels)
-    I_f_all = np.zeros(3*nv, dtype=np.complex128)
+    I_f_all = np.zeros(3*nv, dtype=np.complex_)
     I_f_all[idx_f] = I_f
 
     # transform the face variable in a voxel variable
@@ -249,15 +249,15 @@ def get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
     I_src_v = I_src[n_src_c:n_src_c+n_src_v]
 
     # assign voxel potentials
-    V_v_all = np.zeros(nv, dtype=np.complex128)
+    V_v_all = np.zeros(nv, dtype=np.complex_)
     V_v_all[idx_vc] = V_vc
 
     # assign current source currents
-    I_src_c_all = np.zeros(nv, dtype=np.complex128)
+    I_src_c_all = np.zeros(nv, dtype=np.complex_)
     I_src_c_all[idx_src_c] = I_src_c
 
     # assign voltage source currents
-    I_src_v_all = np.zeros(nv, dtype=np.complex128)
+    I_src_v_all = np.zeros(nv, dtype=np.complex_)
     I_src_v_all[idx_src_v] = I_src_v
 
     return V_v_all, I_src_c_all, I_src_v_all
@@ -292,13 +292,13 @@ def get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all):
             V_tmp = np.nan+1j*np.nan
         else:
             # voltage is the average between all the voxels composing the terminal
-            V_tmp = np.complex128(np.mean(V_v_all[idx]))
+            V_tmp = np.complex_(np.mean(V_v_all[idx]))
 
             # current is the sum between all the voxels composing the terminal
             if source_type == "current":
-                I_tmp = np.complex128(np.sum(I_src_c_all[idx]))
+                I_tmp = np.complex_(np.sum(I_src_c_all[idx]))
             elif source_type == "voltage":
-                I_tmp = np.complex128(np.sum(I_src_v_all[idx]))
+                I_tmp = np.complex_(np.sum(I_src_v_all[idx]))
             else:
                 raise ValueError("invalid terminal type")
 

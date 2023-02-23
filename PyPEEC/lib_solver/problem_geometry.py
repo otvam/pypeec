@@ -21,8 +21,8 @@ def get_material_geometry(material_idx, extract_type):
     """
 
     # array for the indices and resistivities
-    idx_v = np.array([], dtype=np.int64)
-    rho_v = np.array([], dtype=np.complex128)
+    idx_v = np.array([], dtype=np.int_)
+    rho_v = np.array([], dtype=np.complex_)
 
     # populate the arrays
     for tag, dat_tmp in material_idx.items():
@@ -60,9 +60,9 @@ def get_source_geometry(source_idx, extract_type):
     """
 
     # array for the current source indices and source values
-    idx_src = np.array([], dtype=np.int64)
-    value_src = np.array([], dtype=np.complex128)
-    element_src = np.array([], dtype=np.complex128)
+    idx_src = np.array([], dtype=np.int_)
+    value_src = np.array([], dtype=np.complex_)
+    element_src = np.array([], dtype=np.complex_)
 
     # populate the arrays with the current sources
     for tag, dat_tmp in source_idx.items():

@@ -174,15 +174,15 @@ def _get_green_preproc(int_type):
 
     # get the offset vector
     if int_type == "6D":
-        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float64)
-        offset_z = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float64)
-        idx_xy = np.arange(1, 5, dtype=np.int64)
-        idx_z = np.arange(1, 5, dtype=np.int64)
+        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float_)
+        offset_z = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float_)
+        idx_xy = np.arange(1, 5, dtype=np.int_)
+        idx_z = np.arange(1, 5, dtype=np.int_)
     elif int_type == "5D":
-        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float64)
-        offset_z = np.array([+0.5, -0.5], dtype=np.float64)
-        idx_xy = np.arange(1, 5, dtype=np.int64)
-        idx_z = np.arange(1, 3, dtype=np.int64)
+        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float_)
+        offset_z = np.array([+0.5, -0.5], dtype=np.float_)
+        idx_xy = np.arange(1, 5, dtype=np.int_)
+        idx_z = np.arange(1, 3, dtype=np.int_)
     else:
         raise ValueError("invalid integral type")
 
@@ -212,7 +212,7 @@ def get_green_ana(d, idx, int_type):
 
     # check if empty
     if len(idx) == 0:
-        return np.array([], dtype=np.float64)
+        return np.array([], dtype=np.float_)
 
     # display
     logger.debug("analytical solution: %s / %d" % (int_type, len(idx)))
@@ -260,7 +260,7 @@ def get_green_num(d, idx, int_type):
 
     # check if empty
     if len(idx) == 0:
-        return np.array([], dtype=np.float64)
+        return np.array([], dtype=np.float_)
 
     # display
     logger.debug("numerical approximation: %s / %d" % (int_type, len(idx)))

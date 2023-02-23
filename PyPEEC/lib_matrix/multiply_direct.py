@@ -19,9 +19,9 @@ def _get_voxel_indices(nx, ny, nz):
     """
 
     # get the indices array
-    idx_x = np.arange(nx, dtype=np.int64)
-    idx_y = np.arange(ny, dtype=np.int64)
-    idx_z = np.arange(nz, dtype=np.int64)
+    idx_x = np.arange(nx, dtype=np.int_)
+    idx_y = np.arange(ny, dtype=np.int_)
+    idx_z = np.arange(nz, dtype=np.int_)
     [idx_x, idx_y, idx_z] = np.meshgrid(idx_x, idx_y, idx_z, indexing="ij")
 
     # flatten the indices into vectors
@@ -46,7 +46,7 @@ def _get_dense_zero(idx_out, idx_in, mat, idx_row, idx_col):
     n_col = np.count_nonzero(np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv), idx_in))
 
     # create an empty matrix
-    mat_dense = np.zeros((n_row, n_col), dtype=np.float64)
+    mat_dense = np.zeros((n_row, n_col), dtype=np.float_)
 
     return mat_dense
 
@@ -92,7 +92,7 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
 
     # get the sign matrix
     idx_neg = np.logical_not(idx_pos)
-    sign = np.empty((len(idx_row), len(idx_col)), dtype=np.int64)
+    sign = np.empty((len(idx_row), len(idx_col)), dtype=np.int_)
     sign[idx_pos] = +1
     sign[idx_neg] = -1
 
@@ -123,8 +123,8 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     # get the permutation for sorting
     idx_perm_out = np.argsort(idx_out)
     idx_perm_in = np.argsort(idx_in)
-    idx_rev_out = np.empty(len(idx_perm_out), dtype=np.int64)
-    idx_rev_in = np.empty(len(idx_perm_in), dtype=np.int64)
+    idx_rev_out = np.empty(len(idx_perm_out), dtype=np.int_)
+    idx_rev_in = np.empty(len(idx_perm_in), dtype=np.int_)
     idx_rev_out[idx_perm_out] = np.arange(len(idx_perm_out))
     idx_rev_in[idx_perm_in] = np.arange(len(idx_perm_in))
 

@@ -19,7 +19,7 @@ def _check_voxel_domain_def(n, domain_def):
     nv = nx*ny*nz
 
     # init the domain indices
-    idx_domain = np.array([], dtype=np.int64)
+    idx_domain = np.array([], dtype=np.int_)
 
     # check type
     if not isinstance(domain_def, dict):
@@ -34,12 +34,12 @@ def _check_voxel_domain_def(n, domain_def):
             raise CheckError("tag: domain name should be a string")
 
         # cast indices
-        idx = np.array(idx, dtype=np.int64)
+        idx = np.array(idx, dtype=np.int_)
 
         # check for indices type and range
         if not (len(idx.shape) == 1):
             raise CheckError("idx: indices should be a vector")
-        if not np.issubdtype(idx.dtype, np.integer):
+        if not np.issubdtype(idx.dtype, np.int_eger):
             raise CheckError("idx: indices should be composed of integers")
         if not (np.all(idx >= 0) and np.all(idx < nv)):
             raise CheckError("idx: domain indices should belong to the voxel structure")
@@ -66,7 +66,7 @@ def _check_voxel_size(n, d, c):
         raise CheckError("c: invalid center coordinate size (should be a list with three elements)")
 
     # check type
-    if not all(np.issubdtype(type(x), np.integer) for x in n):
+    if not all(np.issubdtype(type(x), np.int_eger) for x in n):
         raise CheckError("n: number of voxels should be composed of integers")
     if not all(np.issubdtype(type(x), np.floating) for x in d):
         raise CheckError("d: dimension of the voxels should be composed of real floats")
@@ -102,7 +102,7 @@ def _check_png_domain_color(domain_color):
             raise CheckError("color: invalid color (should be an array with four elements)")
 
         # check type
-        if not all(np.issubdtype(type(x), np.integer) for x in color):
+        if not all(np.issubdtype(type(x), np.int_eger) for x in color):
             raise CheckError("color: color array should be composed of integers")
 
 
@@ -223,9 +223,9 @@ def _check_data_voxelize_png(data_voxelize):
         raise CheckError("d: dimension of the voxels should be composed of real floats")
     if not all(np.issubdtype(type(x), np.floating) for x in c):
         raise CheckError("c: center coordinate should be composed of real floats")
-    if not np.issubdtype(type(nx), np.integer):
+    if not np.issubdtype(type(nx), np.int_eger):
         raise CheckError("nx: number of voxel in x direction should be an integer")
-    if not np.issubdtype(type(ny), np.integer):
+    if not np.issubdtype(type(ny), np.int_eger):
         raise CheckError("ny: number of voxel in y direction should be an integer")
 
     # check value
@@ -268,7 +268,7 @@ def _check_data_voxelize_stl(data_voxelize):
     if n is not None:
         if not (len(n) == 3):
             raise CheckError("n: invalid voxel number (should be a list with three elements)")
-        if not all(np.issubdtype(type(x), np.integer) for x in n):
+        if not all(np.issubdtype(type(x), np.int_eger) for x in n):
             raise CheckError("n: the number of voxels should be composed of integers")
         if not all((x > 0) for x in n):
             raise CheckError("n: number of voxels cannot be smaller than one")
@@ -355,7 +355,7 @@ def _check_resampling_factor(resampling_factor):
         raise CheckError("resampling_factor: invalid voxel resampling (should be a list with three elements)")
 
     # check type
-    if not all(np.issubdtype(type(x), np.integer) for x in resampling_factor):
+    if not all(np.issubdtype(type(x), np.int_eger) for x in resampling_factor):
         raise CheckError("resampling_factor: number of resampling should be composed of integers")
 
     # check value

@@ -20,7 +20,7 @@ def _get_prepare_vector(nx, ny, nz, nd, idx_in, vec_in):
     """
 
     # expand the vector into a vector with all the dimention
-    vec_all = np.zeros(nx*ny*nz*nd, dtype=np.complex128)
+    vec_all = np.zeros(nx*ny*nz*nd, dtype=np.complex_)
     vec_all[idx_in] = vec_in
 
     # reshape the vector into a tensor
@@ -56,7 +56,7 @@ def _get_tensor_circulant(mat, sign):
     (nx, ny, nz, nd) = mat.shape
 
     # init the circulant tensor
-    mat_circulant = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.float64)
+    mat_circulant = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.float_)
 
     # cube none
     mat_circulant[0:nx, 0:ny, 0:nz, :] = mat[0:nx, 0:ny, 0:nz, :]*sign[0:1, 0:1, 0:1, :]
@@ -92,11 +92,11 @@ def get_prepare(mat, matrix_type):
 
     # get the sign that will be applied to the different blocks of the tensor
     if matrix_type == "single":
-        sign = np.ones((2, 2, 2, 1), dtype=np.int64)
+        sign = np.ones((2, 2, 2, 1), dtype=np.int_)
     elif matrix_type == "diag":
-        sign = np.ones((2, 2, 2, 3), dtype=np.int64)
+        sign = np.ones((2, 2, 2, 3), dtype=np.int_)
     elif matrix_type == "cross":
-        sign = np.empty((2, 2, 2, 3), dtype=np.int64)
+        sign = np.empty((2, 2, 2, 3), dtype=np.int_)
         sign[0, 0, 0, :] = [+1, +1, +1]
         sign[1, 0, 0, :] = [-1, +1, +1]
         sign[0, 1, 0, :] = [+1, -1, +1]
@@ -147,7 +147,7 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
     vec_all_fft = fourier_transform.get_fft_tensor(vec_all, True)
 
     # init the results
-    res_all_fft = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.complex128)
+    res_all_fft = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.complex_)
 
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
     if matrix_type == "single":

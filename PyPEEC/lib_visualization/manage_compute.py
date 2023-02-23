@@ -71,7 +71,7 @@ def _get_graph_component(idx, connection_def):
     """
 
     # init the data with invalid data
-    tag = np.zeros(len(idx), dtype=np.int64)
+    tag = np.zeros(len(idx), dtype=np.int_)
 
     # find to corresponding connected components
     for i, idx_graph in enumerate(connection_def):
@@ -96,15 +96,15 @@ def get_geometry_tag(domain_def, connection_def):
     """
 
     # init
-    idx = np.empty(0, dtype=np.int64)
-    domain = np.empty(0, dtype=np.int64)
-    connection = np.empty(0, dtype=np.int64)
+    idx = np.empty(0, dtype=np.int_)
+    domain = np.empty(0, dtype=np.int_)
+    connection = np.empty(0, dtype=np.int_)
 
     # get the indices and colors
     counter = 1
     for tag, idx_tmp in domain_def.items():
         # assign the color (n different integer for each domain)
-        domain_tmp = np.full(len(idx_tmp), counter, dtype=np.int64)
+        domain_tmp = np.full(len(idx_tmp), counter, dtype=np.int_)
 
         # find the connected components corresponding to the indices
         connection_tmp = _get_graph_component(idx_tmp, connection_def)
@@ -135,7 +135,7 @@ def get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v):
     idx_src_v_local = np.flatnonzero(np.in1d(idx, idx_src_v))
 
     # init the material
-    material = np.empty(len(idx), dtype=np.int64)
+    material = np.empty(len(idx), dtype=np.int_)
 
     # assign the voltage and current sources
     material[idx_vc_local] = 1
@@ -161,7 +161,7 @@ def get_magnetic_field(d, idx_vc, idx_vm, J_vc, S_vm, coord_vox, data_point):
     pts_vm = coord_vox[idx_vm]
 
     # for each provided point, compute the magnetic field
-    H_points = np.zeros((len(data_point), 3), dtype=np.complex128)
+    H_points = np.zeros((len(data_point), 3), dtype=np.complex_)
     for i, pts_tmp in enumerate(data_point):
         H_c = _get_biot_savart(pts_tmp, pts_vc, J_vc, vol)
         H_m = _get_magnetic_charge(pts_tmp, pts_vm, S_vm, vol)
