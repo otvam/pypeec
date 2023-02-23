@@ -103,9 +103,9 @@ def _get_data_viewer_connection(name):
     return data
 
 
-def _get_data_viewer_tolerance(name):
+def _get_data_viewer_voxelization(name):
         """
-        Plot options for the tolerance description.
+        Plot options for the voxelization description.
         The result is plotted on the voxel structure.
         This structure is used by the viewer.
         """
@@ -117,7 +117,7 @@ def _get_data_viewer_tolerance(name):
             "opacity_reference": 0.5,  # face opacity for the reference structure
         }
 
-        data = _get_data_pyvista("tolerance", data_options, name)
+        data = _get_data_pyvista("voxelization", data_options, name)
 
         return data
 
@@ -277,7 +277,7 @@ def get_data_viewer():
     data_viewer = [
         _get_data_viewer_domain("Domain"),
         _get_data_viewer_connection("Connection"),
-        _get_data_viewer_tolerance("Tolerance"),
+        _get_data_viewer_voxelization("Voxelization"),
     ]
 
     return data_viewer

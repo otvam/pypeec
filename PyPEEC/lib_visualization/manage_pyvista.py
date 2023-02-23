@@ -191,34 +191,7 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     return obj
 
 
-def plot_material(pl, voxel, data_options, clip_options):
-    """
-    Plot the material and source description.
-    """
-
-    # get a colormap with three discrete color
-    cmap = [
-        data_options["color_electric"],
-        data_options["color_magnetic"],
-        data_options["color_current_source"],
-        data_options["color_voltage_source"],
-    ]
-
-    # make a copy (for avoid cross coupling)
-    voxel_tmp = voxel.copy(deep=True)
-
-    # add the resulting plot to the plotter
-    arg = dict(
-        clim=[1, 4],
-        show_scalar_bar=False,
-        scalars="material",
-        cmap=cmap,
-    )
-    if voxel_tmp.n_cells > 0:
-        _get_clip_mesh(pl, voxel_tmp, arg, clip_options)
-
-
-def plot_scalar(pl, obj, data_options, clip_options):
+def _plot_scalar(pl, obj, data_options, clip_options):
     """
     Plot a scalar variable.
     The plot is either made on:
@@ -260,7 +233,7 @@ def plot_scalar(pl, obj, data_options, clip_options):
         _get_clip_mesh(pl, obj_tmp, arg, clip_options)
 
 
-def plot_arrow(pl, d_char, obj, data_options, clip_options):
+def _plot_arrow(pl, grid, obj, data_options, clip_options):
     """
     Plot a vector variable with an arrow plot (quiver plot).
     The plot is either made on:
@@ -297,6 +270,7 @@ def plot_arrow(pl, d_char, obj, data_options, clip_options):
     obj_tmp = _get_clamp_scale_scalar(obj_tmp, var_scalar, color_lim, scale)
 
     # get arrow size
+    d_char = min(grid.spacing)
     factor = d_char*arrow_scale
 
     # add the resulting plot to the plotter
@@ -306,12 +280,36 @@ def plot_arrow(pl, d_char, obj, data_options, clip_options):
         _get_clip_mesh(pl, glyph_tmp, arg, clip_options)
 
 
-def plot_geometry(pl, voxel, data_options, clip_options, tag):
+def _plot_material(pl, voxel, data_options, clip_options):
     """
-    Plot the voxel structure (for the viewer).
-    The following plot types are available:
-        - the domains are shown for the non-empty voxels
-        - the connected components for the non-empty voxels
+    Plot the material and source description.
+    """
+
+    # get a colormap with three discrete color
+    cmap = [
+        data_options["color_electric"],
+        data_options["color_magnetic"],
+        data_options["color_current_source"],
+        data_options["color_voltage_source"],
+    ]
+
+    # make a copy (for avoid cross coupling)
+    voxel_tmp = voxel.copy(deep=True)
+
+    # add the resulting plot to the plotter
+    arg = dict(
+        clim=[1, 4],
+        show_scalar_bar=False,
+        scalars="material",
+        cmap=cmap,
+    )
+    if voxel_tmp.n_cells > 0:
+        _get_clip_mesh(pl, voxel_tmp, arg, clip_options)
+
+
+def _plot_geometry(pl, voxel, data_options, clip_options, tag):
+    """
+    Plot an integer variable on the voxel structure (material or connection).
     """
 
     # extract
@@ -332,7 +330,11 @@ def plot_geometry(pl, voxel, data_options, clip_options, tag):
         _get_clip_mesh(pl, voxel_tmp, arg, clip_options)
 
 
-def plot_tolerance(pl, voxel, reference, data_options, clip_options):
+def _plot_voxelization(pl, voxel, reference, data_options, clip_options):
+    """
+    Plot the reference and voxelized structures in order to assess the voxelization error.
+    """
+
     # get the data
     color_voxel = data_options["color_voxel"]
     color_reference = data_options["color_reference"]
@@ -384,11 +386,11 @@ def get_plot_viewer(pl, grid, voxel, point, reference, data_plot):
 
     # get the main plot
     if plot_type == "domain":
-        plot_geometry(pl, voxel, data_options, clip_options, "domain")
+        _plot_geometry(pl, voxel, data_options, clip_options, "domain")
     elif plot_type == "connection":
-        plot_geometry(pl, voxel, data_options, clip_options, "connection")
-    elif plot_type == "tolerance":
-        plot_tolerance(pl, voxel, reference, data_options, clip_options)
+        _plot_geometry(pl, voxel, data_options, clip_options, "connection")
+    elif plot_type == "voxelization":
+        _plot_voxelization(pl, voxel, reference, data_options, clip_options)
     else:
         raise ValueError("invalid plot type and plot feature")
 
@@ -415,17 +417,15 @@ def get_plot_plotter(pl, grid, voxel, point, data_plot):
 
     # get the main plot
     if plot_type == "material":
-        plot_material(pl, voxel, data_options, clip_options)
+        _plot_material(pl, voxel, data_options, clip_options)
     elif plot_type == "scalar_voxel":
-        plot_scalar(pl, voxel, data_options, clip_options)
+        _plot_scalar(pl, voxel, data_options, clip_options)
     elif plot_type == "scalar_point":
-        plot_scalar(pl, point, data_options, clip_options)
+        _plot_scalar(pl, point, data_options, clip_options)
     elif plot_type == "arrow_voxel":
-        d_char = min(grid.spacing)
-        plot_arrow(pl, d_char, voxel, data_options, clip_options)
+        _plot_arrow(pl, grid, voxel, data_options, clip_options)
     elif plot_type == "arrow_point":
-        d_char = min(grid.spacing)
-        plot_arrow(pl, d_char, point, data_options, clip_options)
+        _plot_arrow(pl, grid, point, data_options, clip_options)
     else:
         raise ValueError("invalid plot type and plot feature")
 

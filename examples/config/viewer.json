@@ -80,7 +80,7 @@
     {
         "plot_framework": "pyvista",
         "data_window": {
-            "title": "Tolerance",
+            "title": "Voxelization",
             "show_menu": false,
             "window_size": [
                 800,
@@ -88,7 +88,7 @@
             ]
         },
         "data_plot": {
-            "plot_type": "tolerance",
+            "plot_type": "voxelization",
             "data_options": {
                 "color_voxel": "red",
                 "color_reference": "blue",
@@ -102,7 +102,7 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Tolerance",
+                "title": "Voxelization",
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",

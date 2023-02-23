@@ -236,7 +236,7 @@ def _check_data_options_viewer(plot_type, data_options):
         raise CheckError("data_options: data options should be a dict")
 
     # check the material options
-    if plot_type == "tolerance":
+    if plot_type == "voxelization":
         if not isinstance(data_options["color_voxel"], str):
             raise CheckError("color_voxel: color name should be a string")
         if not isinstance(data_options["color_reference"], str):
@@ -357,7 +357,7 @@ def _check_data_viewer_item(data_viewer):
     # check plot type
     if not isinstance(plot_type, str):
         raise CheckError("plot_type: plot type should be a string")
-    if plot_type not in ["domain", "connection", "tolerance"]:
+    if plot_type not in ["domain", "connection", "voxelization"]:
         raise CheckError("plot_type: specified plot type is invalid")
 
     # check options
