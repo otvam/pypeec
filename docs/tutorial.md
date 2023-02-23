@@ -34,16 +34,18 @@ The **PyPEEC** package contains the following tools (`PyPEEC` package)::
 ## Entry Points and Scripts
 
 The entry points of the different tools are located in the `PyPEEC.main` module:
-* `run_mesher` for the **mesher**
-* `run_viewer` for the **viewer**
-* `run_solver` for the **solver**
-* `run_plotter` for the **plotter**
+* `set_config` for the setting a custom configuration file
+* `run_mesher` for running the **mesher**
+* `run_viewer` for running the **viewer**
+* `run_solver` for running the **solver**
+* `run_plotter` for running the **plotter**
 
 Additionally, console scripts are located in the `PyPEEC.script` module:
-* `run_mesher` for the **mesher** (command line alias `ppmesher`)
-* `run_viewer` for the **viewer** (command line alias `ppviewer`)
-* `run_solver` for the **solver** (command line alias `ppsolver`)
-* `run_plotter` for the **plotter** (command line alias `ppplotter`)
+* `pypeec --help` display the command line options
+* `pypeec mesher` for running the **mesher**
+* `pypeec viewer` for running the **viewer**
+* `pypeec solver` for running the **solver**
+* `pypeec plotter` for running the **plotter**
 
 ## Input/Output File Description
 

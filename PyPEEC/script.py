@@ -28,6 +28,7 @@ def _get_parser():
         prog="pypeec",
         description="PyPEEC - 3D PEEC Solver",
         epilog="(c) Thomas Guillod - Dartmouth College",
+        allow_abbrev=False,
     )
 
     # display the version
@@ -69,7 +70,11 @@ def _get_arg_mesher(subparsers):
     """
 
     # add the subparser
-    parser = subparsers.add_parser('mesher', help="transform the provided data into a 3D voxel structure")
+    parser = subparsers.add_parser(
+        "mesher",
+        aliases=["me"],
+        help="transform the provided data into a 3D voxel structure",
+    )
 
     # add the arguments
     parser.add_argument(
@@ -92,35 +97,30 @@ def _get_arg_viewer(subparsers):
     """
 
     # add the subparser
-    parser = subparsers.add_parser('viewer', help="visualization of a 3D voxel structure")
+    parser = subparsers.add_parser(
+        "viewer",
+        aliases=["vi"],
+        help="visualization of a 3D voxel structure",
+    )
 
     # add the arguments
     parser.add_argument(
         "-vo", "--voxel",
-        metavar="file",
         help="voxel file (input / pickle)",
         required=True,
         dest="file_voxel",
     )
     parser.add_argument(
         "-po", "--point",
-        metavar="file",
         help="point file (input / JSON or YAML)",
         required=True,
         dest="file_point",
     )
     parser.add_argument(
         "-vi", "--viewer",
-        metavar="file",
         help="viewer file (input / JSON or YAML)",
         required=True,
         dest="file_viewer",
-    )
-    parser.add_argument(
-        "-s", "--silent",
-        help="if set, do not display the plots",
-        action="store_false",
-        dest="is_interactive",
     )
 
 
@@ -130,33 +130,33 @@ def _get_arg_solver(subparsers):
     """
 
     # add the subparser
-    parser = subparsers.add_parser('solver', help="solve a problem with the PEEC method")
+    parser = subparsers.add_parser(
+        "solver",
+        aliases=["so"],
+        help="solve a problem with the PEEC method",
+    )
 
     # add the arguments
     parser.add_argument(
         "-vo", "--voxel",
-        metavar="file",
         help="voxel file (input / pickle)",
         required=True,
         dest="file_voxel",
     )
     parser.add_argument(
         "-pr", "--problem",
-        metavar="file",
         help="problem file (input / JSON or YAML)",
         required=True,
         dest="file_problem",
     )
     parser.add_argument(
         "-to", "--tolerance",
-        metavar="file",
         help="tolerance file (input / JSON or YAML)",
         required=True,
         dest="file_problem",
     )
     parser.add_argument(
         "-so", "--solution",
-        metavar="file",
         help="solution file (output / pickle)",
         required=True,
         dest="file_solution",
@@ -169,41 +169,37 @@ def _get_arg_plotter(subparsers):
     """
 
     # add the subparser
-    parser = subparsers.add_parser('plotter', help="plot the solution of a PEEC problem")
+    parser = subparsers.add_parser(
+        "plotter",
+        aliases=["pl"],
+        help="plot the solution of a PEEC problem", 
+    )
 
     # add the arguments
     parser.add_argument(
         "-so", "--solution",
-        metavar="file",
         help="solution file (input / pickle)",
         required=True,
         dest="file_solution",
     )
     parser.add_argument(
         "-po", "--point",
-        metavar="file",
         help="point file (input / JSON or YAML)",
         required=True,
         dest="file_point",
     )
     parser.add_argument(
         "-pl", "--plotter",
-        metavar="file",
         help="plotter file (input / JSON or YAML)",
         required=True,
         dest="file_plotter",
-    )
-    parser.add_argument(
-        "-s", "--silent",
-        help="if set, do not display the plots",
-        action="store_false",
-        dest="is_interactive",
     )
 
 
 def _get_arguments(parser):
     """
-    Load the config file (if specified).
+    Parse the command line arguments.
+    Load a custom config file (if provided).
     """
 
     # parse and call
@@ -214,15 +210,14 @@ def _get_arguments(parser):
     is_interactive = args.is_interactive
     file_config = args.file_config
 
-    # load the config
+    # if provided, load a custom config file
     if file_config is not None:
+        # load the config
         status = main.set_config(file_config)
-    else:
-        status = True
 
-    # exit if problematic
-    if not status:
-        sys.exit(int(not status))
+        # exit if config is problematic
+        if not status:
+            sys.exit(1)
 
     return command, is_interactive, args
 
@@ -246,13 +241,13 @@ def run_script():
     (command, is_interactive, args) = _get_arguments(parser)
 
     # run the code
-    if command == "mesher":
+    if command in ["mesher", "me"]:
         (status, ex) = main.run_mesher(args.file_mesher, args.file_voxel)
-    elif command == "viewer":
+    elif command in ["viewer", "vi"]:
         (status, ex) = main.run_viewer(args.file_voxel, args.file_point, args.file_viewer, is_interactive)
-    elif command == "solver":
+    elif command in ["solver", "so"]:
         (status, ex) = main.run_solver(args.file_voxel, args.file_problem, args.file_tolerance, args.file_solution)
-    elif command == "plotter":
+    elif command in ["plotter", "pl"]:
         (status, ex) = main.run_plotter(args.file_solution, args.file_point, args.file_plotter, is_interactive)
     else:
         raise ValueError("invalid command")
