@@ -26,24 +26,18 @@ LOGGING_OPTIONS:
 
 # FFT options
 FFT_OPTIONS:
-    #   - NumPy is not very fast
-    #   - SciPy is typically faster than NumPy
+    #   - SciPy is typically faster slower but is always available
     #   - FFTW is typically faster but has to be installed separately
-    SOLVER: "SciPy"  # "NumPy" or "SciPy" or "FFTW"
-
-    # FFT handling
-    #   - if true, then the FFT is done separately for each dimension
-    #   - if false, then the FFT is done at once for the complete tensor
-    SPLIT_TENSOR: false  # split (or not) the tensors for the FFT
+    SOLVER: "SciPy"  # "SciPy" or "FFTW"
 
     # FFT library options
-    FFTS_WORKER: 4  # number of workers for SciPy
-    FFTW_THREAD: 4  # number of threads for FFTW
-    FFTW_CACHE_TIMEOUT: 100  # cache timeout in seconds for FFTW
+    FFTS_WORKER: null  # number of workers for SciPy (null for number of CPUs)
+    FFTW_THREAD: null  # number of threads for FFTW (null for number of CPUs)
+    FFTW_CACHE_TIMEOUT: 100  # cache timeout in seconds for FFTW (null for no caching)
     FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW
 
 # matrix factorization options
-#   - SuperLU is typically slower but integrated with SciPy
+#   - SuperLU is typically slower but is always available
 #   - UMFPACK is typically faster but has to be installed separately
 MATRIX_FACTORIZATION: "SuperLU"  # "SuperLU" or "UMFPACK"
 

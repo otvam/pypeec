@@ -10,32 +10,40 @@ WARNING: Not all versions of FFTW are compiled with multithreading support.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import numpy as np
+import os
 from PyPEEC.lib_utils import config
 
 # get config
 SOLVER = config.FFT_OPTIONS["SOLVER"]
-SPLIT_TENSOR = config.FFT_OPTIONS["SPLIT_TENSOR"]
 FFTS_WORKER = config.FFT_OPTIONS["FFTS_WORKER"]
 FFTW_THREAD = config.FFT_OPTIONS["FFTW_THREAD"]
 FFTW_CACHE_TIMEOUT = config.FFT_OPTIONS["FFTW_CACHE_TIMEOUT"]
 FFTW_BYTE_ALIGN = config.FFT_OPTIONS["FFTW_BYTE_ALIGN"]
 
 # import the right library
-if SOLVER == "NumPy":
-    import numpy.fft as fftn
-elif SOLVER == "SciPy":
+if SOLVER == "SciPy":
+    # import the SciPy FFT module
     import scipy.fft as ffts
+
+    # set the number of workers
+    if FFTS_WORKER is None:
+        FFTS_WORKER = os.cpu_count()
 elif SOLVER == "FFTW":
+    # import the FFTW binding
     import pyfftw
     import pyfftw.interfaces.cache as cache
     import pyfftw.interfaces.numpy_fft as fftw
 
-    # the cache for the FFT dimension should be enabled
-    cache.enable()
+    # set the number of threads
+    if FFTW_THREAD is None:
+        FFTW_THREAD = os.cpu_count()
 
-    # the cache has a timeout
-    cache.set_keepalive_time(FFTW_CACHE_TIMEOUT)
+    # configure the FFT cache
+    if FFTW_CACHE_TIMEOUT is None:
+        cache.disable()
+    else:
+        cache.enable()
+        cache.set_keepalive_time(FFTW_CACHE_TIMEOUT)
 else:
     raise ValueError("invalid FFT library")
 
@@ -46,9 +54,7 @@ def _get_fftn(mat, shape, axes):
     The size of the output tensor is specified.
     """
 
-    if SOLVER == "NumPy":
-        mat_trf = fftn.fftn(mat, shape, axes=axes)
-    elif SOLVER == "SciPy":
+    if SOLVER == "SciPy":
         mat_trf = ffts.fftn(mat, shape, axes=axes, workers=FFTS_WORKER)
     elif SOLVER == "FFTW":
         mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
@@ -65,9 +71,7 @@ def _get_ifftn(mat, shape, axes):
     The size of the output tensor is specified.
     """
 
-    if SOLVER == "NumPy":
-        mat_trf = fftn.ifftn(mat, shape, axes=axes)
-    elif SOLVER == "SciPy":
+    if SOLVER == "SciPy":
         mat_trf = ffts.ifftn(mat, shape, axes=axes, workers=FFTS_WORKER)
     elif SOLVER == "FFTW":
         mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
@@ -95,13 +99,7 @@ def _get_fct_tensor(mat, double_dim, fct):
         ny = 2*ny
         nz = 2*nz
 
-    # compute the tensor (with a loop or directly)
-    if SPLIT_TENSOR:
-        mat_trf = np.empty((nx, ny, nz, nd), dtype=np.complex128)
-        for i in range(nd):
-            mat_trf[:, :, :, i] = fct(mat[:, :, :, i], (nx, ny, nz), (0, 1, 2))
-    else:
-        mat_trf = fct(mat, (nx, ny, nz), (0, 1, 2))
+    mat_trf = fct(mat, (nx, ny, nz), (0, 1, 2))
 
     return mat_trf
 
