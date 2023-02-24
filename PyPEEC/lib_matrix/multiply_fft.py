@@ -11,7 +11,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
+from PyPEEC.lib_utils import config
 from PyPEEC.lib_matrix import fourier_transform
+
+# get GPU config
+USE_GPU = config.USE_GPU
 
 
 def _get_tensor_sign(matrix_type):
@@ -115,8 +119,7 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
         - computation the FFT of the obtained tensor: (nx, ny, nz, nd) to (2*nx, 2*ny, 2*nz, nd)
         - multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz, nd)
         - computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz, nd)
-        - shrinking of the obtained tensor: (2*nx, 2*ny, 2*nz, nd) to (nx, ny, nz, nd)
-        - the tensor is flattened into a vector: (nx, ny, nz, nd) to n_sel
+        - the tensor is flattened into a vector: (2*nx, 2*ny, 2*nz, nd) to n_sel
     """
 
     # get the tensor size

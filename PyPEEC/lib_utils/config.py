@@ -25,12 +25,14 @@ def set_config(file_config):
     global MATRIX_FACTORIZATION
     global MATRIX_MULTIPLICATION
     global FFT_OPTIONS
+    global USE_GPU
 
     # assign data
     LOGGING_OPTIONS = data["LOGGING_OPTIONS"]
     MATRIX_FACTORIZATION = data["MATRIX_FACTORIZATION"]
     MATRIX_MULTIPLICATION = data["MATRIX_MULTIPLICATION"]
     FFT_OPTIONS = data["FFT_OPTIONS"]
+    USE_GPU = data["USE_GPU"]
 
 
 # init the global variables
@@ -38,6 +40,7 @@ LOGGING_OPTIONS = None
 MATRIX_FACTORIZATION = None
 MATRIX_MULTIPLICATION = None
 FFT_OPTIONS = None
+USE_GPU = None
 
 # get the default config file
 default_file_config = importlib.resources.files("PyPEEC").joinpath("pypeec.yaml")

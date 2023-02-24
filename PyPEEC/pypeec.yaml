@@ -24,7 +24,7 @@ LOGGING_OPTIONS:
     CL_CRITICAL: '[38;5;196m' # terminal color code
     CL_RESET: '[0m' # terminal color code
 
-# FFT options
+# FFT options (for the CPU computation, ignored for GPU)
 FFT_OPTIONS:
     #   - SciPy is typically faster slower but is always available
     #   - FFTW is typically faster but has to be installed separately
@@ -35,6 +35,11 @@ FFT_OPTIONS:
     FFTW_THREAD: null  # number of threads for FFTW (null for number of CPUs)
     FFTW_CACHE_TIMEOUT: 100  # cache timeout in seconds for FFTW (null for no caching)
     FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW
+
+# GPU options
+#   - if false, the GPU is are not used
+#   - if true, the GPU is used for some operations
+USE_GPU: false
 
 # matrix factorization options
 #   - SuperLU is typically slower but is always available

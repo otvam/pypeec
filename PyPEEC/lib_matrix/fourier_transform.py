@@ -20,8 +20,13 @@ FFTW_THREAD = config.FFT_OPTIONS["FFTW_THREAD"]
 FFTW_CACHE_TIMEOUT = config.FFT_OPTIONS["FFTW_CACHE_TIMEOUT"]
 FFTW_BYTE_ALIGN = config.FFT_OPTIONS["FFTW_BYTE_ALIGN"]
 
+# get GPU config
+USE_GPU = config.USE_GPU
+
 # import the right library
-if SOLVER == "SciPy":
+if USE_GPU:
+    import cupy.fft as fftc
+elif SOLVER == "SciPy":
     # import the SciPy FFT module
     import scipy.fft as ffts
 
@@ -54,7 +59,9 @@ def _get_fftn(mat, shape, axes):
     The size of the output tensor is specified.
     """
 
-    if SOLVER == "SciPy":
+    if USE_GPU:
+        mat_trf = fftc.fftn(mat, shape, axes=axes)
+    elif SOLVER == "SciPy":
         mat_trf = ffts.fftn(mat, shape, axes=axes, workers=FFTS_WORKER)
     elif SOLVER == "FFTW":
         mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
@@ -71,7 +78,9 @@ def _get_ifftn(mat, shape, axes):
     The size of the output tensor is specified.
     """
 
-    if SOLVER == "SciPy":
+    if USE_GPU:
+        mat_trf = fftc.ifftn(mat, shape, axes=axes)
+    elif SOLVER == "SciPy":
         mat_trf = ffts.ifftn(mat, shape, axes=axes, workers=FFTS_WORKER)
     elif SOLVER == "FFTW":
         mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
