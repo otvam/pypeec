@@ -2,7 +2,6 @@
 "material_def":
     "pri": {"domain_list": ["pri" ,"src", "sink"], "material_type": "electric", "rho": 1.75e-8}
     "sec": {"domain_list": ["sec", "short"], "material_type": "electric", "rho": 8.75e-8}
-    "empty": {"domain_list": ["empty"], "material_type": "electric", "rho": 8.75e-8}
 "source_def":
     "src": {"domain_list": ["src"], "source_type": "current", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
     "sink": {"domain_list": ["sink"], "source_type": "voltage", "V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}

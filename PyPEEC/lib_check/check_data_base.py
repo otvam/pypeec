@@ -9,7 +9,7 @@ import numpy as np
 from PyPEEC.lib_utils.error import CheckError
 
 
-def check_dict(name, data, key_list, can_be_empty, sub_type):
+def check_dict(name, data, key_list=None, sub_type=None, can_be_empty=True):
     """
     Check a dict.
     """
@@ -24,12 +24,12 @@ def check_dict(name, data, key_list, can_be_empty, sub_type):
         if (sub_type is not None) and not isinstance(value, sub_type):
             raise CheckError("%s: invalid type" % name)
     if key_list is not None:
-        for key_list_tmp in key_list:
-            if key_list_tmp not in data:
-                raise CheckError("%s: dict is incomplete" % name)
+        for tag in key_list:
+            if tag not in data:
+                raise CheckError("%s: dict is incomplete: %s" % (name, tag))
 
 
-def check_list(name, data, can_be_empty, sub_type):
+def check_list(name, data, sub_type=None, can_be_empty=True):
     """
     Check a list.
     """
@@ -43,14 +43,17 @@ def check_list(name, data, can_be_empty, sub_type):
             raise CheckError("%s: invalid type" % name)
 
 
-def check_float_array(name, data, size, is_positive, can_be_zero):
+def check_float_array(name, data, size=None, is_positive=False, can_be_zero=True, can_be_empty=True):
     """
-    Check an float array.
+    Check a float array.
     """
 
     data = np.array(data)
-    if not (len(data) == size):
-        raise CheckError("%s: invalid array size" % name)
+    if size is not None:
+        if not (len(data) == size):
+            raise CheckError("%s: invalid array size" % name)
+    if (not can_be_empty) and (len(data) == 0):
+        raise CheckError("%s: cannot be zero" % name)
     if not np.issubdtype(data.dtype, np.floating):
         raise CheckError("%s: invalid array type" % name)
     if is_positive and not np.all(data >= 0):
@@ -59,7 +62,40 @@ def check_float_array(name, data, size, is_positive, can_be_zero):
         raise CheckError("%s: cannot be zero" % name)
 
 
-def check_float(name, data, is_positive, can_be_zero):
+def check_integer_array(name, data, size=None, is_positive=False, can_be_zero=True, can_be_empty=True):
+    """
+    Check an integer array.
+    """
+
+    data = np.array(data)
+    if size is not None:
+        if not (len(data) == size):
+            raise CheckError("%s: invalid array size" % name)
+    if (not can_be_empty) and (len(data) == 0):
+        raise CheckError("%s: cannot be zero" % name)
+    if not np.issubdtype(data.dtype, np.integer):
+        raise CheckError("%s: invalid array type" % name)
+    if is_positive and not np.all(data >= 0):
+        raise CheckError("%s: should be positive" % name)
+    if (not can_be_zero) and np.any(data == 0):
+        raise CheckError("%s: cannot be zero" % name)
+
+
+def check_index_array(name, data, bnd):
+    """
+    Check an integer array.
+    """
+
+    data = np.array(data)
+    if not np.issubdtype(data.dtype, np.integer):
+        raise CheckError("%s: invalid array type" % name)
+    if not (np.all(data >= 0) and np.all(data < bnd)):
+        raise CheckError("%s: invalid index range" % name)
+    if not (len(np.unique(data)) == len(data)):
+        raise CheckError("%s: indices should be unique" % name)
+
+
+def check_float(name, data, is_positive=False, can_be_zero=True):
     """
     Check a float.
     """
@@ -72,7 +108,7 @@ def check_float(name, data, is_positive, can_be_zero):
         raise CheckError("%s: cannot be zero" % name)
 
 
-def check_integer(name, data, is_positive, can_be_zero):
+def check_integer(name, data, is_positive=False, can_be_zero=True):
     """
     Check a integer.
     """
@@ -105,10 +141,31 @@ def check_string(name, data):
 
 def check_choice(name, data, choice_list):
     """
-    Check a string.
+    Check a string within given choices.
     """
 
     if not isinstance(data, str):
         raise CheckError("%s: should be a string" % name)
     if data not in choice_list:
-        raise CheckError("%s: invalid value" % name)
+        raise CheckError("%s: invalid value: %s" % (name, data))
+
+
+def check_filename(name, filename):
+    """
+    Check that a filename is existing.
+    """
+
+    try:
+        fid = open(filename, "rb")
+        fid.close()
+    except FileNotFoundError:
+        raise CheckError("%s: file does not exist: %s" % (name, filename))
+
+
+def check_assert(name, cond, msg):
+    """
+    Check an assertion.
+    """
+
+    if not cond:
+        raise CheckError("%s: %s" % (name, msg))

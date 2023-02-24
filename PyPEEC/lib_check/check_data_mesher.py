@@ -5,79 +5,38 @@ Module for checking the mesher data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import numpy as np
-from PyPEEC.lib_utils.error import CheckError
+from PyPEEC.lib_check import check_data_base
 
 
-def _check_voxel_domain_def(n, domain_def):
+def _check_voxel_domain_def(domain_def):
     """
     Check the domain definition (mapping between domain names and indices).
     """
+
+    # check type
+    check_data_base.check_dict("domain_def", domain_def, can_be_empty=False, sub_type=list)
+
+    # check data
+    for idx in domain_def.values():
+        check_data_base.check_integer_array("domain_def", idx, is_positive=True, can_be_empty=False)
+
+
+def _check_voxel_indices(n, domain_def):
+    """
+    Get the validity of the indices.
+    """
+
+    # get the indices
+    idx_all = []
+    for idx in domain_def.values():
+        idx_all += idx
 
     # extract the voxel data
     (nx, ny, nz) = n
     nv = nx*ny*nz
 
-    # init the domain indices
-    idx_domain = np.array([], dtype=np.int_)
-
-    # check type
-    if not isinstance(domain_def, dict):
-        raise CheckError("domain_def: domain definition should be a dict")
-    if not domain_def:
-        raise CheckError("domain_def: domain definition cannot be empty")
-
-    # check the different domains
-    for tag, idx in domain_def.items():
-        # check tag
-        if not isinstance(tag, str):
-            raise CheckError("tag: domain name should be a string")
-
-        # cast indices
-        idx = np.array(idx, dtype=np.int_)
-
-        # check for indices type and range
-        if not (len(idx.shape) == 1):
-            raise CheckError("idx: indices should be a vector")
-        if not np.issubdtype(idx.dtype, np.integer):
-            raise CheckError("idx: indices should be composed of integers")
-        if not (np.all(idx >= 0) and np.all(idx < nv)):
-            raise CheckError("idx: domain indices should belong to the voxel structure")
-
-        # append
-        idx_domain = np.append(idx_domain, idx)
-
-    # check for duplicates
-    if not (len(np.unique(idx_domain)) == len(idx_domain)):
-        raise CheckError("domain indices should be unique")
-
-
-def _check_voxel_size(n, d, c):
-    """
-    Check the voxel number, placement, and dimension.
-    """
-
-    # check size
-    if not (len(n) == 3):
-        raise CheckError("n: invalid voxel number (should be a list with three elements)")
-    if not (len(d) == 3):
-        raise CheckError("d: invalid voxel size (should be a list with three elements)")
-    if not (len(c) == 3):
-        raise CheckError("c: invalid center coordinate size (should be a list with three elements)")
-
-    # check type
-    if not all(np.issubdtype(type(x), np.integer) for x in n):
-        raise CheckError("n: number of voxels should be composed of integers")
-    if not all(np.issubdtype(type(x), np.floating) for x in d):
-        raise CheckError("d: dimension of the voxels should be composed of real floats")
-    if not all(np.issubdtype(type(x), np.floating) for x in c):
-        raise CheckError("c: center coordinate should be composed of real floats")
-
-    # check value
-    if not all((x > 0) for x in n):
-        raise CheckError("n: number of voxels cannot be smaller than one")
-    if not all((x > 0) for x in d):
-        raise CheckError("d: dimension of the voxels should be positive")
+    # check the indices
+    check_data_base.check_index_array("domain_def", idx_all, nv)
 
 
 def _check_png_domain_color(domain_color):
@@ -86,24 +45,11 @@ def _check_png_domain_color(domain_color):
     """
 
     # check type
-    if not isinstance(domain_color, dict):
-        raise CheckError("domain_color: domain color definition should be a dict")
-    if not domain_color:
-        raise CheckError("domain_color: domain color definition cannot be empty")
+    check_data_base.check_dict("domain_color", domain_color, can_be_empty=False, sub_type=list)
 
     # check value
-    for tag, color in domain_color.items():
-        # check tag
-        if not isinstance(tag, str):
-            raise CheckError("tag: domain name should be a string")
-
-        # check size
-        if not (len(color) == 4):
-            raise CheckError("color: invalid color (should be an array with four elements)")
-
-        # check type
-        if not all(np.issubdtype(type(x), np.integer) for x in color):
-            raise CheckError("color: color array should be composed of integers")
+    for color in domain_color.values():
+        check_data_base.check_integer_array("domain_color", color, size=4, is_positive=True)
 
 
 def _check_png_layer_stack(layer_stack):
@@ -112,26 +58,21 @@ def _check_png_layer_stack(layer_stack):
     """
 
     # check type
-    if not isinstance(layer_stack, list):
-        raise CheckError("layer_stack: layer stack definition should be a list")
-    if not layer_stack:
-        raise CheckError("layer_stack: layer stack definition cannot be empty")
+    check_data_base.check_list("layer_stack", layer_stack, can_be_empty=False, sub_type=dict)
 
     # check value
     for layer_stack_tmp in layer_stack:
+        # check type
+        key_list = ["n_layer", "filename"]
+        check_data_base.check_dict("layer_stack", layer_stack_tmp, key_list=key_list)
+
         # get the data
         n_layer = layer_stack_tmp["n_layer"]
         filename = layer_stack_tmp["filename"]
 
-        # check type
-        if not isinstance(n_layer, int):
-            raise CheckError("n_layer: number of layers should be an integer")
-        if not isinstance(filename, str):
-            raise CheckError("filename: filename should be a string")
-
-        # check value
-        if not (n_layer >= 1):
-            raise CheckError("n_layer: number of layers cannot be smaller than one")
+        # check data
+        check_data_base.check_integer("n_layer", n_layer, is_positive=True, can_be_zero=False)
+        check_data_base.check_string("filename", filename)
 
 
 def _check_stl_domain_stl(domain_stl):
@@ -140,20 +81,7 @@ def _check_stl_domain_stl(domain_stl):
     """
 
     # check type
-    if not isinstance(domain_stl, dict):
-        raise CheckError("domain_stl: domain definition should be a dict")
-    if not domain_stl:
-        raise CheckError("domain_stl: domain definition cannot be empty")
-
-    # check value
-    for tag, filename in domain_stl.items():
-        # check tag
-        if not isinstance(tag, str):
-            raise CheckError("tag: domain name should be a string")
-
-        # check type
-        if not isinstance(filename, str):
-            raise CheckError("filename: filename should be a string")
+    check_data_base.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=str)
 
 
 def _check_stl_domain_conflict(domain_conflict):
@@ -162,23 +90,24 @@ def _check_stl_domain_conflict(domain_conflict):
     """
 
     # check type
-    if not isinstance(domain_conflict, list):
-        raise CheckError("domain_conflict: domain conflict should be a list")
+    check_data_base.check_list("domain_conflict", domain_conflict, sub_type=dict)
 
     # check value
     for domain_conflict_tmp in domain_conflict:
+        # check type
+        key_list = ["domain_keep", "domain_resolve"]
+        check_data_base.check_dict("domain_conflict", domain_conflict_tmp, key_list=key_list)
+
         # extract data
         domain_keep = domain_conflict_tmp["domain_keep"]
         domain_resolve = domain_conflict_tmp["domain_resolve"]
 
         # check type
-        if not isinstance(domain_keep, str):
-            raise CheckError("domain_keep: domain name should be a string")
-        if not isinstance(domain_resolve, str):
-            raise CheckError("domain_resolve: domain name should be a string")
+        check_data_base.check_string("domain_keep", domain_keep)
+        check_data_base.check_string("domain_resolve", domain_resolve)
 
 
-def _check_stl_domain_name(domain_conflict, domain_name):
+def _check_stl_name(domain_conflict, domain_name):
     """
     Check the consistency of the domain names.
     """
@@ -188,11 +117,9 @@ def _check_stl_domain_name(domain_conflict, domain_name):
         domain_resolve = domain_conflict_tmp["domain_resolve"]
         domain_keep = domain_conflict_tmp["domain_keep"]
 
-        # check value
-        if domain_resolve not in domain_name:
-            raise CheckError("domain_resolve: domain name is invalid")
-        if domain_keep not in domain_name:
-            raise CheckError("domain_keep: domain name is invalid")
+        # check data
+        check_data_base.check_choice("domain_resolve", domain_resolve, domain_name)
+        check_data_base.check_choice("domain_keep", domain_keep, domain_name)
 
 
 def _check_data_voxelize_png(data_voxelize):
@@ -201,8 +128,8 @@ def _check_data_voxelize_png(data_voxelize):
     """
 
     # check type
-    if not isinstance(data_voxelize, dict):
-        raise CheckError("data_voxelize: mesher data should be a dict")
+    key_list = ["d", "c", "nx", "ny", "domain_color", "layer_stack"]
+    check_data_base.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     d = data_voxelize["d"]
@@ -212,35 +139,17 @@ def _check_data_voxelize_png(data_voxelize):
     domain_color = data_voxelize["domain_color"]
     layer_stack = data_voxelize["layer_stack"]
 
-    # check size
-    if not (len(d) == 3):
-        raise CheckError("d: invalid voxel size (should be a list with three elements)")
-    if not (len(c) == 3):
-        raise CheckError("c: invalid center coordinate size (should be a list with three elements)")
-
-    # check type
-    if not all(np.issubdtype(type(x), np.floating) for x in d):
-        raise CheckError("d: dimension of the voxels should be composed of real floats")
-    if not all(np.issubdtype(type(x), np.floating) for x in c):
-        raise CheckError("c: center coordinate should be composed of real floats")
-    if not np.issubdtype(type(nx), np.integer):
-        raise CheckError("nx: number of voxel in x direction should be an integer")
-    if not np.issubdtype(type(ny), np.integer):
-        raise CheckError("ny: number of voxel in y direction should be an integer")
-
-    # check value
-    if not all((x > 0) for x in d):
-        raise CheckError("d: dimension of the voxels should be positive")
-    if not (nx > 0):
-        raise CheckError("nx: of voxel in x direction cannot be smaller than one")
-    if not (ny > 0):
-        raise CheckError("ny: of voxel in y direction cannot be smaller than one")
+    # check data
+    check_data_base.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
+    check_data_base.check_float_array("c", c, size=3)
+    check_data_base.check_integer("nx", nx, is_positive=True, can_be_zero=False)
+    check_data_base.check_integer("ny", ny, is_positive=True, can_be_zero=False)
 
     # check domains and layers
     _check_png_domain_color(domain_color)
     _check_png_layer_stack(layer_stack)
 
-    # get name
+    # get the domain name
     domain_name = domain_color.keys()
 
     return domain_name
@@ -252,8 +161,8 @@ def _check_data_voxelize_stl(data_voxelize):
     """
 
     # check type
-    if not isinstance(data_voxelize, dict):
-        raise CheckError("data_voxelize: mesher data should be a dict")
+    key_list = ["n", "d", "c", "pts_min", "pts_max", "domain_stl", "domain_conflict"]
+    check_data_base.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     n = data_voxelize["n"]
@@ -264,56 +173,32 @@ def _check_data_voxelize_stl(data_voxelize):
     domain_stl = data_voxelize["domain_stl"]
     domain_conflict = data_voxelize["domain_conflict"]
 
-    # check voxel numer
+    # check data
     if n is not None:
-        if not (len(n) == 3):
-            raise CheckError("n: invalid voxel number (should be a list with three elements)")
-        if not all(np.issubdtype(type(x), np.integer) for x in n):
-            raise CheckError("n: the number of voxels should be composed of integers")
-        if not all((x > 0) for x in n):
-            raise CheckError("n: number of voxels cannot be smaller than one")
-
-    # check voxel size
+        check_data_base.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
     if d is not None:
-        if not (len(d) == 3):
-            raise CheckError("d: invalid voxel size (should be a list with three elements)")
-        if not all(np.issubdtype(type(x), np.floating) for x in d):
-            raise CheckError("d: dimension of the voxels should be composed of real floats")
-        if not all((x > 0) for x in d):
-            raise CheckError("d: dimension of the voxels should be composed of real floats")
-
-    # check voxel center
+        check_data_base.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
     if c is not None:
-        if not (len(c) == 3):
-            raise CheckError("c: invalid center coordinate size (should be a list with three elements)")
-        if not all(np.issubdtype(type(x), np.floating) for x in c):
-            raise CheckError("c: center coordinate should be composed of real floats")
-
-    # check voxel boundaries
+        check_data_base.check_float_array("c", c, size=3)
     if pts_min is not None:
-        if not (len(pts_min) == 3):
-            raise CheckError("pts_min: invalid point size (should be a list with three elements)")
-        if not all(np.issubdtype(type(x), np.floating) for x in pts_min):
-            raise CheckError("pts_min: the coordinates of a point should be composed of real floats")
+        check_data_base.check_float_array("pts_min", pts_min, size=3)
     if pts_max is not None:
-        if not (len(pts_max) == 3):
-            raise CheckError("pts_max: invalid point size (should be a list with three elements)")
-        if not all(np.issubdtype(type(x), np.floating) for x in pts_max):
-            raise CheckError("pts_max: the coordinates of a point should be composed of real floats")
+        check_data_base.check_float_array("pts_max", pts_max, size=3)
 
     # check that the size is defined
-    if (d is not None) != (n is None):
-        raise CheckError("n/d: inconsistent definition of the voxel number/size")
+    cond_d = (d is None) and (n is not None)
+    cond_n = (d is not None) and (n is None)
+    check_data_base.check_assert("n/d", cond_d or cond_n, "inconsistent definition of the voxel number/size")
 
     # check the stl file
     _check_stl_domain_stl(domain_stl)
     _check_stl_domain_conflict(domain_conflict)
 
-    # get name
+    # get the domain name
     domain_name = domain_stl.keys()
 
     # check domain name
-    _check_stl_domain_name(domain_conflict, domain_name)
+    _check_stl_name(domain_conflict, domain_name)
 
     return domain_name
 
@@ -325,8 +210,8 @@ def _check_data_voxelize_voxel(data_voxelize):
     """
 
     # check type
-    if not isinstance(data_voxelize, dict):
-        raise CheckError("data_voxelize: voxel description should be a dict")
+    key_list = ["n", "d", "c", "domain_def"]
+    check_data_base.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     n = data_voxelize["n"]
@@ -335,32 +220,20 @@ def _check_data_voxelize_voxel(data_voxelize):
     domain_def = data_voxelize["domain_def"]
 
     # check data
-    _check_voxel_size(n, d, c)
-    _check_voxel_domain_def(n, domain_def)
+    check_data_base.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
+    check_data_base.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
+    check_data_base.check_float_array("c", c, size=3)
 
-    # get name
+    # check domain definition
+    _check_voxel_domain_def(domain_def)
+
+    # get the domain name
     domain_name = domain_def.keys()
 
+    # check indices range
+    _check_voxel_indices(n, domain_def)
+
     return domain_name
-
-
-def _check_resampling_factor(resampling_factor):
-    """
-    Check the resampling data.
-    This vector is controlling the resampling of a voxel structure.
-    """
-
-    # check size
-    if not (len(resampling_factor) == 3):
-        raise CheckError("resampling_factor: invalid voxel resampling (should be a list with three elements)")
-
-    # check type
-    if not all(np.issubdtype(type(x), np.integer) for x in resampling_factor):
-        raise CheckError("resampling_factor: number of resampling should be composed of integers")
-
-    # check value
-    if not all((x >= 1) for x in resampling_factor):
-        raise CheckError("resampling_factor: number of resampling cannot be smaller than one")
 
 
 def _check_domain_connection(domain_connection, domain_name):
@@ -370,35 +243,25 @@ def _check_domain_connection(domain_connection, domain_name):
     """
 
     # check type
-    if not isinstance(domain_connection, dict):
-        raise CheckError("domain_connection: domain connection check should be a dict")
+    check_data_base.check_dict("domain_connection", domain_connection, sub_type=dict)
 
     # check value
-    for tag, dat_tmp in domain_connection.items():
+    for dat_tmp in domain_connection.values():
         # check type
-        if not isinstance(tag, str):
-            raise CheckError("domain_connection: domain connection name should be a tring")
-        if not isinstance(dat_tmp, dict):
-            raise CheckError("domain_connection: domain connection check should be a dict")
+        key_list = ["connected", "domain_list"]
+        check_data_base.check_dict("domain_connection", dat_tmp, key_list=key_list)
 
         # extract field
         domain_list = dat_tmp["domain_list"]
         connected = dat_tmp["connected"]
 
-        # check type
-        if not isinstance(domain_list, list):
-            raise CheckError("domain_list: connected domain names should be a list")
-        if not domain_list:
-            raise CheckError("domain_list: connected domain names should not be empty")
-        if not isinstance(connected, bool):
-            raise CheckError("connected: domain connection flag should be a boolean")
+        # check data
+        check_data_base.check_boolean("connected", connected)
+        check_data_base.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
         # check value
-        for tag_tmp in domain_list:
-            if not isinstance(tag_tmp, str):
-                raise CheckError("domain_list: domain name should be a string")
-            if tag_tmp not in domain_name:
-                raise CheckError("domain_list: domain name is invalid")
+        for tag in domain_list:
+            check_data_base.check_choice("source_type", tag, domain_name)
 
 
 def get_domain_stl_path(domain_stl, path_ref):
@@ -411,8 +274,7 @@ def get_domain_stl_path(domain_stl, path_ref):
         return domain_stl
 
     # check the path
-    if not isinstance(path_ref, str):
-        raise CheckError("path_ref: path_ref should be a string or None")
+    check_data_base.check_string("path_ref", path_ref)
 
     # init new domain description
     domain_stl_path = {}
@@ -421,11 +283,7 @@ def get_domain_stl_path(domain_stl, path_ref):
     for tag, filename in domain_stl.items():
         # check file
         filename = path_ref + "/" + filename
-        try:
-            fid = open(filename, "rb")
-            fid.close()
-        except FileNotFoundError:
-            raise CheckError("filename: file does not exist: %s" % filename)
+        check_data_base.check_filename("filename", filename)
 
         # add the new item
         domain_stl_path[tag] = filename
@@ -443,8 +301,7 @@ def get_layer_stack_path(layer_stack, path_ref):
         return layer_stack
 
     # check the path
-    if not isinstance(path_ref, str):
-        raise CheckError("path_ref: path_ref should be a string or None")
+    check_data_base.check_string("path_ref", path_ref)
 
     # init new layer stack
     layer_stack_path = []
@@ -457,11 +314,7 @@ def get_layer_stack_path(layer_stack, path_ref):
 
         # check file
         filename = path_ref + "/" + filename
-        try:
-            fid = open(filename, "rb")
-            fid.close()
-        except FileNotFoundError:
-            raise CheckError("filename: file does not exist: %s" % filename)
+        check_data_base.check_filename("filename", filename)
 
         # add the new item
         layer_stack_path.append({"n_layer": n_layer, "filename": filename})
@@ -475,8 +328,13 @@ def check_data_mesher(data_mesher):
     """
 
     # check type
-    if not isinstance(data_mesher, dict):
-        raise CheckError("data_mesher: mesher data should be a dict")
+    key_list = [
+        "mesh_type",
+        "data_voxelize",
+        "resampling_factor",
+        "domain_connection",
+    ]
+    check_data_base.check_dict("data_mesher", data_mesher, key_list=key_list)
 
     # extract field
     mesh_type = data_mesher["mesh_type"]
@@ -485,12 +343,7 @@ def check_data_mesher(data_mesher):
     domain_connection = data_mesher["domain_connection"]
 
     # check type
-    if not isinstance(mesh_type, str):
-        raise CheckError("mesh_type: mesher type should be a string")
-
-    # check value
-    if mesh_type not in ["stl", "png", "voxel"]:
-        raise CheckError("mesh_type: specified mesh type does not exist")
+    check_data_base.check_choice("mesh_type", mesh_type, ["stl", "png", "voxel"])
 
     # check the mesher
     if mesh_type == "png":
@@ -500,10 +353,10 @@ def check_data_mesher(data_mesher):
     elif mesh_type == "voxel":
         domain_name = _check_data_voxelize_voxel(data_voxelize)
     else:
-        raise CheckError("invalid mesh type")
+        raise ValueError("invalid mesh type")
 
     # check the resampling data
-    _check_resampling_factor(resampling_factor)
+    check_data_base.check_integer_array("resampling_factor", resampling_factor, size=3, is_positive=True, can_be_zero=False)
 
     # check the connection data
     _check_domain_connection(domain_connection, domain_name)

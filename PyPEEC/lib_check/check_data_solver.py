@@ -7,6 +7,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from PyPEEC.lib_utils.error import CheckError
+from PyPEEC.lib_check import check_data_base
 
 
 def _get_domain_indices(domain_list, domain_def):
@@ -20,8 +21,7 @@ def _get_domain_indices(domain_list, domain_def):
     # find the indices
     for tag in domain_list:
         # check that the domain exist
-        if tag not in domain_def:
-            raise CheckError("domain: domain name should be list in the voxel definition")
+        check_data_base.check_choice("domain_list", tag, domain_def)
 
         # append indices
         idx = np.append(idx, domain_def[tag])
@@ -59,7 +59,7 @@ def _get_material_idx(material_def, domain_def):
             idx_m = np.append(idx_m, idx)
             material_idx[tag] = {"idx": idx, "material_type": material_type, "chi": chi}
         else:
-            raise CheckError("invalid material type")
+            raise ValueError("invalid material type")
 
     return idx_c, idx_m, material_idx
 
@@ -95,7 +95,7 @@ def _get_source_idx(source_def, domain_def):
             Z = dat_tmp["Z_re"]+1j*dat_tmp["Z_im"]
             source_idx[tag] = {"idx": idx, "source_type": source_type, "V": V, "Z": Z}
         else:
-            raise CheckError("invalid source type")
+            raise ValueError("invalid source type")
 
     return idx_s, source_idx
 
