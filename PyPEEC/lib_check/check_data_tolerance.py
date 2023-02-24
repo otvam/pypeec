@@ -18,7 +18,10 @@ def _check_solver_options(solver_options):
         "tolerance",
         "gmres_options",
     ]
-    check_data_base.check_dict("solver_options", solver_options, str_key=True, key_list=key_list)
+    check_data_base.check_dict(
+        "solver_options", solver_options,
+        key_list=key_list, can_be_empty=False, sub_type=None,
+    )
 
     # extract field
     tolerance = solver_options["tolerance"]
@@ -31,7 +34,10 @@ def _check_solver_options(solver_options):
         "n_between_restart",
         "n_maximum_restart",
     ]
-    check_data_base.check_dict("gmres_options", gmres_options, str_key=True, key_list=key_list)
+    check_data_base.check_dict(
+        "gmres_options", gmres_options,
+        key_list=key_list, can_be_empty=False, sub_type=None,
+    )
 
     # check the data
     check_data_base.check_float("tolerance", tolerance, is_positive=True, can_be_zero=False)
@@ -52,7 +58,10 @@ def _check_condition_options(condition_options):
         "tolerance",
         "norm_options",
     ]
-    check_data_base.check_dict("condition_options", condition_options, str_key=True, key_list=key_list)
+    check_data_base.check_dict(
+        "condition_options", condition_options,
+        key_list=key_list, can_be_empty=False, sub_type=None,
+    )
 
     # extract field
     check = condition_options["check"]
@@ -64,7 +73,10 @@ def _check_condition_options(condition_options):
         "t_accuracy",
         "n_iter_max",
     ]
-    check_data_base.check_dict("norm_options", norm_options, str_key=True, key_list=key_list)
+    check_data_base.check_dict(
+        "norm_options", norm_options,
+        key_list=key_list, can_be_empty=False, sub_type=None,
+    )
 
     # check the data
     check_data_base.check_boolean("tolerance", check)
@@ -88,7 +100,10 @@ def check_data_tolerance(data_tolerance):
         "solver_options",
         "condition_options",
     ]
-    check_data_base.check_dict("data_tolerance", data_tolerance, str_key=True, key_list=key_list)
+    check_data_base.check_dict(
+        "data_tolerance", data_tolerance,
+        key_list=key_list, can_be_empty=False, sub_type=None,
+    )
 
     # extract field
     green_simplify = data_tolerance["green_simplify"]

@@ -15,7 +15,7 @@ def check_data_point(data_point):
     """
 
     # check type
-    check_data_base.check_list("data_point", data_point, can_be_empty=True)
+    check_data_base.check_list("data_point", data_point, can_be_empty=True, sub_type=list)
 
     # check the points (if any)
     for data_point_tmp in data_point:

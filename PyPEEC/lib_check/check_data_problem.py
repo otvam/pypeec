@@ -5,8 +5,7 @@ Module for checking the solver problem data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import numpy as np
-from PyPEEC.lib_utils.error import CheckError
+from PyPEEC.lib_check import check_data_base
 
 
 def _check_material_def(material_def):
@@ -15,51 +14,45 @@ def _check_material_def(material_def):
     """
 
     # check type
-    if not isinstance(material_def, dict):
-        raise CheckError("material_def: material definition should be a dict")
-    if not material_def:
-        raise CheckError("material_def: material definition cannot be empty")
+    check_data_base.check_dict(
+        "material_def", material_def,
+        key_list=None, can_be_empty=False, sub_type=dict,
+    )
 
     # check value
-    for tag, dat_tmp in material_def.items():
-        # extract the data
-        material_type = dat_tmp["material_type"]
-        domain_list = dat_tmp["domain_list"]
-
+    for material_def_tmp in material_def.values():
         # check type
-        if not isinstance(tag, str):
-            raise CheckError("tag: material name should be a string")
-        if not isinstance(material_type, str):
-            raise CheckError("material_type: material type should be a string")
-        if not isinstance(domain_list, list):
-            raise CheckError("domain_list: domain definition a list")
+        key_list = ["material_type", "domain_list"]
+        check_data_base.check_dict(
+            "material_def", material_def_tmp,
+            key_list=key_list, can_be_empty=False, sub_type=None,
+        )
 
-        # check value
-        if not (material_type in ["electric", "magnetic"]):
-            raise CheckError("material_type: material type should be electric or magnetic")
-        if not all(np.issubdtype(type(x), str) for x in domain_list):
-            raise CheckError("domain_list: domain name should be composed of strings")
+        # extract the data
+        material_type = material_def_tmp["material_type"]
+        domain_list = material_def_tmp["domain_list"]
+
+        # check data
+        check_data_base.check_choice("material_type", material_type, ["electric", "magnetic"])
+        check_data_base.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
         # get the source value
         if material_type == "electric":
-            rho = dat_tmp["rho"]
-            if not np.issubdtype(type(rho), np.floating):
-                raise CheckError("rho: material parameter should be a float")
-            if not (rho > 0):
-                raise CheckError("rho: material parameter should be greater than zero")
+            key_list = ["rho"]
         elif material_type == "magnetic":
-            chi_re = dat_tmp["chi_re"]
-            chi_im = dat_tmp["chi_im"]
-            if not np.issubdtype(type(chi_re), np.floating):
-                raise CheckError("chi_re: material parameter should be a float")
-            if not np.issubdtype(type(chi_im), np.floating):
-                raise CheckError("chi_im: material parameter should be a float")
-            if not (chi_re >= 0):
-                raise CheckError("chi_re: material parameter should be greater than zero")
-            if not (chi_im >= 0):
-                raise CheckError("chi_im: material parameter should be greater than zero")
+            key_list = ["chi_re", "chi_im"]
         else:
-            raise CheckError("invalid material type")
+            raise ValueError("invalid material type")
+
+        # check type
+        check_data_base.check_dict(
+            "material_def", material_def_tmp,
+            key_list=key_list, can_be_empty=False, sub_type=None,
+        )
+
+        # check data
+        for key_list_tmp in key_list:
+            check_data_base.check_float(key_list_tmp, material_def_tmp[key_list_tmp], is_positive=False, can_be_zero=True)
 
 
 def _check_source_def(source_def):
@@ -68,46 +61,45 @@ def _check_source_def(source_def):
     """
 
     # check type
-    if not isinstance(source_def, dict):
-        raise CheckError("source_def: source definition should be a dict")
-    if not source_def:
-        raise CheckError("source_def: source definition cannot be empty")
+    check_data_base.check_dict(
+        "source_def", source_def,
+        key_list=None, can_be_empty=False, sub_type=dict,
+    )
 
     # check value
-    for tag, dat_tmp in source_def.items():
-        # extract the data
-        source_type = dat_tmp["source_type"]
-        domain_list = dat_tmp["domain_list"]
-
+    for tag, source_def_tmp in source_def.items():
         # check type
-        if not isinstance(tag, str):
-            raise CheckError("tag: source name should be a string")
-        if not isinstance(source_type, str):
-            raise CheckError("source_type: source type should be a string")
-        if not isinstance(domain_list, list):
-            raise CheckError("domain_list: domain definition a list")
+        key_list = ["source_type", "domain_list"]
+        check_data_base.check_dict(
+            "source_def", source_def_tmp,
+            key_list=key_list, can_be_empty=False, sub_type=None,
+        )
 
-        # check value
-        if not (source_type in ["current", "voltage"]):
-            raise CheckError("source_type: source type should be voltage or current")
-        if not all(np.issubdtype(type(x), str) for x in domain_list):
-            raise CheckError("domain_list: domain name should be composed of strings")
+        # extract the data
+        source_type = source_def_tmp["source_type"]
+        domain_list = source_def_tmp["domain_list"]
+
+        # check data
+        check_data_base.check_choice("source_type", source_type, ["current", "voltage"])
+        check_data_base.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
         # get the source value
         if source_type == "current":
-            value = dat_tmp["I_re"]+1j*dat_tmp["I_im"]
-            element = dat_tmp["Y_re"]+1j*dat_tmp["Y_im"]
+            key_list = ["I_re", "I_im", "Y_re", "Y_im"]
         elif source_type == "voltage":
-            value = dat_tmp["V_re"]+1j*dat_tmp["V_im"]
-            element = dat_tmp["Z_re"]+1j*dat_tmp["Z_im"]
+            key_list = ["V_re", "V_im", "Z_re", "Z_im"]
         else:
-            raise CheckError("invalid source type")
+            raise ValueError("invalid source type")
 
-        # check the source type
-        if not np.issubdtype(type(value), np.number):
-            raise CheckError("I/V: current/voltage source value should be a complex number")
-        if not np.issubdtype(type(element), np.number):
-            raise CheckError("G/R: source internal conductance/resistance should be a float")
+        # check type
+        check_data_base.check_dict(
+            "source_type", source_def_tmp,
+            key_list=key_list, can_be_empty=False, sub_type=None,
+        )
+
+        # check data
+        for key_list_tmp in key_list:
+            check_data_base.check_float(key_list_tmp, source_def_tmp[key_list_tmp], is_positive=False, can_be_zero=True)
 
 
 def check_data_problem(data_problem):
@@ -119,21 +111,23 @@ def check_data_problem(data_problem):
     """
 
     # check type
-    if not isinstance(data_problem, dict):
-        raise CheckError("data_problem: problem description should be a dict")
+    key_list = [
+        "freq",
+        "material_def",
+        "source_def",
+    ]
+    check_data_base.check_dict(
+        "data_problem", data_problem,
+        key_list=key_list, can_be_empty=False, sub_type=None,
+    )
 
     # extract field
     freq = data_problem["freq"]
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
 
-    # check type
-    if not np.issubdtype(type(freq), np.floating):
-        raise CheckError("freq: frequency should be a float")
-
-    # check value
-    if not(freq >= 0):
-        raise CheckError("freq: frequency should be positive")
+    # check data
+    check_data_base.check_float("freq", freq, is_positive=True, can_be_zero=True)
 
     # check material and source
     _check_material_def(material_def)
