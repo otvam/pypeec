@@ -5,8 +5,7 @@ Module for checking the solver tolerance data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import numpy as np
-from PyPEEC.lib_utils.error import CheckError
+from PyPEEC.lib_check import check_data_base
 
 
 def _check_solver_options(solver_options):
@@ -14,22 +13,32 @@ def _check_solver_options(solver_options):
     Check the matrix solver options.
     """
 
-    # check the type
-    if not isinstance(solver_options, dict):
-        raise CheckError("solver_options: solver options should be a dict")
+    # check type
+    key_list = [
+        "tolerance",
+        "gmres_options",
+    ]
+    check_data_base.check_dict("solver_options", solver_options, str_key=True, key_list=key_list)
 
     # extract field
+    tolerance = solver_options["tolerance"]
     gmres_options = solver_options["gmres_options"]
 
+    # check type
+    key_list = [
+        "rel_tol",
+        "abs_tol",
+        "n_between_restart",
+        "n_maximum_restart",
+    ]
+    check_data_base.check_dict("gmres_options", gmres_options, str_key=True, key_list=key_list)
+
     # check the data
-    if not (gmres_options["rel_tol"] > 0):
-        raise CheckError("rel_tol: solver relative tolerance should be greater than zero")
-    if not (gmres_options["abs_tol"] > 0):
-        raise CheckError("abs_tol: solver absolute tolerance should be greater than zero")
-    if not (gmres_options["n_between_restart"] >= 1):
-        raise CheckError("n_between_restart: number of iterations between restarts should be greater than zero")
-    if not (gmres_options["n_maximum_restart"] >= 1):
-        raise CheckError("n_maximum_restart: number of restart cycles should be greater than zero")
+    check_data_base.check_float("tolerance", tolerance, is_positive=True, can_be_zero=False)
+    check_data_base.check_float("rel_tol", gmres_options["rel_tol"], is_positive=True, can_be_zero=False)
+    check_data_base.check_float("abs_tol", gmres_options["abs_tol"], is_positive=True, can_be_zero=False)
+    check_data_base.check_integer("n_between_restart", gmres_options["n_between_restart"], is_positive=True, can_be_zero=False)
+    check_data_base.check_integer("n_maximum_restart", gmres_options["n_maximum_restart"], is_positive=True, can_be_zero=False)
 
 
 def _check_condition_options(condition_options):
@@ -37,23 +46,31 @@ def _check_condition_options(condition_options):
     Check the matrix condition number checking options.
     """
 
-    # check the type
-    if not isinstance(condition_options, dict):
-        raise CheckError("solver options should be a dict")
+    # check type
+    key_list = [
+        "check",
+        "tolerance",
+        "norm_options",
+    ]
+    check_data_base.check_dict("condition_options", condition_options, str_key=True, key_list=key_list)
 
     # extract field
     check = condition_options["check"]
     tolerance = condition_options["tolerance"]
     norm_options = condition_options["norm_options"]
 
-    if not isinstance(check, bool):
-        raise CheckError("check: the flag for checking the condition should be a boolean")
-    if not (tolerance > 0):
-        raise CheckError("tolerance: maximum condition number tolerance should be greater than zero")
-    if not (norm_options["t_accuracy"] > 0):
-        raise CheckError("t_accuracy: accuracy parameter for the norm be greater than zero")
-    if not (norm_options["n_iter_max"] > 0):
-        raise CheckError("n_iter_max: maximum number of iterations for the norm should be greater than zero")
+    # check type
+    key_list = [
+        "t_accuracy",
+        "n_iter_max",
+    ]
+    check_data_base.check_dict("norm_options", norm_options, str_key=True, key_list=key_list)
+
+    # check the data
+    check_data_base.check_boolean("tolerance", check)
+    check_data_base.check_float("tolerance", tolerance, is_positive=True, can_be_zero=False)
+    check_data_base.check_integer("t_accuracy", norm_options["t_accuracy"], is_positive=True, can_be_zero=False)
+    check_data_base.check_integer("n_iter_max", norm_options["n_iter_max"], is_positive=True, can_be_zero=False)
 
 
 def check_data_tolerance(data_tolerance):
@@ -65,8 +82,13 @@ def check_data_tolerance(data_tolerance):
     """
 
     # check type
-    if not isinstance(data_tolerance, dict):
-        raise CheckError("data_tolerance: tolerance description should be a dict")
+    key_list = [
+        "green_simplify",
+        "coupling_simplify",
+        "solver_options",
+        "condition_options",
+    ]
+    check_data_base.check_dict("data_tolerance", data_tolerance, str_key=True, key_list=key_list)
 
     # extract field
     green_simplify = data_tolerance["green_simplify"]
@@ -74,17 +96,9 @@ def check_data_tolerance(data_tolerance):
     solver_options = data_tolerance["solver_options"]
     condition_options = data_tolerance["condition_options"]
 
-    # check type
-    if not np.issubdtype(type(green_simplify), np.floating):
-        raise CheckError("green_simplify: voxel distance to simplify the green functions should be a float")
-    if not np.issubdtype(type(coupling_simplify), np.floating):
-        raise CheckError("coupling_simplify: voxel distance to simplify the coupling functions should be a float")
-
-    # check value
-    if not (green_simplify > 0):
-        raise CheckError("green_simplify: voxel distance to simplify the green functions should be positive")
-    if not (coupling_simplify > 0):
-        raise CheckError("coupling_simplify: voxel distance to simplify the coupling functions should be positive")
+    # check data
+    check_data_base.check_float("green_simplify", green_simplify, is_positive=True, can_be_zero=False)
+    check_data_base.check_float("coupling_simplify", coupling_simplify, is_positive=True, can_be_zero=False)
 
     # check solver and condition check options
     _check_solver_options(solver_options)
