@@ -13,10 +13,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def _get_plot_residuum(fig, res_all):
+def _get_plot_residuum(fig, res_all, data_options):
     """
     Plot the final residuum (absolute value) with a histogram.
     """
+
+    # get the data
+    n_bins = data_options["n_bins"]
+    bar_color = data_options["bar_color"]
+    edge_color = data_options["edge_color"]
 
     # activate the figure
     plt.figure(fig)
@@ -33,13 +38,12 @@ def _get_plot_residuum(fig, res_all):
     n_plt = len(res_abs)
 
     # get the bins
-    bins = np.histogram_bin_edges(res_log, bins="auto")
-    bins = np.logspace(min(res_log), max(res_log), num=len(bins))
+    bins = np.logspace(min(res_log), max(res_log), n_bins)
     bins[0] = min(res_abs)
     bins[-1] = max(res_abs)
 
     # plot the histogram
-    plt.hist(res_abs, bins=bins, edgecolor="black")
+    plt.hist(res_abs, bins=bins, edgecolor=edge_color, color=bar_color)
 
     # get log axis
     plt.xscale("log")
@@ -52,10 +56,14 @@ def _get_plot_residuum(fig, res_all):
     plt.title("Solver Residuum / n_tot = %d / n_plt = %d" % (n_tot, n_plt))
 
 
-def _get_plot_convergence(fig, res_iter):
+def _get_plot_convergence(fig, res_iter, data_options):
     """
     Plot the convergence of the iterative matrix solver.
     """
+
+    # get the data
+    color = data_options["color"]
+    marker = data_options["marker"]
 
     # activate the figure
     plt.figure(fig)
@@ -65,7 +73,7 @@ def _get_plot_convergence(fig, res_iter):
 
     # plot the data
     idx_iter = np.arange(1, n_iter+1)
-    plt.semilogy(idx_iter, res_iter, "rs-")
+    plt.semilogy(idx_iter, res_iter, color=color, marker=marker)
 
     # add cosmetics
     plt.grid()
@@ -80,13 +88,17 @@ def get_plot_plotter(fig, solver_status, data_plot):
     """
 
     # get the data
+    plot_type = data_plot["plot_type"]
+    data_options = data_plot["data_options"]
+
+    # get the data
     res_all = solver_status["res_all"]
     res_iter = solver_status["res_iter"]
 
     # get the main plot
-    if data_plot == "convergence":
-        _get_plot_convergence(fig, res_iter)
-    elif data_plot == "residuum":
-        _get_plot_residuum(fig, res_all)
+    if plot_type == "convergence":
+        _get_plot_convergence(fig, res_iter, data_options)
+    elif plot_type == "residuum":
+        _get_plot_residuum(fig, res_all, data_options)
     else:
         raise ValueError("invalid plot type and plot feature")

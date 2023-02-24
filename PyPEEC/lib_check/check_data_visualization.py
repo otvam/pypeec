@@ -104,7 +104,7 @@ def _check_clip_options(clip_options):
         raise CheckError("clip_value: the value of the clip plane should be a float")
 
 
-def _check_data_options_plotter(plot_type, data_options):
+def _check_data_options_plotter_pyvista(plot_type, data_options):
     """
     Check the validity of the data options (for the plotter).
     The data options are controlling the plot content.
@@ -221,6 +221,36 @@ def _check_data_options_plotter(plot_type, data_options):
             raise CheckError("filter_lim: filter limits should be composed of floats")
 
 
+def _check_data_options_plotter_matplotlib(plot_type, data_options):
+    """
+    Check the validity of the data options (for the plotter).
+    The data options are controlling the plot content.
+    Three different types of plots are available:
+        - convergence
+        - residuum
+    """
+
+    # check type
+    if not isinstance(data_options, dict):
+        raise CheckError("data_options: data options should be a dict")
+
+    # check the convergence options
+    if plot_type == "convergence":
+        if not isinstance(data_options["color"], str):
+            raise CheckError("color: color name should be a string")
+        if not isinstance(data_options["marker"], str):
+            raise CheckError("marker: marker name should be a string")
+
+    # check the residuum options
+    if plot_type == "residuum":
+        if not isinstance(data_options["n_bins"], int):
+            raise CheckError("n_bins: number of bins should be an integer")
+        if not isinstance(data_options["edge_color"], str):
+            raise CheckError("edge_color: color name should be a string")
+        if not isinstance(data_options["bar_color"], str):
+            raise CheckError("bar_color: color name should be a string")
+
+
 def _check_data_options_viewer(plot_type, data_options):
     """
     Check the validity of the data options (for the viewer).
@@ -261,12 +291,23 @@ def _check_data_plotter_matplotlib(data_plot):
     """
 
     # check type
-    if not isinstance(data_plot, str):
-        raise CheckError("data_plot: plot data should be a string")
+    if not isinstance(data_plot, dict):
+        raise CheckError("data_plot: plot data should be a dict")
+
+    # get the data
+    plot_type = data_plot["plot_type"]
+    data_options = data_plot["data_options"]
+
+    # check type
+    if not isinstance(plot_type, str):
+        raise CheckError("plot_type: plot type should be a string")
 
     # check value
-    if data_plot not in ["convergence", "residuum"]:
+    if plot_type not in ["convergence", "residuum"]:
         raise CheckError("data_plot: specified data plot is invalid")
+    
+    # check data
+    _check_data_options_plotter_matplotlib(plot_type, data_options)
 
 
 def _check_data_plotter_pyvista(data_plot):
@@ -293,7 +334,7 @@ def _check_data_plotter_pyvista(data_plot):
         raise CheckError("plot_type: specified plot type is invalid")
 
     # check data
-    _check_data_options_plotter(plot_type, data_options)
+    _check_data_options_plotter_pyvista(plot_type, data_options)
     _check_clip_options(clip_options)
     _check_plot_options(plot_options)
 

@@ -812,7 +812,13 @@
                 600
             ]
         },
-        "data_plot": "convergence"
+        "data_plot": {
+            "plot_type": "convergence",
+            "data_options": {
+                "color": "red",
+                "marker": "o"
+            }
+        }
     },
     {
         "plot_framework": "matplotlib",
@@ -824,6 +830,13 @@
                 600
             ]
         },
-        "data_plot": "residuum"
+        "data_plot": {
+            "plot_type": "residuum",
+            "data_options": {
+                "n_bins": 10,
+                "bar_color": "blue",
+                "edge_color": "black"
+            }
+        }
     }
 ]

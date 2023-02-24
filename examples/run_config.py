@@ -141,6 +141,41 @@ def _get_data_plotter_material(name):
     return data
 
 
+def _get_data_plotter_convergence(name):
+    """
+    Plot options for the convergence description.
+    The result is plotted on a 2D plot.
+    This structure is used by the plotter.
+    """
+
+    data_options = {
+        "color": "red",  # color of the plot
+        "marker": "o",  # marker shape
+    }
+
+    data = _get_data_matplotlib("convergence", data_options, name)
+
+    return data
+
+
+def _get_data_plotter_residuum(name):
+    """
+    Plot options for the convergence description.
+    The result is plotted on a 2D plot.
+    This structure is used by the plotter.
+    """
+
+    data_options = {
+        "n_bins": 10,  # number of bins
+        "bar_color": "blue",  # fill color of the bins
+        "edge_color": "black",  # edge color of the bins
+    }
+
+    data = _get_data_matplotlib("residuum", data_options, name)
+
+    return data
+
+
 def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
     """
     Plot options for a scalar variable (scalar plot).
@@ -207,7 +242,7 @@ def _get_data_pyvista(plot_type, data_options, name):
     return data
 
 
-def _get_data_matplotlib(data_plot, name):
+def _get_data_matplotlib(plot_type, data_options, name):
     """
     Get the options defining a single Matplotlib plot.
     This structure is used by the plotter.
@@ -216,8 +251,11 @@ def _get_data_matplotlib(data_plot, name):
     data = {
         "plot_framework": "matplotlib",
         "data_window": _get_data_window(name),
-        "data_plot": data_plot,
-        }
+        "data_plot": {
+            "plot_type": plot_type,
+            "data_options": data_options,
+        },
+    }
 
     return data
 
@@ -308,8 +346,8 @@ def get_data_plotter():
         _get_data_plotter_scalar("point", "H_norm_abs", 1e0, "A/m", "Mag. Field Norm"),
         _get_data_plotter_arrow("point", "H_norm_re", "H_vec_re", 1e0, "A/m", "Re. Mag. Field"),
         _get_data_plotter_arrow("point", "H_norm_im", "H_vec_im", 1e0, "A/m", "Im. Mag. Field"),
-        _get_data_matplotlib("convergence", "Convergence"),
-        _get_data_matplotlib("residuum", "Residuum"),
+        _get_data_plotter_convergence("Convergence"),
+        _get_data_plotter_residuum("Residuum"),
     ]
 
     return data_plotter
