@@ -43,9 +43,13 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
     Prepare the matrix for the multiplication.
     """
 
+    # get the operator size
+    n_out = len(idx_out)
+    n_in = len(idx_in)
+
     # get the matrix
     if MATRIX_MULTIPLICATION == "FFT":
-        mat = multiply_fft.get_prepare(mat, matrix_type)
+        (mat, idx_in, idx_out) = multiply_fft.get_prepare(idx_out, idx_in, mat, matrix_type)
     elif MATRIX_MULTIPLICATION == "DIRECT":
         mat = multiply_direct.get_prepare(idx_out, idx_in, mat, matrix_type)
     else:
@@ -57,7 +61,7 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
         return res_out
 
     # corresponding linear operator
-    op = sla.LinearOperator((len(idx_out), len(idx_in)), matvec=fct)
+    op = sla.LinearOperator((n_out, n_in), matvec=fct)
 
     return op
 

@@ -14,33 +14,29 @@ import numpy as np
 from PyPEEC.lib_matrix import fourier_transform
 
 
-def _get_prepare_vector(nx, ny, nz, nd, idx_in, vec_in):
+def _get_tensor_sign(matrix_type):
     """
-    Prepare a vector for the circulant FFT multiplication.
-    """
-
-    # expand the vector into a vector with all the dimensions
-    vec_all = np.zeros(nx*ny*nz*nd, dtype=np.complex_)
-    vec_all[idx_in] = vec_in
-
-    # reshape the vector into a tensor
-    vec_all = vec_all.reshape((nx, ny, nz, nd), order="F")
-
-    return vec_all
-
-
-def _get_extract_vector(idx_out, vec_all):
-    """
-    Extract a vector from the circulant FFT multiplication result.
+    Get the signs for the different tensor blocks.
     """
 
-    # flatten the tensor into a vector
-    vec_all = vec_all.flatten(order="F")
+    if matrix_type == "single":
+        sign = np.ones((2, 2, 2, 1), dtype=np.int_)
+    elif matrix_type == "diag":
+        sign = np.ones((2, 2, 2, 3), dtype=np.int_)
+    elif matrix_type == "cross":
+        sign = np.empty((2, 2, 2, 3), dtype=np.int_)
+        sign[0, 0, 0, :] = [+1, +1, +1]
+        sign[1, 0, 0, :] = [-1, +1, +1]
+        sign[0, 1, 0, :] = [+1, -1, +1]
+        sign[0, 0, 1, :] = [+1, +1, -1]
+        sign[1, 1, 0, :] = [-1, -1, +1]
+        sign[1, 0, 1, :] = [-1, +1, -1]
+        sign[0, 1, 1, :] = [+1, -1, -1]
+        sign[1, 1, 1, :] = [-1, -1, -1]
+    else:
+        raise ValueError("invalid matrix type")
 
-    # select the elements
-    res_out = vec_all[idx_out]
-
-    return res_out
+    return sign
 
 
 def _get_tensor_circulant(mat, sign):
@@ -81,7 +77,7 @@ def _get_tensor_circulant(mat, sign):
     return mat_fft
 
 
-def get_prepare(mat, matrix_type):
+def get_prepare(idx_out, idx_in, mat, matrix_type):
     """
     Construct a circulant tensor from a 4D tensor.
     The circulant tensor is constructed for the first 3D.
@@ -91,27 +87,16 @@ def get_prepare(mat, matrix_type):
     """
 
     # get the sign that will be applied to the different blocks of the tensor
-    if matrix_type == "single":
-        sign = np.ones((2, 2, 2, 1), dtype=np.int_)
-    elif matrix_type == "diag":
-        sign = np.ones((2, 2, 2, 3), dtype=np.int_)
-    elif matrix_type == "cross":
-        sign = np.empty((2, 2, 2, 3), dtype=np.int_)
-        sign[0, 0, 0, :] = [+1, +1, +1]
-        sign[1, 0, 0, :] = [-1, +1, +1]
-        sign[0, 1, 0, :] = [+1, -1, +1]
-        sign[0, 0, 1, :] = [+1, +1, -1]
-        sign[1, 1, 0, :] = [-1, -1, +1]
-        sign[1, 0, 1, :] = [-1, +1, -1]
-        sign[0, 1, 1, :] = [+1, -1, -1]
-        sign[1, 1, 1, :] = [-1, -1, -1]
-    else:
-        raise ValueError("invalid matrix type")
+    sign = _get_tensor_sign(matrix_type)
 
     # get the FFT circulant tensor
     mat_fft = _get_tensor_circulant(mat, sign)
 
-    return mat_fft
+    # get the indices
+    idx_in = np.unravel_index(idx_in, mat.shape, order="F")
+    idx_out = np.unravel_index(idx_out, mat.shape, order="F")
+
+    return mat_fft, idx_in, idx_out
 
 
 def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
@@ -140,8 +125,11 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
     ny = int(ny/2)
     nz = int(nz/2)
 
-    # prepare the vector (transform the vector into a tensor)
-    vec_all = _get_prepare_vector(nx, ny, nz, nd, idx_in, vec_in)
+    # create a tensor for the vector
+    vec_all = np.zeros((nx, ny, nz, nd), dtype=np.complex_)
+
+    # assign the elements from the tensor indices
+    vec_all[idx_in] = vec_in
 
     # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
     vec_all_fft = fourier_transform.get_fft_tensor(vec_all, True)
@@ -169,7 +157,7 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
     # the result is in the first block of the matrix
     res_all = res_all[0:nx, 0:ny, 0:nz, :]
 
-    # extract the vector (transform the tensor into a vector)
-    res_out = _get_extract_vector(idx_out, res_all)
+    # select the elements from the tensor indices
+    res_out = res_all[idx_out]
 
     return res_out
