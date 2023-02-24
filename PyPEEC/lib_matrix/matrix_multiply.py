@@ -49,7 +49,7 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
 
     # get the matrix
     if MATRIX_MULTIPLICATION == "FFT":
-        (mat, idx_in, idx_out) = multiply_fft.get_prepare(idx_out, idx_in, mat, matrix_type)
+        (idx_in, idx_out, mat) = multiply_fft.get_prepare(idx_out, idx_in, mat, matrix_type)
     elif MATRIX_MULTIPLICATION == "DIRECT":
         mat = multiply_direct.get_prepare(idx_out, idx_in, mat, matrix_type)
     else:

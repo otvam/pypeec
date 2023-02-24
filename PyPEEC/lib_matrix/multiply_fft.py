@@ -96,7 +96,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     idx_in = np.unravel_index(idx_in, mat.shape, order="F")
     idx_out = np.unravel_index(idx_out, mat.shape, order="F")
 
-    return mat_fft, idx_in, idx_out
+    return idx_in, idx_out, mat_fft
 
 
 def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
@@ -134,17 +134,13 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
     # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
     vec_all_fft = fourier_transform.get_fft_tensor(vec_all, True)
 
-    # init the results
-    res_all_fft = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.complex_)
-
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
     if matrix_type == "single":
-        res_all_fft[:, :, :, 0] = mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 0]
+        res_all_fft = mat_fft*vec_all_fft
     elif matrix_type == "diag":
-        res_all_fft[:, :, :, 0] = mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 0]
-        res_all_fft[:, :, :, 1] = mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 1]
-        res_all_fft[:, :, :, 2] = mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 2]
+        res_all_fft = mat_fft*vec_all_fft
     elif matrix_type == "cross":
+        res_all_fft = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.complex_)
         res_all_fft[:, :, :, 0] = +mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 1]+mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 2]
         res_all_fft[:, :, :, 1] = -mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 0]+mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 2]
         res_all_fft[:, :, :, 2] = -mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 0]-mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 1]
