@@ -19,7 +19,7 @@ def _get_prepare_vector(nx, ny, nz, nd, idx_in, vec_in):
     Prepare a vector for the circulant FFT multiplication.
     """
 
-    # expand the vector into a vector with all the dimention
+    # expand the vector into a vector with all the dimensions
     vec_all = np.zeros(nx*ny*nz*nd, dtype=np.complex_)
     vec_all[idx_in] = vec_in
 
