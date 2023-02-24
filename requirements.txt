@@ -1,15 +1,16 @@
 # Definition of the Python Virtual Environment.
 #
+# WARNING: The GPU libraries (CUDA, CuPy) should be installed separately.
+#          These libraries are not included in the Python Virtual Environment.
+#          The GPU support is extremely platform/version dependent.
+#
 # (c) Thomas Guillod - Dartmouth College
 
-# parsing files
+# default packages
 PyYAML>=6.0 # YAML parser
-
-# standard numpy and scipy
 numpy>=1.24 # used everywhere
 scipy>=1.9 # used everywhere
 
-# package for visualization
 Pillow>=9.4 # used by the mesher
 matplotlib>=3.6 # used by the viewer, and plotter
 vtk>=9.2 # used by the mesher, viewer, and plotter

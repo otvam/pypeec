@@ -1,5 +1,9 @@
 # Definition of the Conda Environment.
 #
+# WARNING: The GPU libraries (CUDA, CuPy) should be installed separately.
+#          These libraries are not included in the Conda Environment.
+#          The GPU support is extremely platform/version dependent.
+#
 # (c) Thomas Guillod - Dartmouth College
 
 name: PyPEEC

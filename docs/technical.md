@@ -3,27 +3,38 @@
 ## Dependencies
 
 **PyPEEC** is entirely programmed in **Python 3** and is using the following packages:
-* PyYAML
-* NumPy and SciPy
-* scikit-umfpack (for the solver, optional)
-* pyFFTW (for the solver, optional)
-* PyVista and Pillow (for the mesher)
-* Matplotlib, PyVista, PyVistaQt, QtPy, PyQt5 (for the viewer and plotter)
+* PyYAML (used everywhere)
+* NumPy (used everywhere)
+* SciPy (used everywhere)
+* Pillow (for the mesher)
+* VTK, PyVista (for the mesher, viewer, and plotter)
+* Matplotlib (for the viewer and plotter)
+* PyVistaQt, QtPy, PyQt5 (for the viewer and plotter)
 
-PyPEEC is tested on Linux x64 but should run on other platforms.
-The optional UMFPACK solver is known to be difficult to install on MS Windows.
-It should be noted that some versions of FFTW are compiled without multithreading support.
-The interactions between Qt/PyVista/Matplotlib are likely be sensitive to the environment.
+The following optional packages are used for speeding up the solver:
+* scikit-umfpack (for the solver)
+* pyFFTW (for the solver)
+* CuPy (for the solver)
+
+PyPEEC is tested on Linux x86/x64 but should run on other platforms.
+The following configurations have been tested:
+* RedHat 7.9 on x86/x64
+* Ubuntu 20.04 on x86/x64
+* Ubuntu 22.04 on x86/x64
+* NVIDIA T4 Tensor GPU
 
 # Optimization
 
 The code is reasonably optimized, leveraging NumPy and SciPy for the heavy operations.
 All the code is vectorized, no loops are used for the array operations.
 Sparse matrix algebra is used wherever appropriate to speed up the code and limit the memory consumption.
-The optional libraries FFTW and UMFPACK can be used to speed up the solver.
-
-However, this code is pure Python and advanced optimizations (MKL, GPU, etc.) are not implemented.
+However, this code is pure Python and advanced optimizations (MKL, MPI, etc.) are not implemented.
 Moreover, the memory consumption is not heavily optimized (no customized garbage collection).
+
+The following optional optimizations are available:
+* FFTW can be used for computing FFTs (default is SciPy)
+* UMFPACK can be used for factorizing sparse matrices (default is SuperLU)
+* CuPy can be used for computing FFTs and matrix multiplications with GPUs (default is CPU)
 
 ## Configuration
 
@@ -46,7 +57,20 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 * The tests are checking that the examples are running correctly.
 * Only integration tests currently exist (no unit tests).
 
-# Warnings
+# Library Warnings
+
+> **Warning**: The interactions between **Qt/PyVista/Matplotlib** are likely be sensitive to the environment.
+> Therefore, the Qt dependency is minimized and insulated from the rest of the code.
+
+> **Warning**: The optional **GPU libraries** (CUDA, CuPy) should be installed separately.
+> These libraries are not included in the package dependencies and environments. 
+> The GPU support is extremely platform/version dependent.
+
+> **Warning**: The optional **UMFPACK** library is known to be difficult to install on MS Windows.
+
+> **Warning**: The optional **FFTW** library should be compiled with multithreading support.
+
+# General Warnings
 
 > **Warning**: For problems with magnetic domains, the preconditioner is not heavily optimized.
 > This might lead to a very slow convergence of the matrix solver.

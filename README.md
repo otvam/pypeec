@@ -5,6 +5,7 @@
 **PyPEEC** is a **3D magnetic field solver** with the following characteristics:
 * 3D voxel geometry
 * PEEC method with FFT acceleration
+* GPU acceleration is available
 * Pure Python implementation
 * Conductive and magnetic domains
 * Frequency domain solution
