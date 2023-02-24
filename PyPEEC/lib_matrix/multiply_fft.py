@@ -72,7 +72,7 @@ def _get_tensor_circulant(mat, sign):
     mat_circulant[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz, :] = mat[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1, :]*sign[1:2, 1:2, 1:2, :]
 
     # get the FFT of the circulant tensor
-    mat_fft = fourier_transform.get_fft_tensor(mat_circulant, False)
+    mat_fft = fourier_transform.get_fft_tensor_keep(mat_circulant)
 
     return mat_fft
 
@@ -132,7 +132,7 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
     vec_all[idx_in] = vec_in
 
     # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
-    vec_all_fft = fourier_transform.get_fft_tensor(vec_all, True)
+    vec_all_fft = fourier_transform.get_fft_tensor_expand(vec_all)
 
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
     if matrix_type == "single":
@@ -148,10 +148,7 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
         raise ValueError("invalid matrix type")
 
     # compute the iFFT
-    res_all = fourier_transform.get_ifft_tensor(res_all_fft, False)
-
-    # the result is in the first block of the matrix
-    res_all = res_all[0:nx, 0:ny, 0:nz, :]
+    res_all = fourier_transform.get_ifft_tensor(res_all_fft)
 
     # select the elements from the tensor indices
     res_out = res_all[idx_out]
