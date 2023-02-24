@@ -10,12 +10,17 @@ Three different types of matrices are supported:
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import numpy as np
 from PyPEEC.lib_utils import config
 from PyPEEC.lib_matrix import fourier_transform
 
 # get GPU config
 USE_GPU = config.USE_GPU
+
+# load the GPU and CPU libraries
+if USE_GPU:
+    import cupy as cp
+else:
+    import numpy as cp
 
 
 def _get_tensor_sign(matrix_type):
@@ -24,11 +29,11 @@ def _get_tensor_sign(matrix_type):
     """
 
     if matrix_type == "single":
-        sign = np.ones((2, 2, 2, 1), dtype=np.int_)
+        sign = cp.ones((2, 2, 2, 1), dtype=cp.int_)
     elif matrix_type == "diag":
-        sign = np.ones((2, 2, 2, 3), dtype=np.int_)
+        sign = cp.ones((2, 2, 2, 3), dtype=cp.int_)
     elif matrix_type == "cross":
-        sign = np.empty((2, 2, 2, 3), dtype=np.int_)
+        sign = cp.empty((2, 2, 2, 3), dtype=cp.int_)
         sign[0, 0, 0, :] = [+1, +1, +1]
         sign[1, 0, 0, :] = [-1, +1, +1]
         sign[0, 1, 0, :] = [+1, -1, +1]
@@ -52,11 +57,15 @@ def _get_tensor_circulant(mat, sign):
     The output FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
     """
 
+    # load the data to the GPU
+    if USE_GPU:
+        mat = cp.asarray(mat)
+
     # get the tensor size
     (nx, ny, nz, nd) = mat.shape
 
     # init the circulant tensor
-    mat_circulant = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.float_)
+    mat_circulant = cp.zeros((2*nx, 2*ny, 2*nz, nd), dtype=cp.float_)
 
     # cube none
     mat_circulant[0:nx, 0:ny, 0:nz, :] = mat[0:nx, 0:ny, 0:nz, :]*sign[0:1, 0:1, 0:1, :]
@@ -96,9 +105,14 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     # get the FFT circulant tensor
     mat_fft = _get_tensor_circulant(mat, sign)
 
+    # load the data to the GPU
+    if USE_GPU:
+        idx_in = cp.asarray(idx_in)
+        idx_out = cp.asarray(idx_out)
+
     # get the indices
-    idx_in = np.unravel_index(idx_in, mat.shape, order="F")
-    idx_out = np.unravel_index(idx_out, mat.shape, order="F")
+    idx_in = cp.unravel_index(idx_in, mat.shape, order="F")
+    idx_out = cp.unravel_index(idx_out, mat.shape, order="F")
 
     return idx_in, idx_out, mat_fft
 
@@ -128,8 +142,12 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
     ny = int(ny/2)
     nz = int(nz/2)
 
+    # load the data to the GPU
+    if USE_GPU:
+        vec_in = cp.array(vec_in)
+
     # create a tensor for the vector
-    vec_all = np.zeros((nx, ny, nz, nd), dtype=np.complex_)
+    vec_all = cp.zeros((nx, ny, nz, nd), dtype=cp.complex_)
 
     # assign the elements from the tensor indices
     vec_all[idx_in] = vec_in
@@ -143,7 +161,7 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
     elif matrix_type == "diag":
         res_all_fft = mat_fft*vec_all_fft
     elif matrix_type == "cross":
-        res_all_fft = np.zeros((2*nx, 2*ny, 2*nz, nd), dtype=np.complex_)
+        res_all_fft = cp.zeros((2*nx, 2*ny, 2*nz, nd), dtype=cp.complex_)
         res_all_fft[:, :, :, 0] = +mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 1]+mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 2]
         res_all_fft[:, :, :, 1] = -mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 0]+mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 2]
         res_all_fft[:, :, :, 2] = -mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 0]-mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 1]
@@ -155,5 +173,9 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
 
     # select the elements from the tensor indices
     res_out = res_all[idx_out]
+
+    # unload the data from the GPU
+    if USE_GPU:
+        res_out = cp.asnumpy(res_out)
 
     return res_out
