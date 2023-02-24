@@ -8,13 +8,12 @@ Three different types of matrices are supported:
     - diag: tensor representing a block diagonal matrix (number of dimensions = 3)
     - cross: tensor representing a block off-diagonal matrix (number of dimensions = 3)
 
-A SciPy linear operator is returned for performing the matrix-vector multiplication.
+A matrix-vector operator is returned for performing the matrix-vector multiplication.
 """
 
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import scipy.sparse.linalg as sla
 from PyPEEC.lib_matrix import multiply_fft
 from PyPEEC.lib_matrix import multiply_direct
 from PyPEEC.lib_utils import config
@@ -43,10 +42,6 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
     Prepare the matrix for the multiplication.
     """
 
-    # get the operator size
-    n_out = len(idx_out)
-    n_in = len(idx_in)
-
     # get the matrix
     if MATRIX_MULTIPLICATION == "FFT":
         (idx_in, idx_out, mat) = multiply_fft.get_prepare(idx_out, idx_in, mat, matrix_type)
@@ -56,12 +51,9 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
         raise ValueError("invalid multiplication library")
 
     # function describing the matrix-vector multiplication
-    def fct(vec_in):
+    def op(vec_in):
         res_out = _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type)
         return res_out
-
-    # corresponding linear operator
-    op = sla.LinearOperator((n_out, n_in), matvec=fct)
 
     return op
 

@@ -4,7 +4,7 @@ Different functions for handling creating the PEEC dense matrices:
     - inductance and potential matrix
     - magnetic-electric coupling matrices
 
-SciPy linear operators are returned for performing the matrix-vector multiplications.
+Function operators are returned for performing the matrix-vector multiplications.
 The multiplication can either be done with the dense matrices or with FFT circulant tensors.
 """
 
@@ -13,7 +13,6 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import scipy.sparse as sps
-import scipy.sparse.linalg as sla
 from PyPEEC.lib_matrix import matrix_multiply
 
 
@@ -69,18 +68,15 @@ def _get_face_voxel_matrix(n, idx_v, idx_f, A_net):
     return A_fv_net, idx_fv
 
 
-def _get_operator_zeros(idx_out, idx_in):
+def _get_operator_zeros(idx_out):
     """
     Get a linear operator returning zeros.
     """
 
     # function returning zeros
-    def fct(_):
+    def op(_):
         var_out = np.zeros(len(idx_out), dtype=np.complex_)
         return var_out
-
-    # fake operator
-    op = sla.LinearOperator((len(idx_out), len(idx_in)), matvec=fct)
 
     return op
 
@@ -139,7 +135,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     # check if the matrix is required
     if not has_domain:
         L_vec = np.zeros(len(idx_f), dtype=np.float_)
-        L_op = _get_operator_zeros(idx_f, idx_f)
+        L_op = _get_operator_zeros(idx_f)
         return L_vec, L_op
 
     # vacuum permeability
@@ -186,7 +182,7 @@ def get_P_matrix(n, d, idx_v, G_self, G_mutual, has_domain):
     # check if the matrix is required
     if not has_domain:
         P_vec = np.zeros(len(idx_v), dtype=np.float_)
-        P_op = _get_operator_zeros(idx_v, idx_v)
+        P_op = _get_operator_zeros(idx_v)
         return P_vec, P_op
 
     # vacuum permeability
@@ -243,8 +239,8 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
 
     # check if the matrix is required
     if not has_coupling:
-        K_op_c = _get_operator_zeros(idx_fc, idx_fm)
-        K_op_m = _get_operator_zeros(idx_fm, idx_fc)
+        K_op_c = _get_operator_zeros(idx_fc)
+        K_op_m = _get_operator_zeros(idx_fm)
         return K_op_c, K_op_m
 
     # get the face voxel incidence matrix
@@ -260,17 +256,13 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
     K_op_m_tmp = matrix_multiply.get_operator_cross(idx_fvm, idx_fvc, -1*K_tsr)
 
     # function describing the coupling from the magnetic to the electric faces
-    def fct_c(var_f_m):
+    def K_op_c(var_f_m):
         var_f_c = A_vf_net_c*K_op_c_tmp(A_fv_net_m*var_f_m)
         return var_f_c
 
     # function describing the coupling from the electric to the magnetic faces
-    def fct_m(var_f_c):
+    def K_op_m(var_f_c):
         var_f_m = A_vf_net_m*K_op_m_tmp(A_fv_net_c*var_f_c)
         return var_f_m
-
-    # corresponding linear operator
-    K_op_c = sla.LinearOperator((len(idx_fc), len(idx_fm)), matvec=fct_c)
-    K_op_m = sla.LinearOperator((len(idx_fm), len(idx_fc)), matvec=fct_m)
 
     return K_op_c, K_op_m
