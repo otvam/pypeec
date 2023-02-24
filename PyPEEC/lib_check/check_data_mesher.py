@@ -36,7 +36,7 @@ def _check_voxel_indices(n, domain_def):
     nv = nx*ny*nz
 
     # check the indices
-    check_data_base.check_index_array("domain_def", idx_all, nv)
+    check_data_base.check_index_array("domain_def", idx_all, bnd=nv, can_be_empty=False)
 
 
 def _check_png_domain_color(domain_color):

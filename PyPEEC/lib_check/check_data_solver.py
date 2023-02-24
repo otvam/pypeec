@@ -6,7 +6,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
-from PyPEEC.lib_utils.error import CheckError
 from PyPEEC.lib_check import check_data_base
 
 
@@ -15,15 +14,8 @@ def _get_domain_indices(domain_list, domain_def):
     Get indices from a list of domain names.
     """
 
-    # init array
     idx = np.array([], dtype=np.int_)
-
-    # find the indices
     for tag in domain_list:
-        # check that the domain exist
-        check_data_base.check_choice("domain_list", tag, domain_def)
-
-        # append indices
         idx = np.append(idx, domain_def[tag])
 
     return idx
@@ -40,6 +32,7 @@ def _get_material_idx(material_def, domain_def):
     material_idx = {}
     idx_c = np.array([], dtype=np.int_)
     idx_m = np.array([], dtype=np.int_)
+    domain_cm = []
 
     for tag, dat_tmp in material_def.items():
         # extract the data
@@ -48,6 +41,9 @@ def _get_material_idx(material_def, domain_def):
 
         # get indices
         idx = _get_domain_indices(domain_list, domain_def)
+
+        # append domain names
+        domain_cm += domain_list
 
         # assign the indices
         if material_type == "electric":
@@ -61,7 +57,7 @@ def _get_material_idx(material_def, domain_def):
         else:
             raise ValueError("invalid material type")
 
-    return idx_c, idx_m, material_idx
+    return domain_cm, idx_c, idx_m, material_idx
 
 
 def _get_source_idx(source_def, domain_def):
@@ -73,6 +69,7 @@ def _get_source_idx(source_def, domain_def):
     # init
     source_idx = {}
     idx_s = np.array([], dtype=np.int_)
+    domain_s = []
 
     for tag, dat_tmp in source_def.items():
         # extract the data
@@ -84,6 +81,9 @@ def _get_source_idx(source_def, domain_def):
 
         # append indices
         idx_s = np.append(idx_s, idx)
+
+        # append domain names
+        domain_s += domain_list
 
         # get the source value
         if source_type == "current":
@@ -97,49 +97,68 @@ def _get_source_idx(source_def, domain_def):
         else:
             raise ValueError("invalid source type")
 
-    return idx_s, source_idx
+    return domain_s, idx_s, source_idx
 
 
-def _check_indices(idx_c, idx_m, idx_s):
+def _check_names(domain_cm, domain_s, domain_def):
+    """
+    Check the validity of the domain names.
+    """
+
+    # check the material domain name
+    for tag in domain_cm:
+        check_data_base.check_choice("material domain name", tag, domain_def)
+
+    # check the source domain name
+    for tag in domain_s:
+        check_data_base.check_choice("source domain name", tag, domain_def)
+
+
+def _check_indices(n, idx_c, idx_m, idx_s):
     """
     Check that the material and source indices are valid.
     The indices should be unique and compatible with the voxel size.
     The source indices should be included in the electric indices.
     """
 
-    # check for unicity
-    if not (len(np.unique(idx_c)) == len(idx_c)):
-        raise CheckError("electric indices should be unique")
-    if not (len(np.unique(idx_m)) == len(idx_m)):
-        raise CheckError("magnetic indices should be unique")
-    if not (len(np.unique(idx_s)) == len(idx_s)):
-        raise CheckError("source indices should be unique")
+    # extract the voxel data
+    (nx, ny, nz) = n
+    nv = nx*ny*nz
+
+    # check the indices
+    check_data_base.check_index_array("index electric", idx_c, bnd=nv, can_be_empty=False)
+    check_data_base.check_index_array("index magnetic", idx_m, bnd=nv, can_be_empty=True)
+    check_data_base.check_index_array("index source", idx_s, bnd=nv, can_be_empty=False)
 
     # check for invalid material
-    if len(np.intersect1d(idx_c, idx_m)) != 0:
-        raise CheckError("magnetic and electric indices should be unique")
-
-    # check that the problem is not empty
-    if len(idx_c) == 0:
-        raise CheckError("electric indices should not be empty")
-    if len(idx_s) == 0:
-        raise CheckError("sources indices should not be empty")
+    cond = len(np.intersect1d(idx_c, idx_m)) == 0
+    check_data_base.check_assert("index overlap", cond, "magnetic and electric indices should not overlap")
 
     # check that the terminal indices are electric indices
-    if not np.all(np.in1d(idx_s, idx_c)):
-        raise CheckError("source indices are not included in electric indices")
+    cond = np.all(np.in1d(idx_s, idx_c))
+    check_data_base.check_assert("index overlap", cond, "source indices should overlap with electric indices")
+
+    # check that the terminal indices are electric indices
+    cond = np.all(np.logical_not(np.in1d(idx_s, idx_m)))
+    check_data_base.check_assert("index overlap", cond, "source indices should not overlap with magnetic indices")
 
 
-def _check_source_graph(idx_c, idx_s, connection_def):
+def _check_source_graph(idx_c, idx_m, idx_s, connection_def):
     """
     Check that there is at least one source per connected component.
     A connected components without a source would lead to a singular problem.
     """
 
     for idx_graph in connection_def:
-        if len(np.intersect1d(idx_graph, idx_c)) > 0:
-            if len(np.intersect1d(idx_graph, idx_s)) == 0:
-                raise CheckError("a connected component does not include at least one source")
+        has_magnetic = len(np.intersect1d(idx_graph, idx_m)) > 0
+        has_electric = len(np.intersect1d(idx_graph, idx_c)) > 0
+        has_source = len(np.intersect1d(idx_graph, idx_s)) > 0
+
+        cond = (not has_electric) or has_source
+        check_data_base.check_assert("index overlap", cond, "electric components should include at least one source")
+
+        cond = (not has_magnetic) or (not has_source)
+        check_data_base.check_assert("index overlap", cond, "magnetic components should not include sources")
 
 
 def get_data_solver(data_voxel, data_problem, data_tolerance):
@@ -156,18 +175,22 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     source_def = data_problem["source_def"]
 
     # extract field
+    n = data_voxel["n"]
     domain_def = data_voxel["domain_def"]
     connection_def = data_voxel["connection_def"]
 
     # get material and source indices
-    (idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
-    (idx_s, source_idx) = _get_source_idx(source_def, domain_def)
+    (domain_cm, idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
+    (domain_s, idx_s, source_idx) = _get_source_idx(source_def, domain_def)
+
+    # check the domain name
+    _check_names(domain_cm, domain_s, domain_def)
 
     # check indices
-    _check_indices(idx_c, idx_m, idx_s)
+    _check_indices(n, idx_c, idx_m, idx_s)
 
     # check graph
-    _check_source_graph(idx_c, idx_s, connection_def)
+    _check_source_graph(idx_c, idx_m, idx_s, connection_def)
 
     # check the existence of magnetic domains
     has_electric = len(idx_c) > 0
