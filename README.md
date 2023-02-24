@@ -43,7 +43,7 @@ The FFT-accelerated PEEC method with voxels has been first described and impleme
 * R. Torchio, IEEE TPEL, 10.1109/TPEL.2021.3092431
 * R. Torchio, https://github.com/UniPD-DII-ETCOMP/FFT-PEEC
 
-Other interesting papers and code about similar methods:
+Other interesting papers and codes about similar methods:
 * A. Yucel, IEEE TMTT, 10.1109/TMTT.2017.2785842
 * P. Bettini, IOP, 10.1088/1361-6587/abce8f
 * N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864

@@ -37,8 +37,8 @@ FFT_OPTIONS:
     FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW
 
 # GPU options
-#   - if false, the GPU is are not used
-#   - if true, the GPU is used for some operations
+#   - if false, GPUs are not used and not required
+#   - if true, GPUs are used for some operations
 USE_GPU: false
 
 # matrix factorization options
