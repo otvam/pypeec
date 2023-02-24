@@ -53,12 +53,12 @@ def _get_plot_options(pl, grid, voxel, point, plot_options):
             line_width=plot_options["geom_thickness"]
         )
 
-    if plot_options["cloud_plot"] and (point.n_cells > 0):
+    if plot_options["point_plot"] and (point.n_cells > 0):
         pl.add_mesh(
             point,
-            color=plot_options["cloud_color"],
-            point_size=plot_options["cloud_size"],
-            opacity=plot_options["cloud_opacity"],
+            color=plot_options["point_color"],
+            point_size=plot_options["point_size"],
+            opacity=plot_options["point_opacity"],
             render_points_as_spheres=True,
         )
 

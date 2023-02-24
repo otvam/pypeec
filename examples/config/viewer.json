@@ -31,10 +31,10 @@
                 "geom_thickness": 1.0,
                 "geom_color": "black",
                 "geom_opacity": 0.5,
-                "cloud_plot": true,
-                "cloud_color": "red",
-                "cloud_size": 5.0,
-                "cloud_opacity": 0.5
+                "point_plot": true,
+                "point_color": "red",
+                "point_size": 5.0,
+                "point_opacity": 0.5
             }
         }
     },
@@ -70,10 +70,10 @@
                 "geom_thickness": 1.0,
                 "geom_color": "black",
                 "geom_opacity": 0.5,
-                "cloud_plot": true,
-                "cloud_color": "red",
-                "cloud_size": 5.0,
-                "cloud_opacity": 0.5
+                "point_plot": true,
+                "point_color": "red",
+                "point_size": 5.0,
+                "point_opacity": 0.5
             }
         }
     },
@@ -111,10 +111,10 @@
                 "geom_thickness": 1.0,
                 "geom_color": "black",
                 "geom_opacity": 0.5,
-                "cloud_plot": true,
-                "cloud_color": "red",
-                "cloud_size": 5.0,
-                "cloud_opacity": 0.5
+                "point_plot": true,
+                "point_color": "red",
+                "point_size": 5.0,
+                "point_opacity": 0.5
             }
         }
     }

@@ -93,11 +93,7 @@ def check_data_problem(data_problem):
     """
 
     # check type
-    key_list = [
-        "freq",
-        "material_def",
-        "source_def",
-    ]
+    key_list = ["freq", "material_def", "source_def"]
     check_data_base.check_dict("data_problem", data_problem, key_list=key_list)
 
     # extract field

@@ -6,6 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from PyPEEC.lib_utils.error import CheckError
+from PyPEEC.lib_check import check_data_base
 
 
 def _check_data_window(data_window):
@@ -14,26 +15,19 @@ def _check_data_window(data_window):
     Check the window title, window size, and menu configuration.
     """
 
+    # check type
+    key_list = ["title", "show_menu", "window_size"]
+    check_data_base.check_dict("data_window", data_window, key_list=key_list)
+
     # get the data
     title = data_window["title"]
     show_menu = data_window["show_menu"]
     window_size = data_window["window_size"]
 
-    # check type
-    if not isinstance(title, str):
-        raise CheckError("title: window title should be a string")
-    if not isinstance(show_menu, bool):
-        raise CheckError("show_menu: menu toggle switch should be a boolean")
-
-    # check size
-    if not len(window_size) == 2:
-        raise CheckError("window_size: invalid window size (should be a list with two elements)")
-
-    # check value
-    if not all(isinstance(x, int) for x in window_size):
-        raise CheckError("window_size: window_size: window size should be composed of integers")
-    if not all((x >= 1) for x in window_size):
-        raise CheckError("window_size: window_size: window size should be greater than zero")
+    # check data
+    check_data_base.check_string("title", title)
+    check_data_base.check_boolean("show_menu", show_menu)
+    check_data_base.check_integer_array("window_size", window_size, size=2, is_positive=True, can_be_zero=False)
 
 
 def _check_plot_options(plot_options):
@@ -43,42 +37,34 @@ def _check_plot_options(plot_options):
     """
 
     # check type
-    if not isinstance(plot_options, dict):
-        raise CheckError("plot_options: plot options should be a dict")
+    key_list = [
+        "title",
+        "grid_plot", "grid_thickness", "grid_color", "grid_opacity",
+        "geom_plot", "geom_thickness", "geom_color", "geom_opacity",
+        "point_plot", "point_size", "point_color", "point_opacity",
+    ]
+    check_data_base.check_dict("data_window", plot_options, key_list=key_list)
 
-    # check type
-    if not isinstance(plot_options["title"], str):
-        raise CheckError("title: plot title should be a string")
+    # check title data
+    check_data_base.check_string("title", plot_options["title"])
 
-    # check grid options (plot of the complete grid as wireframes)
-    if not isinstance(plot_options["grid_plot"], bool):
-        raise CheckError("grid_plot: the grid plot option should be a boolean")
-    if not isinstance(plot_options["grid_thickness"], float):
-        raise CheckError("grid_thickness: the grid thickness option should be a float")
-    if not isinstance(plot_options["grid_color"], str):
-        raise CheckError("grid_color: the grid color option should be a string")
-    if not isinstance(plot_options["grid_opacity"], float):
-        raise CheckError("grid_opacity: the grid opacity option should be a float")
+    # check grid data
+    check_data_base.check_boolean("grid_plot", plot_options["grid_plot"])
+    check_data_base.check_float("grid_thickness", plot_options["grid_thickness"])
+    check_data_base.check_string("grid_color", plot_options["grid_color"])
+    check_data_base.check_float("grid_opacity", plot_options["grid_opacity"])
 
-    # check geom options (plot of the non-empty voxels as wireframe)
-    if not isinstance(plot_options["geom_plot"], bool):
-        raise CheckError("geom_plot: the geom plot option should be a boolean")
-    if not isinstance(plot_options["geom_thickness"], float):
-        raise CheckError("geom_thickness: the geom thickness option should be a float")
-    if not isinstance(plot_options["geom_color"], str):
-        raise CheckError("geom_color: the geom color option should be a string")
-    if not isinstance(plot_options["geom_opacity"], float):
-        raise CheckError("geom_opacity: the geom opacity option should be a float")
+    # check geom data
+    check_data_base.check_boolean("geom_plot", plot_options["geom_plot"])
+    check_data_base.check_float("geom_thickness", plot_options["geom_thickness"])
+    check_data_base.check_string("geom_color", plot_options["geom_color"])
+    check_data_base.check_float("geom_opacity", plot_options["geom_opacity"])
 
-    # check cloud options (plot of the point cloud)
-    if not isinstance(plot_options["cloud_plot"], bool):
-        raise CheckError("cloud_plot: the cloud plot option should be a boolean")
-    if not isinstance(plot_options["cloud_size"], float):
-        raise CheckError("cloud_size: the cloud size option should be a float")
-    if not isinstance(plot_options["cloud_color"], str):
-        raise CheckError("cloud_color: the cloud color option should be a string")
-    if not isinstance(plot_options["cloud_opacity"], float):
-        raise CheckError("cloud_opacity: the cloud opacity option should be a float")
+    # check cloud data
+    check_data_base.check_boolean("point_plot", plot_options["point_plot"])
+    check_data_base.check_float("point_size", plot_options["point_size"])
+    check_data_base.check_string("point_color", plot_options["point_color"])
+    check_data_base.check_float("point_opacity", plot_options["point_opacity"])
 
 
 def _check_clip_options(clip_options):
@@ -345,13 +331,16 @@ def _check_data_plotter_item(data_plotter):
     """
 
     # check type
-    if not isinstance(data_plotter, dict):
-        raise CheckError("data_plotter: plot description should be a dict")
+    key_list = ["plot_framework", "data_window", "data_plot"]
+    check_data_base.check_dict("data_plotter", data_plotter, key_list=key_list)
 
     # extract field
     plot_framework = data_plotter["plot_framework"]
     data_window = data_plotter["data_window"]
     data_plot = data_plotter["data_plot"]
+
+    # check plot framework
+    check_data_base.check_choice("plot_framework", plot_framework, ["matplotlib", "pyvista"])
 
     # check window data
     _check_data_window(data_window)
@@ -375,8 +364,8 @@ def _check_data_viewer_item(data_viewer):
     """
 
     # check type
-    if not isinstance(data_viewer, dict):
-        raise CheckError("data_viewer: the plot description should be a dict")
+    key_list = ["data_window", "data_plot"]
+    check_data_base.check_dict("data_viewer", data_viewer, key_list=key_list)
 
     # extract field
     data_window = data_viewer["data_window"]
@@ -389,6 +378,10 @@ def _check_data_viewer_item(data_viewer):
     if not isinstance(data_plot, dict):
         raise CheckError("data_plot: plot data should be a dict")
 
+    # check type
+    key_list = ["plot_type", "clip_options", "data_options", "plot_options"]
+    check_data_base.check_dict("data_plot", data_plot, key_list=key_list)
+
     # get the data
     plot_type = data_plot["plot_type"]
     clip_options = data_plot["clip_options"]
@@ -396,10 +389,7 @@ def _check_data_viewer_item(data_viewer):
     plot_options = data_plot["plot_options"]
 
     # check plot type
-    if not isinstance(plot_type, str):
-        raise CheckError("plot_type: plot type should be a string")
-    if plot_type not in ["domain", "connection", "voxelization"]:
-        raise CheckError("plot_type: specified plot type is invalid")
+    check_data_base.check_choice("plot_type", plot_type, ["domain", "connection", "voxelization"])
 
     # check options
     _check_data_options_viewer(plot_type, data_options)
@@ -414,8 +404,7 @@ def check_data_plotter(data_plotter):
     """
 
     # check type
-    if not isinstance(data_plotter, list):
-        raise CheckError("data_plotter: plot data should be a list")
+    check_data_base.check_list("data_plotter", data_plotter, sub_type=dict)
 
     # check items
     for data_plotter_tmp in data_plotter:
@@ -429,8 +418,7 @@ def check_data_viewer(data_viewer):
     """
 
     # check type
-    if not isinstance(data_viewer, list):
-        raise CheckError("data_viewer: plot data should be a list")
+    check_data_base.check_list("data_viewer", data_viewer, sub_type=dict)
 
     # check items
     for data_viewer_tmp in data_viewer:

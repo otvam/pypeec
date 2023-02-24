@@ -14,10 +14,7 @@ def _check_solver_options(solver_options):
     """
 
     # check type
-    key_list = [
-        "tolerance",
-        "gmres_options",
-    ]
+    key_list = ["tolerance", "gmres_options"]
     check_data_base.check_dict("solver_options", solver_options, key_list=key_list)
 
     # extract field
@@ -25,12 +22,7 @@ def _check_solver_options(solver_options):
     gmres_options = solver_options["gmres_options"]
 
     # check type
-    key_list = [
-        "rel_tol",
-        "abs_tol",
-        "n_between_restart",
-        "n_maximum_restart",
-    ]
+    key_list = ["rel_tol", "abs_tol", "n_between_restart", "n_maximum_restart"]
     check_data_base.check_dict("gmres_options", gmres_options, key_list=key_list)
 
     # check the data
@@ -47,11 +39,7 @@ def _check_condition_options(condition_options):
     """
 
     # check type
-    key_list = [
-        "check",
-        "tolerance",
-        "norm_options",
-    ]
+    key_list = ["check", "tolerance", "norm_options"]
     check_data_base.check_dict("condition_options", condition_options, key_list=key_list)
 
     # extract field
@@ -60,10 +48,7 @@ def _check_condition_options(condition_options):
     norm_options = condition_options["norm_options"]
 
     # check type
-    key_list = [
-        "t_accuracy",
-        "n_iter_max",
-    ]
+    key_list = ["t_accuracy", "n_iter_max"]
     check_data_base.check_dict("norm_options", norm_options, key_list=key_list)
 
     # check the data
@@ -82,12 +67,7 @@ def check_data_tolerance(data_tolerance):
     """
 
     # check type
-    key_list = [
-        "green_simplify",
-        "coupling_simplify",
-        "solver_options",
-        "condition_options",
-    ]
+    key_list = ["green_simplify", "coupling_simplify", "solver_options", "condition_options"]
     check_data_base.check_dict("data_tolerance", data_tolerance, key_list=key_list)
 
     # extract field

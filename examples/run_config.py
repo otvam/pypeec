@@ -30,10 +30,10 @@ def _get_plot_options(name):
         "geom_thickness": 1.0,  # line thickness for the non-empty voxels
         "geom_color": "black",  # line color for the non-empty voxels
         "geom_opacity": 0.5,  # line opacity for the non-empty voxels
-        "cloud_plot": True,  # plot (or not) the provided point cloud as dots
-        "cloud_color": "red",  # color of the point cloud dots
-        "cloud_size": 5.0,  # size of the point cloud dots
-        "cloud_opacity": 0.5,  # opacity of the point cloud dots
+        "point_plot": True,  # plot (or not) the provided point cloud as dots
+        "point_color": "red",  # color of the point cloud dots
+        "point_size": 5.0,  # size of the point cloud dots
+        "point_opacity": 0.5,  # opacity of the point cloud dots
     }
 
     return plot_options
