@@ -1,10 +1,15 @@
 # PyPEEC default configuration file.
 #
+# This configuration does not require:
+#   - GPU support (CPU is used)
+#   - FFTW library (SciPy FFT is used)
+#   - UMFPACK solver (SciPy SuperLU is used)
+#
 # (c) Thomas Guillod - Dartmouth College
 
 # logging options
 LOGGING_OPTIONS:
-    # logger format with the following custom attributes
+    # logging module logger format with the following custom attributes
     #   - timestamp: current timestamp (formatted as a string)
     #   - duration: elapsed time (formatted as a string)
     FORMAT: '%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s'  # logger format
@@ -26,7 +31,7 @@ LOGGING_OPTIONS:
 
 # FFT options (for the CPU computation, ignored for GPU)
 FFT_OPTIONS:
-    #   - SciPy is typically faster slower but is always available
+    #   - SciPy is typically faster slower but is always available (integrated with SciPy)
     #   - FFTW is typically faster but has to be installed separately
     SOLVER: "SciPy"  # "SciPy" or "FFTW"
 
@@ -42,11 +47,13 @@ FFT_OPTIONS:
 USE_GPU: false
 
 # matrix factorization options
-#   - SuperLU is typically slower but is always available
+#   - SuperLU is typically slower but is always available (integrated with SciPy)
 #   - UMFPACK is typically faster but has to be installed separately
 MATRIX_FACTORIZATION: "SuperLU"  # "SuperLU" or "UMFPACK"
 
 # method for dense matrix multiplication
 #   - FFT for doing the multiplication with circulant tensors and FFT
-#   - DIRECT for standard matrix multiplication (extremely slow and memory intensive)
+#   - DIRECT for standard matrix multiplication
+#   - DIRECT is extremely slow and memory intensive
+#   - DIRECT is only useful for debugging and educational purposes
 MATRIX_MULTIPLICATION: "FFT"  # "FFT" or "DIRECT"

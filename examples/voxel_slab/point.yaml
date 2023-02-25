@@ -1,3 +1,10 @@
+# Definition of a "file_point" data.
+#
+# Definition of the points used for magnetic field evaluation.
+# Defined as a 2D array with the following size: (n_pts, 3).
+#
+# (c) Thomas Guillod - Dartmouth College
+
 [
     [30.0e-3, 0.0e-3, -30.0e-3],
     [30.0e-3, 0.0e-3, -10.0e-3],
