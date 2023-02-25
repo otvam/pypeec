@@ -1,3 +1,11 @@
+# Definition of a "file_mesher" data.
+#
+# This file is used by the mesher.
+# Definition of the voxel structure.
+# The voxel structure is created from PNG files.
+#
+# (c) Thomas Guillod - Dartmouth College
+
 "mesh_type": "png"
 "data_voxelize":
     "d": [50.0e-6, 50.0e-6, 50.0e-6]

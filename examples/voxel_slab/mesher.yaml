@@ -1,3 +1,11 @@
+# Definition of a "file_mesher" data.
+#
+# This file is used by the mesher.
+# Definition of the voxel structure.
+# The indices of the voxels are given explicitly.
+#
+# (c) Thomas Guillod - Dartmouth College
+
 "mesh_type": "voxel"
 "data_voxelize":
     "n": [1, 1, 7]

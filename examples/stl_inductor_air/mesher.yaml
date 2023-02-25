@@ -1,3 +1,11 @@
+# Definition of a "file_mesher" data.
+#
+# This file is used by the mesher.
+# Definition of the voxel structure.
+# The voxel structure is created from STL files.
+#
+# (c) Thomas Guillod - Dartmouth College
+
 "mesh_type": "stl"
 "data_voxelize":
     "n": [74, 58, 22]

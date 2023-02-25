@@ -1,5 +1,6 @@
 # Definition of a "file_problem" data.
 #
+# This file is used by the solver.
 # Definition of the magnetic problem to be solved.
 # Definition of the frequency, materials, and sources.
 #
