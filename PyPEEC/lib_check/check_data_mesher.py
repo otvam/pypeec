@@ -161,34 +161,35 @@ def _check_data_voxelize_stl(data_voxelize):
     """
 
     # check type
-    key_list = ["n", "d", "c", "pts_min", "pts_max", "domain_stl", "domain_conflict"]
+    key_list = ["n", "d", "c", "sampling", "pts_min", "pts_max", "domain_stl", "domain_conflict"]
     check_data_base.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     n = data_voxelize["n"]
     d = data_voxelize["d"]
     c = data_voxelize["c"]
+    sampling = data_voxelize["sampling"]
     pts_min = data_voxelize["pts_min"]
     pts_max = data_voxelize["pts_max"]
     domain_stl = data_voxelize["domain_stl"]
     domain_conflict = data_voxelize["domain_conflict"]
 
     # check data
-    if n is not None:
+    check_data_base.check_choice("sampling", sampling, ["number", "dimension"])
+    if sampling == "number":
         check_data_base.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
-    if d is not None:
+    elif sampling == "dimension":
         check_data_base.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
+    else:
+        raise ValueError("inconsistent definition of the voxel number/size")
+
+    # check data
     if c is not None:
         check_data_base.check_float_array("c", c, size=3)
     if pts_min is not None:
         check_data_base.check_float_array("pts_min", pts_min, size=3)
     if pts_max is not None:
         check_data_base.check_float_array("pts_max", pts_max, size=3)
-
-    # check that the size is defined
-    cond_d = (d is None) and (n is not None)
-    cond_n = (d is not None) and (n is None)
-    check_data_base.check_assert("n/d", cond_d or cond_n, "inconsistent definition of the voxel number/size")
 
     # check the stl file
     _check_stl_domain_stl(domain_stl)

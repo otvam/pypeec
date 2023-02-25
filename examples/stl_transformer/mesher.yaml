@@ -7,9 +7,10 @@
 
 "mesh_type": "stl"
 "data_voxelize":
+    "sampling": "dimension"
+    "n": null
     "d": [600.0e-6, 600.0e-6, 250.0e-6]
     "c": null
-    "n": null
     "pts_min": null
     "pts_max": null
     "domain_stl":

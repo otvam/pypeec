@@ -7,6 +7,7 @@
 
 "mesh_type": "stl"
 "data_voxelize":
+    "sampling": "number"
     "n": [72, 70, 32]
     "d": null
     "c": null

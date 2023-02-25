@@ -179,7 +179,7 @@ def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
     return domain_def
 
 
-def get_mesh(n, d, c, pts_min, pts_max, domain_stl):
+def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
     """
     Transform STL files into a 3D voxel structure.
     Each STL file corresponds to a domain of the 3D voxel structure.
@@ -199,9 +199,9 @@ def get_mesh(n, d, c, pts_min, pts_max, domain_stl):
         pts_max = np.array(pts_max, np.float_)
 
     # extract the number of voxels
-    if (n is not None) and (d is None):
+    if sampling == "number":
         n = np.array(n, dtype=np.int_)
-    elif (n is None) and (d is not None):
+    elif sampling == "dimension":
         d = np.array(d, dtype=np.float_)
         n = np.rint((pts_max-pts_min)/d)
         n = n.astype(np.int_)
