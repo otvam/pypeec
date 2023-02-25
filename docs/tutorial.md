@@ -83,7 +83,7 @@ Different examples are located in the `examples` folder:
 ## Running the Example Problems
 
 The following files (located in the `examples` folder) are used to run the examples.
-* `run_conifg.py` is used to regenerate the configuration files
+* `run_config.py` is used to regenerate the configuration files
 * `examples_config.py` is used to select the example (when using the Python launchers)
 * `examples_config.sh` is used to select the example (when using the Shell launchers)
 * `run_mesher.[py/sh]` runs the mesher (Python or Shell)
