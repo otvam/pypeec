@@ -2,7 +2,6 @@
 #
 # This file is used by the mesher.
 # Definition of the voxel structure.
-# The voxel structure is created from STL files.
 #
 # (c) Thomas Guillod - Dartmouth College
 

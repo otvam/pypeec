@@ -2,7 +2,6 @@
 #
 # This file is used by the mesher.
 # Definition of the voxel structure.
-# The indices of the voxels are given explicitly.
 #
 # (c) Thomas Guillod - Dartmouth College
 
