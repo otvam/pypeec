@@ -42,12 +42,10 @@ MATRIX_MULTIPLICATION = None
 FFT_OPTIONS = None
 USE_GPU = None
 
-# get the default config file
-default_file_config = importlib.resources.path("PyPEEC", "pypeec.yaml")
-
 # load the default config files
 try:
-    set_config(default_file_config)
+    with importlib.resources.path("PyPEEC", "pypeec.yaml") as default_file_config:
+        set_config(default_file_config)
 except FileError as ex:
     print("INVALID CONFIGURATION FILE")
     print("==========================")
