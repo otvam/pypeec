@@ -43,7 +43,7 @@ FFT_OPTIONS = None
 USE_GPU = None
 
 # get the default config file
-default_file_config = importlib.resources.files("PyPEEC").joinpath("pypeec.yaml")
+default_file_config = importlib.resources.path("PyPEEC", "pypeec.yaml")
 
 # load the default config files
 try:

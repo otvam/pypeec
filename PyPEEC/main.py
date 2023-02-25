@@ -21,6 +21,7 @@ logger = timelogger.get_logger("MAIN")
 def set_config(file_config):
     """
     Set and load a custom configuration file.
+    This function should be called immediately after initializing the module.
 
     Parameters
     ----------

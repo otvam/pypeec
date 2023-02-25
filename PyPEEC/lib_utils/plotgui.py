@@ -52,7 +52,7 @@ def open_pyvista(data_window, is_interactive):
             window_size=tuple(window_size),
         )
         # set icon
-        path_icon = importlib.resources.files("PyPEEC").joinpath("pypeec.png")
+        path_icon = importlib.resources.path("PyPEEC", "pypeec.png")
         pl.set_icon(str(path_icon))
     else:
         # get standard plotter if non-interactive
@@ -82,13 +82,13 @@ def open_matplotlib(data_window, is_interactive):
         (sx, sy) = window_size
 
         # get the icon
-        path_icon = importlib.resources.files("PyPEEC").joinpath("pypeec.png")
-        icn = qtpy.QtGui.QIcon(str(path_icon))
+        path_icon = importlib.resources.path("PyPEEC", "pypeec.png")
+        res_icon = qtpy.QtGui.QIcon(str(path_icon))
 
         # set the Qt options
         man = matplotlib.pyplot.get_current_fig_manager()
         man.window.setWindowTitle(title)
-        man.window.setWindowIcon(icn)
+        man.window.setWindowIcon(res_icon)
         man.window.resize(sx, sy)
         if show_menu:
             man.toolbar.show()
