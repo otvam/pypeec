@@ -56,14 +56,8 @@
                 "var": "V_c_abs",
                 "scale": 1.0,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "point_size": 10.0,
                 "legend": "El. Potential [V]"
             },
@@ -106,14 +100,8 @@
                 "var": "V_m_abs",
                 "scale": 1.0,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "point_size": 10.0,
                 "legend": "Mag. Potential [A]"
             },
@@ -156,14 +144,8 @@
                 "var": "S_c_abs",
                 "scale": 1e-09,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "point_size": 10.0,
                 "legend": "El. Source [A/mm3]"
             },
@@ -206,14 +188,8 @@
                 "var": "Q_m_abs",
                 "scale": 1.0,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "point_size": 10.0,
                 "legend": "Mag. Source [mT/mm]"
             },
@@ -256,14 +232,8 @@
                 "var": "P_c_abs",
                 "scale": 1e-06,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "point_size": 10.0,
                 "legend": "El. Losses [W/cm3]"
             },
@@ -306,14 +276,8 @@
                 "var": "P_m_abs",
                 "scale": 1e-06,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "point_size": 10.0,
                 "legend": "Mag. Losses [W/cm3]"
             },
@@ -356,14 +320,8 @@
                 "var": "J_c_norm_abs",
                 "scale": 1e-06,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "point_size": 10.0,
                 "legend": "Current [A/mm2]"
             },
@@ -407,14 +365,8 @@
                 "var_vector": "J_c_vec_re",
                 "scale": 1e-06,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "arrow_threshold": 0.001,
                 "arrow_scale": 0.75,
                 "legend": "Re. Current [A/mm2]"
@@ -459,14 +411,8 @@
                 "var_vector": "J_c_vec_im",
                 "scale": 1e-06,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "arrow_threshold": 0.001,
                 "arrow_scale": 0.75,
                 "legend": "Im. Current [A/mm2]"
@@ -510,14 +456,8 @@
                 "var": "B_m_norm_abs",
                 "scale": 1000.0,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "point_size": 10.0,
                 "legend": "Flux Density [mT]"
             },
@@ -561,14 +501,8 @@
                 "var_vector": "B_m_vec_re",
                 "scale": 1000.0,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "arrow_threshold": 0.001,
                 "arrow_scale": 0.75,
                 "legend": "Re. Flux Density [mT]"
@@ -613,14 +547,8 @@
                 "var_vector": "B_m_vec_im",
                 "scale": 1000.0,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "arrow_threshold": 0.001,
                 "arrow_scale": 0.75,
                 "legend": "Im. Flux Density [mT]"
@@ -664,14 +592,8 @@
                 "var": "H_norm_abs",
                 "scale": 1.0,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "point_size": 10.0,
                 "legend": "Mag. Field Norm [A/m]"
             },
@@ -715,14 +637,8 @@
                 "var_vector": "H_vec_re",
                 "scale": 1.0,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "arrow_threshold": 0.001,
                 "arrow_scale": 0.75,
                 "legend": "Re. Mag. Field [A/m]"
@@ -767,14 +683,8 @@
                 "var_vector": "H_vec_im",
                 "scale": 1.0,
                 "log": false,
-                "color_lim": [
-                    null,
-                    null
-                ],
-                "filter_lim": [
-                    null,
-                    null
-                ],
+                "color_lim": null,
+                "filter_lim": null,
                 "arrow_threshold": 0.001,
                 "arrow_scale": 0.75,
                 "legend": "Im. Mag. Field [A/m]"

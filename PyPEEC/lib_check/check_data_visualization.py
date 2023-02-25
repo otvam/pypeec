@@ -5,7 +5,6 @@ Module for checking the viewer and plotter data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-from PyPEEC.lib_utils.error import CheckError
 from PyPEEC.lib_check import check_data_base
 
 
@@ -74,20 +73,14 @@ def _check_clip_options(clip_options):
     """
 
     # check type
-    if not isinstance(clip_options, dict):
-        raise CheckError("clip_options: clip options should be a dict")
+    key_list = ["clip_plot", "clip_invert", "clip_axis", "clip_value"]
+    check_data_base.check_dict("clip_options", clip_options, key_list=key_list)
 
-    # check type
-    if not isinstance(clip_options["clip_plot"], bool):
-        raise CheckError("clip_plot: the clip plot option should be a boolean")
-    if not isinstance(clip_options["clip_invert"], bool):
-        raise CheckError("clip_invert: the clip invert option should be a boolean")
-    if not isinstance(clip_options["clip_axis"], str):
-        raise CheckError("clip_axis: the axis of the clip should be a string")
-    if not clip_options["clip_axis"] in ["x", "y", "z"]:
-        raise CheckError("clip_axis: the axis of the clip is invalid")
-    if not isinstance(clip_options["clip_value"], float):
-        raise CheckError("clip_value: the value of the clip plane should be a float")
+    # check data
+    check_data_base.check_boolean("clip_plot", clip_options["clip_plot"])
+    check_data_base.check_boolean("clip_invert", clip_options["clip_invert"])
+    check_data_base.check_choice("clip_axis", clip_options["clip_axis"], ["x", "y", "z"])
+    check_data_base.check_float("clip_value", clip_options["clip_value"])
 
 
 def _check_data_options_plotter_pyvista(plot_type, data_options):
@@ -99,10 +92,6 @@ def _check_data_options_plotter_pyvista(plot_type, data_options):
         - scalar plots
         - arrow plots
     """
-
-    # check type
-    if not isinstance(data_options, dict):
-        raise CheckError("data_options: data options should be a dict")
 
     # list of allowed variable names
     var_voxel_list = [
@@ -123,88 +112,70 @@ def _check_data_options_plotter_pyvista(plot_type, data_options):
 
     # check the material options
     if plot_type == "material":
-        if not isinstance(data_options["color_electric"], str):
-            raise CheckError("color_electric: color name should be a string")
-        if not isinstance(data_options["color_magnetic"], str):
-            raise CheckError("color_magnetic: color name should be a string")
-        if not isinstance(data_options["color_current_source"], str):
-            raise CheckError("color_current_source: color name should be a string")
-        if not isinstance(data_options["color_voltage_source"], str):
-            raise CheckError("color_voltage_source: color name should be a string")
-
-    # check the scalar options
-    if plot_type in ["scalar_voxel", "scalar_point"]:
         # check type
-        if not isinstance(data_options["var"], str):
-            raise CheckError("var: scalar variable name should be a string")
-        if not isinstance(data_options["point_size"], float):
-            raise CheckError("point_size: the marker size option should be a float")
+        key_list = ["color_electric", "color_magnetic", "color_current_source", "color_voltage_source"]
+        check_data_base.check_dict("data_options", data_options, key_list=key_list)
 
-        # check compatibility
-        if plot_type == "scalar_voxel":
-            if not (data_options["var"] in var_voxel_list):
-                raise CheckError("var: scalar variable name is invalid for this plot type and geometry")
-        elif plot_type == "scalar_point":
-            if not (data_options["var"] in var_point_list):
-                raise CheckError("var: scalar variable name is invalid for this plot type and geometry")
-        else:
-            raise CheckError("plot_geom: the plot geometry option is incompatible with the plot type")
-
-    # check the arrow options
-    if plot_type in ["arrow_voxel", "arrow_point"]:
-        # check type
-        if not isinstance(data_options["var_scalar"], str):
-            raise CheckError("var_scalar: scalar variable name should be a string")
-        if not isinstance(data_options["var_vector"], str):
-            raise CheckError("var_vector: vector variable name should be a string")
-        if not isinstance(data_options["arrow_scale"], float):
-            raise CheckError("arrow_scale: the arrow relative scaling should be a float")
-        if not isinstance(data_options["arrow_threshold"], float):
-            raise CheckError("arrow_threshold: the arrow removal threshold should be a float")
-
-        # check value
-        if not (data_options["arrow_scale"] > 0):
-            raise CheckError("arrow_scale: the arrow relative scaling should be greater than zero")
-        if not (data_options["arrow_threshold"] > 0):
-            raise CheckError("arrow_threshold: the arrow removal threshold should be greater than zero")
-
-        # check compatibility
-        if plot_type == "arrow_voxel":
-            if not (data_options["var_scalar"] in var_voxel_list):
-                raise CheckError("var_scalar: scalar variable name is invalid for this plot type and geometry")
-            if not (data_options["var_vector"] in vec_voxel_list):
-                raise CheckError("var_vector: vector variable name is invalid for this plot type and geometry")
-        elif plot_type == "arrow_point":
-            if not (data_options["var_scalar"] in var_point_list):
-                raise CheckError("var_scalar: scalar variable name is invalid for this plot type and geometry")
-            if not (data_options["var_vector"] in vec_point_list):
-                raise CheckError("var_vector: vector variable name is invalid for this plot type and geometry")
-        else:
-            raise CheckError("plot_geom: the plot geometry option is incompatible with the plot type")
+        # check data
+        check_data_base.check_string("color_electric", data_options["color_electric"])
+        check_data_base.check_string("color_magnetic", data_options["color_magnetic"])
+        check_data_base.check_string("color_current_source", data_options["color_current_source"])
+        check_data_base.check_string("color_voltage_source", data_options["color_voltage_source"])
 
     # check the options for scalar and arrow plots
     if plot_type in ["scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"]:
         # check type
-        if not isinstance(data_options["scale"], float):
-            raise CheckError("scale: the scale option should be a float")
-        if not isinstance(data_options["log"], bool):
-            raise CheckError("log: the log option should be a boolean")
-        if not isinstance(data_options["legend"], str):
-            raise CheckError("plot_legend: plot legend option should be a string")
+        key_list = ["scale", "log", "legend", "color_lim", "filter_lim"]
+        check_data_base.check_dict("data_options", data_options, key_list=key_list)
 
-        # check size
-        if not (len(data_options["color_lim"]) == 2):
-            raise CheckError("color_lim: invalid color limits (should be a list with tep elements)")
-        if not (len(data_options["filter_lim"]) == 2):
-            raise CheckError("filter_lim: invalid filter limits (should be a list with tep elements)")
+        # check data
+        check_data_base.check_float("scale", data_options["scale"])
+        check_data_base.check_boolean("log", data_options["log"])
+        check_data_base.check_string("legend", data_options["legend"])
+        if data_options["color_lim"] is not None:
+            check_data_base.check_float_array("color_lim", data_options["color_lim"], size=2)
+        if data_options["filter_lim"] is not None:
+            check_data_base.check_float_array("filter_lim", data_options["filter_lim"], size=2)
 
-        # check value
-        if not (data_options["scale"] > 0):
-            raise CheckError("scale: the scale option should be greater than zero")
-        if not all(isinstance(x, float) or (x is None) for x in data_options["color_lim"]):
-            raise CheckError("color_lim: color limits should be composed of floats")
-        if not all(isinstance(x, float) or (x is None) for x in data_options["filter_lim"]):
-            raise CheckError("filter_lim: filter limits should be composed of floats")
+    # check the scalar options
+    if plot_type in ["scalar_voxel", "scalar_point"]:
+        # check type
+        key_list = ["var", "point_size"]
+        check_data_base.check_dict("data_options", data_options, key_list=key_list)
+
+        # check data
+        check_data_base.check_string("var", data_options["var"])
+        check_data_base.check_float("point_size", data_options["point_size"])
+
+        # check compatibility
+        if plot_type == "scalar_voxel":
+            check_data_base.check_choice("var", data_options["var"], var_voxel_list)
+        elif plot_type == "scalar_point":
+            check_data_base.check_choice("var", data_options["var"], var_point_list)
+        else:
+            raise ValueError("plot_geom: the plot geometry option is incompatible with the plot type")
+
+    # check the arrow options
+    if plot_type in ["arrow_voxel", "arrow_point"]:
+        # check type
+        key_list = ["var_scalar", "var_vector", "arrow_scale", "arrow_threshold"]
+        check_data_base.check_dict("data_options", data_options, key_list=key_list)
+
+        # check data
+        check_data_base.check_string("var_scalar", data_options["var_scalar"])
+        check_data_base.check_string("var_vector", data_options["var_vector"])
+        check_data_base.check_float("arrow_scale", data_options["arrow_scale"])
+        check_data_base.check_float("arrow_threshold", data_options["arrow_threshold"])
+
+        # check compatibility
+        if plot_type == "arrow_voxel":
+            check_data_base.check_choice("var_scalar", data_options["var_scalar"], var_voxel_list)
+            check_data_base.check_choice("var_vector", data_options["var_vector"], vec_voxel_list)
+        elif plot_type == "arrow_point":
+            check_data_base.check_choice("var_scalar", data_options["var_scalar"], var_point_list)
+            check_data_base.check_choice("var_vector", data_options["var_vector"], vec_point_list)
+        else:
+            raise ValueError("plot_geom: the plot geometry option is incompatible with the plot type")
 
 
 def _check_data_options_plotter_matplotlib(plot_type, data_options):
@@ -216,25 +187,26 @@ def _check_data_options_plotter_matplotlib(plot_type, data_options):
         - residuum
     """
 
-    # check type
-    if not isinstance(data_options, dict):
-        raise CheckError("data_options: data options should be a dict")
-
     # check the convergence options
     if plot_type == "convergence":
-        if not isinstance(data_options["color"], str):
-            raise CheckError("color: color name should be a string")
-        if not isinstance(data_options["marker"], str):
-            raise CheckError("marker: marker name should be a string")
+        # check type
+        key_list = ["color", "marker"]
+        check_data_base.check_dict("data_options", data_options, key_list=key_list)
+
+        # check data
+        check_data_base.check_string("color", data_options["color"])
+        check_data_base.check_string("marker", data_options["marker"])
 
     # check the residuum options
     if plot_type == "residuum":
-        if not isinstance(data_options["n_bins"], int):
-            raise CheckError("n_bins: number of bins should be an integer")
-        if not isinstance(data_options["edge_color"], str):
-            raise CheckError("edge_color: color name should be a string")
-        if not isinstance(data_options["bar_color"], str):
-            raise CheckError("bar_color: color name should be a string")
+        # check type
+        key_list = ["n_bins", "edge_color", "bar_color"]
+        check_data_base.check_dict("data_options", data_options, key_list=key_list)
+
+        # check data
+        check_data_base.check_integer("n_bins", data_options["n_bins"])
+        check_data_base.check_string("edge_color", data_options["edge_color"])
+        check_data_base.check_string("bar_color", data_options["bar_color"])
 
 
 def _check_data_options_viewer(plot_type, data_options):
@@ -247,28 +219,27 @@ def _check_data_options_viewer(plot_type, data_options):
         - tolerance plot
     """
 
-    # check type
-    if not isinstance(data_options, dict):
-        raise CheckError("data_options: data options should be a dict")
-
     # check the material options
     if plot_type == "voxelization":
-        if not isinstance(data_options["color_voxel"], str):
-            raise CheckError("color_voxel: color name should be a string")
-        if not isinstance(data_options["color_reference"], str):
-            raise CheckError("color_reference: color name should be a string")
-        if not isinstance(data_options["opacity_voxel"], float):
-            raise CheckError("opacity_voxel: the opacity option should be a float")
-        if not isinstance(data_options["opacity_reference"], float):
-            raise CheckError("opacity_reference: the opacity option should be a float")
+        # check type
+        key_list = ["color_voxel", "color_reference", "opacity_voxel", "opacity_reference"]
+        check_data_base.check_dict("data_options", data_options, key_list=key_list)
+
+        # check data
+        check_data_base.check_string("color_voxel", data_options["color_voxel"])
+        check_data_base.check_string("color_reference", data_options["color_reference"])
+        check_data_base.check_float("opacity_voxel", data_options["opacity_voxel"])
+        check_data_base.check_float("opacity_reference", data_options["opacity_reference"])
 
     # check the scalar options
     if plot_type in ["domain", "connection"]:
         # check type
-        if not isinstance(data_options["colormap"], str):
-            raise CheckError("colormap: colormap name should be a string")
-        if not isinstance(data_options["opacity"], float):
-            raise CheckError("opacity: the opacity option should be a float")
+        key_list = ["colormap", "opacity"]
+        check_data_base.check_dict("data_options", data_options, key_list=key_list)
+
+        # check data
+        check_data_base.check_string("colormap", data_options["colormap"])
+        check_data_base.check_float("opacity", data_options["opacity"])
 
 
 def _check_data_plotter_matplotlib(data_plot):
@@ -277,21 +248,16 @@ def _check_data_plotter_matplotlib(data_plot):
     """
 
     # check type
-    if not isinstance(data_plot, dict):
-        raise CheckError("data_plot: plot data should be a dict")
+    key_list = ["plot_type", "data_options"]
+    check_data_base.check_dict("data_plot", data_plot, key_list=key_list)
 
     # get the data
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
 
-    # check type
-    if not isinstance(plot_type, str):
-        raise CheckError("plot_type: plot type should be a string")
+    # check plot type
+    check_data_base.check_choice("plot_type", plot_type, ["convergence", "residuum"])
 
-    # check value
-    if plot_type not in ["convergence", "residuum"]:
-        raise CheckError("data_plot: specified data plot is invalid")
-    
     # check data
     _check_data_options_plotter_matplotlib(plot_type, data_options)
 
@@ -302,8 +268,8 @@ def _check_data_plotter_pyvista(data_plot):
     """
 
     # check type
-    if not isinstance(data_plot, dict):
-        raise CheckError("data_plot: plot data should be a dict")
+    key_list = ["plot_type", "clip_options", "data_options", "plot_options"]
+    check_data_base.check_dict("data_plot", data_plot, key_list=key_list)
 
     # get the data
     plot_type = data_plot["plot_type"]
@@ -311,13 +277,8 @@ def _check_data_plotter_pyvista(data_plot):
     clip_options = data_plot["clip_options"]
     plot_options = data_plot["plot_options"]
 
-    # check type
-    if not isinstance(plot_type, str):
-        raise CheckError("plot_type: plot type should be a string")
-
-    # check value
-    if plot_type not in ["material", "scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"]:
-        raise CheckError("plot_type: specified plot type is invalid")
+    # check plot type
+    check_data_base.check_choice("plot_type", plot_type, ["material", "scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"])
 
     # check data
     _check_data_options_plotter_pyvista(plot_type, data_options)
@@ -345,17 +306,13 @@ def _check_data_plotter_item(data_plotter):
     # check window data
     _check_data_window(data_window)
 
-    # check framework
-    if not isinstance(plot_framework, str):
-        raise CheckError("plot_framework: plot framework should be a string")
-
     # check the plot data for the framework
     if plot_framework == "matplotlib":
         _check_data_plotter_matplotlib(data_plot)
     elif plot_framework == "pyvista":
         _check_data_plotter_pyvista(data_plot)
     else:
-        raise CheckError("plot_framework: plot framework is invalid")
+        raise ValueError("plot_framework: plot framework is invalid")
 
 
 def _check_data_viewer_item(data_viewer):
@@ -373,10 +330,6 @@ def _check_data_viewer_item(data_viewer):
 
     # check window data
     _check_data_window(data_window)
-
-    # check plot data
-    if not isinstance(data_plot, dict):
-        raise CheckError("data_plot: plot data should be a dict")
 
     # check type
     key_list = ["plot_type", "clip_options", "data_options", "plot_options"]

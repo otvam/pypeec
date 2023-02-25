@@ -187,8 +187,8 @@ def _get_data_plotter_scalar(plot_geom, var, scale, unit, name):
         "var": var,  # name of the scalar variable to be plotted (color scale)
         "scale": scale,  # scaling of the variable (scaling done just before plotting)
         "log": False,  # use (or not) a log scale for the color axis
-        "color_lim": (None, None),  # clamping range for the color axis (None for complete range)
-        "filter_lim": (None, None),  # hide voxels/points with values outside this range (None for complete range)
+        "color_lim": None,  # clamping range for the color axis (None for complete range)
+        "filter_lim": None,  # hide voxels/points with values outside this range (None for complete range)
         "point_size": 10.0,  # size of the marker used for plotting on the point cloud
         "legend": "%s [%s]" % (name, unit),  # legend of the color axis
     }
@@ -210,8 +210,8 @@ def _get_data_plotter_arrow(plot_geom, var_scalar, var_vector, scale, unit, name
         "var_vector": var_vector,  # name of the vector variable to be plotted (arrow direction)
         "scale": scale,  # scaling of the scalar variable (scaling done just before plotting)
         "log": False,  # use (or not) a log scale for the color axis
-        "color_lim": (None, None),  # clamping range for the color axis (None for complete range)
-        "filter_lim": (None, None),  # hide arrows with scalar values outside this range (None for complete range)
+        "color_lim": None,  # clamping range for the color axis (None for complete range)
+        "filter_lim": None,  # hide arrows with scalar values outside this range (None for complete range)
         "arrow_threshold": 1e-3,  # relative threshold for arrows with small scalar values
         "arrow_scale": 0.75,  # relative arrow length (with respect to the voxel size)
         "legend": "%s [%s]" % (name, unit),  # legend of the color axis

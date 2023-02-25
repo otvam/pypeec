@@ -140,11 +140,11 @@ def _get_filter_scalar(obj, var, filter_lim):
         return obj
 
     # handle None
-    (f_min, f_max) = filter_lim
-    if f_min is None:
+    if filter_lim is None:
         f_min = -float("inf")
-    if f_max is None:
         f_max = +float("inf")
+    else:
+        (f_min, f_max) = filter_lim
 
     # get var
     data = obj[var]
@@ -169,11 +169,11 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
         return obj
 
     # handle None
-    (c_min, c_max) = color_lim
-    if c_min is None:
+    if color_lim is None:
         c_min = -float("inf")
-    if c_max is None:
         c_max = +float("inf")
+    else:
+        (c_min, c_max) = color_lim
 
     # get var
     data = obj[var]
