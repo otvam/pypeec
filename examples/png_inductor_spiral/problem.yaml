@@ -1,3 +1,10 @@
+# Definition of a "file_problem" data.
+#
+# Definition of the magnetic problem to be solved.
+# Definition of the frequency, materials, and sources.
+#
+# (c) Thomas Guillod - Dartmouth College
+
 "freq": 1.0e+6
 "material_def":
     "coil": {"domain_list": ["src", "sink", "coil"], "material_type": "electric", "rho": 1.75e-8}

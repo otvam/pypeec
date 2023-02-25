@@ -1,3 +1,10 @@
+# Definition of a "file_problem" data.
+#
+# Definition of the magnetic problem to be solved.
+# Definition of the frequency, materials, and sources.
+#
+# (c) Thomas Guillod - Dartmouth College
+
 "freq": 100.0e+3
 "material_def":
     "pri": {"domain_list": ["pri_src", "pri_sink", "pri_coil"], "material_type": "electric", "rho": 1.75e-8}
