@@ -3,10 +3,11 @@
 ## Summary
 
 **PyPEEC** is a **3D magnetic field solver** with the following characteristics:
-* 3D voxel geometry
-* PEEC method with FFT acceleration
-* GPU acceleration is available
-* Pure Python implementation
+* **3D voxel** geometry
+* **PEEC method** with **FFT acceleration**
+* **GPU acceleration** is available
+* Pure **Python** implementation
+* **Fast** with **moderate memory** requirements
 * Conductive and magnetic domains
 * Frequency domain solution
 * Connection of current and voltage sources
@@ -14,7 +15,6 @@
 * Extraction of the losses and energy
 * Extraction of the terminal impedances
 * Computation of the magnetic field 
-* Fast with moderate memory requirements
 
 **PyPEEC** has the following limitations:
 * No capacitive effects
@@ -50,6 +50,11 @@ Other interesting papers and codes about similar methods:
 * N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864
 * A. Yucel, https://github.com/acyucel/VoxHenry
 
+## Project Repository
+
+* [Repository](https://github.com/otvam/PyPEEC)
+* [Releases](https://github.com/otvam/PyPEEC/tags)
+
 ## Author
 
 * **Thomas Guillod**, Dartmouth College
@@ -60,8 +65,12 @@ Other interesting papers and codes about similar methods:
 
 > (c) 2023 - Thomas Guillod - Dartmouth College
 > 
-> All rights reserved
-
-> **Warning**: Some dependencies are under copyleft licences.
->
-> Make sure to respect these licenses when distributing the package.
+> All rights reserved.
+> 
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.

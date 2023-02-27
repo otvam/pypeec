@@ -257,7 +257,7 @@ This file contains the definition of the points used for magnetic field evaluati
 ]
 ```
 
-## Other Files
+## Other File Formats
 
 * The `file_tolerance` format is documented in `examples/run_config.py`.
 * The `file_viewer` format is documented in `examples/run_config.py`.

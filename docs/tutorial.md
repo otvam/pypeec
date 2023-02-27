@@ -41,7 +41,7 @@ The entry points of the different tools are located in the `PyPEEC.main` module:
 * `run_plotter` for running the **plotter**
 
 Additionally, console scripts are located in the `PyPEEC.script` module:
-* `pypeec --help` display the command line options
+* `pypeec --help` for displaying the command line options
 * `pypeec mesher` for running the **mesher**
 * `pypeec viewer` for running the **viewer**
 * `pypeec solver` for running the **solver**

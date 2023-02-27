@@ -57,23 +57,30 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 * The tests are checking that the examples are running correctly.
 * Only integration tests currently exist (no unit tests).
 
+# PyPEEC Warnings
+
+> **Warning**: For problems with magnetic domains, the preconditioner is not heavily optimized.
+> This might lead to a very slow convergence of the matrix solver.
+
+> **Warning**: The voxelization of STL files does consider tolerances.
+> This implies same the same voxel can be assigned to several domains.
+> The problem is solved with used-provided conflict resolution rules.
+
 # Library Warnings
 
 > **Warning**: The interactions between **Qt/PyVista/Matplotlib** are likely be sensitive to the environment.
+> These interactions not work depending of the platform and the version of the libraries.
 > Therefore, the Qt dependency is minimized and insulated from the rest of the code.
 
 > **Warning**: The optional **GPU libraries** (CUDA, CuPy) should be installed separately.
 > These libraries are not included in the package dependencies and environments. 
-> The GPU support is extremely platform/version dependent.
+> The GPU support is extremely platform/version dependent (GPU type and CUDA version).
 
 > **Warning**: The optional **UMFPACK** library is known to be difficult to install on MS Windows.
 
 > **Warning**: The optional **FFTW** library should be compiled with multithreading support.
 
 # General Warnings
-
-> **Warning**: For problems with magnetic domains, the preconditioner is not heavily optimized.
-> This might lead to a very slow convergence of the matrix solver.
 
 > **Warning**: For large problems, the code might allocate huge amounts of memory.
 > This might crash the program and/or your operating system.
@@ -82,3 +89,6 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 > Pickling data is not secure. 
 > Only load Pickle files that you trust.
 > Do not commit the Pickle files in the Git repository.
+
+> **Warning**: Some dependencies are under copyleft licences.
+> Make sure to respect these licenses if you package these libraries.

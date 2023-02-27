@@ -1,5 +1,5 @@
 """
-Contain the console scripts (mesher, viewer, solver, and plotter).
+Contain the console script with CLI interface.
 Parse the command line arguments and call the corresponding entry point.
 """
 
