@@ -113,7 +113,7 @@ USE_GPU = None
 
 # load the default config files
 try:
-    with importlib.resources.path("PyPEEC", "pypeec.yaml") as default_file_config:
+    with importlib.resources.path("pypeec", "pypeec.yaml") as default_file_config:
         set_config(default_file_config)
 except (FileError, CheckError) as ex:
     print("INVALID CONFIGURATION FILE")
