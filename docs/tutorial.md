@@ -3,15 +3,15 @@
 ## Tools
 
 The **PyPEEC** package contains the following tools (`PyPEEC` package)::
-* **mesher** (`PyPEEC.mesher` module)
+* **mesher** (`pypeec.mesher` module)
   * Create the voxel structure (from STL or PNG files)
   * Assign different domain names to the voxels
   * Resampling (refine) the voxel structure
   * Construct the graph of the structure and detect connected components
-* **viewer** (`PyPEEC.viewer` module)
+* **viewer** (`pypeec.viewer` module)
   * Visualization of the different domains composing the voxel structure
   * Visualization of the connected components composing the voxel structure
-* **solver** (`PyPEEC.solver` module)
+* **solver** (`pypeec.solver` module)
   * Computation of the incidence matrix
   * Computation of the Green and coupling tensors
   * Computation of the resistance, inductance, and potential matrices
@@ -33,14 +33,14 @@ The **PyPEEC** package contains the following tools (`PyPEEC` package)::
 
 ## Entry Points and Scripts
 
-The entry points of the different tools are located in the `PyPEEC.main` module:
+The entry points of the different tools are located in the `pypeec.main` module:
 * `set_config` for the setting a custom configuration file
 * `run_mesher` for running the **mesher**
 * `run_viewer` for running the **viewer**
 * `run_solver` for running the **solver**
 * `run_plotter` for running the **plotter**
 
-Additionally, console scripts are located in the `PyPEEC.script` module:
+Additionally, console scripts are located in the `pypeec.script` module:
 * `pypeec --help` for displaying the command line options
 * `pypeec mesher` for running the **mesher**
 * `pypeec viewer` for running the **viewer**

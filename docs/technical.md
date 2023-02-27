@@ -38,11 +38,11 @@ The following optional optimizations are available:
 
 ## Configuration
 
-The default configuration file is `PyPEEC/pypeec.yaml`.
+The default configuration file is `pypeec/pypeec.yaml`.
 The default configuration file is loaded at the startup.
 Afterwards, a custom configuration (JSON or YAML) file can be set:
-* with a function call (see `PyPEEC.main` module)
-* with a command line option (see `PyPEEC.script` module)
+* with a function call (see `pypeec.main` module)
+* with a command line option (see `pypeec.script` module)
 
 ## Packaging and Environment
 
