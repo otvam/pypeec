@@ -63,6 +63,7 @@ def run_mesher(file_mesher, file_voxel):
     """
 
     # load the tool
+    timelogger.reset_timer()
     logger.info("load the mesher")
     from pypeec import mesher
 
@@ -112,6 +113,7 @@ def run_viewer(file_voxel, file_point, file_viewer, is_interactive):
     """
 
     # load the tool
+    timelogger.reset_timer()
     logger.info("load the viewer")
     from pypeec import viewer
 
@@ -152,6 +154,7 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     """
 
     # load the tool
+    timelogger.reset_timer()
     logger.info("load the solver")
     from pypeec import solver
 
@@ -198,6 +201,7 @@ def run_plotter(file_solution, file_point, file_plotter, is_interactive):
     """
 
     # load the tool
+    timelogger.reset_timer()
     logger.info("load the plotter")
     from pypeec import plotter
 

@@ -174,6 +174,15 @@ def log_exception(logger, ex):
     logger.error("exception error : " + name, exc_info=ex)
 
 
+def reset_timer():
+    """
+    Reset the global timer to the current time.
+    """
+
+    global GLOBAL_TIMESTAMP
+    GLOBAL_TIMESTAMP = time.time()
+
+
 def get_logger(name):
     """
     Get a logger with a name.
