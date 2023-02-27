@@ -30,12 +30,12 @@ LOGGING_OPTIONS:
     CL_RESET: '[0m' # terminal color code
 
 # FFT options (for the CPU computation, ignored for GPU)
-FFT_OPTIONS:
-    #   - SciPy is typically faster slower but is always available (integrated with SciPy)
-    #   - FFTW is typically faster but has to be installed separately
-    SOLVER: "SciPy"  # "SciPy" or "FFTW"
+#   - SciPy is typically slightly slower but is always available (integrated with SciPy)
+#   - FFTW is typically faster but has to be installed separately
+FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW"
 
-    # FFT library options
+# FFT options (for the CPU computation, ignored for GPU)
+FFT_OPTIONS:
     FFTS_WORKER: null  # number of workers for SciPy (null for number of CPUs)
     FFTW_THREAD: null  # number of threads for FFTW (null for number of CPUs)
     FFTW_CACHE_TIMEOUT: 100  # cache timeout in seconds for FFTW (null for no caching)

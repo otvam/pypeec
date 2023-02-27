@@ -5,7 +5,7 @@ Module for checking the solver problem data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-from PyPEEC.lib_check import check_data_base
+from PyPEEC.lib_utils import datachecker
 
 
 def _check_material_def(material_def):
@@ -14,21 +14,21 @@ def _check_material_def(material_def):
     """
 
     # check type
-    check_data_base.check_dict("material_def", material_def, can_be_empty=False, sub_type=dict)
+    datachecker.check_dict("material_def", material_def, can_be_empty=False, sub_type=dict)
 
     # check value
     for dat_tmp in material_def.values():
         # check type
         key_list = ["material_type", "domain_list"]
-        check_data_base.check_dict("material_def", dat_tmp, key_list=key_list)
+        datachecker.check_dict("material_def", dat_tmp, key_list=key_list)
 
         # extract the data
         material_type = dat_tmp["material_type"]
         domain_list = dat_tmp["domain_list"]
 
         # check data
-        check_data_base.check_choice("material_type", material_type, ["electric", "magnetic"])
-        check_data_base.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
+        datachecker.check_choice("material_type", material_type, ["electric", "magnetic"])
+        datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
         # get the source value
         if material_type == "electric":
@@ -39,11 +39,11 @@ def _check_material_def(material_def):
             raise ValueError("invalid material type")
 
         # check type
-        check_data_base.check_dict("material_def", dat_tmp, key_list=key_list)
+        datachecker.check_dict("material_def", dat_tmp, key_list=key_list)
 
         # check data
         for tag in key_list:
-            check_data_base.check_float(tag, dat_tmp[tag], is_positive=True)
+            datachecker.check_float(tag, dat_tmp[tag], is_positive=True)
 
 
 def _check_source_def(source_def):
@@ -52,21 +52,21 @@ def _check_source_def(source_def):
     """
 
     # check type
-    check_data_base.check_dict("source_def", source_def, can_be_empty=False, sub_type=dict)
+    datachecker.check_dict("source_def", source_def, can_be_empty=False, sub_type=dict)
 
     # check value
     for dat_tmp in source_def.values():
         # check type
         key_list = ["source_type", "domain_list"]
-        check_data_base.check_dict("source_def", dat_tmp, key_list=key_list)
+        datachecker.check_dict("source_def", dat_tmp, key_list=key_list)
 
         # extract the data
         source_type = dat_tmp["source_type"]
         domain_list = dat_tmp["domain_list"]
 
         # check data
-        check_data_base.check_choice("source_type", source_type, ["current", "voltage"])
-        check_data_base.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
+        datachecker.check_choice("source_type", source_type, ["current", "voltage"])
+        datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
         # get the source value
         if source_type == "current":
@@ -77,11 +77,11 @@ def _check_source_def(source_def):
             raise ValueError("invalid source type")
 
         # check type
-        check_data_base.check_dict("source_type", dat_tmp, key_list=key_list)
+        datachecker.check_dict("source_type", dat_tmp, key_list=key_list)
 
         # check data
         for tag in key_list:
-            check_data_base.check_float(tag, dat_tmp[tag])
+            datachecker.check_float(tag, dat_tmp[tag])
 
 
 def check_data_problem(data_problem):
@@ -94,7 +94,7 @@ def check_data_problem(data_problem):
 
     # check type
     key_list = ["freq", "material_def", "source_def"]
-    check_data_base.check_dict("data_problem", data_problem, key_list=key_list)
+    datachecker.check_dict("data_problem", data_problem, key_list=key_list)
 
     # extract field
     freq = data_problem["freq"]
@@ -102,7 +102,7 @@ def check_data_problem(data_problem):
     source_def = data_problem["source_def"]
 
     # check data
-    check_data_base.check_float("freq", freq, is_positive=True)
+    datachecker.check_float("freq", freq, is_positive=True)
 
     # check material and source
     _check_material_def(material_def)

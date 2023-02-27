@@ -12,7 +12,7 @@ import os.path
 from PyPEEC.lib_utils import timelogger
 from PyPEEC.lib_utils import config
 from PyPEEC.lib_utils import fileio
-from PyPEEC.lib_utils.error import FileError
+from PyPEEC.lib_utils.error import FileError, CheckError
 
 # get a logger
 logger = timelogger.get_logger("MAIN")
@@ -38,7 +38,7 @@ def set_config(file_config):
 
     try:
         config.set_config(file_config)
-    except FileError as ex:
+    except (FileError, CheckError) as ex:
         timelogger.log_exception(logger, ex)
         return False
 

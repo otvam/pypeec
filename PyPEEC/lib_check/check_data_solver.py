@@ -6,7 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
-from PyPEEC.lib_check import check_data_base
+from PyPEEC.lib_utils import datachecker
 
 
 def _get_domain_indices(domain_list, domain_def):
@@ -107,11 +107,11 @@ def _check_names(domain_cm, domain_s, domain_def):
 
     # check the material domain name
     for tag in domain_cm:
-        check_data_base.check_choice("material domain name", tag, domain_def)
+        datachecker.check_choice("material domain name", tag, domain_def)
 
     # check the source domain name
     for tag in domain_s:
-        check_data_base.check_choice("source domain name", tag, domain_def)
+        datachecker.check_choice("source domain name", tag, domain_def)
 
 
 def _check_indices(n, idx_c, idx_m, idx_s):
@@ -126,21 +126,21 @@ def _check_indices(n, idx_c, idx_m, idx_s):
     nv = nx*ny*nz
 
     # check the indices
-    check_data_base.check_index_array("index electric", idx_c, bnd=nv, can_be_empty=False)
-    check_data_base.check_index_array("index magnetic", idx_m, bnd=nv, can_be_empty=True)
-    check_data_base.check_index_array("index source", idx_s, bnd=nv, can_be_empty=False)
+    datachecker.check_index_array("index electric", idx_c, bnd=nv, can_be_empty=False)
+    datachecker.check_index_array("index magnetic", idx_m, bnd=nv, can_be_empty=True)
+    datachecker.check_index_array("index source", idx_s, bnd=nv, can_be_empty=False)
 
     # check for invalid material
     cond = len(np.intersect1d(idx_c, idx_m)) == 0
-    check_data_base.check_assert("index overlap", cond, "magnetic and electric indices should not overlap")
+    datachecker.check_assert("index overlap", cond, "magnetic and electric indices should not overlap")
 
     # check that the terminal indices are electric indices
     cond = np.all(np.in1d(idx_s, idx_c))
-    check_data_base.check_assert("index overlap", cond, "source indices should overlap with electric indices")
+    datachecker.check_assert("index overlap", cond, "source indices should overlap with electric indices")
 
     # check that the terminal indices are electric indices
     cond = np.all(np.logical_not(np.in1d(idx_s, idx_m)))
-    check_data_base.check_assert("index overlap", cond, "source indices should not overlap with magnetic indices")
+    datachecker.check_assert("index overlap", cond, "source indices should not overlap with magnetic indices")
 
 
 def _check_source_graph(idx_c, idx_m, idx_s, connection_def):
@@ -155,10 +155,10 @@ def _check_source_graph(idx_c, idx_m, idx_s, connection_def):
         has_source = len(np.intersect1d(idx_graph, idx_s)) > 0
 
         cond = (not has_electric) or has_source
-        check_data_base.check_assert("index overlap", cond, "electric components should include at least one source")
+        datachecker.check_assert("index overlap", cond, "electric components should include at least one source")
 
         cond = (not has_magnetic) or (not has_source)
-        check_data_base.check_assert("index overlap", cond, "magnetic components should not include sources")
+        datachecker.check_assert("index overlap", cond, "magnetic components should not include sources")
 
 
 def get_data_solver(data_voxel, data_problem, data_tolerance):

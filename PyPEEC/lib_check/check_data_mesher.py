@@ -5,7 +5,7 @@ Module for checking the mesher data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-from PyPEEC.lib_check import check_data_base
+from PyPEEC.lib_utils import datachecker
 
 
 def _check_voxel_domain_def(domain_def):
@@ -14,11 +14,11 @@ def _check_voxel_domain_def(domain_def):
     """
 
     # check type
-    check_data_base.check_dict("domain_def", domain_def, can_be_empty=False, sub_type=list)
+    datachecker.check_dict("domain_def", domain_def, can_be_empty=False, sub_type=list)
 
     # check data
     for idx in domain_def.values():
-        check_data_base.check_integer_array("domain_def", idx, is_positive=True, can_be_empty=False)
+        datachecker.check_integer_array("domain_def", idx, is_positive=True, can_be_empty=False)
 
 
 def _check_voxel_indices(n, domain_def):
@@ -36,7 +36,7 @@ def _check_voxel_indices(n, domain_def):
     nv = nx*ny*nz
 
     # check the indices
-    check_data_base.check_index_array("domain_def", idx_all, bnd=nv, can_be_empty=False)
+    datachecker.check_index_array("domain_def", idx_all, bnd=nv, can_be_empty=False)
 
 
 def _check_png_domain_color(domain_color):
@@ -45,11 +45,11 @@ def _check_png_domain_color(domain_color):
     """
 
     # check type
-    check_data_base.check_dict("domain_color", domain_color, can_be_empty=False, sub_type=list)
+    datachecker.check_dict("domain_color", domain_color, can_be_empty=False, sub_type=list)
 
     # check value
     for color in domain_color.values():
-        check_data_base.check_integer_array("domain_color", color, size=4, is_positive=True)
+        datachecker.check_integer_array("domain_color", color, size=4, is_positive=True)
 
 
 def _check_png_layer_stack(layer_stack):
@@ -58,21 +58,21 @@ def _check_png_layer_stack(layer_stack):
     """
 
     # check type
-    check_data_base.check_list("layer_stack", layer_stack, can_be_empty=False, sub_type=dict)
+    datachecker.check_list("layer_stack", layer_stack, can_be_empty=False, sub_type=dict)
 
     # check value
     for layer_stack_tmp in layer_stack:
         # check type
         key_list = ["n_layer", "filename"]
-        check_data_base.check_dict("layer_stack", layer_stack_tmp, key_list=key_list)
+        datachecker.check_dict("layer_stack", layer_stack_tmp, key_list=key_list)
 
         # get the data
         n_layer = layer_stack_tmp["n_layer"]
         filename = layer_stack_tmp["filename"]
 
         # check data
-        check_data_base.check_integer("n_layer", n_layer, is_positive=True, can_be_zero=False)
-        check_data_base.check_string("filename", filename)
+        datachecker.check_integer("n_layer", n_layer, is_positive=True, can_be_zero=False)
+        datachecker.check_string("filename", filename)
 
 
 def _check_stl_domain_stl(domain_stl):
@@ -81,7 +81,7 @@ def _check_stl_domain_stl(domain_stl):
     """
 
     # check type
-    check_data_base.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=str)
+    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=str)
 
 
 def _check_stl_domain_conflict(domain_conflict):
@@ -90,21 +90,21 @@ def _check_stl_domain_conflict(domain_conflict):
     """
 
     # check type
-    check_data_base.check_list("domain_conflict", domain_conflict, sub_type=dict)
+    datachecker.check_list("domain_conflict", domain_conflict, sub_type=dict)
 
     # check value
     for domain_conflict_tmp in domain_conflict:
         # check type
         key_list = ["domain_keep", "domain_resolve"]
-        check_data_base.check_dict("domain_conflict", domain_conflict_tmp, key_list=key_list)
+        datachecker.check_dict("domain_conflict", domain_conflict_tmp, key_list=key_list)
 
         # extract data
         domain_keep = domain_conflict_tmp["domain_keep"]
         domain_resolve = domain_conflict_tmp["domain_resolve"]
 
         # check type
-        check_data_base.check_string("domain_keep", domain_keep)
-        check_data_base.check_string("domain_resolve", domain_resolve)
+        datachecker.check_string("domain_keep", domain_keep)
+        datachecker.check_string("domain_resolve", domain_resolve)
 
 
 def _check_stl_name(domain_conflict, domain_name):
@@ -118,8 +118,8 @@ def _check_stl_name(domain_conflict, domain_name):
         domain_keep = domain_conflict_tmp["domain_keep"]
 
         # check data
-        check_data_base.check_choice("domain_resolve", domain_resolve, domain_name)
-        check_data_base.check_choice("domain_keep", domain_keep, domain_name)
+        datachecker.check_choice("domain_resolve", domain_resolve, domain_name)
+        datachecker.check_choice("domain_keep", domain_keep, domain_name)
 
 
 def _check_data_voxelize_png(data_voxelize):
@@ -129,7 +129,7 @@ def _check_data_voxelize_png(data_voxelize):
 
     # check type
     key_list = ["d", "c", "nx", "ny", "domain_color", "layer_stack"]
-    check_data_base.check_dict("data_voxelize", data_voxelize, key_list=key_list)
+    datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     d = data_voxelize["d"]
@@ -140,10 +140,10 @@ def _check_data_voxelize_png(data_voxelize):
     layer_stack = data_voxelize["layer_stack"]
 
     # check data
-    check_data_base.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
-    check_data_base.check_float_array("c", c, size=3)
-    check_data_base.check_integer("nx", nx, is_positive=True, can_be_zero=False)
-    check_data_base.check_integer("ny", ny, is_positive=True, can_be_zero=False)
+    datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
+    datachecker.check_float_array("c", c, size=3)
+    datachecker.check_integer("nx", nx, is_positive=True, can_be_zero=False)
+    datachecker.check_integer("ny", ny, is_positive=True, can_be_zero=False)
 
     # check domains and layers
     _check_png_domain_color(domain_color)
@@ -162,7 +162,7 @@ def _check_data_voxelize_stl(data_voxelize):
 
     # check type
     key_list = ["n", "d", "c", "sampling", "pts_min", "pts_max", "domain_stl", "domain_conflict"]
-    check_data_base.check_dict("data_voxelize", data_voxelize, key_list=key_list)
+    datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     n = data_voxelize["n"]
@@ -175,21 +175,21 @@ def _check_data_voxelize_stl(data_voxelize):
     domain_conflict = data_voxelize["domain_conflict"]
 
     # check data
-    check_data_base.check_choice("sampling", sampling, ["number", "dimension"])
+    datachecker.check_choice("sampling", sampling, ["number", "dimension"])
     if sampling == "number":
-        check_data_base.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
+        datachecker.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
     elif sampling == "dimension":
-        check_data_base.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
+        datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
     else:
         raise ValueError("inconsistent definition of the voxel number/size")
 
     # check data
     if c is not None:
-        check_data_base.check_float_array("c", c, size=3)
+        datachecker.check_float_array("c", c, size=3)
     if pts_min is not None:
-        check_data_base.check_float_array("pts_min", pts_min, size=3)
+        datachecker.check_float_array("pts_min", pts_min, size=3)
     if pts_max is not None:
-        check_data_base.check_float_array("pts_max", pts_max, size=3)
+        datachecker.check_float_array("pts_max", pts_max, size=3)
 
     # check the stl file
     _check_stl_domain_stl(domain_stl)
@@ -212,7 +212,7 @@ def _check_data_voxelize_voxel(data_voxelize):
 
     # check type
     key_list = ["n", "d", "c", "domain_def"]
-    check_data_base.check_dict("data_voxelize", data_voxelize, key_list=key_list)
+    datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     n = data_voxelize["n"]
@@ -221,9 +221,9 @@ def _check_data_voxelize_voxel(data_voxelize):
     domain_def = data_voxelize["domain_def"]
 
     # check data
-    check_data_base.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
-    check_data_base.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
-    check_data_base.check_float_array("c", c, size=3)
+    datachecker.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
+    datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
+    datachecker.check_float_array("c", c, size=3)
 
     # check domain definition
     _check_voxel_domain_def(domain_def)
@@ -244,25 +244,25 @@ def _check_domain_connection(domain_connection, domain_name):
     """
 
     # check type
-    check_data_base.check_dict("domain_connection", domain_connection, sub_type=dict)
+    datachecker.check_dict("domain_connection", domain_connection, sub_type=dict)
 
     # check value
     for dat_tmp in domain_connection.values():
         # check type
         key_list = ["connected", "domain_list"]
-        check_data_base.check_dict("domain_connection", dat_tmp, key_list=key_list)
+        datachecker.check_dict("domain_connection", dat_tmp, key_list=key_list)
 
         # extract field
         domain_list = dat_tmp["domain_list"]
         connected = dat_tmp["connected"]
 
         # check data
-        check_data_base.check_boolean("connected", connected)
-        check_data_base.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
+        datachecker.check_boolean("connected", connected)
+        datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
         # check value
         for tag in domain_list:
-            check_data_base.check_choice("source_type", tag, domain_name)
+            datachecker.check_choice("source_type", tag, domain_name)
 
 
 def get_domain_stl_path(domain_stl, path_ref):
@@ -275,7 +275,7 @@ def get_domain_stl_path(domain_stl, path_ref):
         return domain_stl
 
     # check the path
-    check_data_base.check_string("path_ref", path_ref)
+    datachecker.check_string("path_ref", path_ref)
 
     # init new domain description
     domain_stl_path = {}
@@ -284,7 +284,7 @@ def get_domain_stl_path(domain_stl, path_ref):
     for tag, filename in domain_stl.items():
         # check file
         filename = path_ref + "/" + filename
-        check_data_base.check_filename("filename", filename)
+        datachecker.check_filename("filename", filename)
 
         # add the new item
         domain_stl_path[tag] = filename
@@ -302,7 +302,7 @@ def get_layer_stack_path(layer_stack, path_ref):
         return layer_stack
 
     # check the path
-    check_data_base.check_string("path_ref", path_ref)
+    datachecker.check_string("path_ref", path_ref)
 
     # init new layer stack
     layer_stack_path = []
@@ -315,7 +315,7 @@ def get_layer_stack_path(layer_stack, path_ref):
 
         # check file
         filename = path_ref + "/" + filename
-        check_data_base.check_filename("filename", filename)
+        datachecker.check_filename("filename", filename)
 
         # add the new item
         layer_stack_path.append({"n_layer": n_layer, "filename": filename})
@@ -334,7 +334,7 @@ def check_data_mesher(data_mesher):
         "resampling_factor",
         "domain_connection",
     ]
-    check_data_base.check_dict("data_mesher", data_mesher, key_list=key_list)
+    datachecker.check_dict("data_mesher", data_mesher, key_list=key_list)
 
     # extract field
     mesh_type = data_mesher["mesh_type"]
@@ -343,7 +343,7 @@ def check_data_mesher(data_mesher):
     domain_connection = data_mesher["domain_connection"]
 
     # check type
-    check_data_base.check_choice("mesh_type", mesh_type, ["stl", "png", "voxel"])
+    datachecker.check_choice("mesh_type", mesh_type, ["stl", "png", "voxel"])
 
     # check the mesher
     if mesh_type == "png":
@@ -356,7 +356,7 @@ def check_data_mesher(data_mesher):
         raise ValueError("invalid mesh type")
 
     # check the resampling data
-    check_data_base.check_integer_array("resampling_factor", resampling_factor, size=3, is_positive=True, can_be_zero=False)
+    datachecker.check_integer_array("resampling_factor", resampling_factor, size=3, is_positive=True, can_be_zero=False)
 
     # check the connection data
     _check_domain_connection(domain_connection, domain_name)
