@@ -30,7 +30,7 @@ def _run_workflow(test_obj, name):
     """
 
     # import PyPEEC
-    from PyPEEC import main
+    from pypeec import main
 
     # start the test
     print("run")

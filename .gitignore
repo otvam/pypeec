@@ -12,8 +12,8 @@
 
 # remove packinging files
 dist/*
-PyPEEC.egg-info/*
-PyPEEC/version.py
+pypeec.egg-info/*
+pypeec/version.py
 
 # exclude virtual environments
 venv/*
