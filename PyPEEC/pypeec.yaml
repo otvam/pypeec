@@ -30,21 +30,16 @@ LOGGING_OPTIONS:
     CL_RESET: '[0m' # terminal color code
 
 # FFT options (for the CPU computation, ignored for GPU)
-#   - SciPy is typically slightly slower but is always available (integrated with SciPy)
-#   - FFTW is typically faster but has to be installed separately
-FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW"
-
-# FFT options (for the CPU computation, ignored for GPU)
 FFT_OPTIONS:
     FFTS_WORKER: null  # number of workers for SciPy (null for number of CPUs)
     FFTW_THREAD: null  # number of threads for FFTW (null for number of CPUs)
-    FFTW_CACHE_TIMEOUT: 100  # cache timeout in seconds for FFTW (null for no caching)
+    FFTW_CACHE_TIMEOUT: 100.0  # cache timeout in seconds for FFTW (null for no caching)
     FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW
 
-# GPU options
-#   - if false, GPUs are not used and not required
-#   - if true, GPUs are used for some operations
-USE_GPU: false
+# FFT options (for the CPU computation, ignored for GPU)
+#   - SciPy is typically slightly slower but is always available (integrated with SciPy)
+#   - FFTW is typically faster but has to be installed separately
+FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW"
 
 # matrix factorization options
 #   - SuperLU is typically slower but is always available (integrated with SciPy)
@@ -57,3 +52,8 @@ MATRIX_FACTORIZATION: "SuperLU"  # "SuperLU" or "UMFPACK"
 #   - DIRECT is extremely slow and memory intensive
 #   - DIRECT is only useful for debugging and educational purposes
 MATRIX_MULTIPLICATION: "FFT"  # "FFT" or "DIRECT"
+
+# GPU options
+#   - if false, GPUs are not used and not required
+#   - if true, GPUs are used for some operations
+USE_GPU: false

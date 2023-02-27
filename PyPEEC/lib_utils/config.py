@@ -10,6 +10,7 @@ import sys
 import importlib.util
 import importlib.resources
 from PyPEEC.lib_utils import fileio
+from PyPEEC.lib_utils import datachecker
 from PyPEEC.lib_utils.error import FileError, CheckError
 
 
@@ -18,7 +19,32 @@ def _check_data():
     Check that the config is valid.
     """
 
-    pass
+    # check logging options
+    datachecker.check_string("FORMAT", LOGGING_OPTIONS["FORMAT"])
+    datachecker.check_string("FORMAT", LOGGING_OPTIONS["FORMAT"])
+    datachecker.check_string("LEVEL", LOGGING_OPTIONS["LEVEL"])
+    datachecker.check_integer("INDENTATION", LOGGING_OPTIONS["INDENTATION"])
+    datachecker.check_boolean("COLOR", LOGGING_OPTIONS["COLOR"])
+    datachecker.check_string("CL_DEBUG", LOGGING_OPTIONS["CL_DEBUG"])
+    datachecker.check_string("CL_INFO", LOGGING_OPTIONS["CL_INFO"])
+    datachecker.check_string("CL_WARNING", LOGGING_OPTIONS["CL_WARNING"])
+    datachecker.check_string("CL_ERROR", LOGGING_OPTIONS["CL_ERROR"])
+    datachecker.check_string("CL_CRITICAL", LOGGING_OPTIONS["CL_CRITICAL"])
+    datachecker.check_string("CL_RESET", LOGGING_OPTIONS["CL_RESET"])
+
+    # check FFT options
+    if FFT_OPTIONS["FFTS_WORKER"] is not None:
+        datachecker.check_integer("FFTS_WORKER", FFT_OPTIONS["FFTS_WORKER"])
+    if FFT_OPTIONS["FFTW_THREAD"] is not None:
+        datachecker.check_integer("FFTW_THREAD", FFT_OPTIONS["FFTW_THREAD"])
+    datachecker.check_integer("FFTW_BYTE_ALIGN", FFT_OPTIONS["FFTW_BYTE_ALIGN"])
+    datachecker.check_float("FFTW_CACHE_TIMEOUT", FFT_OPTIONS["FFTW_CACHE_TIMEOUT"])
+
+    # check other switches
+    datachecker.check_boolean("USE_GPU", USE_GPU)
+    datachecker.check_choice("FFT_LIBRARY", FFT_LIBRARY, ["SciPy", "FFTW"])
+    datachecker.check_choice("MATRIX_FACTORIZATION", MATRIX_FACTORIZATION, ["SuperLU", "UMFPACK"])
+    datachecker.check_choice("MATRIX_MULTIPLICATION", MATRIX_MULTIPLICATION, ["FFT", "DIRECT"])
 
 
 def _check_lib():
@@ -51,24 +77,24 @@ def set_config(file_config):
     """
 
     # name of the global variables
-    var = [
+    key_list = [
         "LOGGING_OPTIONS",
+        "FFT_OPTIONS",
+        "FFT_LIBRARY",
         "MATRIX_FACTORIZATION",
         "MATRIX_MULTIPLICATION",
-        "FFT_LIBRARY",
-        "FFT_OPTIONS",
         "USE_GPU",
     ]
 
     # parse the file
     data = fileio.load_config(file_config)
 
+    # check type
+    datachecker.check_dict("data", data, key_list=key_list)
+
     # assign data to global variables
-    for name in var:
-        if name not in data:
-            raise FileError("invalid configuration: field is missing: %s" % name)
-        else:
-            globals()[name] = data[name]
+    for key in key_list:
+        globals()[key] = data[key]
 
     # check the data integrity
     _check_data()
@@ -78,11 +104,11 @@ def set_config(file_config):
 
 
 # init data to global variables
-LOGGING_OPTIONS = None
+LOGGING_OPTIONS = dict()
+FFT_OPTIONS = dict()
+FFT_LIBRARY = None
 MATRIX_FACTORIZATION = None
 MATRIX_MULTIPLICATION = None
-FFT_LIBRARY = None
-FFT_OPTIONS = None
 USE_GPU = None
 
 # load the default config files
