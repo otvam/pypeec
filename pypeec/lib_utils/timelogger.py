@@ -198,6 +198,9 @@ def get_logger(name):
     # get the logger
     logger = logging.getLogger(name)
 
+    # prevent duplicated log messages
+    logger.propagate = False
+
     # create the logger (if not already done)
     if len(logger.handlers) == 0:
         # get the formatter
