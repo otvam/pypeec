@@ -234,5 +234,7 @@ class PlotGui:
                 pl.close()
             for fig in self.fig_list:
                 matplotlib.pyplot.close(fig)
+
+            return True
         else:
             raise ValueError("invalid plot mode")

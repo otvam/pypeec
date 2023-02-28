@@ -6,6 +6,8 @@
 #
 # WARNING: Jupyter Notebook is not included in the Python Virtual Environment.
 #
+# WARNING: FFTW and UMFPACK are included in the Python Virtual Environment but optional.
+#
 # (c) Thomas Guillod - Dartmouth College
 
 # default packages
@@ -21,6 +23,6 @@ pyvistaqt>=0.9 # used by the viewer, and plotter
 QtPy>=2.3 # used by the viewer, and plotter
 PyQt5>=5.15 # used by the viewer, and plotter
 
-# high-performance libraries (optional)
-scikit-umfpack[HPC]>=0.3 # used by the solver, optional see config file
-pyFFTW[HPC]>=0.13 # used by the solver, optional see config file
+# high-performance libraries
+scikit-umfpack>=0.3 # used by the solver, optional see config file
+pyFFTW>=0.13 # used by the solver, optional see config file
