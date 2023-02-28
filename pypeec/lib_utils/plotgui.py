@@ -33,48 +33,42 @@ class PlotGui:
     Three different plot mode are available:
         - qt: show plot windows with the Qt framework
         - nb: show the plot inside a Jupyter notebook
-        - nop: close all the plots without showing them
+        - silent: close all the plots without showing them
     """
 
-    def __init__(self, plot_mode):
+    def __init__(self, is_silent):
         """
         Constructor.
         Init the plots.
         """
 
         # assign variable
-        self.plot_mode = plot_mode
-        self.app = None
         self.pl_list = []
         self.fig_list = []
 
-        # display
-        logger.info("init the plot manager")
-
-        # check if running inside a notebook
+        # find the plot mode
         is_notebook = self._get_notebook()
-        if (plot_mode == "qt") and is_notebook:
-            logger.warning("the qt plot mode should not be used inside Jupyter notebooks")
-        elif (plot_mode == "nb") and not is_notebook:
-            logger.warning("the nb plot mode should not be used outside Jupyter notebooks")
+        if is_silent:
+            self.plot_mode = "nop"
         else:
-            logger.info("plotting mode is correct")
-
-        # setup PyVista and Matplotlib
-        if plot_mode == "qt":
-            pyvista.set_plot_theme("default")
-            matplotlib.use("QtAgg")
-        elif plot_mode == "nb":
-            pyvista.set_plot_theme("default")
-            pyvista.set_jupyter_backend("trame")
-        elif plot_mode == "nop":
-            pass
-        else:
-            raise ValueError("invalid plot mode")
+            if is_notebook:
+                self.plot_mode = "nb"
+            else:
+                self.plot_mode = "qt"
 
         # create the Qt App
-        if plot_mode == "qt":
+        if self.plot_mode == "qt":
             self.app = qtpy.QtWidgets.QApplication([])
+        else:
+            self.app = None
+
+        # setup PyVista and Matplotlib
+        if self.plot_mode == "qt":
+            pyvista.set_plot_theme("default")
+            matplotlib.use("QtAgg")
+        if self.plot_mode == "nb":
+            pyvista.set_plot_theme("default")
+            pyvista.set_jupyter_backend("trame")
 
     @staticmethod
     def _get_notebook():

@@ -71,7 +71,7 @@ def _get_plot(grid, voxel, point, reference, data_viewer, gui_obj):
     manage_pyvista.get_plot_viewer(pl, grid, voxel, point, reference, data_plot)
 
 
-def run(data_voxel, data_point, data_viewer, plot_mode):
+def run(data_voxel, data_point, data_viewer, is_silent=False):
     """
     Main script for visualizing a 3D voxel structure.
     Handle invalid data with exceptions.
@@ -91,10 +91,9 @@ def run(data_voxel, data_point, data_viewer, plot_mode):
         Different types of plots are available.
         Plot of the different domain composing the voxel structure.
         Plot of the connected components composing the voxel structure.
-    plot_mode : string
-        If "qt": show plot windows with the Qt framework (blocking call)
-        If "nb": show the plot inside a Jupyter notebook (non-blocking call)
-        If "nop": close all the plots without showing them (non-blocking call)
+    is_silent : boolean
+        If true, the plots are not shown (non-blocking call).
+        If true, the plots are shown (blocking call).
 
     Returns
     -------
@@ -109,10 +108,11 @@ def run(data_voxel, data_point, data_viewer, plot_mode):
         logger.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
-        check_data_visualization.check_plot_mode(plot_mode)
+        check_data_visualization.check_is_silent(is_silent)
 
         # create the Qt app (should be at the beginning)
-        gui_obj = plotgui.PlotGui(plot_mode)
+        logger.info("init the plot manager")
+        gui_obj = plotgui.PlotGui(is_silent)
 
         # handle the data
         logger.info("parse the voxel geometry and the data")

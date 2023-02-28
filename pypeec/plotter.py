@@ -121,7 +121,7 @@ def _get_plot(grid, voxel, point, solver_status, data_plotter, gui_obj):
         raise ValueError("invalid plot framework")
 
 
-def run(data_solution, data_point, data_plotter, plot_mode):
+def run(data_solution, data_point, data_plotter, is_silent=False):
     """
     Main script for plotting the solution of a PEEC problem.
     Handle invalid data with exceptions.
@@ -150,10 +150,9 @@ def run(data_solution, data_point, data_plotter, plot_mode):
         Scalar plot of the magnetic field on the point cloud.
         Vector plot (with arrows) of the magnetic field on the point cloud.
         Plots describing the solver convergence.
-    plot_mode : string
-        If "qt": show plot windows with the Qt framework (blocking call)
-        If "nb": show the plot inside a Jupyter notebook (non-blocking call)
-        If "nop": close all the plots without showing them (non-blocking call)
+    is_silent : boolean
+        If true, the plots are not shown (non-blocking call).
+        If true, the plots are shown (blocking call).
 
     Returns
     -------
@@ -169,10 +168,11 @@ def run(data_solution, data_point, data_plotter, plot_mode):
         # check the data type
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_plotter(data_plotter)
-        check_data_visualization.check_plot_mode(plot_mode)
+        check_data_visualization.check_is_silent(is_silent)
 
         # create the Qt app (should be at the beginning)
-        gui_obj = plotgui.PlotGui(plot_mode)
+        logger.info("init the plot manager")
+        gui_obj = plotgui.PlotGui(is_silent)
 
         # handle the data
         logger.info("parse the voxel geometry and the data")

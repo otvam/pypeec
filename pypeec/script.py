@@ -38,6 +38,14 @@ def _get_parser():
         version="PyPEEC %s" % VERSION,
     )
 
+    # silent mode
+    parser.add_argument(
+        "-s", "--silent",
+        help="if set, do not display the plots",
+        action="store_true",
+        dest="is_silent",
+    )
+
     # switch for a custom config file
     parser.add_argument(
         "-c", "--config",
@@ -114,13 +122,6 @@ def _get_arg_viewer(subparsers):
         required=True,
         dest="file_viewer",
     )
-    parser.add_argument(
-        "-mo", "--mode",
-        help="plot mode (input / string)",
-        choices=["qt", "nb", "nop"],
-        required=True,
-        dest="plot_mode",
-    )
 
 
 def _get_arg_solver(subparsers):
@@ -171,7 +172,7 @@ def _get_arg_plotter(subparsers):
     parser = subparsers.add_parser(
         "plotter",
         aliases=["pl"],
-        help="plot the solution of a PEEC problem", 
+        help="plot the solution of a PEEC problem",
     )
 
     # add the arguments
@@ -193,13 +194,6 @@ def _get_arg_plotter(subparsers):
         required=True,
         dest="file_plotter",
     )
-    parser.add_argument(
-        "-mo", "--mode",
-        help="plot mode (input / string)",
-        choices=["qt", "nb", "nop"],
-        required=True,
-        dest="plot_mode",
-    )
 
 
 def _get_arguments(parser):
@@ -213,6 +207,7 @@ def _get_arguments(parser):
 
     # get the config file
     command = args.command
+    is_silent = args.is_silent
     file_config = args.file_config
 
     # if provided, load a custom config file
@@ -224,7 +219,7 @@ def _get_arguments(parser):
         if not status:
             sys.exit(1)
 
-    return command, args
+    return command, is_silent, args
 
 
 def run_script():
@@ -243,17 +238,17 @@ def run_script():
     _get_arg_plotter(subparsers)
 
     # parse the config and get arguments
-    (command, args) = _get_arguments(parser)
+    (command, is_silent, args) = _get_arguments(parser)
 
     # run the code
     if command in ["mesher", "me"]:
         (status, ex) = main.run_mesher(args.file_mesher, args.file_voxel)
     elif command in ["viewer", "vi"]:
-        (status, ex) = main.run_viewer(args.file_voxel, args.file_point, args.file_viewer, args.plot_mode)
+        (status, ex) = main.run_viewer(args.file_voxel, args.file_point, args.file_viewer, is_silent)
     elif command in ["solver", "so"]:
         (status, ex) = main.run_solver(args.file_voxel, args.file_problem, args.file_tolerance, args.file_solution)
     elif command in ["plotter", "pl"]:
-        (status, ex) = main.run_plotter(args.file_solution, args.file_point, args.file_plotter, args.plot_mode)
+        (status, ex) = main.run_plotter(args.file_solution, args.file_point, args.file_plotter, is_silent)
     else:
         raise ValueError("invalid command")
 

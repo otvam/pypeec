@@ -92,7 +92,7 @@ def run_mesher(file_mesher, file_voxel):
     return status, ex
 
 
-def run_viewer(file_voxel, file_point, file_viewer, plot_mode):
+def run_viewer(file_voxel, file_point, file_viewer, is_silent=False):
     """
     Main script for visualizing a 3D voxel structure.
 
@@ -101,10 +101,9 @@ def run_viewer(file_voxel, file_point, file_viewer, plot_mode):
     file_voxel : string (input file, Pickle format)
     file_point: string (input file, JSON or YAML format)
     file_viewer: string (input file, JSON or YAML format)
-    plot_mode : string
-        If "qt": show plot windows with the Qt framework (blocking call)
-        If "nb": show the plot inside a Jupyter notebook (non-blocking call)
-        If "nop": close all the plots without showing them (non-blocking call)
+    is_silent : boolean
+        If true, the plots are not shown (non-blocking call).
+        If true, the plots are shown (blocking call).
 
     Returns
     -------
@@ -127,7 +126,7 @@ def run_viewer(file_voxel, file_point, file_viewer, plot_mode):
         data_viewer = fileio.load_config(file_viewer)
 
         # call the viewer
-        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, plot_mode)
+        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, is_silent)
     except FileError as ex:
         timelogger.log_exception(logger, ex)
         return False, ex
@@ -181,7 +180,7 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     return status, ex
 
 
-def run_plotter(file_solution, file_point, file_plotter, plot_mode):
+def run_plotter(file_solution, file_point, file_plotter, is_silent=False):
     """
     Main script for plotting the solution of a PEEC problem.
 
@@ -190,10 +189,9 @@ def run_plotter(file_solution, file_point, file_plotter, plot_mode):
     file_solution : string (input file, Pickle format)
     file_point: string (input file, JSON or YAML format)
     file_plotter: string (input file, JSON or YAML format)
-    plot_mode : string
-        If "qt": show plot windows with the Qt framework (blocking call)
-        If "nb": show the plot inside a Jupyter notebook (non-blocking call)
-        If "nop": close all the plots without showing them (non-blocking call)
+    is_silent : boolean
+        If true, the plots are not shown (non-blocking call).
+        If true, the plots are shown (blocking call).
 
     Returns
     -------
@@ -216,7 +214,7 @@ def run_plotter(file_solution, file_point, file_plotter, plot_mode):
         data_plotter = fileio.load_config(file_plotter)
 
         # call the plotter
-        (status, ex) = plotter.run(data_solution, data_point, data_plotter, plot_mode)
+        (status, ex) = plotter.run(data_solution, data_point, data_plotter, is_silent)
     except FileError as ex:
         timelogger.log_exception(logger, ex)
         return False, ex

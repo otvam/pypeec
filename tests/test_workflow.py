@@ -60,7 +60,7 @@ def _run_workflow(test_obj, name):
             data_voxel = pickle.load(fid)
 
         # run the viewer
-        (status, ex) = main.run_viewer(file_voxel, file_point, file_viewer, False)
+        (status, ex) = main.run_viewer(file_voxel, file_point, file_viewer, is_silent=True)
         test_obj.assertTrue(status, msg="viewer failure : " + str(ex))
 
         # run the solver
@@ -68,7 +68,7 @@ def _run_workflow(test_obj, name):
         test_obj.assertTrue(status, msg="solver failure : " + str(ex))
 
         # run the plotter
-        (status, ex) = main.run_plotter(file_solution, file_point, file_plotter, False)
+        (status, ex) = main.run_plotter(file_solution, file_point, file_plotter, is_silent=True)
         test_obj.assertTrue(status, msg="plotter failure : " + str(ex))
 
         # check the solution file

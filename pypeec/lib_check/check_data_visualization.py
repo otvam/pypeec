@@ -364,16 +364,12 @@ def check_data_point(data_point):
         datachecker.check_float_array("data_point", dat_tmp, size=3)
 
 
-def check_plot_mode(plot_mode):
+def check_is_silent(is_silent):
     """
-    Check the plot mode.
-
-    If "qt": show plot windows with the Qt framework
-    If "nb": show the plot inside a Jupyter notebook
-    If "nop": close all the plots without showing them
+    Check the plot mode (display or not the plots).
     """
 
-    datachecker.check_choice("plot_mode", plot_mode, ["qt", "nb", "nop"])
+    datachecker.check_boolean("is_silent", is_silent)
 
 
 def check_data_plotter(data_plotter):
