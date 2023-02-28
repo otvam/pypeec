@@ -4,6 +4,8 @@
 #          These libraries are not included in the Python Virtual Environment.
 #          The GPU support is extremely platform/version dependent.
 #
+# WARNING: Jupyter Notebook is not included in the Python Virtual Environment.
+#
 # (c) Thomas Guillod - Dartmouth College
 
 # default packages
@@ -14,7 +16,7 @@ scipy>=1.9 # used everywhere
 Pillow>=9.4 # used by the mesher
 matplotlib>=3.6 # used by the viewer, and plotter
 vtk>=9.2 # used by the mesher, viewer, and plotter
-pyvista>=0.37 # used by the mesher, viewer, and plotter
+pyvista>=0.38 # used by the mesher, viewer, and plotter
 pyvistaqt>=0.9 # used by the viewer, and plotter
 QtPy>=2.3 # used by the viewer, and plotter
 PyQt5>=5.15 # used by the viewer, and plotter

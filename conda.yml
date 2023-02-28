@@ -4,6 +4,8 @@
 #          These libraries are not included in the Conda Environment.
 #          The GPU support is extremely platform/version dependent.
 #
+# WARNING: Jupyter Notebook is not included in the Conda Environment.
+#
 # (c) Thomas Guillod - Dartmouth College
 
 name: PyPEEC
@@ -20,7 +22,7 @@ dependencies:
   - matplotlib=3.6.2
   - pillow=9.4.0
   - vtk=9.2.5
-  - pyvista=0.37.0
-  - pyvistaqt=0.9.0
+  - pyvista=0.38.3
+  - pyvistaqt=0.9.1
   - qtpy=2.3.0
   - pyqt=5.15.7
