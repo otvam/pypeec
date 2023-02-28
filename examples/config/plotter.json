@@ -1,5 +1,5 @@
-[
-    {
+{
+    "material": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Material",
@@ -40,7 +40,7 @@
             }
         }
     },
-    {
+    "V_c_abs": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "El. Potential",
@@ -84,7 +84,7 @@
             }
         }
     },
-    {
+    "V_m_abs": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Mag. Potential",
@@ -128,7 +128,7 @@
             }
         }
     },
-    {
+    "S_c_abs": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "El. Source",
@@ -172,7 +172,7 @@
             }
         }
     },
-    {
+    "Q_m_abs": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Mag. Source",
@@ -216,7 +216,7 @@
             }
         }
     },
-    {
+    "P_c_abs": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "El. Losses",
@@ -260,7 +260,7 @@
             }
         }
     },
-    {
+    "P_m_abs": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Mag. Losses",
@@ -304,7 +304,7 @@
             }
         }
     },
-    {
+    "J_c_norm_abs": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Current",
@@ -348,7 +348,7 @@
             }
         }
     },
-    {
+    "J_c_norm_re": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Re. Current",
@@ -394,7 +394,7 @@
             }
         }
     },
-    {
+    "J_c_norm_im": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Im. Current",
@@ -440,7 +440,7 @@
             }
         }
     },
-    {
+    "B_m_norm_abs": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Flux Density",
@@ -484,7 +484,7 @@
             }
         }
     },
-    {
+    "B_m_norm_re": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Re. Flux Density",
@@ -530,7 +530,7 @@
             }
         }
     },
-    {
+    "B_m_norm_im": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Im. Flux Density",
@@ -576,7 +576,7 @@
             }
         }
     },
-    {
+    "H_norm_abs": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Mag. Field Norm",
@@ -620,7 +620,7 @@
             }
         }
     },
-    {
+    "H_norm_re": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Re. Mag. Field",
@@ -666,7 +666,7 @@
             }
         }
     },
-    {
+    "H_norm_im": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Im. Mag. Field",
@@ -712,7 +712,7 @@
             }
         }
     },
-    {
+    "convergence": {
         "plot_framework": "matplotlib",
         "data_window": {
             "title": "Convergence",
@@ -730,7 +730,7 @@
             }
         }
     },
-    {
+    "residuum": {
         "plot_framework": "matplotlib",
         "data_window": {
             "title": "Residuum",
@@ -749,4 +749,4 @@
             }
         }
     }
-]
+}

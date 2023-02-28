@@ -1,5 +1,5 @@
-[
-    {
+{
+    "domain": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Domain",
@@ -38,7 +38,7 @@
             }
         }
     },
-    {
+    "connection": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Connection",
@@ -77,7 +77,7 @@
             }
         }
     },
-    {
+    "voxelization": {
         "plot_framework": "pyvista",
         "data_window": {
             "title": "Voxelization",
@@ -118,4 +118,4 @@
             }
         }
     }
-]
+}

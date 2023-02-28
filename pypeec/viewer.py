@@ -71,7 +71,7 @@ def _get_plot(grid, voxel, point, reference, data_viewer, gui_obj):
     manage_pyvista.get_plot_viewer(pl, grid, voxel, point, reference, data_plot)
 
 
-def run(data_voxel, data_point, data_viewer, is_silent=False):
+def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
     """
     Main script for visualizing a 3D voxel structure.
     Handle invalid data with exceptions.
@@ -86,11 +86,14 @@ def run(data_voxel, data_point, data_viewer, is_silent=False):
     data_point: list
         The array describes a point cloud.
         The cloud point will be used for field evaluation.
-    data_viewer: list
-        The list describes the different plots to be created.
+    data_viewer: dict
+        The dict describes the different plots to be created.
         Different types of plots are available.
         Plot of the different domain composing the voxel structure.
         Plot of the connected components composing the voxel structure.
+    tag_plot : list
+        The list describes plots to be shown.
+        If None, all the plots are shown.
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
         If true, the plots are shown (blocking call).
@@ -108,7 +111,7 @@ def run(data_voxel, data_point, data_viewer, is_silent=False):
         logger.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
-        check_data_visualization.check_is_silent(is_silent)
+        check_data_visualization.check_options(data_viewer, tag_plot, is_silent)
 
         # create the Qt app (should be at the beginning)
         logger.info("init the plot manager")
@@ -118,10 +121,16 @@ def run(data_voxel, data_point, data_viewer, is_silent=False):
         logger.info("parse the voxel geometry and the data")
         (grid, voxel, point, reference) = _get_grid_voxel(data_voxel, data_point)
 
+        # find the plots
+        if tag_plot is None:
+            data_list = data_viewer.values()
+        else:
+            data_list = [data_viewer[tag] for tag in tag_plot]
+
         # make the plots
         logger.info("generate the different plots")
-        for i, dat_tmp in enumerate(data_viewer):
-            logger.info("plotting %d / %d" % (i+1, len(data_viewer)))
+        for i, dat_tmp in enumerate(data_list):
+            logger.info("plotting %d / %d" % (i+1, len(data_list)))
             _get_plot(grid, voxel, point, reference, dat_tmp, gui_obj)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(logger, ex)

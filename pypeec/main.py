@@ -92,7 +92,7 @@ def run_mesher(file_mesher, file_voxel):
     return status, ex
 
 
-def run_viewer(file_voxel, file_point, file_viewer, is_silent=False):
+def run_viewer(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=False):
     """
     Main script for visualizing a 3D voxel structure.
 
@@ -101,6 +101,9 @@ def run_viewer(file_voxel, file_point, file_viewer, is_silent=False):
     file_voxel : string (input file, Pickle format)
     file_point: string (input file, JSON or YAML format)
     file_viewer: string (input file, JSON or YAML format)
+    tag_plot : list
+        The list describes plots to be shown.
+        If None, all the plots are shown.
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
         If true, the plots are shown (blocking call).
@@ -126,7 +129,7 @@ def run_viewer(file_voxel, file_point, file_viewer, is_silent=False):
         data_viewer = fileio.load_config(file_viewer)
 
         # call the viewer
-        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, is_silent)
+        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent)
     except FileError as ex:
         timelogger.log_exception(logger, ex)
         return False, ex
@@ -180,7 +183,7 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     return status, ex
 
 
-def run_plotter(file_solution, file_point, file_plotter, is_silent=False):
+def run_plotter(file_solution, file_point, file_plotter, tag_plot=None, is_silent=False):
     """
     Main script for plotting the solution of a PEEC problem.
 
@@ -189,6 +192,9 @@ def run_plotter(file_solution, file_point, file_plotter, is_silent=False):
     file_solution : string (input file, Pickle format)
     file_point: string (input file, JSON or YAML format)
     file_plotter: string (input file, JSON or YAML format)
+    tag_plot : list
+        The list describes plots to be shown.
+        If None, all the plots are shown.
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
         If true, the plots are shown (blocking call).
@@ -214,7 +220,7 @@ def run_plotter(file_solution, file_point, file_plotter, is_silent=False):
         data_plotter = fileio.load_config(file_plotter)
 
         # call the plotter
-        (status, ex) = plotter.run(data_solution, data_point, data_plotter, is_silent)
+        (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_plot, is_silent)
     except FileError as ex:
         timelogger.log_exception(logger, ex)
         return False, ex

@@ -207,6 +207,9 @@ class PlotGui:
         logger.info("number of PyVista plots: %s" % len(self.pl_list))
         logger.info("number of Matplotlib plots: %s" % len(self.fig_list))
 
+        if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
+            return True
+
         if self.plot_mode == "qt":
             logger.info("entering the plot event loop")
 

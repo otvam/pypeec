@@ -312,11 +312,11 @@ def get_data_viewer():
     """
 
     # get the plots
-    data_viewer = [
-        _get_data_viewer_domain("Domain"),
-        _get_data_viewer_connection("Connection"),
-        _get_data_viewer_voxelization("Voxelization"),
-    ]
+    data_viewer = {
+        "domain": _get_data_viewer_domain("Domain"),
+        "connection": _get_data_viewer_connection("Connection"),
+        "voxelization": _get_data_viewer_voxelization("Voxelization"),
+    }
 
     return data_viewer
 
@@ -329,26 +329,26 @@ def get_data_plotter():
     """
 
     # get the plots
-    data_plotter = [
-        _get_data_plotter_material("Material"),
-        _get_data_plotter_scalar("voxel", "V_c_abs", 1e0, "V", "El. Potential"),
-        _get_data_plotter_scalar("voxel", "V_m_abs", 1e0, "A", "Mag. Potential"),
-        _get_data_plotter_scalar("voxel", "S_c_abs", 1e-9, "A/mm3", "El. Source"),
-        _get_data_plotter_scalar("voxel", "Q_m_abs", 1e0, "mT/mm", "Mag. Source"),
-        _get_data_plotter_scalar("voxel", "P_c_abs", 1e-6, "W/cm3", "El. Losses"),
-        _get_data_plotter_scalar("voxel", "P_m_abs", 1e-6, "W/cm3", "Mag. Losses"),
-        _get_data_plotter_scalar("voxel", "J_c_norm_abs", 1e-6, "A/mm2", "Current"),
-        _get_data_plotter_arrow("voxel", "J_c_norm_re", "J_c_vec_re", 1e-6, "A/mm2", "Re. Current"),
-        _get_data_plotter_arrow("voxel", "J_c_norm_im", "J_c_vec_im", 1e-6, "A/mm2", "Im. Current"),
-        _get_data_plotter_scalar("voxel", "B_m_norm_abs", 1e3, "mT", "Flux Density"),
-        _get_data_plotter_arrow("voxel", "B_m_norm_re", "B_m_vec_re", 1e3, "mT", "Re. Flux Density"),
-        _get_data_plotter_arrow("voxel", "B_m_norm_im", "B_m_vec_im", 1e3, "mT", "Im. Flux Density"),
-        _get_data_plotter_scalar("point", "H_norm_abs", 1e0, "A/m", "Mag. Field Norm"),
-        _get_data_plotter_arrow("point", "H_norm_re", "H_vec_re", 1e0, "A/m", "Re. Mag. Field"),
-        _get_data_plotter_arrow("point", "H_norm_im", "H_vec_im", 1e0, "A/m", "Im. Mag. Field"),
-        _get_data_plotter_convergence("Convergence"),
-        _get_data_plotter_residuum("Residuum"),
-    ]
+    data_plotter = {
+        "material": _get_data_plotter_material("Material"),
+        "V_c_abs": _get_data_plotter_scalar("voxel", "V_c_abs", 1e0, "V", "El. Potential"),
+        "V_m_abs": _get_data_plotter_scalar("voxel", "V_m_abs", 1e0, "A", "Mag. Potential"),
+        "S_c_abs": _get_data_plotter_scalar("voxel", "S_c_abs", 1e-9, "A/mm3", "El. Source"),
+        "Q_m_abs": _get_data_plotter_scalar("voxel", "Q_m_abs", 1e0, "mT/mm", "Mag. Source"),
+        "P_c_abs": _get_data_plotter_scalar("voxel", "P_c_abs", 1e-6, "W/cm3", "El. Losses"),
+        "P_m_abs": _get_data_plotter_scalar("voxel", "P_m_abs", 1e-6, "W/cm3", "Mag. Losses"),
+        "J_c_norm_abs": _get_data_plotter_scalar("voxel", "J_c_norm_abs", 1e-6, "A/mm2", "Current"),
+        "J_c_norm_re": _get_data_plotter_arrow("voxel", "J_c_norm_re", "J_c_vec_re", 1e-6, "A/mm2", "Re. Current"),
+        "J_c_norm_im": _get_data_plotter_arrow("voxel", "J_c_norm_im", "J_c_vec_im", 1e-6, "A/mm2", "Im. Current"),
+        "B_m_norm_abs": _get_data_plotter_scalar("voxel", "B_m_norm_abs", 1e3, "mT", "Flux Density"),
+        "B_m_norm_re": _get_data_plotter_arrow("voxel", "B_m_norm_re", "B_m_vec_re", 1e3, "mT", "Re. Flux Density"),
+        "B_m_norm_im": _get_data_plotter_arrow("voxel", "B_m_norm_im", "B_m_vec_im", 1e3, "mT", "Im. Flux Density"),
+        "H_norm_abs": _get_data_plotter_scalar("point", "H_norm_abs", 1e0, "A/m", "Mag. Field Norm"),
+        "H_norm_re": _get_data_plotter_arrow("point", "H_norm_re", "H_vec_re", 1e0, "A/m", "Re. Mag. Field"),
+        "H_norm_im": _get_data_plotter_arrow("point", "H_norm_im", "H_vec_im", 1e0, "A/m", "Im. Mag. Field"),
+        "convergence": _get_data_plotter_convergence("Convergence"),
+        "residuum": _get_data_plotter_residuum("Residuum"),
+    }
 
     return data_plotter
 
