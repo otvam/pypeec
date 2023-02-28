@@ -172,7 +172,6 @@ def run(data_solution, data_point, data_plotter, plot_mode):
         check_data_visualization.check_data_plotter(data_plotter)
 
         # create the Qt app (should be at the beginning)
-        logger.info("create the GUI application")
         gui_obj = plotgui.PlotGui(plot_mode)
 
         # handle the data
@@ -192,7 +191,6 @@ def run(data_solution, data_point, data_plotter, plot_mode):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    logger.info("display plots")
     status = gui_obj.show()
 
     return status, None

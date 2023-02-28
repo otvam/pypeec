@@ -112,7 +112,6 @@ def run(data_voxel, data_point, data_viewer, plot_mode):
         check_data_visualization.check_data_viewer(data_viewer)
 
         # create the Qt app (should be at the beginning)
-        logger.info("create the GUI application")
         gui_obj = plotgui.PlotGui(plot_mode)
 
         # handle the data
@@ -132,7 +131,6 @@ def run(data_voxel, data_point, data_viewer, plot_mode):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    logger.info("display plots")
     status = gui_obj.show()
 
     return status, None
