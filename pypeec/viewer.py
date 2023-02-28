@@ -93,9 +93,9 @@ def run(data_voxel, data_point, data_viewer, plot_mode):
         Plot of the different domain composing the voxel structure.
         Plot of the connected components composing the voxel structure.
     plot_mode : string
-        If "windows": show plot windows with the Qt framework (blocking call)
-        If "notebook": show the plot inside a Jupyter notebook (non-blocking call)
-        If "silent": close all the plots without showing them (non-blocking call)
+        If "qt": show plot windows with the Qt framework (blocking call)
+        If "nb": show the plot inside a Jupyter notebook (non-blocking call)
+        If "nop": close all the plots without showing them (non-blocking call)
 
     Returns
     -------

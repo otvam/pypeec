@@ -22,5 +22,5 @@ if __name__ == "__main__":
     file_plotter = os.path.join(PATH_ROOT, "config", "plotter.json")
 
     # run
-    (status, ex) = main.run_plotter(file_solution, file_point, file_plotter, "windows")
+    (status, ex) = main.run_plotter(file_solution, file_point, file_plotter, "qt")
     sys.exit(int(not status))

@@ -152,9 +152,9 @@ def run(data_solution, data_point, data_plotter, plot_mode):
         Vector plot (with arrows) of the magnetic field on the point cloud.
         Plots describing the solver convergence.
     plot_mode : string
-        If "windows": show plot windows with the Qt framework (blocking call)
-        If "notebook": show the plot inside a Jupyter notebook (non-blocking call)
-        If "silent": close all the plots without showing them (non-blocking call)
+        If "qt": show plot windows with the Qt framework (blocking call)
+        If "nb": show the plot inside a Jupyter notebook (non-blocking call)
+        If "nop": close all the plots without showing them (non-blocking call)
 
     Returns
     -------

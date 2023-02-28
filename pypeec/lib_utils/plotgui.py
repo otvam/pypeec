@@ -31,9 +31,9 @@ class PlotGui:
     """
     Manage PyVista and Matplotlib plots.
     Three different plot mode are available:
-        - windows: show plot windows with the Qt framework
-        - notebook: show the plot inside a Jupyter notebook
-        - silent: close all the plots without showing them
+        - qt: show plot windows with the Qt framework
+        - nb: show the plot inside a Jupyter notebook
+        - nop: close all the plots without showing them
     """
 
     def __init__(self, plot_mode):
@@ -53,27 +53,27 @@ class PlotGui:
 
         # check if running inside a notebook
         is_notebook = self._get_notebook()
-        if (plot_mode == "windows") and is_notebook:
-            logger.warning("the windows plot mode should not be used inside Jupyter notebooks")
-        elif (plot_mode == "notebook") and not is_notebook:
-            logger.warning("the notebook plot mode should not be used outside Jupyter notebooks")
+        if (plot_mode == "qt") and is_notebook:
+            logger.warning("the qt plot mode should not be used inside Jupyter notebooks")
+        elif (plot_mode == "nb") and not is_notebook:
+            logger.warning("the nb plot mode should not be used outside Jupyter notebooks")
         else:
             logger.info("plotting mode is correct")
 
         # setup PyVista and Matplotlib
-        if plot_mode == "windows":
+        if plot_mode == "qt":
             pyvista.set_plot_theme("default")
             matplotlib.use("QtAgg")
-        elif plot_mode == "notebook":
+        elif plot_mode == "nb":
             pyvista.set_plot_theme("default")
             pyvista.set_jupyter_backend("trame")
-        elif plot_mode == "silent":
+        elif plot_mode == "nop":
             pass
         else:
             raise ValueError("invalid plot mode")
 
         # create the Qt App
-        if plot_mode == "windows":
+        if plot_mode == "qt":
             self.app = qtpy.QtWidgets.QApplication([])
 
     @staticmethod
@@ -151,11 +151,11 @@ class PlotGui:
         window_size = tuple(window_size)
 
         # create the figure
-        if self.plot_mode == "windows":
+        if self.plot_mode == "qt":
             pl = self._get_plotter_pyvista_qt(title, show_menu, window_size)
-        elif self.plot_mode == "notebook":
+        elif self.plot_mode == "nb":
             pl = pyvista.Plotter(notebook=True, window_size=window_size)
-        elif self.plot_mode == "silent":
+        elif self.plot_mode == "nop":
             pl = pyvista.Plotter(off_screen=True)
         else:
             raise ValueError("invalid plot mode")
@@ -179,12 +179,12 @@ class PlotGui:
         (sx, sy) = window_size
 
         # create the figure
-        if self.plot_mode == "windows":
+        if self.plot_mode == "qt":
             fig = self._get_figure_matplotlib_qt(title, show_menu, sx, sy)
-        elif self.plot_mode == "notebook":
+        elif self.plot_mode == "nb":
             fig = matplotlib.pyplot.figure(tight_layout=True)
             fig.set_size_inches(sx/fig.dpi, sy/fig.dpi)
-        elif self.plot_mode == "silent":
+        elif self.plot_mode == "nop":
             fig = matplotlib.pyplot.figure()
         else:
             raise ValueError("invalid plot mode")
@@ -198,15 +198,15 @@ class PlotGui:
         """
         Show the plots.
         The following behavior is done for the different plot mode:
-            - windows: show plot windows with the Qt framework (blocking call)
-            - notebook: show the plot inside a Jupyter notebook (non-blocking call)
-            - silent: close all the plots without showing them (non-blocking call)
+            - qt: show plot windows with the Qt framework (blocking call)
+            - nb: show the plot inside a Jupyter notebook (non-blocking call)
+            - nop: close all the plots without showing them (non-blocking call)
         """
 
         logger.info("number of PyVista plots: %s" % len(self.pl_list))
         logger.info("number of Matplotlib plots: %s" % len(self.fig_list))
 
-        if self.plot_mode == "windows":
+        if self.plot_mode == "qt":
             logger.info("entering the plot event loop")
 
             # signal for quitting the event loop with interrupt signal
@@ -223,7 +223,7 @@ class PlotGui:
             logger.info("exiting the plot event loop")
 
             return exit_code == 0
-        elif self.plot_mode == "notebook":
+        elif self.plot_mode == "nb":
             # display the non-blocking call
             logger.info("display notebook plots")
 
@@ -233,7 +233,7 @@ class PlotGui:
             matplotlib.pyplot.show(block=False)
 
             return True
-        elif self.plot_mode == "silent":
+        elif self.plot_mode == "nop":
             logger.info("close all the plots")
 
             for pl in self.pl_list:
