@@ -23,7 +23,6 @@ from pypeec.lib_visualization import manage_compute
 from pypeec.lib_visualization import manage_voxel
 from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_matplotlib
-from pypeec.lib_check import check_data_point
 from pypeec.lib_check import check_data_visualization
 from pypeec.lib_utils import plotgui
 from pypeec.lib_utils import timelogger
@@ -168,8 +167,9 @@ def run(data_solution, data_point, data_plotter, plot_mode):
         # check the input data
         logger.info("check the input data")
         # check the data type
-        check_data_point.check_data_point(data_point)
+        check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_plotter(data_plotter)
+        check_data_visualization.check_plot_mode(plot_mode)
 
         # create the Qt app (should be at the beginning)
         gui_obj = plotgui.PlotGui(plot_mode)

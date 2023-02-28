@@ -350,6 +350,32 @@ def _check_data_viewer_item(data_viewer):
     _check_plot_options(plot_options)
 
 
+def check_data_point(data_point):
+    """
+    Check the point structure (defining the point cloud).
+    The point cloud is used for magnetic field evaluation.
+    """
+
+    # check type
+    datachecker.check_list("data_point", data_point, sub_type=list)
+
+    # check the points (if any)
+    for dat_tmp in data_point:
+        datachecker.check_float_array("data_point", dat_tmp, size=3)
+
+
+def check_plot_mode(plot_mode):
+    """
+    Check the plot mode.
+
+    If "qt": show plot windows with the Qt framework
+    If "nb": show the plot inside a Jupyter notebook
+    If "nop": close all the plots without showing them
+    """
+
+    datachecker.check_choice("plot_mode", plot_mode, ["qt", "nb", "nop"])
+
+
 def check_data_plotter(data_plotter):
     """
     Check the type of the data defining several plots.

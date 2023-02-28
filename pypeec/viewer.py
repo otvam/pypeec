@@ -17,7 +17,6 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_visualization import manage_compute
 from pypeec.lib_visualization import manage_voxel
 from pypeec.lib_visualization import manage_pyvista
-from pypeec.lib_check import check_data_point
 from pypeec.lib_check import check_data_visualization
 from pypeec.lib_utils import plotgui
 from pypeec.lib_utils import timelogger
@@ -108,8 +107,9 @@ def run(data_voxel, data_point, data_viewer, plot_mode):
     try:
         # check the input data
         logger.info("check the input data")
-        check_data_point.check_data_point(data_point)
+        check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
+        check_data_visualization.check_plot_mode(plot_mode)
 
         # create the Qt app (should be at the beginning)
         gui_obj = plotgui.PlotGui(plot_mode)
