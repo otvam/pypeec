@@ -22,5 +22,5 @@ if __name__ == "__main__":
     file_viewer = os.path.join(PATH_ROOT, "config", "viewer.json")
 
     # run viewer
-    (status, ex) = main.run_viewer(file_voxel, file_point, file_viewer, True)
+    (status, ex) = main.run_viewer(file_voxel, file_point, file_viewer, "windows")
     sys.exit(int(not status))

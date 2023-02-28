@@ -91,7 +91,7 @@ def _get_grid_voxel(data_solution, data_point):
     return grid, voxel, point, solver_status
 
 
-def _get_plot(grid, voxel, point, solver_status, data_plotter, is_interactive):
+def _get_plot(grid, voxel, point, solver_status, data_plotter, gui_obj):
     """
     Make a plot with the specified user settings.
     The plot contains the following elements:
@@ -108,27 +108,21 @@ def _get_plot(grid, voxel, point, solver_status, data_plotter, is_interactive):
     # make the plots
     if plot_framework == "pyvista":
         # get the plotter (with the Qt framework)
-        pl = plotgui.open_pyvista(data_window, is_interactive)
+        pl = gui_obj.open_pyvista(data_window)
 
         # make the plot
         manage_pyvista.get_plot_plotter(pl, grid, voxel, point, data_plot)
-
-        # close plotter if non-interactive
-        plotgui.close_pyvista(pl, is_interactive)
     elif plot_framework == "matplotlib":
         # get the figure (with the Qt framework)
-        fig = plotgui.open_matplotlib(data_window, is_interactive)
+        fig = gui_obj.open_matplotlib(data_window)
 
         # make the plot
         manage_matplotlib.get_plot_plotter(fig, solver_status, data_plot)
-
-        # close figure if non-interactive
-        plotgui.close_matplotlib(fig, is_interactive)
     else:
         raise ValueError("invalid plot framework")
 
 
-def run(data_solution, data_point, data_plotter, is_interactive):
+def run(data_solution, data_point, data_plotter, plot_mode):
     """
     Main script for plotting the solution of a PEEC problem.
     Handle invalid data with exceptions.
@@ -157,9 +151,10 @@ def run(data_solution, data_point, data_plotter, is_interactive):
         Scalar plot of the magnetic field on the point cloud.
         Vector plot (with arrows) of the magnetic field on the point cloud.
         Plots describing the solver convergence.
-    is_interactive : boolean
-        If true, the plots are shown (blocking call).
-        If false, the plots are not shown (non-blocking call).
+    plot_mode : string
+        If "windows": show plot windows with the Qt framework (blocking call)
+        If "notebook": show the plot inside a Jupyter notebook (non-blocking call)
+        If "silent": close all the plots without showing them (non-blocking call)
 
     Returns
     -------
@@ -178,7 +173,7 @@ def run(data_solution, data_point, data_plotter, is_interactive):
 
         # create the Qt app (should be at the beginning)
         logger.info("create the GUI application")
-        app = plotgui.open_app(is_interactive)
+        gui_obj = plotgui.PlotGui(plot_mode)
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
@@ -188,7 +183,7 @@ def run(data_solution, data_point, data_plotter, is_interactive):
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_plotter):
             logger.info("plotting %d / %d" % (i+1, len(data_plotter)))
-            _get_plot(grid, voxel, point, solver_status, dat_tmp, is_interactive)
+            _get_plot(grid, voxel, point, solver_status, dat_tmp, gui_obj)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(logger, ex)
         return False, ex
@@ -197,8 +192,7 @@ def run(data_solution, data_point, data_plotter, is_interactive):
     logger.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
-    logger.info("entering the GUI event loop")
-    status = plotgui.run_app(app, is_interactive)
-    logger.info("exiting the GUI event loop")
+    logger.info("display plots")
+    status = gui_obj.show()
 
     return status, None

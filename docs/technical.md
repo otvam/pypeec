@@ -68,13 +68,15 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 
 # Library Warnings
 
-> **Warning**: The interactions between **Qt/PyVista/Matplotlib** are likely be sensitive to the environment.
-> These interactions not work depending of the platform and the version of the libraries.
-> Therefore, the Qt dependency is minimized and insulated from the rest of the code.
+> **Warning**: The plotting code is likely sensitive to the environment (platform and the version of the libraries).
+> More particularly, the interactions between **Qt/PyVista/Matplotlib** and **Jupyter/PyVista/Matplotlib**.
+> Therefore, the Qt/Jupyter dependencies are minimized and insulated from the rest of the code.
 
 > **Warning**: The optional **GPU libraries** (CUDA, CuPy) should be installed separately.
 > These libraries are not included in the package dependencies and environments. 
 > The GPU support is extremely platform/version dependent (GPU type and CUDA version).
+
+> **Warning**: **Jupyter Notebook** is not included in the package dependencies and environments.
 
 > **Warning**: The optional **UMFPACK** library is known to be difficult to install on MS Windows.
 
