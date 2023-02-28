@@ -38,19 +38,12 @@ def _get_parser():
         version="PyPEEC %s" % VERSION,
     )
 
-    # silent mode
-    parser.add_argument(
-        "-s", "--silent",
-        help="if set, do not display the plots",
-        action="store_true",
-        dest="is_silent",
-    )
-
     # switch for a custom config file
     parser.add_argument(
         "-c", "--config",
         help="config file (custom configuration file / JSON or YAML)",
         required=False,
+        metavar="file",
         dest="file_config",
     )
 
@@ -62,6 +55,29 @@ def _get_parser():
     )
 
     return parser, subparsers
+
+
+def _get_arg_visualization(parser):
+    """
+    Add the shared viewer/plotter arguments.
+    """
+
+    # silent mode
+    parser.add_argument(
+        "-s", "--silent",
+        help="do not display the plots (default: show the plots)",
+        action="store_true",
+        dest="is_silent",
+    )
+
+    parser.add_argument(
+        "-t", "--tag_",
+        help="list of plots to be shown (default: show the plots)",
+        nargs='+',
+        default=None,
+        metavar="tag",
+        dest="tag_plot",
+    )
 
 
 def _get_arg_mesher(subparsers):
@@ -81,12 +97,14 @@ def _get_arg_mesher(subparsers):
         "-me", "--mesher",
         help="mesher file (input / JSON or YAML)",
         required=True,
+        metavar="file",
         dest="file_mesher",
     )
     parser.add_argument(
         "-vo", "--voxel",
         help="voxel file (output / pickle)",
         required=True,
+        metavar="file",
         dest="file_voxel",
     )
 
@@ -108,20 +126,24 @@ def _get_arg_viewer(subparsers):
         "-vo", "--voxel",
         help="voxel file (input / pickle)",
         required=True,
+        metavar="file",
         dest="file_voxel",
     )
     parser.add_argument(
         "-po", "--point",
         help="point file (input / JSON or YAML)",
         required=True,
+        metavar="file",
         dest="file_point",
     )
     parser.add_argument(
         "-vi", "--viewer",
         help="viewer file (input / JSON or YAML)",
         required=True,
+        metavar="file",
         dest="file_viewer",
     )
+    _get_arg_visualization(parser)
 
 
 def _get_arg_solver(subparsers):
@@ -141,24 +163,28 @@ def _get_arg_solver(subparsers):
         "-vo", "--voxel",
         help="voxel file (input / pickle)",
         required=True,
+        metavar="file",
         dest="file_voxel",
     )
     parser.add_argument(
         "-pr", "--problem",
         help="problem file (input / JSON or YAML)",
         required=True,
+        metavar="file",
         dest="file_problem",
     )
     parser.add_argument(
         "-to", "--tolerance",
         help="tolerance file (input / JSON or YAML)",
         required=True,
+        metavar="file",
         dest="file_problem",
     )
     parser.add_argument(
         "-so", "--solution",
         help="solution file (output / pickle)",
         required=True,
+        metavar="file",
         dest="file_solution",
     )
 
@@ -180,20 +206,24 @@ def _get_arg_plotter(subparsers):
         "-so", "--solution",
         help="solution file (input / pickle)",
         required=True,
+        metavar="file",
         dest="file_solution",
     )
     parser.add_argument(
         "-po", "--point",
         help="point file (input / JSON or YAML)",
         required=True,
+        metavar="file",
         dest="file_point",
     )
     parser.add_argument(
         "-pl", "--plotter",
         help="plotter file (input / JSON or YAML)",
         required=True,
+        metavar="file",
         dest="file_plotter",
     )
+    _get_arg_visualization(parser)
 
 
 def _get_arguments(parser):
@@ -207,7 +237,6 @@ def _get_arguments(parser):
 
     # get the config file
     command = args.command
-    is_silent = args.is_silent
     file_config = args.file_config
 
     # if provided, load a custom config file
@@ -219,7 +248,7 @@ def _get_arguments(parser):
         if not status:
             sys.exit(1)
 
-    return command, is_silent, args
+    return command, args
 
 
 def run_script():
@@ -238,17 +267,37 @@ def run_script():
     _get_arg_plotter(subparsers)
 
     # parse the config and get arguments
-    (command, is_silent, args) = _get_arguments(parser)
+    (command, args) = _get_arguments(parser)
 
     # run the code
     if command in ["mesher", "me"]:
-        (status, ex) = main.run_mesher(args.file_mesher, args.file_voxel)
+        (status, ex) = main.run_mesher(
+            args.file_mesher,
+            args.file_voxel,
+        )
     elif command in ["viewer", "vi"]:
-        (status, ex) = main.run_viewer(args.file_voxel, args.file_point, args.file_viewer, is_silent)
+        (status, ex) = main.run_viewer(
+            args.file_voxel,
+            args.file_point,
+            args.file_viewer,
+            args.tag_plot,
+            args.is_silent,
+        )
     elif command in ["solver", "so"]:
-        (status, ex) = main.run_solver(args.file_voxel, args.file_problem, args.file_tolerance, args.file_solution)
+        (status, ex) = main.run_solver(
+            args.file_voxel,
+            args.file_problem,
+            args.file_tolerance,
+            args.file_solution,
+        )
     elif command in ["plotter", "pl"]:
-        (status, ex) = main.run_plotter(args.file_solution, args.file_point, args.file_plotter, is_silent)
+        (status, ex) = main.run_plotter(
+            args.file_solution,
+            args.file_point,
+            args.file_plotter,
+            args.tag_plot,
+            args.is_silent,
+        )
     else:
         raise ValueError("invalid command")
 
