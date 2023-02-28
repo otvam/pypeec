@@ -99,7 +99,11 @@ class PlotGui:
         Create a PyVista plotter for the Qt framework.
         """
 
-        # get Qt plotter if interactive
+        # cast window size
+        if window_size is not None:
+            window_size = tuple(window_size)
+
+        # get Qt plotter
         pl = pyvistaqt.BackgroundPlotter(
             show=False,
             toolbar=show_menu,
@@ -114,7 +118,22 @@ class PlotGui:
         return pl
 
     @staticmethod
-    def _get_figure_matplotlib_qt(title, show_menu, sx, sy):
+    def _get_plotter_pyvista_nb(notebook_size):
+        """
+        Create a PyVista plotter for Jupyter notebooks.
+        """
+
+        # cast window size
+        if notebook_size is not None:
+            notebook_size = tuple(notebook_size)
+
+        # create plotter
+        pl = pyvista.Plotter(notebook=True, window_size=notebook_size)
+
+        return pl
+
+    @staticmethod
+    def _get_figure_matplotlib_qt(title, show_menu, window_size):
         """
         Create a Matplotlib figure for the Qt framework.
         """
@@ -130,11 +149,33 @@ class PlotGui:
         man = matplotlib.pyplot.get_current_fig_manager()
         man.window.setWindowTitle(title)
         man.window.setWindowIcon(res_icon)
-        man.window.resize(sx, sy)
+
+        # set the menu
         if show_menu:
             man.toolbar.show()
         else:
             man.toolbar.hide()
+
+        # set window size
+        if window_size is not None:
+            (sx, sy) = window_size
+            man.window.resize(sx, sy)
+
+        return fig
+
+    @staticmethod
+    def _get_figure_matplotlib_nb(notebook_size):
+        """
+        Create a Matplotlib figure for Jupyter notebooks.
+        """
+
+        # create figure
+        fig = matplotlib.pyplot.figure(tight_layout=True)
+
+        # set window size
+        if notebook_size is not None:
+            (sx, sy) = notebook_size
+            fig.set_size_inches(sx / fig.dpi, sy / fig.dpi)
 
         return fig
 
@@ -147,15 +188,13 @@ class PlotGui:
         title = data_window["title"]
         show_menu = data_window["show_menu"]
         window_size = data_window["window_size"]
-
-        # cast window size
-        window_size = tuple(window_size)
+        notebook_size = data_window["notebook_size"]
 
         # create the figure
         if self.plot_mode == "qt":
             pl = self._get_plotter_pyvista_qt(title, show_menu, window_size)
         elif self.plot_mode == "nb":
-            pl = pyvista.Plotter(notebook=True, window_size=window_size)
+            pl = self._get_plotter_pyvista_nb(notebook_size)
         elif self.plot_mode == "nop":
             pl = pyvista.Plotter(off_screen=True)
         else:
@@ -175,16 +214,13 @@ class PlotGui:
         title = data_window["title"]
         show_menu = data_window["show_menu"]
         window_size = data_window["window_size"]
-
-        # get the window size
-        (sx, sy) = window_size
+        notebook_size = data_window["notebook_size"]
 
         # create the figure
         if self.plot_mode == "qt":
-            fig = self._get_figure_matplotlib_qt(title, show_menu, sx, sy)
+            fig = self._get_figure_matplotlib_qt(title, show_menu, window_size)
         elif self.plot_mode == "nb":
-            fig = matplotlib.pyplot.figure(tight_layout=True)
-            fig.set_size_inches(sx/fig.dpi, sy/fig.dpi)
+            fig = self._get_figure_matplotlib_nb(notebook_size)
         elif self.plot_mode == "nop":
             fig = matplotlib.pyplot.figure()
         else:
@@ -204,14 +240,14 @@ class PlotGui:
             - nop: close all the plots without showing them (non-blocking call)
         """
 
-        logger.info("number of PyVista plots: %s" % len(self.pl_list))
-        logger.info("number of Matplotlib plots: %s" % len(self.fig_list))
+        logger.debug("number of PyVista plots: %s" % len(self.pl_list))
+        logger.debug("number of Matplotlib plots: %s" % len(self.fig_list))
 
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
             return True
 
         if self.plot_mode == "qt":
-            logger.info("entering the plot event loop")
+            logger.debug("entering the plot event loop")
 
             # signal handler for closing all the windows
             def signal_handler(*_):
@@ -234,7 +270,7 @@ class PlotGui:
             return exit_code == 0
         elif self.plot_mode == "nb":
             # display the non-blocking call
-            logger.info("display notebook plots")
+            logger.debug("display notebook plots")
 
             # show the different plots
             for pl in self.pl_list:
@@ -243,7 +279,7 @@ class PlotGui:
 
             return True
         elif self.plot_mode == "nop":
-            logger.info("close all the plots")
+            logger.debug("close all the plots")
 
             for pl in self.pl_list:
                 pl.close()

@@ -15,18 +15,22 @@ def _check_data_window(data_window):
     """
 
     # check type
-    key_list = ["title", "show_menu", "window_size"]
+    key_list = ["title", "show_menu", "window_size", "notebook_size"]
     datachecker.check_dict("data_window", data_window, key_list=key_list)
 
     # get the data
     title = data_window["title"]
     show_menu = data_window["show_menu"]
     window_size = data_window["window_size"]
+    notebook_size = data_window["notebook_size"]
 
     # check data
     datachecker.check_string("title", title)
     datachecker.check_boolean("show_menu", show_menu)
-    datachecker.check_integer_array("window_size", window_size, size=2, is_positive=True, can_be_zero=False)
+    if window_size is not None:
+        datachecker.check_integer_array("window_size", window_size, size=2, is_positive=True, can_be_zero=False)
+    if notebook_size is not None:
+        datachecker.check_integer_array("notebook_size", notebook_size, size=2, is_positive=True, can_be_zero=False)
 
 
 def _check_plot_options(plot_options):

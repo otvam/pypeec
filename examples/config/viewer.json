@@ -7,6 +7,10 @@
             "window_size": [
                 800,
                 600
+            ],
+            "notebook_size": [
+                800,
+                600
             ]
         },
         "data_plot": {
@@ -46,6 +50,10 @@
             "window_size": [
                 800,
                 600
+            ],
+            "notebook_size": [
+                800,
+                600
             ]
         },
         "data_plot": {
@@ -83,6 +91,10 @@
             "title": "Voxelization",
             "show_menu": false,
             "window_size": [
+                800,
+                600
+            ],
+            "notebook_size": [
                 800,
                 600
             ]

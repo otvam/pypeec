@@ -313,10 +313,12 @@ def run(data_voxel, data_problem, data_tolerance):
     # run the solver
     try:
         # check the problem and tolerance data
+        logger.info("check the input data")
         check_data_problem.check_data_problem(data_problem)
         check_data_tolerance.check_data_tolerance(data_tolerance)
 
         # combine the problem and voxel data
+        logger.info("combine the input data")
         data_solver = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
         # prepare the problem

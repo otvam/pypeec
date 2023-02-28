@@ -179,6 +179,7 @@ def run(data_mesher, path_ref):
     # run the code
     try:
         # check the input data
+        logger.info("check the input data")
         check_data_mesher.check_data_mesher(data_mesher)
 
         # run the mesher
