@@ -20,8 +20,11 @@ LOGGING_OPTIONS:
     # indentation level for the blocks
     INDENTATION: 4  # integer with the number of spaces per indentation
 
+    # display (or) not exception traces
+    EXCEPTION_TRACE: true  # boolean switch
+
     # options for coloring the log output
-    COLOR: false  # use (or not) colors for the logs
+    USE_COLOR: false  # use (or not) colors for the logs
     CL_DEBUG: '[38;5;247m' # terminal color code
     CL_INFO: '[38;5;15m' # terminal color code
     CL_WARNING: '[38;5;202m' # terminal color code

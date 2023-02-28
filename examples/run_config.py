@@ -63,7 +63,8 @@ def _get_data_window(name):
     data_window = {
         "title": name,  # window name
         "show_menu": False,  # show (or not) the window menu
-        "window_size": (800, 600),  # initial window size
+        "window_size": (800, 600),  # initial window size, None for default
+        "notebook_size": (800, 600),  # initial window size, None for default
     }
 
     return data_window

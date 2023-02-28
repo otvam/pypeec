@@ -15,7 +15,8 @@ from pypeec.lib_utils import config
 LEVEL = config.LOGGING_OPTIONS["LEVEL"]
 INDENTATION = config.LOGGING_OPTIONS["INDENTATION"]
 FORMAT = config.LOGGING_OPTIONS["FORMAT"]
-COLOR = config.LOGGING_OPTIONS["COLOR"]
+EXCEPTION_TRACE = config.LOGGING_OPTIONS["EXCEPTION_TRACE"]
+USE_COLOR = config.LOGGING_OPTIONS["USE_COLOR"]
 CL_DEBUG = config.LOGGING_OPTIONS["CL_DEBUG"]
 CL_INFO = config.LOGGING_OPTIONS["CL_INFO"]
 CL_WARNING = config.LOGGING_OPTIONS["CL_WARNING"]
@@ -103,7 +104,7 @@ class _DeltaTimeFormatter(logging.Formatter):
         record.msg = pad + msg
 
         # get the formatter
-        if COLOR:
+        if USE_COLOR:
             msg = self.fmt_color[lvl].format(record)
         else:
             msg = self.fmt_black.format(record)
@@ -171,7 +172,10 @@ def log_exception(logger, ex):
     name = ex.__class__.__name__
 
     # log the exception
-    logger.error("exception error : " + name, exc_info=ex)
+    if EXCEPTION_TRACE:
+        logger.error("exception error : " + name, exc_info=ex)
+    else:
+        logger.error("exception error : " + name + "\n" + str(ex))
 
 
 def reset_timer():
