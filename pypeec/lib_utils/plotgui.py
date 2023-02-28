@@ -62,10 +62,12 @@ class PlotGui:
         # create the Qt App
         if self.plot_mode == "qt":
             self.app = qtpy.QtWidgets.QApplication([])
-            if os.name == "nt":
-                ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("pypeec")
         else:
             self.app = None
+
+        # set the app ID in order to get a consistent icon on MS Windows
+        if (self.plot_mode == "qt") and (os.name == "nt"):
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("pypeec")
 
         # setup PyVista and Matplotlib
         if self.plot_mode == "qt":
@@ -225,8 +227,6 @@ class PlotGui:
 
             # enter the event loop
             exit_code = self.app.exec_()
-
-            logger.info("exiting the plot event loop")
 
             return exit_code == 0
         elif self.plot_mode == "nb":
