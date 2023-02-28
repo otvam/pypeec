@@ -16,12 +16,12 @@ The following optional packages are used for speeding up the solver:
 * pyFFTW (for the solver)
 * CuPy (for the solver)
 
-PyPEEC is tested on Linux x86/x64 but should run on other platforms.
-The following configurations have been tested:
-* RedHat 7.9 on x86/x64
-* Ubuntu 20.04 on x86/x64
-* Ubuntu 22.04 on x86/x64
-* NVIDIA T4 Tensor GPU
+The following platform and system configurations have been tested:
+* Linux / RedHat 7.9 on x86/x64
+* Linux / Ubuntu 20.04 on x86/x64
+* Linux / Ubuntu 22.04 on x86/x64
+* MS / Windows 10 21H2 on x86/x64
+* GPU / NVIDIA T4 Tensor GPU
 
 # Optimization
 

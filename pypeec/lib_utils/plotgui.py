@@ -13,8 +13,11 @@ WARNING: Making many plots can lead to segmentation fault with PyVista.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import importlib.resources
+import os
+import sys
+import ctypes
 import signal
+import importlib.resources
 import pyvista
 import pyvistaqt
 import matplotlib
@@ -59,6 +62,8 @@ class PlotGui:
         # create the Qt App
         if self.plot_mode == "qt":
             self.app = qtpy.QtWidgets.QApplication([])
+            if os.name == "nt":
+                ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("pypeec")
         else:
             self.app = None
 
@@ -203,8 +208,15 @@ class PlotGui:
         if self.plot_mode == "qt":
             logger.info("entering the plot event loop")
 
+            # signal handler for closing all the windows
+            def signal_handler(*_):
+                for pl in self.pl_list:
+                    pl.app_window.close()
+                matplotlib.pyplot.close("all")
+                sys.exit(130)
+
             # signal for quitting the event loop with interrupt signal
-            signal.signal(signal.SIGINT, signal.SIG_DFL)
+            signal.signal(signal.SIGINT, signal_handler)
 
             # show the different plots
             for pl in self.pl_list:
@@ -232,8 +244,7 @@ class PlotGui:
 
             for pl in self.pl_list:
                 pl.close()
-            for fig in self.fig_list:
-                matplotlib.pyplot.close(fig)
+            matplotlib.pyplot.close("all")
 
             return True
         else:
