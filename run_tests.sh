@@ -1,8 +1,6 @@
 #!/bin/bash
 # Script for running the tests:
-#   - copy the data
 #   - run the tests
-#   - clean the data
 #   - check the test status
 #
 # (c) Thomas Guillod - Dartmouth College

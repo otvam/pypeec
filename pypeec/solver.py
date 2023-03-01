@@ -299,7 +299,7 @@ def run(data_voxel, data_problem, data_tolerance):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered
+        False if the problems are encountered.
     data_solution: dict
         The dict describes the problem solution.
         The voxel structure is defined.
@@ -308,6 +308,9 @@ def run(data_voxel, data_problem, data_tolerance):
         The resistivity, potential, current density, and loss density of the different voxel are defined.
         The terminals quantities (voltage and current) of the sources are defined.
         The integral quantities (total losses and energy) of the problem are defined.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     """
 
     # run the solver

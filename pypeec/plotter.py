@@ -161,7 +161,10 @@ def run(data_solution, data_point, data_plotter, tag_plot=None, is_silent=False)
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     """
 
     # run the code

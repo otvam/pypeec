@@ -242,7 +242,7 @@ def _get_arguments(parser):
     # if provided, load a custom config file
     if file_config is not None:
         # load the config
-        status = main.set_config(file_config)
+        (status, ex) = main.set_config(file_config)
 
         # exit if config is problematic
         if not status:

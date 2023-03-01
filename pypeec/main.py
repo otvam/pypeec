@@ -31,7 +31,10 @@ def set_config(file_config):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     """
 
     logger.info("set the PyPEEC configuration")
@@ -40,9 +43,9 @@ def set_config(file_config):
         config.set_config(file_config)
     except (FileError, CheckError) as ex:
         timelogger.log_exception(logger, ex)
-        return False
+        return False, ex
 
-    return True
+    return True, None
 
 
 def run_mesher(file_mesher, file_voxel):
@@ -59,7 +62,10 @@ def run_mesher(file_mesher, file_voxel):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     """
 
     # load the tool
@@ -112,7 +118,10 @@ def run_viewer(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=Fal
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     """
 
     # load the tool
@@ -153,7 +162,10 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     """
 
     # load the tool
@@ -203,7 +215,10 @@ def run_plotter(file_solution, file_point, file_plotter, tag_plot=None, is_silen
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     """
 
     # load the tool

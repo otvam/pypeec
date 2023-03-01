@@ -168,12 +168,15 @@ def run(data_mesher, path_ref):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered
+        False if the problems are encountered.
     data_voxel: dict
         The dict describes the voxel structure.
         The voxel grid (number, size, and origin) is defined.
         Different domains (with the indices of the voxel) are defined.
         The connected components of the graph defined by the voxel structure are defined.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     """
 
     # run the code
