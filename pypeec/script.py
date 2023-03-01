@@ -178,7 +178,7 @@ def _get_arg_solver(subparsers):
         help="tolerance file (input / JSON or YAML)",
         required=True,
         metavar="file",
-        dest="file_problem",
+        dest="file_tolerance",
     )
     parser.add_argument(
         "-so", "--solution",
