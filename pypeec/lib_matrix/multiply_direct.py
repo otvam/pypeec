@@ -187,7 +187,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     return mat_dense
 
 
-def get_multiply(vec_sel, mat_dense):
+def get_multiply(vec_in, mat_dense, flip):
     """
     Matrix-vector multiplication.
 
@@ -196,6 +196,9 @@ def get_multiply(vec_sel, mat_dense):
     The output vector has the size: n_out.
     """
 
-    res_out = np.matmul(mat_dense, vec_sel)
+    if flip:
+        res_out = np.matmul(vec_in, mat_dense)
+    else:
+        res_out = np.matmul(mat_dense, vec_in)
 
     return res_out

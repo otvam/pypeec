@@ -117,7 +117,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     return idx_in, idx_out, mat_fft
 
 
-def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
+def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type, flip):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
@@ -141,6 +141,10 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type):
     nx = int(nx/2)
     ny = int(ny/2)
     nz = int(nz/2)
+
+    # flip the input and output
+    if flip:
+        (idx_out, idx_in) = (idx_in, idx_out)
 
     # load the data to the GPU
     if USE_GPU:

@@ -17,10 +17,10 @@ The equations are set in the following order:
 
 The complete equation matrix is:
     [
-        R_c+s*L_c,   K_c,            A_kvl_c,     0,          0 ;
+        R_c+s*L_c,   +K_c,           A_kvl_c,     0,          0 ;
         A_kcl_c,     0,              0,           0,          A_vc_src ;
         0,           0,              A_src_vc,    A_src_vm,   A_src_src ;
-        K_m,         R_m,            0,           0,          0 ;
+        -K_m,        R_m,            0,           0,          0 ;
         0,           P_m*A_kcl_m,    0,           s*I,        0 ;
     ]
 
@@ -167,7 +167,7 @@ def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
     if freq == 0:
         cpl_fc = np.zeros(n_fc, dtype=np.complex_)
     else:
-        cpl_fc = K_op_c(I_fm)
+        cpl_fc = +1*K_op_c(I_fm)
 
     cpl_vc = np.zeros(n_vc, dtype=np.complex_)
     cpl_src = np.zeros(n_src, dtype=np.complex_)
@@ -191,7 +191,7 @@ def _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m):
     I_fc = sol_c[0:n_fc]
 
     # compute the couplings
-    cpl_fm = K_op_m(I_fc)
+    cpl_fm = -1*K_op_m(I_fc)
     cpl_vm = np.zeros(n_vm, dtype=np.complex_)
 
     # assemble the vectors
