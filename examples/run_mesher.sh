@@ -15,4 +15,4 @@ FILE_MESHER="$PATH_ROOT/$EXAMPLE_NAME/mesher.yaml"
 FILE_VOXEL="$PATH_ROOT/$EXAMPLE_NAME/voxel.pck"
 
 # run
-ppmesher --mesher $FILE_MESHER --voxel $FILE_VOXEL
+pypeec mesher --mesher $FILE_MESHER --voxel $FILE_VOXEL
