@@ -76,7 +76,7 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 > These libraries are not included in the package dependencies and environments. 
 > The GPU support is extremely platform/version dependent (GPU type and CUDA version).
 
-> **Warning**: **Jupyter Notebook** is not included in the package dependencies and environments.
+> **Warning**: **Jupyter** is not included in the package dependencies and environments.
 
 > **Warning**: The optional **UMFPACK** library is known to be difficult to install on MS Windows.
 

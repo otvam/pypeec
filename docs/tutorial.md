@@ -84,9 +84,16 @@ Different examples are located in the `examples` folder:
 
 The following files (located in the `examples` folder) are used to run the examples.
 * `run_config.py` is used to regenerate the configuration files
-* `examples_config.py` is used to select the example (when using the Python launchers)
-* `examples_config.sh` is used to select the example (when using the Shell launchers)
-* `run_mesher.[py/sh]` runs the mesher (Python or Shell)
-* `run_viewer.[py/sh]` runs the viewer (Python or Shell)
-* `run_solver.[py/sh]` runs the solver (Python or Shell)
-* `run_plotter.[py/sh]` runs the plotter (Python or Shell)
+* `notebook.ipynb` for running the example from a Jupyter notebook
+* for running the examples from Python
+  * `examples_config.py` is used to select the example
+  * `run_mesher.py` runs the mesher
+  * `run_viewer.py` runs the viewer
+  * `run_solver.py` runs the solver
+  * `run_plotter.py` runs the plotter
+* for running the examples from the Shell
+  * `examples_config.sh` is used to select the example
+  * `run_mesher.sh` runs the mesher
+  * `run_viewer.sh` runs the viewer
+  * `run_solver.sh` runs the solver
+  * `run_plotter.sh` runs the plotter

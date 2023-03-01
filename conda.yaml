@@ -4,7 +4,7 @@
 #          These libraries are not included in the Conda Environment.
 #          The GPU support is extremely platform/version dependent.
 #
-# WARNING: Jupyter Notebook is not included in the Conda Environment.
+# WARNING: Jupyter is not included in the Conda Environment.
 #
 # WARNING: FFTW and UMFPACK are included in the Conda Environment but optional.
 #

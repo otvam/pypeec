@@ -355,7 +355,7 @@ def get_data_plotter():
 
 
 if __name__ == "__main__":
-    # get the filename
+    # get the filenames
     file_tolerance = os.path.join(PATH_ROOT, "config", "tolerance.json")
     file_plotter = os.path.join(PATH_ROOT, "config", "plotter.json")
     file_viewer = os.path.join(PATH_ROOT, "config", "viewer.json")

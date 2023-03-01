@@ -10,7 +10,7 @@ set -o pipefail
 # get config
 source examples_config.sh
 
-# get the filename
+# get the filenames
 FILE_MESHER="$PATH_ROOT/$EXAMPLE_NAME/mesher.yaml"
 FILE_VOXEL="$PATH_ROOT/$EXAMPLE_NAME/voxel.pck"
 

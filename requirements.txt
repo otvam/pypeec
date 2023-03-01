@@ -4,7 +4,7 @@
 #          These libraries are not included in the Python Virtual Environment.
 #          The GPU support is extremely platform/version dependent.
 #
-# WARNING: Jupyter Notebook is not included in the Python Virtual Environment.
+# WARNING: Jupyter is not included in the Python Virtual Environment.
 #
 # WARNING: FFTW and UMFPACK are included in the Python Virtual Environment but optional.
 #

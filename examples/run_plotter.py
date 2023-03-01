@@ -16,7 +16,7 @@ EXAMPLE_NAME = examples_config.EXAMPLE_NAME
 
 
 if __name__ == "__main__":
-    # get the filename
+    # get the filenames
     file_solution = os.path.join(PATH_ROOT, EXAMPLE_NAME, "solution.pck")
     file_point = os.path.join(PATH_ROOT, EXAMPLE_NAME, "point.yaml")
     file_plotter = os.path.join(PATH_ROOT, "config", "plotter.json")

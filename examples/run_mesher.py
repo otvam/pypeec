@@ -16,7 +16,7 @@ EXAMPLE_NAME = examples_config.EXAMPLE_NAME
 
 
 if __name__ == "__main__":
-    # get the filename
+    # get the filenames
     file_mesher = os.path.join(PATH_ROOT, EXAMPLE_NAME, "mesher.yaml")
     file_voxel = os.path.join(PATH_ROOT, EXAMPLE_NAME, "voxel.pck")
 

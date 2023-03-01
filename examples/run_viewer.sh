@@ -10,7 +10,7 @@ set -o pipefail
 # get config
 source examples_config.sh
 
-# get the filename
+# get the filenames
 FILE_VOXEL="$PATH_ROOT/$EXAMPLE_NAME/voxel.pck"
 FILE_POINT="$PATH_ROOT/$EXAMPLE_NAME/point.yaml"
 FILE_VIEWER="$PATH_ROOT/config/data_viewer.json"
