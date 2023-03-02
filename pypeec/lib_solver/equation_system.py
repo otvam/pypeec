@@ -11,17 +11,17 @@ The equations are set in the following order:
     - n_fc: the electric KVL equations
     - n_vc: the electric KCL equations
     - n_src_c: the current source voxels equations (source equation with internal admittance)
-    - n_src_v: the voltage source voxels equations (source equation with internal resistance)
+    - n_src_v: the voltage source voxels equations (source equation with internal impedance)
     - n_fm: the magnetic KVL equations
     - n_vm: the magnetic KCL equations
 
 The complete equation matrix is:
     [
-        R_c+s*L_c,   +K_c,           A_kvl_c,     0,          0 ;
-        A_kcl_c,     0,              0,           0,          A_vc_src ;
-        0,           0,              A_src_vc,    A_src_vm,   A_src_src ;
-        -K_m,        R_m,            0,           0,          0 ;
-        0,           P_m*A_kcl_m,    0,           s*I,        0 ;
+        R_c+s*L_c,    A_kvl_c,     0,            K_c,            0 ;
+        A_kcl_c,      0,           A_vc_src,     0,              0 ;
+        0,            A_src_vc,    A_src_src,    0,              0 ;
+        -K_m,         0,           0,            R_m,            A_kvl_m ;
+        0,            0,           0,            P_m*A_kcl_m,    s*I ;
     ]
 
 The complete solution vector is:
