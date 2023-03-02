@@ -16,6 +16,7 @@ from pypeec.lib_solver import system_matrix
 from pypeec.lib_solver import equation_system
 from pypeec.lib_solver import equation_solver
 from pypeec.lib_solver import extract_solution
+from pypeec.lib_solver import extract_solution_new
 from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_solver
@@ -157,6 +158,8 @@ def _run_main(data_solver):
     data_solver["idx_vm"] = idx_vm
     data_solver["idx_src_v"] = idx_src_v
     data_solver["idx_src_c"] = idx_src_c
+    data_solver["A_net_c"] = A_net_c
+    data_solver["A_net_m"] = A_net_m
     data_solver["R_vec_c"] = R_vec_c
     data_solver["R_vec_m"] = R_vec_m
     data_solver["L_op_c"] = L_op_c
@@ -180,6 +183,8 @@ def _run_postproc(data_solver):
     d = data_solver["d"]
     freq = data_solver["freq"]
     A_vox = data_solver["A_vox"]
+    A_net_c = data_solver["A_net_c"]
+    A_net_m = data_solver["A_net_m"]
     source_idx = data_solver["source_idx"]
     idx_fc = data_solver["idx_fc"]
     idx_fm = data_solver["idx_fm"]
@@ -198,6 +203,11 @@ def _run_postproc(data_solver):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
         (I_fc, I_fm, V_vc, V_vm, I_src) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
 
+        n_offset = 0
+        (I_fc2, V_vc2, n_offset) = extract_solution_new.get_sol_extract_field(sol, idx_fc, idx_vc, n_offset)
+        (I_src_c, I_src_v, n_offset) = extract_solution_new.get_sol_extract_source(sol, idx_src_c, idx_src_v, n_offset)
+        (I_fm2, V_vm2, n_offset) = extract_solution_new.get_sol_extract_field(sol, idx_fm, idx_vm, n_offset)
+
         # get the losses and energy
         (P_fc, P_fm) = extract_solution.get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m)
         (W_fc, W_fm) = extract_solution.get_energy(freq, I_fc, I_fm, L_op_c, K_op_c)
@@ -206,13 +216,22 @@ def _run_postproc(data_solver):
         J_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, I_fc, "vector")
         B_vm = extract_solution.get_face_to_voxel(n, d, idx_vm, idx_fm, A_vox, I_fm, "vector")
 
+        J_vc2 = extract_solution_new.get_face_to_voxel(n, d, idx_vc, idx_fc, A_net_c, I_fc, "vector")
+        B_vm2 = extract_solution_new.get_face_to_voxel(n, d, idx_vm, idx_fm, A_net_m, I_fm, "vector")
+
         # get the voxel loss densities from the face losses
         P_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, P_fc, "scalar")
         P_vm = extract_solution.get_face_to_voxel(n, d, idx_vm, idx_fm, A_vox, P_fm, "scalar")
 
+        P_vc2 = extract_solution_new.get_face_to_voxel(n, d, idx_vc, idx_fc, A_net_c, P_fc, "scalar")
+        P_vm2 = extract_solution_new.get_face_to_voxel(n, d, idx_vm, idx_fm, A_net_m, P_fm, "scalar")
+
         # get the divergence of the face flows
         S_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, I_fc, "divergence")
         Q_vm = extract_solution.get_face_to_voxel(n, d, idx_vm, idx_fm, A_vox, I_fm, "divergence")
+
+        S_vc2 = extract_solution_new.get_face_to_voxel(n, d, idx_vc, idx_fc, A_net_c, I_fc, "divergence")
+        Q_vm2 = extract_solution_new.get_face_to_voxel(n, d, idx_vm, idx_fm, A_net_m, I_fm, "divergence")
 
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
@@ -222,6 +241,8 @@ def _run_postproc(data_solver):
 
         # parse the terminal voltages and currents for the sources
         terminal = extract_solution.get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all)
+
+        terminal2 = extract_solution_new.get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v)
 
     # assemble results
     data_solver["terminal"] = terminal
