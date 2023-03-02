@@ -334,7 +334,7 @@ def _get_cond_solve(rhs, cpl, Y_mat, S_fact, A_12_mat, A_21_mat):
     return sol
 
 
-def _get_system_multiply_electric(sol, cpl, freq, A_c, A_src, R_vec_c, L_op_c):
+def _get_system_multiply_electric(sol, freq, A_c, A_src, R_vec_c, L_op_c):
     """
     Multiply the full electric equation matrix with a given solution test vector.
 
@@ -375,12 +375,12 @@ def _get_system_multiply_electric(sol, cpl, freq, A_c, A_src, R_vec_c, L_op_c):
     rhs_src = rhs_1+rhs_2
 
     # assemble the solution
-    rhs = np.concatenate((rhs_fc, rhs_vc, rhs_src))+cpl
+    rhs = np.concatenate((rhs_fc, rhs_vc, rhs_src))
 
     return rhs
 
 
-def _get_system_multiply_magnetic(sol, cpl, freq, A_m, R_vec_m, P_op_m):
+def _get_system_multiply_magnetic(sol, freq, A_m, R_vec_m, P_op_m):
     """
     Multiply the full magnetic equation matrix with a given solution test vector.
 
@@ -415,7 +415,7 @@ def _get_system_multiply_magnetic(sol, cpl, freq, A_m, R_vec_m, P_op_m):
     rhs_vm = rhs_1+rhs_2
 
     # assemble the solution
-    rhs = np.concatenate((rhs_fm, rhs_vm))+cpl
+    rhs = np.concatenate((rhs_fm, rhs_vm))
 
     return rhs
 
@@ -589,11 +589,11 @@ def get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m,
         cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
 
         # compute the system multiplication
-        rhs_c = _get_system_multiply_electric(sol_c, cpl_c, freq, A_c, A_src, R_vec_c, L_op_c)
-        rhs_m = _get_system_multiply_magnetic(sol_m, cpl_m, freq, A_m, R_vec_m, P_op_m)
+        rhs_c = _get_system_multiply_electric(sol_c, freq, A_c, A_src, R_vec_c, L_op_c)
+        rhs_m = _get_system_multiply_magnetic(sol_m, freq, A_m, R_vec_m, P_op_m)
 
         # assemble the rhs
-        rhs = np.concatenate((rhs_c, rhs_m))
+        rhs = np.concatenate((rhs_c+cpl_c, rhs_m+cpl_m))
 
         return rhs
 
