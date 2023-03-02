@@ -22,13 +22,13 @@ from pypeec.lib_utils import config
 MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION
 
 
-def _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type, flip):
+def _get_multiply(data, vec_in, matrix_type, flip):
     """
     Make a matrix-vector multiplication.
     """
 
     if MATRIX_MULTIPLICATION == "FFT":
-        res_out = multiply_fft.get_multiply(idx_out, idx_in, vec_in, mat, matrix_type, flip)
+        res_out = multiply_fft.get_multiply(data, vec_in, matrix_type, flip)
     elif MATRIX_MULTIPLICATION == "DIRECT":
         res_out = multiply_direct.get_multiply(vec_in, mat, flip)
     else:
@@ -44,13 +44,13 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
 
     # get the matrix
     if MATRIX_MULTIPLICATION == "FFT":
-        (idx_in, idx_out, mat) = multiply_fft.get_prepare(idx_out, idx_in, mat, matrix_type)
+        data = multiply_fft.get_prepare(idx_out, idx_in, mat, matrix_type)
     elif MATRIX_MULTIPLICATION == "DIRECT":
-        mat = multiply_direct.get_prepare(idx_out, idx_in, mat, matrix_type)
+        data = multiply_direct.get_prepare(idx_out, idx_in, mat, matrix_type)
     else:
         raise ValueError("invalid multiplication library")
 
-    return idx_in, idx_out, mat
+    return data
 
 
 def get_operator_single(idx, mat):
@@ -59,11 +59,11 @@ def get_operator_single(idx, mat):
     """
 
     # prepare the matrix
-    (idx_in, idx_out, mat) = _get_prepare(idx, idx, mat, "single")
+    data = _get_prepare(idx, idx, mat, "single")
 
     # function describing the matrix-vector multiplication
     def op(vec_in):
-        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, "single", False)
+        res_out = _get_multiply(data, vec_in, "single", False)
         return res_out
 
     return op
@@ -75,11 +75,11 @@ def get_operator_diag(idx, mat):
     """
 
     # prepare the matrix
-    (idx_in, idx_out, mat) = _get_prepare(idx, idx, mat, "diag")
+    data = _get_prepare(idx, idx, mat, "diag")
 
     # function describing the matrix-vector multiplication
     def op(vec_in):
-        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, "diag", False)
+        res_out = _get_multiply(data, vec_in, "diag", False)
         return res_out
 
     return op
@@ -91,16 +91,16 @@ def get_operator_cross(idx_out, idx_in, mat):
     """
 
     # prepare the matrix
-    (idx_in, idx_out, mat) = _get_prepare(idx_out, idx_in, mat, "cross")
+    data = _get_prepare(idx_out, idx_in, mat, "cross")
 
     # function describing the matrix-vector multiplication
     def op_for(vec_in):
-        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, "cross", False)
+        res_out = _get_multiply(data, vec_in, "cross", False)
         return res_out
 
     # function describing the matrix-vector multiplication
     def op_rev(vec_in):
-        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, "cross", True)
+        res_out = _get_multiply(data, vec_in, "cross", True)
         return res_out
 
     return op_for, op_rev

@@ -23,17 +23,17 @@ else:
     import numpy as cp
 
 
-def _get_tensor_sign(matrix_type):
+def _get_tensor_sign(matrix_type, nd):
     """
     Get the signs for the different tensor blocks.
     """
 
     if matrix_type == "single":
-        sign = cp.ones((2, 2, 2, 1), dtype=cp.int_)
+        sign = cp.ones((2, 2, 2, nd), dtype=cp.int_)
     elif matrix_type == "diag":
-        sign = cp.ones((2, 2, 2, 1), dtype=cp.int_)
+        sign = cp.ones((2, 2, 2, nd), dtype=cp.int_)
     elif matrix_type == "cross":
-        sign = cp.empty((2, 2, 2, 3), dtype=cp.int_)
+        sign = cp.empty((2, 2, 2, nd), dtype=cp.int_)
         sign[0, 0, 0, :] = [+1, +1, +1]
         sign[1, 0, 0, :] = [-1, +1, +1]
         sign[0, 1, 0, :] = [+1, -1, +1]
@@ -99,8 +99,21 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     The output FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
     """
 
+    # get tensor size
+    (nx, ny, nz, nd) = mat.shape
+
+    # get tensor last dimension
+    if matrix_type == "single":
+        nd_out = 1
+    elif matrix_type == "diag":
+        nd_out = 3
+    elif matrix_type == "cross":
+        nd_out = 3
+    else:
+        raise ValueError("invalid matrix type")
+
     # get the sign that will be applied to the different blocks of the tensor
-    sign = _get_tensor_sign(matrix_type)
+    sign = _get_tensor_sign(matrix_type, nd)
 
     # get the FFT circulant tensor
     mat_fft = _get_tensor_circulant(mat, sign)
@@ -110,28 +123,16 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
         idx_in = cp.asarray(idx_in)
         idx_out = cp.asarray(idx_out)
 
-    # matrix vector multiplication in frequency domain with the FFT circulant tensor
-    nx = mat.shape[0]
-    ny = mat.shape[1]
-    nz = mat.shape[2]
-
-    if matrix_type == "single":
-        nd = 1
-    elif matrix_type == "diag":
-        nd = 3
-    elif matrix_type == "cross":
-        nd = 3
-    else:
-        raise ValueError("invalid matrix type")
-
     # get the indices
-    idx_in = cp.unravel_index(idx_in, [nx, ny, nz, nd], order="F")
-    idx_out = cp.unravel_index(idx_out,  [nx, ny, nz, nd], order="F")
+    shape = [nx, ny, nz, nd_out]
+    shape_fft = [2*nx, 2*ny, 2*nz, nd_out]
+    idx_in = cp.unravel_index(idx_in, shape, order="F")
+    idx_out = cp.unravel_index(idx_out,  shape, order="F")
 
-    return idx_in, idx_out, mat_fft
+    return shape, shape_fft, idx_in, idx_out, mat_fft
 
 
-def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type, flip):
+def get_multiply(data, vec_in, matrix_type, flip):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
@@ -150,23 +151,8 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type, flip):
         - the tensor is flattened into a vector: (2*nx, 2*ny, 2*nz, nd) to n_sel
     """
 
-    # get the tensor size
-    nx = mat_fft.shape[0]
-    ny = mat_fft.shape[1]
-    nz = mat_fft.shape[2]
-
-    if matrix_type == "single":
-        nd = 1
-    elif matrix_type == "diag":
-        nd = 3
-    elif matrix_type == "cross":
-        nd = 3
-    else:
-        raise ValueError("invalid matrix type")
-
-    nx = int(nx/2)
-    ny = int(ny/2)
-    nz = int(nz/2)
+    # extract data
+    (shape, shape_fft, idx_in, idx_out, mat_fft) = data
 
     # flip the input and output
     if flip:
@@ -177,7 +163,7 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type, flip):
         vec_in = cp.array(vec_in)
 
     # create a tensor for the vector
-    vec_all = cp.zeros((nx, ny, nz, nd), dtype=cp.complex_)
+    vec_all = cp.zeros(shape, dtype=cp.complex_)
 
     # assign the elements from the tensor indices
     vec_all[idx_in] = vec_in
@@ -191,7 +177,7 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type, flip):
     elif matrix_type == "diag":
         res_all_fft = mat_fft*vec_all_fft
     elif matrix_type == "cross":
-        res_all_fft = cp.zeros((2*nx, 2*ny, 2*nz, nd), dtype=cp.complex_)
+        res_all_fft = cp.zeros(shape_fft, dtype=cp.complex_)
         res_all_fft[:, :, :, 0] = +mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 1]+mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 2]
         res_all_fft[:, :, :, 1] = -mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 0]+mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 2]
         res_all_fft[:, :, :, 2] = -mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 0]-mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 1]
