@@ -146,6 +146,9 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     (dx, dy, dz) = d
     nv = nx*ny*nz
 
+    # scaling factor
+    scale = np.array([mu/(dy**2*dz**2), mu/(dx**2*dz**2), mu/(dx**2*dy**2)], dtype=np.float_)
+
     # self-inductance for the preconditioner
     L_x = mu*G_self/(dy**2*dz**2)
     L_y = mu*G_self/(dx**2*dz**2)
@@ -153,14 +156,16 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     L_vec = np.concatenate((L_x*np.ones(nv), L_y*np.ones(nv), L_z*np.ones(nv)))
     L_vec = L_vec[idx_f]
 
-    # compute the inductance tensor from the Green functions
-    L_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float_)
-    L_tsr[:, :, :, 0] = mu*G_mutual/(dy**2*dz**2)
-    L_tsr[:, :, :, 1] = mu*G_mutual/(dx**2*dz**2)
-    L_tsr[:, :, :, 2] = mu*G_mutual/(dx**2*dy**2)
+    # # compute the inductance tensor from the Green functions
+    # L_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float_)
+    # L_tsr[:, :, :, 0] = G_mutual
+    # L_tsr[:, :, :, 1] = G_mutual
+    # L_tsr[:, :, :, 2] = G_mutual
+
+    # G_mutual = np.concatenate((G_mutual, G_mutual, G_mutual), axis=3)
 
     # get the matrix-vector operator
-    L_op = matrix_multiply.get_operator_diag(idx_f, L_tsr)
+    L_op = matrix_multiply.get_operator_diag(idx_f, G_mutual, scale)
 
     return L_vec, L_op
 
@@ -198,12 +203,11 @@ def get_P_matrix(n, d, idx_v, G_self, G_mutual, has_domain):
     P_vec = P_v*np.ones(nv)
     P_vec = P_vec[idx_v]
 
-    # compute the inductance tensor from the Green functions
-    P_tsr = np.zeros((nx, ny, nz, 1), dtype=np.float_)
-    P_tsr[:, :, :, 0] = G_mutual/(mu*dx**2*dy**2*dz**2)
+    # scaling factor
+    scale = np.array([1/(mu*dx**2*dy**2*dz**2)], dtype=np.float_)
 
     # get the matrix-vector operator
-    P_op = matrix_multiply.get_operator_single(idx_v, P_tsr)
+    P_op = matrix_multiply.get_operator_single(idx_v, G_mutual, scale)
 
     return P_vec, P_op
 
