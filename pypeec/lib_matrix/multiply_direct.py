@@ -138,8 +138,8 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     elif matrix_type == "diag":
         # fill the diagonal blocks
         mat_dense_xx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
-        mat_dense_yy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 1], 1, 1, "abs")
-        mat_dense_zz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 2], 2, 2, "abs")
+        mat_dense_yy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 1, 1, "abs")
+        mat_dense_zz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 2, 2, "abs")
 
         # the off-diagonal blocks are empty
         mat_dense_xy = _get_dense_zero(idx_out, idx_in, mat, 0, 1)
@@ -187,7 +187,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     return mat_dense
 
 
-def get_multiply(vec_in, mat_dense, flip):
+def get_multiply(mat_dense, vec_in, flip):
     """
     Matrix-vector multiplication.
 

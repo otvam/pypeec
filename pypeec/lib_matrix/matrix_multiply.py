@@ -30,7 +30,7 @@ def _get_multiply(data, vec_in, matrix_type, flip):
     if MATRIX_MULTIPLICATION == "FFT":
         res_out = multiply_fft.get_multiply(data, vec_in, matrix_type, flip)
     elif MATRIX_MULTIPLICATION == "DIRECT":
-        res_out = multiply_direct.get_multiply(vec_in, mat, flip)
+        res_out = multiply_direct.get_multiply(data, vec_in, flip)
     else:
         raise ValueError("invalid multiplication library")
 
