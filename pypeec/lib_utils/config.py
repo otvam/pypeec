@@ -43,6 +43,7 @@ def _check_data():
 
     # check other switches
     datachecker.check_boolean("USE_GPU", USE_GPU)
+    datachecker.check_float("PAUSE_GUI", PAUSE_GUI)
     datachecker.check_choice("FFT_LIBRARY", FFT_LIBRARY, ["SciPy", "FFTW"])
     datachecker.check_choice("MATRIX_FACTORIZATION", MATRIX_FACTORIZATION, ["SuperLU", "UMFPACK"])
     datachecker.check_choice("MATRIX_MULTIPLICATION", MATRIX_MULTIPLICATION, ["FFT", "DIRECT"])
@@ -84,6 +85,7 @@ def set_config(file_config):
         "FFT_LIBRARY",
         "MATRIX_FACTORIZATION",
         "MATRIX_MULTIPLICATION",
+        "PAUSE_GUI",
         "USE_GPU",
     ]
 
@@ -110,6 +112,7 @@ FFT_OPTIONS = dict()
 FFT_LIBRARY = None
 MATRIX_FACTORIZATION = None
 MATRIX_MULTIPLICATION = None
+PAUSE_GUI = None
 USE_GPU = None
 
 # load the default config files

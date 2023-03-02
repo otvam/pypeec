@@ -6,8 +6,11 @@ WARNING: This module is using different more or less dirty hacks.
          This module is likely to be non-portable across platforms (tested on Linux x64).
          This module is likely to break with newer/older versions of the dependencies.
 
-WARNING: Making many plots can lead to segmentation fault with PyVista.
-         Not sure if the problem lies with PyPEEC, PyVista or Vtk.
+TODO: Making many plots can lead to segmentation fault with PyVista.
+         Not sure if the problem lies with PyPEEC, PyVista, PyVistaQt or Vtk.
+
+TODO: A delay is adding between the plots when using the Qt framework.
+         This is a dirty workaround for a race condition in PyVista/PyVistaQt.
 """
 
 __author__ = "Thomas Guillod"
@@ -17,6 +20,7 @@ import os
 import sys
 import ctypes
 import signal
+import time
 import importlib.resources
 import pyvista
 import pyvistaqt
@@ -25,9 +29,13 @@ import matplotlib.pyplot
 import qtpy.QtWidgets
 import qtpy.QtGui
 from pypeec.lib_utils import timelogger
+from pypeec.lib_utils import config
 
 # get a logger
 logger = timelogger.get_logger("PLOTGUI")
+
+# get config
+PAUSE_GUI = config.PAUSE_GUI
 
 
 class PlotGui:
@@ -115,6 +123,9 @@ class PlotGui:
         with importlib.resources.path("pypeec", "pypeec.png") as file_icon:
             pl.set_icon(str(file_icon))
 
+        # pause to avoid race conditions
+        time.sleep(PAUSE_GUI)
+
         return pl
 
     @staticmethod
@@ -160,6 +171,9 @@ class PlotGui:
         if window_size is not None:
             (sx, sy) = window_size
             man.window.resize(sx, sy)
+
+        # pause to avoid race conditions
+        time.sleep(PAUSE_GUI)
 
         return fig
 
@@ -258,6 +272,9 @@ class PlotGui:
 
             # signal for quitting the event loop with interrupt signal
             signal.signal(signal.SIGINT, signal_handler)
+
+            # pause to avoid race conditions
+            time.sleep(PAUSE_GUI)
 
             # show the different plots
             for pl in self.pl_list:

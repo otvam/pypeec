@@ -60,3 +60,8 @@ MATRIX_MULTIPLICATION: "FFT"  # "FFT" or "DIRECT"
 #   - if false, GPUs are not used and not required
 #   - if true, GPUs are used for some operations
 USE_GPU: false
+
+# delay (in seconds) between the Qt plots
+#   - this parameter should not be required
+#   - however, it seems to mitigate a race condition in PyVista/PyVistaQt
+PAUSE_GUI: 0.2
