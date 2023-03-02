@@ -31,7 +31,7 @@ def _get_tensor_sign(matrix_type):
     if matrix_type == "single":
         sign = cp.ones((2, 2, 2, 1), dtype=cp.int_)
     elif matrix_type == "diag":
-        sign = cp.ones((2, 2, 2, 3), dtype=cp.int_)
+        sign = cp.ones((2, 2, 2, 1), dtype=cp.int_)
     elif matrix_type == "cross":
         sign = cp.empty((2, 2, 2, 3), dtype=cp.int_)
         sign[0, 0, 0, :] = [+1, +1, +1]
@@ -110,14 +110,28 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
         idx_in = cp.asarray(idx_in)
         idx_out = cp.asarray(idx_out)
 
+    # matrix vector multiplication in frequency domain with the FFT circulant tensor
+    nx = mat.shape[0]
+    ny = mat.shape[1]
+    nz = mat.shape[2]
+
+    if matrix_type == "single":
+        nd = 1
+    elif matrix_type == "diag":
+        nd = 3
+    elif matrix_type == "cross":
+        nd = 3
+    else:
+        raise ValueError("invalid matrix type")
+
     # get the indices
-    idx_in = cp.unravel_index(idx_in, mat.shape, order="F")
-    idx_out = cp.unravel_index(idx_out, mat.shape, order="F")
+    idx_in = cp.unravel_index(idx_in, [nx, ny, nz, nd], order="F")
+    idx_out = cp.unravel_index(idx_out,  [nx, ny, nz, nd], order="F")
 
     return idx_in, idx_out, mat_fft
 
 
-def get_multiply(idx_out, idx_in, vec_in, mat_fft, scale, matrix_type, flip):
+def get_multiply(idx_out, idx_in, vec_in, mat_fft, matrix_type, flip):
     """
     Matrix-vector multiplication with FFT.
     The matrix is shaped as a FFT circulant tensor.
@@ -137,7 +151,19 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, scale, matrix_type, flip):
     """
 
     # get the tensor size
-    (nx, ny, nz, nd) = mat_fft.shape
+    nx = mat_fft.shape[0]
+    ny = mat_fft.shape[1]
+    nz = mat_fft.shape[2]
+
+    if matrix_type == "single":
+        nd = 1
+    elif matrix_type == "diag":
+        nd = 3
+    elif matrix_type == "cross":
+        nd = 3
+    else:
+        raise ValueError("invalid matrix type")
+
     nx = int(nx/2)
     ny = int(ny/2)
     nz = int(nz/2)
@@ -161,11 +187,9 @@ def get_multiply(idx_out, idx_in, vec_in, mat_fft, scale, matrix_type, flip):
 
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
     if matrix_type == "single":
-        scale = cp.expand_dims(scale, axis=(0, 1, 2))
-        res_all_fft = scale*mat_fft*vec_all_fft
+        res_all_fft = mat_fft*vec_all_fft
     elif matrix_type == "diag":
-        scale = cp.expand_dims(scale, axis=(0, 1, 2))
-        res_all_fft = scale*mat_fft*vec_all_fft
+        res_all_fft = mat_fft*vec_all_fft
     elif matrix_type == "cross":
         res_all_fft = cp.zeros((2*nx, 2*ny, 2*nz, nd), dtype=cp.complex_)
         res_all_fft[:, :, :, 0] = +mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 1]+mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 2]

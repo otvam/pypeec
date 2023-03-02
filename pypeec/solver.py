@@ -116,7 +116,7 @@ def _run_main(data_solver):
         (L_vec_c, L_op_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual, has_electric)
 
         # get the potential tensor (preconditioner and full problem)
-        (P_vec_m, P_op_m) = system_matrix.get_P_matrix(n, d, idx_vm, G_self, G_mutual, has_magnetic)
+        (P_vec_m, P_op_m) = system_matrix.get_P_matrix(d, idx_vm, G_self, G_mutual, has_magnetic)
 
         # get the coupling matrices
         (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling)

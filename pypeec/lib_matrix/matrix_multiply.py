@@ -22,13 +22,13 @@ from pypeec.lib_utils import config
 MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION
 
 
-def _get_multiply(idx_out, idx_in, vec_in, mat, scale, matrix_type, flip):
+def _get_multiply(idx_out, idx_in, vec_in, mat, matrix_type, flip):
     """
     Make a matrix-vector multiplication.
     """
 
     if MATRIX_MULTIPLICATION == "FFT":
-        res_out = multiply_fft.get_multiply(idx_out, idx_in, vec_in, mat, scale, matrix_type, flip)
+        res_out = multiply_fft.get_multiply(idx_out, idx_in, vec_in, mat, matrix_type, flip)
     elif MATRIX_MULTIPLICATION == "DIRECT":
         res_out = multiply_direct.get_multiply(vec_in, mat, flip)
     else:
@@ -53,7 +53,7 @@ def _get_prepare(idx_out, idx_in, mat, matrix_type):
     return idx_in, idx_out, mat
 
 
-def get_operator_single(idx, mat, scale):
+def get_operator_single(idx, mat):
     """
     Get the linear matrix-vector operator for a single-type matrix.
     """
@@ -63,13 +63,13 @@ def get_operator_single(idx, mat, scale):
 
     # function describing the matrix-vector multiplication
     def op(vec_in):
-        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, scale, "single", False)
+        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, "single", False)
         return res_out
 
     return op
 
 
-def get_operator_diag(idx, mat, scale):
+def get_operator_diag(idx, mat):
     """
     Get the linear matrix-vector operator for a diagonal-type matrix.
     """
@@ -79,7 +79,7 @@ def get_operator_diag(idx, mat, scale):
 
     # function describing the matrix-vector multiplication
     def op(vec_in):
-        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, scale, "diag", False)
+        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, "diag", False)
         return res_out
 
     return op
@@ -95,12 +95,12 @@ def get_operator_cross(idx_out, idx_in, mat):
 
     # function describing the matrix-vector multiplication
     def op_for(vec_in):
-        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, 1.0, "cross", False)
+        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, "cross", False)
         return res_out
 
     # function describing the matrix-vector multiplication
     def op_rev(vec_in):
-        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, 1.0, "cross", True)
+        res_out = _get_multiply(idx_out, idx_in, vec_in, mat, "cross", True)
         return res_out
 
     return op_for, op_rev

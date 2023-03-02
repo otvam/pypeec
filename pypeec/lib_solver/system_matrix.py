@@ -107,10 +107,8 @@ def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
     idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv))
     idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
 
-    # init the resistance vector
-    R_vec = np.zeros(len(rho_vec), dtype=np.complex_)
-
     # resistance vector (different directions)
+    R_vec = np.zeros(len(idx_f), dtype=np.complex_)
     R_vec[idx_fx] = (dx/(dy*dz))*rho_vec[idx_fx]
     R_vec[idx_fy] = (dy/(dx*dz))*rho_vec[idx_fy]
     R_vec[idx_fz] = (dz/(dx*dy))*rho_vec[idx_fz]
@@ -146,31 +144,32 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     (dx, dy, dz) = d
     nv = nx*ny*nz
 
+    # get the direction of the faces (x, y, z)
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
+
     # scaling factor
-    scale = np.array([mu/(dy**2*dz**2), mu/(dx**2*dz**2), mu/(dx**2*dy**2)], dtype=np.float_)
+    scale = np.zeros(len(idx_f), dtype=np.complex_)
+    scale[idx_fx] = mu/(dy**2*dz**2)
+    scale[idx_fy] = mu/(dx**2*dz**2)
+    scale[idx_fz] = mu/(dx**2*dy**2)
 
     # self-inductance for the preconditioner
-    L_x = mu*G_self/(dy**2*dz**2)
-    L_y = mu*G_self/(dx**2*dz**2)
-    L_z = mu*G_self/(dx**2*dy**2)
-    L_vec = np.concatenate((L_x*np.ones(nv), L_y*np.ones(nv), L_z*np.ones(nv)))
-    L_vec = L_vec[idx_f]
-
-    # # compute the inductance tensor from the Green functions
-    # L_tsr = np.zeros((nx, ny, nz, 3), dtype=np.float_)
-    # L_tsr[:, :, :, 0] = G_mutual
-    # L_tsr[:, :, :, 1] = G_mutual
-    # L_tsr[:, :, :, 2] = G_mutual
-
-    # G_mutual = np.concatenate((G_mutual, G_mutual, G_mutual), axis=3)
+    L_vec = scale*G_self
 
     # get the matrix-vector operator
-    L_op = matrix_multiply.get_operator_diag(idx_f, G_mutual, scale)
+    L_op_tmp = matrix_multiply.get_operator_diag(idx_f, G_mutual)
+
+    # function describing the coupling from the electric to the magnetic faces
+    def L_op(var_f):
+        res_f = scale*L_op_tmp(var_f)
+        return res_f
 
     return L_vec, L_op
 
 
-def get_P_matrix(n, d, idx_v, G_self, G_mutual, has_domain):
+def get_P_matrix(d, idx_v, G_self, G_mutual, has_domain):
     """
     Extract the potential matrix of the system.
 
@@ -194,20 +193,21 @@ def get_P_matrix(n, d, idx_v, G_self, G_mutual, has_domain):
     mu = 4*np.pi*1e-7
 
     # extract the voxel data
-    (nx, ny, nz) = n
     (dx, dy, dz) = d
-    nv = nx*ny*nz
-
-    # self-inductance for the preconditioner
-    P_v = G_self/(mu*dx**2*dy**2*dz**2)
-    P_vec = P_v*np.ones(nv)
-    P_vec = P_vec[idx_v]
 
     # scaling factor
-    scale = np.array([1/(mu*dx**2*dy**2*dz**2)], dtype=np.float_)
+    scale = 1/(mu*dx**2*dy**2*dz**2)
+
+    # self-inductance for the preconditioner
+    P_vec = scale*G_self*np.ones(len(idx_v))
 
     # get the matrix-vector operator
-    P_op = matrix_multiply.get_operator_single(idx_v, G_mutual, scale)
+    P_op_tmp = matrix_multiply.get_operator_single(idx_v, G_mutual)
+
+    # function describing the coupling from the electric to the magnetic faces
+    def P_op(var_v):
+        res_v = scale*P_op_tmp(var_v)
+        return res_v
 
     return P_vec, P_op
 
@@ -259,13 +259,13 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
     (K_op_c_tmp, K_op_m_tmp) = matrix_multiply.get_operator_cross(idx_fvc, idx_fvm, K_tsr)
 
     # function describing the coupling from the magnetic to the electric faces
-    def K_op_c(var_f_m):
-        var_f_c = A_vf_net_c*K_op_c_tmp(A_fv_net_m*var_f_m)
-        return var_f_c
+    def K_op_c(var_fm):
+        var_fc = A_vf_net_c*K_op_c_tmp(A_fv_net_m*var_fm)
+        return var_fc
 
     # function describing the coupling from the electric to the magnetic faces
-    def K_op_m(var_f_c):
-        var_f_m = A_vf_net_m*K_op_m_tmp(A_fv_net_c*var_f_c)
-        return var_f_m
+    def K_op_m(var_fc):
+        var_fm = A_vf_net_m*K_op_m_tmp(A_fv_net_c*var_fc)
+        return var_fm
 
     return K_op_c, K_op_m
