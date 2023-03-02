@@ -135,8 +135,8 @@ def get_green_tensor(n, d, green_simplify):
     For the remote mutual coefficients, an approximation is used.
 
     The voxel structure has the following size: (nx, ny, nz).
-    The created tensor has the following dimension: (nx, ny, nz).
-    The self-coefficient is at the following location: (0, 0, 0).
+    The created tensor has the following dimension: (nx, ny, nz, 1).
+    The self-coefficient is at the following location: (0, 0, 0, 0).
     All the elements are computed with respect to the first voxel.
     """
 

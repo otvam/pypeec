@@ -2,9 +2,15 @@
 Module for doing matrix-vector multiplication (with circulant tensors and FFT).
 
 Three different types of matrices are supported:
-    - single: tensor representing a simple matrix (number of dimensions = 1)
-    - diag: tensor representing a block diagonal matrix (number of dimensions = 3)
-    - cross: tensor representing a block off-diagonal matrix (number of dimensions = 3)
+    - single: tensor representing a simple matrix
+        - number of dimensions of the input matrix = 1
+        - number of dimensions of the input vector = 1
+    - diag: tensor representing a block diagonal matrix
+        - number of dimensions of the input matrix = 1
+        - number of dimensions of the input vector = 3
+    - cross: tensor representing a block off-diagonal matrix
+        - number of dimensions of the input matrix = 3
+        - number of dimensions of the input vector = 3
 """
 
 __author__ = "Thomas Guillod"
@@ -94,9 +100,6 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     """
     Construct a circulant tensor from a 4D tensor.
     The circulant tensor is constructed for the first 3D.
-
-    The input tensor has the size: (nx, ny, nz, nd).
-    The output FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
     """
 
     # get tensor size
@@ -135,20 +138,20 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
 def get_multiply(data, vec_in, matrix_type, flip):
     """
     Matrix-vector multiplication with FFT.
-    The matrix is shaped as a FFT circulant tensor.
+    If the flip switch is activated, the input and output are flipped.
 
     The output index vector has the size: n_out.
     The input index vector has the size: n_in.
     The input vector has the size: n_in.
-    The input FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
+    The input FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd_int).
     The output vector has the size: n_out.
 
     For the matrix-vector multiplication is done in several steps:
-        - the vector is expanded into a tensor: n_sel to (nx, ny, nz, nd)
-        - computation the FFT of the obtained tensor: (nx, ny, nz, nd) to (2*nx, 2*ny, 2*nz, nd)
-        - multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz, nd)
-        - computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz, nd)
-        - the tensor is flattened into a vector: (2*nx, 2*ny, 2*nz, nd) to n_sel
+        - the vector is expanded into a tensor: n_in to (nx, ny, nz, nd_out)
+        - computation the FFT of the obtained tensor: (nx, ny, nz, nd_out) to (2*nx, 2*ny, 2*nz, nd_out)
+        - multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz, nd_int) and (2*nx, 2*ny, 2*nz, nd_out)
+        - computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz, nd_out)
+        - the tensor is flattened into a vector: (2*nx, 2*ny, 2*nz, nd_out) to n_out
     """
 
     # extract data

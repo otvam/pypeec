@@ -122,9 +122,8 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
 
     The problem contains n_f internal faces.
     The voxel structure has the following size: (nx, ny, nz).
-    The green tensor has the following size: (nx, ny, nz).
+    The green tensor has the following size: (nx, ny, nz, 1).
 
-    The green tensor is transformed into an inductance tensor: (nx, ny, nz, 3).
     The tensor is then used to create a matrix-vector linear operator:
         - input size: n_f
         - output size: n_f
@@ -175,9 +174,8 @@ def get_P_matrix(d, idx_v, G_self, G_mutual, has_domain):
 
     The problem contains n_v non-empty voxels.
     The voxel structure has the following size: (nx, ny, nz).
-    The green tensor has the following size: (nx, ny, nz).
+    The green tensor has the following size: (nx, ny, nz, 1).
 
-    The green tensor is transformed into a potential tensor: (nx, ny, nz, 1).
     The tensor is then used to create a matrix-vector linear operator:
         - input size: n_v
         - output size: n_v

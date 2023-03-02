@@ -4,9 +4,15 @@ Module for doing matrix-vector multiplication:
     - multiplication with FFT and circulant tensors
 
 Three different types of matrices are supported:
-    - single: tensor representing a simple matrix (number of dimensions = 1)
-    - diag: tensor representing a block diagonal matrix (number of dimensions = 3)
-    - cross: tensor representing a block off-diagonal matrix (number of dimensions = 3)
+    - single: tensor representing a simple matrix
+        - number of dimensions of the input matrix = 1
+        - number of dimensions of the input vector = 1
+    - diag: tensor representing a block diagonal matrix
+        - number of dimensions of the input matrix = 1
+        - number of dimensions of the input vector = 3
+    - cross: tensor representing a block off-diagonal matrix
+        - number of dimensions of the input matrix = 3
+        - number of dimensions of the input vector = 3
 
 A matrix-vector operator is returned for performing the matrix-vector multiplication.
 """

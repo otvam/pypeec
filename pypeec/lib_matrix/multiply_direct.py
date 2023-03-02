@@ -2,9 +2,15 @@
 Module for doing matrix-vector multiplication (direct multiplication).
 
 Three different types of matrices are supported:
-    - single: tensor representing a simple matrix (number of dimensions = 1)
-    - diag: tensor representing a block diagonal matrix (number of dimensions = 3)
-    - cross: tensor representing a block off-diagonal matrix (number of dimensions = 3)
+    - single: tensor representing a simple matrix
+        - number of dimensions of the input matrix = 1
+        - number of dimensions of the input vector = 1
+    - diag: tensor representing a block diagonal matrix
+        - number of dimensions of the input matrix = 1
+        - number of dimensions of the input vector = 3
+    - cross: tensor representing a block off-diagonal matrix
+        - number of dimensions of the input matrix = 3
+        - number of dimensions of the input vector = 3
 """
 
 __author__ = "Thomas Guillod"
@@ -116,7 +122,6 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
 
     The output index vector has the size: n_out.
     The input index vector has the size: n_in.
-    The input tensor has the size: (nx, ny, nz, nd).
     The output dense matrix has the size: (n_out, n_in).
     """
 
@@ -190,6 +195,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
 def get_multiply(mat_dense, vec_in, flip):
     """
     Matrix-vector multiplication.
+    If the flip switch is activated, the input and output are flipped.
 
     The input vector has the size: n_in.
     The input dense matrix has the size: (n_out, n_in).
