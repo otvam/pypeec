@@ -351,27 +351,27 @@ def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
 
     # multiply the inductance matrix
     if freq == 0:
-        rhs_ind = np.zeros(n_fc, dtype=np.complex_)
+        rhs_kvl_ind = np.zeros(n_fc, dtype=np.complex_)
     else:
-        rhs_ind = s*L_op_c(I_fc)
+        rhs_kvl_ind = s*L_op_c(I_fc)
 
     # electric KVL equations
-    rhs_res = R_c*I_fc
-    rhs_net = -A_net_c.transpose()*V_vc
-    rhs_fc = rhs_ind+rhs_res+rhs_net
+    rhs_kvl_res = R_c*I_fc
+    rhs_kvl_net = -A_net_c.transpose()*V_vc
 
     # electric KCL equations
-    rhs_net = A_net_c*I_fc
-    rhs_con = A_vc_src*I_src
-    rhs_vc = rhs_net+rhs_con
+    rhs_kcl_net = A_net_c*I_fc
+    rhs_kvl_src = A_vc_src*I_src
 
     # form the source equation
-    rhs_con = A_src_vc*V_vc
-    rhs_src = A_src_src*I_src
-    rhs_src = rhs_con+rhs_src
+    rhs_src_con = A_src_vc*V_vc
+    rhs_src_src = A_src_src*I_src
 
     # assemble the solution
-    rhs = np.concatenate((rhs_fc, rhs_vc, rhs_src))
+    rhs_kvl = rhs_kvl_ind+rhs_kvl_res+rhs_kvl_net
+    rhs_kcl = rhs_kcl_net+rhs_kvl_src
+    rhs_src = rhs_src_con+rhs_src_src
+    rhs = np.concatenate((rhs_kvl, rhs_kcl, rhs_src))
 
     return rhs
 
@@ -387,30 +387,31 @@ def _get_system_multiply_magnetic(sol, freq, A_net_m, R_m, P_op_m):
     # get the system size
     (n_vm, n_fm) = A_net_m.shape
 
-    # get the derivative operator (avoid singularity for DC solution)
-    if freq == 0:
-        s_diff = 1
-    else:
-        s_diff = 1j*2*np.pi*freq
+    # get the angular frequency
+    s = 1j*2*np.pi*freq
 
     # split the solution vector
     I_fm = sol[0:n_fm]
     V_vm = sol[n_fm:n_fm+n_vm]
 
     # multiply the potential matrix
-    rhs_pot = P_op_m(A_net_m*I_fm)
+    rhs_kcl_pot = P_op_m(A_net_m*I_fm)
+
+    # get the term that are different for DC and AC cases
+    if freq == 0:
+        rhs_kvl_res = R_m*I_fm
+        rhs_kcl_net = s*V_vm
+    else:
+        rhs_kvl_res = R_m/s*I_fm
+        rhs_kcl_net = s*V_vm
 
     # magnetic KVL equations
-    rhs_res = R_m/s_diff*I_fm
-    rhs_net = -A_net_m.transpose()*V_vm
-    rhs_fm = rhs_res+rhs_net
-
-    # magnetic KCL equations
-    rhs_ide = s_diff*V_vm
-    rhs_vm = rhs_pot+rhs_ide
+    rhs_kvl_net = -A_net_m.transpose()*V_vm
 
     # assemble the solution
-    rhs = np.concatenate((rhs_fm, rhs_vm))
+    rhs_kvl = rhs_kvl_res+rhs_kvl_net
+    rhs_kcl = rhs_kcl_pot+rhs_kcl_net
+    rhs = np.concatenate((rhs_kvl, rhs_kcl))
 
     return rhs
 
