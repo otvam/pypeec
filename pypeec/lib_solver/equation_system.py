@@ -17,11 +17,11 @@ The equations are set in the following order:
 
 The complete equation matrix is:
     [
-        R_c+s*L_c,    A_kvl_c,     0,            K_c,            0 ;
-        A_kcl_c,      0,           A_vc_src,     0,              0 ;
-        0,            A_src_vc,    A_src_src,    0,              0 ;
-        -K_m,         0,           0,            R_m,            A_kvl_m ;
-        0,            0,           0,            P_m*A_kcl_m,    s*I ;
+        +R_c+s*L_c,    -A_net_c',     0,            +K_c,             0 ;
+        +A_net_c,       0,           +A_vc_src,      0,               0 ;
+         0,            +A_src_vc,    +A_src_src,     0,               0 ;
+        -K_m,           0,            0,            +R_m,            -A_net_m' ;
+         0,             0,            0,            +P_m*A_net_m,    +s*I ;
     ]
 
 The complete solution vector is:
@@ -83,7 +83,7 @@ import scipy.sparse.linalg as sla
 from pypeec.lib_matrix import matrix_factorization
 
 
-def _get_system_size(A_c, A_m, A_src):
+def _get_system_size(A_net_c, A_net_m, A_src):
     """
     Get the size of the equation system.
 
@@ -93,13 +93,11 @@ def _get_system_size(A_c, A_m, A_src):
     """
 
     # get the matrices
-    (A_kvl_c, A_kcl_c) = A_c
-    (A_kvl_m, A_kcl_m) = A_m
     (A_vc_src, A_src_vc, A_src_src) = A_src
 
     # get the system size
-    (n_vc, n_fc) = A_kcl_c.shape
-    (n_vm, n_fm) = A_kcl_m.shape
+    (n_vc, n_fc) = A_net_c.shape
+    (n_vm, n_fm) = A_net_m.shape
     (n_src, n_src) = A_src_src.shape
 
     # get the system size
@@ -167,7 +165,7 @@ def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
     if freq == 0:
         cpl_fc = np.zeros(n_fc, dtype=np.complex_)
     else:
-        cpl_fc = +1*K_op_c(I_fm)
+        cpl_fc = K_op_c(I_fm)
 
     cpl_vc = np.zeros(n_vc, dtype=np.complex_)
     cpl_src = np.zeros(n_src, dtype=np.complex_)
@@ -191,7 +189,7 @@ def _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m):
     I_fc = sol_c[0:n_fc]
 
     # compute the couplings
-    cpl_fm = -1*K_op_m(I_fc)
+    cpl_fm = -K_op_m(I_fc)
     cpl_vm = np.zeros(n_vm, dtype=np.complex_)
 
     # assemble the vectors
@@ -200,7 +198,7 @@ def _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m):
     return cpl_m
 
 
-def _get_cond_fact_electric(freq, A_c, R_vec_c, L_vec_c, A_src):
+def _get_cond_fact_electric(freq, A_net_c, R_vec_c, L_vec_c, A_src):
     """
     Compute the sparse matrices using for the electric preconditioner.
 
@@ -211,11 +209,10 @@ def _get_cond_fact_electric(freq, A_c, R_vec_c, L_vec_c, A_src):
     """
 
     # get the matrices
-    (A_kvl_c, A_kcl_c) = A_c
     (A_vc_src, A_src_vc, A_src_src) = A_src
 
     # get the system size
-    (n_vc, n_fc) = A_kcl_c.shape
+    (n_vc, n_fc) = A_net_c.shape
     (n_src, n_src) = A_src_src.shape
 
     # get the angular frequency
@@ -228,8 +225,8 @@ def _get_cond_fact_electric(freq, A_c, R_vec_c, L_vec_c, A_src):
     Y_mat = sps.diags(Y_vec_c)
 
     # assemble the matrices
-    A_12_mat = A_kvl_c
-    A_21_mat = A_kcl_c
+    A_12_mat = -A_net_c.transpose()
+    A_21_mat = A_net_c
     A_22_mat = sps.csc_matrix((n_vc, n_vc), dtype=np.int_)
 
     # expand for the source matrices
@@ -247,7 +244,7 @@ def _get_cond_fact_electric(freq, A_c, R_vec_c, L_vec_c, A_src):
     return Y_mat, S_mat, S_fact, A_12_mat, A_21_mat
 
 
-def _get_cond_fact_magnetic(freq, A_m, R_vec_m, P_vec_m):
+def _get_cond_fact_magnetic(freq, A_net_m, R_vec_m, P_vec_m):
     """
     Compute the sparse matrices using for the magnetic preconditioner.
 
@@ -257,11 +254,8 @@ def _get_cond_fact_magnetic(freq, A_m, R_vec_m, P_vec_m):
         - n_vm (Schur complement size)
     """
 
-    # get the matrices
-    (A_kvl_m, A_kcl_m) = A_m
-
     # get the system size
-    (n_vm, n_fm) = A_kcl_m.shape
+    (n_vm, n_fm) = A_net_m.shape
 
     # get the angular frequency
     s = 1j*2*np.pi*freq
@@ -283,8 +277,8 @@ def _get_cond_fact_magnetic(freq, A_m, R_vec_m, P_vec_m):
     I_mat_m = sps.diags(I_vec_m)
 
     # assemble the matrices
-    A_12_mat = A_kvl_m
-    A_21_mat = P_mat_m*A_kcl_m
+    A_12_mat = -A_net_m.transpose()
+    A_21_mat = P_mat_m*A_net_m
     A_22_mat = I_mat_m
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
@@ -334,7 +328,7 @@ def _get_cond_solve(rhs, cpl, Y_mat, S_fact, A_12_mat, A_21_mat):
     return sol
 
 
-def _get_system_multiply_electric(sol, freq, A_c, A_src, R_vec_c, L_op_c):
+def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_vec_c, L_op_c):
     """
     Multiply the full electric equation matrix with a given solution test vector.
 
@@ -343,11 +337,10 @@ def _get_system_multiply_electric(sol, freq, A_c, A_src, R_vec_c, L_op_c):
     """
 
     # get the matrices
-    (A_kvl_c, A_kcl_c) = A_c
     (A_vc_src, A_src_vc, A_src_src) = A_src
 
     # get the system size
-    (n_vc, n_fc) = A_kcl_c.shape
+    (n_vc, n_fc) = A_net_c.shape
     (n_src, n_src) = A_src_src.shape
 
     # get the angular frequency
@@ -361,11 +354,11 @@ def _get_system_multiply_electric(sol, freq, A_c, A_src, R_vec_c, L_op_c):
     # electric KVL equations
     rhs_1 = s*L_op_c(I_fc)
     rhs_2 = R_vec_c*I_fc
-    rhs_3 = A_kvl_c*V_vc
+    rhs_3 = -A_net_c.transpose()*V_vc
     rhs_fc = rhs_1+rhs_2+rhs_3
 
     # electric KCL equations
-    rhs_1 = A_kcl_c*I_fc
+    rhs_1 = A_net_c*I_fc
     rhs_2 = A_vc_src*I_src
     rhs_vc = rhs_1+rhs_2
 
@@ -380,7 +373,7 @@ def _get_system_multiply_electric(sol, freq, A_c, A_src, R_vec_c, L_op_c):
     return rhs
 
 
-def _get_system_multiply_magnetic(sol, freq, A_m, R_vec_m, P_op_m):
+def _get_system_multiply_magnetic(sol, freq, A_net_m, R_vec_m, P_op_m):
     """
     Multiply the full magnetic equation matrix with a given solution test vector.
 
@@ -388,11 +381,8 @@ def _get_system_multiply_magnetic(sol, freq, A_m, R_vec_m, P_op_m):
     The equation system has the following size: n_fm+n_vm.
     """
 
-    # get the matrices
-    (A_kvl_m, A_kcl_m) = A_m
-
     # get the system size
-    (n_vm, n_fm) = A_kcl_m.shape
+    (n_vm, n_fm) = A_net_m.shape
 
     # get the derivative operator (avoid singularity for DC solution)
     if freq == 0:
@@ -406,11 +396,11 @@ def _get_system_multiply_magnetic(sol, freq, A_m, R_vec_m, P_op_m):
 
     # magnetic KVL equations
     rhs_1 = R_vec_m/s_diff*I_fm
-    rhs_2 = A_kvl_m*V_vm
+    rhs_2 = -A_net_m.transpose()*V_vm
     rhs_fm = rhs_1+rhs_2
 
     # magnetic KCL equations
-    rhs_1 = P_op_m(A_kcl_m*I_fm)
+    rhs_1 = P_op_m(A_net_m*I_fm)
     rhs_2 = s_diff*V_vm
     rhs_vm = rhs_1+rhs_2
 
@@ -440,23 +430,6 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     rhs = np.concatenate((rhs_c, I_src_c, V_src_v, rhs_m))
 
     return rhs
-
-
-def get_kvl_kcl_matrix(A_net):
-    """
-    Construct the connection matrices for the KVL and KCL equations.
-
-    The A_kvl matrix has the following size: (n_f, n_v).
-    The A_kcl matrix has the following size: (n_v, n_f).
-    """
-
-    # connection matrix for the KCL
-    A_kcl = +1*A_net
-
-    # connection matrix for the KVL
-    A_kvl = -1*A_net.transpose()
-
-    return A_kvl, A_kcl
 
 
 def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
@@ -515,7 +488,7 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     return A_vc_src, A_src_vc, A_src_src
 
 
-def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m):
+def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m):
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
@@ -528,12 +501,12 @@ def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
     """
 
     # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src, n_dof) = _get_system_size(A_c, A_m, A_src)
+    (n_vc, n_fc, n_vm, n_fm, n_src, n_dof) = _get_system_size(A_net_c, A_net_m, A_src)
     (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
 
     # get the Schur complement
-    (Y_mat_c, S_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_c, R_vec_c, L_vec_c, A_src)
-    (Y_mat_m, S_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_m, R_vec_m, P_vec_m)
+    (Y_mat_c, S_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_vec_c, L_vec_c, A_src)
+    (Y_mat_m, S_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_net_m, R_vec_m, P_vec_m)
 
     # if the matrix is singular, there is not preconditioner
     if (S_fact_c is None) or (S_fact_m is None):
@@ -565,7 +538,7 @@ def get_cond_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
     return op, S_mat_c, S_mat_m
 
 
-def get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m, K_op_c, K_op_m):
+def get_system_operator(freq, A_net_c, A_net_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m, K_op_c, K_op_m):
     """
     Get a linear operator that produce the matrix-vector multiplication result for the full system.
     This operator is used for the iterative solver.
@@ -574,7 +547,7 @@ def get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m,
     """
 
     # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src, n_dof) = _get_system_size(A_c, A_m, A_src)
+    (n_vc, n_fc, n_vm, n_fm, n_src, n_dof) = _get_system_size(A_net_c, A_net_m, A_src)
     (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
 
     # function describing the equation system
@@ -589,8 +562,8 @@ def get_system_operator(freq, A_c, A_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m,
         cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
 
         # compute the system multiplication
-        rhs_c = _get_system_multiply_electric(sol_c, freq, A_c, A_src, R_vec_c, L_op_c)
-        rhs_m = _get_system_multiply_magnetic(sol_m, freq, A_m, R_vec_m, P_op_m)
+        rhs_c = _get_system_multiply_electric(sol_c, freq, A_net_c, A_src, R_vec_c, L_op_c)
+        rhs_m = _get_system_multiply_magnetic(sol_m, freq, A_net_m, R_vec_m, P_op_m)
 
         # assemble the rhs
         rhs = np.concatenate((rhs_c+cpl_c, rhs_m+cpl_m))

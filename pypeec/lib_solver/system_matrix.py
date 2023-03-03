@@ -249,21 +249,17 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
     (A_fv_net_c, idx_fvc) = _get_face_voxel_matrix(n, idx_vc, idx_fc, A_net_c)
     (A_fv_net_m, idx_fvm) = _get_face_voxel_matrix(n, idx_vm, idx_fm, A_net_m)
 
-    # get the voxel face incidence matrix
-    A_vf_net_c = A_fv_net_c.transpose()
-    A_vf_net_m = A_fv_net_m.transpose()
-
     # get the coupling operator (voxel to voxel)
     (K_op_c_tmp, K_op_m_tmp) = matrix_multiply.get_operator_cross(idx_fvc, idx_fvm, K_tsr)
 
     # function describing the coupling from the magnetic to the electric faces
     def K_op_c(var_fm):
-        var_fc = A_vf_net_c*K_op_c_tmp(A_fv_net_m*var_fm)
+        var_fc = A_fv_net_c.transpose()*K_op_c_tmp(A_fv_net_m*var_fm)
         return var_fc
 
     # function describing the coupling from the electric to the magnetic faces
     def K_op_m(var_fc):
-        var_fm = A_vf_net_m*K_op_m_tmp(A_fv_net_c*var_fc)
+        var_fm = A_fv_net_m.transpose()*K_op_m_tmp(A_fv_net_c*var_fc)
         return var_fm
 
     return K_op_c, K_op_m
