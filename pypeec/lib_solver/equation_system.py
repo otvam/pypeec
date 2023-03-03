@@ -163,17 +163,11 @@ def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
 
     # compute the couplings
     if freq == 0:
-        cpl_fc = np.zeros(n_fc, dtype=np.complex_)
+        rhs_cpl_fc = np.zeros(n_fc, dtype=np.complex_)
     else:
-        cpl_fc = K_op_c(I_fm)
+        rhs_cpl_fc = K_op_c(I_fm)
 
-    cpl_vc = np.zeros(n_vc, dtype=np.complex_)
-    cpl_src = np.zeros(n_src, dtype=np.complex_)
-
-    # assemble the vectors
-    cpl_c = np.concatenate((cpl_fc, cpl_vc, cpl_src))
-
-    return cpl_c
+    return rhs_cpl_fc
 
 
 def _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m):
@@ -189,13 +183,9 @@ def _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m):
     I_fc = sol_c[0:n_fc]
 
     # compute the couplings
-    cpl_fm = -K_op_m(I_fc)
-    cpl_vm = np.zeros(n_vm, dtype=np.complex_)
+    rhs_cpl_fm = -K_op_m(I_fc)
 
-    # assemble the vectors
-    cpl_m = np.concatenate((cpl_fm, cpl_vm))
-
-    return cpl_m
+    return rhs_cpl_fm
 
 
 def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
@@ -299,7 +289,7 @@ def _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat):
     return S_mat, S_fact
 
 
-def _get_cond_solve(rhs, cpl, Y_mat, S_fact, A_12_mat, A_21_mat):
+def _get_cond_solve(rhs, Y_mat, S_fact, A_12_mat, A_21_mat):
     """
     Solve the preconditioner equation system.
     The matrix factorization of the Schur complement is used.
@@ -308,17 +298,14 @@ def _get_cond_solve(rhs, cpl, Y_mat, S_fact, A_12_mat, A_21_mat):
     # split the system (Schur complement split)
     (n_schur, n_schur) = Y_mat.shape
 
-    # add the electric-magnetic couplings
-    rhs_cpl = rhs-cpl
-
     # split the rhs vector
-    rhs_cpl_a = rhs_cpl[:n_schur]
-    rhs_cpl_b = rhs_cpl[n_schur:]
+    rhs_a = rhs[:n_schur]
+    rhs_b = rhs[n_schur:]
 
     # solve the equation system (Schur complement and matrix factorization)
-    tmp = rhs_cpl_b-(A_21_mat*(Y_mat*rhs_cpl_a))
+    tmp = rhs_b-(A_21_mat*(Y_mat*rhs_a))
     sol_b = matrix_factorization.get_solve(S_fact, tmp)
-    sol_a = Y_mat*(rhs_cpl_a-(A_12_mat*sol_b))
+    sol_a = Y_mat*(rhs_a-(A_12_mat*sol_b))
 
     # assemble the solution
     sol = np.concatenate((sol_a, sol_b))
@@ -326,12 +313,11 @@ def _get_cond_solve(rhs, cpl, Y_mat, S_fact, A_12_mat, A_21_mat):
     return sol
 
 
-def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
+def _get_system_multiply_source(sol, A_net_c, A_src):
     """
-    Multiply the full electric equation matrix with a given solution test vector.
+    Multiply the source equation matrix with a given solution test vector.
 
-    For the multiplication of the dense matrix, the provided linear operators are used.
-    The equation system has the following size: n_fc+n_vc+n_src_c+n_src_v.
+    The equation system has the following size: n_src_c+n_src_v.
     """
 
     # get the matrices
@@ -341,13 +327,38 @@ def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
     (n_vc, n_fc) = A_net_c.shape
     (n_src, n_src) = A_src_src.shape
 
+    # split the solution vector
+    V_vc = sol[n_fc:n_fc+n_vc]
+    I_src = sol[n_fc+n_vc:n_fc+n_vc+n_src]
+
+    # electric KCL equations
+    rhs_src_vc = A_vc_src*I_src
+
+    # form the source equation
+    rhs_1 = A_src_vc*V_vc
+    rhs_2 = A_src_src*I_src
+    rhs_src_src = rhs_1+rhs_2
+
+    return rhs_src_vc, rhs_src_src
+
+
+def _get_system_multiply_electric(sol, freq, A_net_c, R_c, L_op_c):
+    """
+    Multiply the full electric equation matrix with a given solution test vector.
+
+    For the multiplication of the dense matrix, the provided linear operators are used.
+    The equation system has the following size: n_fc+n_vc+n_src_c+n_src_v.
+    """
+
+    # get the system size
+    (n_vc, n_fc) = A_net_c.shape
+
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
     # split the solution vector
     I_fc = sol[0:n_fc]
     V_vc = sol[n_fc:n_fc+n_vc]
-    I_src = sol[n_fc+n_vc:n_fc+n_vc+n_src]
 
     # electric KVL equations
     rhs_1 = s*L_op_c(I_fc)
@@ -356,19 +367,9 @@ def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
     rhs_fc = rhs_1+rhs_2+rhs_3
 
     # electric KCL equations
-    rhs_1 = A_net_c*I_fc
-    rhs_2 = A_vc_src*I_src
-    rhs_vc = rhs_1+rhs_2
+    rhs_vc = A_net_c*I_fc
 
-    # form the source equation
-    rhs_1 = A_src_vc*V_vc
-    rhs_2 = A_src_src*I_src
-    rhs_src = rhs_1+rhs_2
-
-    # assemble the solution
-    rhs = np.concatenate((rhs_fc, rhs_vc, rhs_src))
-
-    return rhs
+    return rhs_fc, rhs_vc
 
 
 def _get_system_multiply_magnetic(sol, freq, A_net_m, R_m, P_op_m):
@@ -402,10 +403,7 @@ def _get_system_multiply_magnetic(sol, freq, A_net_m, R_m, P_op_m):
     rhs_2 = s_diff*V_vm
     rhs_vm = rhs_1+rhs_2
 
-    # assemble the solution
-    rhs = np.concatenate((rhs_fm, rhs_vm))
-
-    return rhs
+    return rhs_fm, rhs_vm
 
 
 def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
@@ -510,18 +508,14 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     if (S_fact_c is None) or (S_fact_m is None):
         return None, S_mat_c, S_mat_m
 
-    # the electric-magnetic couplings are neglected
-    cpl = np.zeros(n_dof, dtype=np.complex_)
-    (cpl_c, cpl_m) = _get_split_vector(cpl, n_vc, n_fc, n_vm, n_fm, n_src)
-
     # function describing the preconditioner
     def fct(rhs):
         # split the rhs vector into an electric and magnetic vector
         (rhs_c, rhs_m) = _get_split_vector(rhs, n_vc, n_fc, n_vm, n_fm, n_src)
 
         # solve the system (electric and magnetic)
-        sol_c = _get_cond_solve(rhs_c, cpl_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
-        sol_m = _get_cond_solve(rhs_m, cpl_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
+        sol_c = _get_cond_solve(rhs_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
+        sol_m = _get_cond_solve(rhs_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
 
         # scale and assemble the solution
         sol_c = sol_c/scaler_c
@@ -556,15 +550,24 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
         sol_m = sol_m*scaler_m
 
         # compute the electric-magnetic coupling
-        cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
-        cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
+        rhs_cpl_fc = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
+        rhs_cpl_fm = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
+
+        # compute the source equation
+        (rhs_src_vc, rhs_src_src) = _get_system_multiply_source(sol_c, A_net_c, A_src)
 
         # compute the system multiplication
-        rhs_c = _get_system_multiply_electric(sol_c, freq, A_net_c, A_src, R_c, L_op_c)
-        rhs_m = _get_system_multiply_magnetic(sol_m, freq, A_net_m, R_m, P_op_m)
+        (rhs_fc, rhs_vc) = _get_system_multiply_electric(sol_c, freq, A_net_c, R_c, L_op_c)
+        (rhs_fm, rhs_vm) = _get_system_multiply_magnetic(sol_m, freq, A_net_m, R_m, P_op_m)
 
         # assemble the rhs
-        rhs = np.concatenate((rhs_c+cpl_c, rhs_m+cpl_m))
+        rhs = np.concatenate((
+            rhs_fc+rhs_cpl_fc,
+            rhs_vc+rhs_src_vc,
+            rhs_src_src,
+            rhs_fm+rhs_cpl_fm,
+            rhs_vm,
+        ))
 
         return rhs
 
