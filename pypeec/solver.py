@@ -26,7 +26,7 @@ from pypeec.lib_utils.error import CheckError, RunError
 logger = timelogger.get_logger("SOLVER")
 
 
-def _run_preproc(data_solver):
+def _run_solver(data_solver):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
     """
@@ -35,9 +35,16 @@ def _run_preproc(data_solver):
     n = data_solver["n"]
     d = data_solver["d"]
     c = data_solver["c"]
+    freq = data_solver["freq"]
     green_simplify = data_solver["green_simplify"]
     coupling_simplify = data_solver["coupling_simplify"]
     has_coupling = data_solver["has_coupling"]
+    has_electric = data_solver["has_electric"]
+    has_magnetic = data_solver["has_magnetic"]
+    material_idx = data_solver["material_idx"]
+    source_idx = data_solver["source_idx"]
+    solver_options = data_solver["solver_options"]
+    condition_options = data_solver["condition_options"]
 
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
@@ -57,38 +64,6 @@ def _run_preproc(data_solver):
 
         # Green function mutual coefficients
         K_tsr = system_tensor.get_coupling_tensor(n, d, coupling_simplify, has_coupling)
-
-    # assemble results
-    data_solver["pts_vox"] = pts_vox
-    data_solver["A_vox"] = A_vox
-    data_solver["G_self"] = G_self
-    data_solver["G_mutual"] = G_mutual
-    data_solver["K_tsr"] = K_tsr
-
-    return data_solver
-
-
-def _run_main(data_solver):
-    """
-    Construct and solve the problem (equation system).
-    """
-
-    # extract the data
-    n = data_solver["n"]
-    d = data_solver["d"]
-    freq = data_solver["freq"]
-    solver_options = data_solver["solver_options"]
-    condition_options = data_solver["condition_options"]
-    has_electric = data_solver["has_electric"]
-    has_magnetic = data_solver["has_magnetic"]
-    has_coupling = data_solver["has_coupling"]
-    material_idx = data_solver["material_idx"]
-    source_idx = data_solver["source_idx"]
-    pts_vox = data_solver["pts_vox"]
-    A_vox = data_solver["A_vox"]
-    G_self = data_solver["G_self"]
-    G_mutual = data_solver["G_mutual"]
-    K_tsr = data_solver["K_tsr"]
 
     # parse the problem geometry (materials and sources)
     with timelogger.BlockTimer(logger, "problem_geometry"):
@@ -151,55 +126,6 @@ def _run_main(data_solver):
         # compute convergence
         has_converged = solver_ok and condition_ok
 
-    # assemble results
-    data_solver["idx_fc"] = idx_fc
-    data_solver["idx_fm"] = idx_fm
-    data_solver["idx_vc"] = idx_vc
-    data_solver["idx_vm"] = idx_vm
-    data_solver["idx_src_v"] = idx_src_v
-    data_solver["idx_src_c"] = idx_src_c
-    data_solver["pts_net_c"] = pts_net_c
-    data_solver["pts_net_m"] = pts_net_m
-    data_solver["A_net_c"] = A_net_c
-    data_solver["A_net_m"] = A_net_m
-    data_solver["R_vec_c"] = R_vec_c
-    data_solver["R_vec_m"] = R_vec_m
-    data_solver["L_op_c"] = L_op_c
-    data_solver["K_op_c"] = K_op_c
-    data_solver["problem_status"] = problem_status
-    data_solver["has_converged"] = has_converged
-    data_solver["solver_status"] = solver_status
-    data_solver["condition_status"] = condition_status
-    data_solver["sol"] = sol
-
-    return data_solver
-
-
-def _run_postproc(data_solver):
-    """
-    Extract and parse the solution.
-    """
-
-    # extract the data
-    n = data_solver["n"]
-    d = data_solver["d"]
-    freq = data_solver["freq"]
-    A_vox = data_solver["A_vox"]
-    A_net_c = data_solver["A_net_c"]
-    A_net_m = data_solver["A_net_m"]
-    source_idx = data_solver["source_idx"]
-    idx_fc = data_solver["idx_fc"]
-    idx_fm = data_solver["idx_fm"]
-    idx_vc = data_solver["idx_vc"]
-    idx_vm = data_solver["idx_vm"]
-    idx_src_c = data_solver["idx_src_c"]
-    idx_src_v = data_solver["idx_src_v"]
-    R_vec_c = data_solver["R_vec_c"]
-    R_vec_m = data_solver["R_vec_m"]
-    L_op_c = data_solver["L_op_c"]
-    K_op_c = data_solver["K_op_c"]
-    sol = data_solver["sol"]
-
     # extract the solution
     with timelogger.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
@@ -230,52 +156,32 @@ def _run_postproc(data_solver):
         # parse the terminal voltages and currents for the sources
         terminal = extract_solution.get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v)
 
-    # assemble results
-    data_solver["terminal"] = terminal
-    data_solver["integral"] = integral
-    data_solver["V_vc"] = V_vc
-    data_solver["V_vm"] = V_vm
-    data_solver["J_vc"] = J_vc
-    data_solver["B_vm"] = B_vm
-    data_solver["P_vc"] = P_vc
-    data_solver["P_vm"] = P_vm
-    data_solver["S_vc"] = S_vc
-    data_solver["Q_vm"] = Q_vm
-
-    return data_solver
-
-
-def _run_assemble(data_solver):
-    """
-    Generate the output data, discard intermediate results.
-    """
-
     # assign results
     data_solution = {
-        "n": data_solver["n"],
-        "d": data_solver["d"],
-        "c": data_solver["c"],
-        "pts_net_c": data_solver["pts_net_c"],
-        "pts_net_m": data_solver["pts_net_m"],
-        "idx_vc": data_solver["idx_vc"],
-        "idx_vm": data_solver["idx_vm"],
-        "idx_src_c": data_solver["idx_src_c"],
-        "idx_src_v": data_solver["idx_src_v"],
-        "freq": data_solver["freq"],
-        "has_converged": data_solver["has_converged"],
-        "problem_status": data_solver["problem_status"],
-        "solver_status": data_solver["solver_status"],
-        "condition_status": data_solver["condition_status"],
-        "terminal": data_solver["terminal"],
-        "integral": data_solver["integral"],
-        "V_vc": data_solver["V_vc"],
-        "V_vm": data_solver["V_vm"],
-        "J_vc": data_solver["J_vc"],
-        "B_vm": data_solver["B_vm"],
-        "P_vc": data_solver["P_vc"],
-        "P_vm": data_solver["P_vm"],
-        "S_vc": data_solver["S_vc"],
-        "Q_vm": data_solver["Q_vm"],
+        "n": n,
+        "d": d,
+        "c": c,
+        "pts_net_c": pts_net_c,
+        "pts_net_m": pts_net_m,
+        "idx_vc": idx_vc,
+        "idx_vm": idx_vm,
+        "idx_src_c": idx_src_c,
+        "idx_src_v": idx_src_v,
+        "freq": freq,
+        "has_converged": has_converged,
+        "problem_status": problem_status,
+        "solver_status": solver_status,
+        "condition_status": condition_status,
+        "terminal": terminal,
+        "integral": integral,
+        "V_vc": V_vc,
+        "V_vm": V_vm,
+        "J_vc": J_vc,
+        "B_vm": B_vm,
+        "P_vc": P_vc,
+        "P_vm": P_vm,
+        "S_vc": S_vc,
+        "Q_vm": Q_vm,
     }
 
     return data_solution
@@ -332,17 +238,8 @@ def run(data_voxel, data_problem, data_tolerance):
         logger.info("combine the input data")
         data_solver = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
-        # prepare the problem
-        data_solver = _run_preproc(data_solver)
-
         # solve the problem
-        data_solver = _run_main(data_solver)
-
-        # extrac the solution
-        data_solver = _run_postproc(data_solver)
-
-        # assemble the output data structure
-        data_solution = _run_assemble(data_solver)
+        data_solution = _run_solver(data_solver)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(logger, ex)
         return False, None, ex
