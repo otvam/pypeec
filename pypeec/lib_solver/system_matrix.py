@@ -91,8 +91,8 @@ def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
 
     # check if the vector is required
     if not has_domain:
-        R_vec = np.zeros(len(idx_f), dtype=np.complex_)
-        return R_vec
+        R = np.zeros(len(idx_f), dtype=np.complex_)
+        return R
 
     # extract the voxel data
     (nx, ny, nz) = n
@@ -100,7 +100,7 @@ def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
     nv = nx*ny*nz
 
     # get the resistivity of the faces (average between voxels)
-    rho_vec = 0.5*rho_v*np.abs(A_net)
+    rho = 0.5*rho_v*np.abs(A_net)
 
     # get the direction of the faces (x, y, z)
     idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv))
@@ -108,12 +108,12 @@ def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
     idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
 
     # resistance vector (different directions)
-    R_vec = np.zeros(len(idx_f), dtype=np.complex_)
-    R_vec[idx_fx] = (dx/(dy*dz))*rho_vec[idx_fx]
-    R_vec[idx_fy] = (dy/(dx*dz))*rho_vec[idx_fy]
-    R_vec[idx_fz] = (dz/(dx*dy))*rho_vec[idx_fz]
+    R = np.zeros(len(idx_f), dtype=np.complex_)
+    R[idx_fx] = (dx/(dy*dz))*rho[idx_fx]
+    R[idx_fy] = (dy/(dx*dz))*rho[idx_fy]
+    R[idx_fz] = (dz/(dx*dy))*rho[idx_fz]
 
-    return R_vec
+    return R
 
 
 def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
@@ -131,9 +131,9 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
 
     # check if the matrix is required
     if not has_domain:
-        L_vec = np.zeros(len(idx_f), dtype=np.float_)
+        L = np.zeros(len(idx_f), dtype=np.float_)
         L_op = _get_operator_zeros(idx_f)
-        return L_vec, L_op
+        return L, L_op
 
     # vacuum permeability
     mu = 4*np.pi*1e-7
@@ -155,7 +155,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     scale[idx_fz] = mu/(dx**2*dy**2)
 
     # self-inductance for the preconditioner
-    L_vec = scale*G_self
+    L = scale*G_self
 
     # get the matrix-vector operator
     L_op_tmp = matrix_multiply.get_operator_diag(idx_f, G_mutual)
@@ -165,7 +165,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
         res_f = scale*L_op_tmp(var_f)
         return res_f
 
-    return L_vec, L_op
+    return L, L_op
 
 
 def get_P_matrix(d, idx_v, G_self, G_mutual, has_domain):
@@ -183,9 +183,9 @@ def get_P_matrix(d, idx_v, G_self, G_mutual, has_domain):
 
     # check if the matrix is required
     if not has_domain:
-        P_vec = np.zeros(len(idx_v), dtype=np.float_)
+        P = 0.0
         P_op = _get_operator_zeros(idx_v)
-        return P_vec, P_op
+        return P, P_op
 
     # vacuum permeability
     mu = 4*np.pi*1e-7
@@ -197,7 +197,7 @@ def get_P_matrix(d, idx_v, G_self, G_mutual, has_domain):
     scale = 1/(mu*dx**2*dy**2*dz**2)
 
     # self-inductance for the preconditioner
-    P_vec = scale*G_self*np.ones(len(idx_v))
+    P = scale*G_self
 
     # get the matrix-vector operator
     P_op_tmp = matrix_multiply.get_operator_single(idx_v, G_mutual)
@@ -207,7 +207,7 @@ def get_P_matrix(d, idx_v, G_self, G_mutual, has_domain):
         res_v = scale*P_op_tmp(var_v)
         return res_v
 
-    return P_vec, P_op
+    return P, P_op
 
 
 def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling):

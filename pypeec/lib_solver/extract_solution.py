@@ -135,7 +135,7 @@ def get_divergence_density(d, A_net, var_f):
     return var_v
 
 
-def get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m):
+def get_losses(freq, I_fc, I_fm, R_c, R_m):
     """
     Get the losses for the electric and magnetic domains.
     """
@@ -150,11 +150,11 @@ def get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m):
         fact = 0.5
 
     # get the magnetic losses linked with the electric domains
-    P_fc = fact*np.conj(I_fc)*R_vec_c*I_fc
+    P_fc = fact*np.conj(I_fc)*R_c*I_fc
     P_fc = np.real(P_fc)
 
     # get the magnetic losses linked with the magnetic domains
-    P_fm = fact*np.conj(s*I_fm)*R_vec_m*I_fm
+    P_fm = fact*np.conj(s*I_fm)*R_m*I_fm
     P_fm = np.real(P_fm)
 
     return P_fc, P_fm

@@ -85,14 +85,14 @@ def _run_solver(data_solver):
     # get the resistances and inductances
     with timelogger.BlockTimer(logger, "system_matrix"):
         # get the resistance vector
-        R_vec_c = system_matrix.get_R_vector(n, d, A_net_c, idx_fc, rho_vc, has_electric)
-        R_vec_m = system_matrix.get_R_vector(n, d, A_net_m, idx_fm, rho_vm, has_magnetic)
+        R_c = system_matrix.get_R_vector(n, d, A_net_c, idx_fc, rho_vc, has_electric)
+        R_m = system_matrix.get_R_vector(n, d, A_net_m, idx_fm, rho_vm, has_magnetic)
 
         # get the inductance tensor (preconditioner and full problem)
-        (L_vec_c, L_op_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual, has_electric)
+        (L_c, L_op_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual, has_electric)
 
         # get the potential tensor (preconditioner and full problem)
-        (P_vec_m, P_op_m) = system_matrix.get_P_matrix(d, idx_vm, G_self, G_mutual, has_magnetic)
+        (P_m, P_op_m) = system_matrix.get_P_matrix(d, idx_vm, G_self, G_mutual, has_magnetic)
 
         # get the coupling matrices
         (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling)
@@ -106,10 +106,10 @@ def _run_solver(data_solver):
         A_src = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        (pcd_op, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_vec_c, R_vec_m, L_vec_c, P_vec_m)
+        (pcd_op, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_vec_c, R_vec_m, L_op_c, P_op_m, K_op_c, K_op_m)
+        sys_op = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
 
     # solve the equation system
     with timelogger.BlockTimer(logger, "equation_solver"):
@@ -131,7 +131,7 @@ def _run_solver(data_solver):
         (I_fm, V_vm, n_offset) = extract_solution.get_sol_extract_field(sol, idx_fm, idx_vm, n_offset)
 
         # get the losses and energy
-        (P_fc, P_fm) = extract_solution.get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m)
+        (P_fc, P_fm) = extract_solution.get_losses(freq, I_fc, I_fm, R_c, R_m)
         (W_fc, W_fm) = extract_solution.get_energy(freq, I_fc, I_fm, L_op_c, K_op_c)
 
         # get the voxel flow densities from the face flows

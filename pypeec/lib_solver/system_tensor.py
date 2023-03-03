@@ -124,6 +124,7 @@ def get_green_self(d):
 
     idx = np.array([[0, 0, 0]], dtype=np.int_)
     G_self = green_function.get_green_ana(d, idx, "6D")
+    G_self = G_self.item()
 
     return G_self
 
