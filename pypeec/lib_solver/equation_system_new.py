@@ -211,12 +211,8 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
         - n_vc+n_src_c+n_src_v (Schur complement size)
     """
 
-    # get the matrices
-    (A_vc_src, A_src_vc, A_src_src) = A_src
-
     # get the system size
     (n_vc, n_fc) = A_net_c.shape
-    (n_src, n_src) = A_src_src.shape
 
     # get the angular frequency
     s = 1j*2*np.pi*freq
@@ -232,22 +228,13 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     A_21_mat = A_net_c
     A_22_mat = sps.csc_matrix((n_vc, n_vc), dtype=np.int_)
 
-    # expand for the source matrices
-    A_add = sps.csc_matrix((n_fc, n_src), dtype=np.int_)
-    A_12_mat = sps.hstack([A_12_mat, A_add], dtype=np.complex_)
-    A_add = sps.csc_matrix((n_src, n_fc), dtype=np.int_)
-    A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex_)
-
-    # add the source
-    A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=np.complex_)
-
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat)
+    (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat, A_src)
 
     return Y_mat, S_mat, S_fact, A_12_mat, A_21_mat
 
 
-def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m):
+def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m, A_src):
     """
     Compute the sparse matrices using for the magnetic preconditioner.
 
@@ -283,18 +270,32 @@ def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m):
     A_22_mat = I_mat_m
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat)
+    (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat, A_src)
 
     return Y_mat, S_mat, S_fact, A_12_mat, A_21_mat
 
 
-def _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat):
+def _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat, A_src):
     """
     Compute the Schur complement of a matrix.
     """
 
+    # extract the sources
+    (A_v_src, A_src_v, A_src_src) = A_src
+
     # computing the Schur complement (with respect to the diagonal admittance matrix)
     S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
+
+    # add the source
+    S_mat = sps.bmat([[S_mat, A_v_src], [A_src_v, A_src_src]], dtype=np.complex_)
+
+
+    # expand for the source matrices
+    A_add = sps.csc_matrix((n_fc, n_src), dtype=np.int_)
+    A_12_mat = sps.hstack([A_12_mat, A_add], dtype=np.complex_)
+    A_add = sps.csc_matrix((n_src, n_fc), dtype=np.int_)
+    A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex_)
+
 
     # compute the factorization of the sparse Schur complement
     S_fact = matrix_factorization.get_factorize(S_mat)
@@ -302,7 +303,7 @@ def _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat):
     return S_mat, S_fact
 
 
-def _get_cond_solve(rhs, Y_mat, S_fact, A_12_mat, A_21_mat):
+def _get_cond_solve(rhs, rhs_src, Y_mat, S_fact, A_12_mat, A_21_mat):
     """
     Solve the preconditioner equation system.
     The matrix factorization of the Schur complement is used.
@@ -334,13 +335,13 @@ def _get_system_multiply_source(sol_v, sol_src, A_src):
     """
 
     # get the matrices
-    (A_vc_src, A_src_vc, A_src_src) = A_src
+    (A_v_src, A_src_v, A_src_src) = A_src
 
     # electric KCL equations
-    rhs_src_vc = A_vc_src*sol_src
+    rhs_src_vc = A_v_src*sol_src
 
     # form the source equation
-    rhs_1 = A_src_vc*sol_v
+    rhs_1 = A_src_v*sol_v
     rhs_2 = A_src_src*sol_src
     rhs_src_src = rhs_1+rhs_2
 
@@ -499,7 +500,7 @@ def get_source_magnetic(idx_v):
     return A_v_src, A_src_v, A_src_src
 
 
-def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
+def get_cond_operator(freq, A_net_c, A_net_m, A_src_c, A_src_m, R_c, R_m, L_c, P_m):
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
@@ -512,12 +513,12 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     """
 
     # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src, n_dof) = _get_system_size(A_net_c, A_net_m, A_src)
-    (scaler_fc, scaler_fm) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm)
+    (n_vc, n_fc, n_src_c, n_vm, n_fm, n_src_m, n_dof) = _get_system_size(A_net_c, A_net_m, A_src_c, A_src_m)
+    (scaler_fc, scaler_fm) = _get_system_scaler(freq, n_fc, n_fm)
 
     # get the Schur complement
-    (Y_mat_c, S_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
-    (Y_mat_m, S_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m)
+    (Y_mat_c, S_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src_c)
+    (Y_mat_m, S_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m, A_src_m)
 
     # if the matrix is singular, there is not preconditioner
     if (S_fact_c is None) or (S_fact_m is None):
@@ -526,15 +527,18 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     # function describing the preconditioner
     def fct(rhs):
         # split the rhs vector into an electric and magnetic vector
-        (rhs_c, rhs_m) = _get_split_vector(rhs, n_vc, n_fc, n_vm, n_fm, n_src)
+        (rhs_c, rhs_src_c, rhs_m, rhs_src_m) = _get_split_vector(rhs, n_vc, n_fc, n_src_c, n_vm, n_fm, n_src_m)
 
         # solve the system (electric and magnetic)
-        sol_c = _get_cond_solve(rhs_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
-        sol_m = _get_cond_solve(rhs_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
+        sol_c = _get_cond_solve(rhs_c, rhs_src_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
+        sol_m = _get_cond_solve(rhs_m, rhs_src_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
+
+        (sol_fc, sol_vc) = _get_split_field(sol_c, n_vc, n_fc)
+        (sol_fm, sol_vm) = _get_split_field(sol_m, n_vm, n_fm)
 
         # scale and assemble the solution
-        sol_c = sol_c/scaler_c
-        sol_m = sol_m/scaler_m
+        sol_fc = sol_fc/scaler_fc
+        sol_fm = sol_fm/scaler_fm
         sol = np.concatenate((sol_c, sol_m))
 
         return sol
@@ -555,10 +559,7 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src_c, A_src_m, R_c, R_m, L_op
 
     # get the system size and the solution scaling
     (n_vc, n_fc, n_src_c, n_vm, n_fm, n_src_m, n_dof) = _get_system_size(A_net_c, A_net_m, A_src_c, A_src_m)
-
-
     (scaler_fc, scaler_fm) = _get_system_scaler(freq, n_fc, n_fm)
-
 
     # function describing the equation system
     def fct(sol):

@@ -114,15 +114,15 @@ def _run_solver(data_solver):
         sys_op = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src_c, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
 
         sys_op2 = equation_system_new.get_system_operator(freq, A_net_c, A_net_m, A_src_c, A_src_m, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
-        # (pcd_op2, S_mat_c2, S_mat_m2) = equation_system_new.get_cond_operator(freq, A_net_c, A_net_m, A_src_c, R_c, R_m, L_c, P_m)
+        (pcd_op2, S_mat_c2, S_mat_m2) = equation_system_new.get_cond_operator(freq, A_net_c, A_net_m, A_src_c, A_src_m, R_c, R_m, L_c, P_m)
 
         import numpy as np
         vec = np.arange(pcd_op.shape[0])
 
-        # res = pcd_op(vec)
-        # res2 = pcd_op2(vec)
-        # err = res-res2
-        # vva = np.max(np.abs(err))
+        res = pcd_op(vec)
+        res2 = pcd_op2(vec)
+        err = res-res2
+        vva = np.max(np.abs(err))
 
         res = sys_op(vec)
         res2 = sys_op2(vec)
