@@ -400,7 +400,7 @@ def _get_system_multiply_magnetic(sol, freq, A_net_m, R_m, P_op_m):
     # get the term that are different for DC and AC cases
     if freq == 0:
         rhs_kvl_res = R_m*I_fm
-        rhs_kcl_net = s*V_vm
+        rhs_kcl_net = V_vm
     else:
         rhs_kvl_res = R_m/s*I_fm
         rhs_kcl_net = s*V_vm
