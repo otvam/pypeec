@@ -222,7 +222,7 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     Y_c = 1/(R_c+s*L_c)
 
     # admittance matrix
-    Y_mat = sps.diags(Y_c)
+    Y_mat = sps.diags(Y_c, format="csc")
 
     # assemble the matrices
     A_12_mat = -A_net_c.transpose()
@@ -231,12 +231,14 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
 
     # expand for the source matrices
     A_add = sps.csc_matrix((n_fc, n_src), dtype=np.int_)
-    A_12_mat = sps.hstack([A_12_mat, A_add], dtype=np.complex_)
+    A_12_mat = sps.hstack([A_12_mat, A_add], dtype=np.complex_, format="csr")
+
+    # expand for the source matrices
     A_add = sps.csc_matrix((n_src, n_fc), dtype=np.int_)
-    A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex_)
+    A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex_, format="csc")
 
     # add the source
-    A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=np.complex_)
+    A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=np.complex_, format="csc")
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
     (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat)
@@ -269,10 +271,10 @@ def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m):
         I_m = s*np.ones(n_vm, dtype=np.complex_)
 
     # admittance matrix
-    Y_mat = sps.diags(Y_m)
+    Y_mat = sps.diags(Y_m, format="csc")
 
     # potential matrix
-    I_mat_m = sps.diags(I_m)
+    I_mat_m = sps.diags(I_m, format="csc")
 
     # assemble the matrices
     A_12_mat = -A_net_m.transpose()
