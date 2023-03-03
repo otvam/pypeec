@@ -16,14 +16,14 @@ import numpy.linalg as lna
 from pypeec.lib_utils.error import RunError
 
 
-def _get_biot_savart(pts, pts_src, J_src, vol):
+def _get_biot_savart(pts, pts_net, J_src, vol):
     """
     Compute the magnetic field at a specified point.
     The field is created by many currents.
     """
 
     # get the distance between the points and the voxels
-    vec = pts-pts_src
+    vec = pts-pts_net
 
     # get the norm of the distance
     nrm = lna.norm(vec, axis=1, keepdims=True)
@@ -146,7 +146,7 @@ def get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v):
     return idx, material
 
 
-def get_magnetic_field(d, idx_vc, idx_vm, J_vc, S_vm, coord_vox, data_point):
+def get_magnetic_field(d, J_vc, S_vm, pts_net_c, pts_net_m, data_point):
     """
     Compute the magnetic field for the provided points.
     The Biot-Savart law is used for the electric material contribution.
@@ -156,15 +156,11 @@ def get_magnetic_field(d, idx_vc, idx_vm, J_vc, S_vm, coord_vox, data_point):
     # extract the voxel volume
     vol = np.prod(d)
 
-    # keep non-empty voxels
-    pts_vc = coord_vox[idx_vc]
-    pts_vm = coord_vox[idx_vm]
-
     # for each provided point, compute the magnetic field
     H_points = np.zeros((len(data_point), 3), dtype=np.complex_)
     for i, pts_tmp in enumerate(data_point):
-        H_c = _get_biot_savart(pts_tmp, pts_vc, J_vc, vol)
-        H_m = _get_magnetic_charge(pts_tmp, pts_vm, S_vm, vol)
+        H_c = _get_biot_savart(pts_tmp, pts_net_c, J_vc, vol)
+        H_m = _get_magnetic_charge(pts_tmp, pts_net_m, S_vm, vol)
         H_points[i, :] = H_c+H_m
 
     return H_points

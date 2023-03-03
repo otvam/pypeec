@@ -92,16 +92,21 @@ def get_source_geometry(source_idx, extract_type):
     return idx_src, value_src, element_src
 
 
-def get_incidence_matrix(A_vox, idx_v):
+def get_reduce_matrix(pts_vox, A_vox, idx_v):
     """
-    Reduce the incidence matrix to the non-empty voxels and compute face indices.
+    Reduce the matrices to the non-empty voxels and compute face indices.
 
     The voxel structure has the following size: (nx, ny, nz).
     The problem contains n_v non-empty voxels and n_f internal faces.
+    At the input, the complete coordinate matrix is provided: (nx*ny*nz, 3).
     At the input, the complete incidence matrix is provided: (nx*ny*nz, 3*nx*ny*nz).
+    At the output, the reduced coordinate matrix is provided: (n_v, 3).
     At the output, the reduced incidence matrix is provided: (n_v, n_f).
-    The indices of the internal faces is also computed.
+    The indices of the internal faces are also computed.
     """
+
+    # reduce the size of the voxel coordinate amtrix
+    pts_net = pts_vox[idx_v, :]
 
     # reduce the size of the incidence matrix (only the non-empty voxels)
     A_net = A_vox[idx_v, :]
@@ -113,7 +118,9 @@ def get_incidence_matrix(A_vox, idx_v):
     # reduce the size of the incidence matrix (only the internal faces)
     A_net = A_net[:, idx_f]
 
-    return A_net, idx_f
+
+
+    return pts_net, A_net, idx_f
 
 
 def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):

@@ -10,7 +10,7 @@ import numpy as np
 import scipy.sparse as sps
 
 
-def get_voxel_coord(n, d, c):
+def get_voxel_coordinate(n, d, c):
     """
     Get the coordinate of the different voxels.
     The first voxel center is at the specified origin coordinate.
@@ -46,9 +46,9 @@ def get_voxel_coord(n, d, c):
     z = z[idx_z].flatten(order="F")
 
     # assemble the coordinate array
-    coord_vox = np.stack((x, y, z), axis=1)
+    pts_vox = np.stack((x, y, z), axis=1)
 
-    return coord_vox
+    return pts_vox
 
 
 def get_incidence_matrix(n):

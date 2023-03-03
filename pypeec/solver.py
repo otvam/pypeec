@@ -42,7 +42,7 @@ def _run_preproc(data_solver):
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(logger, "voxel_geometry"):
         # get the coordinate of the voxels
-        coord_vox = voxel_geometry.get_voxel_coord(n, d, c)
+        pts_vox = voxel_geometry.get_voxel_coordinate(n, d, c)
 
         # compute the incidence matrix
         A_vox = voxel_geometry.get_incidence_matrix(n)
@@ -59,7 +59,7 @@ def _run_preproc(data_solver):
         K_tsr = system_tensor.get_coupling_tensor(n, d, coupling_simplify, has_coupling)
 
     # assemble results
-    data_solver["coord_vox"] = coord_vox
+    data_solver["pts_vox"] = pts_vox
     data_solver["A_vox"] = A_vox
     data_solver["G_self"] = G_self
     data_solver["G_mutual"] = G_mutual
@@ -84,6 +84,7 @@ def _run_main(data_solver):
     has_coupling = data_solver["has_coupling"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
+    pts_vox = data_solver["pts_vox"]
     A_vox = data_solver["A_vox"]
     G_self = data_solver["G_self"]
     G_mutual = data_solver["G_mutual"]
@@ -100,8 +101,8 @@ def _run_main(data_solver):
         (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_geometry(source_idx, "voltage")
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
-        (A_net_c, idx_fc) = problem_geometry.get_incidence_matrix(A_vox, idx_vc)
-        (A_net_m, idx_fm) = problem_geometry.get_incidence_matrix(A_vox, idx_vm)
+        (pts_net_c, A_net_c, idx_fc) = problem_geometry.get_reduce_matrix(pts_vox, A_vox, idx_vc)
+        (pts_net_m, A_net_m, idx_fm) = problem_geometry.get_reduce_matrix(pts_vox, A_vox, idx_vm)
 
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
@@ -157,6 +158,8 @@ def _run_main(data_solver):
     data_solver["idx_vm"] = idx_vm
     data_solver["idx_src_v"] = idx_src_v
     data_solver["idx_src_c"] = idx_src_c
+    data_solver["pts_net_c"] = pts_net_c
+    data_solver["pts_net_m"] = pts_net_m
     data_solver["A_net_c"] = A_net_c
     data_solver["A_net_m"] = A_net_m
     data_solver["R_vec_c"] = R_vec_c
@@ -252,7 +255,8 @@ def _run_assemble(data_solver):
         "n": data_solver["n"],
         "d": data_solver["d"],
         "c": data_solver["c"],
-        "coord_vox": data_solver["coord_vox"],
+        "pts_net_c": data_solver["pts_net_c"],
+        "pts_net_m": data_solver["pts_net_m"],
         "idx_vc": data_solver["idx_vc"],
         "idx_vm": data_solver["idx_vm"],
         "idx_src_c": data_solver["idx_src_c"],

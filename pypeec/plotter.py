@@ -43,7 +43,8 @@ def _get_grid_voxel(data_solution, data_point):
     n = data_solution["n"]
     d = data_solution["d"]
     c = data_solution["c"]
-    coord_vox = data_solution["coord_vox"]
+    pts_net_c = data_solution["pts_net_c"]
+    pts_net_m = data_solution["pts_net_m"]
     idx_vc = data_solution["idx_vc"]
     idx_vm = data_solution["idx_vm"]
     idx_src_c = data_solution["idx_src_c"]
@@ -62,7 +63,7 @@ def _get_grid_voxel(data_solution, data_point):
     (idx, material) = manage_compute.get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v)
 
     # compute the magnetic field
-    H_point = manage_compute.get_magnetic_field(d, idx_vc, idx_vm, J_vc, Q_vm, coord_vox, data_point)
+    H_point = manage_compute.get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, data_point)
 
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
