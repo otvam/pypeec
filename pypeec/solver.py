@@ -16,7 +16,6 @@ from pypeec.lib_solver import system_matrix
 from pypeec.lib_solver import equation_system
 from pypeec.lib_solver import equation_solver
 from pypeec.lib_solver import extract_solution
-from pypeec.lib_solver import extract_solution_new
 from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_solver
@@ -201,48 +200,32 @@ def _run_postproc(data_solver):
     # extract the solution
     with timelogger.BlockTimer(logger, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        # (I_fc, I_fm, V_vc, V_vm, I_src) = extract_solution.get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol)
-
         n_offset = 0
-        (I_fc, V_vc, n_offset) = extract_solution_new.get_sol_extract_field(sol, idx_fc, idx_vc, n_offset)
-        (I_src_c, I_src_v, n_offset) = extract_solution_new.get_sol_extract_source(sol, idx_src_c, idx_src_v, n_offset)
-        (I_fm, V_vm, n_offset) = extract_solution_new.get_sol_extract_field(sol, idx_fm, idx_vm, n_offset)
+        (I_fc, V_vc, n_offset) = extract_solution.get_sol_extract_field(sol, idx_fc, idx_vc, n_offset)
+        (I_src_c, I_src_v, n_offset) = extract_solution.get_sol_extract_source(sol, idx_src_c, idx_src_v, n_offset)
+        (I_fm, V_vm, n_offset) = extract_solution.get_sol_extract_field(sol, idx_fm, idx_vm, n_offset)
 
         # get the losses and energy
-        (P_fc, P_fm) = extract_solution_new.get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m)
-        (W_fc, W_fm) = extract_solution_new.get_energy(freq, I_fc, I_fm, L_op_c, K_op_c)
+        (P_fc, P_fm) = extract_solution.get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m)
+        (W_fc, W_fm) = extract_solution.get_energy(freq, I_fc, I_fm, L_op_c, K_op_c)
 
         # get the voxel flow densities from the face flows
-        #J_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, I_fc, "vector")
-        #B_vm = extract_solution.get_face_to_voxel(n, d, idx_vm, idx_fm, A_vox, I_fm, "vector")
-
-        J_vc = extract_solution_new.get_vector_density(n, d, idx_fc, A_net_c, I_fc)
-        B_vm = extract_solution_new.get_vector_density(n, d, idx_fm, A_net_m, I_fm)
+        J_vc = extract_solution.get_vector_density(n, d, idx_fc, A_net_c, I_fc)
+        B_vm = extract_solution.get_vector_density(n, d, idx_fm, A_net_m, I_fm)
 
         # get the voxel loss densities from the face losses
-        #P_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, P_fc, "scalar")
-        #P_vm = extract_solution.get_face_to_voxel(n, d, idx_vm, idx_fm, A_vox, P_fm, "scalar")
-
-        P_vc = extract_solution_new.get_scalar_density(d, A_net_c, P_fc)
-        P_vm = extract_solution_new.get_scalar_density(d, A_net_m, P_fm)
+        P_vc = extract_solution.get_scalar_density(d, A_net_c, P_fc)
+        P_vm = extract_solution.get_scalar_density(d, A_net_m, P_fm)
 
         # get the divergence of the face flows
-        #S_vc = extract_solution.get_face_to_voxel(n, d, idx_vc, idx_fc, A_vox, I_fc, "divergence")
-        #Q_vm = extract_solution.get_face_to_voxel(n, d, idx_vm, idx_fm, A_vox, I_fm, "divergence")
-
-        S_vc = extract_solution_new.get_divergence_density(d, A_net_c, I_fc)
-        Q_vm = extract_solution_new.get_divergence_density(d, A_net_m, I_fm)
+        S_vc = extract_solution.get_divergence_density(d, A_net_c, I_fc)
+        Q_vm = extract_solution.get_divergence_density(d, A_net_m, I_fm)
 
         # get the global quantities (energy and losses)
-        integral = extract_solution_new.get_integral(P_fc, P_fm, W_fc, W_fm)
-
-        # extend the solution for the complete voxel structure (including the empty voxels)
-        #(V_v_all, I_src_c_all, I_src_v_all) = extract_solution.get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src)
+        integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
 
         # parse the terminal voltages and currents for the sources
-        #terminal = extract_solution.get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all)
-
-        terminal = extract_solution_new.get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v)
+        terminal = extract_solution.get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v)
 
     # assemble results
     data_solver["terminal"] = terminal

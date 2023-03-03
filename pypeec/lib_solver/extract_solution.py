@@ -17,7 +17,46 @@ from pypeec.lib_utils import timelogger
 logger = timelogger.get_logger("SOLUTION")
 
 
-def _get_vector_density(n, d, A_vox, var_f_all):
+def _get_sol_var(sol, idx, n_offset):
+    """
+    Extract a variable from the solution vector.
+    """
+
+    # size of the slice
+    n_var = len(idx)
+
+    # get the variable
+    var = sol[n_offset:n_offset+n_var]
+
+    # update the offset
+    n_offset += n_var
+
+    return var, n_offset
+
+
+def get_sol_extract_field(sol, idx_f, idx_v, n_offset):
+    """
+    Extract the electric/magnetic variables from the solution vector.
+    """
+
+    (I_f, n_offset) = _get_sol_var(sol, idx_f, n_offset)
+    (V_v, n_offset) = _get_sol_var(sol, idx_v, n_offset)
+
+    return I_f, V_v, n_offset
+
+
+def get_sol_extract_source(sol, idx_src_c, idx_src_v, n_offset):
+    """
+    Extract the electric/magnetic variables from the solution vector.
+    """
+
+    (I_src_c, n_offset) = _get_sol_var(sol, idx_src_c, n_offset)
+    (I_src_v, n_offset) = _get_sol_var(sol, idx_src_v, n_offset)
+
+    return I_src_c, I_src_v, n_offset
+
+
+def get_vector_density(n, d, idx_f, A_net, var_f):
     """
     Project a face vector variable into a voxel vector variable.
     Scale the variable with respect to the face area (density).
@@ -27,12 +66,21 @@ def _get_vector_density(n, d, A_vox, var_f_all):
     """
 
     # extract the voxel data
+    (nx, ny, nz) = n
+    nv = nx*ny*nz
+
+    # extract the voxel data
     (dx, dy, dz) = d
 
+    # get the direction of the faces (x, y, z)
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
+
     # project the faces into the voxels
-    var_v_x = 0.5*np.abs(A_vox[:, 0*n:1*n])*var_f_all[0*n:1*n]
-    var_v_y = 0.5*np.abs(A_vox[:, 1*n:2*n])*var_f_all[1*n:2*n]
-    var_v_z = 0.5*np.abs(A_vox[:, 2*n:3*n])*var_f_all[2*n:3*n]
+    var_v_x = 0.5*np.abs(A_net[:, idx_fx])*var_f[idx_fx]
+    var_v_y = 0.5*np.abs(A_net[:, idx_fy])*var_f[idx_fy]
+    var_v_z = 0.5*np.abs(A_net[:, idx_fz])*var_f[idx_fz]
 
     # convert to density.
     var_v_x = var_v_x/(dy*dz)
@@ -40,12 +88,12 @@ def _get_vector_density(n, d, A_vox, var_f_all):
     var_v_z = var_v_z/(dx*dy)
 
     # assemble the variables
-    var_v_all = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
+    var_v = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
 
-    return var_v_all
+    return var_v
 
 
-def _get_scalar_density(d, A_vox, var_f_all):
+def get_scalar_density(d, A_net, var_f):
     """
     Project a face vector variable into a voxel scalar variable.
     Scale the variable with respect to the voxel volume (density).
@@ -58,15 +106,15 @@ def _get_scalar_density(d, A_vox, var_f_all):
     (dx, dy, dz) = d
 
     # compute the divergence
-    var_v_all = 0.5*np.abs(A_vox)*var_f_all
+    var_v = 0.5*np.abs(A_net)*var_f
 
     # convert to density.
-    var_v_all = var_v_all/(dx*dy*dz)
+    var_v = var_v/(dx*dy*dz)
 
-    return var_v_all
+    return var_v
 
 
-def _get_divergence_density(d, A_vox, var_f_all):
+def get_divergence_density(d, A_net, var_f):
     """
     Compute the divergence of a face vector with respect to the voxels.
     Scale the variable with respect to the voxel volume (density).
@@ -79,76 +127,12 @@ def _get_divergence_density(d, A_vox, var_f_all):
     (dx, dy, dz) = d
 
     # compute the divergence
-    var_v_all = A_vox*var_f_all
+    var_v = A_net*var_f
 
     # convert to density.
-    var_v_all = var_v_all/(dx*dy*dz)
+    var_v = var_v/(dx*dy*dz)
 
-    return var_v_all
-
-
-def get_sol_extract(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
-    """
-    Split the solution vector into different variables.
-
-    The solution vector is set in the following order:
-        - n_fc: electric face currents
-        - n_vc: electric voxel potentials
-        - n_src: source currents
-        - n_fm: magnetic face fluxes
-        - n_vm: magnetic voxel potentials
-    """
-
-    # extract the voxel data
-    n_fc = len(idx_fc)
-    n_fm = len(idx_fm)
-    n_vc = len(idx_vc)
-    n_vm = len(idx_vm)
-    n_src = len(idx_src_c)+len(idx_src_v)
-
-    # split the solution vector
-    I_fc = sol[0:n_fc]
-    V_vc = sol[n_fc:n_fc+n_vc]
-    I_src = sol[n_fc+n_vc:n_fc+n_vc+n_src]
-    I_fm = sol[n_fc+n_vc+n_src:n_fc+n_vc+n_src+n_fm]
-    V_vm = sol[n_fc+n_vc+n_src+n_fm:n_fc+n_vc+n_src+n_fm+n_vm]
-
-    return I_fc, I_fm, V_vc, V_vm, I_src
-
-
-def get_face_to_voxel(n, d, idx_v, idx_f, A_vox, I_f, var_type):
-    """
-    Get the voxel variable from the face variable.
-    Scale the variable with respect to the area/volume (density).
-
-    The different transformations are available:
-        - vector: project a vector face variable into a vector voxel variable
-        - scalar: project a vector face variable into a scalar voxel variable
-        - divergence: divergence of a face vector with respect to the voxels
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
-
-    # extend the solution for the complete voxel structure (including the empty voxels)
-    I_f_all = np.zeros(3*nv, dtype=np.complex_)
-    I_f_all[idx_f] = I_f
-
-    # transform the face variable in a voxel variable
-    if var_type == "vector":
-        I_v_all = _get_vector_density(nv, d, A_vox, I_f_all)
-    elif var_type == "scalar":
-        I_v_all = _get_scalar_density(d, A_vox, I_f_all)
-    elif var_type == "divergence":
-        I_v_all = _get_divergence_density(d, A_vox, I_f_all)
-    else:
-        raise ValueError("invalid variable type")
-
-    # remove empty voxels
-    I_v = I_v_all[idx_v]
-
-    return I_v
+    return var_v
 
 
 def get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m):
@@ -228,42 +212,7 @@ def get_integral(P_fc, P_fm, W_fc, W_fm):
     return integral
 
 
-def get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
-    """
-    Expand the electric potential and source currents for all the voxels.
-
-    The solution is assigned to all the voxels (even the empty voxels).
-    The input electric potential vector has the following size: n_vc.
-    The input source current vector has the following size: n_src_c+n_src_v.
-    The output vectors have the following size: nx*ny*nz.
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
-
-    # split the source currents between the current and voltage sources
-    n_src_c = len(idx_src_c)
-    n_src_v = len(idx_src_v)
-    I_src_c = I_src[0:n_src_c]
-    I_src_v = I_src[n_src_c:n_src_c+n_src_v]
-
-    # assign voxel potentials
-    V_v_all = np.zeros(nv, dtype=np.complex_)
-    V_v_all[idx_vc] = V_vc
-
-    # assign current source currents
-    I_src_c_all = np.zeros(nv, dtype=np.complex_)
-    I_src_c_all[idx_src_c] = I_src_c
-
-    # assign voltage source currents
-    I_src_v_all = np.zeros(nv, dtype=np.complex_)
-    I_src_v_all[idx_src_v] = I_src_v
-
-    return V_v_all, I_src_c_all, I_src_v_all
-
-
-def get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all):
+def get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
@@ -286,21 +235,20 @@ def get_terminal(freq, source_idx, V_v_all, I_src_c_all, I_src_v_all):
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
 
-        # append the source
-        if len(idx) == 0:
-            I_tmp = np.nan+1j*np.nan
-            V_tmp = np.nan+1j*np.nan
-        else:
-            # voltage is the average between all the voxels composing the terminal
-            V_tmp = np.complex_(np.mean(V_v_all[idx]))
+        idx_V_vc = np.in1d(idx_vc, idx)
+        idx_I_src_c = np.in1d(idx_src_c, idx)
+        idx_I_src_v = np.in1d(idx_src_v, idx)
 
-            # current is the sum between all the voxels composing the terminal
-            if source_type == "current":
-                I_tmp = np.complex_(np.sum(I_src_c_all[idx]))
-            elif source_type == "voltage":
-                I_tmp = np.complex_(np.sum(I_src_v_all[idx]))
-            else:
-                raise ValueError("invalid terminal type")
+        # voltage is the average between all the voxels composing the terminal
+        V_tmp = np.complex_(np.mean(V_vc[idx_V_vc]))
+
+        # current is the sum between all the voxels composing the terminal
+        if source_type == "current":
+            I_tmp = np.complex_(np.sum(I_src_c[idx_I_src_c]))
+        elif source_type == "voltage":
+            I_tmp = np.complex_(np.sum(I_src_v[idx_I_src_v]))
+        else:
+            raise ValueError("invalid terminal type")
 
         # compute the apparent power
         S_tmp = fact*V_tmp*np.conj(I_tmp)
