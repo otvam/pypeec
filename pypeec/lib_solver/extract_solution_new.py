@@ -17,81 +17,6 @@ from pypeec.lib_utils import timelogger
 logger = timelogger.get_logger("SOLUTION")
 
 
-def _get_vector_density(nv, d, idx_f, A_net, var_f):
-    """
-    Project a face vector variable into a voxel vector variable.
-    Scale the variable with respect to the face area (density).
-
-    At the input, the array has the following size: 3*nx*ny*nx.
-    At the output, the array has the following size: (nx*ny*nx, 3).
-    """
-
-    # extract the voxel data
-    (dx, dy, dz) = d
-
-    # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
-
-    # project the faces into the voxels
-    var_v_x = 0.5*np.abs(A_net[:, idx_fx])*var_f[idx_fx]
-    var_v_y = 0.5*np.abs(A_net[:, idx_fy])*var_f[idx_fy]
-    var_v_z = 0.5*np.abs(A_net[:, idx_fz])*var_f[idx_fz]
-
-    # convert to density.
-    var_v_x = var_v_x/(dy*dz)
-    var_v_y = var_v_y/(dx*dz)
-    var_v_z = var_v_z/(dx*dy)
-
-    # assemble the variables
-    var_v = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
-
-    return var_v
-
-
-def _get_scalar_density(d, A_net, var_f):
-    """
-    Project a face vector variable into a voxel scalar variable.
-    Scale the variable with respect to the voxel volume (density).
-
-    At the input, the array has the following size: 3*nx*ny*nx.
-    At the output, the array has the following size: nx*ny*nx.
-    """
-
-    # extract the voxel data
-    (dx, dy, dz) = d
-
-    # compute the divergence
-    var_v = 0.5*np.abs(A_net)*var_f
-
-    # convert to density.
-    var_v = var_v/(dx*dy*dz)
-
-    return var_v
-
-
-def _get_divergence_density(d, A_net, var_f):
-    """
-    Compute the divergence of a face vector with respect to the voxels.
-    Scale the variable with respect to the voxel volume (density).
-
-    At the input, the array has the following size: 3*nx*ny*nx.
-    At the output, the array has the following size: nx*ny*nx.
-    """
-
-    # extract the voxel data
-    (dx, dy, dz) = d
-
-    # compute the divergence
-    var_v = A_net*var_f
-
-    # convert to density.
-    var_v = var_v/(dx*dy*dz)
-
-    return var_v
-
-
 def _get_sol_var(sol, idx, n_offset):
     """
     Extract a variable from the solution vector.
@@ -131,61 +56,83 @@ def get_sol_extract_source(sol, idx_src_c, idx_src_v, n_offset):
     return I_src_c, I_src_v, n_offset
 
 
-def get_sol_extract_old(idx_fc, idx_fm, idx_vc, idx_vm, idx_src_c, idx_src_v, sol):
+def get_vector_density(n, d, idx_f, A_net, var_f):
     """
-    Split the solution vector into different variables.
+    Project a face vector variable into a voxel vector variable.
+    Scale the variable with respect to the face area (density).
 
-    The solution vector is set in the following order:
-        - n_fc: electric face currents
-        - n_vc: electric voxel potentials
-        - n_src: source currents
-        - n_fm: magnetic face fluxes
-        - n_vm: magnetic voxel potentials
-    """
-
-    # extract the voxel data
-    n_fc = len(idx_fc)
-    n_fm = len(idx_fm)
-    n_vc = len(idx_vc)
-    n_vm = len(idx_vm)
-    n_src = len(idx_src_c)+len(idx_src_v)
-
-    # split the solution vector
-    I_fc = sol[0:n_fc]
-    V_vc = sol[n_fc:n_fc+n_vc]
-    I_src = sol[n_fc+n_vc:n_fc+n_vc+n_src]
-    I_fm = sol[n_fc+n_vc+n_src:n_fc+n_vc+n_src+n_fm]
-    V_vm = sol[n_fc+n_vc+n_src+n_fm:n_fc+n_vc+n_src+n_fm+n_vm]
-
-    return I_fc, I_fm, V_vc, V_vm, I_src
-
-
-def get_face_to_voxel(n, d, idx_v, idx_f, A_net, var_f, var_type):
-    """
-    Get the voxel variable from the face variable.
-    Scale the variable with respect to the area/volume (density).
-
-    The different transformations are available:
-        - vector: project a vector face variable into a vector voxel variable
-        - scalar: project a vector face variable into a scalar voxel variable
-        - divergence: divergence of a face vector with respect to the voxels
+    At the input, the array has the following size: 3*nx*ny*nx.
+    At the output, the array has the following size: (nx*ny*nx, 3).
     """
 
     # extract the voxel data
     (nx, ny, nz) = n
     nv = nx*ny*nz
 
-    # transform the face variable in a voxel variable
-    if var_type == "vector":
-        I_v = _get_vector_density(nv, d, idx_f, A_net, var_f)
-    elif var_type == "scalar":
-        I_v = _get_scalar_density(d, A_net, var_f)
-    elif var_type == "divergence":
-        I_v = _get_divergence_density(d, A_net, var_f)
-    else:
-        raise ValueError("invalid variable type")
+    # extract the voxel data
+    (dx, dy, dz) = d
 
-    return I_v
+    # get the direction of the faces (x, y, z)
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
+
+    # project the faces into the voxels
+    var_v_x = 0.5*np.abs(A_net[:, idx_fx])*var_f[idx_fx]
+    var_v_y = 0.5*np.abs(A_net[:, idx_fy])*var_f[idx_fy]
+    var_v_z = 0.5*np.abs(A_net[:, idx_fz])*var_f[idx_fz]
+
+    # convert to density.
+    var_v_x = var_v_x/(dy*dz)
+    var_v_y = var_v_y/(dx*dz)
+    var_v_z = var_v_z/(dx*dy)
+
+    # assemble the variables
+    var_v = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
+
+    return var_v
+
+
+def get_scalar_density(d, A_net, var_f):
+    """
+    Project a face vector variable into a voxel scalar variable.
+    Scale the variable with respect to the voxel volume (density).
+
+    At the input, the array has the following size: 3*nx*ny*nx.
+    At the output, the array has the following size: nx*ny*nx.
+    """
+
+    # extract the voxel data
+    (dx, dy, dz) = d
+
+    # compute the divergence
+    var_v = 0.5*np.abs(A_net)*var_f
+
+    # convert to density.
+    var_v = var_v/(dx*dy*dz)
+
+    return var_v
+
+
+def get_divergence_density(d, A_net, var_f):
+    """
+    Compute the divergence of a face vector with respect to the voxels.
+    Scale the variable with respect to the voxel volume (density).
+
+    At the input, the array has the following size: 3*nx*ny*nx.
+    At the output, the array has the following size: nx*ny*nx.
+    """
+
+    # extract the voxel data
+    (dx, dy, dz) = d
+
+    # compute the divergence
+    var_v = A_net*var_f
+
+    # convert to density.
+    var_v = var_v/(dx*dy*dz)
+
+    return var_v
 
 
 def get_losses(freq, I_fc, I_fm, R_vec_c, R_vec_m):
@@ -263,41 +210,6 @@ def get_integral(P_fc, P_fm, W_fc, W_fm):
     logger.debug("integral: W_tot = %.3e J" % W_tot)
 
     return integral
-
-
-def get_sol_extend(n, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
-    """
-    Expand the electric potential and source currents for all the voxels.
-
-    The solution is assigned to all the voxels (even the empty voxels).
-    The input electric potential vector has the following size: n_vc.
-    The input source current vector has the following size: n_src_c+n_src_v.
-    The output vectors have the following size: nx*ny*nz.
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
-
-    # split the source currents between the current and voltage sources
-    n_src_c = len(idx_src_c)
-    n_src_v = len(idx_src_v)
-    I_src_c = I_src[0:n_src_c]
-    I_src_v = I_src[n_src_c:n_src_c+n_src_v]
-
-    # assign voxel potentials
-    V_v_all = np.zeros(nv, dtype=np.complex_)
-    V_v_all[idx_vc] = V_vc
-
-    # assign current source currents
-    I_src_c_all = np.zeros(nv, dtype=np.complex_)
-    I_src_c_all[idx_src_c] = I_src_c
-
-    # assign voltage source currents
-    I_src_v_all = np.zeros(nv, dtype=np.complex_)
-    I_src_v_all[idx_src_v] = I_src_v
-
-    return V_v_all, I_src_c_all, I_src_v_all
 
 
 def get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v):
