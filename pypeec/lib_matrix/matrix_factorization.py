@@ -29,13 +29,13 @@ if MATRIX_FACTORIZATION == "SuperLU":
     import scipy.sparse.linalg as sla
 
     # prevent problematic matrices to trigger warnings
-    warnings.filterwarnings("ignore", module="scipy.sparse.linalg")
+    warnings.filterwarnings("error", module="scipy.sparse.linalg")
 elif MATRIX_FACTORIZATION == "UMFPACK":
     # import the UMFPACK binding
     import scikits.umfpack as umf
 
     # prevent problematic matrices to trigger warnings
-    warnings.filterwarnings("ignore", module="scikits.umfpack")
+    warnings.filterwarnings("error", module="scikits.umfpack")
 else:
     raise ValueError("invalid matrix factorization library")
 
@@ -69,7 +69,7 @@ def get_factorize(mat):
             raise ValueError("invalid matrix factorization library")
 
         logger.debug("factorization success")
-    except RuntimeError:
+    except (RuntimeError, Warning):
         logger.warning("factorization failure")
         factor = None
 
