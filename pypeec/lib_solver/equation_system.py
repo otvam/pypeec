@@ -349,21 +349,26 @@ def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
     V_vc = sol[n_fc:n_fc+n_vc]
     I_src = sol[n_fc+n_vc:n_fc+n_vc+n_src]
 
+    # multiply the inductance matrix
+    if freq == 0:
+        rhs_ind = np.zeros(n_fc, dtype=np.complex_)
+    else:
+        rhs_ind = s*L_op_c(I_fc)
+
     # electric KVL equations
-    rhs_1 = s*L_op_c(I_fc)
-    rhs_2 = R_c*I_fc
-    rhs_3 = -A_net_c.transpose()*V_vc
-    rhs_fc = rhs_1+rhs_2+rhs_3
+    rhs_res = R_c*I_fc
+    rhs_net = -A_net_c.transpose()*V_vc
+    rhs_fc = rhs_ind+rhs_res+rhs_net
 
     # electric KCL equations
-    rhs_1 = A_net_c*I_fc
-    rhs_2 = A_vc_src*I_src
-    rhs_vc = rhs_1+rhs_2
+    rhs_net = A_net_c*I_fc
+    rhs_con = A_vc_src*I_src
+    rhs_vc = rhs_net+rhs_con
 
     # form the source equation
-    rhs_1 = A_src_vc*V_vc
-    rhs_2 = A_src_src*I_src
-    rhs_src = rhs_1+rhs_2
+    rhs_con = A_src_vc*V_vc
+    rhs_src = A_src_src*I_src
+    rhs_src = rhs_con+rhs_src
 
     # assemble the solution
     rhs = np.concatenate((rhs_fc, rhs_vc, rhs_src))
@@ -392,15 +397,17 @@ def _get_system_multiply_magnetic(sol, freq, A_net_m, R_m, P_op_m):
     I_fm = sol[0:n_fm]
     V_vm = sol[n_fm:n_fm+n_vm]
 
+    # multiply the potential matrix
+    rhs_pot = P_op_m(A_net_m*I_fm)
+
     # magnetic KVL equations
-    rhs_1 = R_m/s_diff*I_fm
-    rhs_2 = -A_net_m.transpose()*V_vm
-    rhs_fm = rhs_1+rhs_2
+    rhs_res = R_m/s_diff*I_fm
+    rhs_net = -A_net_m.transpose()*V_vm
+    rhs_fm = rhs_res+rhs_net
 
     # magnetic KCL equations
-    rhs_1 = P_op_m(A_net_m*I_fm)
-    rhs_2 = s_diff*V_vm
-    rhs_vm = rhs_1+rhs_2
+    rhs_ide = s_diff*V_vm
+    rhs_vm = rhs_pot+rhs_ide
 
     # assemble the solution
     rhs = np.concatenate((rhs_fm, rhs_vm))
