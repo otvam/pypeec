@@ -14,6 +14,7 @@ from pypeec.lib_solver import system_tensor
 from pypeec.lib_solver import problem_geometry
 from pypeec.lib_solver import system_matrix
 from pypeec.lib_solver import equation_system
+from pypeec.lib_solver import equation_system_new
 from pypeec.lib_solver import equation_solver
 from pypeec.lib_solver import extract_solution
 from pypeec.lib_check import check_data_problem
@@ -103,13 +104,33 @@ def _run_solver(data_solver):
         rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
 
         # get the source connection matrices
-        A_src = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
+        A_src_c = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
+        A_src_m = equation_system_new.get_source_magnetic(idx_vm)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        (pcd_op, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m)
+        (pcd_op, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src_c, R_c, R_m, L_c, P_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        sys_op = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
+        sys_op = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src_c, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
+
+        sys_op2 = equation_system_new.get_system_operator(freq, A_net_c, A_net_m, A_src_c, A_src_m, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
+        # (pcd_op2, S_mat_c2, S_mat_m2) = equation_system_new.get_cond_operator(freq, A_net_c, A_net_m, A_src_c, R_c, R_m, L_c, P_m)
+
+        import numpy as np
+        vec = np.arange(pcd_op.shape[0])
+
+        # res = pcd_op(vec)
+        # res2 = pcd_op2(vec)
+        # err = res-res2
+        # vva = np.max(np.abs(err))
+
+        res = sys_op(vec)
+        res2 = sys_op2(vec)
+        err = res-res2
+        vvb = np.max(np.abs(err))
+
+        pass
+
 
     # solve the equation system
     with timelogger.BlockTimer(logger, "equation_solver"):
