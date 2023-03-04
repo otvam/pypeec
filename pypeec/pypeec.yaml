@@ -61,6 +61,11 @@ MATRIX_MULTIPLICATION: "FFT"  # "FFT" or "DIRECT"
 #   - if true, GPUs are used for some operations
 USE_GPU: false
 
+# double precision
+#   - if false, use single precision numbers
+#   - if true, use double precision for numbers
+USE_DOUBLE: true
+
 # delay (in seconds) between the Qt plots
 #   - this parameter should not be required
 #   - however, it seems to mitigate a race condition in PyVista/PyVistaQt
