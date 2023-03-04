@@ -82,6 +82,10 @@ def _run_solver(data_solver):
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
 
+    # free memory
+    del pts_vox
+    del A_vox
+
     # get the resistances and inductances
     with timelogger.BlockTimer(logger, "system_matrix"):
         # get the resistance vector
@@ -96,6 +100,11 @@ def _run_solver(data_solver):
 
         # get the coupling matrices
         (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling)
+
+    # free memory
+    del G_self
+    del G_mutual
+    del K_tsr
 
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
