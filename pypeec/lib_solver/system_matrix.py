@@ -14,6 +14,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import numpy as np
 import scipy.sparse as sps
 from pypeec.lib_matrix import matrix_multiply
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 
 def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
@@ -75,7 +79,7 @@ def _get_operator_zeros(idx_out):
 
     # function returning zeros
     def op(_):
-        var_out = np.zeros(len(idx_out), dtype=np.complex_)
+        var_out = np.zeros(len(idx_out), dtype=NP_TYPES.COMPLEX)
         return var_out
 
     return op
@@ -91,7 +95,7 @@ def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
 
     # check if the vector is required
     if not has_domain:
-        R = np.zeros(len(idx_f), dtype=np.complex_)
+        R = np.zeros(len(idx_f), dtype=NP_TYPES.COMPLEX)
         return R
 
     # extract the voxel data
@@ -108,7 +112,7 @@ def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
     idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
 
     # resistance vector (different directions)
-    R = np.zeros(len(idx_f), dtype=np.complex_)
+    R = np.zeros(len(idx_f), dtype=NP_TYPES.COMPLEX)
     R[idx_fx] = (dx/(dy*dz))*rho[idx_fx]
     R[idx_fy] = (dy/(dx*dz))*rho[idx_fy]
     R[idx_fz] = (dz/(dx*dy))*rho[idx_fz]
@@ -131,7 +135,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
 
     # check if the matrix is required
     if not has_domain:
-        L = np.zeros(len(idx_f), dtype=np.float_)
+        L = np.zeros(len(idx_f), dtype=NP_TYPES.FLOAT)
         L_op = _get_operator_zeros(idx_f)
         return L, L_op
 
@@ -149,7 +153,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
 
     # scaling factor
-    scale = np.zeros(len(idx_f), dtype=np.complex_)
+    scale = np.zeros(len(idx_f), dtype=NP_TYPES.COMPLEX)
     scale[idx_fx] = mu/(dy**2*dz**2)
     scale[idx_fy] = mu/(dx**2*dz**2)
     scale[idx_fz] = mu/(dx**2*dy**2)

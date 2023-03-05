@@ -19,6 +19,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import numpy as np
 import numpy.linalg as lna
 from pypeec.lib_utils import timelogger
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 # get a logger
 logger = timelogger.get_logger("GREEN")
@@ -174,15 +178,15 @@ def _get_green_preproc(int_type):
 
     # get the offset vector
     if int_type == "6D":
-        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float_)
-        offset_z = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float_)
-        idx_xy = np.arange(1, 5, dtype=np.int_)
-        idx_z = np.arange(1, 5, dtype=np.int_)
+        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=NP_TYPES.FLOAT)
+        offset_z = np.array([-1.0, 0.0, +1.0, 0.0], dtype=NP_TYPES.FLOAT)
+        idx_xy = np.arange(1, 5, dtype=NP_TYPES.INT)
+        idx_z = np.arange(1, 5, dtype=NP_TYPES.INT)
     elif int_type == "5D":
-        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float_)
-        offset_z = np.array([+0.5, -0.5], dtype=np.float_)
-        idx_xy = np.arange(1, 5, dtype=np.int_)
-        idx_z = np.arange(1, 3, dtype=np.int_)
+        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=NP_TYPES.FLOAT)
+        offset_z = np.array([+0.5, -0.5], dtype=NP_TYPES.FLOAT)
+        idx_xy = np.arange(1, 5, dtype=NP_TYPES.INT)
+        idx_z = np.arange(1, 3, dtype=NP_TYPES.INT)
     else:
         raise ValueError("invalid integral type")
 
@@ -212,7 +216,7 @@ def get_green_ana(d, idx, int_type):
 
     # check if empty
     if len(idx) == 0:
-        return np.array([], dtype=np.float_)
+        return np.array([], dtype=NP_TYPES.FLOAT)
 
     # display
     logger.debug("analytical solution: %s / %d" % (int_type, len(idx)))
@@ -260,7 +264,7 @@ def get_green_num(d, idx, int_type):
 
     # check if empty
     if len(idx) == 0:
-        return np.array([], dtype=np.float_)
+        return np.array([], dtype=NP_TYPES.FLOAT)
 
     # display
     logger.debug("numerical approximation: %s / %d" % (int_type, len(idx)))

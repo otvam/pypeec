@@ -16,6 +16,16 @@ from pypeec.lib_utils import datachecker
 from pypeec.lib_utils.error import FileError, CheckError
 
 
+class _dict_to_attributes(dict):
+    """
+    Wrapper to access dict with dot notation.
+    """
+
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+
 def _update_data(data):
     """
     Parse and complete the config.
@@ -29,9 +39,14 @@ def _update_data(data):
 
     # get the data types
     if data["USE_DOUBLE"]:
-        data["NB_TYPES"] = {"INT": np.int_, "FLOAT": np.float_, "COMPLEX": np.complex_}
+        data["NP_TYPES"] = {"INT": np.int_, "FLOAT": np.float_, "COMPLEX": np.complex_}
     else:
-        data["NB_TYPES"] = {"INT": np.intc, "FLOAT": np.single, "COMPLEX": np.csingle}
+        data["NP_TYPES"] = {"INT": np.intc, "FLOAT": np.single, "COMPLEX": np.csingle}
+
+    # access with dot notation
+    data["NP_TYPES"] = _dict_to_attributes(data["NP_TYPES"])
+    data["FFT_OPTIONS"] = _dict_to_attributes(data["FFT_OPTIONS"])
+    data["LOGGING_OPTIONS"] = _dict_to_attributes(data["LOGGING_OPTIONS"])
 
     return data
 

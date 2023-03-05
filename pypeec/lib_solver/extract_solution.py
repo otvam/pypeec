@@ -12,6 +12,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from pypeec.lib_utils import timelogger
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 # get a logger
 logger = timelogger.get_logger("SOLUTION")
@@ -240,13 +244,13 @@ def get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, 
         idx_I_src_v = np.in1d(idx_src_v, idx)
 
         # voltage is the average between all the voxels composing the terminal
-        V_tmp = np.complex_(np.mean(V_vc[idx_V_vc]))
+        V_tmp = NP_TYPES.COMPLEX(np.mean(V_vc[idx_V_vc]))
 
         # current is the sum between all the voxels composing the terminal
         if source_type == "current":
-            I_tmp = np.complex_(np.sum(I_src_c[idx_I_src_c]))
+            I_tmp = NP_TYPES.COMPLEX(np.sum(I_src_c[idx_I_src_c]))
         elif source_type == "voltage":
-            I_tmp = np.complex_(np.sum(I_src_v[idx_I_src_v]))
+            I_tmp = NP_TYPES.COMPLEX(np.sum(I_src_v[idx_I_src_v]))
         else:
             raise ValueError("invalid terminal type")
 

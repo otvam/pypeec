@@ -13,6 +13,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import numpy as np
 import PIL.Image as pmg
 from pypeec.lib_utils.error import RunError
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 
 def _get_idx_image(nx, ny, img, color):
@@ -25,7 +29,7 @@ def _get_idx_image(nx, ny, img, color):
         raise RunError("invalid image:  size is not compatible with the voxel structure")
 
     # get the color vector
-    color_tmp = np.array(color, dtype=np.int_)
+    color_tmp = np.array(color, dtype=NP_TYPES.INT)
     color_tmp = np.expand_dims(color_tmp, axis=(0, 1))
     if not (color_tmp.shape == (1, 1, 4)):
         raise RunError("invalid color: colors should be a specified with for values")
@@ -47,7 +51,7 @@ def _get_idx_voxel(nx, ny, nz, n_layer, idx_img):
     """
 
     # init idx
-    idx_voxel = np.array([], dtype=np.int_)
+    idx_voxel = np.array([], dtype=NP_TYPES.INT)
 
     # convert image indices into voxel indices
     for n_tmp in range(n_layer):
@@ -122,7 +126,7 @@ def get_mesh(nx, ny, domain_color, layer_stack):
     # init domain definition dict
     domain_def = {}
     for tag, color in domain_color.items():
-        domain_def[tag] = np.array([], np.int_)
+        domain_def[tag] = np.array([], NP_TYPES.INT)
 
     # add layers
     for layer_stack_tmp in layer_stack:

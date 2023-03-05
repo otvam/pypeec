@@ -14,6 +14,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import numpy as np
 import numpy.linalg as lna
 from pypeec.lib_utils.error import RunError
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 
 def _get_biot_savart(pts, pts_net, J_src, vol):
@@ -71,7 +75,7 @@ def _get_graph_component(idx, connection_def):
     """
 
     # init the data with invalid data
-    tag = np.zeros(len(idx), dtype=np.int_)
+    tag = np.zeros(len(idx), dtype=NP_TYPES.INT)
 
     # find to corresponding connected components
     for i, idx_graph in enumerate(connection_def):
@@ -96,15 +100,15 @@ def get_geometry_tag(domain_def, connection_def):
     """
 
     # init
-    idx = np.empty(0, dtype=np.int_)
-    domain = np.empty(0, dtype=np.int_)
-    connection = np.empty(0, dtype=np.int_)
+    idx = np.empty(0, dtype=NP_TYPES.INT)
+    domain = np.empty(0, dtype=NP_TYPES.INT)
+    connection = np.empty(0, dtype=NP_TYPES.INT)
 
     # get the indices and colors
     counter = 1
     for tag, idx_tmp in domain_def.items():
         # assign the color (n different integer for each domain)
-        domain_tmp = np.full(len(idx_tmp), counter, dtype=np.int_)
+        domain_tmp = np.full(len(idx_tmp), counter, dtype=NP_TYPES.INT)
 
         # find the connected components corresponding to the indices
         connection_tmp = _get_graph_component(idx_tmp, connection_def)
@@ -135,7 +139,7 @@ def get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v):
     idx_src_v_local = np.flatnonzero(np.in1d(idx, idx_src_v))
 
     # init the material
-    material = np.empty(len(idx), dtype=np.int_)
+    material = np.empty(len(idx), dtype=NP_TYPES.INT)
 
     # assign the voltage and current sources
     material[idx_vc_local] = 1
@@ -157,7 +161,7 @@ def get_magnetic_field(d, J_vc, S_vm, pts_net_c, pts_net_m, data_point):
     vol = np.prod(d)
 
     # for each provided point, compute the magnetic field
-    H_points = np.zeros((len(data_point), 3), dtype=np.complex_)
+    H_points = np.zeros((len(data_point), 3), dtype=NP_TYPES.COMPLEX)
     for i, pts_tmp in enumerate(data_point):
         H_c = _get_biot_savart(pts_tmp, pts_net_c, J_vc, vol)
         H_m = _get_magnetic_charge(pts_tmp, pts_net_m, S_vm, vol)

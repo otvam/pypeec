@@ -10,6 +10,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import numpy as np
 import numpy.linalg as lna
 from pypeec.lib_matrix import green_function
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 
 def _get_coupling(d, idx, method, dimension):
@@ -20,7 +24,7 @@ def _get_coupling(d, idx, method, dimension):
 
     # extract the voxel data
     (dx, dy, dz) = d
-    d = np.array(d, np.float_)
+    d = np.array(d, NP_TYPES.FLOAT)
 
     # dimension permutation:
     #   - the 5D integral is solved for the xy faces
@@ -83,9 +87,9 @@ def _get_voxel_indices(n):
     (nx, ny, nz) = n
 
     # get the indices array
-    idx_x = np.arange(nx, dtype=np.int_)
-    idx_y = np.arange(ny, dtype=np.int_)
-    idx_z = np.arange(nz, dtype=np.int_)
+    idx_x = np.arange(nx, dtype=NP_TYPES.INT)
+    idx_y = np.arange(ny, dtype=NP_TYPES.INT)
+    idx_z = np.arange(nz, dtype=NP_TYPES.INT)
     [idx_x, idx_y, idx_z] = np.meshgrid(idx_x, idx_y, idx_z, indexing="ij")
 
     # flatten the indices into vectors
@@ -122,7 +126,7 @@ def get_green_self(d):
     The self-coefficient is used for the preconditioner.
     """
 
-    idx = np.array([[0, 0, 0]], dtype=np.int_)
+    idx = np.array([[0, 0, 0]], dtype=NP_TYPES.INT)
     G_self = green_function.get_green_ana(d, idx, "6D")
     G_self = G_self.item()
 
@@ -156,7 +160,7 @@ def get_green_tensor(n, d, green_simplify):
     idx_num = np.invert(idx_ana)
 
     # init the result vector
-    G_mutual = np.zeros(nv, dtype=np.float_)
+    G_mutual = np.zeros(nv, dtype=NP_TYPES.FLOAT)
 
     # analytical solution
     G_mutual[idx_ana] = green_function.get_green_ana(d, idx[idx_ana], "6D")
@@ -200,7 +204,7 @@ def get_coupling_tensor(n, d, coupling_simplify, has_coupling):
     idx_num = np.invert(idx_ana)
 
     # init the result vector
-    K_tsr = np.zeros((nv, 3), dtype=np.float_)
+    K_tsr = np.zeros((nv, 3), dtype=NP_TYPES.FLOAT)
 
     # analytical solution
     K_tsr[idx_ana, 0] = _get_coupling(d, idx[idx_ana], "ana", "yz")

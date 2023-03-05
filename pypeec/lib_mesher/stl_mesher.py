@@ -16,6 +16,10 @@ import vtk
 import numpy as np
 import pyvista as pv
 from pypeec.lib_utils.error import RunError
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 # prevent VTK to mess up the output
 vtk.vtkObject.GlobalWarningDisplayOff()
@@ -36,7 +40,7 @@ def _get_grid(n, d, c):
     grid.spacing = d
 
     # add indices for tracking the voxels after voxelization
-    grid["idx"] = np.arange(np.prod(n), dtype=np.int_)
+    grid["idx"] = np.arange(np.prod(n), dtype=NP_TYPES.INT)
 
     # cast is required for voxelization
     grid = grid.cast_to_unstructured_grid()
@@ -128,8 +132,8 @@ def _get_load_stl(domain_stl):
     mesh_stl = {}
 
     # init the coordinate (minimum and maximum coordinates)
-    pts_min = np.full(3, +np.inf, dtype=np.float_)
-    pts_max = np.full(3, -np.inf, dtype=np.float_)
+    pts_min = np.full(3, +np.inf, dtype=NP_TYPES.FLOAT)
+    pts_max = np.full(3, -np.inf, dtype=NP_TYPES.FLOAT)
 
     # load the STL files and find the bounding box
     for tag, filename in domain_stl.items():
@@ -145,8 +149,8 @@ def _get_load_stl(domain_stl):
 
         # find the bounds
         (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
-        tmp_min = np.array((x_min, y_min, z_min), dtype=np.float_)
-        tmp_max = np.array((x_max, y_max, z_max), dtype=np.float_)
+        tmp_min = np.array((x_min, y_min, z_min), dtype=NP_TYPES.FLOAT)
+        tmp_max = np.array((x_max, y_max, z_max), dtype=NP_TYPES.FLOAT)
 
         # update the bounds
         pts_min = np.minimum(pts_min, tmp_min)
@@ -192,19 +196,19 @@ def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
     if pts_min is None:
         pts_min = pts_min_stl
     else:
-        pts_min = np.array(pts_min, np.float_)
+        pts_min = np.array(pts_min, NP_TYPES.FLOAT)
     if pts_max is None:
         pts_max = pts_max_stl
     else:
-        pts_max = np.array(pts_max, np.float_)
+        pts_max = np.array(pts_max, NP_TYPES.FLOAT)
 
     # extract the number of voxels
     if sampling == "number":
-        n = np.array(n, dtype=np.int_)
+        n = np.array(n, dtype=NP_TYPES.INT)
     elif sampling == "dimension":
-        d = np.array(d, dtype=np.float_)
+        d = np.array(d, dtype=NP_TYPES.FLOAT)
         n = np.rint((pts_max-pts_min)/d)
-        n = n.astype(np.int_)
+        n = n.astype(NP_TYPES.INT)
     else:
         raise ValueError("inconsistent definition of the voxel number/size")
 
@@ -231,7 +235,7 @@ def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
     if c is None:
         c = c_stl
     else:
-        c = np.array(c, np.float_)
+        c = np.array(c, NP_TYPES.FLOAT)
 
     # merge meshes
     reference = _get_merge_stl(c, c_stl, mesh_stl)
@@ -261,7 +265,7 @@ def get_conflict(domain_def, domain_conflict):
         domain_def = _get_solve_overlap(domain_def, domain_resolve, domain_keep)
 
     # assemble all the indices
-    idx_all = np.array([], dtype=np.int_)
+    idx_all = np.array([], dtype=NP_TYPES.INT)
     for idx in domain_def.values():
         idx_all = np.append(idx_all, idx)
 

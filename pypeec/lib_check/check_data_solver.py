@@ -7,6 +7,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from pypeec.lib_utils import datachecker
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 
 def _get_domain_indices(domain_list, domain_def):
@@ -14,7 +18,7 @@ def _get_domain_indices(domain_list, domain_def):
     Get indices from a list of domain names.
     """
 
-    idx = np.array([], dtype=np.int_)
+    idx = np.array([], dtype=NP_TYPES.INT)
     for tag in domain_list:
         idx = np.append(idx, domain_def[tag])
 
@@ -30,8 +34,8 @@ def _get_material_idx(material_def, domain_def):
 
     # init
     material_idx = {}
-    idx_c = np.array([], dtype=np.int_)
-    idx_m = np.array([], dtype=np.int_)
+    idx_c = np.array([], dtype=NP_TYPES.INT)
+    idx_m = np.array([], dtype=NP_TYPES.INT)
     domain_cm = []
 
     for tag, dat_tmp in material_def.items():
@@ -68,7 +72,7 @@ def _get_source_idx(source_def, domain_def):
 
     # init
     source_idx = {}
-    idx_s = np.array([], dtype=np.int_)
+    idx_s = np.array([], dtype=NP_TYPES.INT)
     domain_s = []
 
     for tag, dat_tmp in source_def.items():

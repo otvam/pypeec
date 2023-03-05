@@ -81,6 +81,10 @@ import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.linalg as sla
 from pypeec.lib_matrix import matrix_factorization
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 
 def _get_system_size(A_net_c, A_net_m, A_src):
@@ -123,12 +127,12 @@ def _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src):
 
     # get the scaling vectors
     if freq == 0:
-        scaler_c = np.ones(n_fc+n_vc+n_src, dtype=np.complex_)
-        scaler_m = np.ones(n_fm+n_vm, dtype=np.complex_)
+        scaler_c = np.ones(n_fc+n_vc+n_src, dtype=NP_TYPES.COMPLEX)
+        scaler_m = np.ones(n_fm+n_vm, dtype=NP_TYPES.COMPLEX)
     else:
-        scaler_c = np.ones(n_fc+n_vc+n_src, dtype=np.complex_)
-        scaler_fm = s*np.ones(n_fm, dtype=np.complex_)
-        scaler_vm = np.ones(n_vm, dtype=np.complex_)
+        scaler_c = np.ones(n_fc+n_vc+n_src, dtype=NP_TYPES.COMPLEX)
+        scaler_fm = s*np.ones(n_fm, dtype=NP_TYPES.COMPLEX)
+        scaler_vm = np.ones(n_vm, dtype=NP_TYPES.COMPLEX)
         scaler_m = np.concatenate((scaler_fm, scaler_vm))
 
     return scaler_c, scaler_m
@@ -163,12 +167,12 @@ def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
 
     # compute the couplings
     if freq == 0:
-        cpl_fc = np.zeros(n_fc, dtype=np.complex_)
+        cpl_fc = np.zeros(n_fc, dtype=NP_TYPES.COMPLEX)
     else:
         cpl_fc = K_op_c(I_fm)
 
-    cpl_vc = np.zeros(n_vc, dtype=np.complex_)
-    cpl_src = np.zeros(n_src, dtype=np.complex_)
+    cpl_vc = np.zeros(n_vc, dtype=NP_TYPES.COMPLEX)
+    cpl_src = np.zeros(n_src, dtype=NP_TYPES.COMPLEX)
 
     # assemble the vectors
     cpl_c = np.concatenate((cpl_fc, cpl_vc, cpl_src))
@@ -190,7 +194,7 @@ def _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m):
 
     # compute the couplings
     cpl_fm = -K_op_m(I_fc)
-    cpl_vm = np.zeros(n_vm, dtype=np.complex_)
+    cpl_vm = np.zeros(n_vm, dtype=NP_TYPES.COMPLEX)
 
     # assemble the vectors
     cpl_m = np.concatenate((cpl_fm, cpl_vm))
@@ -227,18 +231,18 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     # assemble the matrices
     A_12_mat = -A_net_c.transpose()
     A_21_mat = A_net_c
-    A_22_mat = sps.csc_matrix((n_vc, n_vc), dtype=np.int_)
+    A_22_mat = sps.csc_matrix((n_vc, n_vc), dtype=NP_TYPES.INT)
 
     # expand for the source matrices
-    A_add = sps.csc_matrix((n_fc, n_src), dtype=np.int_)
-    A_12_mat = sps.hstack([A_12_mat, A_add], dtype=np.complex_, format="csr")
+    A_add = sps.csc_matrix((n_fc, n_src), dtype=NP_TYPES.INT)
+    A_12_mat = sps.hstack([A_12_mat, A_add], dtype=NP_TYPES.COMPLEX, format="csr")
 
     # expand for the source matrices
-    A_add = sps.csc_matrix((n_src, n_fc), dtype=np.int_)
-    A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex_, format="csc")
+    A_add = sps.csc_matrix((n_src, n_fc), dtype=NP_TYPES.INT)
+    A_21_mat = sps.vstack([A_21_mat, A_add], dtype=NP_TYPES.COMPLEX, format="csc")
 
     # add the source
-    A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=np.complex_, format="csc")
+    A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=NP_TYPES.COMPLEX, format="csc")
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
     (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat)
@@ -265,10 +269,10 @@ def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m):
     # get the magnetic admittance (avoid singularity for DC solution)
     if freq == 0:
         Y_m = 1/R_m
-        I_m = np.ones(n_vm, dtype=np.complex_)
+        I_m = np.ones(n_vm, dtype=NP_TYPES.COMPLEX)
     else:
         Y_m = s/R_m
-        I_m = s*np.ones(n_vm, dtype=np.complex_)
+        I_m = s*np.ones(n_vm, dtype=NP_TYPES.COMPLEX)
 
     # admittance matrix
     Y_mat = sps.diags(Y_m, format="csc")
@@ -353,7 +357,7 @@ def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
 
     # multiply the inductance matrix
     if freq == 0:
-        rhs_kvl_ind = np.zeros(n_fc, dtype=np.complex_)
+        rhs_kvl_ind = np.zeros(n_fc, dtype=NP_TYPES.COMPLEX)
     else:
         rhs_kvl_ind = s*L_op_c(I_fc)
 
@@ -431,8 +435,8 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     n_m = len(idx_vm)+len(idx_fm)
 
     # excitation are handled separately
-    rhs_c = np.zeros(n_c, dtype=np.complex_)
-    rhs_m = np.zeros(n_m, dtype=np.complex_)
+    rhs_c = np.zeros(n_c, dtype=NP_TYPES.COMPLEX)
+    rhs_m = np.zeros(n_m, dtype=NP_TYPES.COMPLEX)
 
     # assemble
     rhs = np.concatenate((rhs_c, I_src_c, V_src_v, rhs_m))
@@ -468,30 +472,30 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     idx_src_v_local = idx_s[idx_src_v_p]
 
     # indices of the new source equations to be added
-    idx_src_c_add = np.arange(0, n_src_c, dtype=np.int_)
-    idx_src_v_add = np.arange(n_src_c, n_src_c+n_src_v, dtype=np.int_)
+    idx_src_c_add = np.arange(0, n_src_c, dtype=NP_TYPES.INT)
+    idx_src_v_add = np.arange(n_src_c, n_src_c+n_src_v, dtype=NP_TYPES.INT)
 
     # constant vector with the size of the sources
-    cst_src_c = np.full(n_src_c, 1, dtype=np.complex_)
-    cst_src_v = np.full(n_src_v, 1, dtype=np.complex_)
+    cst_src_c = np.full(n_src_c, 1, dtype=NP_TYPES.COMPLEX)
+    cst_src_v = np.full(n_src_v, 1, dtype=NP_TYPES.COMPLEX)
 
     # matrix between the KCL equations and the source variables
     idx_row = np.concatenate((idx_src_c_local, idx_src_v_local))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((-cst_src_c, -cst_src_v))
-    A_vc_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc, n_src_c+n_src_v), dtype=np.complex_)
+    A_vc_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc, n_src_c+n_src_v), dtype=NP_TYPES.COMPLEX)
 
     # matrix between the source equations and the potential variables
     idx_row = np.concatenate((idx_src_v_add, idx_src_c_add))
     idx_col = np.concatenate((idx_src_v_local, idx_src_c_local))
     val = np.concatenate((cst_src_v, G_src_c))
-    A_src_vc = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc), dtype=np.complex_)
+    A_src_vc = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc), dtype=NP_TYPES.COMPLEX)
 
     # matrix between the source equations and the source variables
     idx_row = np.concatenate((idx_src_c_add, idx_src_v_add))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((cst_src_c, R_src_v))
-    A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=np.complex_)
+    A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=NP_TYPES.COMPLEX)
 
     return A_vc_src, A_src_vc, A_src_src
 
@@ -521,7 +525,7 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
         return None, S_mat_c, S_mat_m
 
     # the electric-magnetic couplings are neglected
-    cpl = np.zeros(n_dof, dtype=np.complex_)
+    cpl = np.zeros(n_dof, dtype=NP_TYPES.COMPLEX)
     (cpl_c, cpl_m) = _get_split_vector(cpl, n_vc, n_fc, n_vm, n_fm, n_src)
 
     # function describing the preconditioner

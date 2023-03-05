@@ -16,8 +16,8 @@ Three different types of matrices are supported:
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-from pypeec.lib_utils import config
 from pypeec.lib_matrix import fourier_transform
+from pypeec.lib_utils import config
 
 # get GPU config
 USE_GPU = config.USE_GPU
