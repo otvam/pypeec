@@ -545,7 +545,7 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
         return sol
 
     # corresponding linear operator
-    op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
+    op = sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX)
 
     return op, S_mat_c, S_mat_m
 
@@ -583,6 +583,6 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
         return rhs
 
     # corresponding linear operator
-    op = sla.LinearOperator((n_dof, n_dof), matvec=fct)
+    op = sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX)
 
     return op

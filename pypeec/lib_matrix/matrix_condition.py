@@ -7,6 +7,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import scipy.sparse.linalg as sla
 from pypeec.lib_utils import timelogger
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 # get a logger
 logger = timelogger.get_logger("CONDITION")
@@ -32,14 +36,16 @@ def _get_inverse_operator(mat, decomposition):
 
     # get the function for the linear operator (original matrix)
     def fct_matvec(v):
+        v = v.astype(NP_TYPES.COMPLEX)
         return decomposition.solve(v, trans="N")
 
     # get the function for the linear operator (transposed matrix)
     def fct_rmatvec(v):
+        v = v.astype(NP_TYPES.COMPLEX)
         return decomposition.solve(v, trans="H")
 
     # assign linear operator for inversion
-    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec)
+    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec, dtype=NP_TYPES.COMPLEX)
 
     return op
 

@@ -51,9 +51,12 @@ def get_material_geometry(material_idx, extract_type):
             else:
                 raise ValueError("invalid material type")
 
+            # extend the vector
+            rho_tmp = np.full(len(idx), rho, dtype=NP_TYPES.COMPLEX)
+
             # append the indices and resistivities
             idx_v = np.append(idx_v, idx)
-            rho_v = np.append(rho_v, np.full(len(idx), rho))
+            rho_v = np.append(rho_v, rho_tmp)
 
     return idx_v, rho_v
 
@@ -81,17 +84,28 @@ def get_source_geometry(source_idx, extract_type):
 
             # find the source value
             if source_type == "current":
+                # extract data
                 I = dat_tmp["I"]
                 Y = dat_tmp["Y"]
-                value_src = np.append(value_src, np.full(len(idx), I/len(idx)))
-                element_src = np.append(element_src, np.full(len(idx), Y/len(idx)))
+
+                # compute the source for each voxel
+                value_tmp = np.full(len(idx), I/len(idx), dtype=NP_TYPES.COMPLEX)
+                element_tmp = np.full(len(idx), Y/len(idx), dtype=NP_TYPES.COMPLEX)
             elif source_type == "voltage":
+                # extract data
                 V = dat_tmp["V"]
                 Z = dat_tmp["Z"]
-                value_src = np.append(value_src, np.full(len(idx), V))
-                element_src = np.append(element_src, np.full(len(idx), Z*len(idx)))
+
+                # compute the source for each voxel
+                value_tmp = np.full(len(idx), V, dtype=NP_TYPES.COMPLEX)
+                element_tmp = np.full(len(idx), Z*len(idx), dtype=NP_TYPES.COMPLEX)
+
             else:
                 raise ValueError("invalid source type")
+
+            # append the source
+            value_src = np.append(value_src, value_tmp)
+            element_src = np.append(element_src, element_tmp)
 
     return idx_src, value_src, element_src
 
@@ -122,7 +136,8 @@ def get_reduce_matrix(pts_vox, A_vox, idx_v):
     # reduce the size of the incidence matrix (only the internal faces)
     A_net = A_net[:, idx_f]
 
-
+    # cast to float
+    A_net = A_net.astype(NP_TYPES.FLOAT)
 
     return pts_net, A_net, idx_f
 
