@@ -14,11 +14,14 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import warnings
-from pypeec.lib_utils import config
 from pypeec.lib_utils import timelogger
+from pypeec.lib_utils import config
 
 # get a logger
 logger = timelogger.get_logger("FACTOR")
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 # get config
 MATRIX_FACTORIZATION = config.MATRIX_FACTORIZATION
@@ -64,6 +67,7 @@ def get_factorize(mat):
         if MATRIX_FACTORIZATION == "SuperLU":
             factor = sla.splu(mat)
         elif MATRIX_FACTORIZATION == "UMFPACK":
+            mat = mat.astype(NP_TYPES.DCOMPLEX)
             factor = umf.splu(mat)
         else:
             raise ValueError("invalid matrix factorization library")
@@ -89,7 +93,9 @@ def get_solve(factor, rhs):
     if MATRIX_FACTORIZATION == "SuperLU":
         sol = factor.solve(rhs)
     elif MATRIX_FACTORIZATION == "UMFPACK":
+        rhs = rhs.astype(NP_TYPES.DCOMPLEX)
         sol = factor.solve(rhs)
+        sol = sol.astype(NP_TYPES.COMPLEX)
     else:
         raise ValueError("invalid matrix factorization library")
 

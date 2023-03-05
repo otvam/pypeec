@@ -39,9 +39,15 @@ def _update_data(data):
 
     # get the data types
     if data["USE_DOUBLE"]:
-        data["NP_TYPES"] = {"INT": np.int_, "FLOAT": np.float_, "COMPLEX": np.complex_}
+        data["NP_TYPES"] = {
+            "INT": np.int_, "FLOAT": np.float_, "COMPLEX": np.complex_,
+            "DINT": np.int_, "DFLOAT": np.float_, "DCOMPLEX": np.complex_,
+        }
     else:
-        data["NP_TYPES"] = {"INT": np.intc, "FLOAT": np.single, "COMPLEX": np.csingle}
+        data["NP_TYPES"] = {
+            "INT": np.intc, "FLOAT": np.single, "COMPLEX": np.csingle,
+            "DINT": np.int_, "DFLOAT": np.float_, "DCOMPLEX": np.complex_,
+        }
 
     # access with dot notation
     data["NP_TYPES"] = _dict_to_attributes(data["NP_TYPES"])
