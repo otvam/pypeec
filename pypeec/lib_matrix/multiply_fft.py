@@ -178,6 +178,9 @@ def get_multiply(data, vec_in, matrix_type, flip):
     # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
     vec_all_fft = fourier_transform.get_fft_tensor_expand(vec_all)
 
+    # free memory
+    del vec_all
+
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
     if matrix_type == "single":
         res_all_fft = mat_fft*vec_all_fft
@@ -193,6 +196,10 @@ def get_multiply(data, vec_in, matrix_type, flip):
 
     # compute the iFFT
     res_all = fourier_transform.get_ifft_tensor(res_all_fft)
+
+    # free memory
+    del res_all_fft
+    del vec_all_fft
 
     # select the elements from the tensor indices
     res_out = res_all[idx_out]

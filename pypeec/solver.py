@@ -79,12 +79,12 @@ def _run_solver(data_solver):
         (pts_net_c, A_net_c, idx_fc) = problem_geometry.get_reduce_matrix(pts_vox, A_vox, idx_vc)
         (pts_net_m, A_net_m, idx_fm) = problem_geometry.get_reduce_matrix(pts_vox, A_vox, idx_vm)
 
+        # free memory
+        del pts_vox
+        del A_vox
+
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
-
-    # free memory
-    del pts_vox
-    del A_vox
 
     # get the resistances and inductances
     with timelogger.BlockTimer(logger, "system_matrix"):
@@ -98,13 +98,15 @@ def _run_solver(data_solver):
         # get the potential tensor (preconditioner and full problem)
         (P_m, P_op_m) = system_matrix.get_P_matrix(d, idx_vm, G_self, G_mutual, has_magnetic)
 
+        # free memory
+        del G_self
+        del G_mutual
+
         # get the coupling matrices
         (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling)
 
-    # free memory
-    del G_self
-    del G_mutual
-    del K_tsr
+        # free memory
+        del K_tsr
 
     # assemble the equation system
     with timelogger.BlockTimer(logger, "equation_system"):
@@ -125,8 +127,16 @@ def _run_solver(data_solver):
         # estimate the condition number of the problem (to detect quasi-singular problem)
         (condition_ok, condition_status) = equation_solver.get_condition(S_mat_c, S_mat_m, condition_options)
 
+        # free memory
+        del S_mat_c
+        del S_mat_m
+
         # solve the equation system
         (sol, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
+
+        # free memory
+        del pcd_op
+        del sys_op
 
         # compute convergence
         has_converged = solver_ok and condition_ok
