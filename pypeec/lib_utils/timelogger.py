@@ -12,23 +12,31 @@ import logging
 from pypeec.lib_utils import config
 
 # get config
-LEVEL = config.LOGGING_OPTIONS["LEVEL"]
-INDENTATION = config.LOGGING_OPTIONS["INDENTATION"]
-FORMAT = config.LOGGING_OPTIONS["FORMAT"]
-EXCEPTION_TRACE = config.LOGGING_OPTIONS["EXCEPTION_TRACE"]
-USE_COLOR = config.LOGGING_OPTIONS["USE_COLOR"]
-CL_DEBUG = config.LOGGING_OPTIONS["CL_DEBUG"]
-CL_INFO = config.LOGGING_OPTIONS["CL_INFO"]
-CL_WARNING = config.LOGGING_OPTIONS["CL_WARNING"]
-CL_ERROR = config.LOGGING_OPTIONS["CL_ERROR"]
-CL_CRITICAL = config.LOGGING_OPTIONS["CL_CRITICAL"]
-CL_RESET = config.LOGGING_OPTIONS["CL_RESET"]
+LOGGING_OPTIONS = config.LOGGING_OPTIONS
 
 # global timestamp (constant over the complete run)
 GLOBAL_TIMESTAMP = time.time()
 
 # logging indentation level (updated inside the blocks)
 CURRENT_LEVEL = 0
+
+
+def _get_fmt(color):
+    """
+    Get a logging formatter.
+    """
+
+    # extract the data
+    ESC = "\x1b"
+    FORMAT = LOGGING_OPTIONS.FORMAT
+    CL_RESET = LOGGING_OPTIONS.CL_RESET
+
+    if color is None:
+        fmt = logging.Formatter(FORMAT)
+    else:
+        fmt = logging.Formatter(ESC + color + FORMAT + ESC + CL_RESET)
+
+    return fmt
 
 
 def _get_format_timestamp(timestamp):
@@ -68,20 +76,18 @@ class _DeltaTimeFormatter(logging.Formatter):
         # call parent constructor
         super().__init__()
 
-        # color escape
-        ESC = "\x1b"
 
         # define the color formatters
         self.fmt_color = {
-            logging.DEBUG: logging.Formatter(ESC + CL_DEBUG + FORMAT + ESC + CL_RESET),
-            logging.INFO: logging.Formatter(ESC + CL_INFO + FORMAT + ESC + CL_RESET),
-            logging.WARNING: logging.Formatter(ESC + CL_WARNING + FORMAT + ESC + CL_RESET),
-            logging.ERROR: logging.Formatter(ESC + CL_ERROR + FORMAT + ESC + CL_RESET),
-            logging.CRITICAL: logging.Formatter(ESC + CL_CRITICAL + FORMAT + ESC + CL_RESET),
+            logging.DEBUG: _get_fmt(LOGGING_OPTIONS.CL_DEBUG),
+            logging.INFO: _get_fmt(LOGGING_OPTIONS.CL_INFO),
+            logging.WARNING: _get_fmt(LOGGING_OPTIONS.CL_WARNING),
+            logging.ERROR: _get_fmt(LOGGING_OPTIONS.CL_ERROR),
+            logging.CRITICAL: _get_fmt(LOGGING_OPTIONS.CL_CRITICAL),
         }
 
         # define the black formatter
-        self.fmt_black = logging.Formatter(FORMAT)
+        self.fmt_black = _get_fmt(None)
 
     def format(self, record):
         """
@@ -98,13 +104,13 @@ class _DeltaTimeFormatter(logging.Formatter):
         record.duration = _get_format_duration(GLOBAL_TIMESTAMP)
 
         # get the message padding for the desired indentation
-        pad = " " * (CURRENT_LEVEL*INDENTATION)
+        pad = " " * (CURRENT_LEVEL*LOGGING_OPTIONS.INDENTATION)
 
         # add the padding to the message
         record.msg = pad + msg
 
         # get the formatter
-        if USE_COLOR:
+        if LOGGING_OPTIONS.USE_COLOR:
             msg = self.fmt_color[lvl].format(record)
         else:
             msg = self.fmt_black.format(record)
@@ -172,7 +178,7 @@ def log_exception(logger, ex):
     name = ex.__class__.__name__
 
     # log the exception
-    if EXCEPTION_TRACE:
+    if LOGGING_OPTIONS.EXCEPTION_TRACE:
         logger.error("exception error : " + name, exc_info=ex)
     else:
         logger.error("exception error : " + name + "\n" + str(ex))
@@ -215,7 +221,7 @@ def get_logger(name):
         handler.setFormatter(fmt)
 
         # get the logger
-        logger.setLevel(LEVEL)
+        logger.setLevel(LOGGING_OPTIONS.LEVEL)
         logger.addHandler(handler)
 
     return logger
