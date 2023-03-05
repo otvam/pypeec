@@ -18,6 +18,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_matrix import fourier_transform
 from pypeec.lib_utils import config
+from pypeec.lib_utils import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 # get GPU config
 USE_GPU = config.USE_GPU
@@ -35,11 +39,11 @@ def _get_tensor_sign(matrix_type, nd):
     """
 
     if matrix_type == "single":
-        sign = cp.ones((2, 2, 2, nd), dtype=cp.int_)
+        sign = cp.ones((2, 2, 2, nd), dtype=NP_TYPES.FLOAT)
     elif matrix_type == "diag":
-        sign = cp.ones((2, 2, 2, nd), dtype=cp.int_)
+        sign = cp.ones((2, 2, 2, nd), dtype=NP_TYPES.FLOAT)
     elif matrix_type == "cross":
-        sign = cp.empty((2, 2, 2, nd), dtype=cp.int_)
+        sign = cp.empty((2, 2, 2, nd), dtype=NP_TYPES.FLOAT)
         sign[0, 0, 0, :] = [+1, +1, +1]
         sign[1, 0, 0, :] = [-1, +1, +1]
         sign[0, 1, 0, :] = [+1, -1, +1]
@@ -71,7 +75,7 @@ def _get_tensor_circulant(mat, sign):
     (nx, ny, nz, nd) = mat.shape
 
     # init the circulant tensor
-    mat_circulant = cp.zeros((2*nx, 2*ny, 2*nz, nd), dtype=cp.float_)
+    mat_circulant = cp.zeros((2*nx, 2*ny, 2*nz, nd), dtype=NP_TYPES.FLOAT)
 
     # cube none
     mat_circulant[0:nx, 0:ny, 0:nz, :] = mat[0:nx, 0:ny, 0:nz, :]*sign[0:1, 0:1, 0:1, :]
@@ -166,7 +170,7 @@ def get_multiply(data, vec_in, matrix_type, flip):
         vec_in = cp.array(vec_in)
 
     # create a tensor for the vector
-    vec_all = cp.zeros(shape, dtype=cp.complex_)
+    vec_all = cp.zeros(shape, dtype=NP_TYPES.COMPLEX)
 
     # assign the elements from the tensor indices
     vec_all[idx_in] = vec_in
@@ -180,7 +184,7 @@ def get_multiply(data, vec_in, matrix_type, flip):
     elif matrix_type == "diag":
         res_all_fft = mat_fft*vec_all_fft
     elif matrix_type == "cross":
-        res_all_fft = cp.zeros(shape_fft, dtype=cp.complex_)
+        res_all_fft = cp.zeros(shape_fft, dtype=NP_TYPES.COMPLEX)
         res_all_fft[:, :, :, 0] = +mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 1]+mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 2]
         res_all_fft[:, :, :, 1] = -mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 0]+mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 2]
         res_all_fft[:, :, :, 2] = -mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 0]-mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 1]
