@@ -269,8 +269,10 @@ def get_data_tolerance():
 
     # iterative solver options
     solver_options = {
-        "tolerance": 1e-6,  # tolerance for checking the solution residuum
-        "gmres_options": {  # options for the GMRES iterative solver
+        # tolerance for checking the solution residuum
+        "tolerance": 1e-6,
+        # options for the GMRES iterative solver
+        "gmres_options": {
             "rel_tol": 1e-6,  # relative preconditioned tolerance for GMRES stopping
             "abs_tol": 1e-12,  # absolute preconditioned tolerance for GMRES stopping
             "n_between_restart": 20,  # number of GMRES iterations between restarts
@@ -280,11 +282,25 @@ def get_data_tolerance():
 
     # matrix condition check options
     condition_options = {
-        "check": True,  # check (or not) the condition number of the matrices
-        "tolerance": 1e15,  # maximum allowable condition number for the matrices
-        "norm_options": {  # options for computing the one-norm estimate
+        # check (or not) the condition number of the matrices
+        "check": True,
+        # maximum allowable condition number for the matrices
+        "tolerance": 1e15,
+        # options for computing the one-norm estimate
+        "norm_options": {
             "t_accuracy": 2,  # accuracy parameter for the one-norm estimate
             "n_iter_max": 25,  # maximum number of iterations for the one-norm estimate
+        }
+    }
+
+    # matrix factorization options
+    factorization_options = {
+        # matrix factorization options
+        #   - SuperLU is typically slower but is always available (integrated with SciPy)
+        #   - UMFPACK is typically faster but has to be installed separately
+        "library": "SuperLU",
+        # options for computing the matrix factorization
+        "solver_options": {
         }
     }
 
@@ -300,6 +316,7 @@ def get_data_tolerance():
         "coupling_simplify": coupling_simplify,
         "solver_options": solver_options,
         "condition_options": condition_options,
+        "factorization_options": factorization_options,
     }
 
     return data_tolerance

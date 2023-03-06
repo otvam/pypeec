@@ -34,7 +34,7 @@ def _update_data(data):
     # get the GPU usage
     if data["FFT_LIBRARY"] == "SciPy":
         data["USE_FFT_GPU"] = False
-    elif data["FFT_LIBRARY"] == "FFTE":
+    elif data["FFT_LIBRARY"] == "FFTW":
         data["USE_FFT_GPU"] = False
     elif data["FFT_LIBRARY"] == "CuPy":
         data["USE_FFT_GPU"] = True
@@ -44,6 +44,8 @@ def _update_data(data):
     # get the number of cores
     if data["FFT_OPTIONS"]["FFTS_WORKER"] is None:
         data["FFT_OPTIONS"]["FFTS_WORKER"] = os.cpu_count()
+    if data["FFT_OPTIONS"]["FFTW_THREAD"] is None:
+        data["FFT_OPTIONS"]["FFTW_THREAD"] = os.cpu_count()
     if data["FFT_OPTIONS"]["FFTW_THREAD"] is None:
         data["FFT_OPTIONS"]["FFTW_THREAD"] = os.cpu_count()
 
@@ -77,7 +79,6 @@ def _check_data(data):
         "LOGGING_OPTIONS",
         "FFT_OPTIONS",
         "FFT_LIBRARY",
-        "MATRIX_FACTORIZATION",
         "MATRIX_MULTIPLICATION",
         "PAUSE_GUI",
     ]
@@ -101,14 +102,15 @@ def _check_data(data):
         datachecker.check_integer("FFTS_WORKER", data["FFT_OPTIONS"]["FFTS_WORKER"])
     if data["FFT_OPTIONS"]["FFTW_THREAD"] is not None:
         datachecker.check_integer("FFTW_THREAD", data["FFT_OPTIONS"]["FFTW_THREAD"])
-    datachecker.check_integer("FFTW_BYTE_ALIGN", data["FFT_OPTIONS"]["FFTW_BYTE_ALIGN"])
-    datachecker.check_float("FFTW_CACHE_TIMEOUT", data["FFT_OPTIONS"]["FFTW_CACHE_TIMEOUT"])
+    if data["FFT_OPTIONS"]["FFTW_BYTE_ALIGN"] is not None:
+        datachecker.check_integer("FFTW_BYTE_ALIGN", data["FFT_OPTIONS"]["FFTW_BYTE_ALIGN"])
+    if data["FFT_OPTIONS"]["FFTW_CACHE_TIMEOUT"] is not None:
+        datachecker.check_float("FFTW_CACHE_TIMEOUT", data["FFT_OPTIONS"]["FFTW_CACHE_TIMEOUT"])
 
     # check other switches
     datachecker.check_boolean("USE_DOUBLE", data["USE_DOUBLE"])
     datachecker.check_float("PAUSE_GUI", data["PAUSE_GUI"])
     datachecker.check_choice("FFT_LIBRARY", data["FFT_LIBRARY"], ["SciPy", "FFTW", "CuPy"])
-    datachecker.check_choice("MATRIX_FACTORIZATION", data["MATRIX_FACTORIZATION"], ["SuperLU", "UMFPACK"])
     datachecker.check_choice("MATRIX_MULTIPLICATION", data["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
 
 
@@ -160,7 +162,6 @@ def set_config(file_config):
 LOGGING_OPTIONS = dict()
 FFT_OPTIONS = dict()
 FFT_LIBRARY = None
-MATRIX_FACTORIZATION = None
 MATRIX_MULTIPLICATION = None
 PAUSE_GUI = None
 USE_DOUBLE = None

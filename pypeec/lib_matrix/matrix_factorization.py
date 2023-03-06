@@ -23,30 +23,60 @@ logger = timelogger.get_logger("FACTOR")
 # get config
 NP_TYPES = config.NP_TYPES
 
-# get config
-MATRIX_FACTORIZATION = config.MATRIX_FACTORIZATION
 
-# import the right library
-if MATRIX_FACTORIZATION == "SuperLU":
+def _get_fact_superlu(mat):
+    """
+    Factorize a matrix with SuperLU.
+    """
+
     # import the SciPy SuperLU library
     import scipy.sparse.linalg as sla
 
     # prevent problematic matrices to trigger warnings
     warnings.filterwarnings("error", module="scipy.sparse.linalg")
-elif MATRIX_FACTORIZATION == "UMFPACK":
+
+    # factorize the matrix
+    mat_factor = sla.splu(mat)
+
+    # matrix solver
+    def fact(rhs):
+        return mat_factor.solve(rhs)
+
+    return fact
+
+
+def _get_fact_umfpack(mat):
+    """
+    Factorize a matrix with UMFPACK.
+    """
+
     # import the UMFPACK binding
     import scikits.umfpack as umf
 
     # prevent problematic matrices to trigger warnings
     warnings.filterwarnings("error", module="scikits.umfpack")
-else:
-    raise ValueError("invalid matrix factorization library")
+
+    # double precision is required for the solver
+    mat = mat.astype(NP_TYPES.DCOMPLEX)
+
+    # factorize the matrix
+    mat_factor = umf.splu(mat)
+
+    # matrix solver
+    def fact(rhs):
+        return mat_factor.solve(rhs)
+
+    return fact
 
 
-def get_factorize(mat):
+def get_factorize(mat, factorization_options):
     """
     Factorize a sparse matrix.
     """
+
+    # extract the options
+    library = factorization_options["library"]
+    solver_options = factorization_options["solver_options"]
 
     # check shape
     nnz = mat.size
@@ -54,8 +84,7 @@ def get_factorize(mat):
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
-        factor = sla.splu(mat)
-        return factor
+        return _get_fact_superlu(mat)
 
     # display
     logger.debug("matrix size: (%d, %d) / %d" % (nx, ny, nnz))
@@ -64,11 +93,10 @@ def get_factorize(mat):
     try:
         logger.debug("matrix factorization")
 
-        if MATRIX_FACTORIZATION == "SuperLU":
-            factor = sla.splu(mat)
-        elif MATRIX_FACTORIZATION == "UMFPACK":
-            mat = mat.astype(NP_TYPES.DCOMPLEX)
-            factor = umf.splu(mat)
+        if library == "SuperLU":
+            factor = _get_fact_superlu(mat)
+        elif library == "UMFPACK":
+            factor = _get_fact_umfpack(mat)
         else:
             raise ValueError("invalid matrix factorization library")
 
@@ -90,13 +118,6 @@ def get_solve(factor, rhs):
         raise RuntimeError("invalid factorization")
 
     # solve the equation system
-    if MATRIX_FACTORIZATION == "SuperLU":
-        sol = factor.solve(rhs)
-    elif MATRIX_FACTORIZATION == "UMFPACK":
-        rhs = rhs.astype(NP_TYPES.DCOMPLEX)
-        sol = factor.solve(rhs)
-        sol = sol.astype(NP_TYPES.COMPLEX)
-    else:
-        raise ValueError("invalid matrix factorization library")
+    sol = factor(rhs)
 
     return sol

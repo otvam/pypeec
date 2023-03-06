@@ -245,9 +245,9 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=NP_TYPES.COMPLEX, format="csc")
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat)
+    S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
 
-    return Y_mat, S_mat, S_fact, A_12_mat, A_21_mat
+    return Y_mat, S_mat, A_12_mat, A_21_mat
 
 
 def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m):
@@ -286,23 +286,9 @@ def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m):
     A_22_mat = I_mat_m
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    (S_mat, S_fact) = _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat)
-
-    return Y_mat, S_mat, S_fact, A_12_mat, A_21_mat
-
-
-def _get_cond_schur(Y_mat, A_12_mat, A_21_mat, A_22_mat):
-    """
-    Compute the Schur complement of a matrix.
-    """
-
-    # computing the Schur complement (with respect to the diagonal admittance matrix)
     S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
 
-    # compute the factorization of the sparse Schur complement
-    S_fact = matrix_factorization.get_factorize(S_mat)
-
-    return S_mat, S_fact
+    return Y_mat, S_mat, A_12_mat, A_21_mat
 
 
 def _get_cond_solve(rhs, cpl, Y_mat, S_fact, A_12_mat, A_21_mat):
@@ -500,7 +486,7 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     return A_vc_src, A_src_vc, A_src_src
 
 
-def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
+def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, factorization_options):
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
@@ -517,8 +503,12 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
 
     # get the Schur complement
-    (Y_mat_c, S_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
-    (Y_mat_m, S_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m)
+    (Y_mat_c, S_mat_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
+    (Y_mat_m, S_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m)
+
+    # factorize the Schur complement
+    S_fact_c = matrix_factorization.get_factorize(S_mat_c, factorization_options)
+    S_fact_m = matrix_factorization.get_factorize(S_mat_m, factorization_options)
 
     # if the matrix is singular, there is not preconditioner
     if (S_fact_c is None) or (S_fact_m is None):

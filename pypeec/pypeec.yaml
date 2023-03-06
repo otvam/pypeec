@@ -37,18 +37,13 @@ FFT_OPTIONS:
     FFTS_WORKER: null  # number of workers for SciPy (null for number of CPUs)
     FFTW_THREAD: null  # number of threads for FFTW (null for number of CPUs)
     FFTW_CACHE_TIMEOUT: 100.0  # cache timeout in seconds for FFTW (null for no caching)
-    FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW
+    FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW (null for default)
 
 # FFT library
 #   - SciPy is typically slightly slower but is always available (integrated with SciPy)
 #   - FFTW is typically faster but has to be installed separately
 #   - CuPy is extremely faster but require GPUs with the corresponding library
 FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW" or "CuPy"
-
-# matrix factorization options
-#   - SuperLU is typically slower but is always available (integrated with SciPy)
-#   - UMFPACK is typically faster but has to be installed separately
-MATRIX_FACTORIZATION: "SuperLU"  # "SuperLU" or "UMFPACK"
 
 # method for dense matrix multiplication
 #   - FFT for doing the multiplication with circulant tensors and FFT
