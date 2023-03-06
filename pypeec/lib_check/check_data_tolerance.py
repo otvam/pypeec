@@ -5,6 +5,7 @@ Module for checking the solver tolerance data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import importlib.util
 from pypeec.lib_utils import datachecker
 
 
@@ -72,17 +73,25 @@ def _check_factorization_options(factorization_options):
     solver_options = factorization_options["solver_options"]
 
     # check the data
-    datachecker.check_choice("library", library, ["SuperLU", "UMFPACK"])
+    datachecker.check_choice("library", library, ["SuperLU", "UMFPACK", "GCROT", "BICG"])
 
-    # # check type
-    # key_list = ["t_accuracy", "n_iter_max"]
-    # datachecker.check_dict("norm_options", norm_options, key_list=key_list)
-    #
-    # # check the data
-    # datachecker.check_boolean("tolerance", check)
-    # datachecker.check_float("tolerance", tolerance, is_positive=True, can_be_zero=False)
-    # datachecker.check_integer("t_accuracy", norm_options["t_accuracy"], is_positive=True, can_be_zero=False)
-    # datachecker.check_integer("n_iter_max", norm_options["n_iter_max"], is_positive=True, can_be_zero=False)
+    if library in ["SuperLU", "GCROT", "BICG"]:
+        lib = importlib.util.find_spec("scipy.sparse.linalg")
+        datachecker.check_assert("library", lib is not None, "Library SciPy is not installed")
+    elif library == "UMFPACK":
+        lib = importlib.util.find_spec("scikits.umfpack")
+        datachecker.check_assert("library", lib is not None, "Library UMFPACK is not installed")
+    else:
+        raise ValueError("invalid matrix factorization library")
+
+    # check type
+    key_list = ["rel_tol", "abs_tol", "n_iter_max"]
+    datachecker.check_dict("solver_options", solver_options, key_list=key_list)
+
+    # check the data
+    datachecker.check_float("rel_tol", solver_options["rel_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("abs_tol", solver_options["abs_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_integer("n_iter_max", solver_options["n_iter_max"], is_positive=True, can_be_zero=False)
 
 
 def check_data_tolerance(data_tolerance):

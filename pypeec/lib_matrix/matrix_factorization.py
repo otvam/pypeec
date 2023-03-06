@@ -3,9 +3,12 @@ Module for factorizing sparse matrix.
 This module is used as a common interface for different solvers:
     - SuperLU: built-in library (with SciPy)
     - UMFPACK: extra library (with SciKits)
+    - GCROT: built-in library (with SciPy)
+    - BICG: built-in library (with SciPy)
 
 SuperLU is available on all platforms and easy to install.
 UMFPACK need to be installed (and often compiled).
+GCROT and BICG are typically quite unstable.
 
 WARNING: UMFPACK is difficult to install on MS Windows.
 """
@@ -69,6 +72,38 @@ def _get_fact_umfpack(mat):
     return fact
 
 
+def _get_fact_iter(library, solver_options, mat):
+    """
+    Factorize a matrix with iterative method.
+    """
+
+    # import the SciPy SuperLU library
+    import scipy.sparse.linalg as sla
+
+    # prevent problematic matrices to trigger warnings
+    warnings.filterwarnings("error", module="scipy.sparse.linalg")
+
+    # get the options
+    rel_tol = solver_options["rel_tol"]
+    abs_tol = solver_options["abs_tol"]
+    n_iter_max = solver_options["n_iter_max"]
+
+    # get the solver
+    if library == "GCROT":
+        solver = sla.gcrotmk
+    elif library == "BICG":
+        solver = sla.bicg
+    else:
+        raise ValueError("invalid matrix factorization library")
+
+    # factorize the matrix
+    def fact(rhs):
+        (sol, flag) = solver(mat, rhs, tol=rel_tol, atol=abs_tol, maxiter=n_iter_max)
+        return sol
+
+    return fact
+
+
 def get_factorize(mat, factorization_options):
     """
     Factorize a sparse matrix.
@@ -88,6 +123,7 @@ def get_factorize(mat, factorization_options):
 
     # display
     logger.debug("matrix size: (%d, %d) / %d" % (nx, ny, nnz))
+    logger.debug("matrix library: %s" % library)
 
     # factorize the matrix
     try:
@@ -97,6 +133,8 @@ def get_factorize(mat, factorization_options):
             factor = _get_fact_superlu(mat)
         elif library == "UMFPACK":
             factor = _get_fact_umfpack(mat)
+        elif library in ["GCROT", "BICG"]:
+            factor = _get_fact_iter(library, solver_options, mat)
         else:
             raise ValueError("invalid matrix factorization library")
 

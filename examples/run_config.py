@@ -298,9 +298,14 @@ def get_data_tolerance():
         # matrix factorization options
         #   - SuperLU is typically slower but is always available (integrated with SciPy)
         #   - UMFPACK is typically faster but has to be installed separately
+        #   - GCROT is quite unstable but has low memory requirements (integrated with SciPy)
+        #   - BICG is quite unstable but has low memory requirements (integrated with SciPy)
         "library": "SuperLU",
         # options for computing the matrix factorization
         "solver_options": {
+            "rel_tol": 1e-6,  # relative preconditioned tolerance for the iterative solvers
+            "abs_tol": 1e-12,  # absolute preconditioned tolerance for the iterative solvers
+            "n_iter_max": 100,   # maximum number of iterations for the iterative solvers
         }
     }
 

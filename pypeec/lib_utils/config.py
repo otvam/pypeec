@@ -114,7 +114,7 @@ def _check_data(data):
     datachecker.check_choice("MATRIX_MULTIPLICATION", data["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
 
 
-def _check_lib(data):
+def _check_fft_library(data):
     """
     Check that the required libraries are installed.
     """
@@ -122,16 +122,13 @@ def _check_lib(data):
     # check GPU
     if data["FFT_LIBRARY"] == "SciPy":
         lib = importlib.util.find_spec("scipy")
-        if lib is None:
-            raise FileError("Library SciPy is not installed and is activated in the config")
+        datachecker.check_assert("FFT_LIBRARY", lib is not None, "Library SciPy is not installed")
     elif data["FFT_LIBRARY"] == "FFTW":
-            lib = importlib.util.find_spec("pyfftw")
-            if lib is None:
-                raise FileError("Library FFTW is not installed and is activated in the config")
+        lib = importlib.util.find_spec("pyfftw")
+        datachecker.check_assert("FFT_LIBRARY", lib is not None, "Library FFTW is not installed")
     elif data["FFT_LIBRARY"] == "CuPy":
         lib = importlib.util.find_spec("cupy")
-        if lib is None:
-            raise FileError("Library CuPy is not installed and is activated in the config")
+        datachecker.check_assert("FFT_LIBRARY", lib is not None, "Library CuPy is not installed")
     else:
         raise ValueError("invalid FFT library")
 
@@ -148,7 +145,7 @@ def set_config(file_config):
     _check_data(data)
 
     # check that the libraries are installed
-    _check_lib(data)
+    _check_fft_library(data)
 
     # update the configuration
     data = _update_data(data)
