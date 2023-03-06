@@ -17,11 +17,8 @@ from pypeec.lib_utils import config
 FFT_LIBRARY = config.FFT_LIBRARY
 FFT_OPTIONS = config.FFT_OPTIONS
 
-# get GPU config
-USE_GPU = config.USE_GPU
-
 # import the right library
-if USE_GPU:
+if FFT_LIBRARY == "CuPy":
     import cupy.fft as fftc
 elif FFT_LIBRARY == "SciPy":
     import scipy.fft as ffts
@@ -47,7 +44,7 @@ def _get_fftn(mat, shape, axes):
     The size of the output tensor is specified.
     """
 
-    if USE_GPU:
+    if FFT_LIBRARY == "CuPy":
         mat_trf = fftc.fftn(mat, shape, axes=axes)
     elif FFT_LIBRARY == "SciPy":
         mat_trf = ffts.fftn(mat, shape, axes=axes, workers=FFT_OPTIONS.FFTS_WORKER)
@@ -66,7 +63,7 @@ def _get_ifftn(mat, shape, axes):
     The size of the output tensor is specified.
     """
 
-    if USE_GPU:
+    if FFT_LIBRARY == "CuPy":
         mat_trf = fftc.ifftn(mat, shape, axes=axes)
     elif FFT_LIBRARY == "SciPy":
         mat_trf = ffts.ifftn(mat, shape, axes=axes, workers=FFT_OPTIONS.FFTS_WORKER)

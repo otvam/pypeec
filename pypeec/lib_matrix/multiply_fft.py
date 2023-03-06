@@ -18,16 +18,15 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_matrix import fourier_transform
 from pypeec.lib_utils import config
-from pypeec.lib_utils import config
 
 # get config
 NP_TYPES = config.NP_TYPES
 
 # get GPU config
-USE_GPU = config.USE_GPU
+USE_FFT_GPU = config.USE_FFT_GPU
 
 # load the GPU and CPU libraries
-if USE_GPU:
+if USE_FFT_GPU:
     import cupy as cp
 else:
     import numpy as cp
@@ -68,7 +67,7 @@ def _get_tensor_circulant(mat, sign):
     """
 
     # load the data to the GPU
-    if USE_GPU:
+    if USE_FFT_GPU:
         mat = cp.asarray(mat)
 
     # get the tensor size
@@ -126,7 +125,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     mat_fft = _get_tensor_circulant(mat, sign)
 
     # load the data to the GPU
-    if USE_GPU:
+    if USE_FFT_GPU:
         idx_in = cp.asarray(idx_in)
         idx_out = cp.asarray(idx_out)
 
@@ -166,7 +165,7 @@ def get_multiply(data, vec_in, matrix_type, flip):
         (idx_out, idx_in) = (idx_in, idx_out)
 
     # load the data to the GPU
-    if USE_GPU:
+    if USE_FFT_GPU:
         vec_in = cp.array(vec_in)
 
     # create a tensor for the vector
@@ -205,7 +204,7 @@ def get_multiply(data, vec_in, matrix_type, flip):
     res_out = res_all[idx_out]
 
     # unload the data from the GPU
-    if USE_GPU:
+    if USE_FFT_GPU:
         res_out = cp.asnumpy(res_out)
 
     return res_out

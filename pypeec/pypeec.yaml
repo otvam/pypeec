@@ -39,10 +39,11 @@ FFT_OPTIONS:
     FFTW_CACHE_TIMEOUT: 100.0  # cache timeout in seconds for FFTW (null for no caching)
     FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW
 
-# FFT options (for the CPU computation, ignored for GPU)
+# FFT library
 #   - SciPy is typically slightly slower but is always available (integrated with SciPy)
 #   - FFTW is typically faster but has to be installed separately
-FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW"
+#   - CuPy is extremely faster but require GPUs with the corresponding library
+FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW" or "CuPy"
 
 # matrix factorization options
 #   - SuperLU is typically slower but is always available (integrated with SciPy)
@@ -55,11 +56,6 @@ MATRIX_FACTORIZATION: "SuperLU"  # "SuperLU" or "UMFPACK"
 #   - DIRECT is extremely slow and memory intensive
 #   - DIRECT is only useful for debugging and educational purposes
 MATRIX_MULTIPLICATION: "FFT"  # "FFT" or "DIRECT"
-
-# GPU options
-#   - if false, GPUs are not used and not required
-#   - if true, GPUs are used for some operations
-USE_GPU: false
 
 # double precision
 #   - if false, use single precision numbers

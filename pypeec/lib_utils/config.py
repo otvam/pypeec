@@ -31,6 +31,16 @@ def _update_data(data):
     Parse and complete the config.
     """
 
+    # get the GPU usage
+    if data["FFT_LIBRARY"] == "SciPy":
+        data["USE_FFT_GPU"] = False
+    elif data["FFT_LIBRARY"] == "FFTE":
+        data["USE_FFT_GPU"] = False
+    elif data["FFT_LIBRARY"] == "CuPy":
+        data["USE_FFT_GPU"] = True
+    else:
+        raise ValueError("invalid FFT library")
+
     # get the number of cores
     if data["FFT_OPTIONS"]["FFTS_WORKER"] is None:
         data["FFT_OPTIONS"]["FFTS_WORKER"] = os.cpu_count()
@@ -70,8 +80,6 @@ def _check_data(data):
         "MATRIX_FACTORIZATION",
         "MATRIX_MULTIPLICATION",
         "PAUSE_GUI",
-        "USE_DOUBLE",
-        "USE_GPU",
     ]
     datachecker.check_dict("data", data, key_list=key_list)
 
@@ -97,10 +105,9 @@ def _check_data(data):
     datachecker.check_float("FFTW_CACHE_TIMEOUT", data["FFT_OPTIONS"]["FFTW_CACHE_TIMEOUT"])
 
     # check other switches
-    datachecker.check_boolean("USE_GPU", data["USE_GPU"])
     datachecker.check_boolean("USE_DOUBLE", data["USE_DOUBLE"])
     datachecker.check_float("PAUSE_GUI", data["PAUSE_GUI"])
-    datachecker.check_choice("FFT_LIBRARY", data["FFT_LIBRARY"], ["SciPy", "FFTW"])
+    datachecker.check_choice("FFT_LIBRARY", data["FFT_LIBRARY"], ["SciPy", "FFTW", "CuPy"])
     datachecker.check_choice("MATRIX_FACTORIZATION", data["MATRIX_FACTORIZATION"], ["SuperLU", "UMFPACK"])
     datachecker.check_choice("MATRIX_MULTIPLICATION", data["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
 
@@ -111,22 +118,20 @@ def _check_lib(data):
     """
 
     # check GPU
-    if data["USE_GPU"]:
+    if data["FFT_LIBRARY"] == "SciPy":
+        lib = importlib.util.find_spec("scipy")
+        if lib is None:
+            raise FileError("Library SciPy is not installed and is activated in the config")
+    elif data["FFT_LIBRARY"] == "FFTW":
+            lib = importlib.util.find_spec("pyfftw")
+            if lib is None:
+                raise FileError("Library FFTW is not installed and is activated in the config")
+    elif data["FFT_LIBRARY"] == "CuPy":
         lib = importlib.util.find_spec("cupy")
         if lib is None:
             raise FileError("Library CuPy is not installed and is activated in the config")
-
-    # check FFTW
-    if data["FFT_LIBRARY"] == "FFTW":
-        lib = importlib.util.find_spec("pyfftw")
-        if lib is None:
-            raise FileError("Library FFTW is not installed and is activated in the config")
-
-    # check library
-    if data["FFT_LIBRARY"] == "UMFPACK":
-        lib = importlib.util.find_spec("scikits.umfpack")
-        if lib is None:
-            raise FileError("Library UMFPACK is not installed and is activated in the config")
+    else:
+        raise ValueError("invalid FFT library")
 
 
 def set_config(file_config):
@@ -160,7 +165,7 @@ MATRIX_MULTIPLICATION = None
 PAUSE_GUI = None
 USE_DOUBLE = None
 NP_TYPES = None
-USE_GPU = None
+USE_FFT_GPU = None
 
 # load the default config files
 try:
