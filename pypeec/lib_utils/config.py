@@ -6,7 +6,6 @@ Defined with global variables.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import os
 import sys
 import importlib.util
 import importlib.resources
@@ -40,14 +39,6 @@ def _update_data(data):
         data["USE_FFT_GPU"] = True
     else:
         raise ValueError("invalid FFT library")
-
-    # get the number of cores
-    if data["FFT_OPTIONS"]["FFTS_WORKER"] is None:
-        data["FFT_OPTIONS"]["FFTS_WORKER"] = os.cpu_count()
-    if data["FFT_OPTIONS"]["FFTW_THREAD"] is None:
-        data["FFT_OPTIONS"]["FFTW_THREAD"] = os.cpu_count()
-    if data["FFT_OPTIONS"]["FFTW_THREAD"] is None:
-        data["FFT_OPTIONS"]["FFTW_THREAD"] = os.cpu_count()
 
     # get the data types
     if data["USE_DOUBLE"]:

@@ -39,20 +39,55 @@ def _get_fact_superlu(mat):
     """
 
     # import the SciPy SuperLU library
-    import scipy.sparse.linalg as sla
-
-    # prevent problematic matrices to trigger warnings
-    warnings.filterwarnings("error", module="scipy.sparse.linalg")
+    from scipy.sparse import linalg
 
     # factorize the matrix
-    mat_factor = sla.splu(mat)
+    try:
+        mat_factor = linalg.splu(mat)
+    except RuntimeError:
+        logger.warning("factorization failure")
+        return None
 
     # matrix solver
-    def fact(rhs):
+    def factor(rhs):
         sol = mat_factor.solve(rhs)
         return sol
 
-    return fact
+    return factor
+
+
+def _get_fact_pardiso(solver_options, mat):
+    """
+    Factorize a matrix with PARDISO.
+    """
+
+    # import the UMFPACK binding
+    from pydiso import mkl_solver
+    from pydiso.mkl_solver import MKLPardisoSolver
+    from pydiso.mkl_solver import PardisoError
+
+    # get the options
+    thread_pardiso = solver_options["thread_pardiso"]
+    thread_mkl = solver_options["thread_mkl"]
+
+    # set number of threads
+    mkl_solver.set_mkl_pardiso_threads(thread_pardiso)
+    mkl_solver.set_mkl_threads(thread_mkl)
+
+    # factorize the matrix
+    try:
+        mat = mat.tocsr()
+        mat_factor = MKLPardisoSolver(mat, factor=True, verbose=False)
+    except PardisoError:
+        logger.warning("factorization failure")
+        return None
+
+    # matrix solver
+    def factor(rhs):
+        sol = mat_factor.solve(rhs)
+        return sol
+
+    return factor
 
 
 def _get_fact_umfpack(mat):
@@ -61,7 +96,7 @@ def _get_fact_umfpack(mat):
     """
 
     # import the UMFPACK binding
-    import scikits.umfpack as umf
+    from scikits import umfpack
 
     # prevent problematic matrices to trigger warnings
     warnings.filterwarnings("error", module="scikits.umfpack")
@@ -70,16 +105,20 @@ def _get_fact_umfpack(mat):
     mat = mat.astype(NP_TYPES.DCOMPLEX)
 
     # factorize the matrix
-    mat_factor = umf.splu(mat)
+    try:
+        mat_factor = umfpack.splu(mat)
+    except Warning:
+        logger.warning("factorization failure")
+        return None
 
     # matrix solver
-    def fact(rhs):
+    def factor(rhs):
         rhs = rhs.astype(NP_TYPES.DCOMPLEX)
         sol = mat_factor.solve(rhs)
         sol = sol.astype(NP_TYPES.COMPLEX)
         return sol
 
-    return fact
+    return factor
 
 
 def _get_fact_iter(library, solver_options, mat):
@@ -88,10 +127,7 @@ def _get_fact_iter(library, solver_options, mat):
     """
 
     # import the SciPy SuperLU library
-    import scipy.sparse.linalg as sla
-
-    # prevent problematic matrices to trigger warnings
-    warnings.filterwarnings("error", module="scipy.sparse.linalg")
+    from scipy.sparse import linalg
 
     # get the options
     rel_tol = solver_options["rel_tol"]
@@ -100,20 +136,20 @@ def _get_fact_iter(library, solver_options, mat):
 
     # get the solver
     if library == "GCROT":
-        solver = sla.gcrotmk
+        solver = linalg.gcrotmk
     elif library == "BICG":
-        solver = sla.bicg
+        solver = linalg.bicg
     elif library == "GMRES":
-        solver = sla.gmres
+        solver = linalg.gmres
     else:
         raise ValueError("invalid matrix factorization library")
 
     # factorize the matrix
-    def fact(rhs):
+    def factor(rhs):
         (sol, flag) = solver(mat, rhs, tol=rel_tol, atol=abs_tol, maxiter=n_iter_max)
         return sol
 
-    return fact
+    return factor
 
 
 def get_factorize(mat, factorization_options):
@@ -146,7 +182,7 @@ def get_factorize(mat, factorization_options):
         elif library == "UMFPACK":
             factor = _get_fact_umfpack(mat)
         elif library == "PARDISO":
-            factor = _get_fact_pardiso(mat)
+            factor = _get_fact_pardiso(solver_options, mat)
         elif library in ["GCROT", "BICG", "GMRES"]:
             factor = _get_fact_iter(library, solver_options, mat)
         else:

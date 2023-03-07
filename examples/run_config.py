@@ -302,7 +302,7 @@ def get_data_tolerance():
         #   - GCROT is quite unstable but has low memory requirements (integrated with SciPy)
         #   - BICG is quite unstable but has low memory requirements (integrated with SciPy)
         #   - GMRES is quite unstable but has low memory requirements (integrated with SciPy)
-        "library": "PARDISO",
+        "library": "SuperLU",
         # options for computing the matrix factorization
         "solver_options": {
             "rel_tol": 1e-6,  # relative preconditioned tolerance for the iterative solvers
