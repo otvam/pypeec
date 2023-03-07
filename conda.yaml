@@ -6,7 +6,7 @@
 #
 # WARNING: Jupyter is not included in the Conda Environment.
 #
-# WARNING: FFTW and UMFPACK are included in the Conda Environment but optional.
+# WARNING: FFTW and UMFPACK are not included in the Conda Environment.
 #
 # (c) Thomas Guillod - Dartmouth College
 
@@ -26,5 +26,3 @@ dependencies:
   - pyvistaqt=0.9.1
   - qtpy=2.3.0
   - pyqt=5.15.7
-  - scikit-umfpack=0.3.3
-  - pyfftw=0.13.1
