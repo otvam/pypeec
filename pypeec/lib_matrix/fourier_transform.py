@@ -16,6 +16,16 @@ from pypeec.lib_utils import config
 # get FFT config
 FFT_LIBRARY = config.FFT_LIBRARY
 FFT_OPTIONS = config.FFT_OPTIONS
+FFTW_CACHE_TIMEOUT = FFT_OPTIONS.FFTW_CACHE_TIMEOUT
+FFTS_WORKER = FFT_OPTIONS.FFTS_WORKER
+FFTW_BYTE_ALIGN = FFT_OPTIONS.FFTW_BYTE_ALIGN
+FFTW_THREAD = FFT_OPTIONS.FFTW_THREAD
+
+# find the number of threads
+if FFTS_WORKER is None:
+    FFTS_WORKER = os.cpu_count()
+if FFTW_THREAD is None:
+    FFTW_THREAD = os.cpu_count()
 
 # import the right library
 if FFT_LIBRARY == "CuPy":
@@ -29,11 +39,11 @@ elif FFT_LIBRARY == "FFTW":
     import pyfftw.interfaces.numpy_fft as fftw
 
     # configure the FFT cache
-    if FFT_OPTIONS.FFTW_CACHE_TIMEOUT is None:
+    if FFTW_CACHE_TIMEOUT is None:
         cache.disable()
     else:
         cache.enable()
-        cache.set_keepalive_time(FFT_OPTIONS.FFTW_CACHE_TIMEOUT)
+        cache.set_keepalive_time(FFTW_CACHE_TIMEOUT)
 else:
     raise ValueError("invalid FFT library")
 
@@ -47,10 +57,10 @@ def _get_fftn(mat, shape, axes):
     if FFT_LIBRARY == "CuPy":
         mat_trf = fftc.fftn(mat, shape, axes=axes)
     elif FFT_LIBRARY == "SciPy":
-        mat_trf = ffts.fftn(mat, shape, axes=axes, workers=FFT_OPTIONS.FFTS_WORKER)
+        mat_trf = ffts.fftn(mat, shape, axes=axes, workers=FFTS_WORKER)
     elif FFT_LIBRARY == "FFTW":
-        mat = pyfftw.byte_align(mat, n=FFT_OPTIONS.FFTW_BYTE_ALIGN)
-        mat_trf = fftw.fftn(mat, shape, axes=axes, threads=FFT_OPTIONS.FFTW_THREAD)
+        mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
+        mat_trf = fftw.fftn(mat, shape, axes=axes, threads=FFTW_THREAD)
     else:
         raise ValueError("invalid FFT library")
 
@@ -66,10 +76,10 @@ def _get_ifftn(mat, shape, axes):
     if FFT_LIBRARY == "CuPy":
         mat_trf = fftc.ifftn(mat, shape, axes=axes)
     elif FFT_LIBRARY == "SciPy":
-        mat_trf = ffts.ifftn(mat, shape, axes=axes, workers=FFT_OPTIONS.FFTS_WORKER)
+        mat_trf = ffts.ifftn(mat, shape, axes=axes, workers=FFTS_WORKER)
     elif FFT_LIBRARY == "FFTW":
-        mat = pyfftw.byte_align(mat, n=FFT_OPTIONS.FFTW_BYTE_ALIGN)
-        mat_trf = fftw.ifftn(mat, shape, axes=axes, threads=FFT_OPTIONS.FFTW_THREAD)
+        mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
+        mat_trf = fftw.ifftn(mat, shape, axes=axes, threads=FFTW_THREAD)
     else:
         raise ValueError("invalid FFT library")
 

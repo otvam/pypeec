@@ -73,7 +73,7 @@ def _check_factorization_options(factorization_options):
     solver_options = factorization_options["solver_options"]
 
     # check the data
-    datachecker.check_choice("library", library, ["SuperLU", "UMFPACK", "GCROT", "BICG", "GMRES"])
+    datachecker.check_choice("library", library, ["SuperLU", "UMFPACK", "PARDISO", "GCROT", "BICG", "GMRES"])
 
     if library in ["SuperLU", "GCROT", "BICG", "GMRES"]:
         lib = importlib.util.find_spec("scipy.sparse.linalg")
@@ -81,17 +81,24 @@ def _check_factorization_options(factorization_options):
     elif library == "UMFPACK":
         lib = importlib.util.find_spec("scikits.umfpack")
         datachecker.check_assert("library", lib is not None, "Library UMFPACK is not installed")
+    elif library == "PARDISO":
+        lib = importlib.util.find_spec("pydiso")
+        datachecker.check_assert("library", lib is not None, "Library PARDISO is not installed")
     else:
         raise ValueError("invalid matrix factorization library")
 
     # check type
-    key_list = ["rel_tol", "abs_tol", "n_iter_max"]
+    key_list = ["rel_tol", "abs_tol", "n_iter_max", "thread_pardiso", "thread_mkl"]
     datachecker.check_dict("solver_options", solver_options, key_list=key_list)
 
     # check the data
     datachecker.check_float("rel_tol", solver_options["rel_tol"], is_positive=True, can_be_zero=False)
     datachecker.check_float("abs_tol", solver_options["abs_tol"], is_positive=True, can_be_zero=False)
     datachecker.check_integer("n_iter_max", solver_options["n_iter_max"], is_positive=True, can_be_zero=False)
+    if solver_options["thread_pardiso"] is not None:
+        datachecker.check_integer("thread_pardiso", solver_options["thread_pardiso"], is_positive=True, can_be_zero=False)
+    if solver_options["thread_mkl"] is not None:
+        datachecker.check_integer("thread_mkl", solver_options["thread_mkl"], is_positive=True, can_be_zero=False)
 
 
 def check_data_tolerance(data_tolerance):

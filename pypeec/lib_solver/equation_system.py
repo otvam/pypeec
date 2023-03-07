@@ -64,9 +64,7 @@ The Schur complement is computed as:
         - Y_mat = 1/Z_mat
         - S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
 
-Two different methods are used to solve the Schur complement (S_mat):
-    - with matrix factorization (UMFPACK solver)
-    - with LU decomposition (SuperLU solver)
+Two different methods are available to factorize and solve the Schur complement.
 
 For the full equation system, the complete dense matrix are used:
     - the system is split in three parts: electric, magnetic, and electric-magnetic coupling
