@@ -297,8 +297,8 @@ def get_data_tolerance():
     factorization_options = {
         # matrix factorization options
         #   - SuperLU is typically slower but is always available (integrated with SciPy)
-        #   - UMFPACK is typically faster but has to be installed separately
-        #   - PARDISO is typically faster but has to be installed separately
+        #   - UMFPACK is typically faster than SuperLU (with SciKits)
+        #   - PARDISO is typically faster than UMFPACK (with Pydiso)
         #   - GCROT is quite unstable but has low memory requirements (integrated with SciPy)
         #   - BICG is quite unstable but has low memory requirements (integrated with SciPy)
         #   - GMRES is quite unstable but has low memory requirements (integrated with SciPy)

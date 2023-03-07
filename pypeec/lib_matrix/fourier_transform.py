@@ -1,10 +1,10 @@
 """
+Module for computer FFT/iFFT of tensors.
+
 This module is used as a common interface for different FFT libraries:
-    - NumPy FFT library
     - SciPy FFT library
     - FFTW FFT library (available through pyFFTW)
-
-WARNING: Not all versions of FFTW are compiled with multithreading support.
+    - CuPy FFT library (computation with GPUs)
 """
 
 __author__ = "Thomas Guillod"

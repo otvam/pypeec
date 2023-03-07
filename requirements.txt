@@ -1,12 +1,9 @@
 # Definition of the Python Virtual Environment.
 #
-# WARNING: The GPU libraries (CUDA, CuPy) should be installed separately.
-#          These libraries are not included in the Python Virtual Environment.
-#          The GPU support is extremely platform/version dependent.
-#
-# WARNING: Jupyter is not included in the Python Virtual Environment.
-#
-# WARNING: FFTW and UMFPACK are not included in the Python Virtual Environment.
+# WARNING: Only the required packages are in the environment.
+#          The following optional libraries are not installed:
+#              - Jupyter and Trame
+#              - CuPy, FFTW, UMFPACK, and MKL/PARDISO
 #
 # (c) Thomas Guillod - Dartmouth College
 

@@ -1,22 +1,13 @@
 """
 Module for factorizing sparse matrix.
+
 This module is used as a common interface for different solvers:
-    - SuperLU: built-in library (with SciPy)
-    - UMFPACK: extra library (with SciKits)
-    - PARDISO: extra library (with Pydiso)
-    - GCROT: built-in library (with SciPy)
-    - BICG: built-in library (with SciPy)
-    - GMRES: built-in library (with SciPy)
-
-SuperLU is available on all platforms and easy to install.
-UMFPACK and PARDISO need to be installed separately.
-
-GCROT, BICG, and GMRES are iterative solvers and are used without preconditioner.
-Therefore, these solvers are typically unstable and should only be used for particular problems.
-
-WARNING: UMFPACK is difficult to install on MS Windows.
-
-WARNING: PARDISO is difficult to install on MS Windows.
+    - SuperLU is typically slower but is always available (integrated with SciPy)
+    - UMFPACK is typically faster than SuperLU (with SciKits)
+    - PARDISO is typically faster than UMFPACK (with Pydiso)
+    - GCROT is quite unstable but has low memory requirements (integrated with SciPy)
+    - BICG is quite unstable but has low memory requirements (integrated with SciPy)
+    - GMRES is quite unstable but has low memory requirements (integrated with SciPy)
 """
 
 __author__ = "Thomas Guillod"

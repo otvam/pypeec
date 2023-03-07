@@ -71,16 +71,20 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 > **Warning**: The plotting code is likely sensitive to the environment (platform and the version of the libraries).
 > More particularly, the interactions between **Qt/PyVista/Matplotlib** and **Jupyter/PyVista/Matplotlib**.
 > Therefore, the Qt/Jupyter dependencies are minimized and insulated from the rest of the code.
+> The plotting code (viewer and plotter) is separated from the simulation code (mesher and solver).
 
-> **Warning**: The optional **GPU libraries** (CUDA, CuPy) should be installed separately.
-> These libraries are not included in the package dependencies and environments. 
-> The GPU support is extremely platform/version dependent (GPU type and CUDA version).
+> **Warning**: **Jupyter** is not included in the package dependencies.
+> For Jupyter, PyVista has to be installed with the optional Trame support.
+> Jupyter support is optional, PyPEEC is fully functional without Jupyter.
 
-> **Warning**: **Jupyter** is not included in the package dependencies and environments.
+> **Warning**: The **GPU** libraries (CUDA, CuPy) are not included in the package dependencies.
+> The GPU support is extremely hardware/platform/version dependent).
+> GPU support is optional, PyPEEC is fully functional without GPU support.
 
-> **Warning**: The optional **UMFPACK** library is known to be difficult to install on MS Windows.
-
-> **Warning**: The optional **FFTW** library should be compiled with multithreading support.
+> **Warning**: **FFTW**, **UMFPACK**, and **MKL/PARDISO** are not included in the package dependencies.
+> These libraries can be tricky to install, especially on MS Windows.
+> Make sure that these libraries are compiled with multithreading support.
+> FFTW, UMFPACK, and MKL/PARDISO are optional, PyPEEC is fully functional without them.
 
 # General Warnings
 
@@ -92,5 +96,5 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 > Only load Pickle files that you trust.
 > Do not commit the Pickle files in the Git repository.
 
-> **Warning**: Some dependencies are under copyleft licences.
-> Make sure to respect these licenses if you package these libraries.
+> **Warning**: Some dependencies are under various licences (including copyleft and non-free).
+> Make sure to respect these licenses if you package and/or distribute these libraries.
