@@ -5,10 +5,11 @@ This module is used as a common interface for different solvers:
     - UMFPACK: extra library (with SciKits)
     - GCROT: built-in library (with SciPy)
     - BICG: built-in library (with SciPy)
+    - GMRES: built-in library (with SciPy)
 
 SuperLU is available on all platforms and easy to install.
 UMFPACK need to be installed (and often compiled).
-GCROT and BICG are typically quite unstable.
+GCROT, BICG, and GMRES are typically quite unstable.
 
 WARNING: UMFPACK is difficult to install on MS Windows.
 """
@@ -43,7 +44,8 @@ def _get_fact_superlu(mat):
 
     # matrix solver
     def fact(rhs):
-        return mat_factor.solve(rhs)
+        sol = mat_factor.solve(rhs)
+        return sol
 
     return fact
 
@@ -67,7 +69,9 @@ def _get_fact_umfpack(mat):
 
     # matrix solver
     def fact(rhs):
-        return mat_factor.solve(rhs)
+        sol = mat_factor.solve(rhs)
+        sol = sol.astype(NP_TYPES.COMPLEX)
+        return sol
 
     return fact
 
@@ -93,6 +97,8 @@ def _get_fact_iter(library, solver_options, mat):
         solver = sla.gcrotmk
     elif library == "BICG":
         solver = sla.bicg
+    elif library == "GMRES":
+        solver = sla.gmres
     else:
         raise ValueError("invalid matrix factorization library")
 
@@ -133,7 +139,7 @@ def get_factorize(mat, factorization_options):
             factor = _get_fact_superlu(mat)
         elif library == "UMFPACK":
             factor = _get_fact_umfpack(mat)
-        elif library in ["GCROT", "BICG"]:
+        elif library in ["GCROT", "BICG", "GMRES"]:
             factor = _get_fact_iter(library, solver_options, mat)
         else:
             raise ValueError("invalid matrix factorization library")

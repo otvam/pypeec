@@ -300,6 +300,7 @@ def get_data_tolerance():
         #   - UMFPACK is typically faster but has to be installed separately
         #   - GCROT is quite unstable but has low memory requirements (integrated with SciPy)
         #   - BICG is quite unstable but has low memory requirements (integrated with SciPy)
+        #   - GMRES is quite unstable but has low memory requirements (integrated with SciPy)
         "library": "SuperLU",
         # options for computing the matrix factorization
         "solver_options": {

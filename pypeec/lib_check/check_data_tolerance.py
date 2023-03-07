@@ -73,9 +73,9 @@ def _check_factorization_options(factorization_options):
     solver_options = factorization_options["solver_options"]
 
     # check the data
-    datachecker.check_choice("library", library, ["SuperLU", "UMFPACK", "GCROT", "BICG"])
+    datachecker.check_choice("library", library, ["SuperLU", "UMFPACK", "GCROT", "BICG", "GMRES"])
 
-    if library in ["SuperLU", "GCROT", "BICG"]:
+    if library in ["SuperLU", "GCROT", "BICG", "GMRES"]:
         lib = importlib.util.find_spec("scipy.sparse.linalg")
         datachecker.check_assert("library", lib is not None, "Library SciPy is not installed")
     elif library == "UMFPACK":

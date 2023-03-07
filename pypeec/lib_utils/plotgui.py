@@ -283,8 +283,9 @@ class PlotGui:
 
             # enter the event loop
             exit_code = self.app.exec_()
+            status = exit_code == 0
 
-            return exit_code == 0
+            return status
         elif self.plot_mode == "nb":
             # display the non-blocking call
             logger.debug("display notebook plots")
