@@ -1,5 +1,10 @@
 # PyPEEC - Gallery
 
+## Log Output
+
+* [**Mesher sample log output**](gallery/log_mesher.txt) 
+* [**Solver sample log output**](gallery/log_solver.txt) 
+
 ## Viewer (Mesher Results)
 
 ![viewer_1](gallery/viewer_1.png)

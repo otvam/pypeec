@@ -51,7 +51,7 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 * A Python package can be built from the `pyproject.toml` and `setup.cfg` files.
 * In order to create a Python Virtual Environment, use `requirements.txt`.
 * In order to create a Conda Environment, use `conda.yml`.
-* In order to create a development environment, use `run_dev_env.sh`.
+* In order to create a development environment, use `run_env.sh`.
 
 ## Tests
 
@@ -101,6 +101,6 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 
 > **Warning**: Some dependencies are under various licences (including copyleft and proprietary).
 > Make sure to respect these licenses if you package and/or distribute these libraries.
-> Qt is under copyleft licenses (GPL/LGPL).
-> FFTW is under copyleft licenses (GPL).
-> MKL/PARDISO is proprietary library (ISSL).
+> Qt is under different copyleft licenses (GPL and LGPL).
+> FFTW is under a copyleft license (GPL).
+> MKL/PARDISO is a proprietary library (ISSL).

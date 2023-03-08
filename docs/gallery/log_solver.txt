@@ -1,0 +1,179 @@
+00:00:00,000 : MAIN        : INFO         : load the solver
+00:00:00,247 : MAIN        : INFO         : load the input data
+00:00:00,492 : SOLVER      : INFO         : check the input data
+00:00:00,492 : SOLVER      : INFO         : combine the input data
+00:00:00,504 : SOLVER      : INFO         : voxel_geometry : enter : timing
+00:00:00,585 : SOLVER      : INFO         : voxel_geometry : exit : 00:00:00,081
+00:00:00,585 : SOLVER      : INFO         : system_tensor : enter : timing
+00:00:00,585 : GREEN       : DEBUG        :     analytical solution: 6D / 1
+00:00:00,597 : GREEN       : DEBUG        :     analytical solution: 6D / 6820
+00:00:00,857 : GREEN       : DEBUG        :     numerical approximation: 6D / 154460
+00:00:00,878 : GREEN       : DEBUG        :     analytical solution: 5D / 6820
+00:00:01,082 : GREEN       : DEBUG        :     analytical solution: 5D / 6820
+00:00:01,275 : GREEN       : DEBUG        :     analytical solution: 5D / 6820
+00:00:01,476 : GREEN       : DEBUG        :     analytical solution: 5D / 6820
+00:00:01,672 : GREEN       : DEBUG        :     analytical solution: 5D / 6820
+00:00:01,869 : GREEN       : DEBUG        :     analytical solution: 5D / 6820
+00:00:02,094 : GREEN       : DEBUG        :     numerical approximation: 5D / 154460
+00:00:02,100 : GREEN       : DEBUG        :     numerical approximation: 5D / 154460
+00:00:02,117 : GREEN       : DEBUG        :     numerical approximation: 5D / 154460
+00:00:02,123 : GREEN       : DEBUG        :     numerical approximation: 5D / 154460
+00:00:02,140 : GREEN       : DEBUG        :     numerical approximation: 5D / 154460
+00:00:02,145 : GREEN       : DEBUG        :     numerical approximation: 5D / 154460
+00:00:02,152 : SOLVER      : INFO         : system_tensor : exit : 00:00:01,567
+00:00:02,153 : SOLVER      : INFO         : problem_geometry : enter : timing
+00:00:02,189 : PROBLEM     : DEBUG        :     problem size: n_voxel = 161280
+00:00:02,190 : PROBLEM     : DEBUG        :     problem size: n_face = 483840
+00:00:02,190 : PROBLEM     : DEBUG        :     problem size: n_voxel_electric = 16363
+00:00:02,190 : PROBLEM     : DEBUG        :     problem size: n_voxel_magnetic = 17160
+00:00:02,190 : PROBLEM     : DEBUG        :     problem size: n_face_electric = 44097
+00:00:02,190 : PROBLEM     : DEBUG        :     problem size: n_face_magnetic = 47854
+00:00:02,190 : PROBLEM     : DEBUG        :     problem size: n_src_current = 245
+00:00:02,190 : PROBLEM     : DEBUG        :     problem size: n_src_voltage = 210
+00:00:02,190 : PROBLEM     : DEBUG        :     problem size: ratio_voxel = 2.079e-01
+00:00:02,190 : PROBLEM     : DEBUG        :     problem size: ratio_face = 1.900e-01
+00:00:02,190 : SOLVER      : INFO         : problem_geometry : exit : 00:00:00,037
+00:00:02,190 : SOLVER      : INFO         : system_matrix : enter : timing
+00:00:02,431 : SOLVER      : INFO         : system_matrix : exit : 00:00:00,240
+00:00:02,431 : SOLVER      : INFO         : equation_system : enter : timing
+00:00:02,459 : FACTOR      : DEBUG        :     matrix size: (16818, 16818) / 105467
+00:00:02,459 : FACTOR      : DEBUG        :     matrix library: SuperLU
+00:00:02,459 : FACTOR      : DEBUG        :     matrix factorization
+00:00:02,599 : FACTOR      : DEBUG        :     factorization success
+00:00:02,599 : FACTOR      : DEBUG        :     matrix size: (17160, 17160) / 112868
+00:00:02,599 : FACTOR      : DEBUG        :     matrix library: SuperLU
+00:00:02,599 : FACTOR      : DEBUG        :     matrix factorization
+00:00:04,264 : FACTOR      : DEBUG        :     factorization success
+00:00:04,265 : SOLVER      : INFO         : equation_system : exit : 00:00:01,834
+00:00:04,265 : SOLVER      : INFO         : equation_solver : enter : timing
+00:00:04,265 : CONDITION   : DEBUG        :     matrix size: (16818, 16818) / 105467
+00:00:04,265 : CONDITION   : DEBUG        :     compute LU decomposition
+00:00:04,517 : CONDITION   : DEBUG        :     compute estimate norm of the inverse
+00:00:04,730 : CONDITION   : DEBUG        :     compute estimate norm of the matrix
+00:00:04,767 : CONDITION   : DEBUG        :     compute condition estimate
+00:00:04,773 : CONDITION   : DEBUG        :     matrix size: (17160, 17160) / 112868
+00:00:04,773 : CONDITION   : DEBUG        :     compute LU decomposition
+00:00:06,411 : CONDITION   : DEBUG        :     compute estimate norm of the inverse
+00:00:06,717 : CONDITION   : DEBUG        :     compute estimate norm of the matrix
+00:00:06,761 : CONDITION   : DEBUG        :     compute condition estimate
+00:00:06,781 : EQUATION    : DEBUG        :     matrix condition: check = True
+00:00:06,781 : EQUATION    : DEBUG        :     matrix condition: value_electric = 3.186e+09
+00:00:06,781 : EQUATION    : DEBUG        :     matrix condition: value_magnetic = 9.483e+01
+00:00:06,781 : EQUATION    : DEBUG        :     matrix condition: status = True
+00:00:06,781 : EQUATION    : DEBUG        :     matrix condition: matrix condition is good
+00:00:06,781 : GMRES       : DEBUG        :     start matrix solver
+00:00:08,422 : GMRES       : DEBUG        :     matrix iter: i_iter = 1 / res = 3.359e+01
+00:00:09,064 : GMRES       : DEBUG        :     matrix iter: i_iter = 2 / res = 3.010e+01
+00:00:09,713 : GMRES       : DEBUG        :     matrix iter: i_iter = 3 / res = 2.946e+01
+00:00:10,318 : GMRES       : DEBUG        :     matrix iter: i_iter = 4 / res = 2.827e+01
+00:00:10,927 : GMRES       : DEBUG        :     matrix iter: i_iter = 5 / res = 2.792e+01
+00:00:11,525 : GMRES       : DEBUG        :     matrix iter: i_iter = 6 / res = 2.255e+01
+00:00:12,121 : GMRES       : DEBUG        :     matrix iter: i_iter = 7 / res = 1.473e+01
+00:00:12,726 : GMRES       : DEBUG        :     matrix iter: i_iter = 8 / res = 5.100e+00
+00:00:13,310 : GMRES       : DEBUG        :     matrix iter: i_iter = 9 / res = 1.748e+00
+00:00:13,912 : GMRES       : DEBUG        :     matrix iter: i_iter = 10 / res = 1.099e+00
+00:00:14,454 : GMRES       : DEBUG        :     matrix iter: i_iter = 11 / res = 6.406e-01
+00:00:15,067 : GMRES       : DEBUG        :     matrix iter: i_iter = 12 / res = 3.810e-01
+00:00:15,624 : GMRES       : DEBUG        :     matrix iter: i_iter = 13 / res = 2.112e-01
+00:00:16,233 : GMRES       : DEBUG        :     matrix iter: i_iter = 14 / res = 1.288e-01
+00:00:16,813 : GMRES       : DEBUG        :     matrix iter: i_iter = 15 / res = 6.488e-02
+00:00:17,437 : GMRES       : DEBUG        :     matrix iter: i_iter = 16 / res = 4.684e-02
+00:00:17,997 : GMRES       : DEBUG        :     matrix iter: i_iter = 17 / res = 2.688e-02
+00:00:18,577 : GMRES       : DEBUG        :     matrix iter: i_iter = 18 / res = 1.319e-02
+00:00:19,179 : GMRES       : DEBUG        :     matrix iter: i_iter = 19 / res = 7.863e-03
+00:00:20,862 : GMRES       : DEBUG        :     matrix iter: i_iter = 20 / res = 6.150e-03
+00:00:21,765 : GMRES       : DEBUG        :     matrix iter: i_iter = 21 / res = 6.129e-03
+00:00:22,676 : GMRES       : DEBUG        :     matrix iter: i_iter = 22 / res = 6.068e-03
+00:00:23,519 : GMRES       : DEBUG        :     matrix iter: i_iter = 23 / res = 5.759e-03
+00:00:24,382 : GMRES       : DEBUG        :     matrix iter: i_iter = 24 / res = 5.231e-03
+00:00:25,274 : GMRES       : DEBUG        :     matrix iter: i_iter = 25 / res = 5.038e-03
+00:00:26,027 : GMRES       : DEBUG        :     matrix iter: i_iter = 26 / res = 4.419e-03
+00:00:26,965 : GMRES       : DEBUG        :     matrix iter: i_iter = 27 / res = 3.467e-03
+00:00:27,805 : GMRES       : DEBUG        :     matrix iter: i_iter = 28 / res = 1.704e-03
+00:00:28,676 : GMRES       : DEBUG        :     matrix iter: i_iter = 29 / res = 9.137e-04
+00:00:29,497 : GMRES       : DEBUG        :     matrix iter: i_iter = 30 / res = 7.786e-04
+00:00:30,320 : GMRES       : DEBUG        :     matrix iter: i_iter = 31 / res = 7.726e-04
+00:00:31,141 : GMRES       : DEBUG        :     matrix iter: i_iter = 32 / res = 6.074e-04
+00:00:31,934 : GMRES       : DEBUG        :     matrix iter: i_iter = 33 / res = 4.008e-04
+00:00:32,748 : GMRES       : DEBUG        :     matrix iter: i_iter = 34 / res = 3.017e-04
+00:00:33,616 : GMRES       : DEBUG        :     matrix iter: i_iter = 35 / res = 2.714e-04
+00:00:34,384 : GMRES       : DEBUG        :     matrix iter: i_iter = 36 / res = 2.072e-04
+00:00:35,278 : GMRES       : DEBUG        :     matrix iter: i_iter = 37 / res = 1.374e-04
+00:00:36,029 : GMRES       : DEBUG        :     matrix iter: i_iter = 38 / res = 1.024e-04
+00:00:36,972 : GMRES       : DEBUG        :     matrix iter: i_iter = 39 / res = 8.591e-05
+00:00:38,709 : GMRES       : DEBUG        :     matrix iter: i_iter = 40 / res = 7.399e-05
+00:00:39,497 : GMRES       : DEBUG        :     matrix iter: i_iter = 41 / res = 7.359e-05
+00:00:40,311 : GMRES       : DEBUG        :     matrix iter: i_iter = 42 / res = 7.326e-05
+00:00:41,146 : GMRES       : DEBUG        :     matrix iter: i_iter = 43 / res = 6.997e-05
+00:00:41,949 : GMRES       : DEBUG        :     matrix iter: i_iter = 44 / res = 6.168e-05
+00:00:42,778 : GMRES       : DEBUG        :     matrix iter: i_iter = 45 / res = 4.095e-05
+00:00:43,586 : GMRES       : DEBUG        :     matrix iter: i_iter = 46 / res = 3.376e-05
+00:00:44,450 : GMRES       : DEBUG        :     matrix iter: i_iter = 47 / res = 3.014e-05
+00:00:45,261 : GMRES       : DEBUG        :     matrix iter: i_iter = 48 / res = 2.617e-05
+00:00:46,089 : GMRES       : DEBUG        :     matrix iter: i_iter = 49 / res = 1.885e-05
+00:00:46,925 : GMRES       : DEBUG        :     matrix iter: i_iter = 50 / res = 1.574e-05
+00:00:47,777 : GMRES       : DEBUG        :     matrix iter: i_iter = 51 / res = 1.453e-05
+00:00:48,588 : GMRES       : DEBUG        :     matrix iter: i_iter = 52 / res = 1.012e-05
+00:00:49,391 : GMRES       : DEBUG        :     matrix iter: i_iter = 53 / res = 8.949e-06
+00:00:50,303 : GMRES       : DEBUG        :     matrix iter: i_iter = 54 / res = 6.868e-06
+00:00:51,105 : GMRES       : DEBUG        :     matrix iter: i_iter = 55 / res = 5.759e-06
+00:00:51,893 : GMRES       : DEBUG        :     matrix iter: i_iter = 56 / res = 4.254e-06
+00:00:52,723 : GMRES       : DEBUG        :     matrix iter: i_iter = 57 / res = 3.076e-06
+00:00:53,523 : GMRES       : DEBUG        :     matrix iter: i_iter = 58 / res = 2.026e-06
+00:00:54,342 : GMRES       : DEBUG        :     matrix iter: i_iter = 59 / res = 1.781e-06
+00:00:55,991 : GMRES       : DEBUG        :     matrix iter: i_iter = 60 / res = 1.411e-06
+00:00:56,819 : GMRES       : DEBUG        :     matrix iter: i_iter = 61 / res = 1.326e-06
+00:00:57,683 : GMRES       : DEBUG        :     matrix iter: i_iter = 62 / res = 1.296e-06
+00:00:58,551 : GMRES       : DEBUG        :     matrix iter: i_iter = 63 / res = 1.286e-06
+00:00:59,437 : GMRES       : DEBUG        :     matrix iter: i_iter = 64 / res = 1.087e-06
+00:01:00,290 : GMRES       : DEBUG        :     matrix iter: i_iter = 65 / res = 8.674e-07
+00:01:01,133 : GMRES       : DEBUG        :     matrix iter: i_iter = 66 / res = 8.155e-07
+00:01:01,984 : GMRES       : DEBUG        :     matrix iter: i_iter = 67 / res = 6.782e-07
+00:01:02,878 : GMRES       : DEBUG        :     matrix iter: i_iter = 68 / res = 4.981e-07
+00:01:03,696 : GMRES       : DEBUG        :     matrix iter: i_iter = 69 / res = 4.200e-07
+00:01:04,561 : GMRES       : DEBUG        :     matrix iter: i_iter = 70 / res = 3.461e-07
+00:01:05,470 : GMRES       : DEBUG        :     matrix iter: i_iter = 71 / res = 3.379e-07
+00:01:06,316 : GMRES       : DEBUG        :     matrix iter: i_iter = 72 / res = 3.114e-07
+00:01:07,157 : GMRES       : DEBUG        :     matrix iter: i_iter = 73 / res = 2.465e-07
+00:01:07,956 : GMRES       : DEBUG        :     matrix iter: i_iter = 74 / res = 1.470e-07
+00:01:08,775 : GMRES       : DEBUG        :     matrix iter: i_iter = 75 / res = 1.189e-07
+00:01:09,753 : GMRES       : DEBUG        :     matrix iter: i_iter = 76 / res = 1.108e-07
+00:01:10,649 : GMRES       : DEBUG        :     matrix iter: i_iter = 77 / res = 9.469e-08
+00:01:11,506 : GMRES       : DEBUG        :     matrix iter: i_iter = 78 / res = 8.261e-08
+00:01:12,373 : GMRES       : DEBUG        :     matrix iter: i_iter = 79 / res = 7.261e-08
+00:01:14,086 : GMRES       : DEBUG        :     matrix iter: i_iter = 80 / res = 6.585e-08
+00:01:14,959 : GMRES       : DEBUG        :     matrix iter: i_iter = 81 / res = 6.313e-08
+00:01:15,836 : GMRES       : DEBUG        :     matrix iter: i_iter = 82 / res = 5.683e-08
+00:01:16,712 : GMRES       : DEBUG        :     matrix iter: i_iter = 83 / res = 4.756e-08
+00:01:17,576 : GMRES       : DEBUG        :     matrix iter: i_iter = 84 / res = 4.413e-08
+00:01:18,446 : GMRES       : DEBUG        :     matrix iter: i_iter = 85 / res = 4.185e-08
+00:01:19,312 : GMRES       : DEBUG        :     matrix iter: i_iter = 86 / res = 3.689e-08
+00:01:20,152 : GMRES       : DEBUG        :     matrix iter: i_iter = 87 / res = 3.306e-08
+00:01:21,030 : GMRES       : DEBUG        :     matrix iter: i_iter = 88 / res = 2.716e-08
+00:01:21,831 : GMRES       : DEBUG        :     matrix iter: i_iter = 89 / res = 1.838e-08
+00:01:22,647 : GMRES       : DEBUG        :     matrix iter: i_iter = 90 / res = 1.575e-08
+00:01:22,656 : GMRES       : DEBUG        :     exit matrix solver
+00:01:23,501 : EQUATION    : DEBUG        :     matrix solver: n_dof = 125929
+00:01:23,502 : EQUATION    : DEBUG        :     matrix solver: n_iter = 90
+00:01:23,502 : EQUATION    : DEBUG        :     matrix solver: res_norm = 6.378e-08
+00:01:23,502 : EQUATION    : DEBUG        :     matrix solver: status_gmres = True
+00:01:23,502 : EQUATION    : DEBUG        :     matrix solver: status_res = True
+00:01:23,502 : EQUATION    : DEBUG        :     matrix solver: convergence achieved
+00:01:23,512 : SOLVER      : INFO         : equation_solver : exit : 00:01:19,246
+00:01:23,512 : SOLVER      : INFO         : extract_solution : enter : timing
+00:01:25,042 : SOLUTION    : DEBUG        :     integral: P_electric = 2.061e-03 W
+00:01:25,042 : SOLUTION    : DEBUG        :     integral: P_magnetic = 0.000e+00 W
+00:01:25,042 : SOLUTION    : DEBUG        :     integral: W_electric = 8.784e-09 J
+00:01:25,042 : SOLUTION    : DEBUG        :     integral: W_magnetic = 2.973e-08 J
+00:01:25,042 : SOLUTION    : DEBUG        :     integral: P_tot = 2.061e-03 W
+00:01:25,042 : SOLUTION    : DEBUG        :     integral: W_tot = 3.852e-08 J
+00:01:25,044 : SOLUTION    : DEBUG        :     terminal: src : V = +2.061e-03 + +3.050e-25j V
+00:01:25,044 : SOLUTION    : DEBUG        :     terminal: src : I = +1.000e+00 + +1.593e-22j A
+00:01:25,045 : SOLUTION    : DEBUG        :     terminal: src : S = +2.061e-03 + -2.319e-26j VA
+00:01:25,046 : SOLUTION    : DEBUG        :     terminal: sink : V = +5.754e-27 + +8.370e-34j V
+00:01:25,046 : SOLUTION    : DEBUG        :     terminal: sink : I = -1.000e+00 + -1.552e-22j A
+00:01:25,046 : SOLUTION    : DEBUG        :     terminal: sink : S = -5.754e-27 + -8.370e-34j VA
+00:01:25,046 : SOLVER      : INFO         : extract_solution : exit : 00:00:01,533
+00:01:25,053 : SOLVER      : INFO         : successful termination
+00:01:25,053 : MAIN        : INFO         : save the results
+

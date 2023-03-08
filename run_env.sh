@@ -10,7 +10,7 @@ set -o pipefail
 
 # check argument
 if [ "$#" -ne 1 ]; then
-    echo "error : usage : run_dev.sh CONDA_PATH"
+    echo "error : usage : run_env.sh CONDA_PATH"
     exit 1
 fi
 

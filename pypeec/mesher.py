@@ -96,7 +96,7 @@ def _run_stl(data_voxelize, path_ref):
     domain_conflict = data_voxelize["domain_conflict"]
 
     # get the voxel geometry and the incidence matrix
-    with timelogger.BlockTimer(logger, "voxel_geometry"):
+    with timelogger.BlockTimer(logger, "stl_mesher"):
         domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
         (n, d, c, domain_def, reference) = stl_mesher.get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl)
         domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
