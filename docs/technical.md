@@ -28,13 +28,15 @@ The following platform and system configurations have been tested:
 The code is reasonably optimized, leveraging NumPy and SciPy for the heavy operations.
 All the code is vectorized, no loops are used for the array operations.
 Sparse matrix algebra is used wherever appropriate to speed up the code and limit the memory consumption.
-However, this code is pure Python and advanced optimizations (MKL, MPI, etc.) are not implemented.
-Moreover, the memory consumption is not heavily optimized (no customized garbage collection).
+Wherever possible, multithreading is used for exploiting multicore CPUs.
 
 The following optional optimizations are available:
 * FFTW can be used for computing FFTs (default is SciPy)
-* UMFPACK can be used for factorizing sparse matrices (default is SuperLU)
-* CuPy can be used for computing FFTs and matrix multiplications with GPUs (default is CPU)
+* CuPy can be used for computing FFTs and matrix multiplications with GPUs (default is NumPy/SciPy))
+* UMFPACK pr MKL/PARDISO can be used for factorizing sparse matrices (default is SuperLU)
+
+Advanced optimizations (MKL, MPI, OpenMP, or C/FORTRAN) are not implemented.
+Moreover, the memory consumption is not heavily optimized.
 
 ## Configuration
 
@@ -49,6 +51,7 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 * A Python package can be built from the `pyproject.toml` and `setup.cfg` files.
 * In order to create a Python Virtual Environment, use `requirements.txt`.
 * In order to create a Conda Environment, use `conda.yml`.
+* In order to create a development environment, use `run_dev_env.sh`.
 
 ## Tests
 
@@ -61,6 +64,9 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 
 > **Warning**: For problems with magnetic domains, the preconditioner is not heavily optimized.
 > This might lead to a very slow convergence of the matrix solver.
+
+> **Warning**: For large problems, the code might allocate huge amounts of memory.
+> This might crash the program and/or your operating system.
 
 > **Warning**: The voxelization of STL files does consider tolerances.
 > This implies same the same voxel can be assigned to several domains.
@@ -88,13 +94,13 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 
 # General Warnings
 
-> **Warning**: For large problems, the code might allocate huge amounts of memory.
-> This might crash the program and/or your operating system.
-
 > **Warning**: Python Pickle files are using to store the mesher and solver results.
 > Pickling data is not secure. 
 > Only load Pickle files that you trust.
 > Do not commit the Pickle files in the Git repository.
 
-> **Warning**: Some dependencies are under various licences (including copyleft and non-free).
+> **Warning**: Some dependencies are under various licences (including copyleft and proprietary).
 > Make sure to respect these licenses if you package and/or distribute these libraries.
+> Qt is under copyleft licenses (GPL/LGPL).
+> FFTW is under copyleft licenses (GPL).
+> MKL/PARDISO is proprietary library (ISSL).
