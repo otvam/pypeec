@@ -47,6 +47,17 @@ class TestMesherViewer(unittest.TestCase):
         }
         test_workflow.test_workflow(self, "voxel_transformer", res)
 
+    def test_voxel_logo(self):
+        """
+        Test workflow for voxel_logo.
+        """
+
+        res = {
+            "n_total_ref": 27, "n_used_ref": 15,
+            "P_tot_ref": 3.57142857e-02, "W_tot_ref": 4.41185013e-09, "tol": 1e-4,
+        }
+        test_workflow.test_workflow(self, "voxel_logo", res)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -11,6 +11,7 @@ PATH_ROOT="."
 #   voxel_slab
 #   voxel_transformer
 #   voxel_core
+#   voxel_logo
 #   stl_inductor_air
 #   stl_inductor_core
 #   stl_transformer
@@ -20,4 +21,4 @@ PATH_ROOT="."
 #   png_busbar
 #   png_wire
 #   png_pcb
-EXAMPLE_NAME="voxel_transformer"
+EXAMPLE_NAME="voxel_core"

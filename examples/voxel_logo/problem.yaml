@@ -1,0 +1,13 @@
+# Definition of a "file_problem" data.
+#
+# This file is used by the solver.
+# Definition of the magnetic problem to be solved.
+#
+# (c) Thomas Guillod - Dartmouth College
+
+"freq": 1.0
+"material_def":
+    "copper": {"domain_list": ["coil", "src", "sink"], "material_type": "electric", "rho": 1.0}
+"source_def":
+    "src": {"domain_list": ["src"], "source_type": "voltage", "V_re": 1.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
+    "sink": {"domain_list": ["sink"], "source_type": "voltage", "V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}

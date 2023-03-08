@@ -1,0 +1,19 @@
+# Definition of a "file_mesher" data.
+#
+# This file is used by the mesher.
+# Definition of the voxel structure.
+#
+# (c) Thomas Guillod - Dartmouth College
+
+"mesh_type": "voxel"
+"data_voxelize":
+    "n": [3, 3, 3]
+    "d": [1.0, 1.0, 1.0]
+    "c": [0.0, 0.0, 0.0]
+    "domain_def":
+        "coil": [9, 0, 1, 2, 11, 20, 23, 26, 25, 24, 15, 6, 7]
+        "src": [18]
+        "sink": [8]
+"resampling_factor": [1, 1, 1]
+"domain_connection":
+    "connect": {"domain_list": ["coil", "src", "sink"], "connected": true}

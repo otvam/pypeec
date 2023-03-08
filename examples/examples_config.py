@@ -15,6 +15,7 @@ PATH_ROOT = os.path.dirname(__file__)
 #   voxel_slab
 #   voxel_transformer
 #   voxel_core
+#   voxel_logo
 #   stl_inductor_air
 #   stl_inductor_core
 #   stl_transformer
