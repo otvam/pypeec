@@ -15,7 +15,7 @@ from pypeec.lib_utils import datachecker
 from pypeec.lib_utils.error import FileError, CheckError
 
 
-class _dict_to_attributes(dict):
+class _DictToAttributes(dict):
     """
     Wrapper to access dict with dot notation.
     """
@@ -53,9 +53,9 @@ def _update_data(data):
         }
 
     # access with dot notation
-    data["NP_TYPES"] = _dict_to_attributes(data["NP_TYPES"])
-    data["FFT_OPTIONS"] = _dict_to_attributes(data["FFT_OPTIONS"])
-    data["LOGGING_OPTIONS"] = _dict_to_attributes(data["LOGGING_OPTIONS"])
+    data["NP_TYPES"] = _DictToAttributes(data["NP_TYPES"])
+    data["FFT_OPTIONS"] = _DictToAttributes(data["FFT_OPTIONS"])
+    data["LOGGING_OPTIONS"] = _DictToAttributes(data["LOGGING_OPTIONS"])
 
     return data
 

@@ -85,7 +85,6 @@ class _DeltaTimeFormatter(logging.Formatter):
         # call parent constructor
         super().__init__()
 
-
         # define the color formatters
         self.fmt_color = {
             logging.DEBUG: _get_fmt(CL_DEBUG),

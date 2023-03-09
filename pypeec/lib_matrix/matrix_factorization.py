@@ -36,7 +36,6 @@ def _get_fact_superlu(mat):
     try:
         mat_factor = linalg.splu(mat)
     except RuntimeError:
-        logger.warning("factorization failure")
         return None
 
     # matrix solver
@@ -47,7 +46,7 @@ def _get_fact_superlu(mat):
     return factor
 
 
-def _get_fact_pardiso(solver_options, mat):
+def _get_fact_pardiso(algorithm_options, mat):
     """
     Factorize a matrix with PARDISO.
     """
@@ -58,8 +57,8 @@ def _get_fact_pardiso(solver_options, mat):
     from pydiso.mkl_solver import PardisoError
 
     # get the options
-    thread_pardiso = solver_options["thread_pardiso"]
-    thread_mkl = solver_options["thread_mkl"]
+    thread_pardiso = algorithm_options["thread_pardiso"]
+    thread_mkl = algorithm_options["thread_mkl"]
 
     # set number of threads
     mkl_solver.set_mkl_pardiso_threads(thread_pardiso)
@@ -70,7 +69,6 @@ def _get_fact_pardiso(solver_options, mat):
         mat = mat.tocsr()
         mat_factor = MKLPardisoSolver(mat, factor=True, verbose=False)
     except PardisoError:
-        logger.warning("factorization failure")
         return None
 
     # matrix solver
@@ -99,7 +97,6 @@ def _get_fact_umfpack(mat):
     try:
         mat_factor = umfpack.splu(mat)
     except Warning:
-        logger.warning("factorization failure")
         return None
 
     # matrix solver
@@ -112,7 +109,7 @@ def _get_fact_umfpack(mat):
     return factor
 
 
-def _get_fact_iter(library, solver_options, mat):
+def _get_fact_iter(library, algorithm_options, mat):
     """
     Factorize a matrix with iterative method.
     """
@@ -121,9 +118,9 @@ def _get_fact_iter(library, solver_options, mat):
     from scipy.sparse import linalg
 
     # get the options
-    rel_tol = solver_options["rel_tol"]
-    abs_tol = solver_options["abs_tol"]
-    n_iter_max = solver_options["n_iter_max"]
+    rel_tol = algorithm_options["rel_tol"]
+    abs_tol = algorithm_options["abs_tol"]
+    n_iter_max = algorithm_options["n_iter_max"]
 
     # get the solver
     if library == "GCROT":
@@ -150,7 +147,7 @@ def get_factorize(mat, factorization_options):
 
     # extract the options
     library = factorization_options["library"]
-    solver_options = factorization_options["solver_options"]
+    algorithm_options = factorization_options["algorithm_options"]
 
     # check shape
     nnz = mat.size
@@ -165,24 +162,23 @@ def get_factorize(mat, factorization_options):
     logger.debug("matrix library: %s" % library)
 
     # factorize the matrix
-    try:
-        logger.debug("matrix factorization")
+    logger.debug("matrix factorization")
 
-        if library == "SuperLU":
-            factor = _get_fact_superlu(mat)
-        elif library == "UMFPACK":
-            factor = _get_fact_umfpack(mat)
-        elif library == "PARDISO":
-            factor = _get_fact_pardiso(solver_options, mat)
-        elif library in ["GCROT", "BICG", "GMRES"]:
-            factor = _get_fact_iter(library, solver_options, mat)
-        else:
-            raise ValueError("invalid matrix factorization library")
+    if library == "SuperLU":
+        factor = _get_fact_superlu(mat)
+    elif library == "UMFPACK":
+        factor = _get_fact_umfpack(mat)
+    elif library == "PARDISO":
+        factor = _get_fact_pardiso(algorithm_options, mat)
+    elif library in ["GCROT", "BICG", "GMRES"]:
+        factor = _get_fact_iter(library, algorithm_options, mat)
+    else:
+        raise ValueError("invalid matrix factorization library")
 
-        logger.debug("factorization success")
-    except (RuntimeError, Warning):
+    if factor is None:
         logger.warning("factorization failure")
-        factor = None
+    else:
+        logger.debug("factorization success")
 
     return factor
 

@@ -105,22 +105,22 @@ def _get_data_viewer_connection(name):
 
 
 def _get_data_viewer_voxelization(name):
-        """
-        Plot options for the voxelization description.
-        The result is plotted on the voxel structure.
-        This structure is used by the viewer.
-        """
+    """
+    Plot options for the voxelization description.
+    The result is plotted on the voxel structure.
+    This structure is used by the viewer.
+    """
 
-        data_options = {
-            "color_voxel": "red",  # face color for the voxelized structure
-            "color_reference": "blue",  # face color for the reference structure
-            "opacity_voxel": 0.5,  # face opacity for the voxelized structure
-            "opacity_reference": 0.5,  # face opacity for the reference structure
-        }
+    data_options = {
+        "color_voxel": "red",  # face color for the voxelized structure
+        "color_reference": "blue",  # face color for the reference structure
+        "opacity_voxel": 0.5,  # face opacity for the voxelized structure
+        "opacity_reference": 0.5,  # face opacity for the reference structure
+    }
 
-        data = _get_data_pyvista("voxelization", data_options, name)
+    data = _get_data_pyvista("voxelization", data_options, name)
 
-        return data
+    return data
 
 
 def _get_data_plotter_material(name):
@@ -304,7 +304,7 @@ def get_data_tolerance():
         #   - GMRES is quite unstable but has low memory requirements (integrated with SciPy)
         "library": "SuperLU",
         # options for computing the matrix factorization
-        "solver_options": {
+        "algorithm_options": {
             "rel_tol": 1e-6,  # relative preconditioned tolerance for the iterative solvers
             "abs_tol": 1e-12,  # absolute preconditioned tolerance for the iterative solvers
             "n_iter_max": 100,   # maximum number of iterations for the iterative solvers

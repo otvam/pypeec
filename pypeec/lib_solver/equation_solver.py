@@ -24,9 +24,11 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     tolerance = solver_options["tolerance"]
     gmres_options = solver_options["gmres_options"]
 
+    # get problem size
+    n_dof = len(rhs)
+
     # check preconditioner
-    if pcd_op is None:
-        logger.warning("matrix solver: preconditioner is not available")
+    status_pcd = pcd_op is not None
 
     # call the solver
     (status_gmres, n_iter, res_iter, sol) = matrix_gmres.get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options)
@@ -35,9 +37,6 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     res_all = sys_op(sol)-rhs
     res_norm = lna.norm(res_all)
     status_res = res_norm < tolerance
-
-    # get problem size
-    n_dof = len(rhs)
 
     # assign the results
     solver_status = {
@@ -51,14 +50,21 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     }
 
     # solver success
-    status = status_gmres and status_res
+    status = status_gmres and status_res and status_pcd
 
     # display status
     logger.debug("matrix solver: n_dof = %d" % n_dof)
     logger.debug("matrix solver: n_iter = %d" % n_iter)
     logger.debug("matrix solver: res_norm = %.3e" % res_norm)
+    logger.debug("matrix solver: status_pcd = %s" % status_pcd)
     logger.debug("matrix solver: status_gmres = %s" % status_gmres)
     logger.debug("matrix solver: status_res = %s" % status_res)
+    if pcd_op is None:
+        logger.warning("matrix solver: preconditioner issue")
+    if status_gmres is None:
+        logger.warning("matrix solver: gmres issue")
+    if status_res is None:
+        logger.warning("matrix solver: residuum issue")
     if status:
         logger.debug("matrix solver: convergence achieved")
     else:

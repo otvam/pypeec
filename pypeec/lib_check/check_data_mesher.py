@@ -329,7 +329,8 @@ def check_data_mesher(data_mesher):
     """
 
     # check type
-    key_list = ["mesh_type",
+    key_list = [
+        "mesh_type",
         "data_voxelize",
         "resampling_factor",
         "domain_connection",
