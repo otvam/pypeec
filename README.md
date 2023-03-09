@@ -36,6 +36,8 @@ The **PyPEEC** package contains the following tools:
 
 ## Screenshot
 
+![summary](docs/images/summary.png)
+
 ![screenshot](docs/images/screenshot.png)
 
 ## Credits
@@ -54,12 +56,13 @@ Other interesting papers and codes about similar methods:
 
 * [Repository](https://github.com/otvam/PyPEEC)
 * [Releases](https://github.com/otvam/PyPEEC/tags)
+* [Issues](https://github.com/otvam/PyPEEC/issues)
 
 ## Author
 
-* **Thomas Guillod**, Dartmouth College
-* [guillod@otvam.ch](mailto:guillod@otvam.ch)
-* [https://otvam.ch](https://otvam.ch)
+* **Thomas Guillod**, Dartmouth College, NH, USA
+* Email: [guillod@otvam.ch](mailto:guillod@otvam.ch)
+* Website: [https://otvam.ch](https://otvam.ch)
 
 ## Copyright
 

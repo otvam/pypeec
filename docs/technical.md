@@ -23,7 +23,7 @@ The following platform and system configurations have been tested:
 * MS / Windows 10 21H2 on x86/x64
 * GPU / NVIDIA T4 Tensor GPU
 
-# Optimization
+## Optimization
 
 The code is reasonably optimized, leveraging NumPy and SciPy for the heavy operations.
 All the code is vectorized, no loops are used for the array operations.
@@ -60,46 +60,44 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 * The tests are checking that the examples are running correctly.
 * Only integration tests currently exist (no unit tests).
 
-# PyPEEC Warnings
+## PyPEEC Warnings
 
-> **Warning**: For problems with magnetic domains, the preconditioner is not heavily optimized.
-> This might lead to a very slow convergence of the matrix solver.
+> For problems with **magnetic domains**, the **preconditioner** is not optimal.
+> This might lead to a slow convergence of the iterative matrix solver.
 
-> **Warning**: For large problems, the code might allocate huge amounts of memory.
+> For **large problems**, the code might allocate huge amounts of **memory**.
 > This might crash the program and/or your operating system.
 
-> **Warning**: The voxelization of STL files does consider tolerances.
-> This implies same the same voxel can be assigned to several domains.
-> The problem is solved with used-provided conflict resolution rules.
+> During the **voxelization of STL** files, the same voxel can be assigned to several domains.
+> The problem is solved with used-provided **conflict** resolution rules between the domains.
 
-# Library Warnings
+## Library Warnings
 
-> **Warning**: The plotting code is likely sensitive to the environment (platform and the version of the libraries).
-> More particularly, the interactions between **Qt/PyVista/Matplotlib** and **Jupyter/PyVista/Matplotlib**.
-> Therefore, the Qt/Jupyter dependencies are minimized and insulated from the rest of the code.
+> The **plotting code** is likely sensitive to the environment (platform and the version of the libraries).
+> Therefore, the Qt and Jupyter dependencies are minimized and insulated from the rest of the code.
 > The plotting code (viewer and plotter) is separated from the simulation code (mesher and solver).
 
-> **Warning**: **Jupyter** is not included in the package dependencies.
+> **Jupyter** is not included in the package dependencies.
 > For Jupyter, PyVista has to be installed with the optional Trame support.
 > Jupyter support is optional, PyPEEC is fully functional without Jupyter.
 
-> **Warning**: The **GPU** libraries (CUDA, CuPy) are not included in the package dependencies.
-> The GPU support is extremely hardware/platform/version dependent).
+> The **GPU libraries** (CuPy and CUDA) are not included in the package dependencies.
+> The GPU support is extremely hardware/platform/version dependent.
 > GPU support is optional, PyPEEC is fully functional without GPU support.
 
-> **Warning**: **FFTW**, **UMFPACK**, and **MKL/PARDISO** are not included in the package dependencies.
+> **FFTW, UMFPACK, and MKL/PARDISO** are not included in the package dependencies.
 > These libraries can be tricky to install, especially on MS Windows.
 > Make sure that these libraries are compiled with multithreading support.
 > FFTW, UMFPACK, and MKL/PARDISO are optional, PyPEEC is fully functional without them.
 
-# General Warnings
+## General Warnings
 
-> **Warning**: Python Pickle files are using to store the mesher and solver results.
+> Python **Pickle files** are using to store the mesher and solver results.
 > Pickling data is not secure. 
 > Only load Pickle files that you trust.
 > Do not commit the Pickle files in the Git repository.
 
-> **Warning**: Some dependencies are under various licences (including copyleft and proprietary).
+> Some **dependencies** are under **various licences** (including copyleft and proprietary).
 > Make sure to respect these licenses if you package and/or distribute these libraries.
 > Qt is under different copyleft licenses (GPL and LGPL).
 > FFTW is under a copyleft license (GPL).

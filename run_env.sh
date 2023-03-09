@@ -3,6 +3,9 @@
 #   - using Conda for Python and MKL
 #   - using Pip for the Python packages
 #
+# WARNING: Some libraries are hardware/platform/version specific.
+#          Therefore, some adaptations might be required for your system.
+#
 # (c) Thomas Guillod - Dartmouth College
 
 set -o nounset

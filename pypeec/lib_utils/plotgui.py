@@ -7,10 +7,14 @@ WARNING: This module is using different more or less dirty hacks.
          This module is likely to break with newer/older versions of the dependencies.
 
 TODO: Making many plots can lead to segmentation fault with PyVista.
-         Not sure if the problem lies with PyPEEC, PyVista, PyVistaQt or Vtk.
+      Not sure if the problem lies with PyPEEC, PyVista, PyVistaQt or Vtk.
 
 TODO: A delay is adding between the plots when using the Qt framework.
-         This is a dirty workaround for a race condition in PyVista/PyVistaQt.
+      This is a dirty workaround for a race condition in PyVista/PyVistaQt.
+
+TODO: Quitting or making screenshot might cause a crash of PyVista.
+      The reason is that the rendering is not forced properly with multiple windows.
+      A workaround is to patch the PyVista to force a rendering before screenshots.
 """
 
 __author__ = "Thomas Guillod"
