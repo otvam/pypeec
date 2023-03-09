@@ -79,6 +79,7 @@ Different examples are located in the `examples` folder:
   * **voxel_slab**: a simple slab conductor in free space
   * **voxel_core**: a simple slab conductor surrounded by a magnetic core
   * **voxel_transformer**: a simple coil with a secondary short-circuit winding
+  * **voxel_logo**: a simple geometry used for the PyPEEC logo
 
 ## Running the Example Problems
 
