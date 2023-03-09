@@ -62,7 +62,8 @@ Other interesting papers and codes about similar methods:
 
 * **Thomas Guillod**, Dartmouth College, NH, USA
 * Email: [guillod@otvam.ch](mailto:guillod@otvam.ch)
-* Website: [https://otvam.ch](https://otvam.ch)
+* Personal website: [https://otvam.ch](https://otvam.ch)
+* Lab website: [https://pmic.engineering.dartmouth.edu](https://pmic.engineering.dartmouth.edu)
 
 ## Copyright
 

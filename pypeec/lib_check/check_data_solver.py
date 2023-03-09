@@ -13,97 +13,6 @@ from pypeec.lib_utils import config
 NP_TYPES = config.NP_TYPES
 
 
-def _get_domain_indices(domain_list, domain_def):
-    """
-    Get indices from a list of domain names.
-    """
-
-    idx = np.array([], dtype=NP_TYPES.INT)
-    for tag in domain_list:
-        idx = np.append(idx, domain_def[tag])
-
-    return idx
-
-
-def _get_material_idx(material_def, domain_def):
-    """
-    Get the indices of the material.
-    Create a new dict with the indices in place of the domain names.
-    Split the electric and magnetic materials.
-    """
-
-    # init
-    material_idx = {}
-    idx_c = np.array([], dtype=NP_TYPES.INT)
-    idx_m = np.array([], dtype=NP_TYPES.INT)
-    domain_cm = []
-
-    for tag, dat_tmp in material_def.items():
-        # extract the data
-        material_type = dat_tmp["material_type"]
-        domain_list = dat_tmp["domain_list"]
-
-        # get indices
-        idx = _get_domain_indices(domain_list, domain_def)
-
-        # append domain names
-        domain_cm += domain_list
-
-        # assign the indices
-        if material_type == "electric":
-            rho = dat_tmp["rho"]
-            idx_c = np.append(idx_c, idx)
-            material_idx[tag] = {"idx": idx, "material_type": material_type, "rho": rho}
-        elif material_type == "magnetic":
-            chi = dat_tmp["chi_re"]-1j*dat_tmp["chi_im"]
-            idx_m = np.append(idx_m, idx)
-            material_idx[tag] = {"idx": idx, "material_type": material_type, "chi": chi}
-        else:
-            raise ValueError("invalid material type")
-
-    return domain_cm, idx_c, idx_m, material_idx
-
-
-def _get_source_idx(source_def, domain_def):
-    """
-    Get the indices of the sources.
-    Create a new dict with the indices in place of the domain names.
-    """
-
-    # init
-    source_idx = {}
-    idx_s = np.array([], dtype=NP_TYPES.INT)
-    domain_s = []
-
-    for tag, dat_tmp in source_def.items():
-        # extract the data
-        source_type = dat_tmp["source_type"]
-        domain_list = dat_tmp["domain_list"]
-
-        # get indices
-        idx = _get_domain_indices(domain_list, domain_def)
-
-        # append indices
-        idx_s = np.append(idx_s, idx)
-
-        # append domain names
-        domain_s += domain_list
-
-        # get the source value
-        if source_type == "current":
-            I = dat_tmp["I_re"]+1j*dat_tmp["I_im"]
-            Y = dat_tmp["Y_re"]+1j*dat_tmp["Y_im"]
-            source_idx[tag] = {"idx": idx, "source_type": source_type, "I": I, "Y": Y}
-        elif source_type == "voltage":
-            V = dat_tmp["V_re"]+1j*dat_tmp["V_im"]
-            Z = dat_tmp["Z_re"]+1j*dat_tmp["Z_im"]
-            source_idx[tag] = {"idx": idx, "source_type": source_type, "V": V, "Z": Z}
-        else:
-            raise ValueError("invalid source type")
-
-    return domain_s, idx_s, source_idx
-
-
 def _check_names(domain_cm, domain_s, domain_def):
     """
     Check the validity of the domain names.
@@ -163,6 +72,138 @@ def _check_source_graph(idx_c, idx_m, idx_s, connection_def):
 
         cond = (not has_magnetic) or (not has_source)
         datachecker.check_assert("index overlap", cond, "magnetic components should not include sources")
+
+
+def _get_domain_indices(domain_list, domain_def):
+    """
+    Get indices from a list of domain names.
+    """
+
+    idx = np.array([], dtype=NP_TYPES.INT)
+    for tag in domain_list:
+        idx = np.append(idx, domain_def[tag])
+
+    return idx
+
+
+def _get_problem_vector(tag, var_type, idx, vec):
+    """
+    Cast and check the material and source vectors.
+    If the variable is a scalar, cast to an array.
+    If the variable is an array, check the length.
+    """
+
+    if var_type == "lumped":
+        vec = np.full(len(idx), vec, dtype=NP_TYPES.FLOAT)
+    elif var_type == "distributed":
+        cond = len(vec) == len(idx)
+        datachecker.check_assert(tag, cond, "vector length does not match the number of voxels")
+    else:
+        raise ValueError("invalid material type")
+
+    return vec
+
+
+def _get_material_idx(material_def, domain_def):
+    """
+    Get the indices of the material.
+    Create a new dict with the indices in place of the domain names.
+    Split the electric and magnetic materials.
+    """
+
+    # init
+    material_idx = {}
+    idx_c = np.array([], dtype=NP_TYPES.INT)
+    idx_m = np.array([], dtype=NP_TYPES.INT)
+    domain_cm = []
+
+    for tag, dat_tmp in material_def.items():
+        # extract the data
+        var_type = dat_tmp["var_type"]
+        material_type = dat_tmp["material_type"]
+        domain_list = dat_tmp["domain_list"]
+
+        # get indices
+        idx = _get_domain_indices(domain_list, domain_def)
+
+        # append domain names
+        domain_cm += domain_list
+
+        # assign the indices
+        if material_type == "electric":
+            rho = _get_problem_vector(tag, var_type, idx, dat_tmp["rho"])
+
+            idx_c = np.append(idx_c, idx)
+            material_idx[tag] = {
+                "idx": idx, "material_type": material_type,
+                "var_type": var_type, "rho": rho,
+            }
+        elif material_type == "magnetic":
+            chi_re = _get_problem_vector(tag, var_type, idx, dat_tmp["chi_re"])
+            chi_im = _get_problem_vector(tag, var_type, idx, dat_tmp["chi_im"])
+
+            idx_m = np.append(idx_m, idx)
+            material_idx[tag] = {
+                "idx": idx, "material_type": material_type,
+                "var_type": var_type, "chi_re": chi_re, "chi_im": chi_im,
+            }
+        else:
+            raise ValueError("invalid material type")
+
+    return domain_cm, idx_c, idx_m, material_idx
+
+
+def _get_source_idx(source_def, domain_def):
+    """
+    Get the indices of the sources.
+    Create a new dict with the indices in place of the domain names.
+    """
+
+    # init
+    source_idx = {}
+    idx_s = np.array([], dtype=NP_TYPES.INT)
+    domain_s = []
+
+    for tag, dat_tmp in source_def.items():
+        # extract the data
+        var_type = dat_tmp["var_type"]
+        source_type = dat_tmp["source_type"]
+        domain_list = dat_tmp["domain_list"]
+
+        # get indices
+        idx = _get_domain_indices(domain_list, domain_def)
+
+        # append indices
+        idx_s = np.append(idx_s, idx)
+
+        # append domain names
+        domain_s += domain_list
+
+        # get the source value
+        if source_type == "current":
+            I_re = _get_problem_vector(tag, var_type, idx, dat_tmp["I_re"])
+            I_im = _get_problem_vector(tag, var_type, idx, dat_tmp["I_im"])
+            Y_re = _get_problem_vector(tag, var_type, idx, dat_tmp["Y_re"])
+            Y_im = _get_problem_vector(tag, var_type, idx, dat_tmp["Y_im"])
+
+            source_idx[tag] = {
+                "idx": idx, "source_type": source_type, "var_type": var_type,
+                "I_re": I_re, "I_im": I_im, "Y_re": Y_re, "Y_im": Y_im,
+            }
+        elif source_type == "voltage":
+            V_re = _get_problem_vector(tag, var_type, idx, dat_tmp["V_re"])
+            V_im = _get_problem_vector(tag, var_type, idx, dat_tmp["V_im"])
+            Z_re = _get_problem_vector(tag, var_type, idx, dat_tmp["Z_re"])
+            Z_im = _get_problem_vector(tag, var_type, idx, dat_tmp["Z_im"])
+
+            source_idx[tag] = {
+                "idx": idx, "source_type": source_type, "var_type": var_type,
+                "V_re": V_re, "V_im": V_im, "Z_re": Z_re, "Z_im": Z_im,
+            }
+        else:
+            raise ValueError("invalid source type")
+
+    return domain_s, idx_s, source_idx
 
 
 def get_data_solver(data_voxel, data_problem, data_tolerance):

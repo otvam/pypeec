@@ -41,7 +41,7 @@ def get_material_geometry(material_idx, extract_type):
                 rho = dat_tmp["rho"]
             elif material_type == "magnetic":
                 # get the magnetic susceptibility
-                chi = dat_tmp["chi"]
+                chi = dat_tmp["chi_re"]-1j*dat_tmp["chi_im"]
 
                 # vacuum permeability
                 mu = 4*np.pi*1e-7
@@ -51,12 +51,9 @@ def get_material_geometry(material_idx, extract_type):
             else:
                 raise ValueError("invalid material type")
 
-            # extend the vector
-            rho_tmp = np.full(len(idx), rho, dtype=NP_TYPES.COMPLEX)
-
             # append the indices and resistivities
             idx_v = np.append(idx_v, idx)
-            rho_v = np.append(rho_v, rho_tmp)
+            rho_v = np.append(rho_v, rho)
 
     return idx_v, rho_v
 
@@ -74,6 +71,7 @@ def get_source_geometry(source_idx, extract_type):
     # populate the arrays with the current sources
     for tag, dat_tmp in source_idx.items():
         # get the data
+        var_type = dat_tmp["var_type"]
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
 
@@ -85,21 +83,32 @@ def get_source_geometry(source_idx, extract_type):
             # find the source value
             if source_type == "current":
                 # extract data
-                I = dat_tmp["I"]
-                Y = dat_tmp["Y"]
+                I_tmp = dat_tmp["I_re"]+1j*dat_tmp["I_im"]
+                Y_tmp = dat_tmp["Y_re"]+1j*dat_tmp["Y_im"]
 
                 # compute the source for each voxel
-                value_tmp = np.full(len(idx), I/len(idx), dtype=NP_TYPES.COMPLEX)
-                element_tmp = np.full(len(idx), Y/len(idx), dtype=NP_TYPES.COMPLEX)
+                if var_type == "lumped":
+                    value_tmp = I_tmp/len(idx)
+                    element_tmp = Y_tmp/len(idx)
+                elif var_type == "distributed":
+                    value_tmp = I_tmp
+                    element_tmp = Y_tmp
+                else:
+                    raise ValueError("invalid material type")
             elif source_type == "voltage":
                 # extract data
-                V = dat_tmp["V"]
-                Z = dat_tmp["Z"]
+                V_tmp = dat_tmp["V_re"]+1j*dat_tmp["V_im"]
+                Z_tmp = dat_tmp["Z_re"]+1j*dat_tmp["Z_im"]
 
                 # compute the source for each voxel
-                value_tmp = np.full(len(idx), V, dtype=NP_TYPES.COMPLEX)
-                element_tmp = np.full(len(idx), Z*len(idx), dtype=NP_TYPES.COMPLEX)
-
+                if var_type == "lumped":
+                    value_tmp = V_tmp
+                    element_tmp = Z_tmp*len(idx)
+                elif var_type == "distributed":
+                    value_tmp = V_tmp
+                    element_tmp = Z_tmp
+                else:
+                    raise ValueError("invalid material type")
             else:
                 raise ValueError("invalid source type")
 

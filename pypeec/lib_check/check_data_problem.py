@@ -23,10 +23,12 @@ def _check_material_def(material_def):
         datachecker.check_dict("material_def", dat_tmp, key_list=key_list)
 
         # extract the data
+        var_type = dat_tmp["var_type"]
         material_type = dat_tmp["material_type"]
         domain_list = dat_tmp["domain_list"]
 
         # check data
+        datachecker.check_choice("var_type", var_type, ["lumped", "distributed"])
         datachecker.check_choice("material_type", material_type, ["electric", "magnetic"])
         datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
@@ -43,7 +45,12 @@ def _check_material_def(material_def):
 
         # check data
         for tag in key_list:
-            datachecker.check_float(tag, dat_tmp[tag], is_positive=True)
+            if var_type == "lumped":
+                datachecker.check_float(tag, dat_tmp[tag], is_positive=True)
+            elif var_type == "distributed":
+                datachecker.check_float_array(tag, dat_tmp[tag], is_positive=True, can_be_empty=False)
+            else:
+                raise ValueError("invalid material type")
 
 
 def _check_source_def(source_def):
@@ -61,10 +68,12 @@ def _check_source_def(source_def):
         datachecker.check_dict("source_def", dat_tmp, key_list=key_list)
 
         # extract the data
+        var_type = dat_tmp["var_type"]
         source_type = dat_tmp["source_type"]
         domain_list = dat_tmp["domain_list"]
 
         # check data
+        datachecker.check_choice("var_type", var_type, ["lumped", "distributed"])
         datachecker.check_choice("source_type", source_type, ["current", "voltage"])
         datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
@@ -81,7 +90,12 @@ def _check_source_def(source_def):
 
         # check data
         for tag in key_list:
-            datachecker.check_float(tag, dat_tmp[tag])
+            if var_type == "lumped":
+                datachecker.check_float(tag, dat_tmp[tag])
+            elif var_type == "distributed":
+                datachecker.check_float_array(tag, dat_tmp[tag], can_be_empty=False)
+            else:
+                raise ValueError("invalid material type")
 
 
 def check_data_problem(data_problem):
