@@ -9,7 +9,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import time
 import datetime
 import logging
-from pypeec.lib_utils import config
+from pypeec import config
 
 # get config
 LOGGING_OPTIONS = config.LOGGING_OPTIONS

@@ -12,7 +12,7 @@ import os.path
 import json
 import pickle
 import yaml
-from pypeec.lib_utils.error import FileError
+from pypeec.error import FileError
 
 
 def _load_yaml(filename):

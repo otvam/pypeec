@@ -6,7 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
-from pypeec.lib_utils.error import CheckError
+from pypeec.error import CheckError
 
 
 def check_dict(name, data, key_list=None, sub_type=None, can_be_empty=True):

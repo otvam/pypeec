@@ -21,7 +21,7 @@ from pypeec.lib_mesher import voxel_connection
 from pypeec.lib_mesher import voxel_summary
 from pypeec.lib_check import check_data_mesher
 from pypeec.lib_utils import timelogger
-from pypeec.lib_utils.error import CheckError, RunError
+from pypeec.error import CheckError, RunError
 
 # get a logger
 logger = timelogger.get_logger("MESHER")

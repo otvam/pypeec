@@ -20,7 +20,7 @@ from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_solver
 from pypeec.lib_utils import timelogger
-from pypeec.lib_utils.error import CheckError, RunError
+from pypeec.error import CheckError, RunError
 
 # get a logger
 logger = timelogger.get_logger("SOLVER")

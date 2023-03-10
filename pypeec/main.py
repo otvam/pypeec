@@ -10,9 +10,9 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import os
 import os.path
 from pypeec.lib_utils import timelogger
-from pypeec.lib_utils import config
+from pypeec import config
 from pypeec.lib_utils import fileio
-from pypeec.lib_utils.error import FileError, CheckError
+from pypeec.error import FileError, CheckError
 
 # get a logger
 logger = timelogger.get_logger("MAIN")

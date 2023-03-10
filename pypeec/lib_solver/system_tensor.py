@@ -10,7 +10,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import numpy as np
 import numpy.linalg as lna
 from pypeec.lib_matrix import green_function
-from pypeec.lib_utils import config
+from pypeec import config
 
 # get config
 NP_TYPES = config.NP_TYPES

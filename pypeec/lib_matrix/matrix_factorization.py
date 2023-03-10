@@ -15,7 +15,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import warnings
 from pypeec.lib_utils import timelogger
-from pypeec.lib_utils import config
+from pypeec import config
 
 # get a logger
 logger = timelogger.get_logger("FACTOR")

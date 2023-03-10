@@ -7,7 +7,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import scipy.sparse.linalg as sla
 from pypeec.lib_utils import timelogger
-from pypeec.lib_utils import config
+from pypeec import config
 
 # get config
 NP_TYPES = config.NP_TYPES

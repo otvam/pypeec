@@ -11,7 +11,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
-from pypeec.lib_utils import config
+from pypeec import config
 
 # get FFT config
 FFT_LIBRARY = config.FFT_LIBRARY

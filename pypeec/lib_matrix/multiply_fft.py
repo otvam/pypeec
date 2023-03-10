@@ -17,7 +17,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_matrix import fourier_transform
-from pypeec.lib_utils import config
+from pypeec import config
 
 # get config
 NP_TYPES = config.NP_TYPES

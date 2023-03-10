@@ -20,7 +20,7 @@ from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_check import check_data_visualization
 from pypeec.lib_utils import plotgui
 from pypeec.lib_utils import timelogger
-from pypeec.lib_utils.error import CheckError, RunError
+from pypeec.error import CheckError, RunError
 
 # get a logger
 logger = timelogger.get_logger("VIEWER")

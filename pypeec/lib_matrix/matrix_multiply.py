@@ -22,7 +22,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import multiply_direct
-from pypeec.lib_utils import config
+from pypeec import config
 
 # get config
 MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION

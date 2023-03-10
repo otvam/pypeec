@@ -10,8 +10,8 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.csgraph as csg
-from pypeec.lib_utils.error import RunError
-from pypeec.lib_utils import config
+from pypeec import config
+from pypeec.error import RunError
 
 # get config
 NP_TYPES = config.NP_TYPES

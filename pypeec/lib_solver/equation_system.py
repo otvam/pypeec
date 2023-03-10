@@ -79,7 +79,7 @@ import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.linalg as sla
 from pypeec.lib_matrix import matrix_factorization
-from pypeec.lib_utils import config
+from pypeec import config
 
 # get config
 NP_TYPES = config.NP_TYPES
