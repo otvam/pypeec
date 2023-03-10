@@ -2,25 +2,26 @@
 
 ## Dependencies
 
-**PyPEEC** is entirely programmed in **Python 3** and is using the following packages:
+**PyPEEC** is entirely programmed in **Python 3** and has the following dependencies:
 * PyYAML (used everywhere)
 * NumPy (used everywhere)
 * SciPy (used everywhere)
 * Pillow (for the mesher)
 * VTK, PyVista (for the mesher, viewer, and plotter)
 * Matplotlib (for the viewer and plotter)
-* PyVistaQt, QtPy, PyQt5 (for the viewer and plotter)
+* PyVistaQt, QtPy, PySide2 (for the viewer and plotter)
 
-The following optional packages are used for speeding up the solver:
-* scikit-umfpack (for the solver)
-* pyFFTW (for the solver)
-* CuPy (for the solver)
+The following optional packages can be used for speeding up the solver:
+* UMFPACK (for the solver, available through SciKits)
+* MKL/PARDISO (for the solver, available through Pydiso)
+* FFTW (for the solver, available through pyFFTW)
+* CuPy (for the solver, using GPUs through CUDA)
 
-The following platform and system configurations have been tested:
+The following platforms and systems have been tested:
 * Linux / RedHat 7.9 on x86/x64
 * Linux / Ubuntu 20.04 on x86/x64
 * Linux / Ubuntu 22.04 on x86/x64
-* MS / Windows 10 21H2 on x86/x64
+* Microsoft / Windows 10 21H2 on x86/x64
 * GPU / NVIDIA T4 Tensor GPU
 
 ## Optimization
@@ -30,21 +31,31 @@ All the code is vectorized, no loops are used for the array operations.
 Sparse matrix algebra is used wherever appropriate to speed up the code and limit the memory consumption.
 Wherever possible, multithreading is used for exploiting multicore CPUs.
 
-The following optional optimizations are available:
-* FFTW can be used for computing FFTs (default is SciPy)
-* CuPy can be used for computing FFTs and matrix multiplications with GPUs (default is NumPy/SciPy))
-* UMFPACK pr MKL/PARDISO can be used for factorizing sparse matrices (default is SuperLU)
+The following optimizations are available for the computationally heavy operations:
+* Computation of the Green functions and electric-magnetic coupling functions.
+  * If the distance between the considered voxels is small, an analytical solution is used.
+  * If the distance between the considered voxels is large, a numerical approximation is used.
+* The factorization of the sparse matrix used for the preconditioner can be done with several algorithms.
+  * SuperLU is typically slower but is always available (integrated with SciPy).
+  * UMFPACK is typically faster than SuperLU (available through SciKits).
+  * MKL/PARDISO is typically faster than UMFPACK (available through Pydiso).
+  * Iterative solvers are also available (quite unstable, low memory requirements, integrated with SciPy).
+* The FFTs for computing matrix-vector product with circulant tensors can be done with several algorithms.
+  * SciPy is typically slightly slower but is always available (integrated with SciPy)
+  * FFTW is typically faster but has to be installed separately (available through pyFFTW)
+  * CuPy is extremely fast but require GPUs with the corresponding libraries (CUDA platform)
 
 Advanced optimizations (MKL, MPI, OpenMP, or C/FORTRAN) are not implemented.
 Moreover, the memory consumption is not heavily optimized.
 
 ## Configuration
 
-The default configuration file is `pypeec/pypeec.yaml`.
-The default configuration file is loaded at the startup.
-Afterwards, a custom configuration (JSON or YAML) file can be set:
-* with a function call (see `pypeec.main` module)
-* with a command line option (see `pypeec.script` module)
+* The default configuration file is `pypeec/pypeec.yaml`.
+* The default configuration file is loaded at the startup.
+* Afterwards, a custom configuration (JSON or YAML) file can be set:
+  * With a function call (see `pypeec.main` module).
+  * With a command line option (see `pypeec.script` module).
+  * The custom configuration should be set immediately after the startup.
 
 ## Packaging and Environment
 
@@ -97,8 +108,8 @@ Afterwards, a custom configuration (JSON or YAML) file can be set:
 > Only load Pickle files that you trust.
 > Do not commit the Pickle files in the Git repository.
 
-> Some **dependencies** are under **various licences** (including copyleft and proprietary).
+> The **dependencies** are under **various licences** (including copyleft and proprietary).
 > Make sure to respect these licenses if you package and/or distribute these libraries.
-> Qt is under different copyleft licenses (GPL and LGPL).
-> FFTW is under a copyleft license (GPL).
+> Qt is under a weak copyleft license (LGPL).
+> FFTW is under a strong copyleft license (GPL).
 > MKL/PARDISO is a proprietary library (ISSL).

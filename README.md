@@ -8,6 +8,8 @@
 * **GPU acceleration** is available
 * Pure **Python** implementation
 * **Fast** with **moderate memory** requirements
+* Advanced **plotting** capabilities
+* Can be used with **Jupyter** notebooks
 * Conductive and magnetic domains
 * Frequency domain solution
 * Connection of current and voltage sources
@@ -19,6 +21,7 @@
 **PyPEEC** has the following limitations:
 * No capacitive effects
 * No dielectric domains
+* No advanced boundaries conditions
 * Limited to voxel geometries
 
 The **PyPEEC** package contains the following tools:
