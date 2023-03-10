@@ -23,4 +23,4 @@ dependencies:
   - pyvista=0.38.3
   - pyvistaqt=0.9.1
   - qtpy=2.3.0
-  - pyqt=5.15.7
+  - PySide2=5.15.8
