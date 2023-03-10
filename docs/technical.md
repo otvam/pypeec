@@ -12,10 +12,10 @@
 * PyVistaQt, QtPy, PySide2 (for the viewer and plotter)
 
 The following optional packages can be used for speeding up the solver:
-* UMFPACK (for the solver, available through SciKits)
-* MKL/PARDISO (for the solver, available through Pydiso)
-* FFTW (for the solver, available through pyFFTW)
-* CuPy (for the solver, using GPUs through CUDA)
+* UMFPACK (available through SciKits)
+* MKL/PARDISO (available through Pydiso)
+* FFTW (available through pyFFTW)
+* CuPy (using GPUs through CUDA
 
 The following platforms and systems have been tested:
 * Linux / RedHat 7.9 on x86/x64
@@ -23,6 +23,9 @@ The following platforms and systems have been tested:
 * Linux / Ubuntu 22.04 on x86/x64
 * Microsoft / Windows 10 21H2 on x86/x64
 * GPU / NVIDIA T4 Tensor GPU
+
+If you deploy PyPEEC on computing nodes, GUI libraries (Matplotlib, PyVistaQt, QtPy, PySide2) are not required.
+If you want to use PyPEEC with Jupyter, PyVista has to be installed with the optional Trame support.
 
 ## Optimization
 
