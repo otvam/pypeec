@@ -208,15 +208,29 @@ This file contains the definition of the magnetic problem to be solved.
 #   - magnetic material definition
 #       - domain_list: list of domains with the specified material
 #       - material_type: material type ("magnetic" for magnetic materials)
+#       - var_type: type of material parameters ("lumped" or "distributed")
 #       - chi_re: material real susceptibility (should be positive)
 #       - chi_im: material imaginary susceptibility (should be positive)
 #   - electric material definition
 #       - domain_list: list of domains with the specified material
 #       - material_type: material type ("electric" for electric materials)
+#       - var_type: type of material parameters ("lumped" or "distributed")
 #       - rho: material resistivity (should be positive)
+#   - lumped or distributed material parameters
+#       - var_type" is equal to "lumped", the material parameters are homogeneous 
+#       - var_type" is equal to "distributed", the material parameters are space-dependent 
+#       - material parameters ("chi_re", "chi_im", and "rho")
+#           - scalar if "var_type" is equal to "lumped"
+#           - array if "var_type" is equal to "distributed"
 "material_def":
-    "mat_magnetic": {"domain_list": ["dom_src", "dom_cond", "dom_sink"], "material_type": "electric", "rho": 1.0e-8}
-    "mat_electric": {"domain_list": ["dom_mag"], "material_type": "magnetic", "chi_re": 100.0, "chi_im": 10.0}
+    "mat_magnetic": {
+        "domain_list": ["dom_src", "dom_cond", "dom_sink"], "material_type": "electric", 
+        "var_type": "lumped", "rho": 1.0e-8,
+    }
+    "mat_electric": {
+        "domain_list": ["dom_mag"], "material_type": "magnetic", 
+        "var_type": "lumped", "chi_re": 100.0, "chi_im": 10.0,
+    }
 
 # source definition
 #   - dict of dicts with the source name and the source definition
@@ -225,6 +239,7 @@ This file contains the definition of the magnetic problem to be solved.
 #   - voltage source definition
 #       - domain_list: list of domains with the specified source
 #       - source_type: source type ("current" for current source)
+#       - var_type: type of source parameters ("lumped" or "distributed")
 #       - I_re: current source value (real part)
 #       - I_im: current source value (imaginary part)
 #       - Y_re: current internal admittance (real part)
@@ -232,13 +247,26 @@ This file contains the definition of the magnetic problem to be solved.
 #   - voltage source definition
 #       - domain_list: list of domains with the specified source
 #       - source_type: source type ("voltage" for voltage source)
+#       - var_type: type of source parameters ("lumped" or "distributed")
 #       - V_re: voltage source value (real part)
 #       - V_im: voltage source value (imaginary part)
 #       - Z_re: voltage internal impedance (real part)
 #       - Z_im: voltage internal impedance (imaginary part)
+#   - lumped or distributed source parameters
+#       - var_type" is equal to "lumped", the source parameters are homogeneous 
+#       - var_type" is equal to "distributed", the source parameters are space-dependent 
+#       - material parameters ("I_re", "I_im", "Y_re", "Y_im", "V_re", "V_im", "Z_re", and "Z_im")
+#           - scalar if "var_type" is equal to "lumped"
+#           - array if "var_type" is equal to "distributed"
 "source_def":
-    "src": {"domain_list": ["dom_src"], "source_type": "current", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0}
-    "sink": {"domain_list": ["dom_sink"], "source_type": "voltage", "V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
+    "src": {
+        "domain_list": ["dom_src"], "source_type": "current", 
+        "var_type": "lumped", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0,
+    }
+    "sink": {
+        "domain_list": ["dom_sink"], "source_type": "voltage", 
+        "var_type": "lumped", "V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0,
+    }
 ```
 
 ## Point File Format
