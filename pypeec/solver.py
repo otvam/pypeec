@@ -69,12 +69,12 @@ def _run_solver(data_solver):
     # parse the problem geometry (materials and sources)
     with timelogger.BlockTimer(logger, "problem_geometry"):
         # parse the materials
-        (idx_vc, rho_vc) = problem_geometry.get_material_geometry(material_idx, "electric")
-        (idx_vm, rho_vm) = problem_geometry.get_material_geometry(material_idx, "magnetic")
+        (idx_vc, rho_vc) = problem_geometry.get_material_electric(material_idx)
+        (idx_vm, rho_vm) = problem_geometry.get_material_magnetic(material_idx)
 
         # parse the sources
-        (idx_src_c, I_src_c, G_src_c) = problem_geometry.get_source_geometry(source_idx, "current")
-        (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_geometry(source_idx, "voltage")
+        (idx_src_c, I_src_c, G_src_c) = problem_geometry.get_source_current(source_idx)
+        (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_voltage(source_idx)
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
         (pts_net_c, A_net_c, idx_fc) = problem_geometry.get_reduce_matrix(pts_vox, A_vox, idx_vc)
