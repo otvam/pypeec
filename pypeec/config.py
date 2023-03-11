@@ -18,7 +18,7 @@ def __getattr__(name):
     Wrapper to access the config data with attributes.
     """
 
-    # once loaded, the config cannot be updated
+    # once used, the config cannot be updated
     global CAN_UPDATE
     CAN_UPDATE = False
 
@@ -27,7 +27,7 @@ def __getattr__(name):
 
 class _DictToAttributes:
     """
-    Wrapper to access dictionary with attributes.
+    Wrapper to access a dictionary with attributes.
     """
 
     def __init__(self, data):

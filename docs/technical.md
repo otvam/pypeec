@@ -27,6 +27,39 @@ The following platforms and systems have been tested:
 If you deploy PyPEEC on computing nodes, GUI libraries (Matplotlib, PyVistaQt, QtPy, PySide2) are not required.
 If you want to use PyPEEC with Jupyter, PyVista has to be installed with the optional Trame support.
 
+## FFT-Accelerated PEEC Method
+
+There are two main categories of field simulation methods:
+* Differential equation based method (FEM, FVM, FD, etc.)
+* Integral equation based method (MoM, BEM, PEEC, etc.)
+
+The PEEC method is an integral equation method. The fundamental ideal is to represent
+the field simulation problem with a very large distributed equivalent circuit consisting
+of resistances, self-inductances, mutual inductances, and capacitances.
+
+This PEEC method feature several advantanges:
+* Only the active materials are meshed (no need to mesh the free-space).
+* Intuitive understanding of the equation discretization process.
+* Straightforward connection of external circuit elements.
+
+The fundamental drawback of the PEEC method is that the matrix describing the
+equation system is not sparse. This means that the computational cost and the
+memory requirements of the problem is becoming problematic for large systems. 
+
+This problem can be mitigated if the geometry is represented with a voxel structure. 
+In this case, the dense matrices are block-Toeplitz Toeplitz-block matrices. 
+Such matrices can be embedded into circulant tensors reducing the memory requirements
+from O(n^2) to 0(n). Additionally, the matrix-vector multiplications can be done
+with Fourier transforms. With an FFT algorithm, the computational complexity of
+matrix-vector multiplications is reduced from O(n^2) to 0(n*log(n)). Besides the reduced
+computational cost and memory requirement, the FFTs allows for the usage of heavily 
+optimized libraries leveraging the parallel processing capabilities of CPUs or GPUs.
+
+Here are some interesting papers about the PEEC method:
+* A. Ruehli IEEE TMTT, 10.1109/TMTT.1974.1128204, 1974
+* R. Torchio, IEEE TAP, 10.1109/TAP.2019.2927789, 2019
+* R. Torchio, IEEE TPEL, 10.1109/TPEL.2021.3092431, 2022
+
 ## Optimization
 
 The code is reasonably optimized, leveraging NumPy and SciPy for the heavy operations.
