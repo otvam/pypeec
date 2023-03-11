@@ -8,6 +8,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import sys
 import argparse
+from pypeec import config
 from pypeec import main
 
 # get the version number
@@ -242,7 +243,7 @@ def _get_arguments(parser):
     # if provided, load a custom config file
     if file_config is not None:
         # load the config
-        (status, ex) = main.set_config(file_config)
+        status = config.set_config(file_config)
 
         # exit if config is problematic
         if not status:

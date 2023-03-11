@@ -56,7 +56,7 @@ Moreover, the memory consumption is not heavily optimized.
 * The default configuration file is `pypeec/pypeec.yaml`.
 * The default configuration file is loaded at the startup.
 * Afterwards, a custom configuration (JSON or YAML) file can be set:
-  * With a function call (see `pypeec.main` module).
+  * With a function call (see `pypeec.config` module).
   * With a command line option (see `pypeec.script` module).
   * The custom configuration should be set immediately after the startup.
 

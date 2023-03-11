@@ -10,42 +10,11 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import os
 import os.path
 from pypeec.lib_utils import timelogger
-from pypeec import config
 from pypeec.lib_utils import fileio
-from pypeec.error import FileError, CheckError
+from pypeec.error import FileError
 
 # get a logger
 logger = timelogger.get_logger("MAIN")
-
-
-def set_config(file_config):
-    """
-    Set and load a custom configuration file.
-    This function should be called immediately after initializing the module.
-
-    Parameters
-    ----------
-    file_config : string (input file, JSON or YAML format)
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if the problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
-    """
-
-    logger.info("set the PyPEEC configuration")
-
-    try:
-        config.set_config(file_config)
-    except (FileError, CheckError) as ex:
-        timelogger.log_exception(logger, ex)
-        return False, ex
-
-    return True, None
 
 
 def run_mesher(file_mesher, file_voxel):

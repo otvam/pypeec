@@ -71,7 +71,18 @@ def _assign_config(data_config):
 
 def set_config(file_config):
     """
-    Load a config file and store the data in global variables.
+    Load and set a configuration file.
+    This function should be called immediately after initializing the module.
+
+    Parameters
+    ----------
+    file_config : string (input file, JSON or YAML format)
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered.
     """
 
     try:
