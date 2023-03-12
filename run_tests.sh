@@ -39,4 +39,4 @@ test_file test_stl
 # collect results
 clean_test
 
-exit 0
+exit $status
