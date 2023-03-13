@@ -216,9 +216,6 @@ def get_logger(name):
     # get the logger
     logger = logging.getLogger(name)
 
-    # prevent duplicated log messages
-    logger.propagate = False
-
     # create the logger (if not already done)
     if len(logger.handlers) == 0:
         # get the formatter
@@ -228,8 +225,13 @@ def get_logger(name):
         handler = logging.StreamHandler()
         handler.setFormatter(fmt)
 
-        # get the logger
+        # prevent duplicated log messages
+        logger.propagate = False
+
+        # set the level
         logger.setLevel(LEVEL)
+
+        # get the logger
         logger.addHandler(handler)
 
     return logger

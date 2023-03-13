@@ -9,12 +9,6 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
 import os.path
-from pypeec.lib_utils import timelogger
-from pypeec.lib_utils import fileio
-from pypeec.error import FileError
-
-# get a logger
-logger = timelogger.get_logger("MAIN")
 
 
 def run_mesher(file_mesher, file_voxel):
@@ -37,8 +31,16 @@ def run_mesher(file_mesher, file_voxel):
         None if the termination is successful.
     """
 
-    # load the tool
+    # load the base libraries
+    from pypeec.lib_utils import timelogger
+    from pypeec.lib_utils import fileio
+    from pypeec.error import FileError
+
+    # create the logger
+    logger = timelogger.get_logger("MAIN")
     timelogger.reset_timer()
+
+    # load the tool
     logger.info("load the mesher")
     from pypeec import mesher
 
@@ -93,8 +95,16 @@ def run_viewer(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=Fal
         None if the termination is successful.
     """
 
-    # load the tool
+    # load the base libraries
+    from pypeec.lib_utils import timelogger
+    from pypeec.lib_utils import fileio
+    from pypeec.error import FileError
+
+    # create the logger
+    logger = timelogger.get_logger("MAIN")
     timelogger.reset_timer()
+
+    # load the tool
     logger.info("load the viewer")
     from pypeec import viewer
 
@@ -137,8 +147,16 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
         None if the termination is successful.
     """
 
-    # load the tool
+    # load the base libraries
+    from pypeec.lib_utils import timelogger
+    from pypeec.lib_utils import fileio
+    from pypeec.error import FileError
+
+    # create the logger
+    logger = timelogger.get_logger("MAIN")
     timelogger.reset_timer()
+
+    # load the tool
     logger.info("load the solver")
     from pypeec import solver
 
@@ -190,8 +208,16 @@ def run_plotter(file_solution, file_point, file_plotter, tag_plot=None, is_silen
         None if the termination is successful.
     """
 
-    # load the tool
+    # load the base libraries
+    from pypeec.lib_utils import timelogger
+    from pypeec.lib_utils import fileio
+    from pypeec.error import FileError
+
+    # create the logger
+    logger = timelogger.get_logger("MAIN")
     timelogger.reset_timer()
+
+    # load the tool
     logger.info("load the plotter")
     from pypeec import plotter
 

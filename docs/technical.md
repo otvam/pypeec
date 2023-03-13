@@ -22,7 +22,8 @@ The following platforms and systems have been tested:
 * Linux / Ubuntu 20.04 on x86/x64
 * Linux / Ubuntu 22.04 on x86/x64
 * Microsoft / Windows 10 21H2 on x86/x64
-* GPU / NVIDIA T4 Tensor GPU
+* GPU / NVIDIA T4 Tensor
+* GPU / NVIDIA Tesla K80
 
 If you deploy PyPEEC on computing nodes, GUI libraries (Matplotlib, PyVistaQt, QtPy, PySide2) are not required.
 If you want to use PyPEEC with Jupyter, PyVista has to be installed with the optional Trame support.
