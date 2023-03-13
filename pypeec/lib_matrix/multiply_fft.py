@@ -94,7 +94,7 @@ def _get_tensor_circulant(mat, sign):
     mat_circulant[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz, :] = mat[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1, :]*sign[1:2, 1:2, 1:2, :]
 
     # get the FFT of the circulant tensor
-    mat_fft = fourier_transform.get_fft_tensor_keep(mat_circulant)
+    mat_fft = fourier_transform.get_fft_tensor_keep(mat_circulant, False)
 
     return mat_fft
 
@@ -169,39 +169,33 @@ def get_multiply(data, vec_in, matrix_type, flip):
         vec_in = cp.array(vec_in)
 
     # create a tensor for the vector
-    vec_all = cp.zeros(shape, dtype=NP_TYPES.COMPLEX)
+    res = cp.zeros(shape, dtype=NP_TYPES.COMPLEX)
 
     # assign the elements from the tensor indices
-    vec_all[idx_in] = vec_in
+    res[idx_in] = vec_in
 
     # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
-    vec_all_fft = fourier_transform.get_fft_tensor_expand(vec_all)
-
-    # free memory
-    del vec_all
+    res = fourier_transform.get_fft_tensor_expand(res, True)
 
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
     if matrix_type == "single":
-        res_all_fft = mat_fft*vec_all_fft
+        res *= mat_fft
     elif matrix_type == "diag":
-        res_all_fft = mat_fft*vec_all_fft
+        res *= mat_fft
     elif matrix_type == "cross":
-        res_all_fft = cp.zeros(shape_fft, dtype=NP_TYPES.COMPLEX)
-        res_all_fft[:, :, :, 0] = +mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 1]+mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 2]
-        res_all_fft[:, :, :, 1] = -mat_fft[:, :, :, 2]*vec_all_fft[:, :, :, 0]+mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 2]
-        res_all_fft[:, :, :, 2] = -mat_fft[:, :, :, 1]*vec_all_fft[:, :, :, 0]-mat_fft[:, :, :, 0]*vec_all_fft[:, :, :, 1]
+        res_tmp = cp.zeros(shape_fft, dtype=NP_TYPES.COMPLEX)
+        res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2]*res[:, :, :, 1]+mat_fft[:, :, :, 1]*res[:, :, :, 2]
+        res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2]*res[:, :, :, 0]+mat_fft[:, :, :, 0]*res[:, :, :, 2]
+        res_tmp[:, :, :, 2] = -mat_fft[:, :, :, 1]*res[:, :, :, 0]-mat_fft[:, :, :, 0]*res[:, :, :, 1]
+        res = res_tmp
     else:
         raise ValueError("invalid matrix type")
 
     # compute the iFFT
-    res_all = fourier_transform.get_ifft_tensor(res_all_fft)
-
-    # free memory
-    del res_all_fft
-    del vec_all_fft
+    res = fourier_transform.get_ifft_tensor(res, True)
 
     # select the elements from the tensor indices
-    res_out = res_all[idx_out]
+    res_out = res[idx_out]
 
     # unload the data from the GPU
     if USE_FFT_GPU:

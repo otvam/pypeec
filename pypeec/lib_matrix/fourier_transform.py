@@ -48,7 +48,7 @@ else:
     raise ValueError("invalid FFT library")
 
 
-def _get_fftn(mat, shape, axes):
+def _get_fftn(mat, shape, axes, replace):
     """
     Get the N-D FFT of a tensor along the specified axes.
     The size of the output tensor is specified.
@@ -57,17 +57,17 @@ def _get_fftn(mat, shape, axes):
     if FFT_LIBRARY == "CuPy":
         mat_trf = fftc.fftn(mat, shape, axes=axes)
     elif FFT_LIBRARY == "SciPy":
-        mat_trf = ffts.fftn(mat, shape, axes=axes, workers=FFTS_WORKER)
+        mat_trf = ffts.fftn(mat, shape, axes=axes, overwrite_x=replace, workers=FFTS_WORKER)
     elif FFT_LIBRARY == "FFTW":
         mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
-        mat_trf = fftw.fftn(mat, shape, axes=axes, threads=FFTW_THREAD)
+        mat_trf = fftw.fftn(mat, shape, axes=axes, overwrite_input=replace, threads=FFTW_THREAD)
     else:
         raise ValueError("invalid FFT library")
 
     return mat_trf
 
 
-def _get_ifftn(mat, shape, axes):
+def _get_ifftn(mat, shape, axes, replace):
     """
     Get the N-D iFFT of a tensor along the specified axes.
     The size of the output tensor is specified.
@@ -76,26 +76,26 @@ def _get_ifftn(mat, shape, axes):
     if FFT_LIBRARY == "CuPy":
         mat_trf = fftc.ifftn(mat, shape, axes=axes)
     elif FFT_LIBRARY == "SciPy":
-        mat_trf = ffts.ifftn(mat, shape, axes=axes, workers=FFTS_WORKER)
+        mat_trf = ffts.ifftn(mat, shape, axes=axes, overwrite_x=replace, workers=FFTS_WORKER)
     elif FFT_LIBRARY == "FFTW":
         mat = pyfftw.byte_align(mat, n=FFTW_BYTE_ALIGN)
-        mat_trf = fftw.ifftn(mat, shape, axes=axes, threads=FFTW_THREAD)
+        mat_trf = fftw.ifftn(mat, shape, axes=axes, overwrite_input=replace, threads=FFTW_THREAD)
     else:
         raise ValueError("invalid FFT library")
 
     return mat_trf
 
 
-def get_fft_tensor_keep(mat):
+def get_fft_tensor_keep(mat, replace):
     """
     Get the FFT of a 4D tensor along the first 3D.
     The size of the output is the same of the input
     """
 
-    return _get_fftn(mat, None, (0, 1, 2))
+    return _get_fftn(mat, None, (0, 1, 2), replace)
 
 
-def get_fft_tensor_expand(mat):
+def get_fft_tensor_expand(mat, replace):
     """
     Get the FFT of a 4D tensor along the first 3D.
     The size of the output is the double the size of the input
@@ -104,13 +104,13 @@ def get_fft_tensor_expand(mat):
     # get the tensor size
     (nx, ny, nz, nd) = mat.shape
 
-    return _get_fftn(mat, (2*nx, 2*ny, 2*nz), (0, 1, 2))
+    return _get_fftn(mat, (2*nx, 2*ny, 2*nz), (0, 1, 2), replace)
 
 
-def get_ifft_tensor(mat):
+def get_ifft_tensor(mat, replace):
     """
     Get the iFFT of a 4D tensor along the first 3D.
     The size of the output is the same of the input
     """
 
-    return _get_ifftn(mat, None, (0, 1, 2))
+    return _get_ifftn(mat, None, (0, 1, 2), replace)
