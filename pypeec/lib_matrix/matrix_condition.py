@@ -62,13 +62,16 @@ def get_condition_matrix(mat, norm_options):
     # check shape
     nnz = mat.size
     (nx, ny) = mat.shape
+    den = nnz/(nx*ny)
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
         return 0.0
 
     # display
-    logger.debug("matrix size: (%d, %d) / %d" % (nx, ny, nnz))
+    logger.debug("matrix size: (%d, %d)" % (nx, ny))
+    logger.debug("matrix elements: %d" % nnz)
+    logger.debug("matrix density: %.3e" % den)
 
     # get LU decomposition
     logger.debug("compute LU decomposition")
