@@ -33,13 +33,16 @@ conda activate pypeec
 # install the base packages
 pip install -r requirements.txt
 
-# package for building the package
+# MKL optional library
+conda install -y "mkl-devel=2023.0.0"
+
+# package for creating the package and debugging
 pip install "build>=0.10"
+pip install "memory-profiler>=0.61"
+pip install "gprof2dot>=2022.7"
 
-# Jupyter notebook
+# Jupyter notebook and PyVista support
 pip install "jupyterlab>=3.6"
-
-# Jupyter support for PyVista
 pip install "pyvista[all,trame]>=0.38"
 
 # FFTW optional library
@@ -48,13 +51,10 @@ pip install "pyFFTW>=0.13"
 # UMFPACK optional library
 pip install "scikit-umfpack>=0.3"
 
-# MKL optional library
-conda install -y "mkl-devel=2023.0.0"
-
-# MKL/PARDISO optional library
-pip install "pydiso>=0.0"
-
 # CuPy optional library
 pip install "cupy-cuda11x>=11.6"
+
+# PARDISO optional library
+pip install "pydiso>=0.0"
 
 exit 0
