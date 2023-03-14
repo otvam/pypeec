@@ -73,10 +73,6 @@ def _get_tensor_circulant(mat, sign):
     The output FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd).
     """
 
-    # load the data to the GPU
-    if USE_FFT_GPU:
-        mat = cp.asarray(mat)
-
     # get the tensor size
     (nx, ny, nz, nd) = mat.shape
 
@@ -190,13 +186,14 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     # get the sign that will be applied to the different blocks of the tensor
     sign = _get_tensor_sign(matrix_type, nd)
 
-    # get the FFT circulant tensor
-    mat_fft = _get_tensor_circulant(mat, sign)
-
     # load the data to the GPU
     if USE_FFT_GPU:
+        mat = cp.asarray(mat)
         idx_in = cp.asarray(idx_in)
         idx_out = cp.asarray(idx_out)
+
+    # get the FFT circulant tensor
+    mat_fft = _get_tensor_circulant(mat, sign)
 
     # get the indices
     shape = [nx, ny, nz, nd_out]

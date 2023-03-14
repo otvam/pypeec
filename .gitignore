@@ -6,6 +6,7 @@
 *.pyc
 *.pyo
 **/__pycache__
+**/.ipynb_checkpoints
 
 # exclude pickle file
 *.pck

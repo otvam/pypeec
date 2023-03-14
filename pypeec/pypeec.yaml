@@ -40,8 +40,8 @@ FFT_OPTIONS:
     FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW (null for default)
 
 # FFT library
-#   - SciPy is typically slightly slower but is always available (integrated with SciPy)
-#   - FFTW is typically faster but has to be installed separately (available through pyFFTW)
+#   - SciPy FFT library is always available (integrated with SciPy)
+#   - FFTW has to be installed separately (available through pyFFTW)
 #   - CuPy is extremely fast but require GPUs with the corresponding libraries (CUDA platform).
 FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW" or "CuPy"
 
