@@ -19,7 +19,7 @@ def _check_material_def(material_def):
     # check value
     for dat_tmp in material_def.values():
         # check type
-        key_list = ["material_type", "domain_list"]
+        key_list = ["material_type", "var_type", "domain_list"]
         datachecker.check_dict("material_def", dat_tmp, key_list=key_list)
 
         # extract the data
@@ -64,7 +64,7 @@ def _check_source_def(source_def):
     # check value
     for dat_tmp in source_def.values():
         # check type
-        key_list = ["source_type", "domain_list"]
+        key_list = ["source_type", "var_type", "domain_list"]
         datachecker.check_dict("source_def", dat_tmp, key_list=key_list)
 
         # extract the data
