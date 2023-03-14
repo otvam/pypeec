@@ -56,31 +56,35 @@ def _check_data(data_config):
     datachecker.check_dict("data_config", data_config, key_list=key_list)
 
     # check logging options
-    datachecker.check_string("FORMAT", data_config["LOGGING_OPTIONS"]["FORMAT"])
-    datachecker.check_string("LEVEL", data_config["LOGGING_OPTIONS"]["LEVEL"])
-    datachecker.check_integer("INDENTATION", data_config["LOGGING_OPTIONS"]["INDENTATION"])
-    datachecker.check_boolean("EXCEPTION_TRACE", data_config["LOGGING_OPTIONS"]["EXCEPTION_TRACE"])
-    datachecker.check_boolean("USE_COLOR", data_config["LOGGING_OPTIONS"]["USE_COLOR"])
-    datachecker.check_string("CL_DEBUG", data_config["LOGGING_OPTIONS"]["CL_DEBUG"])
-    datachecker.check_string("CL_INFO", data_config["LOGGING_OPTIONS"]["CL_INFO"])
-    datachecker.check_string("CL_WARNING", data_config["LOGGING_OPTIONS"]["CL_WARNING"])
-    datachecker.check_string("CL_ERROR", data_config["LOGGING_OPTIONS"]["CL_ERROR"])
-    datachecker.check_string("CL_CRITICAL", data_config["LOGGING_OPTIONS"]["CL_CRITICAL"])
-    datachecker.check_string("CL_RESET", data_config["LOGGING_OPTIONS"]["CL_RESET"])
+    LOGGING_OPTIONS = data_config["LOGGING_OPTIONS"]
+    datachecker.check_string("FORMAT", LOGGING_OPTIONS["FORMAT"])
+    datachecker.check_string("LEVEL", LOGGING_OPTIONS["LEVEL"])
+    datachecker.check_integer("INDENTATION", LOGGING_OPTIONS["INDENTATION"])
+    datachecker.check_boolean("EXCEPTION_TRACE", LOGGING_OPTIONS["EXCEPTION_TRACE"])
+    datachecker.check_boolean("USE_COLOR", LOGGING_OPTIONS["USE_COLOR"])
+    datachecker.check_string("CL_DEBUG", LOGGING_OPTIONS["CL_DEBUG"])
+    datachecker.check_string("CL_INFO", LOGGING_OPTIONS["CL_INFO"])
+    datachecker.check_string("CL_WARNING", LOGGING_OPTIONS["CL_WARNING"])
+    datachecker.check_string("CL_ERROR", LOGGING_OPTIONS["CL_ERROR"])
+    datachecker.check_string("CL_CRITICAL", LOGGING_OPTIONS["CL_CRITICAL"])
+    datachecker.check_string("CL_RESET", LOGGING_OPTIONS["CL_RESET"])
 
     # check FFT options
-    if data_config["FFT_OPTIONS"]["FFTS_WORKER"] is not None:
-        datachecker.check_integer("FFTS_WORKER", data_config["FFT_OPTIONS"]["FFTS_WORKER"])
-    if data_config["FFT_OPTIONS"]["FFTW_THREAD"] is not None:
-        datachecker.check_integer("FFTW_THREAD", data_config["FFT_OPTIONS"]["FFTW_THREAD"])
-    if data_config["FFT_OPTIONS"]["FFTW_BYTE_ALIGN"] is not None:
-        datachecker.check_integer("FFTW_BYTE_ALIGN", data_config["FFT_OPTIONS"]["FFTW_BYTE_ALIGN"])
-    if data_config["FFT_OPTIONS"]["FFTW_CACHE_TIMEOUT"] is not None:
-        datachecker.check_float("FFTW_CACHE_TIMEOUT", data_config["FFT_OPTIONS"]["FFTW_CACHE_TIMEOUT"])
+    FFT_OPTIONS = data_config["FFT_OPTIONS"]
+    if FFT_OPTIONS["FFTS_WORKER"] is not None:
+        datachecker.check_integer("FFTS_WORKER", FFT_OPTIONS["FFTS_WORKER"], is_positive=True, can_be_zero=False)
+    if FFT_OPTIONS["FFTW_THREAD"] is not None:
+        datachecker.check_integer("FFTW_THREAD", FFT_OPTIONS["FFTW_THREAD"], is_positive=True, can_be_zero=False)
+    if FFT_OPTIONS["FFTW_BYTE_ALIGN"] is not None:
+        datachecker.check_integer("FFTW_BYTE_ALIGN", FFT_OPTIONS["FFTW_BYTE_ALIGN"], is_positive=True)
+    if FFT_OPTIONS["FFTW_CACHE_TIMEOUT"] is not None:
+        datachecker.check_float("FFTW_CACHE_TIMEOUT", FFT_OPTIONS["FFTW_CACHE_TIMEOUT"], is_positive=True)
 
     # check other switches
+    if data_config["MATRIX_SPLIT"] is not None:
+        datachecker.check_integer("MATRIX_SPLIT", data_config["MATRIX_SPLIT"], is_positive=True, can_be_zero=False)
     datachecker.check_boolean("USE_DOUBLE", data_config["USE_DOUBLE"])
-    datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"])
+    datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True)
     datachecker.check_choice("FFT_LIBRARY", data_config["FFT_LIBRARY"], ["SciPy", "FFTW", "CuPy"])
     datachecker.check_choice("MATRIX_MULTIPLICATION", data_config["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
 

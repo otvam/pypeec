@@ -29,6 +29,9 @@ NP_TYPES = config.NP_TYPES
 # get GPU config
 USE_FFT_GPU = config.USE_FFT_GPU
 
+# get number of chunks
+MATRIX_SPLIT = config.MATRIX_SPLIT
+
 # load the GPU and CPU libraries
 if USE_FFT_GPU:
     import cupy as cp
