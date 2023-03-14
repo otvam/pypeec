@@ -104,12 +104,15 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
 
     # display status
     logger.debug("matrix condition: check = %s" % check)
-    logger.debug("matrix condition: value_electric = %.3e" % value_electric)
-    logger.debug("matrix condition: value_magnetic = %.3e" % value_magnetic)
     logger.debug("matrix condition: status = %s" % status)
-    if status:
-        logger.debug("matrix condition: matrix condition is good")
+    if check:
+        logger.debug("matrix condition: value_electric = %.3e" % value_electric)
+        logger.debug("matrix condition: value_magnetic = %.3e" % value_magnetic)
+        if status:
+            logger.debug("matrix condition: matrix condition is good")
+        else:
+            logger.warning("matrix condition: matrix condition is problematic")
     else:
-        logger.warning("matrix condition: matrix condition is problematic")
+        logger.debug("matrix condition: matrix condition is not computed")
 
     return status, condition_status
