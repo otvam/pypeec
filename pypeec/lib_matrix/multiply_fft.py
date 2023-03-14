@@ -17,7 +17,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_matrix import fourier_transform
+from pypeec.lib_utils import timelogger
 from pypeec import config
+
+# get a logger
+logger = timelogger.get_logger("FFT")
 
 # get config
 NP_TYPES = config.NP_TYPES
@@ -117,6 +121,16 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
         nd_out = 3
     else:
         raise ValueError("invalid matrix type")
+
+    # get the memory footprint
+    nnz = (2*nx)*(2*ny)*(2*nz)*(nd+nd_out)
+    itemsize = cp.dtype(NP_TYPES.COMPLEX).itemsize
+    footprint = (itemsize*nnz)/(1024**2)
+
+    # display the tensor size
+    logger.debug("tensor type: %s" % matrix_type)
+    logger.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
+    logger.debug("tensor footprint: %.3f MB" % footprint)
 
     # get the sign that will be applied to the different blocks of the tensor
     sign = _get_tensor_sign(matrix_type, nd)
