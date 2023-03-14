@@ -106,6 +106,58 @@ def _get_tensor_circulant(mat, sign):
     return mat_fft
 
 
+def _get_full_cross(mat_fft, res):
+    """
+    Compute the matrix vector multiplication in frequency domain for the block off-diagonal matrix.
+    The product is computed directly and requires additional memory allocation.
+    """
+
+    res_tmp = cp.zeros(res.shape, dtype=NP_TYPES.COMPLEX)
+    res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2]*res[:, :, :, 1]+mat_fft[:, :, :, 1]*res[:, :, :, 2]
+    res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2]*res[:, :, :, 0]+mat_fft[:, :, :, 0]*res[:, :, :, 2]
+    res_tmp[:, :, :, 2] = -mat_fft[:, :, :, 1]*res[:, :, :, 0]-mat_fft[:, :, :, 0]*res[:, :, :, 1]
+    res = res_tmp
+
+    return res
+
+
+def _get_shard_cross(mat_fft, res, matrix_split):
+    """
+    Compute the matrix vector multiplication in frequency domain for the block off-diagonal matrix.
+    The product is computed in chunks, which mitigates the additional memory allocation.
+    """
+
+    # get the tensor size
+    (nx, ny, nz, nd) = res.shape
+
+    # flatten the tensors
+    mat_fft = mat_fft.reshape(nx*ny*nz, nd)
+    res = res.reshape((nx*ny*nz, nd))
+
+    # shard the array in different chunks
+    idx = cp.linspace(0, nx*ny*nz, matrix_split+1, dtype=NP_TYPES.INT)
+    idx = cp.unique(idx)
+
+    # compute the cross product for the different chunks
+    for i in range(len(idx)-1):
+        # get the indices of the chunk
+        idx_tmp = cp.arange(idx[i], idx[i+1])
+
+        # compute the product
+        res_tmp = cp.zeros((len(idx_tmp), nd), dtype=NP_TYPES.COMPLEX)
+        res_tmp[:, 0] = +mat_fft[idx_tmp, 2] * res[idx_tmp, 1] + mat_fft[idx_tmp, 1] * res[idx_tmp, 2]
+        res_tmp[:, 1] = -mat_fft[idx_tmp, 2] * res[idx_tmp, 0] + mat_fft[idx_tmp, 0] * res[idx_tmp, 2]
+        res_tmp[:, 2] = -mat_fft[idx_tmp, 1] * res[idx_tmp, 0] - mat_fft[idx_tmp, 0] * res[idx_tmp, 1]
+
+        # assign the computed chunk
+        res[idx_tmp] = res_tmp
+
+    # reshape the tensor to match the original format
+    res = res.reshape((nx, ny, nz, nd))
+
+    return res
+
+
 def get_prepare(idx_out, idx_in, mat, matrix_type):
     """
     Construct a circulant tensor from a 4D tensor.
@@ -200,11 +252,10 @@ def get_multiply(data, vec_in, matrix_type, flip):
     elif matrix_type == "diag":
         res *= mat_fft
     elif matrix_type == "cross":
-        res_tmp = cp.zeros(shape_fft, dtype=NP_TYPES.COMPLEX)
-        res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2]*res[:, :, :, 1]+mat_fft[:, :, :, 1]*res[:, :, :, 2]
-        res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2]*res[:, :, :, 0]+mat_fft[:, :, :, 0]*res[:, :, :, 2]
-        res_tmp[:, :, :, 2] = -mat_fft[:, :, :, 1]*res[:, :, :, 0]-mat_fft[:, :, :, 0]*res[:, :, :, 1]
-        res = res_tmp
+        if MATRIX_SPLIT is None:
+            res = _get_full_cross(mat_fft, res)
+        else:
+            res = _get_shard_cross(mat_fft, res, MATRIX_SPLIT)
     else:
         raise ValueError("invalid matrix type")
 
