@@ -18,6 +18,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from pypeec import config
+from pypeec.lib_utils import timelogger
+
+# get a logger
+logger = timelogger.get_logger("DIRECT")
 
 # get config
 NP_TYPES = config.NP_TYPES
@@ -128,6 +132,17 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     The input index vector has the size: n_in.
     The output dense matrix has the size: (n_out, n_in).
     """
+
+    # get the matrix size
+    n_out = len(idx_out)
+    n_in = len(idx_in)
+    itemsize = np.dtype(NP_TYPES.FLOAT).itemsize
+    footprint = (itemsize*n_out*n_in)/(1024**2)
+
+    # display the matrix size
+    logger.debug("matrix type: %s" % matrix_type)
+    logger.debug("matrix size: (%d, %d)" % (n_out, n_in))
+    logger.debug("matrix footprint: %.3f MB" % footprint)
 
     # get the permutation for sorting
     idx_perm_out = np.argsort(idx_out)

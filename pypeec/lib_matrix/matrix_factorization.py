@@ -152,16 +152,18 @@ def get_factorize(mat, factorization_options):
     # check shape
     nnz = mat.size
     (nx, ny) = mat.shape
-    den = nnz/(nx*ny)
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
         return _get_fact_superlu(mat)
 
+    # compute matrix density
+    density = nnz/(nx*ny)
+
     # display
     logger.debug("matrix size: (%d, %d)" % (nx, ny))
     logger.debug("matrix elements: %d" % nnz)
-    logger.debug("matrix density: %.3e" % den)
+    logger.debug("matrix density: %.3e" % density)
     logger.debug("matrix library: %s" % library)
 
     # factorize the matrix
