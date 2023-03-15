@@ -133,7 +133,7 @@ def _run_solver(data_solver):
         del S_mat_m
 
         # solve the equation system
-        (sol, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
+        (sol, res, conv, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
 
         # free memory
         del pcd_op
@@ -172,17 +172,11 @@ def _run_solver(data_solver):
         # parse the terminal voltages and currents for the sources
         terminal = extract_solution.get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v)
 
-    # assign results
-    data_solution = {
+    # assign results (lightweight datastructures)
+    data_small = {
         "n": n,
         "d": d,
         "c": c,
-        "pts_net_c": pts_net_c,
-        "pts_net_m": pts_net_m,
-        "idx_vc": idx_vc,
-        "idx_vm": idx_vm,
-        "idx_src_c": idx_src_c,
-        "idx_src_v": idx_src_v,
         "freq": freq,
         "has_converged": has_converged,
         "problem_status": problem_status,
@@ -190,6 +184,18 @@ def _run_solver(data_solver):
         "condition_status": condition_status,
         "terminal": terminal,
         "integral": integral,
+    }
+
+    # assign results (large arrays)
+    data_large = {
+        "pts_net_c": pts_net_c,
+        "pts_net_m": pts_net_m,
+        "idx_vc": idx_vc,
+        "idx_vm": idx_vm,
+        "idx_src_c": idx_src_c,
+        "idx_src_v": idx_src_v,
+        "res": res,
+        "conv": conv,
         "V_vc": V_vc,
         "V_vm": V_vm,
         "J_vc": J_vc,
@@ -199,6 +205,9 @@ def _run_solver(data_solver):
         "S_vc": S_vc,
         "Q_vm": Q_vm,
     }
+
+    # assemble results
+    data_solution = {**data_small, **data_large}
 
     return data_solution
 

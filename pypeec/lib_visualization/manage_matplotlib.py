@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def _get_plot_residuum(fig, res_all, data_options):
+def _get_plot_residuum(fig, res, data_options):
     """
     Plot the final residuum (absolute value) with a histogram.
     """
@@ -27,15 +27,15 @@ def _get_plot_residuum(fig, res_all, data_options):
     plt.figure(fig)
 
     # get absolute value and the log
-    res_abs = np.abs(res_all)
+    res_abs = np.abs(res)
     v_min = np.finfo(res_abs.dtype).eps
     v_max = np.finfo(res_abs.dtype).max
     res_abs = np.clip(res_abs, v_min, v_max)
     res_log = np.log10(res_abs)
 
     # counts the elements
-    n_tot = len(res_all)
     n_plt = len(res_abs)
+    n_tot = len(res)
 
     # get the bins
     bins = np.logspace(min(res_log), max(res_log), n_bins)
@@ -56,7 +56,7 @@ def _get_plot_residuum(fig, res_all, data_options):
     plt.title("Solver Residuum / n_tot = %d / n_plt = %d" % (n_tot, n_plt))
 
 
-def _get_plot_convergence(fig, res_iter, data_options):
+def _get_plot_convergence(fig, conv, data_options):
     """
     Plot the convergence of the iterative matrix solver.
     """
@@ -69,11 +69,11 @@ def _get_plot_convergence(fig, res_iter, data_options):
     plt.figure(fig)
 
     # counts
-    n_iter = len(res_iter)
+    n_iter = len(conv)
 
     # plot the data
     idx_iter = np.arange(1, n_iter+1)
-    plt.semilogy(idx_iter, res_iter, color=color, marker=marker)
+    plt.semilogy(idx_iter, conv, color=color, marker=marker)
 
     # add cosmetics
     plt.grid()
@@ -82,7 +82,7 @@ def _get_plot_convergence(fig, res_iter, data_options):
     plt.title("Solver Convergence / n_iter = %d" % n_iter)
 
 
-def get_plot_plotter(fig, solver_status, data_plot):
+def get_plot_plotter(fig, res, conv, data_plot):
     """
     Plot the solver status (for the plotter).
     """
@@ -91,14 +91,10 @@ def get_plot_plotter(fig, solver_status, data_plot):
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
 
-    # get the data
-    res_all = solver_status["res_all"]
-    res_iter = solver_status["res_iter"]
-
     # get the main plot
     if plot_type == "convergence":
-        _get_plot_convergence(fig, res_iter, data_options)
+        _get_plot_convergence(fig, conv, data_options)
     elif plot_type == "residuum":
-        _get_plot_residuum(fig, res_all, data_options)
+        _get_plot_residuum(fig, res, data_options)
     else:
         raise ValueError("invalid plot type and plot feature")

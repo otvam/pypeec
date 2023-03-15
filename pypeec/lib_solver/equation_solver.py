@@ -31,19 +31,18 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     status_pcd = pcd_op is not None
 
     # call the solver
-    (status_gmres, n_iter, res_iter, sol) = matrix_gmres.get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options)
+    (status_gmres, conv, sol) = matrix_gmres.get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options)
 
     # compute and check the residuum
-    res_all = sys_op(sol)-rhs
-    res_norm = lna.norm(res_all)
+    res = sys_op(sol)-rhs
+    res_norm = lna.norm(res)
     status_res = res_norm < tolerance
+    n_iter = len(conv)
 
     # assign the results
     solver_status = {
-        "res_all": res_all,
         "res_norm": res_norm,
         "n_iter": n_iter,
-        "res_iter": res_iter,
         "n_dof": n_dof,
         "status_gmres": status_gmres,
         "status_res": status_res,
@@ -70,7 +69,7 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     else:
         logger.warning("matrix solver: convergence issues")
 
-    return sol, status, solver_status
+    return sol, res, conv, status, solver_status
 
 
 def get_condition(S_mat_c, S_mat_m, conditions_options):

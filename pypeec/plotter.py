@@ -57,7 +57,6 @@ def _get_grid_voxel(data_solution, data_point):
     Q_vm = data_solution["Q_vm"]
     P_vc = data_solution["P_vc"]
     P_vm = data_solution["P_vm"]
-    solver_status = data_solution["solver_status"]
 
     # get the voxel indices and the material description
     (idx, material) = manage_compute.get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v)
@@ -88,10 +87,10 @@ def _get_grid_voxel(data_solution, data_point):
     # add the magnetic field
     point = manage_voxel.set_plotter_magnetic_field(point, H_point)
 
-    return grid, voxel, point, solver_status
+    return grid, voxel, point
 
 
-def _get_plot(grid, voxel, point, solver_status, data_plotter, gui_obj):
+def _get_plot(data_solution, grid, voxel, point, data_plotter, gui_obj):
     """
     Make a plot with the specified user settings.
     The plot contains the following elements:
@@ -105,6 +104,10 @@ def _get_plot(grid, voxel, point, solver_status, data_plotter, gui_obj):
     data_window = data_plotter["data_window"]
     data_plot = data_plotter["data_plot"]
 
+    # extract the data
+    res = data_solution["res"]
+    conv = data_solution["conv"]
+
     # make the plots
     if plot_framework == "pyvista":
         # get the plotter (with the Qt framework)
@@ -117,7 +120,7 @@ def _get_plot(grid, voxel, point, solver_status, data_plotter, gui_obj):
         fig = gui_obj.open_matplotlib(data_window)
 
         # make the plot
-        manage_matplotlib.get_plot_plotter(fig, solver_status, data_plot)
+        manage_matplotlib.get_plot_plotter(fig, res, conv, data_plot)
     else:
         raise ValueError("invalid plot framework")
 
@@ -182,7 +185,7 @@ def run(data_solution, data_point, data_plotter, tag_plot=None, is_silent=False)
 
         # handle the data
         logger.info("parse the voxel geometry and the data")
-        (grid, voxel, point, solver_status) = _get_grid_voxel(data_solution, data_point)
+        (grid, voxel, point) = _get_grid_voxel(data_solution, data_point)
 
         # find the plots
         if tag_plot is None:
@@ -194,7 +197,7 @@ def run(data_solution, data_point, data_plotter, tag_plot=None, is_silent=False)
         logger.info("generate the different plots")
         for i, dat_tmp in enumerate(data_list):
             logger.info("plotting %d / %d" % (i+1, len(data_list)))
-            _get_plot(grid, voxel, point, solver_status, dat_tmp, gui_obj)
+            _get_plot(data_solution, grid, voxel, point, dat_tmp, gui_obj)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(logger, ex)
         return False, ex
