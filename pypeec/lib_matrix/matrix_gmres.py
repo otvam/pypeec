@@ -24,7 +24,8 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
     n_between_restart = gmres_options["n_between_restart"]
     n_maximum_restart = gmres_options["n_maximum_restart"]
 
-    # list for storing the residuum (callback)
+    # init list for storing the residuum (callback)
+    logger.debug("enter matrix solver")
     conv = []
 
     # define callback
@@ -33,16 +34,15 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
         logger.debug("matrix iter: iter = %d / res = %.3e" % (len(conv), res))
 
     # call the solver
-    logger.debug("start matrix solver")
     (sol, flag) = sla.gmres(
         sys_op, rhs,
         tol=rel_tol, atol=abs_tol,
         restart=n_between_restart, maxiter=n_maximum_restart,
         M=pcd_op, callback=fct, callback_type="pr_norm",
     )
-    logger.debug("exit matrix solver")
 
     # check for convergence
     status = flag == 0
+    logger.debug("exit matrix solver")
 
     return status, conv, sol

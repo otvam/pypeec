@@ -140,7 +140,7 @@ def _get_fact_iter(library, algorithm_options, mat):
     return factor
 
 
-def get_factorize(mat, factorization_options):
+def get_factorize(name, mat, factorization_options):
     """
     Factorize a sparse matrix.
     """
@@ -161,6 +161,7 @@ def get_factorize(mat, factorization_options):
     density = nnz/(nx*ny)
 
     # display
+    logger.debug("enter matrix factorization: %s" % name)
     logger.debug("matrix size: (%d, %d)" % (nx, ny))
     logger.debug("matrix elements: %d" % nnz)
     logger.debug("matrix density: %.3e" % density)
@@ -168,7 +169,6 @@ def get_factorize(mat, factorization_options):
 
     # factorize the matrix
     logger.debug("matrix factorization")
-
     if library == "SuperLU":
         factor = _get_fact_superlu(mat)
     elif library == "UMFPACK":
@@ -180,10 +180,14 @@ def get_factorize(mat, factorization_options):
     else:
         raise ValueError("invalid matrix factorization library")
 
+    # display the status
     if factor is None:
         logger.warning("factorization failure")
     else:
         logger.debug("factorization success")
+
+    # exit
+    logger.debug("exit matrix factorization: %s" % name)
 
     return factor
 

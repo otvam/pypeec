@@ -50,7 +50,7 @@ def _get_inverse_operator(mat, decomposition):
     return op
 
 
-def get_condition_matrix(mat, norm_options):
+def get_condition_matrix(name, mat, norm_options):
     """
     Compute an estimate of the condition number (norm 1) of a sparse matrix.
     """
@@ -71,13 +71,13 @@ def get_condition_matrix(mat, norm_options):
     density = nnz/(nx*ny)
 
     # display
+    logger.debug("enter matrix condition: %s" % name)
     logger.debug("matrix size: (%d, %d)" % (nx, ny))
     logger.debug("matrix elements: %d" % nnz)
     logger.debug("matrix density: %.3e" % density)
 
     # get LU decomposition
     logger.debug("compute LU decomposition")
-
     decomposition = _get_decomposition(mat)
 
     # abort if LU decomposition failed
@@ -99,5 +99,8 @@ def get_condition_matrix(mat, norm_options):
     # compute an estimate of the condition
     logger.debug("compute condition estimate")
     cond = nrm_ori*nrm_inv
+
+    # exit
+    logger.debug("exit matrix condition: %s" % name)
 
     return cond

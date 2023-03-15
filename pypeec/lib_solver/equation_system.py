@@ -505,8 +505,8 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, factori
     (Y_mat_m, S_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m)
 
     # factorize the Schur complement
-    S_fact_c = matrix_factorization.get_factorize(S_mat_c, factorization_options)
-    S_fact_m = matrix_factorization.get_factorize(S_mat_m, factorization_options)
+    S_fact_c = matrix_factorization.get_factorize("electric", S_mat_c, factorization_options)
+    S_fact_m = matrix_factorization.get_factorize("magnetic", S_mat_m, factorization_options)
 
     # if the matrix is singular, there is not preconditioner
     if (S_fact_c is None) or (S_fact_m is None):

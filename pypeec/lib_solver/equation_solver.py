@@ -85,8 +85,8 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
 
     # check the condition
     if check:
-        value_electric = matrix_condition.get_condition_matrix(S_mat_c, norm_options)
-        value_magnetic = matrix_condition.get_condition_matrix(S_mat_m, norm_options)
+        value_electric = matrix_condition.get_condition_matrix("electric", S_mat_c, norm_options)
+        value_magnetic = matrix_condition.get_condition_matrix("magnetic", S_mat_m, norm_options)
         status = (value_electric < tolerance) and (value_magnetic < tolerance)
     else:
         value_electric = float("nan")
