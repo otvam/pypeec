@@ -104,7 +104,7 @@ def get_fft_tensor_expand(mat, replace):
     """
 
     # get the tensor size
-    (nx, ny, nz) = mat.shape[0:3]
+    (nx, ny, nz, nd) = mat.shape
 
     # get the transform
     mat_trf = _get_fftn(mat, (2*nx, 2*ny, 2*nz), (0, 1, 2), replace)
