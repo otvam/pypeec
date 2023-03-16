@@ -108,7 +108,7 @@ def _get_full_cross(mat_fft, res):
     The product is computed directly and requires additional memory allocation.
     """
 
-    res_tmp = cp.zeros(res.shape, dtype=NP_TYPES.COMPLEX)
+    res_tmp = cp.empty(res.shape, dtype=NP_TYPES.COMPLEX)
     res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2]*res[:, :, :, 1]+mat_fft[:, :, :, 1]*res[:, :, :, 2]
     res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2]*res[:, :, :, 0]+mat_fft[:, :, :, 0]*res[:, :, :, 2]
     res_tmp[:, :, :, 2] = -mat_fft[:, :, :, 1]*res[:, :, :, 0]-mat_fft[:, :, :, 0]*res[:, :, :, 1]
@@ -140,7 +140,7 @@ def _get_shard_cross(mat_fft, res, matrix_split):
         idx_tmp = cp.arange(idx[i], idx[i+1])
 
         # compute the product
-        res_tmp = cp.zeros((len(idx_tmp), nd), dtype=NP_TYPES.COMPLEX)
+        res_tmp = cp.empty((len(idx_tmp), nd), dtype=NP_TYPES.COMPLEX)
         res_tmp[:, 0] = +mat_fft[idx_tmp, 2] * res[idx_tmp, 1] + mat_fft[idx_tmp, 1] * res[idx_tmp, 2]
         res_tmp[:, 1] = -mat_fft[idx_tmp, 2] * res[idx_tmp, 0] + mat_fft[idx_tmp, 0] * res[idx_tmp, 2]
         res_tmp[:, 2] = -mat_fft[idx_tmp, 1] * res[idx_tmp, 0] - mat_fft[idx_tmp, 0] * res[idx_tmp, 1]
@@ -174,7 +174,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
         raise ValueError("invalid matrix type")
 
     # get the memory footprint
-    nnz = (2*nx)*(2*ny)*(2*nz)*(nd+nd_out)
+    nnz = (2*nx)*(2*ny)*(2*nz)*nd
     itemsize = cp.dtype(NP_TYPES.COMPLEX).itemsize
     footprint = (itemsize*nnz)/(1024**2)
 
