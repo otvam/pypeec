@@ -92,7 +92,9 @@ def get_fft_tensor_keep(mat, replace):
     The size of the output is the same of the input
     """
 
-    return _get_fftn(mat, None, (0, 1, 2), replace)
+    mat_trf = _get_fftn(mat, None, (0, 1, 2), replace)
+
+    return mat_trf
 
 
 def get_fft_tensor_expand(mat, replace):
@@ -102,9 +104,12 @@ def get_fft_tensor_expand(mat, replace):
     """
 
     # get the tensor size
-    (nx, ny, nz, nd) = mat.shape
+    (nx, ny, nz) = mat.shape[0:3]
 
-    return _get_fftn(mat, (2*nx, 2*ny, 2*nz), (0, 1, 2), replace)
+    # get the transform
+    mat_trf = _get_fftn(mat, (2*nx, 2*ny, 2*nz), (0, 1, 2), replace)
+
+    return mat_trf
 
 
 def get_ifft_tensor(mat, replace):
@@ -113,4 +118,6 @@ def get_ifft_tensor(mat, replace):
     The size of the output is the same of the input
     """
 
-    return _get_ifftn(mat, None, (0, 1, 2), replace)
+    mat_trf = _get_ifftn(mat, None, (0, 1, 2), replace)
+
+    return mat_trf
