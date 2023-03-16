@@ -19,6 +19,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_matrix import fourier_transform
 from pypeec.lib_utils import timelogger
 from pypeec import config
+from memory_profiler import profile
 
 # get a logger
 logger = timelogger.get_logger("FFT")
@@ -236,6 +237,8 @@ def get_tensor(idx_in, vec_in):
     idx_sel = idx_in["idx_sel"]
     idx_mat = idx_in["idx_mat"]
 
+    # shape = (2*shape[0], 2*shape[1], 2*shape[2], shape[3])
+
     res = cp.zeros(shape, dtype=NP_TYPES.COMPLEX)
     if idx_sel is None:
         res[idx_mat] = vec_in[:]
@@ -291,7 +294,12 @@ def get_combined(idx_in, idx_out, mat_fft, vec_in, matrix_type):
 def get_mult(idx_in, idx_out, mat_fft, vec_in, dim_in, dim_out, dim_mat):
     res = get_tensor(idx_in[dim_in], vec_in)
     res = fourier_transform.get_fft_tensor_expand(res, True)
+
+    # res = fourier_transform.get_fft_tensor_keep(res, True)
+
     res *= mat_fft[:, :, :, [dim_mat]]
+    # res *= mat_fft[:, :, :, dim_mat]
+
     res = fourier_transform.get_ifft_tensor(res, True)
     res = get_vector(idx_out[dim_out], res)
 
@@ -317,8 +325,8 @@ def get_split(n_out, idx_in, idx_out, mat_fft, vec_in, matrix_type):
     else:
         raise ValueError("invalid matrix type")
 
-
     return res
+
 
 def get_multiply(data, vec_in, matrix_type, flip):
     """
@@ -361,50 +369,3 @@ def get_multiply(data, vec_in, matrix_type, flip):
         vec_out = cp.asnumpy(vec_out)
 
     return vec_out
-
-
-    # res_out = cp.zeros(n_out, dtype=NP_TYPES.COMPLEX)
-    #
-    # # create a tensor for the vector
-    # for i in range(3):
-    #     res_tmp = get_tensor(idx_in[i], vec_in)
-    #     res_tmp = fourier_transform.get_fft_tensor_expand(res_tmp, True)
-    #     res_tmp *= mat_fft
-    #     res_tmp = fourier_transform.get_ifft_tensor(res_tmp, True)
-    #     res_tmp = get_vector(idx_out[i], res_tmp)
-    #
-    #     res_out += res_tmp
-
-
-    # res = cp.zeros(shape, dtype=NP_TYPES.COMPLEX)
-    #
-    # # assign the elements from the tensor indices
-    # res[idx_in] = vec_in
-    #
-    # # compute the FFT of the vector (result is the same size as the FFT circulant tensor)
-    # res = fourier_transform.get_fft_tensor_expand(res, True)
-    #
-    # # matrix vector multiplication in frequency domain with the FFT circulant tensor
-    # if matrix_type == "single":
-    #     res *= mat_fft
-    # elif matrix_type == "diag":
-    #     res *= mat_fft
-    # elif matrix_type == "cross":
-    #     if MATRIX_SPLIT is None:
-    #         res = _get_full_cross(mat_fft, res)
-    #     else:
-    #         res = _get_shard_cross(mat_fft, res, MATRIX_SPLIT)
-    # else:
-    #     raise ValueError("invalid matrix type")
-    #
-    # # compute the iFFT
-    # res = fourier_transform.get_ifft_tensor(res, True)
-    #
-    # # select the elements from the tensor indices
-    # res_out = res[idx_out]
-    #
-    # # unload the data from the GPU
-    # if USE_FFT_GPU:
-    #     res_out = cp.asnumpy(res_out)
-    #
-    # return res_out
