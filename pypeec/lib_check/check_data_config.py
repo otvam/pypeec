@@ -83,8 +83,7 @@ def _check_data(data_config):
         datachecker.check_float("FFTW_CACHE_TIMEOUT", FFT_OPTIONS["FFTW_CACHE_TIMEOUT"], is_positive=True)
 
     # check other switches
-    if data_config["MATRIX_SPLIT"] is not None:
-        datachecker.check_integer("MATRIX_SPLIT", data_config["MATRIX_SPLIT"], is_positive=True, can_be_zero=False)
+    datachecker.check_boolean("MATRIX_SPLIT", data_config["MATRIX_SPLIT"])
     datachecker.check_choice("MATRIX_MULTIPLICATION", data_config["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
     datachecker.check_boolean("USE_DOUBLE", data_config["USE_DOUBLE"])
     datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True)

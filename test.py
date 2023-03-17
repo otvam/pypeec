@@ -1,13 +1,13 @@
 import time
 import numpy as np
 from pypeec.lib_matrix import multiply_fft
-from pypeec.lib_matrix import multiply_fft_new
+from pypeec.lib_matrix import multiply_fft
 
 flip = False
 
-# matrix_type = "diag"
-# mat = np.random.rand(3, 3, 3, 1)
-#
+matrix_type = "diag"
+mat = np.random.rand(3, 3, 3, 1)
+
 # matrix_type = "cross"
 # mat = np.random.rand(3, 3, 3, 3)
 
@@ -17,8 +17,8 @@ flip = False
 # matrix_type = "single"
 # mat = np.random.rand(200, 200, 100, 1)
 
-matrix_type = "cross"
-mat = np.random.rand(150, 150, 100, 3)
+# matrix_type = "cross"
+# mat = np.random.rand(150, 150, 100, 3)
 
 idx_out = np.array([0, 50, 51, 10])
 idx_in = np.array([0, 50, 51, 10])

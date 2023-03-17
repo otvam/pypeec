@@ -52,10 +52,12 @@ FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW" or "CuPy"
 #   - DIRECT is only useful for debugging and educational purposes
 MATRIX_MULTIPLICATION: "FFT"  # "FFT" or "DIRECT"
 
-# number of chunks for computing the tensor product
-#   - used during the FFT matrix-vector multiplication
-#   - dividing the tensor in several chunks limit the memory requirements
-MATRIX_SPLIT: 10  # number of chunks (null for direct computation)
+# method for computing the tensor multiplication with FFT
+#   - if true, the computation is done with the 4D tensors
+#   - if false, the 4D tensors are sliced into several 3D tensors
+#   - splitting the tensors has a slightly increased computational cost
+#   - splitting the tensors reduces the memory footprint of the computation
+MATRIX_SPLIT: true
 
 # double precision
 #   - if false, use single precision numbers
