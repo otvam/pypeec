@@ -300,8 +300,8 @@ def _get_compute_split(n_out, idx_in, idx_out, mat_fft, vec_in, matrix_type):
         res = cp.zeros(n_out, dtype=NP_TYPES.COMPLEX)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 1, 0, 2)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 2, 0, 1)
-        res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 0, 1, 2)
-        res -= _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 2, 1, 0)
+        res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 2, 1, 0)
+        res -= _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 0, 1, 2)
         res -= _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 0, 2, 1)
         res -= _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 1, 2, 0)
     else:
