@@ -26,6 +26,8 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
 
     # init list for storing the residuum (callback)
     logger.debug("enter matrix solver")
+
+    # list for storing the residuum
     conv = []
 
     # define callback
@@ -43,6 +45,8 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
 
     # check for convergence
     status = flag == 0
+
+    # exit
     logger.debug("exit matrix solver")
 
     return status, conv, sol

@@ -98,13 +98,13 @@ def _check_library(data_config):
     # check GPU
     if data_config["FFT_LIBRARY"] == "SciPy":
         lib = importlib.util.find_spec("scipy")
-        datachecker.check_assert("FFT_LIBRARY", lib is not None, "Library SciPy is not installed")
+        datachecker.check_assert("FFT_LIBRARY", lib is not None, "SciPy is not installed")
     elif data_config["FFT_LIBRARY"] == "FFTW":
         lib = importlib.util.find_spec("pyfftw")
-        datachecker.check_assert("FFT_LIBRARY", lib is not None, "Library FFTW is not installed")
+        datachecker.check_assert("FFT_LIBRARY", lib is not None, "FFTW is not installed")
     elif data_config["FFT_LIBRARY"] == "CuPy":
         lib = importlib.util.find_spec("cupy")
-        datachecker.check_assert("FFT_LIBRARY", lib is not None, "Library CuPy is not installed")
+        datachecker.check_assert("FFT_LIBRARY", lib is not None, "CuPy is not installed")
     else:
         raise ValueError("invalid FFT library")
 

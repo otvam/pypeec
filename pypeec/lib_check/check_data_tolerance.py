@@ -77,13 +77,13 @@ def _check_factorization_options(factorization_options):
 
     if library in ["SuperLU", "GCROT", "BICG", "GMRES"]:
         lib = importlib.util.find_spec("scipy.sparse.linalg")
-        datachecker.check_assert("library", lib is not None, "Library SciPy is not installed")
+        datachecker.check_assert("library", lib is not None, "SciPy is not installed")
     elif library == "UMFPACK":
         lib = importlib.util.find_spec("scikits.umfpack")
-        datachecker.check_assert("library", lib is not None, "Library UMFPACK is not installed")
+        datachecker.check_assert("library", lib is not None, "UMFPACK is not installed")
     elif library == "PARDISO":
         lib = importlib.util.find_spec("pydiso")
-        datachecker.check_assert("library", lib is not None, "Library PARDISO is not installed")
+        datachecker.check_assert("library", lib is not None, "PARDISO is not installed")
     else:
         raise ValueError("invalid matrix factorization library")
 
