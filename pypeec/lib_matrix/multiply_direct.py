@@ -140,7 +140,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     footprint = (itemsize*n_out*n_in)/(1024**2)
 
     # display the matrix size
-    logger.debug("matrix type: %s" % matrix_type)
+    logger.debug("enter direct multiplication: %s" % matrix_type)
     logger.debug("matrix size: (%d, %d)" % (n_out, n_in))
     logger.debug("matrix footprint: %.3f MB" % footprint)
 
@@ -207,6 +207,9 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     # restore the original indices order
     mat_dense = mat_dense[idx_rev_out, :]
     mat_dense = mat_dense[:, idx_rev_in]
+
+    # exit
+    logger.debug("exit direct multiplication: %s" % matrix_type)
 
     return mat_dense
 

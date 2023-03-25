@@ -34,7 +34,7 @@ def _get_multiply(data, vec_in, matrix_type, flip):
     """
 
     if MATRIX_MULTIPLICATION == "FFT":
-        res_out = multiply_fft.get_multiply(data, vec_in, matrix_type, flip)
+        res_out = multiply_fft.get_multiply(data, vec_in, flip)
     elif MATRIX_MULTIPLICATION == "DIRECT":
         res_out = multiply_direct.get_multiply(data, vec_in, flip)
     else:

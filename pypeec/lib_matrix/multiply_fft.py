@@ -35,6 +35,7 @@ NP_TYPES = config.NP_TYPES
 
 # get GPU config
 USE_FFT_GPU = config.USE_FFT_GPU
+FFT_LIBRARY = config.FFT_LIBRARY
 
 # split (or not) the 4D tensors into 3D slices
 MATRIX_SPLIT = config.MATRIX_SPLIT
@@ -329,9 +330,10 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     footprint = (itemsize*nnz)/(1024**2)
 
     # display the tensor size
-    logger.debug("tensor type: %s" % matrix_type)
+    logger.debug("enter FFT multiplication: %s" % matrix_type)
     logger.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
     logger.debug("tensor footprint: %.3f MB" % footprint)
+    logger.debug("FFT library: %s / GPU: %s" % (FFT_LIBRARY, USE_FFT_GPU))
 
     # get the sign that will be applied to the different blocks of the tensor
     sign = _get_tensor_sign(matrix_type, nd_in)
@@ -376,10 +378,13 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
         idx_in_mat = _get_indices(nx, ny, nz, idx_in, nd_out, None)
         idx_out_mat = _get_indices(nx, ny, nz, idx_out, nd_out, None)
 
-    return n_in, n_out, idx_in_mat, idx_out_mat, mat_fft
+    # exit
+    logger.debug("exit FFT multiplication: %s" % matrix_type)
+
+    return n_in, n_out, idx_in_mat, idx_out_mat, mat_fft, matrix_type
 
 
-def get_multiply(data, vec_in, matrix_type, flip):
+def get_multiply(data, vec_in, flip):
     """
     Matrix-vector multiplication with FFT.
     If the flip switch is activated, the input and output are flipped.
@@ -391,7 +396,7 @@ def get_multiply(data, vec_in, matrix_type, flip):
     """
 
     # extract data
-    (n_in, n_out, idx_in, idx_out, mat_fft) = data
+    (n_in, n_out, idx_in, idx_out, mat_fft, matrix_type) = data
 
     # flip the input and output
     if flip:

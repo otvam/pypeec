@@ -165,10 +165,10 @@ def get_factorize(name, mat, factorization_options):
     logger.debug("matrix size: (%d, %d)" % (nx, ny))
     logger.debug("matrix elements: %d" % nnz)
     logger.debug("matrix density: %.3e" % density)
-    logger.debug("matrix library: %s" % library)
+    logger.debug("factorization library: %s" % library)
 
     # factorize the matrix
-    logger.debug("matrix factorization")
+    logger.debug("compute factorization")
     if library == "SuperLU":
         factor = _get_fact_superlu(mat)
     elif library == "UMFPACK":
