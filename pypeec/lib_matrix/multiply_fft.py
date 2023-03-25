@@ -1,23 +1,12 @@
 """
 Module for doing matrix-vector multiplication (with circulant tensors and FFT).
 
-Three different types of matrices are supported:
-    - single: tensor representing a simple matrix
-        - number of dimensions of the input matrix = 1
-        - number of dimensions of the input vector = 1
-    - diag: tensor representing a block diagonal matrix
-        - number of dimensions of the input matrix = 1
-        - number of dimensions of the input vector = 3
-    - cross: tensor representing a block off-diagonal matrix
-        - number of dimensions of the input matrix = 3
-        - number of dimensions of the input vector = 3
-
 The multiplication can be done in two ways:
     - combined: the computation is done with the 4D tensors
     - split: the 4D tensors are sliced into several 3D tensors
 
 The "combined" mode is typically faster than the "split" mode.
-The "split" features a reduced memory footprint.
+The "split" mode features a reduced memory footprint.
 """
 
 __author__ = "Thomas Guillod"
@@ -47,16 +36,16 @@ else:
     import numpy as cp
 
 
-def _get_tensor_sign(matrix_type, nd_in):
+def _get_tensor_sign(name, nd_in):
     """
     Get the signs for the different tensor blocks composing the circulant tensor.
     """
 
-    if matrix_type == "single":
+    if name == "potential":
         sign = cp.ones((2, 2, 2, nd_in), dtype=NP_TYPES.FLOAT)
-    elif matrix_type == "diag":
+    elif name == "inductance":
         sign = cp.ones((2, 2, 2, nd_in), dtype=NP_TYPES.FLOAT)
-    elif matrix_type == "cross":
+    elif name == "coupling":
         sign = cp.empty((2, 2, 2, nd_in), dtype=NP_TYPES.FLOAT)
         sign[0, 0, 0, :] = cp.array([+1, +1, +1], dtype=NP_TYPES.FLOAT)
         sign[1, 0, 0, :] = cp.array([-1, +1, +1], dtype=NP_TYPES.FLOAT)
@@ -191,7 +180,7 @@ def _get_vector(idx, res):
     return vec
 
 
-def _get_compute_combined(idx_in, idx_out, mat_fft, vec_in, matrix_type):
+def _get_compute_combined(name, idx_in, idx_out, mat_fft, vec_in):
     """
     Matrix-vector multiplication with FFT.
     The multiplication is done directly with the 4D tensors.
@@ -219,11 +208,11 @@ def _get_compute_combined(idx_in, idx_out, mat_fft, vec_in, matrix_type):
     res = fourier_transform.get_fft_tensor_expand(res, True)
 
     # matrix vector multiplication in frequency domain with the FFT circulant tensor
-    if matrix_type == "single":
+    if name == "potential":
         res *= mat_fft
-    elif matrix_type == "diag":
+    elif name == "inductance":
         res *= mat_fft
-    elif matrix_type == "cross":
+    elif name == "coupling":
         res_tmp = cp.empty(res.shape, dtype=NP_TYPES.COMPLEX)
         res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2]*res[:, :, :, 1]+mat_fft[:, :, :, 1]*res[:, :, :, 2]
         res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2]*res[:, :, :, 0]+mat_fft[:, :, :, 0]*res[:, :, :, 2]
@@ -265,7 +254,7 @@ def _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, dim_in, dim_out, dim_m
     return res
 
 
-def _get_compute_split(n_out, idx_in, idx_out, mat_fft, vec_in, matrix_type):
+def _get_compute_split(name, n_out, idx_in, idx_out, mat_fft, vec_in):
     """
     Matrix-vector multiplication with FFT.
     The multiplication is done by splitting the 4D tensor in 3D slices.
@@ -287,16 +276,16 @@ def _get_compute_split(n_out, idx_in, idx_out, mat_fft, vec_in, matrix_type):
         - the tensor is flattened into a vector: (2*nx, 2*ny, 2*nz) to n_out
     """
 
-    if matrix_type == "single":
+    if name == "potential":
         # the multiplication is composed of a single slice
         res = _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 0, 0, 0)
-    elif matrix_type == "diag":
+    elif name == "inductance":
         # the multiplication is decomposed into three slices
         res = cp.zeros(n_out, dtype=NP_TYPES.COMPLEX)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 0, 0, 0)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 1, 1, 0)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 2, 2, 0)
-    elif matrix_type == "cross":
+    elif name == "coupling":
         # the multiplication is decomposed into six slices
         res = cp.zeros(n_out, dtype=NP_TYPES.COMPLEX)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 1, 0, 2)
@@ -311,7 +300,7 @@ def _get_compute_split(n_out, idx_in, idx_out, mat_fft, vec_in, matrix_type):
     return res
 
 
-def get_prepare(idx_out, idx_in, mat, matrix_type):
+def get_prepare(name, idx_out, idx_in, mat):
     """
     Construct a circulant tensor from a 4D tensor.
     The circulant tensor is constructed along the first 3D.
@@ -330,13 +319,13 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     footprint = (itemsize*nnz)/(1024**2)
 
     # display the tensor size
-    logger.debug("enter FFT multiplication: %s" % matrix_type)
+    logger.debug("enter FFT multiplication: %s" % name)
     logger.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
     logger.debug("tensor footprint: %.3f MB" % footprint)
     logger.debug("FFT library: %s / GPU: %s" % (FFT_LIBRARY, USE_FFT_GPU))
 
     # get the sign that will be applied to the different blocks of the tensor
-    sign = _get_tensor_sign(matrix_type, nd_in)
+    sign = _get_tensor_sign(name, nd_in)
 
     # load the data to the GPU
     if USE_FFT_GPU:
@@ -348,11 +337,11 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     mat_fft = _get_tensor_circulant(mat, sign)
 
     # get tensor last dimension
-    if matrix_type == "single":
+    if name == "potential":
         nd_out = 1
-    elif matrix_type == "diag":
+    elif name == "inductance":
         nd_out = 3
-    elif matrix_type == "cross":
+    elif name == "coupling":
         nd_out = 3
     else:
         raise ValueError("invalid matrix type")
@@ -379,9 +368,9 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
         idx_out_mat = _get_indices(nx, ny, nz, idx_out, nd_out, None)
 
     # exit
-    logger.debug("exit FFT multiplication: %s" % matrix_type)
+    logger.debug("exit FFT multiplication: %s" % name)
 
-    return n_in, n_out, idx_in_mat, idx_out_mat, mat_fft, matrix_type
+    return name, n_in, n_out, idx_in_mat, idx_out_mat, mat_fft
 
 
 def get_multiply(data, vec_in, flip):
@@ -396,7 +385,7 @@ def get_multiply(data, vec_in, flip):
     """
 
     # extract data
-    (n_in, n_out, idx_in, idx_out, mat_fft, matrix_type) = data
+    (name, n_in, n_out, idx_in, idx_out, mat_fft) = data
 
     # flip the input and output
     if flip:
@@ -408,9 +397,9 @@ def get_multiply(data, vec_in, flip):
         vec_in = cp.array(vec_in)
 
     if MATRIX_SPLIT:
-        vec_out = _get_compute_split(n_out, idx_in, idx_out, mat_fft, vec_in, matrix_type)
+        vec_out = _get_compute_split(name, n_out, idx_in, idx_out, mat_fft, vec_in)
     else:
-        vec_out = _get_compute_combined(idx_in, idx_out, mat_fft, vec_in, matrix_type)
+        vec_out = _get_compute_combined(name, idx_in, idx_out, mat_fft, vec_in)
 
     # unload the data from the GPU
     if USE_FFT_GPU:

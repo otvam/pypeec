@@ -1,16 +1,5 @@
 """
 Module for doing matrix-vector multiplication (direct multiplication).
-
-Three different types of matrices are supported:
-    - single: tensor representing a simple matrix
-        - number of dimensions of the input matrix = 1
-        - number of dimensions of the input vector = 1
-    - diag: tensor representing a block diagonal matrix
-        - number of dimensions of the input matrix = 1
-        - number of dimensions of the input vector = 3
-    - cross: tensor representing a block off-diagonal matrix
-        - number of dimensions of the input matrix = 3
-        - number of dimensions of the input vector = 3
 """
 
 __author__ = "Thomas Guillod"
@@ -124,7 +113,7 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     return mat_dense
 
 
-def get_prepare(idx_out, idx_in, mat, matrix_type):
+def get_prepare(name, idx_out, idx_in, mat):
     """
     Construct a dense matrix from a 4D tensor.
 
@@ -140,7 +129,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     footprint = (itemsize*n_out*n_in)/(1024**2)
 
     # display the matrix size
-    logger.debug("enter direct multiplication: %s" % matrix_type)
+    logger.debug("enter direct multiplication: %s" % name)
     logger.debug("matrix size: (%d, %d)" % (n_out, n_in))
     logger.debug("matrix footprint: %.3f MB" % footprint)
 
@@ -157,9 +146,9 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     idx_in = idx_in[idx_perm_in]
 
     # get the matrix (sorted indices)
-    if matrix_type == "single":
+    if name == "potential":
         mat_dense = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
-    elif matrix_type == "diag":
+    elif name == "inductance":
         # fill the diagonal blocks
         mat_dense_xx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
         mat_dense_yy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 1, 1, "abs")
@@ -180,7 +169,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
             [mat_dense_zx, mat_dense_zy, mat_dense_zz],
         ]
         mat_dense = np.block(mat_dense)
-    elif matrix_type == "cross":
+    elif name == "coupling":
         # fill the off-diagonal blocks
         mat_dense_xy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 2], 0, 1, "z")
         mat_dense_xz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 1], 0, 2, "y")
@@ -209,7 +198,7 @@ def get_prepare(idx_out, idx_in, mat, matrix_type):
     mat_dense = mat_dense[:, idx_rev_in]
 
     # exit
-    logger.debug("exit direct multiplication: %s" % matrix_type)
+    logger.debug("exit direct multiplication: %s" % name)
 
     return mat_dense
 

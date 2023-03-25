@@ -4,15 +4,18 @@ Module for doing matrix-vector multiplication:
     - multiplication with FFT and circulant tensors
 
 Three different types of matrices are supported:
-    - single: tensor representing a simple matrix
-        - number of dimensions of the input matrix = 1
+    - potential: tensor representing a simple potential matrix
+        - size of the last dimension of the input tensor = 1
         - number of dimensions of the input vector = 1
-    - diag: tensor representing a block diagonal matrix
-        - number of dimensions of the input matrix = 1
+        - number of dimensions of the output vector = 1
+    - inductance: tensor representing a block diagonal inductance matrix
+        - size of the last dimension of the input tensor = 1
         - number of dimensions of the input vector = 3
-    - cross: tensor representing a block off-diagonal matrix
-        - number of dimensions of the input matrix = 3
+        - number of dimensions of the output vector = 3
+    - coupling: tensor representing a block off-diagonal coupling matrix
+        - size of the last dimension of the input tensor = 3
         - number of dimensions of the input vector = 3
+        - number of dimensions of the output vector = 3
 
 A matrix-vector operator is returned for performing the matrix-vector multiplication.
 """
@@ -28,7 +31,7 @@ from pypeec import config
 MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION
 
 
-def _get_multiply(data, vec_in, matrix_type, flip):
+def _get_multiply(data, vec_in, flip):
     """
     Make a matrix-vector multiplication.
     """
@@ -43,70 +46,70 @@ def _get_multiply(data, vec_in, matrix_type, flip):
     return res_out
 
 
-def _get_prepare(idx_out, idx_in, mat, matrix_type):
+def _get_prepare(name, idx_out, idx_in, mat):
     """
     Prepare the matrix for the multiplication.
     """
 
     # get the matrix
     if MATRIX_MULTIPLICATION == "FFT":
-        data = multiply_fft.get_prepare(idx_out, idx_in, mat, matrix_type)
+        data = multiply_fft.get_prepare(name,idx_out, idx_in, mat)
     elif MATRIX_MULTIPLICATION == "DIRECT":
-        data = multiply_direct.get_prepare(idx_out, idx_in, mat, matrix_type)
+        data = multiply_direct.get_prepare(name,idx_out, idx_in, mat)
     else:
         raise ValueError("invalid multiplication library")
 
     return data
 
 
-def get_operator_single(idx, mat):
+def get_operator_potential(idx, mat):
     """
-    Get the linear matrix-vector operator for a single-type matrix.
+    Get the linear matrix-vector operator for a simple potential matrix.
     """
 
     # prepare the matrix
-    data = _get_prepare(idx, idx, mat, "single")
+    data = _get_prepare("potential", idx, idx, mat)
 
     # function describing the matrix-vector multiplication
     def op(vec_in):
-        res_out = _get_multiply(data, vec_in, "single", False)
+        res_out = _get_multiply(data, vec_in, False)
         return res_out
 
     return op
 
 
-def get_operator_diag(idx, mat):
+def get_operator_inductance(idx, mat):
     """
-    Get the linear matrix-vector operator for a diagonal-type matrix.
+    Get the linear matrix-vector operator for a block diagonal inductance matrix.
     """
 
     # prepare the matrix
-    data = _get_prepare(idx, idx, mat, "diag")
+    data = _get_prepare("inductance", idx, idx, mat)
 
     # function describing the matrix-vector multiplication
     def op(vec_in):
-        res_out = _get_multiply(data, vec_in, "diag", False)
+        res_out = _get_multiply(data, vec_in, False)
         return res_out
 
     return op
 
 
-def get_operator_cross(idx_out, idx_in, mat):
+def get_operator_coupling(idx_out, idx_in, mat):
     """
-    Get the linear matrix-vector operator for a cross-type matrix.
+    Get the linear matrix-vector operator for a block off-diagonal coupling matrix.
     """
 
     # prepare the matrix
-    data = _get_prepare(idx_out, idx_in, mat, "cross")
+    data = _get_prepare("coupling", idx_out, idx_in, mat)
 
     # function describing the matrix-vector multiplication
     def op_for(vec_in):
-        res_out = _get_multiply(data, vec_in, "cross", False)
+        res_out = _get_multiply(data, vec_in, False)
         return res_out
 
     # function describing the matrix-vector multiplication
     def op_rev(vec_in):
-        res_out = _get_multiply(data, vec_in, "cross", True)
+        res_out = _get_multiply(data, vec_in, True)
         return res_out
 
     return op_for, op_rev

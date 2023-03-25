@@ -90,14 +90,14 @@ def _run_solver(data_solver):
     # get the resistances and inductances
     with timelogger.BlockTimer(logger, "system_matrix"):
         # get the resistance vector
-        R_c = system_matrix.get_R_vector(n, d, A_net_c, idx_fc, rho_vc, has_electric)
-        R_m = system_matrix.get_R_vector(n, d, A_net_m, idx_fm, rho_vm, has_magnetic)
+        R_c = system_matrix.get_resistance_vector(n, d, A_net_c, idx_fc, rho_vc, has_electric)
+        R_m = system_matrix.get_resistance_vector(n, d, A_net_m, idx_fm, rho_vm, has_magnetic)
 
         # get the inductance tensor (preconditioner and full problem)
-        (L_c, L_op_c) = system_matrix.get_L_matrix(n, d, idx_fc, G_self, G_mutual, has_electric)
+        (L_c, L_op_c) = system_matrix.get_inductance_matrix(n, d, idx_fc, G_self, G_mutual, has_electric)
 
         # get the potential tensor (preconditioner and full problem)
-        (P_m, P_op_m) = system_matrix.get_P_matrix(d, idx_vm, G_self, G_mutual, has_magnetic)
+        (P_m, P_op_m) = system_matrix.get_potential_matrix(d, idx_vm, G_self, G_mutual, has_magnetic)
 
         # free memory
         del G_self

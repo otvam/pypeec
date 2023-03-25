@@ -85,7 +85,7 @@ def _get_operator_zeros(idx_out):
     return op
 
 
-def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
+def get_resistance_vector(n, d, A_net, idx_f, rho_v, has_domain):
     """
     Extract the resistance vector of the system (diagonal of the resistance matrix).
 
@@ -120,7 +120,7 @@ def get_R_vector(n, d, A_net, idx_f, rho_v, has_domain):
     return R
 
 
-def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
+def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     """
     Extract the inductance matrix of the system (used for the full system).
 
@@ -162,7 +162,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     L = scale*G_self
 
     # get the matrix-vector operator
-    L_op_tmp = matrix_multiply.get_operator_diag(idx_f, G_mutual)
+    L_op_tmp = matrix_multiply.get_operator_inductance(idx_f, G_mutual)
 
     # function describing the coupling from the electric to the magnetic faces
     def L_op(var_f):
@@ -172,7 +172,7 @@ def get_L_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     return L, L_op
 
 
-def get_P_matrix(d, idx_v, G_self, G_mutual, has_domain):
+def get_potential_matrix(d, idx_v, G_self, G_mutual, has_domain):
     """
     Extract the potential matrix of the system.
 
@@ -204,7 +204,7 @@ def get_P_matrix(d, idx_v, G_self, G_mutual, has_domain):
     P = scale*G_self
 
     # get the matrix-vector operator
-    P_op_tmp = matrix_multiply.get_operator_single(idx_v, G_mutual)
+    P_op_tmp = matrix_multiply.get_operator_potential(idx_v, G_mutual)
 
     # function describing the coupling from the electric to the magnetic faces
     def P_op(var_v):
@@ -254,7 +254,7 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
     (A_fv_net_m, idx_fvm) = _get_face_voxel_matrix(n, idx_vm, idx_fm, A_net_m)
 
     # get the coupling operator (voxel to voxel)
-    (K_op_c_tmp, K_op_m_tmp) = matrix_multiply.get_operator_cross(idx_fvc, idx_fvm, K_tsr)
+    (K_op_c_tmp, K_op_m_tmp) = matrix_multiply.get_operator_coupling(idx_fvc, idx_fvm, K_tsr)
 
     # function describing the coupling from the magnetic to the electric faces
     def K_op_c(var_fm):
