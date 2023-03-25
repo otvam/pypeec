@@ -7,7 +7,6 @@ This allows for a minimization of the loaded dependencies.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import os
 import os.path
 
 
@@ -51,9 +50,8 @@ def run_mesher(file_mesher, file_voxel):
         data_mesher = fileio.load_config(file_mesher)
 
         # get the path for relative file loading
-        path_cwd = os.getcwd()
-        path_ref = os.path.dirname(file_mesher)
-        path_ref = os.path.relpath(path_ref, path_cwd)
+        path_ref = os.path.abspath(file_mesher)
+        path_ref = os.path.dirname(path_ref)
 
         # call the mesher
         (status, data_voxel, ex) = mesher.run(data_mesher, path_ref)
