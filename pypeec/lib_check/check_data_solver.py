@@ -251,7 +251,6 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         "coupling_simplify": data_tolerance["coupling_simplify"],
         "solver_options": data_tolerance["solver_options"],
         "condition_options": data_tolerance["condition_options"],
-        "factorization_options": data_tolerance["factorization_options"],
         "freq": data_problem["freq"],
         "material_idx": material_idx,
         "source_idx": source_idx,

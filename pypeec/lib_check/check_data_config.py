@@ -50,6 +50,8 @@ def _check_data(data_config):
         "LOGGING_OPTIONS",
         "FFT_OPTIONS",
         "FFT_LIBRARY",
+        "FACTORIZATION_OPTIONS",
+        "FACTORIZATION_LIBRARY",
         "MATRIX_SPLIT",
         "MATRIX_MULTIPLICATION",
         "USE_DOUBLE",
@@ -82,12 +84,40 @@ def _check_data(data_config):
     if FFT_OPTIONS["FFTW_CACHE_TIMEOUT"] is not None:
         datachecker.check_float("FFTW_CACHE_TIMEOUT", FFT_OPTIONS["FFTW_CACHE_TIMEOUT"], is_positive=True)
 
+    # check factorization options
+    FACTORIZATION_OPTIONS = data_config["FACTORIZATION_OPTIONS"]
+    datachecker.check_float("ITER_REL_TOL", FACTORIZATION_OPTIONS["ITER_REL_TOL"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("ITER_ABS_TOL", FACTORIZATION_OPTIONS["ITER_ABS_TOL"], is_positive=True, can_be_zero=False)
+    datachecker.check_integer("ITER_N_MAX", FACTORIZATION_OPTIONS["ITER_N_MAX"], is_positive=True, can_be_zero=False)
+    if FACTORIZATION_OPTIONS["THREAD_PARDISO"] is not None:
+        datachecker.check_integer("THREAD_PARDISO", FACTORIZATION_OPTIONS["THREAD_PARDISO"], is_positive=True, can_be_zero=False)
+    if FACTORIZATION_OPTIONS["THREAD_MKL"] is not None:
+        datachecker.check_integer("THREAD_MKL", FACTORIZATION_OPTIONS["THREAD_MKL"], is_positive=True, can_be_zero=False)
+
     # check other switches
     datachecker.check_boolean("MATRIX_SPLIT", data_config["MATRIX_SPLIT"])
-    datachecker.check_choice("MATRIX_MULTIPLICATION", data_config["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
     datachecker.check_boolean("USE_DOUBLE", data_config["USE_DOUBLE"])
     datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True)
-    datachecker.check_choice("FFT_LIBRARY", data_config["FFT_LIBRARY"], ["SciPy", "FFTW", "CuPy"])
+    datachecker.check_choice("MATRIX_MULTIPLICATION", data_config["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
+
+    # check FFT library
+    lib = [
+        "SciPy",
+        "FFTW",
+        "CuPy",
+    ]
+    datachecker.check_choice("FFT_LIBRARY", data_config["FFT_LIBRARY"], lib)
+
+    # check factorization library
+    lib =  [
+        "SuperLU",
+        "UMFPACK",
+        "PARDISO",
+        "GCROT",
+        "BICG",
+        "GMRES",
+    ]
+    datachecker.check_choice("FACTORIZATION_LIBRARY", data_config["FACTORIZATION_LIBRARY"], lib)
 
 
 def _check_library(data_config):
@@ -95,7 +125,7 @@ def _check_library(data_config):
     Check that the required libraries are installed.
     """
 
-    # check GPU
+    # check FFT library
     if data_config["FFT_LIBRARY"] == "SciPy":
         lib = importlib.util.find_spec("scipy")
         datachecker.check_assert("FFT_LIBRARY", lib is not None, "SciPy is not installed")
@@ -107,6 +137,19 @@ def _check_library(data_config):
         datachecker.check_assert("FFT_LIBRARY", lib is not None, "CuPy is not installed")
     else:
         raise ValueError("invalid FFT library")
+
+    # check factorization library
+    if data_config["FACTORIZATION_LIBRARY"] in ["SuperLU", "GCROT", "BICG", "GMRES"]:
+        lib = importlib.util.find_spec("scipy.sparse.linalg")
+        datachecker.check_assert("library", lib is not None, "SciPy is not installed")
+    elif data_config["FACTORIZATION_LIBRARY"] == "UMFPACK":
+        lib = importlib.util.find_spec("scikits.umfpack")
+        datachecker.check_assert("library", lib is not None, "UMFPACK is not installed")
+    elif data_config["FACTORIZATION_LIBRARY"] == "PARDISO":
+        lib = importlib.util.find_spec("pydiso")
+        datachecker.check_assert("library", lib is not None, "PARDISO is not installed")
+    else:
+        raise ValueError("invalid matrix factorization library")
 
 
 def check_data_config(data_config):

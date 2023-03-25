@@ -17,15 +17,5 @@
             "t_accuracy": 2,
             "n_iter_max": 25
         }
-    },
-    "factorization_options": {
-        "library": "SuperLU",
-        "algorithm_options": {
-            "rel_tol": 1e-06,
-            "abs_tol": 1e-12,
-            "n_iter_max": 100,
-            "thread_pardiso": null,
-            "thread_mkl": null
-        }
     }
 }

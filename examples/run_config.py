@@ -293,26 +293,6 @@ def get_data_tolerance():
         }
     }
 
-    # matrix factorization options
-    factorization_options = {
-        # matrix factorization options
-        #   - SuperLU is typically slower but is always available (integrated with SciPy)
-        #   - UMFPACK is typically faster than SuperLU (available through SciKits)
-        #   - PARDISO is typically faster than UMFPACK (available through Pydiso)
-        #   - GCROT is quite unstable but has low memory requirements (integrated with SciPy)
-        #   - BICG is quite unstable but has low memory requirements (integrated with SciPy)
-        #   - GMRES is quite unstable but has low memory requirements (integrated with SciPy)
-        "library": "SuperLU",
-        # options for computing the matrix factorization
-        "algorithm_options": {
-            "rel_tol": 1e-6,  # relative preconditioned tolerance for the iterative solvers
-            "abs_tol": 1e-12,  # absolute preconditioned tolerance for the iterative solvers
-            "n_iter_max": 100,   # maximum number of iterations for the iterative solvers
-            "thread_pardiso": None,  # number of threads for PARDISO (None for maximum)
-            "thread_mkl": None,  # number of threads for MKL (None for maximum)
-        }
-    }
-
     # control where numerical approximations are used for the Green anc coupling functions
     #   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used
     #   - if the normalized voxel distance is larger than the threshold, numerical approximations are used
@@ -325,7 +305,6 @@ def get_data_tolerance():
         "coupling_simplify": coupling_simplify,
         "solver_options": solver_options,
         "condition_options": condition_options,
-        "factorization_options": factorization_options,
     }
 
     return data_tolerance

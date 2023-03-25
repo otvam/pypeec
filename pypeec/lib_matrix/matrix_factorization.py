@@ -13,6 +13,7 @@ This module is used as a common interface for different solvers:
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import os
 import warnings
 from pypeec.lib_utils import timelogger
 from pypeec import config
@@ -23,14 +24,47 @@ logger = timelogger.get_logger("FACTOR")
 # get config
 NP_TYPES = config.NP_TYPES
 
+# get factorization config
+FACTORIZATION_LIBRARY = config.FACTORIZATION_LIBRARY
+FACTORIZATION_OPTIONS = config.FACTORIZATION_OPTIONS
+ITER_REL_TOL = FACTORIZATION_OPTIONS.ITER_REL_TOL
+ITER_ABS_TOL = FACTORIZATION_OPTIONS.ITER_ABS_TOL
+ITER_N_MAX = FACTORIZATION_OPTIONS.ITER_N_MAX
+THREAD_PARDISO = FACTORIZATION_OPTIONS.THREAD_PARDISO
+THREAD_MKL = FACTORIZATION_OPTIONS.THREAD_MKL
+
+# find the number of threads
+if THREAD_PARDISO is None:
+    THREAD_PARDISO = os.cpu_count()
+if THREAD_MKL is None:
+    THREAD_MKL = os.cpu_count()
+
+# import the right library
+if FACTORIZATION_LIBRARY in ["SuperLU", "GCROT", "BICG", "GMRES"]:
+    from scipy.sparse import linalg
+elif FACTORIZATION_LIBRARY == "UMFPACK":
+    # import the UMFPACK binding
+    from scikits import umfpack
+
+    # prevent problematic matrices to trigger warnings
+    warnings.filterwarnings("error", module="scikits.umfpack")
+elif FACTORIZATION_LIBRARY == "PARDISO":
+    # import the PARDISO binding
+    from pydiso import mkl_solver
+    from pydiso.mkl_solver import MKLPardisoSolver
+    from pydiso.mkl_solver import PardisoError
+
+    # set number of threads
+    mkl_solver.set_mkl_pardiso_threads(THREAD_PARDISO)
+    mkl_solver.set_mkl_threads(THREAD_MKL)
+else:
+    raise ValueError("invalid factorization library")
+
 
 def _get_fact_superlu(mat):
     """
     Factorize a matrix with SuperLU.
     """
-
-    # import the SciPy SuperLU library
-    from scipy.sparse import linalg
 
     # factorize the matrix
     try:
@@ -46,23 +80,10 @@ def _get_fact_superlu(mat):
     return factor
 
 
-def _get_fact_pardiso(algorithm_options, mat):
+def _get_fact_pardiso(mat):
     """
     Factorize a matrix with PARDISO.
     """
-
-    # import the UMFPACK binding
-    from pydiso import mkl_solver
-    from pydiso.mkl_solver import MKLPardisoSolver
-    from pydiso.mkl_solver import PardisoError
-
-    # get the options
-    thread_pardiso = algorithm_options["thread_pardiso"]
-    thread_mkl = algorithm_options["thread_mkl"]
-
-    # set number of threads
-    mkl_solver.set_mkl_pardiso_threads(thread_pardiso)
-    mkl_solver.set_mkl_threads(thread_mkl)
 
     # factorize the matrix
     try:
@@ -84,12 +105,6 @@ def _get_fact_umfpack(mat):
     Factorize a matrix with UMFPACK.
     """
 
-    # import the UMFPACK binding
-    from scikits import umfpack
-
-    # prevent problematic matrices to trigger warnings
-    warnings.filterwarnings("error", module="scikits.umfpack")
-
     # double precision is required for the solver
     mat = mat.astype(NP_TYPES.DCOMPLEX)
 
@@ -109,45 +124,23 @@ def _get_fact_umfpack(mat):
     return factor
 
 
-def _get_fact_iter(library, algorithm_options, mat):
+def _get_fact_iter(solver, mat):
     """
     Factorize a matrix with iterative method.
     """
 
-    # import the SciPy SuperLU library
-    from scipy.sparse import linalg
-
-    # get the options
-    rel_tol = algorithm_options["rel_tol"]
-    abs_tol = algorithm_options["abs_tol"]
-    n_iter_max = algorithm_options["n_iter_max"]
-
-    # get the solver
-    if library == "GCROT":
-        solver = linalg.gcrotmk
-    elif library == "BICG":
-        solver = linalg.bicg
-    elif library == "GMRES":
-        solver = linalg.gmres
-    else:
-        raise ValueError("invalid matrix factorization library")
-
     # factorize the matrix
     def factor(rhs):
-        (sol, flag) = solver(mat, rhs, tol=rel_tol, atol=abs_tol, maxiter=n_iter_max)
+        (sol, flag) = solver(mat, rhs, tol=ITER_REL_TOL, atol=ITER_ABS_TOL, maxiter=ITER_N_MAX)
         return sol
 
     return factor
 
 
-def get_factorize(name, mat, factorization_options):
+def get_factorize(name, mat):
     """
     Factorize a sparse matrix.
     """
-
-    # extract the options
-    library = factorization_options["library"]
-    algorithm_options = factorization_options["algorithm_options"]
 
     # check shape
     nnz = mat.size
@@ -165,18 +158,22 @@ def get_factorize(name, mat, factorization_options):
     logger.debug("matrix size: (%d, %d)" % (nx, ny))
     logger.debug("matrix elements: %d" % nnz)
     logger.debug("matrix density: %.3e" % density)
-    logger.debug("factorization library: %s" % library)
+    logger.debug("factorization library: %s" % FACTORIZATION_LIBRARY)
 
     # factorize the matrix
     logger.debug("compute factorization")
-    if library == "SuperLU":
+    if FACTORIZATION_LIBRARY == "SuperLU":
         factor = _get_fact_superlu(mat)
-    elif library == "UMFPACK":
+    elif FACTORIZATION_LIBRARY == "UMFPACK":
         factor = _get_fact_umfpack(mat)
-    elif library == "PARDISO":
-        factor = _get_fact_pardiso(algorithm_options, mat)
-    elif library in ["GCROT", "BICG", "GMRES"]:
-        factor = _get_fact_iter(library, algorithm_options, mat)
+    elif FACTORIZATION_LIBRARY == "PARDISO":
+        factor = _get_fact_pardiso(mat)
+    elif FACTORIZATION_LIBRARY == "GCROT":
+        factor = _get_fact_iter(linalg.gcrotmk, mat)
+    elif FACTORIZATION_LIBRARY == "BICG":
+        factor = _get_fact_iter(linalg.bicg, mat)
+    elif FACTORIZATION_LIBRARY == "GMRES":
+        factor = _get_fact_iter(linalg.gmres, mat)
     else:
         raise ValueError("invalid matrix factorization library")
 
