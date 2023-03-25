@@ -5,7 +5,26 @@ Module for checking the mesher data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import os.path
 from pypeec.lib_utils import datachecker
+
+
+def _check_filename(path_ref, filename):
+    """
+    Form a file path from a file name.
+    Check if a filename is valid.
+    """
+
+    # form the complete path
+    if (path_ref is not None) and (not os.path.isabs(filename)):
+        datachecker.check_string("path_ref", path_ref)
+        datachecker.check_string("filename", filename)
+        filename = os.path.join(path_ref, filename)
+
+    # check that the file exist
+    datachecker.check_filename("filename", filename)
+
+    return filename
 
 
 def _check_voxel_domain_def(domain_def):
@@ -270,21 +289,13 @@ def get_domain_stl_path(domain_stl, path_ref):
     Update the filename of the STL files with respect to the provided path.
     """
 
-    # if None, the specified path are already correct
-    if path_ref is None:
-        return domain_stl
-
-    # check the path
-    datachecker.check_string("path_ref", path_ref)
-
     # init new domain description
     domain_stl_path = {}
 
     # check value
     for tag, filename in domain_stl.items():
         # check file
-        filename = path_ref + "/" + filename
-        datachecker.check_filename("filename", filename)
+        filename = _check_filename(path_ref, filename)
 
         # add the new item
         domain_stl_path[tag] = filename
@@ -297,13 +308,6 @@ def get_layer_stack_path(layer_stack, path_ref):
     Update the filename of the PNG images with respect to the provided path.
     """
 
-    # if None, the specified path are already correct
-    if path_ref is None:
-        return layer_stack
-
-    # check the path
-    datachecker.check_string("path_ref", path_ref)
-
     # init new layer stack
     layer_stack_path = []
 
@@ -314,8 +318,7 @@ def get_layer_stack_path(layer_stack, path_ref):
         filename = layer_stack_tmp["filename"]
 
         # check file
-        filename = path_ref + "/" + filename
-        datachecker.check_filename("filename", filename)
+        filename = _check_filename(path_ref, filename)
 
         # add the new item
         layer_stack_path.append({"n_layer": n_layer, "filename": filename})

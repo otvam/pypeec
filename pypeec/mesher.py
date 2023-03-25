@@ -160,9 +160,10 @@ def run(data_mesher, path_ref):
     data_mesher : dict
         The dict describes the meshing and resampling process.
         The voxel structure can be explicitly given or generated from PNG or STL files.
-    path_ref :  path (string)
+    path_ref :  path (string or None)
         Path used to load the PNG and STL files.
-        Typically, this will be the path of the containing the mesher data.
+        If None, the filename specified in the mesher data are used directly.
+        If a string is given, the path is used to find the location of the files.
 
     Returns
     -------
