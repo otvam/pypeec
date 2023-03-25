@@ -57,14 +57,14 @@ def _get_tensor_sign(matrix_type, nd_in):
         sign = cp.ones((2, 2, 2, nd_in), dtype=NP_TYPES.FLOAT)
     elif matrix_type == "cross":
         sign = cp.empty((2, 2, 2, nd_in), dtype=NP_TYPES.FLOAT)
-        sign[0, 0, 0, :] = [+1, +1, +1]
-        sign[1, 0, 0, :] = [-1, +1, +1]
-        sign[0, 1, 0, :] = [+1, -1, +1]
-        sign[0, 0, 1, :] = [+1, +1, -1]
-        sign[1, 1, 0, :] = [-1, -1, +1]
-        sign[1, 0, 1, :] = [-1, +1, -1]
-        sign[0, 1, 1, :] = [+1, -1, -1]
-        sign[1, 1, 1, :] = [-1, -1, -1]
+        sign[0, 0, 0, :] = cp.array([+1, +1, +1], dtype=NP_TYPES.FLOAT)
+        sign[1, 0, 0, :] = cp.array([-1, +1, +1], dtype=NP_TYPES.FLOAT)
+        sign[0, 1, 0, :] = cp.array([+1, -1, +1], dtype=NP_TYPES.FLOAT)
+        sign[0, 0, 1, :] = cp.array([+1, +1, -1], dtype=NP_TYPES.FLOAT)
+        sign[1, 1, 0, :] = cp.array([-1, -1, +1], dtype=NP_TYPES.FLOAT)
+        sign[1, 0, 1, :] = cp.array([-1, +1, -1], dtype=NP_TYPES.FLOAT)
+        sign[0, 1, 1, :] = cp.array([+1, -1, -1], dtype=NP_TYPES.FLOAT)
+        sign[1, 1, 1, :] = cp.array([-1, -1, -1], dtype=NP_TYPES.FLOAT)
     else:
         raise ValueError("invalid matrix type")
 
@@ -224,9 +224,9 @@ def _get_compute_combined(idx_in, idx_out, mat_fft, vec_in, matrix_type):
         res *= mat_fft
     elif matrix_type == "cross":
         res_tmp = cp.empty(res.shape, dtype=NP_TYPES.COMPLEX)
-        res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2] * res[:, :, :, 1] + mat_fft[:, :, :, 1] * res[:, :, :, 2]
-        res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2] * res[:, :, :, 0] + mat_fft[:, :, :, 0] * res[:, :, :, 2]
-        res_tmp[:, :, :, 2] = -mat_fft[:, :, :, 1] * res[:, :, :, 0] - mat_fft[:, :, :, 0] * res[:, :, :, 1]
+        res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2]*res[:, :, :, 1]+mat_fft[:, :, :, 1]*res[:, :, :, 2]
+        res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2]*res[:, :, :, 0]+mat_fft[:, :, :, 0]*res[:, :, :, 2]
+        res_tmp[:, :, :, 2] = -mat_fft[:, :, :, 1]*res[:, :, :, 0]-mat_fft[:, :, :, 0]*res[:, :, :, 1]
         res = res_tmp
     else:
         raise ValueError("invalid matrix type")
