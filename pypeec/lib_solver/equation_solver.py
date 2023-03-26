@@ -11,7 +11,7 @@ from pypeec.lib_matrix import matrix_gmres
 from pypeec.lib_utils import timelogger
 
 # get a logger
-logger = timelogger.get_logger("EQUATION")
+LOGGER = timelogger.get_logger("EQUATION")
 
 
 def get_solver(sys_op, pcd_op, rhs, solver_options):
@@ -52,22 +52,22 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     status = status_gmres and status_res and status_pcd
 
     # display status
-    logger.debug("matrix solver: n_dof = %d" % n_dof)
-    logger.debug("matrix solver: n_iter = %d" % n_iter)
-    logger.debug("matrix solver: res_norm = %.3e" % res_norm)
-    logger.debug("matrix solver: status_pcd = %s" % status_pcd)
-    logger.debug("matrix solver: status_gmres = %s" % status_gmres)
-    logger.debug("matrix solver: status_res = %s" % status_res)
+    LOGGER.debug("matrix solver: n_dof = %d" % n_dof)
+    LOGGER.debug("matrix solver: n_iter = %d" % n_iter)
+    LOGGER.debug("matrix solver: res_norm = %.3e" % res_norm)
+    LOGGER.debug("matrix solver: status_pcd = %s" % status_pcd)
+    LOGGER.debug("matrix solver: status_gmres = %s" % status_gmres)
+    LOGGER.debug("matrix solver: status_res = %s" % status_res)
     if pcd_op is None:
-        logger.warning("matrix solver: preconditioner issue")
+        LOGGER.warning("matrix solver: preconditioner issue")
     if status_gmres is None:
-        logger.warning("matrix solver: gmres issue")
+        LOGGER.warning("matrix solver: gmres issue")
     if status_res is None:
-        logger.warning("matrix solver: residuum issue")
+        LOGGER.warning("matrix solver: residuum issue")
     if status:
-        logger.debug("matrix solver: convergence achieved")
+        LOGGER.debug("matrix solver: convergence achieved")
     else:
-        logger.warning("matrix solver: convergence issues")
+        LOGGER.warning("matrix solver: convergence issues")
 
     return sol, res, conv, status, solver_status
 
@@ -102,16 +102,16 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
     }
 
     # display status
-    logger.debug("matrix condition: check = %s" % check)
-    logger.debug("matrix condition: status = %s" % status)
+    LOGGER.debug("matrix condition: check = %s" % check)
+    LOGGER.debug("matrix condition: status = %s" % status)
     if check:
-        logger.debug("matrix condition: value_electric = %.3e" % value_electric)
-        logger.debug("matrix condition: value_magnetic = %.3e" % value_magnetic)
+        LOGGER.debug("matrix condition: value_electric = %.3e" % value_electric)
+        LOGGER.debug("matrix condition: value_magnetic = %.3e" % value_magnetic)
         if status:
-            logger.debug("matrix condition: matrix condition is good")
+            LOGGER.debug("matrix condition: matrix condition is good")
         else:
-            logger.warning("matrix condition: matrix condition is problematic")
+            LOGGER.warning("matrix condition: matrix condition is problematic")
     else:
-        logger.debug("matrix condition: matrix condition is not computed")
+        LOGGER.debug("matrix condition: matrix condition is not computed")
 
     return status, condition_status

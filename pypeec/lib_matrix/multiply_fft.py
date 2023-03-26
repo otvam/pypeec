@@ -17,7 +17,7 @@ from pypeec.lib_utils import timelogger
 from pypeec import config
 
 # get a logger
-logger = timelogger.get_logger("FFT")
+LOGGER = timelogger.get_logger("FFT")
 
 # get config
 NP_TYPES = config.NP_TYPES
@@ -319,10 +319,10 @@ def get_prepare(name, idx_out, idx_in, mat):
     footprint = (itemsize*nnz)/(1024**2)
 
     # display the tensor size
-    logger.debug("enter FFT multiplication: %s" % name)
-    logger.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
-    logger.debug("tensor footprint: %.3f MB" % footprint)
-    logger.debug("FFT library: %s / GPU: %s" % (FFT_LIBRARY, USE_FFT_GPU))
+    LOGGER.debug("enter FFT multiplication: %s" % name)
+    LOGGER.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
+    LOGGER.debug("tensor footprint: %.3f MB" % footprint)
+    LOGGER.debug("FFT library: %s / GPU: %s" % (FFT_LIBRARY, USE_FFT_GPU))
 
     # get the sign that will be applied to the different blocks of the tensor
     sign = _get_tensor_sign(name, nd_in)
@@ -368,7 +368,7 @@ def get_prepare(name, idx_out, idx_in, mat):
         idx_out_mat = _get_indices(nx, ny, nz, idx_out, nd_out, None)
 
     # exit
-    logger.debug("exit FFT multiplication: %s" % name)
+    LOGGER.debug("exit FFT multiplication: %s" % name)
 
     return name, n_in, n_out, idx_in_mat, idx_out_mat, mat_fft
 

@@ -9,7 +9,7 @@ import scipy.sparse.linalg as sla
 from pypeec.lib_utils import timelogger
 
 # get a logger
-logger = timelogger.get_logger("GMRES")
+LOGGER = timelogger.get_logger("GMRES")
 
 
 def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
@@ -25,7 +25,7 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
     n_maximum_restart = gmres_options["n_maximum_restart"]
 
     # init list for storing the residuum (callback)
-    logger.debug("enter matrix solver")
+    LOGGER.debug("enter matrix solver")
 
     # list for storing the residuum
     conv = []
@@ -33,7 +33,7 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
     # define callback
     def fct(res):
         conv.append(res)
-        logger.debug("matrix iter: iter = %d / res = %.3e" % (len(conv), res))
+        LOGGER.debug("matrix iter: iter = %d / res = %.3e" % (len(conv), res))
 
     # call the solver
     (sol, flag) = sla.gmres(
@@ -47,6 +47,6 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
     status = flag == 0
 
     # exit
-    logger.debug("exit matrix solver")
+    LOGGER.debug("exit matrix solver")
 
     return status, conv, sol

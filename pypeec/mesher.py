@@ -24,7 +24,7 @@ from pypeec.lib_utils import timelogger
 from pypeec.error import CheckError, RunError
 
 # get a logger
-logger = timelogger.get_logger("MESHER")
+LOGGER = timelogger.get_logger("MESHER")
 
 
 def _run_mesher(data_mesher, path_ref):
@@ -65,7 +65,7 @@ def _run_png(data_voxelize, path_ref):
     layer_stack = data_voxelize["layer_stack"]
 
     # get the voxel geometry and the incidence matrix
-    with timelogger.BlockTimer(logger, "png_mesher"):
+    with timelogger.BlockTimer(LOGGER, "png_mesher"):
         layer_stack = check_data_mesher.get_layer_stack_path(layer_stack, path_ref)
         (n, domain_def) = png_mesher.get_mesh(nx, ny, domain_color, layer_stack)
 
@@ -96,7 +96,7 @@ def _run_stl(data_voxelize, path_ref):
     domain_conflict = data_voxelize["domain_conflict"]
 
     # get the voxel geometry and the incidence matrix
-    with timelogger.BlockTimer(logger, "stl_mesher"):
+    with timelogger.BlockTimer(LOGGER, "stl_mesher"):
         domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
         (n, d, c, domain_def, reference) = stl_mesher.get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl)
         domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
@@ -127,13 +127,13 @@ def _run_resample_graph(reference, data_voxel, data_mesher):
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
 
-    with timelogger.BlockTimer(logger, "voxel_resample"):
+    with timelogger.BlockTimer(LOGGER, "voxel_resample"):
         (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, resampling_factor)
 
-    with timelogger.BlockTimer(logger, "voxel_connection"):
+    with timelogger.BlockTimer(LOGGER, "voxel_connection"):
         connection_def = voxel_connection.get_connection(n, domain_def, domain_connection)
 
-    with timelogger.BlockTimer(logger, "voxel_summary"):
+    with timelogger.BlockTimer(LOGGER, "voxel_summary"):
         voxel_status = voxel_summary.get_status(n, d, c, domain_def, connection_def)
 
     # assemble the data
@@ -183,7 +183,7 @@ def run(data_mesher, path_ref):
     # run the code
     try:
         # check the input data
-        logger.info("check the input data")
+        LOGGER.info("check the input data")
         check_data_mesher.check_data_mesher(data_mesher)
 
         # run the mesher
@@ -192,10 +192,10 @@ def run(data_mesher, path_ref):
         # resample and assemble
         data_voxel = _run_resample_graph(reference, data_voxel, data_mesher)
     except (CheckError, RunError) as ex:
-        timelogger.log_exception(logger, ex)
+        timelogger.log_exception(LOGGER, ex)
         return False, None, ex
 
     # end message
-    logger.info("successful termination")
+    LOGGER.info("successful termination")
 
     return True, data_voxel, None

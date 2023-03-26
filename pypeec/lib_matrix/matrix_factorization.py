@@ -19,7 +19,7 @@ from pypeec.lib_utils import timelogger
 from pypeec import config
 
 # get a logger
-logger = timelogger.get_logger("FACTOR")
+LOGGER = timelogger.get_logger("FACTOR")
 
 # get config
 NP_TYPES = config.NP_TYPES
@@ -154,14 +154,14 @@ def get_factorize(name, mat):
     density = nnz/(nx*ny)
 
     # display
-    logger.debug("enter matrix factorization: %s" % name)
-    logger.debug("matrix size: (%d, %d)" % (nx, ny))
-    logger.debug("matrix elements: %d" % nnz)
-    logger.debug("matrix density: %.3e" % density)
-    logger.debug("factorization library: %s" % FACTORIZATION_LIBRARY)
+    LOGGER.debug("enter matrix factorization: %s" % name)
+    LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
+    LOGGER.debug("matrix elements: %d" % nnz)
+    LOGGER.debug("matrix density: %.3e" % density)
+    LOGGER.debug("factorization library: %s" % FACTORIZATION_LIBRARY)
 
     # factorize the matrix
-    logger.debug("compute factorization")
+    LOGGER.debug("compute factorization")
     if FACTORIZATION_LIBRARY == "SuperLU":
         factor = _get_fact_superlu(mat)
     elif FACTORIZATION_LIBRARY == "UMFPACK":
@@ -179,12 +179,12 @@ def get_factorize(name, mat):
 
     # display the status
     if factor is None:
-        logger.warning("factorization failure")
+        LOGGER.warning("factorization failure")
     else:
-        logger.debug("factorization success")
+        LOGGER.debug("factorization success")
 
     # exit
-    logger.debug("exit matrix factorization: %s" % name)
+    LOGGER.debug("exit matrix factorization: %s" % name)
 
     return factor
 

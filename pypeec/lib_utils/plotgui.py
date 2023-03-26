@@ -36,7 +36,7 @@ from pypeec.lib_utils import timelogger
 from pypeec import config
 
 # get a logger
-logger = timelogger.get_logger("PLOTGUI")
+LOGGER = timelogger.get_logger("PLOTGUI")
 
 # get config
 PAUSE_GUI = config.PAUSE_GUI
@@ -258,14 +258,14 @@ class PlotGui:
             - nop: close all the plots without showing them (non-blocking call)
         """
 
-        logger.debug("number of PyVista plots: %s" % len(self.pl_list))
-        logger.debug("number of Matplotlib plots: %s" % len(self.fig_list))
+        LOGGER.debug("number of PyVista plots: %s" % len(self.pl_list))
+        LOGGER.debug("number of Matplotlib plots: %s" % len(self.fig_list))
 
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
             return True
 
         if self.plot_mode == "qt":
-            logger.debug("entering the plot event loop")
+            LOGGER.debug("entering the plot event loop")
 
             # signal handler for closing all the windows
             def signal_handler(*_):
@@ -292,7 +292,7 @@ class PlotGui:
             return status
         elif self.plot_mode == "nb":
             # display the non-blocking call
-            logger.debug("display notebook plots")
+            LOGGER.debug("display notebook plots")
 
             # show the different plots
             for pl in self.pl_list:
@@ -301,7 +301,7 @@ class PlotGui:
 
             return True
         elif self.plot_mode == "nop":
-            logger.debug("close all the plots")
+            LOGGER.debug("close all the plots")
 
             for pl in self.pl_list:
                 pl.close()

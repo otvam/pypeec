@@ -7,8 +7,6 @@ This allows for a minimization of the loaded dependencies.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import os.path
-
 
 def run_mesher(file_mesher, file_voxel):
     """
@@ -31,12 +29,15 @@ def run_mesher(file_mesher, file_voxel):
     """
 
     # load the base libraries
+    import os.path
     from pypeec.lib_utils import timelogger
     from pypeec.lib_utils import fileio
     from pypeec.error import FileError
 
     # create the logger
     logger = timelogger.get_logger("MAIN")
+
+    # reset the timer logger
     timelogger.reset_timer()
 
     # load the tool

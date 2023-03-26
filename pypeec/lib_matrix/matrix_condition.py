@@ -9,11 +9,11 @@ import scipy.sparse.linalg as sla
 from pypeec.lib_utils import timelogger
 from pypeec import config
 
+# get a logger
+LOGGER = timelogger.get_logger("CONDITION")
+
 # get config
 NP_TYPES = config.NP_TYPES
-
-# get a logger
-logger = timelogger.get_logger("CONDITION")
 
 
 def _get_decomposition(mat):
@@ -71,36 +71,36 @@ def get_condition_matrix(name, mat, norm_options):
     density = nnz/(nx*ny)
 
     # display
-    logger.debug("enter matrix condition: %s" % name)
-    logger.debug("matrix size: (%d, %d)" % (nx, ny))
-    logger.debug("matrix elements: %d" % nnz)
-    logger.debug("matrix density: %.3e" % density)
+    LOGGER.debug("enter matrix condition: %s" % name)
+    LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
+    LOGGER.debug("matrix elements: %d" % nnz)
+    LOGGER.debug("matrix density: %.3e" % density)
 
     # get LU decomposition
-    logger.debug("compute LU decomposition")
+    LOGGER.debug("compute LU decomposition")
     decomposition = _get_decomposition(mat)
 
     # abort if LU decomposition failed
     if decomposition is None:
-        logger.warning("condition estimate is infinite")
+        LOGGER.warning("condition estimate is infinite")
         return float("inf")
 
     # get the inverse operator
     op = _get_inverse_operator(mat, decomposition)
 
     # compute the norm of the matrix inverse (estimate)
-    logger.debug("compute estimate norm of the inverse")
+    LOGGER.debug("compute estimate norm of the inverse")
     nrm_inv = sla.onenormest(op, t=t_accuracy, itmax=n_iter_max)
 
     # compute the norm of the matrix (estimate)
-    logger.debug("compute estimate norm of the matrix")
+    LOGGER.debug("compute estimate norm of the matrix")
     nrm_ori = sla.onenormest(mat, t=t_accuracy, itmax=n_iter_max)
 
     # compute an estimate of the condition
-    logger.debug("compute condition estimate")
+    LOGGER.debug("compute condition estimate")
     cond = nrm_ori*nrm_inv
 
     # exit
-    logger.debug("exit matrix condition: %s" % name)
+    LOGGER.debug("exit matrix condition: %s" % name)
 
     return cond

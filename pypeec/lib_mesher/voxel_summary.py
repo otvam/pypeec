@@ -8,7 +8,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_utils import timelogger
 
 # get a logger
-logger = timelogger.get_logger("SUMMARY")
+LOGGER = timelogger.get_logger("SUMMARY")
 
 
 def get_status(n, d, c, domain_def, connection_def):
@@ -44,19 +44,19 @@ def get_status(n, d, c, domain_def, connection_def):
     }
 
     # display status
-    logger.debug("voxel size: (nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
-    logger.debug("voxel size: (dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
-    logger.debug("voxel size: (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
+    LOGGER.debug("voxel size: (nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
+    LOGGER.debug("voxel size: (dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
+    LOGGER.debug("voxel size: (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
 
     # plot the voxel number
-    logger.debug("voxel size: n_graph = %d" % n_graph)
-    logger.debug("voxel size: n_domain = %d" % n_domain)
-    logger.debug("voxel size: n_total = %d" % n_total)
-    logger.debug("voxel size: n_used = %d" % n_used)
-    logger.debug("voxel size: ratio = %.3e" % ratio)
+    LOGGER.debug("voxel size: n_graph = %d" % n_graph)
+    LOGGER.debug("voxel size: n_domain = %d" % n_domain)
+    LOGGER.debug("voxel size: n_total = %d" % n_total)
+    LOGGER.debug("voxel size: n_used = %d" % n_used)
+    LOGGER.debug("voxel size: ratio = %.3e" % ratio)
 
     # plot the domain size
     for tag, idx in domain_def.items():
-        logger.debug("domain size: %s = %d" % (tag, len(idx)))
+        LOGGER.debug("domain size: %s = %d" % (tag, len(idx)))
 
     return voxel_status

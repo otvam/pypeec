@@ -10,11 +10,11 @@ import numpy as np
 from pypeec.lib_utils import timelogger
 from pypeec import config
 
+# get a logger
+LOGGER = timelogger.get_logger("PROBLEM")
+
 # get config
 NP_TYPES = config.NP_TYPES
-
-# get a logger
-logger = timelogger.get_logger("PROBLEM")
 
 
 def get_material_magnetic(material_idx):
@@ -216,15 +216,15 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     }
 
     # display status
-    logger.debug("problem size: n_voxel = %d" % n_voxel)
-    logger.debug("problem size: n_face = %d" % n_face)
-    logger.debug("problem size: n_voxel_electric = %d" % n_voxel_electric)
-    logger.debug("problem size: n_voxel_magnetic = %d" % n_voxel_magnetic)
-    logger.debug("problem size: n_face_electric = %d" % n_face_electric)
-    logger.debug("problem size: n_face_magnetic = %d" % n_face_magnetic)
-    logger.debug("problem size: n_src_current = %d" % n_src_current)
-    logger.debug("problem size: n_src_voltage = %d" % n_src_voltage)
-    logger.debug("problem size: ratio_voxel = %.3e" % ratio_voxel)
-    logger.debug("problem size: ratio_face = %.3e" % ratio_face)
+    LOGGER.debug("problem size: n_voxel = %d" % n_voxel)
+    LOGGER.debug("problem size: n_face = %d" % n_face)
+    LOGGER.debug("problem size: n_voxel_electric = %d" % n_voxel_electric)
+    LOGGER.debug("problem size: n_voxel_magnetic = %d" % n_voxel_magnetic)
+    LOGGER.debug("problem size: n_face_electric = %d" % n_face_electric)
+    LOGGER.debug("problem size: n_face_magnetic = %d" % n_face_magnetic)
+    LOGGER.debug("problem size: n_src_current = %d" % n_src_current)
+    LOGGER.debug("problem size: n_src_voltage = %d" % n_src_voltage)
+    LOGGER.debug("problem size: ratio_voxel = %.3e" % ratio_voxel)
+    LOGGER.debug("problem size: ratio_face = %.3e" % ratio_face)
 
     return problem_status

@@ -23,7 +23,7 @@ from pypeec.lib_utils import timelogger
 from pypeec.error import CheckError, RunError
 
 # get a logger
-logger = timelogger.get_logger("SOLVER")
+LOGGER = timelogger.get_logger("SOLVER")
 
 
 def _run_solver(data_solver):
@@ -47,7 +47,7 @@ def _run_solver(data_solver):
     condition_options = data_solver["condition_options"]
 
     # get the voxel geometry and the incidence matrix
-    with timelogger.BlockTimer(logger, "voxel_geometry"):
+    with timelogger.BlockTimer(LOGGER, "voxel_geometry"):
         # get the coordinate of the voxels
         pts_vox = voxel_geometry.get_voxel_coordinate(n, d, c)
 
@@ -55,7 +55,7 @@ def _run_solver(data_solver):
         A_vox = voxel_geometry.get_incidence_matrix(n)
 
     # get the Green functions
-    with timelogger.BlockTimer(logger, "system_tensor"):
+    with timelogger.BlockTimer(LOGGER, "system_tensor"):
         # Green function self-coefficient
         G_self = system_tensor.get_green_self(d)
 
@@ -66,7 +66,7 @@ def _run_solver(data_solver):
         K_tsr = system_tensor.get_coupling_tensor(n, d, coupling_simplify, has_coupling)
 
     # parse the problem geometry (materials and sources)
-    with timelogger.BlockTimer(logger, "problem_geometry"):
+    with timelogger.BlockTimer(LOGGER, "problem_geometry"):
         # parse the materials
         (idx_vc, rho_vc) = problem_geometry.get_material_electric(material_idx)
         (idx_vm, rho_vm) = problem_geometry.get_material_magnetic(material_idx)
@@ -87,7 +87,7 @@ def _run_solver(data_solver):
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
 
     # get the resistances and inductances
-    with timelogger.BlockTimer(logger, "system_matrix"):
+    with timelogger.BlockTimer(LOGGER, "system_matrix"):
         # get the resistance vector
         R_c = system_matrix.get_resistance_vector(n, d, A_net_c, idx_fc, rho_vc, has_electric)
         R_m = system_matrix.get_resistance_vector(n, d, A_net_m, idx_fm, rho_vm, has_magnetic)
@@ -109,7 +109,7 @@ def _run_solver(data_solver):
         del K_tsr
 
     # assemble the equation system
-    with timelogger.BlockTimer(logger, "equation_system"):
+    with timelogger.BlockTimer(LOGGER, "equation_system"):
         # compute the right-hand vector with the sources
         rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
 
@@ -123,7 +123,7 @@ def _run_solver(data_solver):
         sys_op = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
 
     # solve the equation system
-    with timelogger.BlockTimer(logger, "equation_solver"):
+    with timelogger.BlockTimer(LOGGER, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
         (condition_ok, condition_status) = equation_solver.get_condition(S_mat_c, S_mat_m, condition_options)
 
@@ -142,7 +142,7 @@ def _run_solver(data_solver):
         has_converged = solver_ok and condition_ok
 
     # extract the solution
-    with timelogger.BlockTimer(logger, "extract_solution"):
+    with timelogger.BlockTimer(LOGGER, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
         n_offset = 0
         (I_fc, V_vc, n_offset) = extract_solution.get_sol_extract_field(sol, idx_fc, idx_vc, n_offset)
@@ -254,21 +254,21 @@ def run(data_voxel, data_problem, data_tolerance):
     # run the solver
     try:
         # check the problem and tolerance data
-        logger.info("check the input data")
+        LOGGER.info("check the input data")
         check_data_problem.check_data_problem(data_problem)
         check_data_tolerance.check_data_tolerance(data_tolerance)
 
         # combine the problem and voxel data
-        logger.info("combine the input data")
+        LOGGER.info("combine the input data")
         data_solver = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
         # solve the problem
         data_solution = _run_solver(data_solver)
     except (CheckError, RunError) as ex:
-        timelogger.log_exception(logger, ex)
+        timelogger.log_exception(LOGGER, ex)
         return False, None, ex
 
     # end message
-    logger.info("successful termination")
+    LOGGER.info("successful termination")
 
     return True, data_solution, None

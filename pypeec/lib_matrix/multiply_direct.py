@@ -10,7 +10,7 @@ from pypeec import config
 from pypeec.lib_utils import timelogger
 
 # get a logger
-logger = timelogger.get_logger("DIRECT")
+LOGGER = timelogger.get_logger("DIRECT")
 
 # get config
 NP_TYPES = config.NP_TYPES
@@ -129,9 +129,9 @@ def get_prepare(name, idx_out, idx_in, mat):
     footprint = (itemsize*n_out*n_in)/(1024**2)
 
     # display the matrix size
-    logger.debug("enter direct multiplication: %s" % name)
-    logger.debug("matrix size: (%d, %d)" % (n_out, n_in))
-    logger.debug("matrix footprint: %.3f MB" % footprint)
+    LOGGER.debug("enter direct multiplication: %s" % name)
+    LOGGER.debug("matrix size: (%d, %d)" % (n_out, n_in))
+    LOGGER.debug("matrix footprint: %.3f MB" % footprint)
 
     # get the permutation for sorting
     idx_perm_out = np.argsort(idx_out)
@@ -198,7 +198,7 @@ def get_prepare(name, idx_out, idx_in, mat):
     mat_dense = mat_dense[:, idx_rev_in]
 
     # exit
-    logger.debug("exit direct multiplication: %s" % name)
+    LOGGER.debug("exit direct multiplication: %s" % name)
 
     return mat_dense
 

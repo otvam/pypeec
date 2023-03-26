@@ -61,6 +61,20 @@ def _check_data(data_config):
 
     # check logging options
     LOGGING_OPTIONS = data_config["LOGGING_OPTIONS"]
+    key_list = [
+        "FORMAT",
+        "LEVEL",
+        "INDENTATION",
+        "EXCEPTION_TRACE",
+        "USE_COLOR",
+        "CL_DEBUG",
+        "CL_INFO",
+        "CL_WARNING",
+        "CL_ERROR",
+        "CL_CRITICAL",
+        "CL_RESET",
+    ]
+    datachecker.check_dict("LOGGING_OPTIONS", LOGGING_OPTIONS, key_list=key_list)
     datachecker.check_string("FORMAT", LOGGING_OPTIONS["FORMAT"])
     datachecker.check_string("LEVEL", LOGGING_OPTIONS["LEVEL"])
     datachecker.check_integer("INDENTATION", LOGGING_OPTIONS["INDENTATION"])
@@ -75,6 +89,13 @@ def _check_data(data_config):
 
     # check FFT options
     FFT_OPTIONS = data_config["FFT_OPTIONS"]
+    key_list = [
+        "FFTS_WORKER",
+        "FFTW_THREAD",
+        "FFTW_BYTE_ALIGN",
+        "FFTW_CACHE_TIMEOUT",
+    ]
+    datachecker.check_dict("FFT_OPTIONS", FFT_OPTIONS, key_list=key_list)
     if FFT_OPTIONS["FFTS_WORKER"] is not None:
         datachecker.check_integer("FFTS_WORKER", FFT_OPTIONS["FFTS_WORKER"], is_positive=True, can_be_zero=False)
     if FFT_OPTIONS["FFTW_THREAD"] is not None:
@@ -86,6 +107,14 @@ def _check_data(data_config):
 
     # check factorization options
     FACTORIZATION_OPTIONS = data_config["FACTORIZATION_OPTIONS"]
+    key_list = [
+        "ITER_REL_TOL",
+        "ITER_ABS_TOL",
+        "ITER_N_MAX",
+        "THREAD_PARDISO",
+        "THREAD_MKL",
+    ]
+    datachecker.check_dict("FACTORIZATION_OPTIONS", FACTORIZATION_OPTIONS, key_list=key_list)
     datachecker.check_float("ITER_REL_TOL", FACTORIZATION_OPTIONS["ITER_REL_TOL"], is_positive=True, can_be_zero=False)
     datachecker.check_float("ITER_ABS_TOL", FACTORIZATION_OPTIONS["ITER_ABS_TOL"], is_positive=True, can_be_zero=False)
     datachecker.check_integer("ITER_N_MAX", FACTORIZATION_OPTIONS["ITER_N_MAX"], is_positive=True, can_be_zero=False)

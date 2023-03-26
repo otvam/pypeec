@@ -21,11 +21,11 @@ import numpy.linalg as lna
 from pypeec.lib_utils import timelogger
 from pypeec import config
 
+# get a logger
+LOGGER = timelogger.get_logger("GREEN")
+
 # get config
 NP_TYPES = config.NP_TYPES
-
-# get a logger
-logger = timelogger.get_logger("GREEN")
 
 
 def _get_safe_inv(x):
@@ -219,7 +219,7 @@ def get_green_ana(d, idx, int_type):
         return np.array([], dtype=NP_TYPES.FLOAT)
 
     # display
-    logger.debug("analytical solution: %s / %d" % (int_type, len(idx)))
+    LOGGER.debug("analytical solution: %s / %d" % (int_type, len(idx)))
 
     # extract the voxel data
     (dx, dy, dz) = d
@@ -267,7 +267,7 @@ def get_green_num(d, idx, int_type):
         return np.array([], dtype=NP_TYPES.FLOAT)
 
     # display
-    logger.debug("numerical approximation: %s / %d" % (int_type, len(idx)))
+    LOGGER.debug("numerical approximation: %s / %d" % (int_type, len(idx)))
 
     # extract the voxel data
     (dx, dy, dz) = d

@@ -14,11 +14,11 @@ import numpy as np
 from pypeec.lib_utils import timelogger
 from pypeec import config
 
+# get a logger
+LOGGER = timelogger.get_logger("SOLUTION")
+
 # get config
 NP_TYPES = config.NP_TYPES
-
-# get a logger
-logger = timelogger.get_logger("SOLUTION")
 
 
 def _get_sol_var(sol, idx, n_offset):
@@ -206,12 +206,12 @@ def get_integral(P_fc, P_fm, W_fc, W_fm):
     }
 
     # display
-    logger.debug("integral: P_electric = %.3e W" % P_electric)
-    logger.debug("integral: P_magnetic = %.3e W" % P_magnetic)
-    logger.debug("integral: W_electric = %.3e J" % W_electric)
-    logger.debug("integral: W_magnetic = %.3e J" % W_magnetic)
-    logger.debug("integral: P_tot = %.3e W" % P_tot)
-    logger.debug("integral: W_tot = %.3e J" % W_tot)
+    LOGGER.debug("integral: P_electric = %.3e W" % P_electric)
+    LOGGER.debug("integral: P_magnetic = %.3e W" % P_magnetic)
+    LOGGER.debug("integral: W_electric = %.3e J" % W_electric)
+    LOGGER.debug("integral: W_magnetic = %.3e J" % W_magnetic)
+    LOGGER.debug("integral: P_tot = %.3e W" % P_tot)
+    LOGGER.debug("integral: W_tot = %.3e J" % W_tot)
 
     return integral
 
@@ -264,8 +264,8 @@ def get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, 
         V_str = "%+.3e + %+.3ej" % (V_tmp.real, V_tmp.imag)
         I_str = "%+.3e + %+.3ej" % (I_tmp.real, I_tmp.imag)
         S_str = "%+.3e + %+.3ej" % (S_tmp.real, S_tmp.imag)
-        logger.debug("terminal: %s : V = %s V" % (tag, V_str))
-        logger.debug("terminal: %s : I = %s A" % (tag, I_str))
-        logger.debug("terminal: %s : S = %s VA" % (tag, S_str))
+        LOGGER.debug("terminal: %s : V = %s V" % (tag, V_str))
+        LOGGER.debug("terminal: %s : I = %s A" % (tag, I_str))
+        LOGGER.debug("terminal: %s : S = %s VA" % (tag, S_str))
 
     return terminal

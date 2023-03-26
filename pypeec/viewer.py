@@ -23,7 +23,7 @@ from pypeec.lib_utils import timelogger
 from pypeec.error import CheckError, RunError
 
 # get a logger
-logger = timelogger.get_logger("VIEWER")
+LOGGER = timelogger.get_logger("VIEWER")
 
 
 def _get_grid_voxel(data_voxel, data_point):
@@ -111,17 +111,17 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
     # run the code
     try:
         # check the input data
-        logger.info("check the input data")
+        LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
         check_data_visualization.check_options(data_viewer, tag_plot, is_silent)
 
         # create the Qt app (should be at the beginning)
-        logger.info("init the plot manager")
+        LOGGER.info("init the plot manager")
         gui_obj = plotgui.PlotGui(is_silent)
 
         # handle the data
-        logger.info("parse the voxel geometry and the data")
+        LOGGER.info("parse the voxel geometry and the data")
         (grid, voxel, point, reference) = _get_grid_voxel(data_voxel, data_point)
 
         # find the plots
@@ -131,16 +131,16 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
             data_list = [data_viewer[tag] for tag in tag_plot]
 
         # make the plots
-        logger.info("generate the different plots")
+        LOGGER.info("generate the different plots")
         for i, dat_tmp in enumerate(data_list):
-            logger.info("plotting %d / %d" % (i+1, len(data_list)))
+            LOGGER.info("plotting %d / %d" % (i+1, len(data_list)))
             _get_plot(grid, voxel, point, reference, dat_tmp, gui_obj)
     except (CheckError, RunError) as ex:
-        timelogger.log_exception(logger, ex)
+        timelogger.log_exception(LOGGER, ex)
         return False, ex
 
     # end message
-    logger.info("successful termination")
+    LOGGER.info("successful termination")
 
     # enter the event loop (should be at the end, blocking call)
     status = gui_obj.show()
