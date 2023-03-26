@@ -32,14 +32,14 @@ LOGGING_OPTIONS:
     CL_CRITICAL: '[38;5;196m' # terminal color code
     CL_RESET: '[0m' # terminal color code
 
-# FFT options (for the CPU computation, ignored for GPU)
+# options for the FFT computation
 FFT_OPTIONS:
     FFTS_WORKER: null  # number of workers for SciPy (null for number of CPUs)
     FFTW_THREAD: null  # number of threads for FFTW (null for number of CPUs)
     FFTW_CACHE_TIMEOUT: 100.0  # cache timeout in seconds for FFTW (null for no caching)
     FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW (null for default)
 
-# options for computing the sparse matrix factorization
+# options for the sparse matrix factorization
 FACTORIZATION_OPTIONS:
     ITER_REL_TOL: 1.0e-6  # relative preconditioned tolerance for the iterative solvers
     ITER_ABS_TOL: 1.0e-12  # absolute preconditioned tolerance for the iterative solvers
