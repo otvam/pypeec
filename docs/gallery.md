@@ -20,5 +20,5 @@
 ![plotter_5](gallery/plotter_5.png)
 ![plotter_6](gallery/plotter_6.png)
 ![plotter_7](gallery/plotter_7.png)
-![plotter_6](gallery/plotter_8.png)
-![plotter_7](gallery/plotter_9.png)
+![plotter_8](gallery/plotter_8.png)
+![plotter_9](gallery/plotter_9.png)

@@ -51,7 +51,7 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     # solver success
     status = status_gmres and status_res and status_pcd
 
-    # display status
+    # display results
     LOGGER.debug("matrix solver: n_dof = %d" % n_dof)
     LOGGER.debug("matrix solver: n_iter = %d" % n_iter)
     LOGGER.debug("matrix solver: res_norm = %.3e" % res_norm)
@@ -64,6 +64,8 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
         LOGGER.warning("matrix solver: gmres issue")
     if status_res is None:
         LOGGER.warning("matrix solver: residuum issue")
+
+    # display status
     if status:
         LOGGER.debug("matrix solver: convergence achieved")
     else:
