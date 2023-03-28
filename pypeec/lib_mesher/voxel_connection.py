@@ -141,7 +141,7 @@ def get_connection(n, domain_def, domain_connection):
     # get the indices of the connected components
     connection_def = []
     for i in range(n_comp):
-        idx_local = np.flatnonzero(labels == i)
+        idx_local = labels == i
         idx_graph = idx[idx_local]
         connection_def.append(idx_graph)
 

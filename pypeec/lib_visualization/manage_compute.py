@@ -133,10 +133,10 @@ def get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v):
     idx = np.concatenate((idx_vc, idx_vm))
 
     # find position
-    idx_vc_local = np.flatnonzero(np.in1d(idx, idx_vc))
-    idx_vm_local = np.flatnonzero(np.in1d(idx, idx_vm))
-    idx_src_c_local = np.flatnonzero(np.in1d(idx, idx_src_c))
-    idx_src_v_local = np.flatnonzero(np.in1d(idx, idx_src_v))
+    idx_vc_local = np.in1d(idx, idx_vc)
+    idx_vm_local = np.in1d(idx, idx_vm)
+    idx_src_c_local = np.in1d(idx, idx_src_c)
+    idx_src_v_local = np.in1d(idx, idx_src_v)
 
     # init the material
     material = np.empty(len(idx), dtype=NP_TYPES.INT)

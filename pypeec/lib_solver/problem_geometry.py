@@ -167,7 +167,7 @@ def get_reduce_matrix(pts_vox, A_vox, idx_v):
 
     # indices of the all the internal faces (global face indices, 0:3*n)
     idx_f = np.sum(np.abs(A_net), axis=0) == 2
-    idx_f = np.flatnonzero(idx_f)
+    idx_f = np.flatnonzero(idx_f).astype(NP_TYPES.INT)
 
     # reduce the size of the incidence matrix (only the internal faces)
     A_net = A_net[:, idx_f]

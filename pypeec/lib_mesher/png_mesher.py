@@ -48,7 +48,7 @@ def _get_idx_image(nx, ny, img, color):
 
     # find the 2D indices
     idx_img = idx_img.flatten(order="F")
-    idx_img = np.flatnonzero(idx_img)
+    idx_img = np.flatnonzero(idx_img).astype(NP_TYPES.INT)
 
     return idx_img
 

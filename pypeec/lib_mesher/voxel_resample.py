@@ -7,6 +7,10 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
+from pypeec import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 
 def _get_idx_resample_tensor(resampling_factor, idx_n, idx_r, idx):
@@ -76,7 +80,8 @@ def _get_original_grid(n):
     nv = nx*ny*nz
 
     # get the indices of the original grid
-    (idx_n_x, idx_n_y, idx_n_z) = np.unravel_index(np.arange(nv), (nx, ny, nz), order="F")
+    idx_all = np.arange(nv, dtype=NP_TYPES.INT)
+    (idx_n_x, idx_n_y, idx_n_z) = np.unravel_index(idx_all, (nx, ny, nz), order="F")
 
     # assemble the coordinate array
     idx_n = np.stack((idx_n_x, idx_n_y, idx_n_z), axis=1)
@@ -94,10 +99,11 @@ def _get_resampled_voxel(resampling_factor):
     (rx, ry, rz) = resampling_factor
 
     # get the number of resampled voxels per original voxel
-    r = rx*ry*rz
+    rv = rx*ry*rz
 
     # get the indices of a single resampled voxel
-    (idx_r_x, idx_r_y, idx_r_z) = np.unravel_index(np.arange(r), (rx, ry, rz), order="F")
+    idx_all = np.arange(rv, dtype=NP_TYPES.INT)
+    (idx_r_x, idx_r_y, idx_r_z) = np.unravel_index(idx_all, (rx, ry, rz), order="F")
 
     # assemble the coordinate array
     idx_r = np.stack((idx_r_x, idx_r_y, idx_r_z), axis=1)

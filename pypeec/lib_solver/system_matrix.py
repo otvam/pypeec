@@ -32,14 +32,13 @@ def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
     nv = nx*ny*nz
 
     # get the local indices (face indices of the incidence matrix)
-    idx_local = np.in1d(idx_f, np.arange(offset*nv, (offset+1)*nv))
+    idx_local = np.in1d(idx_f, np.arange(offset*nv, (offset+1)*nv, dtype=NP_TYPES.INT))
 
     # slice matrix (columns)
     A_net = A_net[:, idx_local]
 
     # get face indices (get the non-zero entry of the projected voxel variable)
-    nnz = A_net.getnnz(axis=1)
-    idx_local = np.flatnonzero(nnz > 0)
+    idx_local = A_net.getnnz(axis=1) > 0
 
     # slice matrix (rows)
     A_net = A_net[idx_local, :]
@@ -47,8 +46,11 @@ def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
     # scale the matrix for vector projection
     A_net = 0.5*np.abs(A_net)
 
+    # extract the indices
+    idx = idx_v[idx_local]
+
     # add index offset (such that the x, z, and z indices are not identical)
-    idx = offset*nv+idx_v[idx_local]
+    idx = offset*nv+idx
 
     return A_net, idx
 
@@ -107,9 +109,9 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v, has_domain):
     rho = 0.5*rho_v*np.abs(A_net)
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=NP_TYPES.INT))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=NP_TYPES.INT))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=NP_TYPES.INT))
 
     # resistance vector (different directions)
     R = np.zeros(len(idx_f), dtype=NP_TYPES.COMPLEX)
@@ -148,9 +150,9 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
     nv = nx*ny*nz
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=NP_TYPES.INT))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=NP_TYPES.INT))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=NP_TYPES.INT))
 
     # scaling factor
     scale = np.zeros(len(idx_f), dtype=NP_TYPES.COMPLEX)

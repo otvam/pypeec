@@ -77,9 +77,9 @@ def get_vector_density(n, d, idx_f, A_net, var_f):
     (dx, dy, dz) = d
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv))
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=NP_TYPES.INT))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=NP_TYPES.INT))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=NP_TYPES.INT))
 
     # project the faces into the voxels
     var_v_x = 0.5*np.abs(A_net[:, idx_fx])*var_f[idx_fx]

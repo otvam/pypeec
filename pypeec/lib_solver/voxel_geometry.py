@@ -84,7 +84,7 @@ def get_incidence_matrix(n):
 
     # assign the diagonal, each voxel is connected to three faces with positive indices
     data = np.ones(nv)
-    idx_row_col = np.arange(nv)
+    idx_row_col = np.arange(nv, dtype=NP_TYPES.INT)
     A_vox += sps.csc_matrix((data, (idx_row_col, 0*nv+idx_row_col)), shape=(nv, 3*nv), dtype=NP_TYPES.INT)
     A_vox += sps.csc_matrix((data, (idx_row_col, 1*nv+idx_row_col)), shape=(nv, 3*nv), dtype=NP_TYPES.INT)
     A_vox += sps.csc_matrix((data, (idx_row_col, 2*nv+idx_row_col)), shape=(nv, 3*nv), dtype=NP_TYPES.INT)

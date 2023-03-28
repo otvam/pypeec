@@ -45,8 +45,10 @@ def _get_dense_zero(idx_out, idx_in, mat, idx_row, idx_col):
     nv = nx*ny*nz
 
     # get the matrix size
-    n_row = np.count_nonzero(np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv), idx_out))
-    n_col = np.count_nonzero(np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv), idx_in))
+    idx_row = np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=NP_TYPES.INT), idx_out)
+    idx_col = np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=NP_TYPES.INT), idx_in)
+    n_row = np.count_nonzero(idx_row)
+    n_col = np.count_nonzero(idx_col)
 
     # create an empty matrix
     mat_dense = np.zeros((n_row, n_col), dtype=NP_TYPES.FLOAT)
@@ -70,8 +72,10 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     mat_tmp = mat.flatten(order="F")
 
     # get the indices of the non-empty face for the current dimension
-    idx_row = np.flatnonzero(np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv), idx_out))
-    idx_col = np.flatnonzero(np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv), idx_in))
+    idx_row = np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=NP_TYPES.INT), idx_out)
+    idx_col = np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=NP_TYPES.INT), idx_in)
+    n_row = np.count_nonzero(idx_row)
+    n_col = np.count_nonzero(idx_col)
 
     # get the relative position between elements
     (idx_x_1, idx_x_2) = np.meshgrid(idx_x[idx_row], idx_x[idx_col], indexing="ij")
@@ -83,7 +87,7 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
 
     # select the element with a positive sign
     if sign_type == "abs":
-        idx_pos = np.full((len(idx_row), len(idx_col)), True, dtype=bool)
+        idx_pos = np.full((n_row, n_col), True, dtype=bool)
     elif sign_type == "x":
         idx_pos = idx_x_tmp >= 0
     elif sign_type == "y":
@@ -95,7 +99,7 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
 
     # get the sign matrix
     idx_neg = np.logical_not(idx_pos)
-    sign = np.empty((len(idx_row), len(idx_col)), dtype=NP_TYPES.INT)
+    sign = np.empty((n_row, n_col), dtype=NP_TYPES.INT)
     sign[idx_pos] = +1
     sign[idx_neg] = -1
 
@@ -138,8 +142,8 @@ def get_prepare(name, idx_out, idx_in, mat):
     idx_perm_in = np.argsort(idx_in)
     idx_rev_out = np.empty(len(idx_perm_out), dtype=NP_TYPES.INT)
     idx_rev_in = np.empty(len(idx_perm_in), dtype=NP_TYPES.INT)
-    idx_rev_out[idx_perm_out] = np.arange(len(idx_perm_out))
-    idx_rev_in[idx_perm_in] = np.arange(len(idx_perm_in))
+    idx_rev_out[idx_perm_out] = np.arange(len(idx_perm_out), dtype=NP_TYPES.INT)
+    idx_rev_in[idx_perm_in] = np.arange(len(idx_perm_in), dtype=NP_TYPES.INT)
 
     # sort the indices
     idx_out = idx_out[idx_perm_out]
