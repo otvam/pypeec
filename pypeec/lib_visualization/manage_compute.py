@@ -57,7 +57,7 @@ def _get_magnetic_charge(pts, pts_src, Q_src, vol):
     nrm = lna.norm(vec, axis=1, keepdims=True)
 
     # transform the charge into a vector
-    Q_src = np.tile(np.array(Q_src), (3, 1)).transpose()
+    Q_src = np.tile(Q_src, (3, 1)).transpose()
 
     # compute the Biot-Savart contributions
     H_all = (vol/(4*np.pi*mu))*((Q_src*vec)/(nrm**3))
@@ -150,7 +150,7 @@ def get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v):
     return idx, material
 
 
-def get_magnetic_field(d, J_vc, S_vm, pts_net_c, pts_net_m, data_point):
+def get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, data_point):
     """
     Compute the magnetic field for the provided points.
     The Biot-Savart law is used for the electric material contribution.
@@ -164,7 +164,7 @@ def get_magnetic_field(d, J_vc, S_vm, pts_net_c, pts_net_m, data_point):
     H_points = np.zeros((len(data_point), 3), dtype=NP_TYPES.COMPLEX)
     for i, pts_tmp in enumerate(data_point):
         H_c = _get_biot_savart(pts_tmp, pts_net_c, J_vc, vol)
-        H_m = _get_magnetic_charge(pts_tmp, pts_net_m, S_vm, vol)
+        H_m = _get_magnetic_charge(pts_tmp, pts_net_m, Q_vm, vol)
         H_points[i, :] = H_c+H_m
 
     return H_points

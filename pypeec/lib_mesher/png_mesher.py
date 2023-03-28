@@ -38,7 +38,7 @@ def _get_idx_image(nx, ny, img, color):
         raise RunError("invalid image:  size is not compatible with the voxel structure")
 
     # get the color vector
-    color_tmp = np.array(color, dtype=NP_TYPES.INT)
+    color_tmp = np.array(color, dtype=np.uint8)
     color_tmp = np.expand_dims(color_tmp, axis=(0, 1))
     if not (color_tmp.shape == (1, 1, 4)):
         raise RunError("invalid color: colors should be a specified with for values")
@@ -86,7 +86,7 @@ def _get_image(filename):
         raise RunError("invalid png: invalid file content: %s" % filename)
 
     # cast to array
-    img = np.array(img)
+    img = np.array(img, dtype=np.uint8)
 
     # transform from image coordinate to cartesian coordinate
     img = np.swapaxes(img, 0, 1)
