@@ -5,6 +5,11 @@ The following axis definition is used:
     - x: x-axis of the images (standard cartesian coordinate, not image coordinate)
     - y: y-axis of the images (standard cartesian coordinate, not image coordinate)
     - z: defined with the layer stack defining the 2D images
+
+If a voxel is assigned to several domains, this creates a conflict.
+Such conflicts should be resolved with the conflict resolution rules.
+
+The image handling is done with Pillow.
 """
 
 __author__ = "Thomas Guillod"

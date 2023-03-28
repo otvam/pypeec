@@ -16,6 +16,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_mesher import png_mesher
 from pypeec.lib_mesher import stl_mesher
+from pypeec.lib_mesher import voxel_conflict
 from pypeec.lib_mesher import voxel_resample
 from pypeec.lib_mesher import voxel_connection
 from pypeec.lib_mesher import voxel_summary
@@ -93,13 +94,11 @@ def _run_stl(data_voxelize, path_ref):
     pts_min = data_voxelize["pts_min"]
     pts_max = data_voxelize["pts_max"]
     domain_stl = data_voxelize["domain_stl"]
-    domain_conflict = data_voxelize["domain_conflict"]
 
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(LOGGER, "stl_mesher"):
         domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
         (n, d, c, domain_def, reference) = stl_mesher.get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl)
-        domain_def = stl_mesher.get_conflict(domain_def, domain_conflict)
 
     # assemble the data
     data_voxel = {
@@ -120,12 +119,16 @@ def _run_resample_graph(reference, data_voxel, data_mesher):
     # extract the data
     resampling_factor = data_mesher["resampling_factor"]
     domain_connection = data_mesher["domain_connection"]
+    domain_conflict = data_mesher["domain_conflict"]
 
     # extract the data
     n = data_voxel["n"]
     d = data_voxel["d"]
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
+
+    with timelogger.BlockTimer(LOGGER, "voxel_conflict"):
+        domain_def = voxel_conflict.get_conflict(domain_def, domain_conflict)
 
     with timelogger.BlockTimer(LOGGER, "voxel_resample"):
         (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, resampling_factor)

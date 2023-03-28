@@ -4,7 +4,7 @@ Each STL file corresponds to a domain of the 3D voxel structure.
 
 If a voxel is located between two domains, it can be assigned to both domains.
 This creates a conflict as the voxel to domains mapping is not anymore a bijection.
-Therefore, such conflicts are detected and resolved.
+Such conflicts should be resolved with the conflict resolution rules.
 
 The voxelization is done with PyVista.
 """
@@ -162,27 +162,6 @@ def _get_load_stl(domain_stl):
     return mesh_stl, pts_min, pts_max
 
 
-def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
-    """
-    Detect and remove shared indices (conflict) between two domains.
-    The conflict is solved in the following way:
-        - the reference domain remains unchanged
-        - the shared indices are removed from the domain to be fixed
-    """
-
-    # get the indices
-    idx_keep = domain_def[domain_keep]
-    idx_resolve = domain_def[domain_resolve]
-
-    # resolve the conflict
-    idx_resolve = np.setdiff1d(idx_resolve, idx_keep)
-
-    # update the domain indices
-    domain_def[domain_resolve] = idx_resolve
-
-    return domain_def
-
-
 def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
     """
     Transform STL files into a 3D voxel structure.
@@ -246,31 +225,3 @@ def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
     c = c.tolist()
 
     return n, d, c, domain_def, reference
-
-
-def get_conflict(domain_def, domain_conflict):
-    """
-    Detect and remove shared indices (conflict) between domains.
-    The direction of the conflict resolution (between two domains) is specified by the user.
-    At the end, check that all shared indices have been removed.
-    """
-
-    # resolve the conflicts for all the specified domain pairs
-    for domain_conflict_tmp in domain_conflict:
-        # extract data
-        domain_resolve = domain_conflict_tmp["domain_resolve"]
-        domain_keep = domain_conflict_tmp["domain_keep"]
-
-        # solve the conflict
-        domain_def = _get_solve_overlap(domain_def, domain_resolve, domain_keep)
-
-    # assemble all the indices
-    idx_all = np.array([], dtype=NP_TYPES.INT)
-    for idx in domain_def.values():
-        idx_all = np.append(idx_all, idx)
-
-    # check that all the conflicts are resolved
-    if not (len(np.unique(idx_all)) == len(idx_all)):
-        raise RunError("invalid domain: domain indices should be unique")
-
-    return domain_def
