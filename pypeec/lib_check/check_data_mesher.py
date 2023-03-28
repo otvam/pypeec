@@ -6,10 +6,15 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os.path
+import numpy as np
 from pypeec.lib_utils import datachecker
+from pypeec import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 
-def _check_filename(path_ref, filename):
+def _get_filename(path_ref, filename):
     """
     Form a file path from a file name.
     Check if a filename is valid.
@@ -27,7 +32,55 @@ def _check_filename(path_ref, filename):
     return filename
 
 
-def _check_voxel_domain_def(n, domain_def):
+def _get_domain_stl(domain_stl, path_ref):
+    """
+    Update the filename of the STL files with respect to the provided path.
+    """
+
+    # init new domain description
+    domain_stl_path = {}
+
+    # check value
+    for tag, filename_list in domain_stl.items():
+        # check file
+        filename_list_path = []
+        for filename in filename_list:
+            filename = _get_filename(path_ref, filename)
+            filename_list_path.append(filename)
+
+        # add the new item
+        domain_stl_path[tag] = filename_list_path
+
+    return domain_stl_path
+
+
+def _get_layer_stack(layer_stack, path_ref):
+    """
+    Update the filename of the PNG images with respect to the provided path.
+    """
+
+    # init new layer stack
+    layer_stack_path = []
+
+    # update value
+    for layer_stack_tmp in layer_stack:
+        # get the data
+        n_layer = layer_stack_tmp["n_layer"]
+        filename_list = layer_stack_tmp["filename_list"]
+
+        # check file
+        filename_list_path = []
+        for filename in filename_list:
+            filename = _get_filename(path_ref, filename)
+            filename_list_path.append(filename)
+
+        # add the new item
+        layer_stack_path.append({"n_layer": n_layer, "filename_list": filename_list_path})
+
+    return layer_stack_path
+
+
+def _get_domain_def(n, domain_def):
     """
     Check the domain definition (mapping between domain names and indices).
     """
@@ -36,81 +89,29 @@ def _check_voxel_domain_def(n, domain_def):
     (nx, ny, nz) = n
     nv = nx*ny*nz
 
-    # check type
-    datachecker.check_dict("domain_def", domain_def, can_be_empty=False, sub_type=list)
+    # init new domain indices
+    domain_def_array = {}
 
     # check data
-    idx_all = []
-    for idx in domain_def.values():
-        datachecker.check_integer_array("domain_def", idx, is_positive=True, can_be_empty=False)
-        idx_all += idx
+    idx_all = np.array([], dtype=NP_TYPES.INT)
+    for tag, idx in domain_def.items():
+        # parse the array
+        idx_tmp = np.array(idx, dtype=NP_TYPES.INT)
+        idx_all = np.append(idx_all, idx_tmp)
+
+        # add the new item
+        domain_def_array[tag] = idx_tmp
 
     # check the indices
     datachecker.check_index_array("domain_def", idx_all, bnd=nv, can_be_empty=False)
 
-
-def _check_png_domain_color(domain_color):
-    """
-    Check that the mapping between the pixel colors and the domains is valid (PNG mesher).
-    """
-
-    # check type
-    datachecker.check_dict("domain_color", domain_color, can_be_empty=False, sub_type=list)
-
-    # check value
-    for color_list in domain_color.values():
-        # check type
-        datachecker.check_list("domain_color", color_list, can_be_empty=False, sub_type=list)
-
-        # check data
-        for color in color_list:
-            datachecker.check_integer_array("domain_color", color, size=4, is_positive=True)
+    return domain_def_array
 
 
-def _check_png_layer_stack(layer_stack):
-    """
-    Check the validity of the image layer stack (PNG mesher).
-    """
-
-    # check type
-    datachecker.check_list("layer_stack", layer_stack, can_be_empty=False, sub_type=dict)
-
-    # check value
-    for layer_stack_tmp in layer_stack:
-        # check type
-        key_list = ["n_layer", "filename_list"]
-        datachecker.check_dict("layer_stack", layer_stack_tmp, key_list=key_list)
-
-        # check data
-        n_layer = layer_stack_tmp["n_layer"]
-        filename_list = layer_stack_tmp["filename_list"]
-
-        # check data
-        datachecker.check_integer("n_layer", n_layer, is_positive=True, can_be_zero=False)
-        datachecker.check_list("filename_list", filename_list, can_be_empty=False, sub_type=str)
-
-
-def _check_stl_domain_stl(domain_stl):
-    """
-    Check the validity of the domain definition (STL mesher).
-    """
-
-    # check type
-    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=list)
-
-    # check content
-    for filename_list in domain_stl.values():
-        datachecker.check_list("domain_stl", filename_list, can_be_empty=False, sub_type=str)
-
-
-def _check_data_voxelize_png(data_voxelize):
+def _check_data_voxelize_png(data_voxelize, path_ref):
     """
     Check the data used for voxelization (PNG mesher).
     """
-
-    # check type
-    key_list = ["d", "c", "nx", "ny", "domain_color", "layer_stack"]
-    datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     d = data_voxelize["d"]
@@ -120,23 +121,23 @@ def _check_data_voxelize_png(data_voxelize):
     domain_color = data_voxelize["domain_color"]
     layer_stack = data_voxelize["layer_stack"]
 
-    # check data
-    datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
-    datachecker.check_float_array("c", c, size=3)
-    datachecker.check_integer("nx", nx, is_positive=True, can_be_zero=False)
-    datachecker.check_integer("ny", ny, is_positive=True, can_be_zero=False)
+    # update data
+    layer_stack = _get_layer_stack(layer_stack, path_ref)
 
-    # check domains and layers
-    _check_png_domain_color(domain_color)
-    _check_png_layer_stack(layer_stack)
+    # assemble data
+    data_voxelize = {
+        "d": d,
+        "c": c,
+        "nx": nx,
+        "ny": ny,
+        "domain_color": domain_color,
+        "layer_stack": layer_stack,
+    }
 
-    # get the domain name
-    domain_name = domain_color.keys()
-
-    return domain_name
+    return data_voxelize
 
 
-def _check_data_voxelize_stl(data_voxelize):
+def _check_data_voxelize_stl(data_voxelize, path_ref):
     """
     Check the data used for voxelization (STL mesher).
     """
@@ -154,30 +155,21 @@ def _check_data_voxelize_stl(data_voxelize):
     pts_max = data_voxelize["pts_max"]
     domain_stl = data_voxelize["domain_stl"]
 
-    # check data
-    datachecker.check_choice("sampling", sampling, ["number", "dimension"])
-    if sampling == "number":
-        datachecker.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
-    elif sampling == "dimension":
-        datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
-    else:
-        raise ValueError("inconsistent definition of the voxel number/size")
+    # update data
+    domain_stl = _get_domain_stl(domain_stl, path_ref)
 
-    # check data
-    if c is not None:
-        datachecker.check_float_array("c", c, size=3)
-    if pts_min is not None:
-        datachecker.check_float_array("pts_min", pts_min, size=3)
-    if pts_max is not None:
-        datachecker.check_float_array("pts_max", pts_max, size=3)
+    # assemble data
+    data_voxelize = {
+        "d": d,
+        "c": c,
+        "n": n,
+        "sampling": sampling,
+        "pts_min": pts_min,
+        "pts_max": pts_max,
+        "domain_stl": domain_stl,
+    }
 
-    # check the stl file
-    _check_stl_domain_stl(domain_stl)
-
-    # get the domain name
-    domain_name = domain_stl.keys()
-
-    return domain_name
+    return data_voxelize
 
 
 def _check_data_voxelize_voxel(data_voxelize):
@@ -196,163 +188,49 @@ def _check_data_voxelize_voxel(data_voxelize):
     c = data_voxelize["c"]
     domain_def = data_voxelize["domain_def"]
 
-    # check data
-    datachecker.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
-    datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
-    datachecker.check_float_array("c", c, size=3)
+    # update data
+    domain_def = _get_domain_def(n, domain_def)
 
-    # check domain definition
-    _check_voxel_domain_def(n, domain_def)
+    # assemble data
+    data_voxelize = {
+        "d": d,
+        "c": c,
+        "n": n,
+        "domain_def": domain_def,
+    }
 
-    # get the domain name
-    domain_name = domain_def.keys()
-
-    return domain_name
-
-
-def _check_domain_conflict(domain_name, domain_conflict):
-    """
-    Check the validity of the rules to solve conflict between domains (STL mesher).
-    """
-
-    # check type
-    datachecker.check_list("domain_conflict", domain_conflict, sub_type=dict)
-
-    # check value
-    for domain_conflict_tmp in domain_conflict:
-        # check type
-        key_list = ["domain_keep", "domain_resolve"]
-        datachecker.check_dict("domain_conflict", domain_conflict_tmp, key_list=key_list)
-
-        # extract data
-        domain_keep = domain_conflict_tmp["domain_keep"]
-        domain_resolve = domain_conflict_tmp["domain_resolve"]
-
-        # check type
-        datachecker.check_string("domain_keep", domain_keep)
-        datachecker.check_string("domain_resolve", domain_resolve)
-
-        # check data
-        datachecker.check_choice("domain_resolve", domain_resolve, domain_name)
-        datachecker.check_choice("domain_keep", domain_keep, domain_name)
+    return data_voxelize
 
 
-def _check_domain_connection(domain_name, domain_connection):
-    """
-    Check the domain connection data.
-    This list is defining the required connection between the domain
-    """
-
-    # check type
-    datachecker.check_dict("domain_connection", domain_connection, sub_type=dict)
-
-    # check value
-    for dat_tmp in domain_connection.values():
-        # check type
-        key_list = ["connected", "domain_list"]
-        datachecker.check_dict("domain_connection", dat_tmp, key_list=key_list)
-
-        # extract field
-        domain_list = dat_tmp["domain_list"]
-        connected = dat_tmp["connected"]
-
-        # check data
-        datachecker.check_boolean("connected", connected)
-        datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
-
-        # check value
-        for tag in domain_list:
-            datachecker.check_choice("source_type", tag, domain_name)
-
-
-def get_domain_stl_path(domain_stl, path_ref):
-    """
-    Update the filename of the STL files with respect to the provided path.
-    """
-
-    # init new domain description
-    domain_stl_path = {}
-
-    # check value
-    for tag, filename_list in domain_stl.items():
-        # check file
-        filename_list_path = []
-        for filename in filename_list:
-            filename = _check_filename(path_ref, filename)
-            filename_list_path.append(filename)
-
-        # add the new item
-        domain_stl_path[tag] = filename_list_path
-
-    return domain_stl_path
-
-
-def get_layer_stack_path(layer_stack, path_ref):
-    """
-    Update the filename of the PNG images with respect to the provided path.
-    """
-
-    # init new layer stack
-    layer_stack_path = []
-
-    # update value
-    for layer_stack_tmp in layer_stack:
-        # get the data
-        n_layer = layer_stack_tmp["n_layer"]
-        filename_list = layer_stack_tmp["filename_list"]
-
-        # check file
-        filename_list_path = []
-        for filename in filename_list:
-            filename = _check_filename(path_ref, filename)
-            filename_list_path.append(filename)
-
-        # add the new item
-        layer_stack_path.append({"n_layer": n_layer, "filename_list": filename_list_path})
-
-    return layer_stack_path
-
-
-def check_data_mesher(data_mesher):
+def get_data_mesher(data_geometry, path_ref):
     """
     Check the mesher data type and extract the data.
     """
 
-    # check type
-    key_list = [
-        "mesh_type",
-        "data_voxelize",
-        "resampling_factor",
-        "domain_conflict",
-        "domain_connection",
-    ]
-    datachecker.check_dict("data_mesher", data_mesher, key_list=key_list)
-
     # extract field
-    mesh_type = data_mesher["mesh_type"]
-    data_voxelize = data_mesher["data_voxelize"]
-    resampling_factor = data_mesher["resampling_factor"]
-    domain_conflict = data_mesher["domain_conflict"]
-    domain_connection = data_mesher["domain_connection"]
-
-    # check type
-    datachecker.check_choice("mesh_type", mesh_type, ["stl", "png", "voxel"])
+    mesh_type = data_geometry["mesh_type"]
+    data_voxelize = data_geometry["data_voxelize"]
+    resampling_factor = data_geometry["resampling_factor"]
+    domain_conflict = data_geometry["domain_conflict"]
+    domain_connection = data_geometry["domain_connection"]
 
     # check the mesher
     if mesh_type == "png":
-        domain_name = _check_data_voxelize_png(data_voxelize)
+        data_voxelize = _check_data_voxelize_png(data_voxelize, path_ref)
     elif mesh_type == "stl":
-        domain_name = _check_data_voxelize_stl(data_voxelize)
+        data_voxelize = _check_data_voxelize_stl(data_voxelize, path_ref)
     elif mesh_type == "voxel":
-        domain_name = _check_data_voxelize_voxel(data_voxelize)
+        data_voxelize = _check_data_voxelize_voxel(data_voxelize)
     else:
         raise ValueError("invalid mesh type")
 
-    # check the resampling data
-    datachecker.check_integer_array("resampling_factor", resampling_factor, size=3, is_positive=True, can_be_zero=False)
+    # assemble the results
+    data_mesher = {
+        "mesh_type": mesh_type,
+        "data_voxelize" : data_voxelize,
+        "resampling_factor": resampling_factor,
+        "domain_conflict": domain_conflict,
+        "domain_connection": domain_connection,
+    }
 
-    # check the conflict data
-    _check_domain_conflict(domain_name, domain_conflict)
-
-    # check the connection data
-    _check_domain_connection(domain_name, domain_connection)
+    return data_mesher

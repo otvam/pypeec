@@ -17,9 +17,9 @@ EXAMPLE_NAME = examples_config.EXAMPLE_NAME
 
 if __name__ == "__main__":
     # get the filenames
-    file_mesher = os.path.join(PATH_ROOT, EXAMPLE_NAME, "mesher.yaml")
+    file_geometry = os.path.join(PATH_ROOT, EXAMPLE_NAME, "geometry.yaml")
     file_voxel = os.path.join(PATH_ROOT, EXAMPLE_NAME, "voxel.pck")
 
     # run
-    (status, ex) = main.run_mesher(file_mesher, file_voxel)
+    (status, ex) = main.run_mesher(file_geometry, file_voxel)
     sys.exit(int(not status))

@@ -36,7 +36,7 @@ def _run_workflow(test_obj, name):
     print("run")
 
     # get input file name
-    file_mesher = os.path.join(path_root, "..", "examples", name, "mesher.yaml")
+    file_geometry = os.path.join(path_root, "..", "examples", name, "geometry.yaml")
     file_point = os.path.join(path_root, "..", "examples", name, "point.yaml")
     file_problem = os.path.join(path_root, "..", "examples", name, "problem.yaml")
     file_plotter = os.path.join(path_root, "..", "examples", "config", "plotter.json")
@@ -52,7 +52,7 @@ def _run_workflow(test_obj, name):
     # run the code
     try:
         # run the mesher
-        (status, ex) = main.run_mesher(file_mesher, file_voxel)
+        (status, ex) = main.run_mesher(file_geometry, file_voxel)
         test_obj.assertTrue(status, msg="mesher failure : " + str(ex))
 
         # load the voxel file

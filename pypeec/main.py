@@ -8,14 +8,14 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 
-def run_mesher(file_mesher, file_voxel):
+def run_mesher(file_geometry, file_voxel):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
     Write the resulting voxel file.
 
     Parameters
     ----------
-    file_mesher : string (input file, JSON or YAML format)
+    file_geometry : string (input file, JSON or YAML format)
     file_voxel :  string (output file, Pickle format)
 
     Returns
@@ -48,10 +48,10 @@ def run_mesher(file_mesher, file_voxel):
     try:
         # load data
         logger.info("load the input data")
-        data_mesher = fileio.load_config(file_mesher)
+        data_mesher = fileio.load_config(file_geometry)
 
         # get the path for relative file loading
-        path_ref = os.path.abspath(file_mesher)
+        path_ref = os.path.abspath(file_geometry)
         path_ref = os.path.dirname(path_ref)
 
         # call the mesher

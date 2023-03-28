@@ -95,11 +95,11 @@ def _get_arg_mesher(subparsers):
 
     # add the arguments
     parser.add_argument(
-        "-me", "--mesher",
-        help="mesher file (input / JSON or YAML)",
+        "-ge", "--geometry",
+        help="geometry file (input / JSON or YAML)",
         required=True,
         metavar="file",
-        dest="file_mesher",
+        dest="file_geometry",
     )
     parser.add_argument(
         "-vo", "--voxel",
@@ -273,7 +273,7 @@ def run_script():
     # run the code
     if command in ["mesher", "me"]:
         (status, ex) = main.run_mesher(
-            args.file_mesher,
+            args.file_geometry,
             args.file_voxel,
         )
     elif command in ["viewer", "vi"]:

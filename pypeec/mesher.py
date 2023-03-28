@@ -20,6 +20,7 @@ from pypeec.lib_mesher import voxel_conflict
 from pypeec.lib_mesher import voxel_resample
 from pypeec.lib_mesher import voxel_connection
 from pypeec.lib_mesher import voxel_summary
+from pypeec.lib_check import check_data_geometry
 from pypeec.lib_check import check_data_mesher
 from pypeec.lib_utils import timelogger
 from pypeec.error import CheckError, RunError
@@ -65,9 +66,8 @@ def _run_png(data_voxelize, path_ref):
     domain_color = data_voxelize["domain_color"]
     layer_stack = data_voxelize["layer_stack"]
 
-    # get the voxel geometry and the incidence matrix
+    # voxelize the PNG files
     with timelogger.BlockTimer(LOGGER, "png_mesher"):
-        layer_stack = check_data_mesher.get_layer_stack_path(layer_stack, path_ref)
         (n, domain_def) = png_mesher.get_mesh(nx, ny, domain_color, layer_stack)
 
     # assemble the data
@@ -95,9 +95,8 @@ def _run_stl(data_voxelize, path_ref):
     pts_max = data_voxelize["pts_max"]
     domain_stl = data_voxelize["domain_stl"]
 
-    # get the voxel geometry and the incidence matrix
+    # voxelize the STL files
     with timelogger.BlockTimer(LOGGER, "stl_mesher"):
-        domain_stl = check_data_mesher.get_domain_stl_path(domain_stl, path_ref)
         (n, d, c, domain_def, reference) = stl_mesher.get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl)
 
     # assemble the data
@@ -153,14 +152,14 @@ def _run_resample_graph(reference, data_voxel, data_mesher):
     return data_voxel
 
 
-def run(data_mesher, path_ref):
+def run(data_geometry, path_ref):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
     Handle invalid data with exceptions.
 
     Parameters
     ----------
-    data_mesher : dict
+    data_geometry : dict
         The dict describes the meshing and resampling process.
         The voxel structure can be explicitly given or generated from PNG or STL files.
     path_ref :  path (string or None)
@@ -187,7 +186,8 @@ def run(data_mesher, path_ref):
     try:
         # check the input data
         LOGGER.info("check the input data")
-        check_data_mesher.check_data_mesher(data_mesher)
+        check_data_geometry.check_data_geometry(data_geometry)
+        data_mesher = check_data_mesher.get_data_mesher(data_geometry, path_ref)
 
         # run the mesher
         (reference, data_voxel) = _run_mesher(data_mesher, path_ref)
