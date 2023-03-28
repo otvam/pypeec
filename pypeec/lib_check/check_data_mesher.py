@@ -27,32 +27,23 @@ def _check_filename(path_ref, filename):
     return filename
 
 
-def _check_voxel_domain_def(domain_def):
+def _check_voxel_domain_def(n, domain_def):
     """
     Check the domain definition (mapping between domain names and indices).
     """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    nv = nx*ny*nz
 
     # check type
     datachecker.check_dict("domain_def", domain_def, can_be_empty=False, sub_type=list)
 
     # check data
-    for idx in domain_def.values():
-        datachecker.check_integer_array("domain_def", idx, is_positive=True, can_be_empty=False)
-
-
-def _check_voxel_indices(n, domain_def):
-    """
-    Get the validity of the indices.
-    """
-
-    # get the indices
     idx_all = []
     for idx in domain_def.values():
+        datachecker.check_integer_array("domain_def", idx, is_positive=True, can_be_empty=False)
         idx_all += idx
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
 
     # check the indices
     datachecker.check_index_array("domain_def", idx_all, bnd=nv, can_be_empty=False)
@@ -103,44 +94,6 @@ def _check_stl_domain_stl(domain_stl):
     datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=str)
 
 
-def _check_stl_domain_conflict(domain_conflict):
-    """
-    Check the validity of the rules to solve conflict between domains (STL mesher).
-    """
-
-    # check type
-    datachecker.check_list("domain_conflict", domain_conflict, sub_type=dict)
-
-    # check value
-    for domain_conflict_tmp in domain_conflict:
-        # check type
-        key_list = ["domain_keep", "domain_resolve"]
-        datachecker.check_dict("domain_conflict", domain_conflict_tmp, key_list=key_list)
-
-        # extract data
-        domain_keep = domain_conflict_tmp["domain_keep"]
-        domain_resolve = domain_conflict_tmp["domain_resolve"]
-
-        # check type
-        datachecker.check_string("domain_keep", domain_keep)
-        datachecker.check_string("domain_resolve", domain_resolve)
-
-
-def _check_stl_name(domain_conflict, domain_name):
-    """
-    Check the consistency of the domain names.
-    """
-
-    for domain_conflict_tmp in domain_conflict:
-        # extract data
-        domain_resolve = domain_conflict_tmp["domain_resolve"]
-        domain_keep = domain_conflict_tmp["domain_keep"]
-
-        # check data
-        datachecker.check_choice("domain_resolve", domain_resolve, domain_name)
-        datachecker.check_choice("domain_keep", domain_keep, domain_name)
-
-
 def _check_data_voxelize_png(data_voxelize):
     """
     Check the data used for voxelization (PNG mesher).
@@ -180,7 +133,7 @@ def _check_data_voxelize_stl(data_voxelize):
     """
 
     # check type
-    key_list = ["n", "d", "c", "sampling", "pts_min", "pts_max", "domain_stl", "domain_conflict"]
+    key_list = ["n", "d", "c", "sampling", "pts_min", "pts_max", "domain_stl"]
     datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
@@ -191,7 +144,6 @@ def _check_data_voxelize_stl(data_voxelize):
     pts_min = data_voxelize["pts_min"]
     pts_max = data_voxelize["pts_max"]
     domain_stl = data_voxelize["domain_stl"]
-    domain_conflict = data_voxelize["domain_conflict"]
 
     # check data
     datachecker.check_choice("sampling", sampling, ["number", "dimension"])
@@ -212,13 +164,9 @@ def _check_data_voxelize_stl(data_voxelize):
 
     # check the stl file
     _check_stl_domain_stl(domain_stl)
-    _check_stl_domain_conflict(domain_conflict)
 
     # get the domain name
     domain_name = domain_stl.keys()
-
-    # check domain name
-    _check_stl_name(domain_conflict, domain_name)
 
     return domain_name
 
@@ -245,18 +193,42 @@ def _check_data_voxelize_voxel(data_voxelize):
     datachecker.check_float_array("c", c, size=3)
 
     # check domain definition
-    _check_voxel_domain_def(domain_def)
+    _check_voxel_domain_def(n, domain_def)
 
     # get the domain name
     domain_name = domain_def.keys()
 
-    # check indices range
-    _check_voxel_indices(n, domain_def)
-
     return domain_name
 
 
-def _check_domain_connection(domain_connection, domain_name):
+def _check_domain_conflict(domain_name, domain_conflict):
+    """
+    Check the validity of the rules to solve conflict between domains (STL mesher).
+    """
+
+    # check type
+    datachecker.check_list("domain_conflict", domain_conflict, sub_type=dict)
+
+    # check value
+    for domain_conflict_tmp in domain_conflict:
+        # check type
+        key_list = ["domain_keep", "domain_resolve"]
+        datachecker.check_dict("domain_conflict", domain_conflict_tmp, key_list=key_list)
+
+        # extract data
+        domain_keep = domain_conflict_tmp["domain_keep"]
+        domain_resolve = domain_conflict_tmp["domain_resolve"]
+
+        # check type
+        datachecker.check_string("domain_keep", domain_keep)
+        datachecker.check_string("domain_resolve", domain_resolve)
+
+        # check data
+        datachecker.check_choice("domain_resolve", domain_resolve, domain_name)
+        datachecker.check_choice("domain_keep", domain_keep, domain_name)
+
+
+def _check_domain_connection(domain_name, domain_connection):
     """
     Check the domain connection data.
     This list is defining the required connection between the domain
@@ -336,6 +308,7 @@ def check_data_mesher(data_mesher):
         "mesh_type",
         "data_voxelize",
         "resampling_factor",
+        "domain_conflict",
         "domain_connection",
     ]
     datachecker.check_dict("data_mesher", data_mesher, key_list=key_list)
@@ -344,6 +317,7 @@ def check_data_mesher(data_mesher):
     mesh_type = data_mesher["mesh_type"]
     data_voxelize = data_mesher["data_voxelize"]
     resampling_factor = data_mesher["resampling_factor"]
+    domain_conflict = data_mesher["domain_conflict"]
     domain_connection = data_mesher["domain_connection"]
 
     # check type
@@ -362,5 +336,8 @@ def check_data_mesher(data_mesher):
     # check the resampling data
     datachecker.check_integer_array("resampling_factor", resampling_factor, size=3, is_positive=True, can_be_zero=False)
 
+    # check the conflict data
+    _check_domain_conflict(domain_name, domain_conflict)
+
     # check the connection data
-    _check_domain_connection(domain_connection, domain_name)
+    _check_domain_connection(domain_name, domain_connection)

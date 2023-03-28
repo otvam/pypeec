@@ -20,5 +20,6 @@
         - {"n_layer": 6, "filename": "png/via.png"}
         - {"n_layer": 1, "filename": "png/coil.png"}
 "resampling_factor": [1, 1, 1]
+"domain_conflict": []
 "domain_connection":
     "connect": {"domain_list": ["coil", "src", "sink"], "connected": true}

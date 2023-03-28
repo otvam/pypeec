@@ -17,6 +17,7 @@
         "sink": [3]
         "short": [52]
 "resampling_factor": [1, 1, 1]
+"domain_conflict": []
 "domain_connection":
     "pri": {"domain_list": ["pri", "src", "sink"], "connected": true}
     "sec": {"domain_list": ["sec", "short"], "connected": true}

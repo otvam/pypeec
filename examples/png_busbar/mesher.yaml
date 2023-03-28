@@ -20,5 +20,6 @@
         - {"n_layer": 2, "filename": "png/via.png"}
         - {"n_layer": 1, "filename": "png/busbar.png"}
 "resampling_factor": [1, 1, 1]
+"domain_conflict": []
 "domain_connection":
     "connect": {"domain_list": ["copper", "src", "sink"], "connected": true}

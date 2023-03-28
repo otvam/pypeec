@@ -21,6 +21,7 @@
         - {"n_layer": 6, "filename": "png/air.png"}
         - {"n_layer": 1, "filename": "png/shield.png"}
 "resampling_factor": [1, 1, 1]
+"domain_conflict": []
 "domain_connection":
     "cond": {"domain_list": ["coil", "src", "sink"], "connected": true}
     "core": {"domain_list": ["coil", "core"], "connected": false}

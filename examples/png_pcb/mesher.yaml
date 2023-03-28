@@ -21,6 +21,7 @@
         - {"n_layer": 2, "filename": "png/insulation.png"}
         - {"n_layer": 1, "filename": "png/bottom.png"}
 "resampling_factor": [1, 1, 1]
+"domain_conflict": []
 "domain_connection":
     "yop": {"domain_list": ["src_top", "copper", "sink"], "connected": true}
     "bottom": {"domain_list": ["src_bottom", "copper", "sink"], "connected": true}

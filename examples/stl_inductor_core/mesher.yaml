@@ -18,9 +18,9 @@
         "coil": "stl/coil.stl"
         "src": "stl/src.stl"
         "sink": "stl/sink.stl"
-    "domain_conflict":
-        - {"domain_resolve": "coil", "domain_keep": "src"}
-        - {"domain_resolve": "coil", "domain_keep": "sink"}
 "resampling_factor": [1, 1, 1]
+"domain_conflict":
+    - {"domain_resolve": "coil", "domain_keep": "src"}
+    - {"domain_resolve": "coil", "domain_keep": "sink"}
 "domain_connection":
     "coil": {"domain_list": ["coil", "src", "sink"], "connected": true}

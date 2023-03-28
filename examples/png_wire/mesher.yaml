@@ -20,5 +20,6 @@
         - {"n_layer": 8, "filename": "png/wire.png"}
         - {"n_layer": 1, "filename": "png/sink.png"}
 "resampling_factor": [1, 1, 1]
+"domain_conflict": []
 "domain_connection":
     "connect": {"domain_list": ["wire", "src", "sink"], "connected": true}

@@ -15,5 +15,6 @@
         "src": [18]
         "sink": [8]
 "resampling_factor": [1, 1, 1]
+"domain_conflict": []
 "domain_connection":
     "connect": {"domain_list": ["coil", "src", "sink"], "connected": true}

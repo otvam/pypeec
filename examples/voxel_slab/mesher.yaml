@@ -15,5 +15,6 @@
         "src": [0]
         "sink": [6]
 "resampling_factor": [2, 2, 1]
+"domain_conflict": []
 "domain_connection":
     "connect": {"domain_list": ["cond", "src", "sink"], "connected": true}
