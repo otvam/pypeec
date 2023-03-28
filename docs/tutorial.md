@@ -49,7 +49,7 @@ Additionally, a command line tool is located in the `pypeec.script` module:
 ## Input/Output File Description
 
 The following input files (JSON or YAML format) are used:
-* `file_mesher` (JSON or YAML, input file): description of the geometry
+* `file_geometry` (JSON or YAML, input file): description of the geometry
 * `file_problem` (JSON or YAML, input file): description of the magnetic problem
 * `file_tolerance` (JSON or YAML, input file): description of the solver numerical options
 * `file_point` (JSON or YAML, input file): definition of a point cloud for evaluating the magnetic field

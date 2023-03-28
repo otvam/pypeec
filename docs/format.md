@@ -4,9 +4,9 @@
 
 ![viewer](images/workflow.png)
 
-## Mesher File Format
+## Geometry File Format
 
-The `file_mesher` file format is used by the mesher.
+The `file_geometry` file format is used by the mesher.
 This file contains the definition of the voxel structure.
 
 ```yaml
@@ -160,13 +160,15 @@ This file contains the definition of the voxel structure.
     
     # definition of the STL files of the different domains
     #   - dict with the domain name and the STL files
-    #   - the STL files are specified with an array
     #   - required information, the dict cannot be empty
+    #   - domain definition
+    #       - offset: array with offsets for translating the STL meshes
+    #       - filename_list: list of strings with the STL files defining the domain
     "domain_stl":
-        "dom_src": ["stl/dom_src.stl"]
-        "dom_cond": ["stl/dom_cond.stl"]
-        "dom_sink": ["stl/dom_sink.stl"]
-        "dom_mag": ["stl/dom_mag.stl"]
+        "dom_src": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/dom_src.stl"]}
+        "dom_cond": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/dom_cond.stl"]}
+        "dom_sink": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/dom_sink.stl"]}
+        "dom_mag": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/dom_mag.stl"]}
 ```
 
 ## Problem File Format
