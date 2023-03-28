@@ -54,12 +54,8 @@ def _check_png_layer_stack(layer_stack):
         datachecker.check_dict("layer_stack", layer_stack_tmp, key_list=key_list)
 
         # check data
-        n_layer = layer_stack_tmp["n_layer"]
-        filename_list = layer_stack_tmp["filename_list"]
-
-        # check data
-        datachecker.check_integer("n_layer", n_layer, is_positive=True, can_be_zero=False)
-        datachecker.check_list("filename_list", filename_list, can_be_empty=False, sub_type=str)
+        datachecker.check_integer("n_layer", layer_stack_tmp["n_layer"], is_positive=True, can_be_zero=False)
+        datachecker.check_list("filename_list", layer_stack_tmp["filename_list"], can_be_empty=False, sub_type=str)
 
 
 def _check_stl_domain_stl(domain_stl):
@@ -68,11 +64,17 @@ def _check_stl_domain_stl(domain_stl):
     """
 
     # check type
-    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=list)
+    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=dict)
 
     # check content
-    for filename_list in domain_stl.values():
-        datachecker.check_list("domain_stl", filename_list, can_be_empty=False, sub_type=str)
+    for domain_stl_tmp in domain_stl.values():
+        # check type
+        key_list = ["offset", "filename_list"]
+        datachecker.check_dict("domain_stl", domain_stl_tmp, key_list=key_list)
+
+        # check data
+        datachecker.check_float_array("domain_color", domain_stl_tmp["offset"], size=3)
+        datachecker.check_list("filename_list", domain_stl_tmp["filename_list"], can_be_empty=False, sub_type=str)
 
 
 def _check_data_voxelize_png(data_voxelize):

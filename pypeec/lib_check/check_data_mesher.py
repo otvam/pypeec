@@ -41,7 +41,11 @@ def _get_domain_stl(domain_stl, path_ref):
     domain_stl_path = {}
 
     # check value
-    for tag, filename_list in domain_stl.items():
+    for tag, domain_stl_tmp in domain_stl.items():
+        # get the data
+        offset = domain_stl_tmp["offset"]
+        filename_list = domain_stl_tmp["filename_list"]
+
         # check file
         filename_list_path = []
         for filename in filename_list:
@@ -49,7 +53,7 @@ def _get_domain_stl(domain_stl, path_ref):
             filename_list_path.append(filename)
 
         # add the new item
-        domain_stl_path[tag] = filename_list_path
+        domain_stl_path[tag] = {"offset": offset, "filename_list": filename_list_path}
 
     return domain_stl_path
 

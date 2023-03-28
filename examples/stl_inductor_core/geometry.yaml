@@ -14,10 +14,10 @@
     "pts_min": null
     "pts_max": null
     "domain_stl":
-        "core": ["stl/core.stl"]
-        "coil": ["stl/coil.stl"]
-        "src": ["stl/src.stl"]
-        "sink": ["stl/sink.stl"]
+        "core": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/core.stl"]}
+        "coil": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/coil.stl"]}
+        "src": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/src.stl"]}
+        "sink": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/sink.stl"]}
 "resampling_factor": [1, 1, 1]
 "domain_conflict":
     - {"domain_resolve": "coil", "domain_keep": "src"}

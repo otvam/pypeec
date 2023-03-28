@@ -123,7 +123,7 @@ def _get_merge_stl(c, c_stl, mesh_stl):
     return reference
 
 
-def _get_load_stl(filename_list):
+def _get_load_stl(offset, filename_list):
     """
     Load several STL files and merge the meshes.
     """
@@ -149,6 +149,9 @@ def _get_load_stl(filename_list):
     # merge the meshes
     mesh = pv.MultiBlock(mesh_list).combine().extract_surface()
 
+    # translate the meshes
+    mesh = mesh.translate(offset, inplace=True)
+
     return mesh
 
 
@@ -166,9 +169,13 @@ def _get_mesh_stl(domain_stl):
     pts_max = np.full(3, -np.inf, dtype=NP_TYPES.FLOAT)
 
     # load the STL files and find the bounding box
-    for tag, filename_list in domain_stl.items():
+    for tag, dat_tmp in domain_stl.items():
+        # extract data
+        offset = dat_tmp["offset"]
+        filename_list = dat_tmp["filename_list"]
+
         # load the STL
-        mesh = _get_load_stl(filename_list)
+        mesh = _get_load_stl(offset, filename_list)
 
         # display the mesh size
         n_face = mesh.n_faces
