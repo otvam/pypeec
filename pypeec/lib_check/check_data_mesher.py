@@ -78,12 +78,16 @@ def _check_png_layer_stack(layer_stack):
     # check value
     for layer_stack_tmp in layer_stack:
         # check type
-        key_list = ["n_layer", "filename"]
+        key_list = ["n_layer", "filename_list"]
         datachecker.check_dict("layer_stack", layer_stack_tmp, key_list=key_list)
 
         # check data
-        datachecker.check_integer("n_layer", layer_stack_tmp["n_layer"], is_positive=True, can_be_zero=False)
-        datachecker.check_string("filename", layer_stack_tmp["filename"])
+        n_layer = layer_stack_tmp["n_layer"]
+        filename_list = layer_stack_tmp["filename_list"]
+
+        # check data
+        datachecker.check_integer("n_layer", n_layer, is_positive=True, can_be_zero=False)
+        datachecker.check_list("filename_list", filename_list, can_be_empty=False, sub_type=str)
 
 
 def _check_stl_domain_stl(domain_stl):
@@ -92,7 +96,11 @@ def _check_stl_domain_stl(domain_stl):
     """
 
     # check type
-    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=str)
+    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=list)
+
+    # check content
+    for filename_list in domain_stl.values():
+        datachecker.check_list("domain_stl", filename_list, can_be_empty=False, sub_type=str)
 
 
 def _check_data_voxelize_png(data_voxelize):
@@ -266,12 +274,15 @@ def get_domain_stl_path(domain_stl, path_ref):
     domain_stl_path = {}
 
     # check value
-    for tag, filename in domain_stl.items():
+    for tag, filename_list in domain_stl.items():
         # check file
-        filename = _check_filename(path_ref, filename)
+        filename_list_path = []
+        for filename in filename_list:
+            filename = _check_filename(path_ref, filename)
+            filename_list_path.append(filename)
 
         # add the new item
-        domain_stl_path[tag] = filename
+        domain_stl_path[tag] = filename_list_path
 
     return domain_stl_path
 
@@ -288,13 +299,16 @@ def get_layer_stack_path(layer_stack, path_ref):
     for layer_stack_tmp in layer_stack:
         # get the data
         n_layer = layer_stack_tmp["n_layer"]
-        filename = layer_stack_tmp["filename"]
+        filename_list = layer_stack_tmp["filename_list"]
 
         # check file
-        filename = _check_filename(path_ref, filename)
+        filename_list_path = []
+        for filename in filename_list:
+            filename = _check_filename(path_ref, filename)
+            filename_list_path.append(filename)
 
         # add the new item
-        layer_stack_path.append({"n_layer": n_layer, "filename": filename})
+        layer_stack_path.append({"n_layer": n_layer, "filename_list": filename_list_path})
 
     return layer_stack_path
 

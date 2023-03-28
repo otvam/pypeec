@@ -17,8 +17,12 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import PIL.Image as pmg
+from pypeec.lib_utils import timelogger
 from pypeec import config
 from pypeec.error import RunError
+
+# get a logger
+LOGGER = timelogger.get_logger("STL")
 
 # get config
 NP_TYPES = config.NP_TYPES
@@ -91,14 +95,17 @@ def _get_image(filename):
     return img
 
 
-def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename):
+def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename_list):
     """
     Add an image to the 3D voxel structure.
     Update the domain indices and the number of layers.
     """
 
     # extract the image data as a tensor
-    img = _get_image(filename)
+    img_list = []
+    for filename in filename_list:
+        img = _get_image(filename)
+        img_list.append(img)
 
     # add the indices for all the domains
     for tag, color_list in domain_color.items():
@@ -107,8 +114,9 @@ def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename):
 
         # get image indices (2D indices)
         for color in color_list:
-            idx_img_tmp = _get_idx_image(nx, ny, img, color)
-            idx_img = np.append(idx_img, idx_img_tmp)
+            for img in img_list:
+                idx_img_tmp = _get_idx_image(nx, ny, img, color)
+                idx_img = np.append(idx_img, idx_img_tmp)
 
         # get voxel indices (3D indices)
         idx_voxel = _get_idx_voxel(nx, ny, nz, n_layer, idx_img)
@@ -142,10 +150,10 @@ def get_mesh(nx, ny, domain_color, layer_stack):
     for layer_stack_tmp in layer_stack:
         # get the data
         n_layer = layer_stack_tmp["n_layer"]
-        filename = layer_stack_tmp["filename"]
+        filename_list = layer_stack_tmp["filename_list"]
 
         # add the layer
-        (nz, domain_def) = _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename)
+        (nz, domain_def) = _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename_list)
 
     # assemble
     n = (nx, ny, nz)

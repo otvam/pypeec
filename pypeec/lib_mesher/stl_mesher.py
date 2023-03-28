@@ -15,8 +15,12 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import vtk
 import numpy as np
 import pyvista as pv
+from pypeec.lib_utils import timelogger
 from pypeec import config
 from pypeec.error import RunError
+
+# get a logger
+LOGGER = timelogger.get_logger("STL")
 
 # get config
 NP_TYPES = config.NP_TYPES
@@ -106,15 +110,9 @@ def _get_merge_stl(c, c_stl, mesh_stl):
     Translate the mesh with the provided origin.
     """
 
-    # init STL mesh list
-    reference = []
-
-    # load the STL files and find the bounding box
-    for mesh in mesh_stl.values():
-        reference.append(mesh)
-
     # merge the meshes
-    reference = pv.MultiBlock(reference).combine()
+    mesh_list = list(mesh_stl.values())
+    reference = pv.MultiBlock(mesh_list).combine().extract_surface()
 
     # place at the new origin
     reference = reference.translate(c-c_stl, inplace=True)
@@ -122,7 +120,36 @@ def _get_merge_stl(c, c_stl, mesh_stl):
     return reference
 
 
-def _get_load_stl(domain_stl):
+def _get_load_stl(filename_list):
+    """
+    Load several STL files and merge the meshes.
+    """
+
+    # list for the meshes
+    mesh_list = []
+
+    # load the files
+    for filename in filename_list:
+        # load the file
+        try:
+            mesh = pv.read(filename, force_ext=".stl")
+        except ValueError:
+            raise RunError("invalid stl: invalid file type: %s" % filename)
+
+        # check that the file is valid
+        if mesh.n_cells == 0:
+            raise RunError("invalid stl: invalid file content: %s" % filename)
+
+        # store the loaded mesh
+        mesh_list.append(mesh)
+
+    # merge the meshes
+    mesh = pv.MultiBlock(mesh_list).combine().extract_surface()
+
+    return mesh
+
+
+def _get_mesh_stl(domain_stl):
     """
     Load meshes from STL files and find the minimum and maximum coordinates.
     The minimum and maximum coordinates defines a bounding box for all the meshes.
@@ -136,16 +163,9 @@ def _get_load_stl(domain_stl):
     pts_max = np.full(3, -np.inf, dtype=NP_TYPES.FLOAT)
 
     # load the STL files and find the bounding box
-    for tag, filename in domain_stl.items():
+    for tag, filename_list in domain_stl.items():
         # load the STL
-        try:
-            mesh = pv.read(filename, force_ext=".stl")
-        except ValueError:
-            raise RunError("invalid stl: invalid file type: %s" % tag)
-
-        # check that the file is valid
-        if mesh.n_cells == 0:
-            raise RunError("invalid stl: invalid file content: %s" % tag)
+        mesh = _get_load_stl(filename_list)
 
         # find the bounds
         (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
@@ -169,7 +189,7 @@ def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
     """
 
     # load the mesh and get the STL bounds
-    (mesh_stl, pts_min_stl, pts_max_stl) = _get_load_stl(domain_stl)
+    (mesh_stl, pts_min_stl, pts_max_stl) = _get_mesh_stl(domain_stl)
 
     # if provided, the user specified bounds are used, otherwise the STL bounds
     if pts_min is None:

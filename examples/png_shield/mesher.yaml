@@ -17,9 +17,9 @@
         "src": [[255, 0, 0, 255]]
         "sink": [[0, 255, 0, 255]]
     "layer_stack":
-        - {"n_layer": 1, "filename": "png/coil.png"}
-        - {"n_layer": 6, "filename": "png/air.png"}
-        - {"n_layer": 1, "filename": "png/shield.png"}
+        - {"n_layer": 1, "filename_list": ["png/coil.png"]}
+        - {"n_layer": 6, "filename_list": ["png/air.png"]}
+        - {"n_layer": 1, "filename_list": ["png/shield.png"]}
 "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":

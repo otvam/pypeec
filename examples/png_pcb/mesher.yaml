@@ -17,9 +17,9 @@
         "src_bottom": [[0, 255, 0, 255]]
         "sink": [[0, 0, 255, 255]]
     "layer_stack":
-        - {"n_layer": 1, "filename": "png/top.png"}
-        - {"n_layer": 2, "filename": "png/insulation.png"}
-        - {"n_layer": 1, "filename": "png/bottom.png"}
+        - {"n_layer": 1, "filename_list": ["png/top.png"]}
+        - {"n_layer": 2, "filename_list": ["png/insulation.png"]}
+        - {"n_layer": 1, "filename_list": ["png/bottom.png"]}
 "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":

@@ -14,10 +14,10 @@
     "pts_min": null
     "pts_max": null
     "domain_stl":
-        "core": "stl/core.stl"
-        "coil": "stl/coil.stl"
-        "src": "stl/src.stl"
-        "sink": "stl/sink.stl"
+        "core": ["stl/core.stl"]
+        "coil": ["stl/coil.stl"]
+        "src": ["stl/src.stl"]
+        "sink": ["stl/sink.stl"]
 "resampling_factor": [1, 1, 1]
 "domain_conflict":
     - {"domain_resolve": "coil", "domain_keep": "src"}
