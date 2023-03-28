@@ -79,11 +79,12 @@ def _get_domain_indices(domain_list, domain_def):
     Get indices from a list of domain names.
     """
 
-    idx = np.array([], dtype=NP_TYPES.INT)
+    idx_all = np.array([], dtype=NP_TYPES.INT)
     for tag in domain_list:
-        idx = np.append(idx, domain_def[tag])
+        idx_tmp = np.array(domain_def[tag], dtype=NP_TYPES.INT)
+        idx_all = np.append(idx_all, idx_tmp)
 
-    return idx
+    return idx_all
 
 
 def _get_problem_vector(tag, var_type, idx, vec):
@@ -93,13 +94,17 @@ def _get_problem_vector(tag, var_type, idx, vec):
     If the variable is an array, check the length.
     """
 
+    # cast
     if var_type == "lumped":
         vec = np.full(len(idx), vec, dtype=NP_TYPES.FLOAT)
     elif var_type == "distributed":
-        cond = len(vec) == len(idx)
-        datachecker.check_assert(tag, cond, "vector length does not match the number of voxels")
+        vec = np.array(vec, dtype=NP_TYPES.FLOAT)
     else:
         raise ValueError("invalid material type")
+
+    # check
+    cond = len(vec) == len(idx)
+    datachecker.check_assert(tag, cond, "vector length does not match the number of voxels")
 
     return vec
 
