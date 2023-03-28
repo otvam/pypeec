@@ -131,10 +131,10 @@ def set_plotter_voxel_scalar(voxel, idx, idx_var, var, name):
 
     # find the variable indices
     idx_s = np.argsort(idx).astype(NP_TYPES.INT)
-    idx_p = np.searchsorted(idx[idx_s], idx_var).astype(NP_TYPES.INT)
+    idx_p = np.searchsorted(idx, idx_var, sorter=idx_s).astype(NP_TYPES.INT)
     idx_var_local = idx_s[idx_p]
 
-    # assign potential (nan for the voxels where the variable is not defined)
+    # assign scalar variable (nan for the voxels where the variable is not defined)
     var_all = np.full(len(idx), np.nan+1j*np.nan, dtype=NP_TYPES.COMPLEX)
     var_all[idx_var_local] = var
 
@@ -157,10 +157,10 @@ def set_plotter_voxel_vector(voxel, idx, idx_var, var, name):
 
     # find the variable indices
     idx_s = np.argsort(idx).astype(NP_TYPES.INT)
-    idx_p = np.searchsorted(idx[idx_s], idx_var).astype(NP_TYPES.INT)
+    idx_p = np.searchsorted(idx, idx_var, sorter=idx_s).astype(NP_TYPES.INT)
     idx_var_local = idx_s[idx_p]
 
-    # assign flux (nan for the voxels where the variable is not defined)
+    # assign vector variable (nan for the voxels where the variable is not defined)
     var_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=NP_TYPES.COMPLEX)
     var_all[idx_var_local] = var
 
