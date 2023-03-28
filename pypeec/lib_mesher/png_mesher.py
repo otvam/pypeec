@@ -108,6 +108,7 @@ def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename_list):
         img_list.append(img)
 
     # add the indices for all the domains
+    n_voxel = 0
     for tag, color_list in domain_color.items():
         # init the index array
         idx_img = np.array([], dtype=NP_TYPES.INT)
@@ -121,8 +122,14 @@ def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename_list):
         # get voxel indices (3D indices)
         idx_voxel = _get_idx_voxel(nx, ny, nz, n_layer, idx_img)
 
+        # count the number of voxels
+        n_voxel += len(idx_voxel)
+
         # append the indices into the corresponding domain
         domain_def[tag] = np.append(domain_def[tag], idx_voxel)
+
+    # display the layer size
+    LOGGER.debug("layer: size = %d / n_voxels = %d" % (n_layer, n_voxel))
 
     # update the layer stack
     nz += n_layer

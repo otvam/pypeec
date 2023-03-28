@@ -98,6 +98,9 @@ def _get_idx_stl(grid, mesh_stl):
         # voxelize and get the indices
         idx = _get_voxelize(grid, tag, mesh)
 
+        # display number of voxels
+        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx)))
+
         # assign the indices to the domain
         domain_def[tag] = idx
 
@@ -167,6 +170,11 @@ def _get_mesh_stl(domain_stl):
         # load the STL
         mesh = _get_load_stl(filename_list)
 
+        # display the mesh size
+        n_face = mesh.n_faces
+        n_vertice = mesh.n_points
+        LOGGER.debug("%s: n_face = %d / n_vertice = %d" % (tag, n_face, n_vertice))
+
         # find the bounds
         (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
         tmp_min = np.array((x_min, y_min, z_min), dtype=NP_TYPES.FLOAT)
@@ -189,6 +197,7 @@ def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
     """
 
     # load the mesh and get the STL bounds
+    LOGGER.debug("load STL files")
     (mesh_stl, pts_min_stl, pts_max_stl) = _get_mesh_stl(domain_stl)
 
     # if provided, the user specified bounds are used, otherwise the STL bounds
@@ -228,6 +237,7 @@ def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
     grid = _get_grid(n, d, c_stl)
 
     # voxelize the meshes and get the indices
+    LOGGER.debug("voxelize STL files")
     domain_def = _get_idx_stl(grid, mesh_stl)
 
     # if provided, the user specified voxel center is used, otherwise the geometrical center
