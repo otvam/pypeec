@@ -58,8 +58,13 @@ def _check_png_domain_color(domain_color):
     datachecker.check_dict("domain_color", domain_color, can_be_empty=False, sub_type=list)
 
     # check value
-    for color in domain_color.values():
-        datachecker.check_integer_array("domain_color", color, size=4, is_positive=True)
+    for color_list in domain_color.values():
+        # check type
+        datachecker.check_list("domain_color", color_list, can_be_empty=False, sub_type=list)
+
+        # check data
+        for color in color_list:
+            datachecker.check_integer_array("domain_color", color, size=4, is_positive=True)
 
 
 def _check_png_layer_stack(layer_stack):
@@ -76,13 +81,9 @@ def _check_png_layer_stack(layer_stack):
         key_list = ["n_layer", "filename"]
         datachecker.check_dict("layer_stack", layer_stack_tmp, key_list=key_list)
 
-        # get the data
-        n_layer = layer_stack_tmp["n_layer"]
-        filename = layer_stack_tmp["filename"]
-
         # check data
-        datachecker.check_integer("n_layer", n_layer, is_positive=True, can_be_zero=False)
-        datachecker.check_string("filename", filename)
+        datachecker.check_integer("n_layer", layer_stack_tmp["n_layer"], is_positive=True, can_be_zero=False)
+        datachecker.check_string("filename", layer_stack_tmp["filename"])
 
 
 def _check_stl_domain_stl(domain_stl):

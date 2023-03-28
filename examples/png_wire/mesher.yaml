@@ -12,9 +12,9 @@
     "nx": 49
     "ny": 49
     "domain_color":
-        "wire": [0, 0, 0, 255]
-        "src": [255, 0, 0, 255]
-        "sink": [0, 255, 0, 255]
+        "wire": [[0, 0, 0, 255]]
+        "src": [[255, 0, 0, 255]]
+        "sink": [[0, 255, 0, 255]]
     "layer_stack":
         - {"n_layer": 1, "filename": "png/src.png"}
         - {"n_layer": 8, "filename": "png/wire.png"}

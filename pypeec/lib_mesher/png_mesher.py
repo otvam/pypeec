@@ -101,9 +101,14 @@ def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename):
     img = _get_image(filename)
 
     # add the indices for all the domains
-    for tag, color in domain_color.items():
+    for tag, color_list in domain_color.items():
+        # init the index array
+        idx_img = np.array([], dtype=NP_TYPES.INT)
+
         # get image indices (2D indices)
-        idx_img = _get_idx_image(nx, ny, img, color)
+        for color in color_list:
+            idx_img_tmp = _get_idx_image(nx, ny, img, color)
+            idx_img = np.append(idx_img, idx_img_tmp)
 
         # get voxel indices (3D indices)
         idx_voxel = _get_idx_voxel(nx, ny, nz, n_layer, idx_img)

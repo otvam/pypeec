@@ -12,10 +12,10 @@
     "nx": 54
     "ny": 54
     "domain_color":
-        "coil": [0, 0, 0, 255]
-        "core": [0, 0, 255, 255]
-        "src": [255, 0, 0, 255]
-        "sink": [0, 255, 0, 255]
+        "coil": [[0, 0, 0, 255]]
+        "core": [[0, 0, 255, 255]]
+        "src": [[255, 0, 0, 255]]
+        "sink": [[0, 255, 0, 255]]
     "layer_stack":
         - {"n_layer": 9, "filename": "png/base.png"}
         - {"n_layer": 1, "filename": "png/side.png"}
