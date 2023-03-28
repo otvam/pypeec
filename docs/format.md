@@ -9,6 +9,47 @@
 The `file_mesher` file format is used by the mesher.
 This file contains the definition of the voxel structure.
 
+```yaml
+# mesher type
+"mesh_type": "voxel" or "png"  or "stl"
+    
+# definition of the voxel structure
+#   - specific for the different mesher types
+#   - format definition is located in the next subsections
+"data_voxelize": {}
+
+# resampling of the voxel structure
+#   - array with resampling factors (x, y, and z directions)
+#   - the array [1, 1, 1] means that no resampling is performed
+#   - the array [2, 2, 2] means that the voxel are divided in two for all directions
+"resampling_factor": [2, 2, 1]
+
+# definition of the conflict resolution between domains
+#   - during the voxelization, the same voxel can be assigned to several domains
+#   - the shared voxels are located at the boundaries between domain
+#   - the shared voxels are conflicts and should be assigned to a single domain
+#   - list of dicts with the conflict resolution rules
+#   - optional feature, the list can be empty if no conflict resolution is required
+#   - conflict definition
+#       - domain_resolve: domain name where the shared voxels should be removed
+#       - domain_keep: domain name where the shared voxels should be kept
+"domain_conflict":
+    - {"domain_resolve": "dom_cond", "domain_keep": "dom_src"}
+    - {"domain_resolve": "dom_cond", "domain_keep": "dom_sink"}
+
+# pledge the existence or absence of connections between domains
+#   - dict of dicts with the connection name and the connection definition
+#   - optional feature, the dict can be empty without having an impact on the results
+#   - connection definition
+#       - domain_list: list of domains where the connections are checks
+#       - connected: boolean specified if the listed domains should be connected or not
+"domain_connection":
+    "connected": {"domain_list": ["dom_src", "dom_cond", "dom_sink"], "connected": true}
+    "insulated_1": {"domain_list": ["dom_src", "dom_mag"], "connected": false}
+    "insulated_2": {"domain_list": ["dom_cond", "dom_mag"], "connected": false}
+    "insulated_3": {"domain_list": ["dom_sink", "dom_mag"], "connected": false}
+```
+
 ### Definition from Index Arrays
 
 ```yaml
@@ -34,24 +75,6 @@ This file contains the definition of the voxel structure.
         "dom_cond": [5, 6, 9, 10]
         "dom_sink": [13, 14]
         "dom_mag": [36, 37, 38, 39, 40, 41, 42, 43]
-        
-# resampling of the voxel structure
-#   - array with resampling factors (x, y, and z directions)
-#   - the array [1, 1, 1] means that no resampling is performed
-#   - the array [2, 2, 2] means that the voxel are divided in two for all directions
-"resampling_factor": [2, 2, 1]
-
-# pledge the existence or absence of connections between domains
-#   - dict of dicts with the connection name and the connection definition
-#   - optional feature, the dict can be empty without having an impact on the results
-#   - connection definition
-#       - domain_list: list of domains where the connections are checks
-#       - connected: boolean specified if the listed domains should be connected or not
-"domain_connection":
-    "connected": {"domain_list": ["dom_src", "dom_cond", "dom_sink"], "connected": true}
-    "insulated_1": {"domain_list": ["dom_src", "dom_mag"], "connected": false}
-    "insulated_2": {"domain_list": ["dom_cond", "dom_mag"], "connected": false}
-    "insulated_3": {"domain_list": ["dom_sink", "dom_mag"], "connected": false}
 ```
 
 ### Definition from PNG Files
@@ -75,42 +98,25 @@ This file contains the definition of the voxel structure.
     "ny": 49
     
     # definition of the mapping between the image color and the different domains
-    #   - dict of arrays with the domain name and the specified color (RGBA format)
+    #   - dict with the domain name and the specified colors
+    #   - the colors are specified with an array of colors (RGBA format)
     #   - required information, the dict cannot be empty
     "domain_color":
-        "dom_src": [255, 0, 0, 255]
-        "dom_cond": [0, 0, 0, 255]
-        "dom_sink": [0, 255, 0, 255]
-        "dom_mag": [0, 0, 255, 255]
+        "dom_src": [[255, 0, 0, 255]]
+        "dom_cond": [[0, 0, 0, 255]]
+        "dom_sink": [[0, 255, 0, 255]]
+        "dom_mag": [[0, 0, 255, 255]]
     
     # definition of the layer stack (voxels in the z-direction)
     #   - list of dicts with the definition of the layers
     #   - required information, the list cannot be empty
     #   - layer definition
     #       - n_layer: number of voxels in the z-direction for the layer
-    #       - filename: name of the PNG file defining the layer
+    #       - filename_list: list of strings with the PNG files defining the layer
     "layer_stack":
-        - {"n_layer": 1, "filename": "png/layer_bottom.png"}
-        - {"n_layer": 8, "filename": "png/layer_mid.png"}
-        - {"n_layer": 1, "filename": "png/layer_top.png"}
-        
-# resampling of the voxel structure
-#   - array with resampling factors (x, y, and z directions)
-#   - the array [1, 1, 1] means that no resampling is performed
-#   - the array [2, 2, 2] means that the voxel are divided in two for all directions
-"resampling_factor": [2, 2, 1]
-
-# pledge the existence or absence of connections between domains
-#   - dict of dicts with the connection name and the connection definition
-#   - optional feature, the dict can be empty without having an impact on the results
-#   - connection definition
-#       - domain_list: list of domains where the connections are checks
-#       - connected: boolean specified if the listed domains should be connected or not
-"domain_connection":
-    "connected": {"domain_list": ["dom_src", "dom_cond", "dom_sink"], "connected": true}
-    "insulated_1": {"domain_list": ["dom_src", "dom_mag"], "connected": false}
-    "insulated_2": {"domain_list": ["dom_cond", "dom_mag"], "connected": false}
-    "insulated_3": {"domain_list": ["dom_sink", "dom_mag"], "connected": false}
+        - {"n_layer": 1, "filename_list": ["png/layer_bottom.png"]}
+        - {"n_layer": 8, "filename_list": ["png/layer_mid.png"]}
+        - {"n_layer": 1, "filename_list": ["png/layer_top.png"]}
 ```
 
 ### Definition from STL Files
@@ -153,44 +159,14 @@ This file contains the definition of the voxel structure.
     "pts_max": null
     
     # definition of the STL files of the different domains
-    #   - dict of strings with the domain name and the STL files
+    #   - dict with the domain name and the STL files
+    #   - the STL files are specified with an array
     #   - required information, the dict cannot be empty
     "domain_stl":
-        "dom_src": "stl/dom_src.stl"
-        "dom_cond": "stl/dom_cond.stl"
-        "dom_sink": "stl/dom_sink.stl"
-        "dom_mag": "stl/dom_mag.stl"
-    
-    # definition of the conflict resolution between domains
-    #   - during the voxelization, the same voxel can be assigned to several domains
-    #   - the shared voxels are located at the boundaries between domain
-    #   - the shared voxels are conflicts and should be assigned to a single domain
-    #   - list of dicts with the conflict resolution rules
-    #   - optional feature, the list can be empty if no conflict resolution is required
-    #   - conflict definition
-    #       - domain_resolve: domain name where the shared voxels should be removed
-    #       - domain_keep: domain name where the shared voxels should be kept
-    "domain_conflict":
-        - {"domain_resolve": "dom_cond", "domain_keep": "dom_src"}
-        - {"domain_resolve": "dom_cond", "domain_keep": "dom_sink"}
-        
-# resampling of the voxel structure
-#   - array with resampling factors (x, y, and z directions)
-#   - the array [1, 1, 1] means that no resampling is performed
-#   - the array [2, 2, 2] means that the voxel are divided in two for all directions
-"resampling_factor": [2, 2, 1]
-
-# pledge the existence or absence of connections between domains
-#   - dict of dicts with the connection name and the connection definition
-#   - optional feature, the dict can be empty without having an impact on the results
-#   - connection definition
-#       - domain_list: list of domains where the connections are checks
-#       - connected: boolean specified if the listed domains should be connected or not
-"domain_connection":
-    "connected": {"domain_list": ["dom_src", "dom_cond", "dom_sink"], "connected": true}
-    "insulated_1": {"domain_list": ["dom_src", "dom_mag"], "connected": false}
-    "insulated_2": {"domain_list": ["dom_cond", "dom_mag"], "connected": false}
-    "insulated_3": {"domain_list": ["dom_sink", "dom_mag"], "connected": false}
+        "dom_src": ["stl/dom_src.stl"]
+        "dom_cond": ["stl/dom_cond.stl"]
+        "dom_sink": ["stl/dom_sink.stl"]
+        "dom_mag": ["stl/dom_mag.stl"]
 ```
 
 ## Problem File Format
