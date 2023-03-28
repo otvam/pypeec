@@ -449,9 +449,9 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     n_src_v = len(idx_src_v)
 
     # find the variable indices
-    idx_s = np.argsort(idx_vc)
-    idx_src_c_p = np.searchsorted(idx_vc[idx_s], idx_src_c)
-    idx_src_v_p = np.searchsorted(idx_vc[idx_s], idx_src_v)
+    idx_s = np.argsort(idx_vc).astype(NP_TYPES.INT)
+    idx_src_c_p = np.searchsorted(idx_vc[idx_s], idx_src_c).astype(NP_TYPES.INT)
+    idx_src_v_p = np.searchsorted(idx_vc[idx_s], idx_src_v).astype(NP_TYPES.INT)
     idx_src_c_local = idx_s[idx_src_c_p]
     idx_src_v_local = idx_s[idx_src_v_p]
 

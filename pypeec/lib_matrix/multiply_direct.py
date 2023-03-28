@@ -138,8 +138,8 @@ def get_prepare(name, idx_out, idx_in, mat):
     LOGGER.debug("matrix footprint: %.3f MB" % footprint)
 
     # get the permutation for sorting
-    idx_perm_out = np.argsort(idx_out)
-    idx_perm_in = np.argsort(idx_in)
+    idx_perm_out = np.argsort(idx_out).astype(NP_TYPES.INT)
+    idx_perm_in = np.argsort(idx_in).astype(NP_TYPES.INT)
     idx_rev_out = np.empty(len(idx_perm_out), dtype=NP_TYPES.INT)
     idx_rev_in = np.empty(len(idx_perm_in), dtype=NP_TYPES.INT)
     idx_rev_out[idx_perm_out] = np.arange(len(idx_perm_out), dtype=NP_TYPES.INT)

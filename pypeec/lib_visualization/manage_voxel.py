@@ -92,8 +92,10 @@ def set_viewer_domain(voxel, idx, domain, connection):
     Integers are used to encode the different tags.
     """
 
-    # sort idx
-    idx_sort = np.argsort(idx)
+    # get sorted indices
+    idx_sort = np.argsort(idx).astype(NP_TYPES.INT)
+
+    # sort data
     domain = domain[idx_sort]
     connection = connection[idx_sort]
 
@@ -110,8 +112,10 @@ def set_plotter_voxel_material(voxel, idx, material):
     Integers are used to encode the different tags.
     """
 
-    # init the material
-    idx_sort = np.argsort(idx)
+    # get sorted indices
+    idx_sort = np.argsort(idx).astype(NP_TYPES.INT)
+
+    # sort data
     material = material[idx_sort]
 
     # assign the data to the geometry
@@ -126,8 +130,8 @@ def set_plotter_voxel_scalar(voxel, idx, idx_var, var, name):
     """
 
     # find the variable indices
-    idx_s = np.argsort(idx)
-    idx_p = np.searchsorted(idx[idx_s], idx_var)
+    idx_s = np.argsort(idx).astype(NP_TYPES.INT)
+    idx_p = np.searchsorted(idx[idx_s], idx_var).astype(NP_TYPES.INT)
     idx_var_local = idx_s[idx_p]
 
     # assign potential (nan for the voxels where the variable is not defined)
@@ -152,8 +156,8 @@ def set_plotter_voxel_vector(voxel, idx, idx_var, var, name):
     """
 
     # find the variable indices
-    idx_s = np.argsort(idx)
-    idx_p = np.searchsorted(idx[idx_s], idx_var)
+    idx_s = np.argsort(idx).astype(NP_TYPES.INT)
+    idx_p = np.searchsorted(idx[idx_s], idx_var).astype(NP_TYPES.INT)
     idx_var_local = idx_s[idx_p]
 
     # assign flux (nan for the voxels where the variable is not defined)
