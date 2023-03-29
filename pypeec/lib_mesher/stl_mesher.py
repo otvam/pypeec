@@ -67,20 +67,15 @@ def _get_voxelize(grid, tag, mesh):
     # create a boolean mask
     mask = selection["SelectedPoints"].view(bool)
 
-    # transform the grid into an unstructured grid (keeping the non-empty voxels)
-    voxel = grid.extract_points(mask)
+    # find the voxel indices
+    if np.any(mask):
+        # transform the grid into an unstructured grid (keeping the non-empty voxels)
+        voxel = grid.extract_points(mask)
 
-    # get the surface of the new geometry
-    surface = voxel.extract_surface()
-
-    # check for empty voxels
-    if voxel.n_cells == 0:
-        raise RunError("invalid mesh: empty voxel structure: %s" % tag)
-    if surface.n_open_edges > 0:
-        raise RunError("invalid mesh: surface is not closed: %s" % tag)
-
-    # get the indices of the extracted voxels
-    idx = voxel["idx"]
+        # get the indices of the extracted voxels
+        idx = voxel["idx"]
+    else:
+        idx = np.array([], dtype=NP_TYPES.INT)
 
     return idx
 

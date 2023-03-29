@@ -18,7 +18,7 @@ def _check_voxel_domain_def(domain_def):
 
     # check data
     for idx in domain_def.values():
-        datachecker.check_integer_array("domain_def", idx, is_positive=True, can_be_empty=False)
+        datachecker.check_integer_array("domain_def", idx, is_positive=True)
 
 
 def _check_png_domain_color(domain_color):

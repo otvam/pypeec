@@ -54,12 +54,13 @@ def check_float_array(name, data, size=None, is_positive=False, can_be_zero=True
             raise CheckError("%s: invalid array size" % name)
     if (not can_be_empty) and (len(data) == 0):
         raise CheckError("%s: cannot be empty" % name)
-    if not np.issubdtype(data.dtype, np.floating):
-        raise CheckError("%s: invalid array type" % name)
-    if is_positive and not np.all(data >= 0):
-        raise CheckError("%s: should be positive" % name)
-    if (not can_be_zero) and np.any(data == 0):
-        raise CheckError("%s: cannot be zero" % name)
+    if len(data) > 0:
+        if not np.issubdtype(data.dtype, np.floating):
+            raise CheckError("%s: invalid array type" % name)
+        if is_positive and not np.all(data >= 0):
+            raise CheckError("%s: should be positive" % name)
+        if (not can_be_zero) and np.any(data == 0):
+            raise CheckError("%s: cannot be zero" % name)
 
 
 def check_integer_array(name, data, size=None, is_positive=False, can_be_zero=True, can_be_empty=True):
@@ -73,12 +74,13 @@ def check_integer_array(name, data, size=None, is_positive=False, can_be_zero=Tr
             raise CheckError("%s: invalid array size" % name)
     if (not can_be_empty) and (len(data) == 0):
         raise CheckError("%s: cannot be empty" % name)
-    if not np.issubdtype(data.dtype, np.integer):
-        raise CheckError("%s: invalid array type" % name)
-    if is_positive and not np.all(data >= 0):
-        raise CheckError("%s: should be positive" % name)
-    if (not can_be_zero) and np.any(data == 0):
-        raise CheckError("%s: cannot be zero" % name)
+    if len(data) > 0:
+        if not np.issubdtype(data.dtype, np.integer):
+            raise CheckError("%s: invalid array type" % name)
+        if is_positive and not np.all(data >= 0):
+            raise CheckError("%s: should be positive" % name)
+        if (not can_be_zero) and np.any(data == 0):
+            raise CheckError("%s: cannot be zero" % name)
 
 
 def check_index_array(name, data, bnd=None, can_be_empty=True):
@@ -89,13 +91,14 @@ def check_index_array(name, data, bnd=None, can_be_empty=True):
     data = np.array(data)
     if (not can_be_empty) and (len(data) == 0):
         raise CheckError("%s: cannot be empty" % name)
-    if not np.issubdtype(data.dtype, np.integer):
-        raise CheckError("%s: invalid array type" % name)
-    if not (len(np.unique(data)) == len(data)):
-        raise CheckError("%s: indices should be unique" % name)
-    if bnd is not None:
-        if not (np.all(data >= 0) and np.all(data < bnd)):
-            raise CheckError("%s: invalid index range" % name)
+    if len(data) > 0:
+        if not np.issubdtype(data.dtype, np.integer):
+            raise CheckError("%s: invalid array type" % name)
+        if not (len(np.unique(data)) == len(data)):
+            raise CheckError("%s: indices should be unique" % name)
+        if bnd is not None:
+            if not (np.all(data >= 0) and np.all(data < bnd)):
+                raise CheckError("%s: invalid index range" % name)
 
 
 def check_float(name, data, is_positive=False, can_be_zero=True):

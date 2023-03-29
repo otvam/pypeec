@@ -17,6 +17,7 @@
         "cond": [37, 62, 87, 112, 137]
         "src": [12]
         "sink": [162]
+        "empty": []
 "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":
