@@ -1,0 +1,25 @@
+# Definition of a "file_mesher" data.
+#
+# This file is used by the mesher.
+# Definition of the voxel structure.
+#
+# (c) Thomas Guillod - Dartmouth College
+
+"mesh_type": "png"
+"data_voxelize":
+    "d": [17.0e-6, 17.0e-6, 17.0e-6]
+    "c": [0.0, 0.0, 0.0]
+    "nx": 204
+    "ny": 109
+    "domain_color":
+        "coil": [[255, 0, 0, 255]]
+        "src": [[0, 255, 0, 255]]
+        "sink": [[0, 0, 255, 255]]
+    "layer_stack":
+        - {"n_layer": 3, "filename_list": ["png/gerbv_front.png"]}
+        - {"n_layer": 23, "filename_list": ["png/gerbv_via.png"]}
+        - {"n_layer": 2, "filename_list": ["png/gerbv_back.png"]}
+"resampling_factor": [1, 1, 1]
+"domain_conflict": []
+"domain_connection":
+    "connect": {"domain_list": ["coil", "src", "sink"], "connected": true}

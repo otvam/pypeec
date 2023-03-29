@@ -19,6 +19,7 @@ PATH_ROOT="."
 #   png_inductor_gap
 #   png_shield
 #   png_busbar
+#   png_gerber
 #   png_wire
 #   png_pcb
 EXAMPLE_NAME="voxel_core"
