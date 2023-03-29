@@ -16,7 +16,7 @@
         "src": [[0, 255, 0, 255]]
         "sink": [[0, 0, 255, 255]]
     "layer_stack":
-        - {"n_layer": 3, "filename_list": ["png/gerbv_front.png"]}
+        - {"n_layer": 2, "filename_list": ["png/gerbv_front.png"]}
         - {"n_layer": 23, "filename_list": ["png/gerbv_via.png"]}
         - {"n_layer": 2, "filename_list": ["png/gerbv_back.png"]}
 "resampling_factor": [1, 1, 1]

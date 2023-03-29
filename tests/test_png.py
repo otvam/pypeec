@@ -64,8 +64,8 @@ class TestMesherViewer(unittest.TestCase):
         """
 
         res = {
-            "n_total_ref": 622608, "n_used_ref": 40456,
-            "P_tot_ref": 4.79767247e-02, "W_tot_ref": 3.67920225e-09, "tol": 1e-4,
+            "n_total_ref": 600372, "n_used_ref": 32920,
+            "P_tot_ref": 5.61707175e-02, "W_tot_ref": 3.69553507e-09, "tol": 1e-4,
         }
         test_workflow.test_workflow(self, "png_gerber", res)
 
