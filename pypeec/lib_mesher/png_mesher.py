@@ -86,6 +86,7 @@ def _get_image(filename):
         raise RunError("invalid png: invalid file content: %s" % filename)
 
     # cast to array
+    img = img.convert("RGBA")
     img = np.array(img, dtype=np.uint8)
 
     # transform from image coordinate to cartesian coordinate
