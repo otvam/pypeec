@@ -48,7 +48,7 @@ def _check_material_def(material_def):
             if var_type == "lumped":
                 datachecker.check_float(tag, dat_tmp[tag], is_positive=True)
             elif var_type == "distributed":
-                datachecker.check_float_array(tag, dat_tmp[tag], is_positive=True, can_be_empty=False)
+                datachecker.check_float_array(tag, dat_tmp[tag], is_positive=True)
             else:
                 raise ValueError("invalid material type")
 

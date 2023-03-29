@@ -239,20 +239,26 @@ def get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, 
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
 
+        # get the position of the sources
         idx_V_vc = np.in1d(idx_vc, idx)
         idx_I_src_c = np.in1d(idx_src_c, idx)
         idx_I_src_v = np.in1d(idx_src_v, idx)
 
-        # voltage is the average between all the voxels composing the terminal
-        V_tmp = NP_TYPES.COMPLEX(np.mean(V_vc[idx_V_vc]))
-
-        # current is the sum between all the voxels composing the terminal
-        if source_type == "current":
-            I_tmp = NP_TYPES.COMPLEX(np.sum(I_src_c[idx_I_src_c]))
-        elif source_type == "voltage":
-            I_tmp = NP_TYPES.COMPLEX(np.sum(I_src_v[idx_I_src_v]))
+        # extract the terminal variables
+        if len(idx) == 0:
+            V_tmp = NP_TYPES.COMPLEX(0)
+            I_tmp = NP_TYPES.COMPLEX(0)
         else:
-            raise ValueError("invalid terminal type")
+            # voltage is the average between all the voxels composing the terminal
+            V_tmp = NP_TYPES.COMPLEX(np.mean(V_vc[idx_V_vc]))
+
+            # current is the sum between all the voxels composing the terminal
+            if source_type == "current":
+                I_tmp = NP_TYPES.COMPLEX(np.sum(I_src_c[idx_I_src_c]))
+            elif source_type == "voltage":
+                I_tmp = NP_TYPES.COMPLEX(np.sum(I_src_v[idx_I_src_v]))
+            else:
+                raise ValueError("invalid terminal type")
 
         # compute the apparent power
         S_tmp = fact*V_tmp*np.conj(I_tmp)

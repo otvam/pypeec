@@ -19,6 +19,10 @@
         "domain_list": ["core"], "material_type": "magnetic",
         "var_type": "lumped", "chi_re": 100.0, "chi_im": 50.0
     }
+    "empty": {
+        "domain_list": ["empty"], "material_type": "electric",
+        "var_type": "lumped", "rho": 1.0e-8
+    }
 "source_def":
     "src": {
         "domain_list": ["src"], "source_type": "current",
@@ -26,5 +30,9 @@
     }
     "sink": {
         "domain_list": ["sink"], "source_type": "voltage",
+         "var_type": "lumped", "V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0
+    }
+    "empty": {
+        "domain_list": ["empty"], "source_type": "voltage",
          "var_type": "lumped", "V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0
     }
