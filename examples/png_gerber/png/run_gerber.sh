@@ -31,5 +31,6 @@ function convert_file {
 convert_file gerbv_front
 convert_file gerbv_back
 convert_file gerbv_via
+convert_file gerbv_terminal
 
 exit 0
