@@ -1,5 +1,13 @@
 #!/bin/bash
-# Script for transforming GERBER files into PNG files:
+# Script for transforming GERBER files into PNG files.
+#
+# The PCB is created with "KiCad - PCB" and the following files are exported:
+#   - GERBER files for the conductor and the terminals
+#   - Excellon files for the vias
+#
+# Afterwards, the files are combined with "gerbv - Gerber Viewer".
+#
+# Finally, this script is used to generate PNG files for the layers: 
 #   - using "gerbv - Gerber Viewer" for parsing the GERBER files
 #   - using "mogrify - ImageMagick" for trimming the PNG files
 #

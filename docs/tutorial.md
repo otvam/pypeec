@@ -72,6 +72,7 @@ Different examples are located in the `examples` folder:
   * **png_inductor_spiral**: a gapped inductor with an E-core
   * **png_shield**: a conductor loop with a magnetic shield
   * **png_busbar**: a coplanar L-shaped busbar
+  * **png_gerber**: a PCB inductor from GERBER files
   * **png_wire**: a straight round wire
   * **png_pcb**: a PCB with traces
 * voxel structure created from voxel indices

@@ -58,6 +58,17 @@ class TestMesherViewer(unittest.TestCase):
         }
         test_workflow.test_workflow(self, "png_busbar", res)
 
+    def test_png_gerber(self):
+        """
+        Test workflow for png_gerber.
+        """
+
+        res = {
+            "n_total_ref": 622608, "n_used_ref": 40456,
+            "P_tot_ref": 4.79767247e-02, "W_tot_ref": 3.67920225e-09, "tol": 1e-4,
+        }
+        test_workflow.test_workflow(self, "png_gerber", res)
+
     def test_png_pcb(self):
         """
         Test workflow for png_pcb.
