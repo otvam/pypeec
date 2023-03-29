@@ -15,6 +15,7 @@
         "coil": [[255, 0, 0, 255]]
         "src": [[0, 255, 0, 255]]
         "sink": [[0, 0, 255, 255]]
+        "edge": [[0, 0, 0, 255]]
     "layer_stack":
         - {"n_layer": 2, "filename_list": ["png/gerbv_front.png", "png/gerbv_terminal.png"]}
         - {"n_layer": 23, "filename_list": ["png/gerbv_via.png"]}

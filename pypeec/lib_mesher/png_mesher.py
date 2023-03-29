@@ -120,6 +120,9 @@ def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename_list):
                 idx_img_tmp = _get_idx_image(nx, ny, img, color)
                 idx_img = np.append(idx_img, idx_img_tmp)
 
+        # remove duplicate (between the images in the list)
+        idx_img = np.unique(idx_img)
+
         # get voxel indices (3D indices)
         idx_voxel = _get_idx_voxel(nx, ny, nz, n_layer, idx_img)
 
