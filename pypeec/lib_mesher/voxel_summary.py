@@ -26,6 +26,11 @@ def get_status(n, d, c, domain_def, connection_def):
     n_graph = len(connection_def)
     n_domain = len(domain_def)
 
+    # object size
+    sx = dx*nx
+    sy = dy*ny
+    sz = dz*nz
+
     # get the used voxels
     n_used = 0
     for tag, idx in domain_def.items():
@@ -44,19 +49,20 @@ def get_status(n, d, c, domain_def, connection_def):
     }
 
     # display status
-    LOGGER.debug("voxel size: (nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
-    LOGGER.debug("voxel size: (dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
-    LOGGER.debug("voxel size: (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
+    LOGGER.debug("voxel: number = (nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
+    LOGGER.debug("voxel: dimension = (dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
+    LOGGER.debug("voxel: center = (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
+    LOGGER.debug("voxel: span = (sx, sy, sz) =  (%.3e, %.3e, %.3e)" % (sx, sy, sz))
 
     # plot the voxel number
-    LOGGER.debug("voxel size: n_graph = %d" % n_graph)
-    LOGGER.debug("voxel size: n_domain = %d" % n_domain)
-    LOGGER.debug("voxel size: n_total = %d" % n_total)
-    LOGGER.debug("voxel size: n_used = %d" % n_used)
-    LOGGER.debug("voxel size: ratio = %.3e" % ratio)
+    LOGGER.debug("size: n_graph = %d" % n_graph)
+    LOGGER.debug("size: n_domain = %d" % n_domain)
+    LOGGER.debug("size: n_total = %d" % n_total)
+    LOGGER.debug("size: n_used = %d" % n_used)
+    LOGGER.debug("size: ratio = %.3e" % ratio)
 
     # plot the domain size
     for tag, idx in domain_def.items():
-        LOGGER.debug("domain size: %s = %d" % (tag, len(idx)))
+        LOGGER.debug("domain: %s = %d" % (tag, len(idx)))
 
     return voxel_status
