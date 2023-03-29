@@ -74,7 +74,7 @@ Different examples are located in the `examples` folder:
   * **png_busbar**: a coplanar L-shaped busbar
   * **png_gerber**: a PCB inductor from GERBER files
   * **png_wire**: a straight round wire
-  * **png_pcb**: a PCB with traces
+  * **png_trace**: a PCB with traces
 * voxel structure created from voxel indices
   * **voxel_slab**: a simple slab conductor in free space
   * **voxel_core**: a simple slab conductor surrounded by a magnetic core

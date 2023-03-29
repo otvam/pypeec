@@ -25,5 +25,5 @@ PATH_ROOT = os.path.dirname(__file__)
 #   png_busbar
 #   png_gerber
 #   png_wire
-#   png_pcb
+#   png_trace
 EXAMPLE_NAME = "voxel_core"

@@ -69,16 +69,16 @@ class TestMesherViewer(unittest.TestCase):
         }
         test_workflow.test_workflow(self, "png_gerber", res)
 
-    def test_png_pcb(self):
+    def test_png_trace(self):
         """
-        Test workflow for png_pcb.
+        Test workflow for png_trace.
         """
 
         res = {
             "n_total_ref": 58564, "n_used_ref": 1945,
             "P_tot_ref": 7.65291474e-03, "W_tot_ref": 4.67362770e-09, "tol": 1e-4,
         }
-        test_workflow.test_workflow(self, "png_pcb", res)
+        test_workflow.test_workflow(self, "png_trace", res)
 
     def test_png_wire(self):
         """
