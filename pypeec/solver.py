@@ -168,6 +168,9 @@ def _run_solver(data_solver):
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
 
+        # get the domain losses
+        domain = extract_solution.get_domain(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm)
+
         # parse the terminal voltages and currents for the sources
         terminal = extract_solution.get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v)
 
@@ -181,6 +184,7 @@ def _run_solver(data_solver):
         "problem_status": problem_status,
         "solver_status": solver_status,
         "condition_status": condition_status,
+        "domain": domain,
         "terminal": terminal,
         "integral": integral,
     }
