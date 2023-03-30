@@ -72,7 +72,7 @@ def _get_arg_visualization(parser):
     )
 
     parser.add_argument(
-        "-t", "--tag_",
+        "-t", "--tag",
         help="list of plots to be shown (default: show the plots)",
         nargs='+',
         default=None,
