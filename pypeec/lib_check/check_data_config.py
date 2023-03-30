@@ -138,7 +138,7 @@ def _check_data(data_config):
     datachecker.check_choice("FFT_LIBRARY", data_config["FFT_LIBRARY"], lib)
 
     # check factorization library
-    lib =  [
+    lib = [
         "SuperLU",
         "UMFPACK",
         "PARDISO",

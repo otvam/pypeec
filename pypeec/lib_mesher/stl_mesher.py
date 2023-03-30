@@ -54,7 +54,7 @@ def _get_grid(n, d, c):
 
 def _get_voxelize(grid, tag, mesh):
     """
-    Voxelize a STL mesh with respect to a uniform grid.
+    Voxelize an STL mesh with respect to a uniform grid.
     Return the indices of the created voxels.
     """
 

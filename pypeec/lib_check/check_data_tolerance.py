@@ -5,7 +5,6 @@ Module for checking the solver tolerance data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import importlib.util
 from pypeec.lib_utils import datachecker
 
 

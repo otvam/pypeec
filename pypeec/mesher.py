@@ -29,7 +29,7 @@ from pypeec.error import CheckError, RunError
 LOGGER = timelogger.get_logger("MESHER")
 
 
-def _run_mesher(data_mesher, path_ref):
+def _run_mesher(data_mesher):
     """
     Run the mesher
     """
@@ -44,16 +44,16 @@ def _run_mesher(data_mesher, path_ref):
         data_voxel = data_voxelize
     elif mesh_type == "png":
         reference = None
-        data_voxel = _run_png(data_voxelize, path_ref)
+        data_voxel = _run_png(data_voxelize)
     elif mesh_type == "stl":
-        (reference, data_voxel) = _run_stl(data_voxelize, path_ref)
+        (reference, data_voxel) = _run_stl(data_voxelize)
     else:
         raise CheckError("invalid mesh type")
 
     return reference, data_voxel
 
 
-def _run_png(data_voxelize, path_ref):
+def _run_png(data_voxelize):
     """
     Generate a 3D voxel structure from 2D PNG images.
     """
@@ -81,7 +81,7 @@ def _run_png(data_voxelize, path_ref):
     return data_voxel
 
 
-def _run_stl(data_voxelize, path_ref):
+def _run_stl(data_voxelize):
     """
     Generate a 3D voxel structure from 3D STL files.
     """
@@ -190,7 +190,7 @@ def run(data_geometry, path_ref):
         data_mesher = check_data_mesher.get_data_mesher(data_geometry, path_ref)
 
         # run the mesher
-        (reference, data_voxel) = _run_mesher(data_mesher, path_ref)
+        (reference, data_voxel) = _run_mesher(data_mesher)
 
         # resample and assemble
         data_voxel = _run_resample_graph(reference, data_voxel, data_mesher)

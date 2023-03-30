@@ -231,7 +231,7 @@ def get_data_mesher(data_geometry, path_ref):
     # assemble the results
     data_mesher = {
         "mesh_type": mesh_type,
-        "data_voxelize" : data_voxelize,
+        "data_voxelize": data_voxelize,
         "resampling_factor": resampling_factor,
         "domain_conflict": domain_conflict,
         "domain_connection": domain_connection,

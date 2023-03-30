@@ -53,9 +53,9 @@ def _get_prepare(name, idx_out, idx_in, mat):
 
     # get the matrix
     if MATRIX_MULTIPLICATION == "FFT":
-        data = multiply_fft.get_prepare(name,idx_out, idx_in, mat)
+        data = multiply_fft.get_prepare(name, idx_out, idx_in, mat)
     elif MATRIX_MULTIPLICATION == "DIRECT":
-        data = multiply_direct.get_prepare(name,idx_out, idx_in, mat)
+        data = multiply_direct.get_prepare(name, idx_out, idx_in, mat)
     else:
         raise ValueError("invalid multiplication library")
 
