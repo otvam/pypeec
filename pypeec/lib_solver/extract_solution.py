@@ -147,7 +147,7 @@ def get_losses(freq, I_fc, I_fm, R_c, R_m):
     # get the angular frequency
     s = 1j*2*np.pi*freq
 
-    # get the factor for getting the average values
+    # get the factor for getting the loss time-averaged values
     if freq == 0:
         fact = 1.0
     else:
@@ -169,7 +169,7 @@ def get_energy(freq, I_fc, I_fm, L_op_c, K_op_c):
     Get the energy for the electric and magnetic domains.
     """
 
-    # get the factor for getting the average values
+    # get the factor for getting the energy time-averaged values
     if freq == 0:
         fact = 0.5
     else:
@@ -216,14 +216,14 @@ def get_integral(P_fc, P_fm, W_fc, W_fm):
     return integral
 
 
-def get_domain(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
+def get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
     """
     Parse the losses for the materials.
     The results are assigned to a dict with the magnetic and electric losses.
     """
 
-    # init domain dict
-    domain = {}
+    # init material dict
+    material = {}
 
     # compute the losses of the voxels
     P_vc = 0.5*np.abs(A_net_c)*P_fc
@@ -245,7 +245,7 @@ def get_domain(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
         P_tmp = P_vc_tmp+P_vm_tmp
 
         # assign the losses
-        domain[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_tot": P_tmp, "material_type": material_type}
+        material[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_tot": P_tmp, "material_type": material_type}
 
         # display
         LOGGER.debug("domain: %s : material_type = %s" % (tag, material_type))
@@ -253,10 +253,10 @@ def get_domain(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
         LOGGER.debug("domain: %s : P_magnetic = %.3e W" % (tag, P_vm_tmp))
         LOGGER.debug("domain: %s : P_tot = %.3e W" % (tag, P_tmp))
 
-    return domain
+    return material
 
 
-def get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v):
+def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
@@ -264,10 +264,10 @@ def get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, 
     The results are assigned to a dict with the voltage and current values.
     """
 
-    # init terminal dict
-    terminal = {}
+    # init source dict
+    source = {}
 
-    # get the factor for getting the average values
+    # get the factor for getting the power time-averaged values
     if freq == 0:
         fact = 1.0
     else:
@@ -304,7 +304,7 @@ def get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, 
         S_tmp = fact*V_tmp*np.conj(I_tmp)
 
         # assign the current and voltage
-        terminal[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp, "source_type": source_type}
+        source[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp, "source_type": source_type}
 
         # display
         LOGGER.debug("terminal: %s : source_type = %s" % (tag, source_type))
@@ -312,4 +312,4 @@ def get_terminal(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, 
         LOGGER.debug("terminal: %s : I = %+.3e + %+.3ej A" % (tag, I_tmp.real, I_tmp.imag))
         LOGGER.debug("terminal: %s : S = %+.3e + %+.3ej VA" % (tag, S_tmp.real, S_tmp.imag))
 
-    return terminal
+    return source
