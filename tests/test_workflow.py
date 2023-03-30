@@ -6,6 +6,7 @@ True unit tests are not implemented.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import json
 import os.path
 import pickle
 import tempfile
@@ -115,18 +116,33 @@ class TestWorkflow(unittest.TestCase):
         self.assertAlmostEqual(P_tot, P_tot_ref, delta=tol*P_tot_ref, msg="invalid losses")
         self.assertAlmostEqual(W_tot, W_tot_ref, delta=tol*W_tot_ref, msg="invalid energy")
 
-    def _run_test(self, data):
+    def run_test(self, folder, name, res):
         """
         Run the workflow and check the results.
         """
-
-        # extract data
-        folder = data["folder"]
-        name = data["name"]
-        res = data["res"]
 
         # generate the results
         (data_voxel, data_solution) = self._run_workflow(folder, name)
 
         # check the results
         self._check_results(res, data_voxel, data_solution)
+
+
+def set_test(folder, name):
+    """
+    Add a test case to the test class.
+    """
+
+    # file containing the test results
+    file_res = os.path.join(path_root, folder, name + ".json")
+
+    # load the test results
+    with open(file_res, "r") as fid:
+        res = json.load(fid)
+
+    # function describing the test
+    def get(self):
+        return TestWorkflow.run_test(self, folder, name, res)
+
+    # dynamically add the method as an attribute
+    setattr(TestWorkflow, "test_" + name, get)
