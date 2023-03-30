@@ -8,18 +8,18 @@
 PATH_ROOT="."
 
 # name of the considered example
-#   voxel_slab
-#   voxel_transformer
-#   voxel_core
-#   voxel_logo
-#   stl_inductor_air
-#   stl_inductor_core
-#   stl_transformer
-#   png_inductor_spiral
-#   png_inductor_gap
-#   png_shield
-#   png_busbar
-#   png_gerber
-#   png_wire
-#   png_trace
-EXAMPLE_NAME="voxel_core"
+#   examples_voxel/voxel_slab
+#   examples_voxel/voxel_transformer
+#   examples_voxel/voxel_core
+#   examples_voxel/voxel_logo
+#   examples_stl/stl_inductor_air
+#   examples_stl/stl_inductor_core
+#   examples_stl/stl_transformer
+#   examples_png/png_inductor_spiral
+#   examples_png/png_inductor_gap
+#   examples_png/png_shield
+#   examples_png/png_busbar
+#   examples_png/png_gerber
+#   examples_png/png_wire
+#   examples_png/png_trace
+EXAMPLE_NAME="examples_voxel/voxel_core"

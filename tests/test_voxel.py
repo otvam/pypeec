@@ -9,10 +9,17 @@ import unittest
 from tests import test_workflow
 
 
-class TestMesherViewer(unittest.TestCase):
+class TestMesherViewer(test_workflow.TestWorkflow):
     """
-    Test the workflow different examples.
+    Test the workflow for different examples.
     """
+
+    def __init__(self, method):
+        """
+        Constructor.
+        """
+
+        super().__init__(method, "examples_voxel")
 
     def test_voxel_slab(self):
         """
@@ -23,7 +30,7 @@ class TestMesherViewer(unittest.TestCase):
             "n_total_ref": 28, "n_used_ref": 28,
             "P_tot_ref": 7.49997749e-07, "W_tot_ref": 1.78093265e-09, "tol": 1e-4,
         }
-        test_workflow.test_workflow(self, "voxel_slab", res)
+        self._run_test(res)
 
     def test_voxel_core(self):
         """
@@ -34,7 +41,7 @@ class TestMesherViewer(unittest.TestCase):
             "n_total_ref": 175, "n_used_ref": 55,
             "P_tot_ref": 5.45468125e-05, "W_tot_ref": 1.03548738e-08, "tol": 1e-4,
         }
-        test_workflow.test_workflow(self, "voxel_core", res)
+        self._run_test(res)
 
     def test_voxel_transformer(self):
         """
@@ -45,7 +52,7 @@ class TestMesherViewer(unittest.TestCase):
             "n_total_ref": 75, "n_used_ref": 31,
             "P_tot_ref": 4.59670260e-04, "W_tot_ref": 9.91401905e-10, "tol": 1e-4,
         }
-        test_workflow.test_workflow(self, "voxel_transformer", res)
+        self._run_test(res)
 
     def test_voxel_logo(self):
         """
@@ -56,7 +63,7 @@ class TestMesherViewer(unittest.TestCase):
             "n_total_ref": 27, "n_used_ref": 15,
             "P_tot_ref": 3.57142857e-02, "W_tot_ref": 4.41185013e-09, "tol": 1e-4,
         }
-        test_workflow.test_workflow(self, "voxel_logo", res)
+        self._run_test(res)
 
 
 if __name__ == "__main__":
