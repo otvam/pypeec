@@ -11,6 +11,7 @@ import pickle
 import tempfile
 import logging
 import unittest
+from pypeec import main
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.INFO)
@@ -24,27 +25,7 @@ class TestWorkflow(unittest.TestCase):
     Run the complete workflow.
     """
 
-    def __init__(self, method, folder):
-        """
-        Constructor.
-        """
-
-        # call parent constructor
-        super().__init__(method)
-
-        # folder name of the test
-        self.folder = folder
-
-        # prefix of the test method name
-        prefix = "test_"
-
-        # check that the method name is valid
-        assert method.startswith(prefix), "invalid test name"
-
-        # name of the example
-        self.name = method[len(prefix):]
-
-    def _run_workflow(self):
+    def _run_workflow(self, folder, name):
         """
         Run the complete workflow:
             - run the mesher
@@ -55,16 +36,13 @@ class TestWorkflow(unittest.TestCase):
         The intermediate file are stored with temporary files.
         """
 
-        # import PyPEEC
-        from pypeec import main
-
         # start the test
         print("run")
 
         # get input file name
-        file_geometry = os.path.join(path_root, "..", "examples", self.folder, self.name, "geometry.yaml")
-        file_point = os.path.join(path_root, "..", "examples", self.folder, self.name, "point.yaml")
-        file_problem = os.path.join(path_root, "..", "examples", self.folder, self.name, "problem.yaml")
+        file_geometry = os.path.join(path_root, "..", "examples", folder, name, "geometry.yaml")
+        file_point = os.path.join(path_root, "..", "examples", folder, name, "point.yaml")
+        file_problem = os.path.join(path_root, "..", "examples", folder, name, "problem.yaml")
         file_plotter = os.path.join(path_root, "..", "examples", "config", "plotter.json")
         file_viewer = os.path.join(path_root, "..", "examples", "config", "viewer.json")
         file_tolerance = os.path.join(path_root, "..", "examples", "config", "tolerance.json")
@@ -137,13 +115,18 @@ class TestWorkflow(unittest.TestCase):
         self.assertAlmostEqual(P_tot, P_tot_ref, delta=tol*P_tot_ref, msg="invalid losses")
         self.assertAlmostEqual(W_tot, W_tot_ref, delta=tol*W_tot_ref, msg="invalid energy")
 
-    def _run_test(self, res):
+    def _run_test(self, data):
         """
         Run the workflow and check the results.
         """
 
+        # extract data
+        folder = data["folder"]
+        name = data["name"]
+        res = data["res"]
+
         # generate the results
-        (data_voxel, data_solution) = self._run_workflow()
+        (data_voxel, data_solution) = self._run_workflow(folder, name)
 
         # check the results
         self._check_results(res, data_voxel, data_solution)
