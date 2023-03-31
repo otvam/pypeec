@@ -11,8 +11,8 @@ set -o pipefail
 source examples_config.sh
 
 # get the filenames
-FILE_SOLUTION="$PATH_ROOT/$EXAMPLE_NAME/solution.pck"
-FILE_POINT="$PATH_ROOT/$EXAMPLE_NAME/point.yaml"
+FILE_SOLUTION="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/solution.pck"
+FILE_POINT="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/point.yaml"
 FILE_PLOTTER="$PATH_ROOT/config/plotter.json"
 
 # run

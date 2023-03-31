@@ -11,9 +11,9 @@ set -o pipefail
 source examples_config.sh
 
 # get the filenames
-FILE_PROBLEM="$PATH_ROOT/$EXAMPLE_NAME/problem.yaml"
-FILE_VOXEL="$PATH_ROOT/$EXAMPLE_NAME/voxel.pck"
-FILE_SOLUTION="$PATH_ROOT/$EXAMPLE_NAME/solution.pck"
+FILE_PROBLEM="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/problem.yaml"
+FILE_VOXEL="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/voxel.pck"
+FILE_SOLUTION="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/solution.pck"
 FILE_TOLERANCE="$PATH_ROOT/config/tolerance.json"
 
 # run

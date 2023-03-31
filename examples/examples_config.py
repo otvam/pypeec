@@ -26,4 +26,5 @@ PATH_ROOT = os.path.dirname(__file__)
 #   examples_png/png_gerber
 #   examples_png/png_wire
 #   examples_png/png_trace
-EXAMPLE_NAME = "examples_voxel/voxel_core"
+FOLDER_NAME = "examples_voxel"
+EXAMPLE_NAME = "voxel_core"
