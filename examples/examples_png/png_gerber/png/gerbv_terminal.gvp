@@ -14,7 +14,7 @@
 	(cons 'color #(0 0 0))
 	(cons 'alpha #(65535))
 )
-(define-layer! -1 (cons 'filename "gerbv_front.gvp")
+(define-layer! -1 (cons 'filename "gerbv_terminal.gvp")
 	(cons 'color #(65535 65535 65535))
 )
 (set-render-type! 3)

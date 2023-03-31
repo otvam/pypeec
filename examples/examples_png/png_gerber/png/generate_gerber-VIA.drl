@@ -7,7 +7,7 @@ M48
 FMAT,2
 METRIC
 ; #@! TA.AperFunction,Plated,PTH,ViaDrill
-T1C0.075
+T1C0.175
 %
 G90
 G05
