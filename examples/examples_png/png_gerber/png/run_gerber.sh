@@ -22,7 +22,7 @@ function convert_file {
   echo "================================================================"
 
   # render the GERBER files
-  gerbv -p $1.gvp -o $1.png -x png --border 10 --dpi 1500 2>/dev/null
+  gerbv -p layer/$1.gvp -o $1.png -x png --border 10 --dpi 1500 2>/dev/null
   
   # cut the border
   mogrify -trim $1.png
