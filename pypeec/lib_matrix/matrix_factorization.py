@@ -145,9 +145,13 @@ def get_factorize(name, mat):
     nnz = mat.size
     (nx, ny) = mat.shape
 
+    # factorization for empty matrices
+    def factor_empty(rhs):
+        return rhs
+
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
-        return _get_fact_superlu(mat)
+        return factor_empty
 
     # compute matrix density
     density = nnz/(nx*ny)
