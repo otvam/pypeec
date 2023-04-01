@@ -36,6 +36,9 @@ pip install -r requirements.txt
 # MKL optional library
 conda install -y "mkl-devel=2023.0.0"
 
+# CUDA optional library
+conda install -y "cudatoolkit=11.3.1"
+
 # package for creating the package and debugging
 pip install "build>=0.10"
 pip install "memory-profiler>=0.61"
