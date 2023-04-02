@@ -74,6 +74,32 @@ def _check_source_graph(idx_c, idx_m, idx_s, connection_def):
         datachecker.check_assert("index overlap", cond, "magnetic components should not include sources")
 
 
+def _get_field(dat_tmp, var_type, idx):
+    """
+    Cast and check the material and source vectors.
+    If the variable is a scalar, cast to an array.
+    If the variable is an array, check the length.
+    """
+
+    for tag, val in dat_tmp.items():
+        # cast
+        if var_type == "lumped":
+            val = np.full(len(idx), val, dtype=NP_TYPES.FLOAT)
+        elif var_type == "distributed":
+            val = np.array(val, dtype=NP_TYPES.FLOAT)
+        else:
+            raise ValueError("invalid material type")
+
+        # check
+        cond = len(val) == len(idx)
+        datachecker.check_assert(tag, cond, "vector length does not match the number of voxels")
+
+        # update
+        dat_tmp[tag] = val
+
+    return dat_tmp
+
+
 def _get_domain_indices(domain_list, domain_def):
     """
     Get indices from a list of domain names.
@@ -85,28 +111,6 @@ def _get_domain_indices(domain_list, domain_def):
         idx_all = np.append(idx_all, idx_tmp)
 
     return idx_all
-
-
-def _get_problem_vector(tag, var_type, idx, vec):
-    """
-    Cast and check the material and source vectors.
-    If the variable is a scalar, cast to an array.
-    If the variable is an array, check the length.
-    """
-
-    # cast
-    if var_type == "lumped":
-        vec = np.full(len(idx), vec, dtype=NP_TYPES.FLOAT)
-    elif var_type == "distributed":
-        vec = np.array(vec, dtype=NP_TYPES.FLOAT)
-    else:
-        raise ValueError("invalid material type")
-
-    # check
-    cond = len(vec) == len(idx)
-    datachecker.check_assert(tag, cond, "vector length does not match the number of voxels")
-
-    return vec
 
 
 def _get_material_idx(material_def, domain_def):
@@ -136,24 +140,14 @@ def _get_material_idx(material_def, domain_def):
 
         # assign the indices
         if material_type == "electric":
-            rho = _get_problem_vector(tag, var_type, idx, dat_tmp["rho"])
-
             idx_c = np.append(idx_c, idx)
-            material_idx[tag] = {
-                "idx": idx, "material_type": material_type,
-                "var_type": var_type, "rho": rho,
-            }
         elif material_type == "magnetic":
-            chi_re = _get_problem_vector(tag, var_type, idx, dat_tmp["chi_re"])
-            chi_im = _get_problem_vector(tag, var_type, idx, dat_tmp["chi_im"])
-
             idx_m = np.append(idx_m, idx)
-            material_idx[tag] = {
-                "idx": idx, "material_type": material_type,
-                "var_type": var_type, "chi_re": chi_re, "chi_im": chi_im,
-            }
         else:
             raise ValueError("invalid material type")
+
+        # assign the material
+        material_idx[tag] = {"idx": idx, "material_type": material_type, "var_type": var_type}
 
     return domain_cm, idx_c, idx_m, material_idx
 
@@ -185,30 +179,44 @@ def _get_source_idx(source_def, domain_def):
         domain_s += domain_list
 
         # get the source value
-        if source_type == "current":
-            I_re = _get_problem_vector(tag, var_type, idx, dat_tmp["I_re"])
-            I_im = _get_problem_vector(tag, var_type, idx, dat_tmp["I_im"])
-            Y_re = _get_problem_vector(tag, var_type, idx, dat_tmp["Y_re"])
-            Y_im = _get_problem_vector(tag, var_type, idx, dat_tmp["Y_im"])
-
-            source_idx[tag] = {
-                "idx": idx, "source_type": source_type, "var_type": var_type,
-                "I_re": I_re, "I_im": I_im, "Y_re": Y_re, "Y_im": Y_im,
-            }
-        elif source_type == "voltage":
-            V_re = _get_problem_vector(tag, var_type, idx, dat_tmp["V_re"])
-            V_im = _get_problem_vector(tag, var_type, idx, dat_tmp["V_im"])
-            Z_re = _get_problem_vector(tag, var_type, idx, dat_tmp["Z_re"])
-            Z_im = _get_problem_vector(tag, var_type, idx, dat_tmp["Z_im"])
-
-            source_idx[tag] = {
-                "idx": idx, "source_type": source_type, "var_type": var_type,
-                "V_re": V_re, "V_im": V_im, "Z_re": Z_re, "Z_im": Z_im,
-            }
-        else:
-            raise ValueError("invalid source type")
+        source_idx[tag] = {"idx": idx, "source_type": source_type, "var_type": var_type}
 
     return domain_s, idx_s, source_idx
+
+
+def _get_excitation_idx(excitation_def, material_idx, source_idx):
+    """
+    Check the size of the material and source values.
+    Convert the values to arrays.
+    """
+
+    # extract field
+    freq = excitation_def["freq"]
+    material_val = excitation_def["material_val"]
+    source_val = excitation_def["source_val"]
+
+    # update values
+    for tag, dat_tmp in material_val.items():
+        # extract the data
+        var_type = material_idx[tag]["var_type"]
+        idx = material_idx[tag]["idx"]
+
+        # check type
+        material_val[tag] = _get_field(dat_tmp, var_type, idx)
+
+    # update values
+    for tag, dat_tmp in source_val.items():
+        # extract the data
+        var_type = source_idx[tag]["var_type"]
+        idx = source_idx[tag]["idx"]
+
+        # check type
+        source_val[tag] = _get_field(dat_tmp, var_type, idx)
+
+    # assign results
+    excitation_idx = {"freq": freq, "material_val": material_val, "source_val": source_val}
+
+    return excitation_idx
 
 
 def get_data_solver(data_voxel, data_problem, data_tolerance):
@@ -223,6 +231,7 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     # extract field
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
+    excitation_def = data_problem["excitation_def"]
 
     # extract field
     n = data_voxel["n"]
@@ -232,6 +241,9 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     # get material and source indices
     (domain_cm, idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
     (domain_s, idx_s, source_idx) = _get_source_idx(source_def, domain_def)
+
+    # get excitation
+    excitation_idx = _get_excitation_idx(excitation_def, material_idx, source_idx)
 
     # check the domain name
     _check_names(domain_cm, domain_s, domain_def)
@@ -256,9 +268,9 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         "coupling_simplify": data_tolerance["coupling_simplify"],
         "solver_options": data_tolerance["solver_options"],
         "condition_options": data_tolerance["condition_options"],
-        "freq": data_problem["freq"],
         "material_idx": material_idx,
         "source_idx": source_idx,
+        "excitation_idx": excitation_idx,
         "has_electric": has_electric,
         "has_magnetic": has_magnetic,
         "has_coupling": has_coupling,

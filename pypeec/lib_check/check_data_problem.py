@@ -17,11 +17,11 @@ def _check_field(dat_tmp, var_type, key_list):
     datachecker.check_dict("val", dat_tmp, key_list=key_list)
 
     # check data
-    for tag in key_list:
+    for tag, val in dat_tmp.items():
         if var_type == "lumped":
-            datachecker.check_float(tag, dat_tmp[tag], is_positive=True)
+            datachecker.check_float(tag, val, is_positive=True)
         elif var_type == "distributed":
-            datachecker.check_float_array(tag, dat_tmp[tag], is_positive=True)
+            datachecker.check_float_array(tag, val, is_positive=True)
         else:
             raise ValueError("invalid material type")
 
@@ -77,6 +77,10 @@ def _check_source_def(source_def):
 
 
 def _check_excitation_def(excitation_def, material_def, source_def):
+    """
+    Check that the excitation definition (materials and sources) is valid.
+    """
+
     # extract field
     freq = excitation_def["freq"]
     material_val = excitation_def["material_val"]
