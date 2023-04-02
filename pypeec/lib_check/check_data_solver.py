@@ -13,20 +13,6 @@ from pypeec import config
 NP_TYPES = config.NP_TYPES
 
 
-def _check_names(domain_cm, domain_s, domain_def):
-    """
-    Check the validity of the domain names.
-    """
-
-    # check the material domain name
-    for tag in domain_cm:
-        datachecker.check_choice("material domain name", tag, domain_def)
-
-    # check the source domain name
-    for tag in domain_s:
-        datachecker.check_choice("source domain name", tag, domain_def)
-
-
 def _check_indices(n, idx_c, idx_m, idx_s):
     """
     Check that the material and source indices are valid.
@@ -195,6 +181,12 @@ def _get_value_idx(value_def, material_idx, source_idx):
     material_val = value_def["material_val"]
     source_val = value_def["source_val"]
 
+    # check the material domain name
+    for tag in material_idx:
+        datachecker.check_choice("material domain name", tag, material_val)
+    for tag in source_idx:
+        datachecker.check_choice("source domain name", tag, source_val)
+
     # update values
     for tag, dat_tmp in material_val.items():
         # extract the data
@@ -242,14 +234,14 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     (domain_cm, idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
     (domain_s, idx_s, source_idx) = _get_source_idx(source_def, domain_def)
 
+    # check the domain name
+    for tag in domain_cm:
+        datachecker.check_choice("material domain name", tag, domain_def)
+    for tag in domain_s:
+        datachecker.check_choice("source domain name", tag, domain_def)
+
     # get source and material values
     value_idx = _get_value_idx(value_def, material_idx, source_idx)
-
-    # check the domain name
-    _check_names(domain_cm, domain_s, domain_def)
-
-    # check indices
-    _check_indices(n, idx_c, idx_m, idx_s)
 
     # check graph
     _check_source_graph(idx_c, idx_m, idx_s, connection_def)
