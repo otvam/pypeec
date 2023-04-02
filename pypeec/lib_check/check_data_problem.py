@@ -76,15 +76,15 @@ def _check_source_def(source_def):
         datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
 
-def _check_excitation_def(excitation_def, material_def, source_def):
+def _check_value_def(value_def, material_def, source_def):
     """
     Check that the excitation definition (materials and sources) is valid.
     """
 
     # extract field
-    freq = excitation_def["freq"]
-    material_val = excitation_def["material_val"]
-    source_val = excitation_def["source_val"]
+    freq = value_def["freq"]
+    material_val = value_def["material_val"]
+    source_val = value_def["source_val"]
 
     # check data
     datachecker.check_float("freq", freq, is_positive=True)
@@ -138,15 +138,15 @@ def check_data_problem(data_problem):
     """
 
     # check type
-    key_list = ["material_def", "source_def", "excitation_def"]
+    key_list = ["material_def", "source_def", "value_def"]
     datachecker.check_dict("data_problem", data_problem, key_list=key_list)
 
     # extract field
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
-    excitation_def = data_problem["excitation_def"]
+    value_def = data_problem["value_def"]
 
     # check material and source
     _check_material_def(material_def)
     _check_source_def(source_def)
-    _check_excitation_def(excitation_def, material_def, source_def)
+    _check_value_def(value_def, material_def, source_def)

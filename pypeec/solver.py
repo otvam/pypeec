@@ -12,6 +12,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_solver import voxel_geometry
 from pypeec.lib_solver import system_tensor
 from pypeec.lib_solver import problem_geometry
+from pypeec.lib_solver import problem_value
 from pypeec.lib_solver import system_matrix
 from pypeec.lib_solver import equation_system
 from pypeec.lib_solver import equation_solver
@@ -42,7 +43,7 @@ def _run_solver(data_solver):
     has_magnetic = data_solver["has_magnetic"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
-    excitation_idx = data_solver["excitation_idx"]
+    value_idx = data_solver["value_idx"]
     solver_options = data_solver["solver_options"]
     condition_options = data_solver["condition_options"]
 
@@ -85,6 +86,19 @@ def _run_solver(data_solver):
 
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
+
+    # get the material and source values
+    with timelogger.BlockTimer(LOGGER, "problem_value"):
+        # get frequency, the material parameters, and the source values
+        (freq, material_val, source_val) = problem_value.get_value(value_idx)
+
+        # parse the material parameters
+        rho_vc = problem_value.get_material_values(material_val, material_idx, "electric")
+        rho_vm = problem_value.get_material_values(material_val, material_idx, "magnetic")
+
+        # parse the source parameters
+        (I_src_c, G_src_c) = problem_value.get_source_values(source_val, source_idx, "current")
+        (V_src_v, R_src_v) = problem_value.get_source_values(source_val, source_idx, "voltage")
 
     # get the resistances and inductances
     with timelogger.BlockTimer(LOGGER, "system_matrix"):

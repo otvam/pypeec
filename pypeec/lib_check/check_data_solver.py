@@ -184,16 +184,16 @@ def _get_source_idx(source_def, domain_def):
     return domain_s, idx_s, source_idx
 
 
-def _get_excitation_idx(excitation_def, material_idx, source_idx):
+def _get_value_idx(value_def, material_idx, source_idx):
     """
     Check the size of the material and source values.
     Convert the values to arrays.
     """
 
     # extract field
-    freq = excitation_def["freq"]
-    material_val = excitation_def["material_val"]
-    source_val = excitation_def["source_val"]
+    freq = value_def["freq"]
+    material_val = value_def["material_val"]
+    source_val = value_def["source_val"]
 
     # update values
     for tag, dat_tmp in material_val.items():
@@ -214,9 +214,9 @@ def _get_excitation_idx(excitation_def, material_idx, source_idx):
         source_val[tag] = _get_field(dat_tmp, var_type, idx)
 
     # assign results
-    excitation_idx = {"freq": freq, "material_val": material_val, "source_val": source_val}
+    value_idx = {"freq": freq, "material_val": material_val, "source_val": source_val}
 
-    return excitation_idx
+    return value_idx
 
 
 def get_data_solver(data_voxel, data_problem, data_tolerance):
@@ -231,7 +231,7 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     # extract field
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
-    excitation_def = data_problem["excitation_def"]
+    value_def = data_problem["value_def"]
 
     # extract field
     n = data_voxel["n"]
@@ -242,8 +242,8 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     (domain_cm, idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
     (domain_s, idx_s, source_idx) = _get_source_idx(source_def, domain_def)
 
-    # get excitation
-    excitation_idx = _get_excitation_idx(excitation_def, material_idx, source_idx)
+    # get source and material values
+    value_idx = _get_value_idx(value_def, material_idx, source_idx)
 
     # check the domain name
     _check_names(domain_cm, domain_s, domain_def)
@@ -270,7 +270,7 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         "condition_options": data_tolerance["condition_options"],
         "material_idx": material_idx,
         "source_idx": source_idx,
-        "excitation_idx": excitation_idx,
+        "value_idx": value_idx,
         "has_electric": has_electric,
         "has_magnetic": has_magnetic,
         "has_coupling": has_coupling,
