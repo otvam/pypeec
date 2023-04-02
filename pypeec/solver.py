@@ -35,7 +35,6 @@ def _run_solver(data_solver):
     n = data_solver["n"]
     d = data_solver["d"]
     c = data_solver["c"]
-    freq = data_solver["freq"]
     green_simplify = data_solver["green_simplify"]
     coupling_simplify = data_solver["coupling_simplify"]
     has_coupling = data_solver["has_coupling"]
@@ -43,6 +42,7 @@ def _run_solver(data_solver):
     has_magnetic = data_solver["has_magnetic"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
+    excitation_idx = data_solver["excitation_idx"]
     solver_options = data_solver["solver_options"]
     condition_options = data_solver["condition_options"]
 
@@ -68,12 +68,12 @@ def _run_solver(data_solver):
     # parse the problem geometry (materials and sources)
     with timelogger.BlockTimer(LOGGER, "problem_geometry"):
         # parse the materials
-        (idx_vc, rho_vc) = problem_geometry.get_material_electric(material_idx)
-        (idx_vm, rho_vm) = problem_geometry.get_material_magnetic(material_idx)
+        idx_vc = problem_geometry.get_material_indices(material_idx, "electric")
+        idx_vm = problem_geometry.get_material_indices(material_idx, "magnetic")
 
         # parse the sources
-        (idx_src_c, I_src_c, G_src_c) = problem_geometry.get_source_current(source_idx)
-        (idx_src_v, V_src_v, R_src_v) = problem_geometry.get_source_voltage(source_idx)
+        idx_src_c = problem_geometry.get_source_indices(source_idx, "current")
+        idx_src_v = problem_geometry.get_source_indices(source_idx, "voltage")
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
         (pts_net_c, A_net_c, idx_fc) = problem_geometry.get_reduce_matrix(pts_vox, A_vox, idx_vc)
