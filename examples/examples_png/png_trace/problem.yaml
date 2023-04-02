@@ -5,22 +5,17 @@
 #
 # (c) Thomas Guillod - Dartmouth College
 
-"freq": 0.0
 "material_def":
-    "coil": {
-        "domain_list": ["src_top", "src_bottom", "sink", "copper"], "material_type": "electric",
-        "var_type": "lumped", "rho": 1.75e-8,
-    }
+    "coil": {"domain_list": ["src_top", "src_bottom", "sink", "copper"], "material_type": "electric", "var_type": "lumped"}
 "source_def":
-    "src_top": {
-        "domain_list": ["src_top"], "source_type": "current",
-        "var_type": "lumped", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0,
-    }
-    "src_bottom": {
-        "domain_list": ["src_bottom"], "source_type": "current",
-        "var_type": "lumped", "I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0,
-    }
-    "sink": {
-        "domain_list": ["sink"], "source_type": "voltage",
-        "var_type": "lumped", "V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0,
-    }
+    "src_top": {"domain_list": ["src_top"], "source_type": "current", "var_type": "lumped"}
+    "src_bottom": {"domain_list": ["src_bottom"], "source_type": "current", "var_type": "lumped"}
+    "sink": {"domain_list": ["sink"], "source_type": "voltage", "var_type": "lumped"}
+value_def:
+    "freq": 0.0
+    "material_val":
+        "coil": {"rho_re": 1.75e-8, "rho_im": 0.0}
+    "source_val":
+        "src_top": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
+        "src_bottom": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
+        "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
