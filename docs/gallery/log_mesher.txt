@@ -1,26 +1,27 @@
 00:00:00,000 : MAIN        : INFO         : load the mesher
-00:00:00,821 : MAIN        : INFO         : load the input data
-00:00:00,825 : MESHER      : INFO         : check the input data
-00:00:00,825 : MESHER      : INFO         : stl_mesher : enter : timing
-00:00:01,298 : MESHER      : INFO         : stl_mesher : exit : 00:00:00,473
-00:00:01,298 : MESHER      : INFO         : voxel_resample : enter : timing
-00:00:01,311 : MESHER      : INFO         : voxel_resample : exit : 00:00:00,012
-00:00:01,311 : MESHER      : INFO         : voxel_connection : enter : timing
-00:00:01,348 : MESHER      : INFO         : voxel_connection : exit : 00:00:00,036
-00:00:01,348 : MESHER      : INFO         : voxel_summary : enter : timing
-00:00:01,348 : SUMMARY     : DEBUG        :     voxel size: (nx, ny, nz)) = (72, 70, 32)
-00:00:01,348 : SUMMARY     : DEBUG        :     voxel size: (dx, dy, dz) =  (8.889e-05, 8.568e-05, 6.247e-05)
-00:00:01,348 : SUMMARY     : DEBUG        :     voxel size: (cx, cy, cz) =  (2.800e-03, 2.499e-03, -3.999e-07)
-00:00:01,348 : SUMMARY     : DEBUG        :     voxel size: n_graph = 2
-00:00:01,348 : SUMMARY     : DEBUG        :     voxel size: n_domain = 4
-00:00:01,348 : SUMMARY     : DEBUG        :     voxel size: n_total = 161280
-00:00:01,348 : SUMMARY     : DEBUG        :     voxel size: n_used = 33523
-00:00:01,348 : SUMMARY     : DEBUG        :     voxel size: ratio = 2.079e-01
-00:00:01,348 : SUMMARY     : DEBUG        :     domain size: core = 17160
-00:00:01,348 : SUMMARY     : DEBUG        :     domain size: coil = 15908
-00:00:01,348 : SUMMARY     : DEBUG        :     domain size: src = 245
-00:00:01,348 : SUMMARY     : DEBUG        :     domain size: sink = 210
-00:00:01,348 : MESHER      : INFO         : voxel_summary : exit : 00:00:00,000
-00:00:01,348 : MESHER      : INFO         : successful termination
-00:00:01,348 : MAIN        : INFO         : save the results
-
+00:00:00,485 : MAIN        : INFO         : load the input data
+00:00:00,492 : MESHER      : INFO         : check the input data
+00:00:00,492 : MESHER      : INFO         : voxel_conflict : enter : timing
+00:00:00,492 : MESHER      : INFO         : voxel_conflict : exit : 00:00:00,000
+00:00:00,492 : MESHER      : INFO         : voxel_resample : enter : timing
+00:00:00,493 : MESHER      : INFO         : voxel_resample : exit : 00:00:00,000
+00:00:00,493 : MESHER      : INFO         : voxel_connection : enter : timing
+00:00:00,496 : MESHER      : INFO         : voxel_connection : exit : 00:00:00,003
+00:00:00,496 : MESHER      : INFO         : voxel_summary : enter : timing
+00:00:00,496 : SUMMARY     : DEBUG        :     voxel: number = (nx, ny, nz)) = (5, 5, 7)
+00:00:00,496 : SUMMARY     : DEBUG        :     voxel: dimension = (dx, dy, dz) =  (1.000e-02, 1.000e-02, 1.000e-02)
+00:00:00,496 : SUMMARY     : DEBUG        :     voxel: center = (cx, cy, cz) =  (0.000e+00, 0.000e+00, 0.000e+00)
+00:00:00,496 : SUMMARY     : DEBUG        :     voxel: span = (sx, sy, sz) =  (5.000e-02, 5.000e-02, 7.000e-02)
+00:00:00,496 : SUMMARY     : DEBUG        :     size: n_graph = 2
+00:00:00,497 : SUMMARY     : DEBUG        :     size: n_domain = 5
+00:00:00,497 : SUMMARY     : DEBUG        :     size: n_total = 175
+00:00:00,497 : SUMMARY     : DEBUG        :     size: n_used = 55
+00:00:00,497 : SUMMARY     : DEBUG        :     size: ratio = 3.143e-01
+00:00:00,497 : SUMMARY     : DEBUG        :     domain: core = 48
+00:00:00,497 : SUMMARY     : DEBUG        :     domain: cond = 5
+00:00:00,497 : SUMMARY     : DEBUG        :     domain: src = 1
+00:00:00,497 : SUMMARY     : DEBUG        :     domain: sink = 1
+00:00:00,497 : SUMMARY     : DEBUG        :     domain: empty = 0
+00:00:00,497 : MESHER      : INFO         : voxel_summary : exit : 00:00:00,000
+00:00:00,497 : MESHER      : INFO         : successful termination
+00:00:00,497 : MAIN        : INFO         : save the results
