@@ -10,6 +10,7 @@
 * **Fast** with **moderate memory** requirements
 * Advanced **plotting** capabilities
 * Can be used with **Jupyter** notebooks
+* Import from STL, PNG, GERBER, and voxel files
 * Conductive and magnetic domains
 * Frequency domain solution
 * Connection of current and voltage sources

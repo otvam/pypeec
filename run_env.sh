@@ -1,7 +1,9 @@
 #!/bin/bash
 # Script for creating the development environment:
-#   - using Conda for Python and MKL
+#   - using Conda for Python, MKL, and CUDA
 #   - using Pip for the Python packages
+#   - install the PyPEEC dependencies
+#   - install development tools
 #
 # WARNING: Some libraries are hardware/platform/version specific.
 #          Therefore, some adaptations might be required for your system.
@@ -18,8 +20,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 # activate conda
-CONDA_PATH="$1/bin/activate"
-source $CONDA_PATH
+source "$1/bin/activate"
 
 # remove previous env
 conda env remove -n pypeec
