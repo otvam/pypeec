@@ -87,25 +87,8 @@ def _run_solver(data_solver):
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
 
-    # get the material and source values
-    with timelogger.BlockTimer(LOGGER, "problem_value"):
-        # get frequency, the material parameters, and the source values
-        (freq, material_val, source_val) = problem_value.get_value(value_idx)
-
-        # parse the material parameters
-        rho_vc = problem_value.get_material_values(material_val, material_idx, "electric")
-        rho_vm = problem_value.get_material_values(material_val, material_idx, "magnetic")
-
-        # parse the source parameters
-        (I_src_c, G_src_c) = problem_value.get_source_values(source_val, source_idx, "current")
-        (V_src_v, R_src_v) = problem_value.get_source_values(source_val, source_idx, "voltage")
-
-    # get the resistances and inductances
+    # get the system operators
     with timelogger.BlockTimer(LOGGER, "system_matrix"):
-        # get the resistance vector
-        R_c = system_matrix.get_resistance_vector(n, d, A_net_c, idx_fc, rho_vc, has_electric)
-        R_m = system_matrix.get_resistance_vector(n, d, A_net_m, idx_fm, rho_vm, has_magnetic)
-
         # get the inductance tensor (preconditioner and full problem)
         (L_c, L_op_c) = system_matrix.get_inductance_matrix(n, d, idx_fc, G_self, G_mutual, has_electric)
 
@@ -121,6 +104,23 @@ def _run_solver(data_solver):
 
         # free memory
         del K_tsr
+
+    # get the material and source values
+    with timelogger.BlockTimer(LOGGER, "problem_value"):
+        # get frequency, the material parameters, and the source values
+        (freq, material_val, source_val) = problem_value.get_value(value_idx)
+
+        # parse the material parameters
+        rho_vc = problem_value.get_material_values(material_val, material_idx, "electric")
+        rho_vm = problem_value.get_material_values(material_val, material_idx, "magnetic")
+
+        # parse the source parameters
+        (I_src_c, G_src_c) = problem_value.get_source_values(source_val, source_idx, "current")
+        (V_src_v, R_src_v) = problem_value.get_source_values(source_val, source_idx, "voltage")
+
+        # get the resistance vector
+        R_c = problem_value.get_resistance_vector(n, d, A_net_c, idx_fc, rho_vc)
+        R_m = problem_value.get_resistance_vector(n, d, A_net_m, idx_fm, rho_vm)
 
     # assemble the equation system
     with timelogger.BlockTimer(LOGGER, "equation_system"):

@@ -1,6 +1,5 @@
 """
 Different functions for handling creating the PEEC dense matrices:
-    - resistance matrix
     - inductance and potential matrix
     - magnetic-electric coupling matrices
 
@@ -85,41 +84,6 @@ def _get_operator_zeros(idx_out):
         return var_out
 
     return op
-
-
-def get_resistance_vector(n, d, A_net, idx_f, rho_v, has_domain):
-    """
-    Extract the resistance vector of the system (diagonal of the resistance matrix).
-
-    The problem contains n_f internal faces.
-    The resistance vector has the following length: n_f.
-    """
-
-    # check if the vector is required
-    if not has_domain:
-        R = np.zeros(len(idx_f), dtype=NP_TYPES.COMPLEX)
-        return R
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    (dx, dy, dz) = d
-    nv = nx*ny*nz
-
-    # get the resistivity of the faces (average between voxels)
-    rho = 0.5*rho_v*np.abs(A_net)
-
-    # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=NP_TYPES.INT))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=NP_TYPES.INT))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=NP_TYPES.INT))
-
-    # resistance vector (different directions)
-    R = np.zeros(len(idx_f), dtype=NP_TYPES.COMPLEX)
-    R[idx_fx] = (dx/(dy*dz))*rho[idx_fx]
-    R[idx_fy] = (dy/(dx*dz))*rho[idx_fy]
-    R[idx_fz] = (dz/(dx*dy))*rho[idx_fz]
-
-    return R
 
 
 def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain):
