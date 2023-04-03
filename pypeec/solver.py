@@ -27,7 +27,7 @@ from pypeec.error import CheckError, RunError
 LOGGER = timelogger.get_logger("SOLVER")
 
 
-def _run_solver(data_solver):
+def _run_solver_prepare(data_solver):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
     """
@@ -43,9 +43,6 @@ def _run_solver(data_solver):
     has_magnetic = data_solver["has_magnetic"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
-    value_idx = data_solver["value_idx"]
-    solver_options = data_solver["solver_options"]
-    condition_options = data_solver["condition_options"]
 
     # get the voxel geometry and the incidence matrix
     with timelogger.BlockTimer(LOGGER, "voxel_geometry"):
@@ -104,6 +101,69 @@ def _run_solver(data_solver):
 
         # free memory
         del K_tsr
+
+    # assign the results (will be merged in the solver output)
+    data_prepare = {
+        "n": n,
+        "d": d,
+        "c": c,
+        "idx_vc": idx_vc,
+        "idx_vm": idx_vm,
+        "idx_fc": idx_fc,
+        "idx_fm": idx_fm,
+        "idx_src_c": idx_src_c,
+        "idx_src_v": idx_src_v,
+        "pts_net_c": pts_net_c,
+        "pts_net_m": pts_net_m,
+        "problem_status": problem_status,
+    }
+
+    # assign the results (internal data required to solve the problem)
+    data_internal = {
+        "A_net_c": A_net_c,
+        "A_net_m": A_net_m,
+        "L_c": L_c,
+        "L_op_c": L_op_c,
+        "P_m": P_m,
+        "P_op_m": P_op_m,
+        "K_op_c": K_op_c,
+        "K_op_m": K_op_m,
+    }
+
+    return data_prepare, data_internal
+
+
+def _run_solver_value(data_solver, data_prepare, data_internal):
+    """
+    Create the equation system, solve the system, and extract the solution.
+    """
+
+    # extract the data
+    n = data_solver["n"]
+    d = data_solver["d"]
+    material_idx = data_solver["material_idx"]
+    source_idx = data_solver["source_idx"]
+    value_idx = data_solver["value_idx"]
+    condition_options = data_solver["condition_options"]
+    solver_options = data_solver["solver_options"]
+
+    # extract the data
+    idx_vc = data_prepare["idx_vc"]
+    idx_vm = data_prepare["idx_vm"]
+    idx_fc = data_prepare["idx_fc"]
+    idx_fm = data_prepare["idx_fm"]
+    idx_src_c = data_prepare["idx_src_c"]
+    idx_src_v = data_prepare["idx_src_v"]
+
+    # extract the data
+    A_net_c = data_internal["A_net_c"]
+    A_net_m = data_internal["A_net_m"]
+    L_c = data_internal["L_c"]
+    L_op_c = data_internal["L_op_c"]
+    P_m = data_internal["P_m"]
+    P_op_m = data_internal["P_op_m"]
+    K_op_c = data_internal["K_op_c"]
+    K_op_m = data_internal["K_op_m"]
 
     # get the material and source values
     with timelogger.BlockTimer(LOGGER, "problem_value"):
@@ -188,29 +248,15 @@ def _run_solver(data_solver):
         # get the terminal voltages and currents for the sources
         source = extract_solution.get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v)
 
-    # assign results (lightweight datastructures)
-    data_small = {
-        "n": n,
-        "d": d,
-        "c": c,
+    # assign the results (will be merged in the solver output)
+    data_value = {
         "freq": freq,
         "has_converged": has_converged,
-        "problem_status": problem_status,
         "solver_status": solver_status,
         "condition_status": condition_status,
         "material": material,
         "source": source,
         "integral": integral,
-    }
-
-    # assign results (large arrays)
-    data_large = {
-        "pts_net_c": pts_net_c,
-        "pts_net_m": pts_net_m,
-        "idx_vc": idx_vc,
-        "idx_vm": idx_vm,
-        "idx_src_c": idx_src_c,
-        "idx_src_v": idx_src_v,
         "res": res,
         "conv": conv,
         "V_vc": V_vc,
@@ -223,10 +269,7 @@ def _run_solver(data_solver):
         "Q_vm": Q_vm,
     }
 
-    # assemble results
-    data_solution = {**data_small, **data_large}
-
-    return data_solution
+    return data_value
 
 
 def run(data_voxel, data_problem, data_tolerance):
@@ -280,8 +323,14 @@ def run(data_voxel, data_problem, data_tolerance):
         LOGGER.info("combine the input data")
         data_solver = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
+        # create the problem
+        (data_prepare, data_internal) = _run_solver_prepare(data_solver)
+
         # solve the problem
-        data_solution = _run_solver(data_solver)
+        data_value = _run_solver_value(data_solver, data_prepare, data_internal)
+
+        # extract the solution
+        data_solution = {**data_prepare, **data_value}
     except (CheckError, RunError) as ex:
         timelogger.log_exception(LOGGER, ex)
         return False, None, ex
