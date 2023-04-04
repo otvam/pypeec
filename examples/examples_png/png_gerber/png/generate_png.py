@@ -161,7 +161,7 @@ if __name__ == "__main__":
     # ######################## get the variables
     name = "gerbv"
     border = 10
-    resolution = 1500
+    resolution = round(25.4e-3/17.0e-6)
     data_base = {
         "gerber_edge": "edge",
         "alpha_channel": 65535,
