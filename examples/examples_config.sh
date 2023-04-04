@@ -7,6 +7,9 @@
 # get the path of the root of the code
 PATH_ROOT="."
 
+# name of config folder
+FOLDER_CONFIG="config"
+
 # name of the considered example
 #   examples_voxel/voxel_slab
 #   examples_voxel/voxel_transformer

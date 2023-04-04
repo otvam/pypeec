@@ -44,6 +44,8 @@ class TestWorkflow(unittest.TestCase):
         file_geometry = os.path.join(path_root, "..", "examples", folder, name, "geometry.yaml")
         file_point = os.path.join(path_root, "..", "examples", folder, name, "point.yaml")
         file_problem = os.path.join(path_root, "..", "examples", folder, name, "problem.yaml")
+
+        # get config file name
         file_plotter = os.path.join(path_root, "..", "examples", "config", "plotter.json")
         file_viewer = os.path.join(path_root, "..", "examples", "config", "viewer.json")
         file_tolerance = os.path.join(path_root, "..", "examples", "config", "tolerance.json")

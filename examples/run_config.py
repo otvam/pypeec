@@ -12,6 +12,7 @@ from examples import examples_config
 
 # get config
 PATH_ROOT = examples_config.PATH_ROOT
+FOLDER_CONFIG = examples_config.FOLDER_CONFIG
 
 
 def _get_plot_options(name):
@@ -361,9 +362,9 @@ def get_data_plotter():
 
 if __name__ == "__main__":
     # get the filenames
-    file_tolerance = os.path.join(PATH_ROOT, "config", "tolerance.json")
-    file_plotter = os.path.join(PATH_ROOT, "config", "plotter.json")
-    file_viewer = os.path.join(PATH_ROOT, "config", "viewer.json")
+    file_tolerance = os.path.join(PATH_ROOT, FOLDER_CONFIG, "tolerance.json")
+    file_plotter = os.path.join(PATH_ROOT, FOLDER_CONFIG, "plotter.json")
+    file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.json")
 
     # get data
     data_tolerance = get_data_tolerance()
