@@ -84,7 +84,7 @@ def get_gerbv_file(filename_gerbv, data_base, stack):
         fid.write('(set-render-type! 3)\n')
 
 
-def get_png(layer, name, margin, voxel, data_base, stack):
+def get_png(layer, name, margin, voxel, oversampling, data_base, stack):
     """
     Transform GERBER files into a PNG file for a given layer.
     """
@@ -97,7 +97,8 @@ def get_png(layer, name, margin, voxel, data_base, stack):
     get_gerbv_file(filename_gerbv, data_base, stack)
 
     # get the resolution
-    resolution = round(25.4e-3/voxel)
+    resolution = round(25.4e-3*oversampling/voxel)
+    resize = 100/oversampling
 
     # get the margin
     border = 100*margin
@@ -115,11 +116,15 @@ def get_png(layer, name, margin, voxel, data_base, stack):
     cmd = "mogrify -trim %s" % filename_png
     subprocess.run(cmd, shell=True)
 
+    # cut the border
+    cmd = "mogrify -sample %.2f%% %s" % (resize, filename_png)
+    subprocess.run(cmd, shell=True)
+
     # remove the project file
     os.remove(filename_gerbv)
 
 
-def get_layer(name, margin, voxel, data_base):
+def get_layer(name, margin, voxel, oversampling, data_base):
     """
     Transform GERBER files into PNG files.
     """
@@ -129,14 +134,14 @@ def get_layer(name, margin, voxel, data_base):
         {"gerber": "drill", "color": "none"},
         {"gerber": "front", "color": "copper"},
     ]
-    get_png("front", name, margin, voxel, data_base, stack)
+    get_png("front", name, margin, voxel, oversampling, data_base, stack)
 
     # back
     stack = [
         {"gerber": "drill", "color": "none"},
         {"gerber": "back", "color": "copper"},
     ]
-    get_png("back", name, margin, voxel, data_base, stack)
+    get_png("back", name, margin, voxel, oversampling, data_base, stack)
 
     # terminal
     stack = [
@@ -144,14 +149,14 @@ def get_layer(name, margin, voxel, data_base):
         {"gerber": "sink", "color": "sink"},
         {"gerber": "src", "color": "src"},
     ]
-    get_png("terminal", name, margin, voxel, data_base, stack)
+    get_png("terminal", name, margin, voxel, oversampling, data_base, stack)
 
     # via
     stack = [
         {"gerber": "drill", "color": "none"},
         {"gerber": "via", "color": "copper"},
     ]
-    get_png("via", name, margin, voxel, data_base, stack)
+    get_png("via", name, margin, voxel, oversampling, data_base, stack)
 
 
 if __name__ == "__main__":
@@ -184,6 +189,7 @@ if __name__ == "__main__":
     name = "gerbv"
     margin = 0.1
     voxel = 17.0e-6
+    oversampling = 1.0
 
     # ######################## run
-    get_layer(name, margin, voxel, data_base)
+    get_layer(name, margin, voxel, oversampling, data_base)
