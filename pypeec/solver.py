@@ -239,14 +239,14 @@ def _run_solver_value(data_solver, data_prepare, data_internal):
         S_vc = extract_solution.get_divergence_density(d, A_net_c, I_fc)
         Q_vm = extract_solution.get_divergence_density(d, A_net_m, I_fm)
 
-        # get the global quantities (energy and losses)
-        integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
-
         # get the domain losses for the different materials
         material = extract_solution.get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm)
 
         # get the terminal voltages and currents for the sources
         source = extract_solution.get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v)
+
+        # get the global quantities (energy and losses)
+        integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
 
     # assign the results (will be merged in the solver output)
     data_value = {
