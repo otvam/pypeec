@@ -19,9 +19,9 @@ def _check_field(dat_tmp, var_type, key_list):
     # check data
     for tag, val in dat_tmp.items():
         if var_type == "lumped":
-            datachecker.check_float(tag, val, is_positive=True)
+            datachecker.check_float(tag, val)
         elif var_type == "distributed":
-            datachecker.check_float_array(tag, val, is_positive=True)
+            datachecker.check_float_array(tag, val)
         else:
             raise ValueError("invalid material type")
 
