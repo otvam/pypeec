@@ -5,7 +5,7 @@ Module for checking the matrix condition number and solving a sparse equation sy
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import scipy.linalg as lna
+import numpy as np
 from pypeec.lib_matrix import matrix_condition
 from pypeec.lib_matrix import matrix_gmres
 from pypeec.lib_utils import timelogger
@@ -35,13 +35,13 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
 
     # compute and check the residuum
     res = sys_op(sol)-rhs
-    res_norm = lna.norm(res)
-    status_res = res_norm < tolerance
+    res_rms = np.sqrt(np.mean(np.abs(res)**2))
+    status_res = res_rms < tolerance
     n_iter = len(conv)
 
     # assign the results
     solver_status = {
-        "res_norm": res_norm,
+        "res_rms": res_rms,
         "n_iter": n_iter,
         "n_dof": n_dof,
         "status_gmres": status_gmres,
@@ -54,7 +54,7 @@ def get_solver(sys_op, pcd_op, rhs, solver_options):
     # display results
     LOGGER.debug("matrix solver: n_dof = %d" % n_dof)
     LOGGER.debug("matrix solver: n_iter = %d" % n_iter)
-    LOGGER.debug("matrix solver: res_norm = %.3e" % res_norm)
+    LOGGER.debug("matrix solver: res_rms = %.3e" % res_rms)
     LOGGER.debug("matrix solver: status_pcd = %s" % status_pcd)
     LOGGER.debug("matrix solver: status_gmres = %s" % status_gmres)
     LOGGER.debug("matrix solver: status_res = %s" % status_res)
