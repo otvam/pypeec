@@ -76,15 +76,15 @@ def _check_source_def(source_def):
         datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
 
-def _check_value_def(value_def, material_def, source_def):
+def _check_run_sweep(run_sweep, material_def, source_def):
     """
     Check that the excitation definition (materials and sources) is valid.
     """
 
     # extract field
-    freq = value_def["freq"]
-    material_val = value_def["material_val"]
-    source_val = value_def["source_val"]
+    freq = run_sweep["freq"]
+    material_val = run_sweep["material_val"]
+    source_val = run_sweep["source_val"]
 
     # check data
     datachecker.check_float("freq", freq, is_positive=True)
@@ -138,19 +138,19 @@ def check_data_problem(data_problem):
     """
 
     # check type
-    key_list = ["material_def", "source_def", "value_def"]
+    key_list = ["material_def", "source_def", "run_sweep"]
     datachecker.check_dict("data_problem", data_problem, key_list=key_list)
 
     # extract field
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
-    value_def = data_problem["value_def"]
+    run_sweep = data_problem["run_sweep"]
 
     # check material and source
     _check_material_def(material_def)
     _check_source_def(source_def)
 
     # check excitation
-    datachecker.check_dict("value_def", value_def, sub_type=dict, can_be_empty=False)
-    for value_def_tmp in value_def.values():
-        _check_value_def(value_def_tmp, material_def, source_def)
+    datachecker.check_dict("run_sweep", run_sweep, sub_type=dict, can_be_empty=False)
+    for run_sweep_tmp in run_sweep.values():
+        _check_run_sweep(run_sweep_tmp, material_def, source_def)

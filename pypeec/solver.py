@@ -133,7 +133,7 @@ def _run_solver_prepare(data_solver):
     return data_prepare, data_internal
 
 
-def _run_solver_value(data_solver, data_prepare, data_internal):
+def _run_solver_run(data_solver, data_prepare, data_internal, run_sweep):
     """
     Create the equation system, solve the system, and extract the solution.
     """
@@ -143,7 +143,6 @@ def _run_solver_value(data_solver, data_prepare, data_internal):
     d = data_solver["d"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
-    value_idx = data_solver["value_idx"]
     condition_options = data_solver["condition_options"]
     solver_options = data_solver["solver_options"]
 
@@ -165,11 +164,13 @@ def _run_solver_value(data_solver, data_prepare, data_internal):
     K_op_c = data_internal["K_op_c"]
     K_op_m = data_internal["K_op_m"]
 
+    # extract the data
+    freq = run_sweep["freq"]
+    material_val = run_sweep["material_val"]
+    source_val = run_sweep["source_val"]
+
     # get the material and source values
     with timelogger.BlockTimer(LOGGER, "problem_value"):
-        # get frequency, the material parameters, and the source values
-        (freq, material_val, source_val) = problem_value.get_value(value_idx)
-
         # parse the material parameters
         rho_vc = problem_value.get_material_values(material_val, material_idx, "electric")
         rho_vm = problem_value.get_material_values(material_val, material_idx, "magnetic")
@@ -249,7 +250,7 @@ def _run_solver_value(data_solver, data_prepare, data_internal):
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
 
     # assign the results (will be merged in the solver output)
-    data_value = {
+    data_run = {
         "freq": freq,
         "has_converged": has_converged,
         "solver_status": solver_status,
@@ -269,7 +270,7 @@ def _run_solver_value(data_solver, data_prepare, data_internal):
         "Q_vm": Q_vm,
     }
 
-    return data_value
+    return data_run
 
 
 def run(data_voxel, data_problem, data_tolerance):
@@ -321,18 +322,23 @@ def run(data_voxel, data_problem, data_tolerance):
 
         # combine the problem and voxel data
         LOGGER.info("combine the input data")
-        data_solver = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
+        (data_solver, run_sweep) = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
         # create the problem
         with timelogger.BlockTimer(LOGGER, "prepare"):
             (data_prepare, data_internal) = _run_solver_prepare(data_solver)
 
         # solve the problem
-        with timelogger.BlockTimer(LOGGER, "value"):
-            data_value = _run_solver_value(data_solver, data_prepare, data_internal)
+        data_run = {}
+        for tag, run_sweep_tmp in run_sweep.items():
+            with timelogger.BlockTimer(LOGGER, tag):
+                data_run[tag] = _run_solver_run(data_solver, data_prepare, data_internal, run_sweep_tmp)
 
         # extract the solution
-        data_solution = {**data_prepare, **data_value}
+        data_solution = {
+            "data_solver": data_solver,
+            "data_run": data_run,
+        }
     except (CheckError, RunError) as ex:
         timelogger.log_exception(LOGGER, ex)
         return False, None, ex

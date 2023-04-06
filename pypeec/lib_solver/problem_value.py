@@ -149,15 +149,3 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
     R[idx_fz] = (dz/(dx*dy))*rho[idx_fz]
 
     return R
-
-
-def get_value(value_idx):
-    """
-    Get the frequency, the material parameters, and the source values.
-    """
-
-    freq = value_idx["freq"]
-    material_val = value_idx["material_val"]
-    source_val = value_idx["source_val"]
-
-    return freq, material_val, source_val

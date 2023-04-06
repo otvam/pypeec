@@ -170,16 +170,16 @@ def _get_source_idx(source_def, domain_def):
     return domain_s, idx_s, source_idx
 
 
-def _get_value_idx(value_def, material_idx, source_idx):
+def _get_run_sweep(run_sweep, material_idx, source_idx):
     """
     Check the size of the material and source values.
     Convert the values to arrays.
     """
 
     # extract field
-    freq = value_def["freq"]
-    material_val = value_def["material_val"]
-    source_val = value_def["source_val"]
+    freq = run_sweep["freq"]
+    material_val = run_sweep["material_val"]
+    source_val = run_sweep["source_val"]
 
     # check the material domain name
     for tag in material_idx:
@@ -206,9 +206,9 @@ def _get_value_idx(value_def, material_idx, source_idx):
         source_val[tag] = _get_field(dat_tmp, var_type, idx)
 
     # assign results
-    value_idx = {"freq": freq, "material_val": material_val, "source_val": source_val}
+    run_sweep = {"freq": freq, "material_val": material_val, "source_val": source_val}
 
-    return value_idx
+    return run_sweep
 
 
 def get_data_solver(data_voxel, data_problem, data_tolerance):
@@ -223,7 +223,7 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     # extract field
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
-    value_def = data_problem["value_def"]
+    run_sweep = data_problem["run_sweep"]
 
     # extract field
     domain_def = data_voxel["domain_def"]
@@ -240,9 +240,8 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         datachecker.check_choice("source domain name", tag, domain_def)
 
     # get source and material values
-    value_idx = {}
-    for tag, value_def_tmp in value_def.items():
-        value_idx[tag] = _get_value_idx(value_def_tmp, material_idx, source_idx)
+    for tag, run_sweep_tmp in run_sweep.items():
+        run_sweep[tag] = _get_run_sweep(run_sweep_tmp, material_idx, source_idx)
 
     # check graph
     _check_source_graph(idx_c, idx_m, idx_s, connection_def)
@@ -263,10 +262,9 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         "condition_options": data_tolerance["condition_options"],
         "material_idx": material_idx,
         "source_idx": source_idx,
-        "value_idx": value_idx,
         "has_electric": has_electric,
         "has_magnetic": has_magnetic,
         "has_coupling": has_coupling,
     }
 
-    return data_solver
+    return data_solver, run_sweep
