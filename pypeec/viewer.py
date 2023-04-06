@@ -55,7 +55,7 @@ def _get_grid_voxel(data_voxel, data_point):
     return grid, voxel, point, reference
 
 
-def _get_plot(grid, voxel, point, reference, data_viewer, gui_obj):
+def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
     """
     Make a plot with the voxel structure and the domains.
     """
@@ -65,7 +65,7 @@ def _get_plot(grid, voxel, point, reference, data_viewer, gui_obj):
     data_plot = data_viewer["data_plot"]
 
     # get the plotter (with the Qt framework)
-    pl = gui_obj.open_pyvista(None, data_window)
+    pl = gui_obj.open_pyvista(tag, data_window)
 
     # make the plot
     manage_pyvista.get_plot_viewer(pl, grid, voxel, point, reference, data_plot)
@@ -114,7 +114,8 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
-        check_data_visualization.check_options(data_viewer, tag_plot, is_silent)
+        check_data_visualization.check_is_silent(is_silent)
+        check_data_visualization.check_options(data_viewer, tag_plot)
 
         # find the plots
         if tag_plot is not None:
@@ -130,9 +131,9 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
 
         # make the plots
         with timelogger.BlockTimer(LOGGER, "generate the different plots"):
-            for i, (tag, dat_tmp) in enumerate(data_viewer.items()):
-                LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_viewer), tag))
-                _get_plot(grid, voxel, point, reference, dat_tmp, gui_obj)
+            for i, (tag_plot, data_viewer_tmp) in enumerate(data_viewer.items()):
+                LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_viewer), tag_plot))
+                _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(LOGGER, ex)
         return False, ex

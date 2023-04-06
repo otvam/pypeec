@@ -328,15 +328,15 @@ def run(data_voxel, data_problem, data_tolerance):
         with timelogger.BlockTimer(LOGGER, "prepare"):
             (data_prepare, data_internal) = _run_solver_prepare(data_solver)
 
-        # solve the problem
+        # solve the sweeps
         data_run = {}
-        for tag, run_sweep_tmp in run_sweep.items():
-            with timelogger.BlockTimer(LOGGER, tag):
-                data_run[tag] = _run_solver_run(data_solver, data_prepare, data_internal, run_sweep_tmp)
+        for tag, dat_tmp in run_sweep.items():
+            with timelogger.BlockTimer(LOGGER, "run sweep: " + tag):
+                data_run[tag] = _run_solver_run(data_solver, data_prepare, data_internal, dat_tmp)
 
         # extract the solution
         data_solution = {
-            "data_solver": data_solver,
+            "data_prepare": data_prepare,
             "data_run": data_run,
         }
     except (CheckError, RunError) as ex:

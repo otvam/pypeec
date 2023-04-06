@@ -32,7 +32,7 @@ from pypeec.error import CheckError, RunError
 LOGGER = timelogger.get_logger("PLOTTER")
 
 
-def _get_grid_voxel(data_solution, data_point):
+def _get_grid_voxel(data_prepare, data_run, data_point):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -40,23 +40,27 @@ def _get_grid_voxel(data_solution, data_point):
     """
 
     # extract the data
-    n = data_solution["n"]
-    d = data_solution["d"]
-    c = data_solution["c"]
-    pts_net_c = data_solution["pts_net_c"]
-    pts_net_m = data_solution["pts_net_m"]
-    idx_vc = data_solution["idx_vc"]
-    idx_vm = data_solution["idx_vm"]
-    idx_src_c = data_solution["idx_src_c"]
-    idx_src_v = data_solution["idx_src_v"]
-    V_vc = data_solution["V_vc"]
-    V_vm = data_solution["V_vm"]
-    J_vc = data_solution["J_vc"]
-    B_vm = data_solution["B_vm"]
-    S_vc = data_solution["S_vc"]
-    Q_vm = data_solution["Q_vm"]
-    P_vc = data_solution["P_vc"]
-    P_vm = data_solution["P_vm"]
+    n = data_prepare["n"]
+    d = data_prepare["d"]
+    c = data_prepare["c"]
+    pts_net_c = data_prepare["pts_net_c"]
+    pts_net_m = data_prepare["pts_net_m"]
+    idx_vc = data_prepare["idx_vc"]
+    idx_vm = data_prepare["idx_vm"]
+    idx_src_c = data_prepare["idx_src_c"]
+    idx_src_v = data_prepare["idx_src_v"]
+
+    # extract the data
+    V_vc = data_run["V_vc"]
+    V_vm = data_run["V_vm"]
+    J_vc = data_run["J_vc"]
+    B_vm = data_run["B_vm"]
+    S_vc = data_run["S_vc"]
+    Q_vm = data_run["Q_vm"]
+    P_vc = data_run["P_vc"]
+    P_vm = data_run["P_vm"]
+    res = data_run["res"]
+    conv = data_run["conv"]
 
     # get the voxel indices and the material description
     (idx, material) = manage_compute.get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v)
@@ -87,10 +91,10 @@ def _get_grid_voxel(data_solution, data_point):
     # add the magnetic field
     point = manage_voxel.set_plotter_magnetic_field(point, H_point)
 
-    return grid, voxel, point
+    return grid, voxel, point, res, conv
 
 
-def _get_plot(data_solution, grid, voxel, point, data_plotter, gui_obj):
+def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
     """
     Make a plot with the specified user settings.
     The plot contains the following elements:
@@ -104,20 +108,16 @@ def _get_plot(data_solution, grid, voxel, point, data_plotter, gui_obj):
     data_window = data_plotter["data_window"]
     data_plot = data_plotter["data_plot"]
 
-    # extract the data
-    res = data_solution["res"]
-    conv = data_solution["conv"]
-
     # make the plots
     if plot_framework == "pyvista":
         # get the plotter (with the Qt framework)
-        pl = gui_obj.open_pyvista(data_window)
+        pl = gui_obj.open_pyvista(tag, data_window)
 
         # make the plot
         manage_pyvista.get_plot_plotter(pl, grid, voxel, point, data_plot)
     elif plot_framework == "matplotlib":
         # get the figure (with the Qt framework)
-        fig = gui_obj.open_matplotlib(data_window)
+        fig = gui_obj.open_matplotlib(tag, data_window)
 
         # make the plot
         manage_matplotlib.get_plot_plotter(fig, res, conv, data_plot)
@@ -125,7 +125,23 @@ def _get_plot(data_solution, grid, voxel, point, data_plotter, gui_obj):
         raise ValueError("invalid plot framework")
 
 
-def run(data_solution, data_point, data_plotter, tag_plot=None, is_silent=False):
+def _get_sweep(tag_sweep, data_run, data_prepare, data_point, data_plotter, gui_obj):
+    """
+    Parse the geometry and make the plots for a specified sweep.
+    """
+
+    # handle the data
+    LOGGER.info("parse the voxel geometry and the data")
+    (grid, voxel, point, res, conv) = _get_grid_voxel(data_prepare, data_run, data_point)
+
+    # make the plots
+    with timelogger.BlockTimer(LOGGER, "generate the different plots"):
+        for i, (tag_plot, data_plotter_tmp) in enumerate(data_plotter.items()):
+            LOGGER.info("plotting %d / %d / %s" % (i + 1, len(data_plotter), tag_plot))
+            _get_plot(tag_sweep + " / " + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)
+
+
+def run(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, is_silent=False):
     """
     Main script for plotting the solution of a PEEC problem.
     Handle invalid data with exceptions.
@@ -154,6 +170,9 @@ def run(data_solution, data_point, data_plotter, tag_plot=None, is_silent=False)
         Scalar plot of the magnetic field on the point cloud.
         Vector plot (with arrows) of the magnetic field on the point cloud.
         Plots describing the solver convergence.
+    tag_sweep : list
+        The list describes sweeps to be shown.
+        If None, all the sweeps are shown.
     tag_plot : list
         The list describes plots to be shown.
         If None, all the plots are shown.
@@ -173,31 +192,32 @@ def run(data_solution, data_point, data_plotter, tag_plot=None, is_silent=False)
 
     # run the code
     try:
+        # extract the data
+        data_prepare = data_solution["data_prepare"]
+        data_run = data_solution["data_run"]
+
         # check the input data
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_plotter(data_plotter)
-        check_data_visualization.check_options(data_plotter, tag_plot, is_silent)
+        check_data_visualization.check_is_silent(is_silent)
+        check_data_visualization.check_options(data_run, tag_sweep)
+        check_data_visualization.check_options(data_plotter, tag_plot)
+
+        # find the plots
+        if tag_sweep is not None:
+            data_run = {key: data_run[key] for key in tag_sweep}
+        if tag_plot is not None:
+            data_plotter = {key: data_plotter[key] for key in tag_plot}
 
         # create the Qt app (should be at the beginning)
         LOGGER.info("init the plot manager")
         gui_obj = plotgui.PlotGui(is_silent)
 
-        # handle the data
-        LOGGER.info("parse the voxel geometry and the data")
-        (grid, voxel, point) = _get_grid_voxel(data_solution, data_point)
-
-        # find the plots
-        if tag_plot is None:
-            data_list = data_plotter.values()
-        else:
-            data_list = [data_plotter[tag] for tag in tag_plot]
-
-        # make the plots
-        LOGGER.info("generate the different plots")
-        for i, dat_tmp in enumerate(data_list):
-            LOGGER.info("plotting %d / %d" % (i+1, len(data_list)))
-            _get_plot(data_solution, grid, voxel, point, dat_tmp, gui_obj)
+        # plot the sweeps
+        for tag_sweep, data_run_tmp in data_run.items():
+            with timelogger.BlockTimer(LOGGER, "plot sweep: " + tag_sweep):
+                _get_sweep(tag_sweep, data_run_tmp, data_prepare, data_point, data_plotter, gui_obj)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(LOGGER, ex)
         return False, ex

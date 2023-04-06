@@ -368,19 +368,23 @@ def check_data_point(data_point):
         datachecker.check_float_array("data_point", dat_tmp, size=3)
 
 
-def check_options(data_viewer, tag_plot, is_silent):
+def check_options(data_check, tag_list):
     """
     Check the list of plots to be shown.
-    Check the plot mode (display or not the plots).
     """
 
     # check the list of plots
-    if tag_plot is not None:
-        datachecker.check_list("tag_plot", tag_plot, sub_type=str)
-        for tag in tag_plot:
-            datachecker.check_choice("tag_plot", tag, data_viewer)
+    if tag_list is not None:
+        datachecker.check_list("tag", tag_list, sub_type=str)
+        for tag in tag_list:
+            datachecker.check_choice("tag", tag, data_check)
 
-    # check the plot mode
+
+def check_is_silent(is_silent):
+    """
+    Check the plot mode (display or not the plots).
+    """
+
     datachecker.check_boolean("is_silent", is_silent)
 
 
