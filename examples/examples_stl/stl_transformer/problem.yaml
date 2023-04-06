@@ -13,13 +13,14 @@
     "pri_sink": {"domain_list": ["pri_sink"], "source_type": "voltage", "var_type": "lumped"}
     "sec_src": {"domain_list": ["sec_src"], "source_type": "current", "var_type": "lumped"}
     "sec_sink": {"domain_list": ["sec_sink"], "source_type": "voltage", "var_type": "lumped"}
-value_def:
-    "freq": 100.0e+3
-    "material_val":
-        "pri": {"rho_re": 1.75e-8, "rho_im": 0.0}
-        "sec": {"rho_re": 1.75e-8, "rho_im": 0.0}
-    "source_val":
-        "pri_src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
-        "pri_sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
-        "sec_src": {"I_re": 0.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
-        "sec_sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
+run_sweep:
+    sim_default:
+        "freq": 100.0e+3
+        "material_val":
+            "pri": {"rho_re": 1.75e-8, "rho_im": 0.0}
+            "sec": {"rho_re": 1.75e-8, "rho_im": 0.0}
+        "source_val":
+            "pri_src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
+            "pri_sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
+            "sec_src": {"I_re": 0.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
+            "sec_sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
