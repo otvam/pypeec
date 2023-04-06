@@ -204,11 +204,12 @@ def _check_data_options_plotter_matplotlib(plot_type, data_options):
     # check the residuum options
     if plot_type == "residuum":
         # check type
-        key_list = ["n_bins", "edge_color", "bar_color"]
+        key_list = ["n_bins", "tol_bins", "edge_color", "bar_color"]
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
         datachecker.check_integer("n_bins", data_options["n_bins"])
+        datachecker.check_float("tol_bins", data_options["tol_bins"])
         datachecker.check_string("edge_color", data_options["edge_color"])
         datachecker.check_string("bar_color", data_options["bar_color"])
 

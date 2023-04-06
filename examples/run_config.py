@@ -169,6 +169,7 @@ def _get_data_plotter_residuum(name):
 
     data_options = {
         "n_bins": 10,  # number of bins
+        "tol_bins": 0.05,  # tolerance for the bin boundaries
         "bar_color": "blue",  # fill color of the bins
         "edge_color": "black",  # edge color of the bins
     }

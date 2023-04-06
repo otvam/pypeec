@@ -20,6 +20,7 @@ def _get_plot_residuum(fig, res, data_options):
 
     # get the data
     n_bins = data_options["n_bins"]
+    tol_bins = data_options["tol_bins"]
     bar_color = data_options["bar_color"]
     edge_color = data_options["edge_color"]
 
@@ -31,16 +32,15 @@ def _get_plot_residuum(fig, res, data_options):
     v_min = np.finfo(res_abs.dtype).eps
     v_max = np.finfo(res_abs.dtype).max
     res_abs = np.clip(res_abs, v_min, v_max)
-    res_log = np.log10(res_abs)
 
     # counts the elements
     n_plt = len(res_abs)
     n_tot = len(res)
 
     # get the bins
-    bins = np.logspace(min(res_log), max(res_log), n_bins)
-    bins[0] = min(res_abs)
-    bins[-1] = max(res_abs)
+    v_min = min(res_abs)/(1+tol_bins)
+    v_max = max(res_abs)*(1+tol_bins)
+    bins = np.logspace(np.log10(v_min), np.log10(v_max), n_bins)
 
     # plot the histogram
     plt.hist(res_abs, bins=bins, edgecolor=edge_color, color=bar_color)

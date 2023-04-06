@@ -816,6 +816,7 @@
             "plot_type": "residuum",
             "data_options": {
                 "n_bins": 10,
+                "tol_bins": 0.05,
                 "bar_color": "blue",
                 "edge_color": "black"
             }
