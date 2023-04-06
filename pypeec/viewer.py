@@ -65,7 +65,7 @@ def _get_plot(grid, voxel, point, reference, data_viewer, gui_obj):
     data_plot = data_viewer["data_plot"]
 
     # get the plotter (with the Qt framework)
-    pl = gui_obj.open_pyvista(data_window)
+    pl = gui_obj.open_pyvista(None, data_window)
 
     # make the plot
     manage_pyvista.get_plot_viewer(pl, grid, voxel, point, reference, data_plot)
@@ -116,6 +116,10 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
         check_data_visualization.check_data_viewer(data_viewer)
         check_data_visualization.check_options(data_viewer, tag_plot, is_silent)
 
+        # find the plots
+        if tag_plot is not None:
+            data_viewer = {key: data_viewer[key] for key in tag_plot}
+
         # create the Qt app (should be at the beginning)
         LOGGER.info("init the plot manager")
         gui_obj = plotgui.PlotGui(is_silent)
@@ -124,17 +128,11 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
         LOGGER.info("parse the voxel geometry and the data")
         (grid, voxel, point, reference) = _get_grid_voxel(data_voxel, data_point)
 
-        # find the plots
-        if tag_plot is None:
-            data_list = data_viewer.values()
-        else:
-            data_list = [data_viewer[tag] for tag in tag_plot]
-
         # make the plots
-        LOGGER.info("generate the different plots")
-        for i, dat_tmp in enumerate(data_list):
-            LOGGER.info("plotting %d / %d" % (i+1, len(data_list)))
-            _get_plot(grid, voxel, point, reference, dat_tmp, gui_obj)
+        with timelogger.BlockTimer(LOGGER, "generate the different plots"):
+            for i, (tag, dat_tmp) in enumerate(data_viewer.items()):
+                LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_viewer), tag))
+                _get_plot(grid, voxel, point, reference, dat_tmp, gui_obj)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(LOGGER, ex)
         return False, ex

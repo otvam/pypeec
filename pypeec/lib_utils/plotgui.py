@@ -197,7 +197,7 @@ class PlotGui:
 
         return fig
 
-    def open_pyvista(self, data_window):
+    def open_pyvista(self, tag, data_window):
         """
         Get a PyVista plotter.
         """
@@ -207,6 +207,10 @@ class PlotGui:
         show_menu = data_window["show_menu"]
         window_size = data_window["window_size"]
         notebook_size = data_window["notebook_size"]
+
+        # prepend tag
+        if tag is not None:
+            title = tag + " / " + title
 
         # create the figure
         if self.plot_mode == "qt":
@@ -223,7 +227,7 @@ class PlotGui:
 
         return pl
 
-    def open_matplotlib(self, data_window):
+    def open_matplotlib(self, tag, data_window):
         """
         Get a Matplotlib figure.
         """
@@ -233,6 +237,10 @@ class PlotGui:
         show_menu = data_window["show_menu"]
         window_size = data_window["window_size"]
         notebook_size = data_window["notebook_size"]
+
+        # prepend tag
+        if tag is not None:
+            title = tag + " / " + title
 
         # create the figure
         if self.plot_mode == "qt":
