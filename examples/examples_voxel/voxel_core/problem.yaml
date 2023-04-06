@@ -15,13 +15,25 @@
     "sink": {"domain_list": ["sink"], "source_type": "voltage", "var_type": "lumped"}
     "empty": {"domain_list": ["empty"], "source_type": "voltage", "var_type": "lumped"}
 value_def:
-    "freq": 1.0e+3
-    "material_val":
-        "terminal": {"rho_re": [1.0e-8, 1.0e-8], "rho_im": [0.0, 0.0]}
-        "cond": {"rho_re": 1.0e-8, "rho_im": 0.0}
-        "core": {"chi_re": 100.0, "chi_im": 50.0}
-        "empty": {"rho_re": 1.0e-8, "rho_im": 0.0}
-    "source_val":
-        "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0}
-        "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
-        "empty": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
+    sim_dc:
+        "freq": 0.0
+        "material_val":
+            "terminal": {"rho_re": [1.0e-8, 1.0e-8], "rho_im": [0.0, 0.0]}
+            "cond": {"rho_re": 1.0e-8, "rho_im": 0.0}
+            "core": {"chi_re": 100.0, "chi_im": 50.0}
+            "empty": {"rho_re": 1.0e-8, "rho_im": 0.0}
+        "source_val":
+            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0}
+            "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
+            "empty": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
+    sim_ac:
+        "freq": 1.0e+3
+        "material_val":
+            "terminal": {"rho_re": [1.0e-8, 1.0e-8], "rho_im": [0.0, 0.0]}
+            "cond": {"rho_re": 1.0e-8, "rho_im": 0.0}
+            "core": {"chi_re": 100.0, "chi_im": 50.0}
+            "empty": {"rho_re": 1.0e-8, "rho_im": 0.0}
+        "source_val":
+            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0}
+            "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
+            "empty": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}

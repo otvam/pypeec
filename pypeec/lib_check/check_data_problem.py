@@ -149,4 +149,8 @@ def check_data_problem(data_problem):
     # check material and source
     _check_material_def(material_def)
     _check_source_def(source_def)
-    _check_value_def(value_def, material_def, source_def)
+
+    # check excitation
+    datachecker.check_dict("value_def", value_def, sub_type=dict, can_be_empty=False)
+    for value_def_tmp in value_def.values():
+        _check_value_def(value_def_tmp, material_def, source_def)

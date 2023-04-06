@@ -226,7 +226,6 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     value_def = data_problem["value_def"]
 
     # extract field
-    n = data_voxel["n"]
     domain_def = data_voxel["domain_def"]
     connection_def = data_voxel["connection_def"]
 
@@ -241,7 +240,9 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         datachecker.check_choice("source domain name", tag, domain_def)
 
     # get source and material values
-    value_idx = _get_value_idx(value_def, material_idx, source_idx)
+    value_idx = {}
+    for tag, value_def_tmp in value_def.items():
+        value_idx[tag] = _get_value_idx(value_def_tmp, material_idx, source_idx)
 
     # check graph
     _check_source_graph(idx_c, idx_m, idx_s, connection_def)

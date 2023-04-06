@@ -324,10 +324,12 @@ def run(data_voxel, data_problem, data_tolerance):
         data_solver = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
         # create the problem
-        (data_prepare, data_internal) = _run_solver_prepare(data_solver)
+        with timelogger.BlockTimer(LOGGER, "prepare"):
+            (data_prepare, data_internal) = _run_solver_prepare(data_solver)
 
         # solve the problem
-        data_value = _run_solver_value(data_solver, data_prepare, data_internal)
+        with timelogger.BlockTimer(LOGGER, "value"):
+            data_value = _run_solver_value(data_solver, data_prepare, data_internal)
 
         # extract the solution
         data_solution = {**data_prepare, **data_value}
