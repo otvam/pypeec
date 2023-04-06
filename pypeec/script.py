@@ -58,29 +58,6 @@ def _get_parser():
     return parser, subparsers
 
 
-def _get_arg_visualization(parser):
-    """
-    Add the shared viewer/plotter arguments.
-    """
-
-    # silent mode
-    parser.add_argument(
-        "-s", "--silent",
-        help="do not display the plots (default: show the plots)",
-        action="store_true",
-        dest="is_silent",
-    )
-
-    parser.add_argument(
-        "-t", "--tag",
-        help="list of plots to be shown (default: show the plots)",
-        nargs='+',
-        default=None,
-        metavar="tag",
-        dest="tag_plot",
-    )
-
-
 def _get_arg_mesher(subparsers):
     """
     Add the mesher arguments.
@@ -144,7 +121,20 @@ def _get_arg_viewer(subparsers):
         metavar="file",
         dest="file_viewer",
     )
-    _get_arg_visualization(parser)
+    parser.add_argument(
+        "-s", "--silent",
+        help="do not display the plots (default: show the plots)",
+        action="store_true",
+        dest="is_silent",
+    )
+    parser.add_argument(
+        "-tp", "--tag_plot",
+        help="list of plots to be shown (default: show the plots)",
+        nargs='+',
+        default=None,
+        metavar="tag_plot",
+        dest="tag_plot",
+    )
 
 
 def _get_arg_solver(subparsers):
@@ -224,7 +214,28 @@ def _get_arg_plotter(subparsers):
         metavar="file",
         dest="file_plotter",
     )
-    _get_arg_visualization(parser)
+    parser.add_argument(
+        "-s", "--silent",
+        help="do not display the plots (default: show the plots)",
+        action="store_true",
+        dest="is_silent",
+    )
+    parser.add_argument(
+        "-ts", "--tag_sweep",
+        help="list of sweeps to be shown (default: show the sweeps)",
+        nargs='+',
+        default=None,
+        metavar="tag_sweep",
+        dest="tag_sweep",
+    )
+    parser.add_argument(
+        "-tp", "--tag_plot",
+        help="list of plots to be shown (default: show the plots)",
+        nargs='+',
+        default=None,
+        metavar="tag_plot",
+        dest="tag_plot",
+    )
 
 
 def _get_arguments(parser):
@@ -296,6 +307,7 @@ def run_script():
             args.file_solution,
             args.file_point,
             args.file_plotter,
+            args.tag_sweep,
             args.tag_plot,
             args.is_silent,
         )

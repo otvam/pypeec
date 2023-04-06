@@ -181,7 +181,7 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     return status, ex
 
 
-def run_plotter(file_solution, file_point, file_plotter, tag_plot=None, is_silent=False):
+def run_plotter(file_solution, file_point, file_plotter, tag_sweep=None, tag_plot=None, is_silent=False):
     """
     Main script for plotting the solution of a PEEC problem.
 
@@ -190,6 +190,9 @@ def run_plotter(file_solution, file_point, file_plotter, tag_plot=None, is_silen
     file_solution : string (input file, Pickle format)
     file_point: string (input file, JSON or YAML format)
     file_plotter: string (input file, JSON or YAML format)
+    tag_sweep : list
+        The list describes sweeps to be shown.
+        If None, all the sweeps are shown.
     tag_plot : list
         The list describes plots to be shown.
         If None, all the plots are shown.
@@ -229,7 +232,7 @@ def run_plotter(file_solution, file_point, file_plotter, tag_plot=None, is_silen
         data_plotter = fileio.load_config(file_plotter)
 
         # call the plotter
-        (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_plot, is_silent)
+        (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent)
     except FileError as ex:
         timelogger.log_exception(logger, ex)
         return False, ex
