@@ -1,7 +1,15 @@
 {
-    "n_total_ref": 102510,
-    "n_used_ref": 23480,
-    "P_tot_ref": 0.00147073968,
-    "W_tot_ref": 3.03608609e-08,
-    "tol": 0.0001
+    "tol": 0.0001,
+    "mesher": {
+        "n_total": 102510,
+        "n_used": 23480
+    },
+    "solver": {
+        "sim_default": {
+            "freq": 100000.0,
+            "has_converged": true,
+            "P_tot": 0.0014707261685764717,
+            "W_tot": 3.0360364601844165e-08
+        }
+    }
 }

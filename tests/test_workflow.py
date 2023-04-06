@@ -88,37 +88,47 @@ class TestWorkflow(unittest.TestCase):
 
         return data_voxel, data_solution
 
-    def _check_results(self, res, data_voxel, data_solution):
+    def _check_mesher(self, voxel_status, mesher):
         """
-        Check the results produced by the workflow.
+        Check the results produced by the mesher.
         """
 
         # get the results
-        n_total_ref = res["n_total_ref"]
-        n_used_ref = res["n_used_ref"]
-        P_tot_ref = res["P_tot_ref"]
-        W_tot_ref = res["W_tot_ref"]
-        tol = res["tol"]
-
-        # check type
-        self.assertIsInstance(data_voxel, dict, msg="invalid voxel file")
-        self.assertIsInstance(data_solution, dict, msg="invalid solution file")
+        n_total_ref = mesher["n_total"]
+        n_used_ref = mesher["n_used"]
 
         # extract the solution
-        n_total = data_voxel["voxel_status"]["n_total"]
-        n_used = data_voxel["voxel_status"]["n_used"]
-        has_converged = data_solution["has_converged"]
-        P_tot = data_solution["integral"]["P_tot"]
-        W_tot = data_solution["integral"]["W_tot"]
+        n_total = voxel_status["n_total"]
+        n_used = voxel_status["n_used"]
 
         # check solution
         self.assertEqual(n_total, n_total_ref, msg="invalid number of voxels (complete grid)")
         self.assertEqual(n_used, n_used_ref, msg="invalid number of voxels (non-empty voxels)")
-        self.assertTrue(has_converged, msg="solver convergence issue")
+
+    def _check_solver(self, data_run, solver, tol):
+        """
+        Check the results produced by the solver.
+        """
+
+        # get the results
+        freq_ref = solver["freq"]
+        has_converged_ref = solver["has_converged"]
+        P_tot_ref = solver["P_tot"]
+        W_tot_ref = solver["W_tot"]
+
+        # extract the solution
+        freq = data_run["freq"]
+        has_converged = data_run["has_converged"]
+        P_tot = data_run["integral"]["P_tot"]
+        W_tot = data_run["integral"]["W_tot"]
+
+        # check solution
+        self.assertEqual(has_converged, has_converged_ref, msg="invalid convergence")
+        self.assertAlmostEqual(freq, freq_ref, delta=tol*freq_ref, msg="invalid frequency")
         self.assertAlmostEqual(P_tot, P_tot_ref, delta=tol*P_tot_ref, msg="invalid losses")
         self.assertAlmostEqual(W_tot, W_tot_ref, delta=tol*W_tot_ref, msg="invalid energy")
 
-    def run_test(self, folder, name, res):
+    def run_test(self, folder, name, data_test):
         """
         Run the workflow and check the results.
         """
@@ -126,8 +136,26 @@ class TestWorkflow(unittest.TestCase):
         # generate the results
         (data_voxel, data_solution) = self._run_workflow(folder, name)
 
-        # check the results
-        self._check_results(res, data_voxel, data_solution)
+        # extract results
+        tol = data_test["tol"]
+        mesher = data_test["mesher"]
+        solver = data_test["solver"]
+
+        # extract data
+        voxel_status = data_voxel["voxel_status"]
+        data_run = data_solution["data_run"]
+
+        # check the mesher
+        self._check_mesher(voxel_status, mesher)
+
+        # check the sweep names
+        self.assertEqual(data_run.keys(), solver.keys(), "invalid sweep")
+
+        # check the solver
+        for tag in data_run:
+            data_run_tmp = data_run[tag]
+            solver_tmp = solver[tag]
+            self._check_solver(data_run_tmp, solver_tmp, tol)
 
 
 def set_test(folder, name):
@@ -136,15 +164,15 @@ def set_test(folder, name):
     """
 
     # file containing the test results
-    file_res = os.path.join(path_root, folder, name + ".json")
+    file_test = os.path.join(path_root, folder, name + ".json")
 
     # load the test results
-    with open(file_res, "r") as fid:
-        res = json.load(fid)
+    with open(file_test, "r") as fid:
+        data_test = json.load(fid)
 
     # function describing the test
     def get(self):
-        return TestWorkflow.run_test(self, folder, name, res)
+        return TestWorkflow.run_test(self, folder, name, data_test)
 
     # dynamically add the method as an attribute
     setattr(TestWorkflow, "test_" + name, get)
