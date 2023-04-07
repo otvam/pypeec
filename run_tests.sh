@@ -32,9 +32,9 @@ function clean_test {
 status=0
 
 # run test
-test_file test_voxel
-test_file test_png
-test_file test_stl
+test_file run_test_voxel
+test_file run_test_png
+test_file run_test_stl
 
 # collect results
 clean_test

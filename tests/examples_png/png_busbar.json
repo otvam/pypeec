@@ -1,5 +1,9 @@
 {
-    "tol": 0.0001,
+    "metadata": {
+        "folder": "examples_png",
+        "name": "png_busbar",
+        "timestamp": "2023-04-06 21:31:37.383699"
+    },
     "mesher": {
         "n_total": 9604,
         "n_used": 3341

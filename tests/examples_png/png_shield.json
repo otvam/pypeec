@@ -1,5 +1,9 @@
 {
-    "tol": 0.0001,
+    "metadata": {
+        "folder": "examples_png",
+        "name": "png_shield",
+        "timestamp": "2023-04-06 21:28:09.873185"
+    },
     "mesher": {
         "n_total": 20808,
         "n_used": 3210

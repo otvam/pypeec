@@ -1,5 +1,9 @@
 {
-    "tol": 0.0001,
+    "metadata": {
+        "folder": "examples_voxel",
+        "name": "voxel_slab",
+        "timestamp": "2023-04-06 21:31:33.685662"
+    },
     "mesher": {
         "n_total": 28,
         "n_used": 28

@@ -1,5 +1,9 @@
 {
-    "tol": 0.0001,
+    "metadata": {
+        "folder": "examples_png",
+        "name": "png_inductor_spiral",
+        "timestamp": "2023-04-06 21:28:04.415158"
+    },
     "mesher": {
         "n_total": 225280,
         "n_used": 16896

@@ -98,6 +98,7 @@ def set_config(file_config):
         # assign config to a global variable
         _assign_config(data_config)
     except (FileError, CheckError, RunError) as ex:
+        print("==========================")
         print("INVALID CONFIGURATION FILE")
         print("==========================")
         print(str(ex))

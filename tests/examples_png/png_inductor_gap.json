@@ -1,5 +1,9 @@
 {
-    "tol": 0.0001,
+    "metadata": {
+        "folder": "examples_png",
+        "name": "png_inductor_gap",
+        "timestamp": "2023-04-06 21:27:55.755383"
+    },
     "mesher": {
         "n_total": 87480,
         "n_used": 34196

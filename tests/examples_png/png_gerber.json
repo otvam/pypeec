@@ -1,5 +1,9 @@
 {
-    "tol": 0.0001,
+    "metadata": {
+        "folder": "examples_png",
+        "name": "png_gerber",
+        "timestamp": "2023-04-06 21:31:52.704347"
+    },
     "mesher": {
         "n_total": 597429,
         "n_used": 95906

@@ -1,5 +1,9 @@
 {
-    "tol": 0.0001,
+    "metadata": {
+        "folder": "examples_stl",
+        "name": "stl_inductor_core",
+        "timestamp": "2023-04-06 21:29:46.692446"
+    },
     "mesher": {
         "n_total": 161280,
         "n_used": 33523

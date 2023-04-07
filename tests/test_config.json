@@ -1,0 +1,5 @@
+{
+    "check_test": true,
+    "generate_test": false,
+    "tol": 0.0001
+}
