@@ -6,8 +6,10 @@ Provide a class for timing (and logging) code blocks.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import os
 import time
 import datetime
+import threading
 import logging
 from pypeec import config
 
@@ -109,6 +111,10 @@ class _DeltaTimeFormatter(logging.Formatter):
         # add the elapsed time to the log record
         record.timestamp = _get_format_timestamp(GLOBAL_TIMESTAMP)
         record.duration = _get_format_duration(GLOBAL_TIMESTAMP)
+
+        # add the process and thread id to the log record
+        record.process_id = os.getpid()
+        record.thread_id = threading.get_native_id()
 
         # get the message padding for the desired indentation
         pad = " " * (CURRENT_LEVEL*INDENTATION)

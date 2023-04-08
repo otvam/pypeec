@@ -12,6 +12,8 @@ LOGGING_OPTIONS:
     # logging module logger format with the following custom attributes
     #   - timestamp: current timestamp (formatted as a string)
     #   - duration: elapsed time (formatted as a string)
+    #   - process_id: process identification number
+    #   - thread_id: thread identification number
     FORMAT: '%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s'  # logger format
 
     # logging level for the handlers
