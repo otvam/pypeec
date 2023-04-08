@@ -9,6 +9,7 @@ The solver is implemented with NumPy and Scipy.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+from pypeec.lib_solver import sweep_solver
 from pypeec.lib_solver import voxel_geometry
 from pypeec.lib_solver import system_tensor
 from pypeec.lib_solver import problem_geometry
@@ -334,10 +335,8 @@ def run(data_voxel, data_problem, data_tolerance):
                 (output, init) = _run_solver_sweep(data_solver, data_init, data_internal, param, init)
             return output, init
 
-        data_sweep = {}
-        for tag, dat_tmp in sweep_param.items():
-            (data_sweep_tmp, sol_init) = fct_compute(tag, dat_tmp, None)
-            data_sweep[tag] = data_sweep_tmp
+        # compute the different sweeps
+        data_sweep = sweep_solver.get_run_sweep(sweep_config, sweep_param, fct_compute)
 
         # extract the solution
         data_solution = {
