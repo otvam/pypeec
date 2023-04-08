@@ -91,15 +91,15 @@ def _check_sweep_config(sweep_config, sweep_tag):
         datachecker.check_choice("tag_init", tag_init, sweep_tag)
 
 
-def _check_sweep_input(sweep_input, material_def, source_def):
+def _check_sweep_param(sweep_param, material_def, source_def):
     """
     Check that the excitation definition (materials and sources) is valid.
     """
 
     # extract field
-    freq = sweep_input["freq"]
-    material_val = sweep_input["material_val"]
-    source_val = sweep_input["source_val"]
+    freq = sweep_param["freq"]
+    material_val = sweep_param["material_val"]
+    source_val = sweep_param["source_val"]
 
     # check data
     datachecker.check_float("freq", freq, is_positive=True)
@@ -153,28 +153,28 @@ def check_data_problem(data_problem):
     """
 
     # check type
-    key_list = ["material_def", "source_def", "sweep_config", "sweep_input"]
+    key_list = ["material_def", "source_def", "sweep_config", "sweep_param"]
     datachecker.check_dict("data_problem", data_problem, key_list=key_list)
 
     # extract field
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
     sweep_config = data_problem["sweep_config"]
-    sweep_input = data_problem["sweep_input"]
+    sweep_param = data_problem["sweep_param"]
 
     # check material and source
     _check_material_def(material_def)
     _check_source_def(source_def)
 
     # check excitation type
-    datachecker.check_dict("sweep_input", sweep_input, sub_type=dict, can_be_empty=False)
+    datachecker.check_dict("sweep_param", sweep_param, sub_type=dict, can_be_empty=False)
     datachecker.check_list("sweep_config", sweep_config, sub_type=dict, can_be_empty=False)
 
     # get sweep names
-    sweep_tag = sweep_input.keys()
+    sweep_tag = sweep_param.keys()
 
     # check excitation data
     for sweep_config_tmp in sweep_config:
         _check_sweep_config(sweep_config_tmp, sweep_tag)
-    for sweep_input_tmp in sweep_input.values():
-        _check_sweep_input(sweep_input_tmp, material_def, source_def)
+    for sweep_param_tmp in sweep_param.values():
+        _check_sweep_param(sweep_param_tmp, material_def, source_def)

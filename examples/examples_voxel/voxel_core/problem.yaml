@@ -17,7 +17,7 @@
 "sweep_config":
     - {"tag_run": "sim_dc", "tag_init": null}
     - {"tag_run": "sim_ac", "tag_init": null}
-"sweep_input":
+"sweep_param":
     "sim_dc":
         "freq": 0.0
         "material_val":

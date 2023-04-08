@@ -133,7 +133,7 @@ def _run_solver_init(data_solver):
     return data_init, data_internal
 
 
-def _run_solver_run(data_solver, data_init, data_internal, sweep_input, sol_init):
+def _run_solver_sweep(data_solver, data_init, data_internal, sweep_param, sol_init):
     """
     Create the equation system, solve the system, and extract the solution.
     """
@@ -165,9 +165,9 @@ def _run_solver_run(data_solver, data_init, data_internal, sweep_input, sol_init
     K_op_m = data_internal["K_op_m"]
 
     # extract the data
-    freq = sweep_input["freq"]
-    material_val = sweep_input["material_val"]
-    source_val = sweep_input["source_val"]
+    freq = sweep_param["freq"]
+    material_val = sweep_param["material_val"]
+    source_val = sweep_param["source_val"]
 
     # get the material and source values
     with timelogger.BlockTimer(LOGGER, "problem_value"):
@@ -250,7 +250,7 @@ def _run_solver_run(data_solver, data_init, data_internal, sweep_input, sol_init
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
 
     # assign the results (will be merged in the solver output)
-    data_run = {
+    data_sweep = {
         "freq": freq,
         "has_converged": has_converged,
         "solver_status": solver_status,
@@ -270,7 +270,7 @@ def _run_solver_run(data_solver, data_init, data_internal, sweep_input, sol_init
         "Q_vm": Q_vm,
     }
 
-    return data_run, sol
+    return data_sweep, sol
 
 
 def run(data_voxel, data_problem, data_tolerance):
@@ -322,26 +322,27 @@ def run(data_voxel, data_problem, data_tolerance):
 
         # combine the problem and voxel data
         LOGGER.info("combine the input data")
-        (data_solver, sweep_config, sweep_input) = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
+        (data_solver, sweep_config, sweep_param) = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
         # create the problem
         with timelogger.BlockTimer(LOGGER, "init"):
             (data_init, data_internal) = _run_solver_init(data_solver)
 
         # function for solving a single sweep
-        def fct_compute(input, init):
-            (sweep, sol) = _run_solver_run(data_solver, data_init, data_internal, input, init)
-            return sweep, sol
+        def fct_compute(tag, param, init):
+            with timelogger.BlockTimer(LOGGER, "run sweep: " + tag):
+                (output, init) = _run_solver_sweep(data_solver, data_init, data_internal, param, init)
+            return output, init
 
         data_sweep = {}
-        for tag, dat_tmp in sweep_input.items():
-            with timelogger.BlockTimer(LOGGER, "run sweep: " + tag):
-                data_sweep[tag] = _run_solver_run(data_solver, data_init, data_internal, dat_tmp, None)
+        for tag, dat_tmp in sweep_param.items():
+            (data_sweep_tmp, sol_init) = fct_compute(tag, dat_tmp, None)
+            data_sweep[tag] = data_sweep_tmp
 
         # extract the solution
         data_solution = {
-            "data_init": data_init,
-            "data_sweep": data_sweep,
+            "init": data_init,
+            "sweep": data_sweep,
         }
     except (CheckError, RunError) as ex:
         timelogger.log_exception(LOGGER, ex)

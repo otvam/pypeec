@@ -170,16 +170,16 @@ def _get_source_idx(source_def, domain_def):
     return domain_s, idx_s, source_idx
 
 
-def _get_sweep_input(sweep_input, material_idx, source_idx):
+def _get_sweep_param(sweep_param, material_idx, source_idx):
     """
     Check the size of the material and source values.
     Convert the values to arrays.
     """
 
     # extract field
-    freq = sweep_input["freq"]
-    material_val = sweep_input["material_val"]
-    source_val = sweep_input["source_val"]
+    freq = sweep_param["freq"]
+    material_val = sweep_param["material_val"]
+    source_val = sweep_param["source_val"]
 
     # check the material domain name
     for tag in material_idx:
@@ -206,9 +206,9 @@ def _get_sweep_input(sweep_input, material_idx, source_idx):
         source_val[tag] = _get_field(dat_tmp, var_type, idx)
 
     # assign results
-    sweep_input = {"freq": freq, "material_val": material_val, "source_val": source_val}
+    sweep_param = {"freq": freq, "material_val": material_val, "source_val": source_val}
 
-    return sweep_input
+    return sweep_param
 
 
 def get_data_solver(data_voxel, data_problem, data_tolerance):
@@ -224,7 +224,7 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
     sweep_config = data_problem["sweep_config"]
-    sweep_input = data_problem["sweep_input"]
+    sweep_param = data_problem["sweep_param"]
 
     # extract field
     domain_def = data_voxel["domain_def"]
@@ -241,8 +241,8 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         datachecker.check_choice("source domain name", tag, domain_def)
 
     # get source and material values
-    for tag, sweep_input_tmp in sweep_input.items():
-        sweep_input[tag] = _get_sweep_input(sweep_input_tmp, material_idx, source_idx)
+    for tag, sweep_param_tmp in sweep_param.items():
+        sweep_param[tag] = _get_sweep_param(sweep_param_tmp, material_idx, source_idx)
 
     # check graph
     _check_source_graph(idx_c, idx_m, idx_s, connection_def)
@@ -268,4 +268,4 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         "has_coupling": has_coupling,
     }
 
-    return data_solver, sweep_config, sweep_input
+    return data_solver, sweep_config, sweep_param
