@@ -32,7 +32,7 @@ from pypeec.error import CheckError, RunError
 LOGGER = timelogger.get_logger("PLOTTER")
 
 
-def _get_grid_voxel(data_prepare, data_run, data_point):
+def _get_grid_voxel(data_init, data_sweep, data_point):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -40,27 +40,27 @@ def _get_grid_voxel(data_prepare, data_run, data_point):
     """
 
     # extract the data
-    n = data_prepare["n"]
-    d = data_prepare["d"]
-    c = data_prepare["c"]
-    pts_net_c = data_prepare["pts_net_c"]
-    pts_net_m = data_prepare["pts_net_m"]
-    idx_vc = data_prepare["idx_vc"]
-    idx_vm = data_prepare["idx_vm"]
-    idx_src_c = data_prepare["idx_src_c"]
-    idx_src_v = data_prepare["idx_src_v"]
+    n = data_init["n"]
+    d = data_init["d"]
+    c = data_init["c"]
+    pts_net_c = data_init["pts_net_c"]
+    pts_net_m = data_init["pts_net_m"]
+    idx_vc = data_init["idx_vc"]
+    idx_vm = data_init["idx_vm"]
+    idx_src_c = data_init["idx_src_c"]
+    idx_src_v = data_init["idx_src_v"]
 
     # extract the data
-    V_vc = data_run["V_vc"]
-    V_vm = data_run["V_vm"]
-    J_vc = data_run["J_vc"]
-    B_vm = data_run["B_vm"]
-    S_vc = data_run["S_vc"]
-    Q_vm = data_run["Q_vm"]
-    P_vc = data_run["P_vc"]
-    P_vm = data_run["P_vm"]
-    res = data_run["res"]
-    conv = data_run["conv"]
+    V_vc = data_sweep["V_vc"]
+    V_vm = data_sweep["V_vm"]
+    J_vc = data_sweep["J_vc"]
+    B_vm = data_sweep["B_vm"]
+    S_vc = data_sweep["S_vc"]
+    Q_vm = data_sweep["Q_vm"]
+    P_vc = data_sweep["P_vc"]
+    P_vm = data_sweep["P_vm"]
+    res = data_sweep["res"]
+    conv = data_sweep["conv"]
 
     # get the voxel indices and the material description
     (idx, material) = manage_compute.get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v)
@@ -125,14 +125,14 @@ def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
         raise ValueError("invalid plot framework")
 
 
-def _get_sweep(tag_sweep, data_run, data_prepare, data_point, data_plotter, gui_obj):
+def _get_sweep(tag_sweep, data_sweep, data_init, data_point, data_plotter, gui_obj):
     """
     Parse the geometry and make the plots for a specified sweep.
     """
 
     # handle the data
     LOGGER.info("parse the voxel geometry and the data")
-    (grid, voxel, point, res, conv) = _get_grid_voxel(data_prepare, data_run, data_point)
+    (grid, voxel, point, res, conv) = _get_grid_voxel(data_init, data_sweep, data_point)
 
     # make the plots
     with timelogger.BlockTimer(LOGGER, "generate the different plots"):
@@ -193,20 +193,20 @@ def run(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, 
     # run the code
     try:
         # extract the data
-        data_prepare = data_solution["data_prepare"]
-        data_run = data_solution["data_run"]
+        data_init = data_solution["data_init"]
+        data_sweep = data_solution["data_sweep"]
 
         # check the input data
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_plotter(data_plotter)
         check_data_visualization.check_is_silent(is_silent)
-        check_data_visualization.check_options(data_run, tag_sweep)
+        check_data_visualization.check_options(data_sweep, tag_sweep)
         check_data_visualization.check_options(data_plotter, tag_plot)
 
         # find the plots
         if tag_sweep is not None:
-            data_run = {key: data_run[key] for key in tag_sweep}
+            data_sweep = {key: data_sweep[key] for key in tag_sweep}
         if tag_plot is not None:
             data_plotter = {key: data_plotter[key] for key in tag_plot}
 
@@ -215,9 +215,9 @@ def run(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, 
         gui_obj = plotgui.PlotGui(is_silent)
 
         # plot the sweeps
-        for tag_sweep, data_run_tmp in data_run.items():
+        for tag_sweep, data_sweep_tmp in data_sweep.items():
             with timelogger.BlockTimer(LOGGER, "plot sweep: " + tag_sweep):
-                _get_sweep(tag_sweep, data_run_tmp, data_prepare, data_point, data_plotter, gui_obj)
+                _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_point, data_plotter, gui_obj)
     except (CheckError, RunError) as ex:
         timelogger.log_exception(LOGGER, ex)
         return False, ex

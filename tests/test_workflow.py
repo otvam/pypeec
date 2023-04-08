@@ -35,7 +35,7 @@ class TestWorkflow(unittest.TestCase):
         self.assertEqual(n_total, n_total_ref, msg="invalid number of voxels (complete grid)")
         self.assertEqual(n_used, n_used_ref, msg="invalid number of voxels (non-empty voxels)")
 
-    def _check_solver(self, data_run, solver, tol):
+    def _check_solver(self, data_sweep, solver, tol):
         """
         Check the results produced by the solver.
         """
@@ -47,10 +47,10 @@ class TestWorkflow(unittest.TestCase):
         W_tot_ref = solver["W_tot"]
 
         # extract the solution
-        freq = data_run["freq"]
-        has_converged = data_run["has_converged"]
-        P_tot = data_run["integral"]["P_tot"]
-        W_tot = data_run["integral"]["W_tot"]
+        freq = data_sweep["freq"]
+        has_converged = data_sweep["has_converged"]
+        P_tot = data_sweep["integral"]["P_tot"]
+        W_tot = data_sweep["integral"]["W_tot"]
 
         # check solution
         self.assertEqual(has_converged, has_converged_ref, msg="invalid convergence")
@@ -58,7 +58,7 @@ class TestWorkflow(unittest.TestCase):
         self.assertAlmostEqual(P_tot, P_tot_ref, delta=tol*P_tot_ref, msg="invalid losses")
         self.assertAlmostEqual(W_tot, W_tot_ref, delta=tol*W_tot_ref, msg="invalid energy")
 
-    def _check_results(self, voxel_status, data_run, solver, mesher, tol):
+    def _check_results(self, voxel_status, data_sweep, solver, mesher, tol):
         """
         Check the results.
         """
@@ -67,13 +67,13 @@ class TestWorkflow(unittest.TestCase):
         self._check_mesher(voxel_status, mesher)
 
         # check the solver sweep names
-        self.assertEqual(data_run.keys(), solver.keys(), "invalid sweep")
+        self.assertEqual(data_sweep.keys(), solver.keys(), "invalid sweep")
 
         # check the solver results
-        for tag in data_run:
-            data_run_tmp = data_run[tag]
+        for tag in data_sweep:
+            data_sweep_tmp = data_sweep[tag]
             solver_tmp = solver[tag]
-            self._check_solver(data_run_tmp, solver_tmp, tol)
+            self._check_solver(data_sweep_tmp, solver_tmp, tol)
 
     def run_test(self, folder, name):
         """
@@ -88,12 +88,12 @@ class TestWorkflow(unittest.TestCase):
 
         # extract data
         voxel_status = data_voxel["voxel_status"]
-        data_run = data_solution["data_run"]
+        data_sweep = data_solution["data_sweep"]
 
         # get the reference results for the tests
         if generate_test:
             # generate the new reference results
-            (mesher, solver) = test_generate.generate_results(voxel_status, data_run)
+            (mesher, solver) = test_generate.generate_results(voxel_status, data_sweep)
 
             # write the reference results
             test_data.write_test_results(folder, name, mesher, solver)
@@ -103,7 +103,7 @@ class TestWorkflow(unittest.TestCase):
 
         # check the results
         if check_test:
-            self._check_results(voxel_status, data_run, solver, mesher, tol)
+            self._check_results(voxel_status, data_sweep, solver, mesher, tol)
 
 
 def set_test(folder, name):

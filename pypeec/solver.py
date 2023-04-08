@@ -340,8 +340,8 @@ def run(data_voxel, data_problem, data_tolerance):
 
         # extract the solution
         data_solution = {
-            "init": data_init,
-            "sweep": data_sweep,
+            "data_init": data_init,
+            "data_sweep": data_sweep,
         }
     except (CheckError, RunError) as ex:
         timelogger.log_exception(LOGGER, ex)

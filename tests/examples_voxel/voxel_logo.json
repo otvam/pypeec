@@ -9,17 +9,11 @@
         "n_used": 15
     },
     "solver": {
-        "sim_dc": {
+        "sim_default": {
             "freq": 0.0,
             "has_converged": true,
             "P_tot": 0.07142857142857145,
             "W_tot": 8.823700255244457e-09
-        },
-        "sim_ac": {
-            "freq": 10.0,
-            "has_converged": true,
-            "P_tot": 0.03571428570575132,
-            "W_tot": 4.411850126567957e-09
         }
     }
 }

@@ -25,16 +25,16 @@ def _get_mesher(voxel_status):
     return mesher
 
 
-def _get_solver(data_run):
+def _get_solver(data_sweep):
     """
     Get the results produced by the solver.
     """
 
     # extract data
-    freq = data_run["freq"]
-    has_converged = data_run["has_converged"]
-    P_tot = data_run["integral"]["P_tot"]
-    W_tot = data_run["integral"]["W_tot"]
+    freq = data_sweep["freq"]
+    has_converged = data_sweep["has_converged"]
+    P_tot = data_sweep["integral"]["P_tot"]
+    W_tot = data_sweep["integral"]["W_tot"]
 
     # assemble results
     solver = {
@@ -47,7 +47,7 @@ def _get_solver(data_run):
     return solver
 
 
-def generate_results(voxel_status, data_run):
+def generate_results(voxel_status, data_sweep):
     """
     Get the results.
     """
@@ -57,7 +57,7 @@ def generate_results(voxel_status, data_run):
 
     # check the solver
     solver = {}
-    for tag, data_run_tmp in data_run.items():
-        solver[tag] = _get_solver(data_run_tmp)
+    for tag, data_sweep_tmp in data_sweep.items():
+        solver[tag] = _get_solver(data_sweep_tmp)
 
     return mesher, solver
