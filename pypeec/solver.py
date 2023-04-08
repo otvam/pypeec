@@ -322,7 +322,7 @@ def run(data_voxel, data_problem, data_tolerance):
 
         # combine the problem and voxel data
         LOGGER.info("combine the input data")
-        (data_solver, run_sweep) = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
+        (data_solver, run_sweep, run_data) = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
         # create the problem
         with timelogger.BlockTimer(LOGGER, "prepare"):
@@ -330,7 +330,7 @@ def run(data_voxel, data_problem, data_tolerance):
 
         # solve the sweeps
         data_run = {}
-        for tag, dat_tmp in run_sweep.items():
+        for tag, dat_tmp in run_data.items():
             with timelogger.BlockTimer(LOGGER, "run sweep: " + tag):
                 data_run[tag] = _run_solver_run(data_solver, data_prepare, data_internal, dat_tmp)
 

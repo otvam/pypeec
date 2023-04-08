@@ -170,16 +170,16 @@ def _get_source_idx(source_def, domain_def):
     return domain_s, idx_s, source_idx
 
 
-def _get_run_sweep(run_sweep, material_idx, source_idx):
+def _get_run_data(run_data, material_idx, source_idx):
     """
     Check the size of the material and source values.
     Convert the values to arrays.
     """
 
     # extract field
-    freq = run_sweep["freq"]
-    material_val = run_sweep["material_val"]
-    source_val = run_sweep["source_val"]
+    freq = run_data["freq"]
+    material_val = run_data["material_val"]
+    source_val = run_data["source_val"]
 
     # check the material domain name
     for tag in material_idx:
@@ -206,9 +206,9 @@ def _get_run_sweep(run_sweep, material_idx, source_idx):
         source_val[tag] = _get_field(dat_tmp, var_type, idx)
 
     # assign results
-    run_sweep = {"freq": freq, "material_val": material_val, "source_val": source_val}
+    run_data = {"freq": freq, "material_val": material_val, "source_val": source_val}
 
-    return run_sweep
+    return run_data
 
 
 def get_data_solver(data_voxel, data_problem, data_tolerance):
@@ -224,6 +224,7 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
     run_sweep = data_problem["run_sweep"]
+    run_data = data_problem["run_data"]
 
     # extract field
     domain_def = data_voxel["domain_def"]
@@ -240,8 +241,8 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         datachecker.check_choice("source domain name", tag, domain_def)
 
     # get source and material values
-    for tag, run_sweep_tmp in run_sweep.items():
-        run_sweep[tag] = _get_run_sweep(run_sweep_tmp, material_idx, source_idx)
+    for tag, run_data_tmp in run_data.items():
+        run_data[tag] = _get_run_data(run_data_tmp, material_idx, source_idx)
 
     # check graph
     _check_source_graph(idx_c, idx_m, idx_s, connection_def)
@@ -267,4 +268,4 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
         "has_coupling": has_coupling,
     }
 
-    return data_solver, run_sweep
+    return data_solver, run_sweep, run_data
