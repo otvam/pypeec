@@ -35,14 +35,16 @@ def _get_inverse_operator(mat, decomposition):
     """
 
     # get the function for the linear operator (original matrix)
-    def fct_matvec(v):
-        v = v.astype(NP_TYPES.COMPLEX)
-        return decomposition.solve(v, trans="N")
+    def fct_matvec(rhs):
+        rhs = rhs.astype(NP_TYPES.COMPLEX)
+        sol = decomposition.solve(rhs, trans="N")
+        return sol
 
     # get the function for the linear operator (transposed matrix)
-    def fct_rmatvec(v):
-        v = v.astype(NP_TYPES.COMPLEX)
-        return decomposition.solve(v, trans="H")
+    def fct_rmatvec(rhs):
+        rhs = rhs.astype(NP_TYPES.COMPLEX)
+        sol = decomposition.solve(rhs, trans="H")
+        return sol
 
     # assign linear operator for inversion
     op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec, dtype=NP_TYPES.COMPLEX)

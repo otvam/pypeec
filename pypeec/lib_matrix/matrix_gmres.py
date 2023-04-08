@@ -12,7 +12,7 @@ from pypeec.lib_utils import timelogger
 LOGGER = timelogger.get_logger("GMRES")
 
 
-def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
+def get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, gmres_options):
     """
     Solve a sparse equation system with GMRES.
     The equation system and the preconditioner are described with linear operator.
@@ -38,7 +38,7 @@ def get_matrix_gmres(sys_op, pcd_op, rhs, gmres_options):
     # call the solver
     (sol, flag) = sla.gmres(
         sys_op, rhs,
-        tol=rel_tol, atol=abs_tol,
+        x0=sol_init, tol=rel_tol, atol=abs_tol,
         restart=n_between_restart, maxiter=n_maximum_restart,
         M=pcd_op, callback=fct, callback_type="pr_norm",
     )

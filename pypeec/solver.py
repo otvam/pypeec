@@ -27,7 +27,7 @@ from pypeec.error import CheckError, RunError
 LOGGER = timelogger.get_logger("SOLVER")
 
 
-def _run_solver_prepare(data_solver):
+def _run_solver_init(data_solver):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
     """
@@ -103,7 +103,7 @@ def _run_solver_prepare(data_solver):
         del K_tsr
 
     # assign the results (will be merged in the solver output)
-    data_prepare = {
+    data_init = {
         "n": n,
         "d": d,
         "c": c,
@@ -130,10 +130,10 @@ def _run_solver_prepare(data_solver):
         "K_op_m": K_op_m,
     }
 
-    return data_prepare, data_internal
+    return data_init, data_internal
 
 
-def _run_solver_run(data_solver, data_prepare, data_internal, run_sweep):
+def _run_solver_run(data_solver, data_init, data_internal, sweep_input, sol_init):
     """
     Create the equation system, solve the system, and extract the solution.
     """
@@ -147,12 +147,12 @@ def _run_solver_run(data_solver, data_prepare, data_internal, run_sweep):
     solver_options = data_solver["solver_options"]
 
     # extract the data
-    idx_vc = data_prepare["idx_vc"]
-    idx_vm = data_prepare["idx_vm"]
-    idx_fc = data_prepare["idx_fc"]
-    idx_fm = data_prepare["idx_fm"]
-    idx_src_c = data_prepare["idx_src_c"]
-    idx_src_v = data_prepare["idx_src_v"]
+    idx_vc = data_init["idx_vc"]
+    idx_vm = data_init["idx_vm"]
+    idx_fc = data_init["idx_fc"]
+    idx_fm = data_init["idx_fm"]
+    idx_src_c = data_init["idx_src_c"]
+    idx_src_v = data_init["idx_src_v"]
 
     # extract the data
     A_net_c = data_internal["A_net_c"]
@@ -165,9 +165,9 @@ def _run_solver_run(data_solver, data_prepare, data_internal, run_sweep):
     K_op_m = data_internal["K_op_m"]
 
     # extract the data
-    freq = run_sweep["freq"]
-    material_val = run_sweep["material_val"]
-    source_val = run_sweep["source_val"]
+    freq = sweep_input["freq"]
+    material_val = sweep_input["material_val"]
+    source_val = sweep_input["source_val"]
 
     # get the material and source values
     with timelogger.BlockTimer(LOGGER, "problem_value"):
@@ -207,7 +207,7 @@ def _run_solver_run(data_solver, data_prepare, data_internal, run_sweep):
         del S_mat_m
 
         # solve the equation system
-        (sol, res, conv, solver_ok, solver_status) = equation_solver.get_solver(sys_op, pcd_op, rhs, solver_options)
+        (sol, res, conv, solver_ok, solver_status) = equation_solver.get_solver(sol_init, sys_op, pcd_op, rhs, solver_options)
 
         # free memory
         del pcd_op
@@ -270,7 +270,7 @@ def _run_solver_run(data_solver, data_prepare, data_internal, run_sweep):
         "Q_vm": Q_vm,
     }
 
-    return data_run
+    return data_run, sol
 
 
 def run(data_voxel, data_problem, data_tolerance):
@@ -322,22 +322,26 @@ def run(data_voxel, data_problem, data_tolerance):
 
         # combine the problem and voxel data
         LOGGER.info("combine the input data")
-        (data_solver, run_sweep, run_data) = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
+        (data_solver, sweep_config, sweep_input) = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
         # create the problem
-        with timelogger.BlockTimer(LOGGER, "prepare"):
-            (data_prepare, data_internal) = _run_solver_prepare(data_solver)
+        with timelogger.BlockTimer(LOGGER, "init"):
+            (data_init, data_internal) = _run_solver_init(data_solver)
 
-        # solve the sweeps
-        data_run = {}
-        for tag, dat_tmp in run_data.items():
+        # function for solving a single sweep
+        def fct_compute(input, init):
+            (sweep, sol) = _run_solver_run(data_solver, data_init, data_internal, input, init)
+            return sweep, sol
+
+        data_sweep = {}
+        for tag, dat_tmp in sweep_input.items():
             with timelogger.BlockTimer(LOGGER, "run sweep: " + tag):
-                data_run[tag] = _run_solver_run(data_solver, data_prepare, data_internal, dat_tmp)
+                data_sweep[tag] = _run_solver_run(data_solver, data_init, data_internal, dat_tmp, None)
 
         # extract the solution
         data_solution = {
-            "data_prepare": data_prepare,
-            "data_run": data_run,
+            "data_init": data_init,
+            "data_sweep": data_sweep,
         }
     except (CheckError, RunError) as ex:
         timelogger.log_exception(LOGGER, ex)
