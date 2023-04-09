@@ -55,6 +55,7 @@ def _check_data(data_config):
         "MATRIX_SPLIT",
         "MATRIX_MULTIPLICATION",
         "USE_DOUBLE",
+        "SWEEP_POOL",
         "PAUSE_GUI",
     ]
     datachecker.check_dict("data_config", data_config, key_list=key_list)
@@ -128,6 +129,8 @@ def _check_data(data_config):
     datachecker.check_boolean("USE_DOUBLE", data_config["USE_DOUBLE"])
     datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True)
     datachecker.check_choice("MATRIX_MULTIPLICATION", data_config["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
+    if data_config["SWEEP_POOL"] is not None:
+        datachecker.check_integer("SWEEP_POOL", data_config["SWEEP_POOL"])
 
     # check FFT library
     lib = [

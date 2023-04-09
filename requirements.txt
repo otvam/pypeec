@@ -9,6 +9,7 @@
 # (c) Thomas Guillod - Dartmouth College
 
 PyYAML>=6.0 # YAML parser
+joblib>=1.2 # parallel loops
 numpy>=1.24 # used everywhere
 scipy>=1.9 # used everywhere
 Pillow>=9.4 # used by the mesher
