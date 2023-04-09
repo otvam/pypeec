@@ -10,9 +10,14 @@ Run the sweeps in the correct order and return the results.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import joblib
 import numpy as np
 import scipy.sparse.csgraph as csg
 from pypeec.error import RunError
+from pypeec import config
+
+# get config
+SWEEP_POOL = config.SWEEP_POOL
 
 
 def _get_tree_tag(config):
@@ -97,12 +102,29 @@ def _get_tree_compute(output, init, tree, param, fct_compute, tag_init):
     else:
         init_tmp = init[tag_init]
 
-    # compute the sweeps
-    for tag_tmp in tag_sub:
-        param_tmp = param[tag_tmp]
-        (output_tmp, sol_tmp) = fct_compute(tag_tmp, param_tmp, init_tmp)
-        output[tag_tmp] = output_tmp
-        init[tag_tmp] = sol_tmp
+    # get the input
+    param_sub = [param[tag_tmp] for tag_tmp in tag_sub]
+
+    # run the serial or parallel loop
+    if SWEEP_POOL is None:
+        for tag_tmp, param_tmp in zip(tag_sub, param_sub):
+            (output_tmp, sol_tmp) = fct_compute(tag_tmp, param_tmp, init_tmp)
+            output[tag_tmp] = output_tmp
+            init[tag_tmp] = sol_tmp
+    else:
+        # run the parallel jobs
+        pool_res = joblib.Parallel(n_jobs=SWEEP_POOL, backend="loky")(
+            joblib.delayed(fct_compute)(
+                tag_tmp, param_tmp, init_tmp
+            )
+            for tag_tmp, param_tmp in zip(tag_sub, param_sub)
+        )
+
+        # assemble the results
+        for tag_tmp, pool_res_tmp in zip(tag_sub, pool_res):
+            (output_tmp, sol_tmp) = pool_res_tmp
+            output[tag_tmp] = output_tmp
+            init[tag_tmp] = sol_tmp
 
     # recursive call for the dependent sweeps
     for tag_tmp in tag_sub:
