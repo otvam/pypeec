@@ -180,6 +180,7 @@ This file contains the definition of the magnetic problem to be solved.
 # material definition
 #   - dict of dicts with the material name and the material definition
 #   - required information, the dict cannot be empty
+#   - electric and magnetic materials can be defined
 #   - material definition
 #       - domain_list: list of domains with the specified material
 #       - material_type: material type ("electric" or "magnetic")
@@ -204,42 +205,66 @@ This file contains the definition of the magnetic problem to be solved.
     "src": {"domain_list": ["dom_src"], "source_type": "current", "var_type": "lumped"}
     "sink": {"domain_list": ["dom_sink"], "source_type": "voltage", "var_type": "lumped"}
 
+# definition of the sweep configurations to be run
+#   - dict with the sweep names and the sweep dependencies
+#   - required information, the dict cannot be empty
+#   - the dict keys represent the name of the sweeps
+#   - the dict values represent the name of the dependencies
+#       - the dependency is used as an initial guess for the solver
+#       - if null, no initial guess is used for the solver
+"sweep_config":
+    "sim_dc": null
+    "sim_ac": "sim_dc"
+
 # material parameters and source values definition
-#   - freq: operating frequency for the problem (DC or AC)
-#   - material_val: material parameters
-#       - dict of dicts with the material name and the material definition
-#       - electric material definition
-#           - rho_re: material real resistivity (should be positive)
-#           - rho_img: material imaginary resistivity (should be positive)
-#       - magnetic material definition
-#           - chi_re: material real susceptibility (should be positive)
-#           - chi_im: material imaginary susceptibility (should be positive)
-#       - material parameters
-#           - scalar if "var_type" is equal to "lumped"
-#           - array if "var_type" is equal to "distributed"
-#   - source_val: source parameters
-#       - dict of dicts with the source name and the source definition
-#       - current source definition
-#           - I_re: current source value (real part)
-#           - I_im: current source value (imaginary part)
-#           - Y_re: current internal admittance (real part)
-#           - Y_im: current internal admittance (imaginary part)
-#       - voltage source definition
-#           - V_re: voltage source value (real part)
-#           - V_im: voltage source value (imaginary part)
-#           - Z_re: voltage internal impedance (real part)
-#           - Z_im: voltage internal impedance (imaginary part)
-#       - source parameters
-#           - scalar if "var_type" is equal to "lumped"
-#           - array if "var_type" is equal to "distributed"
-value_def:
-    "freq": 1.0e+3
-    "material_val":
-        "mat_electric": {"rho_re": 1.0e-8, "rho_im": 0.0"}
-        "mat_magnetic": {"chi_re": 100.0, "chi_im": 10.0}
-    "source_val":
-        "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0}
-        "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
+#   - dict of dicts with the material parameters and source values definition
+#   - required information, the dict cannot be empty
+#   - each dict represents a specific sweep configuration
+#   - material parameters and source values definition
+#       - freq: operating frequency for the problem (DC or AC)
+#       - material_val: material parameters
+#           - dict of dicts with the material name and the material definition
+#           - electric material definition
+#               - rho_re: material real resistivity (should be positive)
+#               - rho_img: material imaginary resistivity (should be positive)
+#           - magnetic material definition
+#               - chi_re: material real susceptibility (should be positive)
+#               - chi_im: material imaginary susceptibility (should be positive)
+#           - material parameters
+#               - scalar if "var_type" is equal to "lumped"
+#               - array if "var_type" is equal to "distributed"
+#       - source_val: source parameters
+#           - dict of dicts with the source name and the source definition
+#           - current source definition
+#               - I_re: current source value (real part)
+#               - I_im: current source value (imaginary part)
+#               - Y_re: current internal admittance (real part)
+#               - Y_im: current internal admittance (imaginary part)
+#           - voltage source definition
+#               - V_re: voltage source value (real part)
+#               - V_im: voltage source value (imaginary part)
+#               - Z_re: voltage internal impedance (real part)
+#               - Z_im: voltage internal impedance (imaginary part)
+#           - source values
+#               - scalar if "var_type" is equal to "lumped"
+#               - array if "var_type" is equal to "distributed"
+"sweep_param":
+    "sim_dc":
+        "freq": 0.0
+        "material_val":
+            "mat_electric": {"rho_re": 1.0e-8, "rho_im": 0.0"}
+            "mat_magnetic": {"chi_re": 100.0, "chi_im": 10.0}
+        "source_val":
+            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0}
+            "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
+    "sim_ac":
+        "freq": 1.0e+3
+        "material_val":
+            "mat_electric": {"rho_re": 1.0e-8, "rho_im": 0.0"}
+            "mat_magnetic": {"chi_re": 100.0, "chi_im": 10.0}
+        "source_val":
+            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0}
+            "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
 ```
 
 ## Point File Format

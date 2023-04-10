@@ -76,21 +76,6 @@ def _check_source_def(source_def):
         datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
 
-def _check_sweep_config(sweep_config, sweep_tag):
-    """
-    Check that a sweep definition is valid.
-    """
-
-    # extract field
-    tag_run = sweep_config["tag_run"]
-    tag_init = sweep_config["tag_init"]
-
-    # check data
-    datachecker.check_choice("tag_run", tag_run, sweep_tag)
-    if tag_init is not None:
-        datachecker.check_choice("tag_init", tag_init, sweep_tag)
-
-
 def _check_sweep_param(sweep_param, material_def, source_def):
     """
     Check that the excitation definition (materials and sources) is valid.
@@ -166,15 +151,17 @@ def check_data_problem(data_problem):
     _check_material_def(material_def)
     _check_source_def(source_def)
 
-    # check excitation type
+    # check excitation values
     datachecker.check_dict("sweep_param", sweep_param, sub_type=dict, can_be_empty=False)
-    datachecker.check_list("sweep_config", sweep_config, sub_type=dict, can_be_empty=False)
+    for sweep_param_tmp in sweep_param.values():
+        _check_sweep_param(sweep_param_tmp, material_def, source_def)
 
     # get sweep names
     sweep_tag = sweep_param.keys()
 
-    # check excitation data
-    for sweep_config_tmp in sweep_config:
-        _check_sweep_config(sweep_config_tmp, sweep_tag)
-    for sweep_param_tmp in sweep_param.values():
-        _check_sweep_param(sweep_param_tmp, material_def, source_def)
+    # check the sweep configuration
+    datachecker.check_dict("sweep_config", sweep_config, can_be_empty=False)
+    for tag_run, tag_init in sweep_config.items():
+        datachecker.check_choice("tag_run", tag_run, sweep_tag)
+        if tag_init is not None:
+            datachecker.check_choice("tag_init", tag_init, sweep_tag)

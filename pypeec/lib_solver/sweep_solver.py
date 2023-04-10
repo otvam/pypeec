@@ -20,30 +20,15 @@ from pypeec import config
 SWEEP_POOL = config.SWEEP_POOL
 
 
-def _get_tree_tag(config):
-    """
-    Get the name and the dependency of the sweeps.
-    """
-
-    # get the sweep names and dependencies
-    tag_run = []
-    tag_init = []
-    for data_tmp in config:
-        tag_run.append(data_tmp["tag_run"])
-        tag_init.append(data_tmp["tag_init"])
-
-    # convert the lists into arrays
-    tag_run = np.array(tag_run, dtype=object)
-    tag_init = np.array(tag_init, dtype=object)
-
-    return tag_run, tag_init
-
-
-def _get_tree_create(tag_run, tag_init):
+def _get_tree_create(config):
     """
     Represent the sweep interdependencies with a tree.
     The root of the tree is the starting point for the computing the sweeps.
     """
+
+    # get the sweep names and dependencies
+    tag_run = np.array(list(config.keys()), dtype=object)
+    tag_init = np.array(list(config.values()), dtype=object)
 
     # dict for storing the tree
     tree = {}
@@ -141,8 +126,7 @@ def get_run_sweep(config, param, fct_compute):
     """
 
     # create a representing the interdependencies between the sweeps
-    (tag_run, tag_init) = _get_tree_tag(config)
-    tree = _get_tree_create(tag_run, tag_init)
+    tree = _get_tree_create(config)
 
     # ensure that the interdependencies are solvable
     _get_tree_check(tree)
