@@ -15,4 +15,4 @@ FILE_GEOMETRY="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/geometry.yaml"
 FILE_VOXEL="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/voxel.pck"
 
 # run
-pypeec mesher --geometry FILE_GEOMETRY --voxel $FILE_VOXEL
+pypeec mesher --geometry $FILE_GEOMETRY --voxel $FILE_VOXEL
