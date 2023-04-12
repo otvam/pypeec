@@ -1,17 +1,13 @@
-# Run the tests after each push/pull event.
-# The tests are run with a single Python version on Linux.
+# Run the tests after a manual trigger.
+# The tests are run with different Python versions on Linux.
 #
 # The environment variable "ALLOW_PLOTTING" is used to prevent warnings without display server.
 #
 # (c) Thomas Guillod - Dartmouth College
 
-name: Push/pull trigger
+name: Python version
 
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+on: ["workflow_dispatch"]
 
 env:
   ALLOW_PLOTTING: true
@@ -23,17 +19,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
+      - name: Set up Python / ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
-      - name: Install dependencies
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies  / ${{ matrix.python-version }}
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run the tests
+      - name: Run the tests / ${{ matrix.python-version }}
         shell: bash
         run: |
           source run_tests.sh

@@ -25,6 +25,27 @@ logging.disable(logging.INFO)
 PATH_ROOT = os.path.dirname(__file__)
 
 
+def _create_temp_file():
+    """
+    Get a temporary file.
+    """
+
+    (_, filename) = tempfile.mkstemp(suffix=".pck")
+
+    return filename
+
+
+def _delete_temp_file(filename):
+    """
+    Delete a temporary file.
+    """
+
+    try:
+        os.remove(filename)
+    except OSError:
+        pass
+
+
 def write_test_results(folder, name, mesher, solver):
     """
     Write the file containing the prescribed test results.
@@ -120,10 +141,8 @@ def run_workflow(folder, name):
     file_tolerance = os.path.join(PATH_ROOT, "..", "examples", "config", "tolerance.json")
 
     # get the temporary files
-    fid_voxel = tempfile.NamedTemporaryFile(suffix=".pck")
-    fid_solution = tempfile.NamedTemporaryFile(suffix=".pck")
-    file_voxel = fid_voxel.name
-    file_solution = fid_solution.name
+    file_voxel = _create_temp_file()
+    file_solution = _create_temp_file()
 
     # run the code
     try:
@@ -156,7 +175,7 @@ def run_workflow(folder, name):
             data_solution = pickle.load(fid)
     finally:
         # close the temporary files
-        fid_voxel.close()
-        fid_solution.close()
+        _delete_temp_file(file_voxel)
+        _delete_temp_file(file_solution)
 
     return data_voxel, data_solution
