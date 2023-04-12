@@ -7,7 +7,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os.path
 import numpy as np
-from pypeec.lib_utils import datachecker
+from pypeec.lib_check import datachecker
 from pypeec import config
 
 # get config

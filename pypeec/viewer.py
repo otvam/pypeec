@@ -17,13 +17,13 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_visualization import manage_compute
 from pypeec.lib_visualization import manage_voxel
 from pypeec.lib_visualization import manage_pyvista
+from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
-from pypeec.lib_utils import plotgui
-from pypeec.lib_utils import timelogger
+from pypeec import utils_log
 from pypeec.error import CheckError, RunError
 
 # get a logger
-LOGGER = timelogger.get_logger("VIEWER")
+LOGGER = utils_log.get_logger("VIEWER")
 
 
 def _get_grid_voxel(data_voxel, data_point):
@@ -123,19 +123,19 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
 
         # create the Qt app (should be at the beginning)
         LOGGER.info("init the plot manager")
-        gui_obj = plotgui.PlotGui(is_silent)
+        gui_obj = manage_plotgui.PlotGui(is_silent)
 
         # handle the data
         LOGGER.info("parse the voxel geometry and the data")
         (grid, voxel, point, reference) = _get_grid_voxel(data_voxel, data_point)
 
         # make the plots
-        with timelogger.BlockTimer(LOGGER, "generate the different plots"):
+        with utils_log.BlockTimer(LOGGER, "generate the different plots"):
             for i, (tag_plot, data_viewer_tmp) in enumerate(data_viewer.items()):
                 LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_viewer), tag_plot))
                 _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)
     except (CheckError, RunError) as ex:
-        timelogger.log_exception(LOGGER, ex)
+        utils_log.log_exception(LOGGER, ex)
         return False, ex
 
     # end message

@@ -7,6 +7,11 @@ This allows for a minimization of the loaded dependencies.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import os.path
+from pypeec import utils_log
+from pypeec import utils_io
+from pypeec.error import FileError
+
 
 def run_mesher(file_geometry, file_voxel):
     """
@@ -28,17 +33,10 @@ def run_mesher(file_geometry, file_voxel):
         None if the termination is successful.
     """
 
-    # load the base libraries
-    import os.path
-    from pypeec.lib_utils import timelogger
-    from pypeec.lib_utils import fileio
-    from pypeec.error import FileError
-
     # create the logger
-    logger = timelogger.get_logger("MAIN")
+    logger = utils_log.get_logger("MAIN")
 
     # reset the timer logger
-    timelogger.reset_timer()
 
     # load the tool
     logger.info("load the mesher")
@@ -48,7 +46,7 @@ def run_mesher(file_geometry, file_voxel):
     try:
         # load data
         logger.info("load the input data")
-        data_geometry = fileio.load_config(file_geometry)
+        data_geometry = utils_io.load_config(file_geometry)
 
         # get the path for relative file loading
         path_ref = os.path.abspath(file_geometry)
@@ -60,9 +58,9 @@ def run_mesher(file_geometry, file_voxel):
         # save results
         if status:
             logger.info("save the results")
-            fileio.write_pickle(file_voxel, data_voxel)
+            utils_io.write_pickle(file_voxel, data_voxel)
     except FileError as ex:
-        timelogger.log_exception(logger, ex)
+        utils_log.log_exception(logger, ex)
         return False, ex
 
     return status, ex
@@ -94,14 +92,8 @@ def run_viewer(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=Fal
         None if the termination is successful.
     """
 
-    # load the base libraries
-    from pypeec.lib_utils import timelogger
-    from pypeec.lib_utils import fileio
-    from pypeec.error import FileError
-
     # create the logger
-    logger = timelogger.get_logger("MAIN")
-    timelogger.reset_timer()
+    logger = utils_log.get_logger("MAIN")
 
     # load the tool
     logger.info("load the viewer")
@@ -111,14 +103,14 @@ def run_viewer(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=Fal
     try:
         # load data
         logger.info("load the input data")
-        data_voxel = fileio.load_pickle(file_voxel)
-        data_point = fileio.load_config(file_point)
-        data_viewer = fileio.load_config(file_viewer)
+        data_voxel = utils_io.load_pickle(file_voxel)
+        data_point = utils_io.load_config(file_point)
+        data_viewer = utils_io.load_config(file_viewer)
 
         # call the viewer
         (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent)
     except FileError as ex:
-        timelogger.log_exception(logger, ex)
+        utils_log.log_exception(logger, ex)
         return False, ex
 
     return status, ex
@@ -146,14 +138,8 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
         None if the termination is successful.
     """
 
-    # load the base libraries
-    from pypeec.lib_utils import timelogger
-    from pypeec.lib_utils import fileio
-    from pypeec.error import FileError
-
     # create the logger
-    logger = timelogger.get_logger("MAIN")
-    timelogger.reset_timer()
+    logger = utils_log.get_logger("MAIN")
 
     # load the tool
     logger.info("load the solver")
@@ -163,9 +149,9 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     try:
         # load data
         logger.info("load the input data")
-        data_voxel = fileio.load_pickle(file_voxel)
-        data_problem = fileio.load_config(file_problem)
-        data_tolerance = fileio.load_config(file_tolerance)
+        data_voxel = utils_io.load_pickle(file_voxel)
+        data_problem = utils_io.load_config(file_problem)
+        data_tolerance = utils_io.load_config(file_tolerance)
 
         # call the solver
         (status, data_solution, ex) = solver.run(data_voxel, data_problem, data_tolerance)
@@ -173,9 +159,9 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
         # save results
         if status:
             logger.info("save the results")
-            fileio.write_pickle(file_solution, data_solution)
+            utils_io.write_pickle(file_solution, data_solution)
     except FileError as ex:
-        timelogger.log_exception(logger, ex)
+        utils_log.log_exception(logger, ex)
         return False, ex
 
     return status, ex
@@ -210,14 +196,8 @@ def run_plotter(file_solution, file_point, file_plotter, tag_sweep=None, tag_plo
         None if the termination is successful.
     """
 
-    # load the base libraries
-    from pypeec.lib_utils import timelogger
-    from pypeec.lib_utils import fileio
-    from pypeec.error import FileError
-
     # create the logger
-    logger = timelogger.get_logger("MAIN")
-    timelogger.reset_timer()
+    logger = utils_log.get_logger("MAIN")
 
     # load the tool
     logger.info("load the plotter")
@@ -227,14 +207,14 @@ def run_plotter(file_solution, file_point, file_plotter, tag_sweep=None, tag_plo
     try:
         # load data
         logger.info("load the input data")
-        data_solution = fileio.load_pickle(file_solution)
-        data_point = fileio.load_config(file_point)
-        data_plotter = fileio.load_config(file_plotter)
+        data_solution = utils_io.load_pickle(file_solution)
+        data_point = utils_io.load_config(file_point)
+        data_plotter = utils_io.load_config(file_plotter)
 
         # call the plotter
         (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent)
     except FileError as ex:
-        timelogger.log_exception(logger, ex)
+        utils_log.log_exception(logger, ex)
         return False, ex
 
     return status, ex

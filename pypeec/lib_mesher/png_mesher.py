@@ -17,12 +17,12 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import PIL.Image as pmg
-from pypeec.lib_utils import timelogger
+from pypeec import utils_log
 from pypeec import config
 from pypeec.error import RunError
 
 # get a logger
-LOGGER = timelogger.get_logger("STL")
+LOGGER = utils_log.get_logger("STL")
 
 # get config
 NP_TYPES = config.NP_TYPES

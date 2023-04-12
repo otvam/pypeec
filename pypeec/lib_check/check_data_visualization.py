@@ -5,7 +5,7 @@ Module for checking the viewer and plotter data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-from pypeec.lib_utils import datachecker
+from pypeec.lib_check import datachecker
 
 
 def _check_data_window(data_window):

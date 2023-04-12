@@ -14,20 +14,12 @@ import logging
 from pypeec import config
 
 # get config
-FORMAT = config.LOGGING_OPTIONS.FORMAT
-LEVEL = config.LOGGING_OPTIONS.LEVEL
-INDENTATION = config.LOGGING_OPTIONS.INDENTATION
-EXCEPTION_TRACE = config.LOGGING_OPTIONS.EXCEPTION_TRACE
-USE_COLOR = config.LOGGING_OPTIONS.USE_COLOR
-CL_DEBUG = config.LOGGING_OPTIONS.CL_DEBUG
-CL_INFO = config.LOGGING_OPTIONS.CL_INFO
-CL_WARNING = config.LOGGING_OPTIONS.CL_WARNING
-CL_ERROR = config.LOGGING_OPTIONS.CL_ERROR
-CL_CRITICAL = config.LOGGING_OPTIONS.CL_CRITICAL
-CL_RESET = config.LOGGING_OPTIONS.CL_RESET
-
-# color escape sequence
-CL_ESC = "\x1b"
+FORMAT = str()
+LEVEL = str()
+INDENTATION = int()
+EXCEPTION_TRACE = bool()
+USE_COLOR = bool()
+DEF_COLOR = dict()
 
 # global timestamp (constant over the complete run)
 GLOBAL_TIMESTAMP = time.time()
@@ -36,15 +28,35 @@ GLOBAL_TIMESTAMP = time.time()
 CURRENT_LEVEL = 0
 
 
-def _get_fmt(color):
+def _load_config():
+    """
+    Load the config from the config file.
+    """
+
+    global FORMAT
+    global LEVEL
+    global INDENTATION
+    global EXCEPTION_TRACE
+    global USE_COLOR
+    global DEF_COLOR
+
+    FORMAT = config.LOGGING_OPTIONS.FORMAT
+    LEVEL = config.LOGGING_OPTIONS.LEVEL
+    INDENTATION = config.LOGGING_OPTIONS.INDENTATION
+    EXCEPTION_TRACE = config.LOGGING_OPTIONS.EXCEPTION_TRACE
+    USE_COLOR = config.LOGGING_OPTIONS.USE_COLOR
+    DEF_COLOR = config.LOGGING_OPTIONS.DEF_COLOR
+
+
+def _get_fmt(color, reset):
     """
     Get a logging formatter.
     """
 
-    if color is None:
+    if (color is None) and (reset is None):
         fmt = logging.Formatter(FORMAT)
     else:
-        fmt = logging.Formatter(CL_ESC + color + FORMAT + CL_ESC + CL_RESET)
+        fmt = logging.Formatter("\x1b" + color + FORMAT + "\x1b" + reset)
 
     return fmt
 
@@ -88,15 +100,15 @@ class _DeltaTimeFormatter(logging.Formatter):
 
         # define the color formatters
         self.fmt_color = {
-            logging.DEBUG: _get_fmt(CL_DEBUG),
-            logging.INFO: _get_fmt(CL_INFO),
-            logging.WARNING: _get_fmt(CL_WARNING),
-            logging.ERROR: _get_fmt(CL_ERROR),
-            logging.CRITICAL: _get_fmt(CL_CRITICAL),
+            logging.DEBUG: _get_fmt(DEF_COLOR["CL_DEBUG"], DEF_COLOR["CL_RESET"]),
+            logging.INFO: _get_fmt(DEF_COLOR["CL_INFO"], DEF_COLOR["CL_RESET"]),
+            logging.WARNING: _get_fmt(DEF_COLOR["CL_WARNING"], DEF_COLOR["CL_RESET"]),
+            logging.ERROR: _get_fmt(DEF_COLOR["CL_ERROR"], DEF_COLOR["CL_RESET"]),
+            logging.CRITICAL: _get_fmt(DEF_COLOR["CL_CRITICAL"], DEF_COLOR["CL_RESET"]),
         }
 
         # define the black formatter
-        self.fmt_black = _get_fmt(None)
+        self.fmt_black = _get_fmt(None, None)
 
     def format(self, record):
         """
@@ -217,6 +229,9 @@ def get_logger(name):
 
     The elapsed time measurement method and the logging level are specified in the config.
     """
+
+    # load the configuration
+    _load_config()
 
     # get the logger
     logger = logging.getLogger(name)

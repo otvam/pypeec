@@ -6,10 +6,10 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import scipy.sparse.linalg as sla
-from pypeec.lib_utils import timelogger
+from pypeec import utils_log
 
 # get a logger
-LOGGER = timelogger.get_logger("GMRES")
+LOGGER = utils_log.get_logger("GMRES")
 
 
 def get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, gmres_options):

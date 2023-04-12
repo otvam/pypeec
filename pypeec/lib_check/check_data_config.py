@@ -7,7 +7,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import importlib.util
 import numpy as np
-from pypeec.lib_utils import datachecker
+from pypeec.lib_check import datachecker
 
 
 def _update_data(data_config):
@@ -68,6 +68,20 @@ def _check_data(data_config):
         "INDENTATION",
         "EXCEPTION_TRACE",
         "USE_COLOR",
+        "DEF_COLOR",
+    ]
+    datachecker.check_dict("LOGGING_OPTIONS", LOGGING_OPTIONS, key_list=key_list)
+
+    # check logging options content
+    datachecker.check_string("FORMAT", LOGGING_OPTIONS["FORMAT"])
+    datachecker.check_string("LEVEL", LOGGING_OPTIONS["LEVEL"])
+    datachecker.check_integer("INDENTATION", LOGGING_OPTIONS["INDENTATION"])
+    datachecker.check_boolean("EXCEPTION_TRACE", LOGGING_OPTIONS["EXCEPTION_TRACE"])
+    datachecker.check_boolean("USE_COLOR", LOGGING_OPTIONS["USE_COLOR"])
+    datachecker.check_dict("DEF_COLOR", LOGGING_OPTIONS["DEF_COLOR"])
+
+    # check logging color definition
+    key_list = [
         "CL_DEBUG",
         "CL_INFO",
         "CL_WARNING",
@@ -75,18 +89,13 @@ def _check_data(data_config):
         "CL_CRITICAL",
         "CL_RESET",
     ]
-    datachecker.check_dict("LOGGING_OPTIONS", LOGGING_OPTIONS, key_list=key_list)
-    datachecker.check_string("FORMAT", LOGGING_OPTIONS["FORMAT"])
-    datachecker.check_string("LEVEL", LOGGING_OPTIONS["LEVEL"])
-    datachecker.check_integer("INDENTATION", LOGGING_OPTIONS["INDENTATION"])
-    datachecker.check_boolean("EXCEPTION_TRACE", LOGGING_OPTIONS["EXCEPTION_TRACE"])
-    datachecker.check_boolean("USE_COLOR", LOGGING_OPTIONS["USE_COLOR"])
-    datachecker.check_string("CL_DEBUG", LOGGING_OPTIONS["CL_DEBUG"])
-    datachecker.check_string("CL_INFO", LOGGING_OPTIONS["CL_INFO"])
-    datachecker.check_string("CL_WARNING", LOGGING_OPTIONS["CL_WARNING"])
-    datachecker.check_string("CL_ERROR", LOGGING_OPTIONS["CL_ERROR"])
-    datachecker.check_string("CL_CRITICAL", LOGGING_OPTIONS["CL_CRITICAL"])
-    datachecker.check_string("CL_RESET", LOGGING_OPTIONS["CL_RESET"])
+    datachecker.check_dict("DEF_COLOR", LOGGING_OPTIONS["DEF_COLOR"], key_list=key_list)
+    datachecker.check_string("CL_DEBUG", LOGGING_OPTIONS["DEF_COLOR"]["CL_DEBUG"])
+    datachecker.check_string("CL_INFO", LOGGING_OPTIONS["DEF_COLOR"]["CL_INFO"])
+    datachecker.check_string("CL_WARNING", LOGGING_OPTIONS["DEF_COLOR"]["CL_WARNING"])
+    datachecker.check_string("CL_ERROR", LOGGING_OPTIONS["DEF_COLOR"]["CL_ERROR"])
+    datachecker.check_string("CL_CRITICAL", LOGGING_OPTIONS["DEF_COLOR"]["CL_CRITICAL"])
+    datachecker.check_string("CL_RESET", LOGGING_OPTIONS["DEF_COLOR"]["CL_RESET"])
 
     # check FFT options
     FFT_OPTIONS = data_config["FFT_OPTIONS"]

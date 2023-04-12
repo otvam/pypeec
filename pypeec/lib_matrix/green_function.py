@@ -18,11 +18,11 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import numpy.linalg as lna
-from pypeec.lib_utils import timelogger
+from pypeec import utils_log
 from pypeec import config
 
 # get a logger
-LOGGER = timelogger.get_logger("GREEN")
+LOGGER = utils_log.get_logger("GREEN")
 
 # get config
 NP_TYPES = config.NP_TYPES

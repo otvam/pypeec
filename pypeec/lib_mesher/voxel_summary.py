@@ -5,10 +5,10 @@ Compute and display metrics about 3D voxel structures.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-from pypeec.lib_utils import timelogger
+from pypeec import utils_log
 
 # get a logger
-LOGGER = timelogger.get_logger("SUMMARY")
+LOGGER = utils_log.get_logger("SUMMARY")
 
 
 def get_status(n, d, c, domain_def, connection_def):

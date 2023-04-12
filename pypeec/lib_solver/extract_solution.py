@@ -11,11 +11,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
-from pypeec.lib_utils import timelogger
+from pypeec import utils_log
 from pypeec import config
 
 # get a logger
-LOGGER = timelogger.get_logger("SOLUTION")
+LOGGER = utils_log.get_logger("SOLUTION")
 
 # get config
 NP_TYPES = config.NP_TYPES

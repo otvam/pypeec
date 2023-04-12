@@ -5,7 +5,7 @@ Module for checking the solver problem data.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-from pypeec.lib_utils import datachecker
+from pypeec.lib_check import datachecker
 
 
 def _check_field(dat_tmp, var_type, key_list):
