@@ -5,7 +5,7 @@
 #
 # (c) Thomas Guillod - Dartmouth College
 
-name: Python version
+name: Test Python Versions
 
 on: ["workflow_dispatch"]
 

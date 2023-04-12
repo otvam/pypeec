@@ -5,7 +5,7 @@
 #
 # (c) Thomas Guillod - Dartmouth College
 
-name: Push/pull trigger
+name: Automated Tests
 
 on:
   push:

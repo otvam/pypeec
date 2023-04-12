@@ -5,7 +5,7 @@
 #
 # (c) Thomas Guillod - Dartmouth College
 
-name: Platform type
+name: Test Different Platforms
 
 on: ["workflow_dispatch"]
 
