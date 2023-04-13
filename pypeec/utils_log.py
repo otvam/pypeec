@@ -14,7 +14,7 @@ import logging
 from pypeec import config
 
 # get config
-FORMAT = str()
+FORMAT = dict()
 LEVEL = str()
 INDENTATION = int()
 EXCEPTION_TRACE = bool()
@@ -54,20 +54,23 @@ def _get_fmt(color, reset):
     """
 
     if (color is None) and (reset is None):
-        fmt = logging.Formatter(FORMAT)
+        fmt = logging.Formatter(FORMAT["LOGGER"])
     else:
-        fmt = logging.Formatter("\x1b" + color + FORMAT + "\x1b" + reset)
+        fmt = logging.Formatter("\x1b" + color + FORMAT["LOGGER"] + "\x1b" + reset)
 
     return fmt
 
 
-def _get_format_timestamp(timestamp):
+def _get_format_timestamp():
     """
     Format a timestamp into a string.
     """
 
+    timestamp = time.time()
     timestamp = datetime.datetime.fromtimestamp(timestamp)
-    timestamp = timestamp.strftime("%H:%M:%S,%f")[:-3]
+    timestamp = timestamp.strftime(FORMAT["TIMESTAMP_FMT"])
+    timestamp = timestamp[0:len(timestamp)-FORMAT["TIMESTAMP_TRC"]]
+
 
     return timestamp
 
@@ -79,7 +82,8 @@ def _get_format_duration(timestamp):
 
     duration = time.time()-timestamp
     duration = datetime.datetime.utcfromtimestamp(duration)
-    duration = duration.strftime("%H:%M:%S,%f")[:-3]
+    duration = duration.strftime(FORMAT["DURATION_FMT"])
+    duration = duration[0:len(duration)-FORMAT["DURATION_TRC"]]
 
     return duration
 
@@ -121,7 +125,7 @@ class _DeltaTimeFormatter(logging.Formatter):
         msg = record.msg
 
         # add the elapsed time to the log record
-        record.timestamp = _get_format_timestamp(GLOBAL_TIMESTAMP)
+        record.timestamp = _get_format_timestamp()
         record.duration = _get_format_duration(GLOBAL_TIMESTAMP)
 
         # add the process and thread id to the log record
@@ -216,6 +220,11 @@ def reset_timer():
 
     global GLOBAL_TIMESTAMP
     GLOBAL_TIMESTAMP = time.time()
+
+
+
+
+
 
 
 def get_logger(name):

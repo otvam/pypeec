@@ -73,12 +73,27 @@ def _check_data(data_config):
     datachecker.check_dict("LOGGING_OPTIONS", LOGGING_OPTIONS, key_list=key_list)
 
     # check logging options content
-    datachecker.check_string("FORMAT", LOGGING_OPTIONS["FORMAT"])
+    datachecker.check_dict("FORMAT", LOGGING_OPTIONS["FORMAT"])
     datachecker.check_string("LEVEL", LOGGING_OPTIONS["LEVEL"])
     datachecker.check_integer("INDENTATION", LOGGING_OPTIONS["INDENTATION"])
     datachecker.check_boolean("EXCEPTION_TRACE", LOGGING_OPTIONS["EXCEPTION_TRACE"])
     datachecker.check_boolean("USE_COLOR", LOGGING_OPTIONS["USE_COLOR"])
     datachecker.check_dict("DEF_COLOR", LOGGING_OPTIONS["DEF_COLOR"])
+
+    # check logging format definition
+    key_list = [
+        "LOGGER",
+        "TIMESTAMP_FMT",
+        "DURATION_FMT",
+        "TIMESTAMP_TRC",
+        "DURATION_TRC",
+    ]
+    datachecker.check_dict("FORMAT", LOGGING_OPTIONS["FORMAT"], key_list=key_list)
+    datachecker.check_string("LOGGER", LOGGING_OPTIONS["FORMAT"]["LOGGER"])
+    datachecker.check_string("TIMESTAMP_FMT", LOGGING_OPTIONS["FORMAT"]["TIMESTAMP_FMT"])
+    datachecker.check_string("DURATION_FMT", LOGGING_OPTIONS["FORMAT"]["DURATION_FMT"])
+    datachecker.check_integer("TIMESTAMP_TRC", LOGGING_OPTIONS["FORMAT"]["TIMESTAMP_TRC"])
+    datachecker.check_integer("DURATION_TRC", LOGGING_OPTIONS["FORMAT"]["DURATION_TRC"])
 
     # check logging color definition
     key_list = [
