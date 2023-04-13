@@ -182,6 +182,9 @@ def run(data_geometry, path_ref):
         None if the termination is successful.
     """
 
+    # get timestamp
+    timestamp = utils_log.get_timer()
+
     # run the code
     try:
         # check the input data
@@ -199,6 +202,8 @@ def run(data_geometry, path_ref):
         return False, None, ex
 
     # end message
+    duration = utils_log.get_duration(timestamp)
+    LOGGER.info("duration: %s" % duration)
     LOGGER.info("successful termination")
 
     return True, data_voxel, None

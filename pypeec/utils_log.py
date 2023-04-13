@@ -61,31 +61,48 @@ def _get_fmt(color, reset):
     return fmt
 
 
-def _get_format_timestamp():
+def _get_compute_timestamp():
     """
-    Format a timestamp into a string.
+    Get the current time.
     """
 
     timestamp = time.time()
     timestamp = datetime.datetime.fromtimestamp(timestamp)
-    timestamp = timestamp.strftime(FORMAT["TIMESTAMP_FMT"])
-    timestamp = timestamp[0:len(timestamp)-FORMAT["TIMESTAMP_TRC"]]
-
 
     return timestamp
 
 
-def _get_format_duration(timestamp):
+def _get_compute_duration(timestamp):
     """
-    Compute the elapsed time and format the duration into a string.
+    Compute the elapsed time.
     """
 
     duration = time.time()-timestamp
     duration = datetime.datetime.utcfromtimestamp(duration)
-    duration = duration.strftime(FORMAT["DURATION_FMT"])
-    duration = duration[0:len(duration)-FORMAT["DURATION_TRC"]]
 
     return duration
+
+
+def _get_format_timestamp(timestamp):
+    """
+    Format a timestamp into a string.
+    """
+
+    timestamp_str = timestamp.strftime(FORMAT["TIMESTAMP_FMT"])
+    timestamp_str = timestamp_str[0:len(timestamp_str)-FORMAT["TIMESTAMP_TRC"]]
+
+    return timestamp_str
+
+
+def _get_format_duration(duration):
+    """
+    Format the duration into a string.
+    """
+
+    duration_str = duration.strftime(FORMAT["DURATION_FMT"])
+    duration_str = duration_str[0:len(duration_str)-FORMAT["DURATION_TRC"]]
+
+    return duration_str
 
 
 class _DeltaTimeFormatter(logging.Formatter):
@@ -125,8 +142,10 @@ class _DeltaTimeFormatter(logging.Formatter):
         msg = record.msg
 
         # add the elapsed time to the log record
-        record.timestamp = _get_format_timestamp()
-        record.duration = _get_format_duration(GLOBAL_TIMESTAMP)
+        timestamp = _get_compute_timestamp()
+        duration = _get_compute_duration(GLOBAL_TIMESTAMP)
+        record.timestamp = _get_format_timestamp(timestamp)
+        record.duration = _get_format_duration(duration)
 
         # add the process and thread id to the log record
         record.process_id = os.getpid()
@@ -190,7 +209,8 @@ class BlockTimer:
         CURRENT_LEVEL -= 1
 
         # stop the timer and display
-        duration = _get_format_duration(self.timestamp)
+        duration = _get_compute_duration(self.timestamp)
+        duration = _get_format_duration(duration)
         self.logger.info(self.name + " : exit : " + duration)
 
 
@@ -222,9 +242,25 @@ def reset_timer():
     GLOBAL_TIMESTAMP = time.time()
 
 
+def get_timer():
+    """
+    Get a timestamp with the current time.
+    """
+
+    timestamp = time.time()
+
+    return timestamp
 
 
+def get_duration(timestamp):
+    """
+    Get the elapsed time with respect to a timestamp.
+    """
 
+    duration = _get_compute_duration(timestamp)
+    duration = _get_format_duration(duration)
+
+    return duration
 
 
 def get_logger(name):

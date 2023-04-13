@@ -314,6 +314,9 @@ def run(data_voxel, data_problem, data_tolerance):
         None if the termination is successful.
     """
 
+    # get timestamp
+    timestamp = utils_log.get_timer()
+
     # run the solver
     try:
         # check the problem and tolerance data
@@ -348,6 +351,8 @@ def run(data_voxel, data_problem, data_tolerance):
         return False, None, ex
 
     # end message
+    duration = utils_log.get_duration(timestamp)
+    LOGGER.info("duration: %s" % duration)
     LOGGER.info("successful termination")
 
     return True, data_solution, None
