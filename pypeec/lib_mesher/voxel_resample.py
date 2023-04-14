@@ -168,7 +168,3 @@ def get_remesh(n, d, domain_def, resampling_factor):
     (n, d) = _get_update_size(n, d, resampling_factor)
 
     return n, d, domain_def
-
-
-
-
