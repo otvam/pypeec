@@ -20,7 +20,10 @@
         "sec_coil": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/sec_coil.stl"]}
         "sec_src": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/sec_src.stl"]}
         "sec_sink": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/sec_sink.stl"]}
-"resampling_factor": [1, 1, 1]
+"resampling":
+    "use_reduce": false
+    "use_resample": false
+    "resampling_factor": [1, 1, 1]
 "domain_conflict":
     - {"domain_resolve": "pri_coil", "domain_keep": "pri_src"}
     - {"domain_resolve": "pri_coil", "domain_keep": "pri_sink"}

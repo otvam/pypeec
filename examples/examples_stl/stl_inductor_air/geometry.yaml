@@ -17,7 +17,10 @@
         "coil": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/coil.stl"]}
         "src": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/src.stl"]}
         "sink": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/sink.stl"]}
-"resampling_factor": [1, 1, 1]
+"resampling":
+    "use_reduce": false
+    "use_resample": false
+    "resampling_factor": [1, 1, 1]
 "domain_conflict":
     - {"domain_resolve": "coil", "domain_keep": "src"}
     - {"domain_resolve": "coil", "domain_keep": "sink"}

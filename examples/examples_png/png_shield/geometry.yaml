@@ -20,7 +20,10 @@
         - {"n_layer": 1, "filename_list": ["png/coil.png"]}
         - {"n_layer": 6, "filename_list": ["png/air.png"]}
         - {"n_layer": 1, "filename_list": ["png/shield.png"]}
-"resampling_factor": [1, 1, 1]
+"resampling":
+    "use_reduce": false
+    "use_resample": false
+    "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":
     "cond": {"domain_list": ["coil", "src", "sink"], "connected": true}

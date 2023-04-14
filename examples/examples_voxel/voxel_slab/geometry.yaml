@@ -7,14 +7,17 @@
 
 "mesh_type": "voxel"
 "data_voxelize":
-    "n": [1, 1, 7]
+    "n": [3, 3, 7]
     "d": [10.0e-3, 10.0e-3, 10.0e-3]
     "c": [0.0, 0.0, 0.0]
     "domain_def":
-        "cond": [1, 2, 3, 4, 5]
-        "src": [0]
-        "sink": [6]
-"resampling_factor": [2, 2, 1]
+        "cond": [13, 22, 31, 40, 49]
+        "src": [4]
+        "sink": [58]
+"resampling":
+    "use_reduce": true
+    "use_resample": true
+    "resampling_factor": [2, 2, 1]
 "domain_conflict": []
 "domain_connection":
     "connect": {"domain_list": ["cond", "src", "sink"], "connected": true}

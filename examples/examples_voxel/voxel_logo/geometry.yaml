@@ -14,7 +14,10 @@
         "coil": [9, 0, 1, 2, 11, 20, 23, 26, 25, 24, 15, 6, 7]
         "src": [18]
         "sink": [8]
-"resampling_factor": [1, 1, 1]
+"resampling":
+    "use_reduce": false
+    "use_resample": false
+    "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":
     "connect": {"domain_list": ["coil", "src", "sink"], "connected": true}

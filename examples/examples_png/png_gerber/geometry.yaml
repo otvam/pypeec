@@ -20,7 +20,10 @@
         - {"n_layer": 2, "filename_list": ["png/gerbv_front.png", "png/gerbv_terminal.png"]}
         - {"n_layer": 23, "filename_list": ["png/gerbv_via.png"]}
         - {"n_layer": 2, "filename_list": ["png/gerbv_back.png"]}
-"resampling_factor": [1, 1, 1]
+"resampling":
+    "use_reduce": false
+    "use_resample": false
+    "resampling_factor": [1, 1, 1]
 "domain_conflict":
     - { "domain_resolve": "coil", "domain_keep": "src" }
     - { "domain_resolve": "coil", "domain_keep": "sink" }

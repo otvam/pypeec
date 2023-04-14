@@ -20,7 +20,10 @@
         - {"n_layer": 1, "filename_list": ["png/top.png"]}
         - {"n_layer": 2, "filename_list": ["png/insulation.png"]}
         - {"n_layer": 1, "filename_list": ["png/bottom.png"]}
-"resampling_factor": [1, 1, 1]
+"resampling":
+    "use_reduce": false
+    "use_resample": false
+    "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":
     "yop": {"domain_list": ["src_top", "copper", "sink"], "connected": true}
