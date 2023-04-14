@@ -7,7 +7,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
+from pypeec import utils_log
 from pypeec import config
+
+# get a logger
+LOGGER = utils_log.get_logger("SAMPLE")
 
 # get config
 NP_TYPES = config.NP_TYPES
@@ -250,6 +254,9 @@ def get_remesh(n, d, domain_def, resampling):
     Remesh of a voxel structure (remove unused voxels and resampling).
     """
 
+    # display number of voxels
+    LOGGER.debug("voxel: original number = %d" % np.prod(n))
+
     # extract data
     use_reduce = resampling["use_reduce"]
     use_resample = resampling["use_resample"]
@@ -262,5 +269,8 @@ def get_remesh(n, d, domain_def, resampling):
     # resampling of the voxel structure
     if use_resample:
         (n, d, domain_def) = _get_resample(n, d, domain_def, resampling_factor)
+
+    # display number of voxels
+    LOGGER.debug("voxel: final number = %d" % np.prod(n))
 
     return n, d, domain_def
