@@ -57,7 +57,7 @@ def _get_idx_resample_linear(n, resampling_factor, idx_nr_x, idx_nr_y, idx_nr_z)
     # extract the voxel data
     (nx, ny, nz) = n
 
-    # extract the resampling factors
+    # extract the resampling resampling_factors
     (rx, ry, rz) = resampling_factor
 
     # convert tensor indices into linear indices
@@ -89,13 +89,13 @@ def _get_original_grid(n):
     return idx_n
 
 
-def _get_resampled_voxel(resampling_factor):
+def _get_resampled_grid(resampling_factor):
     """
     Get the indices of the different sub-voxels composing a single original voxel (after resampling).
     The first resampled sub-voxel has the index zero.
     """
 
-    # extract the resampling factors
+    # extract the resampling resampling_factors
     (rx, ry, rz) = resampling_factor
 
     # get the number of resampled voxels per original voxel
@@ -138,7 +138,7 @@ def _get_update_size(n, d, resampling_factor):
     (nx, ny, nz) = n
     (dx, dy, dz) = d
 
-    # extract the resampling factors
+    # extract the resampling resampling_factors
     (rx, ry, rz) = resampling_factor
 
     # update the number of voxels
@@ -150,21 +150,42 @@ def _get_update_size(n, d, resampling_factor):
     return n, d
 
 
-def get_remesh(n, d, domain_def, resampling_factor):
+def _get_resample(n, d, domain_def, resampling_factor):
     """
     Resampling of a voxel structure (increases the number of voxels).
     """
+
+    # check is resampling is required
+    if resampling_factor is None:
+        return n, d, domain_def
 
     # get the original grid indices
     idx_n = _get_original_grid(n)
 
     # get the indices of a single resampled voxel
-    idx_r = _get_resampled_voxel(resampling_factor)
+    idx_r = _get_resampled_grid(resampling_factor)
 
     # update the indices of the problem
     domain_def = _get_update_indices(n, resampling_factor, idx_n, idx_r, domain_def)
 
     # update the voxel number and size
     (n, d) = _get_update_size(n, d, resampling_factor)
+
+    return n, d, domain_def
+
+
+def get_remesh(n, d, domain_def, resampling):
+    """
+    Remesh of a voxel structure (resampling and remove unused voxels).
+    """
+
+    # extract data
+    use_reduce = resampling["use_reduce"]
+    use_resample = resampling["use_resample"]
+    resampling_factor = resampling["resampling_factor"]
+
+    # resampling of the voxel structure
+    if use_resample:
+        (n, d, domain_def) = _get_resample(n, d, domain_def, resampling_factor)
 
     return n, d, domain_def

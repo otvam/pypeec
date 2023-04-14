@@ -184,6 +184,25 @@ def _check_data_voxelize_voxel(data_voxelize):
     return domain_name
 
 
+def _check_resampling(resampling):
+    """
+    Check the validity of resampling parameters.
+    """
+
+    # check type
+    key_list = [
+        "use_reduce",
+        "use_resample",
+        "resampling_factor",
+    ]
+    datachecker.check_dict("resampling", resampling, key_list=key_list)
+
+    # check data
+    datachecker.check_boolean("use_reduce", resampling["use_reduce"])
+    datachecker.check_boolean("use_resample", resampling["use_resample"])
+    datachecker.check_integer_array("resampling_factor", resampling["resampling_factor"], size=3, is_positive=True, can_be_zero=False)
+
+
 def _check_domain_conflict(domain_name, domain_conflict):
     """
     Check the validity of the rules to solve conflict between domains (STL mesher).
@@ -248,7 +267,7 @@ def check_data_geometry(data_geometry):
     key_list = [
         "mesh_type",
         "data_voxelize",
-        "resampling_factor",
+        "resampling",
         "domain_conflict",
         "domain_connection",
     ]
@@ -257,7 +276,7 @@ def check_data_geometry(data_geometry):
     # extract field
     mesh_type = data_geometry["mesh_type"]
     data_voxelize = data_geometry["data_voxelize"]
-    resampling_factor = data_geometry["resampling_factor"]
+    resampling = data_geometry["resampling"]
     domain_conflict = data_geometry["domain_conflict"]
     domain_connection = data_geometry["domain_connection"]
 
@@ -275,7 +294,7 @@ def check_data_geometry(data_geometry):
         raise ValueError("invalid mesh type")
 
     # check the resampling data
-    datachecker.check_integer_array("resampling_factor", resampling_factor, size=3, is_positive=True, can_be_zero=False)
+    _check_resampling(resampling)
 
     # check the conflict data
     _check_domain_conflict(domain_name, domain_conflict)

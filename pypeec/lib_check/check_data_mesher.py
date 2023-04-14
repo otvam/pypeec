@@ -214,7 +214,7 @@ def get_data_mesher(data_geometry, path_ref):
     # extract field
     mesh_type = data_geometry["mesh_type"]
     data_voxelize = data_geometry["data_voxelize"]
-    resampling_factor = data_geometry["resampling_factor"]
+    resampling = data_geometry["resampling"]
     domain_conflict = data_geometry["domain_conflict"]
     domain_connection = data_geometry["domain_connection"]
 
@@ -232,7 +232,7 @@ def get_data_mesher(data_geometry, path_ref):
     data_mesher = {
         "mesh_type": mesh_type,
         "data_voxelize": data_voxelize,
-        "resampling_factor": resampling_factor,
+        "resampling": resampling,
         "domain_conflict": domain_conflict,
         "domain_connection": domain_connection,
     }
