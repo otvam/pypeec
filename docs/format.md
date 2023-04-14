@@ -19,10 +19,13 @@ This file contains the definition of the voxel structure.
 "data_voxelize": {}
 
 # resampling of the voxel structure
-#   - array with resampling factors (x, y, and z directions)
-#   - the array [1, 1, 1] means that no resampling is performed
-#   - the array [2, 2, 2] means that the voxel are divided in two for all directions
-"resampling_factor": [2, 2, 1]
+#   - use_reduce: reduce (or not) the voxel structure by removing unused voxels
+#   - use_resample: resample (or not) the voxel structure by subdividing voxels
+#   - resampling_factor: array with resampling factors (x, y, and z directions)
+"resampling":
+    "use_reduce": true
+    "use_resample": true
+    "resampling_factor": [2, 2, 1]
 
 # definition of the conflict resolution between domains
 #   - during the voxelization, the same voxel can be assigned to several domains
