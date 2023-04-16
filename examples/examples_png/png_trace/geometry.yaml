@@ -25,5 +25,5 @@
     "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":
-    "yop": {"domain_list": ["src_top", "copper", "sink"], "connected": true}
+    "top": {"domain_list": ["src_top", "copper", "sink"], "connected": true}
     "bottom": {"domain_list": ["src_bottom", "copper", "sink"], "connected": true}

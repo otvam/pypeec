@@ -29,5 +29,5 @@ FOLDER_CONFIG = "config"
 #   examples_png/png_gerber
 #   examples_png/png_wire
 #   examples_png/png_trace
-FOLDER_NAME = "examples_png"
-EXAMPLE_NAME = "png_wire"
+FOLDER_NAME = "examples_voxel"
+EXAMPLE_NAME = "voxel_core"
