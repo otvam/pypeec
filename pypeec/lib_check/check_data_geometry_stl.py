@@ -8,7 +8,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_check import datachecker
 
 
-def _check_domain_stl(domain_stl):
+def _check_domain_stl(domain_stl, pathref):
     """
     Check the validity of the domain definition (STL mesher).
     """
@@ -16,15 +16,33 @@ def _check_domain_stl(domain_stl):
     # check type
     datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=dict)
 
+    # init new domain description
+    domain_stl_path = {}
+
     # check content
-    for domain_stl_tmp in domain_stl.values():
+    for tag, domain_stl_tmp in domain_stl.items():
         # check type
         key_list = ["offset", "filename_list"]
         datachecker.check_dict("domain_stl", domain_stl_tmp, key_list=key_list)
 
+        # get the data
+        offset = domain_stl_tmp["offset"]
+        filename_list = domain_stl_tmp["filename_list"]
+
         # check data
-        datachecker.check_float_array("domain_color", domain_stl_tmp["offset"], size=3)
-        datachecker.check_list("filename_list", domain_stl_tmp["filename_list"], can_be_empty=False, sub_type=str)
+        datachecker.check_float_array("domain_color", offset, size=3)
+        datachecker.check_list("filename_list", filename_list, can_be_empty=False, sub_type=str)
+
+        # check files
+        filename_list_path = []
+        for filename in filename_list:
+            filename = datachecker.check_filename("filename_list", pathref, filename)
+            filename_list_path.append(filename)
+
+        # add the new item
+        domain_stl_path[tag] = {"offset": offset, "filename_list": filename_list_path}
+
+    return domain_stl_path
 
 
 def _check_voxel_structure(c, xyz_min, xyz_max):
@@ -40,7 +58,7 @@ def _check_voxel_structure(c, xyz_min, xyz_max):
         datachecker.check_float_array("xyz_max", xyz_max, size=3)
 
 
-def check_data_voxelize(data_voxelize):
+def check_data_voxelize(data_voxelize, pathref):
     """
     Check the data used for voxelization (STL mesher).
     """
@@ -73,9 +91,20 @@ def check_data_voxelize(data_voxelize):
     _check_voxel_structure(c, xyz_min, xyz_max)
 
     # check the stl file
-    _check_domain_stl(domain_stl)
+    domain_stl = _check_domain_stl(domain_stl, pathref)
 
     # get the domain name
     domain_name = domain_stl.keys()
 
-    return domain_name
+    # assemble data
+    data_voxelize = {
+        "d": d,
+        "c": c,
+        "n": n,
+        "sampling": sampling,
+        "xyz_min": xyz_min,
+        "xyz_max": xyz_max,
+        "domain_stl": domain_stl,
+    }
+
+    return domain_name, data_voxelize

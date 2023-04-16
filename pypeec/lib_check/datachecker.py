@@ -5,6 +5,7 @@ Module for checking the data type and content.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import os.path
 import numpy as np
 from pypeec.error import CheckError
 
@@ -156,16 +157,30 @@ def check_choice(name, data, choice_list):
         raise CheckError("%s: invalid value: %s" % (name, data))
 
 
-def check_filename(name, filename):
+def check_filename(name, pathref, filename):
     """
     Check that a filename is existing.
+    Return the full path of the file.
     """
 
+    # check the type
+    if not isinstance(pathref, str):
+        raise CheckError("%s: path name should be a string" % name)
+    if not isinstance(filename, str):
+        raise CheckError("%s: file name should be a string" % name)
+
+    # if the path need to be constructed
+    if (pathref is not None) and (not os.path.isabs(filename)):
+        filename = os.path.join(pathref, filename)
+
+    # check that the file exist
     try:
         fid = open(filename, "rb")
         fid.close()
     except FileNotFoundError:
         raise CheckError("%s: file does not exist: %s" % (name, filename))
+
+    return filename
 
 
 def check_assert(name, cond, msg):

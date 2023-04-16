@@ -85,7 +85,7 @@ def _check_domain_connection(domain_name, domain_connection):
             datachecker.check_choice("source_type", tag, domain_name)
 
 
-def check_data_geometry(data_geometry):
+def check_data_geometry(data_geometry, pathref):
     """
     Check the mesher data type and extract the data.
     """
@@ -112,9 +112,9 @@ def check_data_geometry(data_geometry):
 
     # check the mesher
     if mesh_type == "png":
-        domain_name = check_data_geometry_png.check_data_voxelize(data_voxelize)
+        (domain_name, data_voxelize) = check_data_geometry_png.check_data_voxelize(data_voxelize, pathref)
     elif mesh_type == "stl":
-        domain_name = check_data_geometry_stl.check_data_voxelize(data_voxelize)
+        (domain_name, data_voxelize) = check_data_geometry_stl.check_data_voxelize(data_voxelize, pathref)
     elif mesh_type == "voxel":
         domain_name = check_data_geometry_voxel.check_data_voxelize(data_voxelize)
     else:
@@ -128,3 +128,14 @@ def check_data_geometry(data_geometry):
 
     # check the connection data
     _check_domain_connection(domain_name, domain_connection)
+
+    # assemble the results
+    data_mesher = {
+        "mesh_type": mesh_type,
+        "data_voxelize": data_voxelize,
+        "resampling": resampling,
+        "domain_conflict": domain_conflict,
+        "domain_connection": domain_connection,
+    }
+
+    return data_mesher

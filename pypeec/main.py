@@ -49,11 +49,11 @@ def run_mesher(file_geometry, file_voxel):
         data_geometry = utils_io.load_config(file_geometry)
 
         # get the path for relative file loading
-        path_ref = os.path.abspath(file_geometry)
-        path_ref = os.path.dirname(path_ref)
+        pathref = os.path.abspath(file_geometry)
+        pathref = os.path.dirname(pathref)
 
         # call the mesher
-        (status, data_voxel, ex) = mesher.run(data_geometry, path_ref)
+        (status, data_voxel, ex) = mesher.run(data_geometry, pathref)
 
         # save results
         if status:
