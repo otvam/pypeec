@@ -127,34 +127,20 @@ This file contains the definition of the voxel structure.
 
 # definition of the voxel structure
 "data_voxelize":
-    # define the number of voxels
-    #   - sampling: sampling type ("number" for defining the voxel numbers)
-    #   - n: array with the number of voxels (x, y, and z directions)
-    #   - d: null (not used)
-    "sampling": "number"
-    "n": [4, 4, 3]
-    "d": null
-
-    # define the voxel dimensions
-    #   - sampling: sampling type ("dimension" for defining the voxel dimensions)
-    #   - d: array with the voxel dimensions (x, y, and z directions)
-    #   - n: null (not used)
-    "sampling": "dimension"
+    # array with the voxel dimensions (x, y, and z directions)
     "d": [10.0e-3, 10.0e-3, 10.0e-3]
-    "n": null
 
     # array with the coordinates of the voxel structure center (x, y, and z directions)
-    "c": [0.0, 0.0, 0.0]
     # alternatively, the coordinates can be set to null and the STL coordinate are kept
-    "c": null
-    
-    # array with the lower corner coordinates of the voxel structure (x, y, and z directions)
-    "xyz_min": [-20e-3, -20e-3, -20e-3]
-    # alternatively, the coordinates can be set to null and the STL lower corner coordinate are kept
-    "xyz_min": null
-
+    "c": [0.0, 0.0, 0.0]
+        
+    # array with the corner coordinates of the voxel structure (x, y, and z directions)
+    # alternatively, the dictionary can be set to null and the STL coordinates are kept
+    "bounds":
+        "xyz_min": [-20e-3, -20e-3, -20e-3] # lower corner coordinates
+        "xyz_max": [+20e-3, +20e-3, +20e-3] # upper corner coordinates
+        
     # array with the upper corner coordinates of the voxel structure (x, y, and z directions)
-    "xyz_max": [+20e-3, +20e-3, +20e-3]
     # alternatively, the coordinates can be set to null and the STL upper corner coordinate are kept
     "xyz_max": null
     

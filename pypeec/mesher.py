@@ -42,6 +42,9 @@ def _run_mesher(data_geometry):
     if mesh_type == "voxel":
         reference = None
         data_voxel = _run_voxel(data_voxelize)
+    elif mesh_type == "shape":
+        reference = None
+        data_voxel = _run_shape(data_voxelize)
     elif mesh_type == "png":
         reference = None
         data_voxel = _run_png(data_voxelize)
@@ -67,6 +70,34 @@ def _run_voxel(data_voxelize):
     # process the indices arrays
     with utils_log.BlockTimer(LOGGER, "mesher_voxel"):
         domain_def = mesher_voxel.get_mesh(n, domain_def)
+
+    # assemble the data
+    data_voxel = {
+        "n": n,
+        "d": d,
+        "c": c,
+        "domain_def": domain_def,
+    }
+
+    return data_voxel
+
+
+def _run_shape(data_voxelize):
+    """
+    Generate a 3D voxel structure from 2D shapes.
+    """
+
+    # extract the data
+    d = data_voxelize["d"]
+    c = data_voxelize["c"]
+    xy_min = data_voxelize["xy_min"]
+    xy_max = data_voxelize["xy_max"]
+    layer_stack = data_voxelize["layer_stack"]
+    geometry_shape = data_voxelize["geometry_shape"]
+
+    # process the shapes
+    with utils_log.BlockTimer(LOGGER, "mesher_shape"):
+        (n, d, c, domain_def, reference) = mesher_shape.get_mesh(d, c, xy_min, xy_max, layer_stack, geometry_shape)
 
     # assemble the data
     data_voxel = {
@@ -112,17 +143,14 @@ def _run_stl(data_voxelize):
     """
 
     # extract the data
-    n = data_voxelize["n"]
     d = data_voxelize["d"]
     c = data_voxelize["c"]
-    sampling = data_voxelize["sampling"]
-    xyz_min = data_voxelize["xyz_min"]
-    xyz_max = data_voxelize["xyz_max"]
+    bounds = data_voxelize["bounds"]
     domain_stl = data_voxelize["domain_stl"]
 
     # voxelize the STL files
     with utils_log.BlockTimer(LOGGER, "mesher_stl"):
-        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(n, d, c, sampling, xyz_min, xyz_max, domain_stl)
+        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(d, c, bounds, domain_stl)
 
     # assemble the data
     data_voxel = {

@@ -9,42 +9,43 @@
 "data_voxelize":
     "d": [0.5, 0.5, 0.5]
     "c": [0.0, 0.0, 0.0]
-    "xy_min": [0, 0]
-    "xy_max": [200, 100]
+    "bounds":
+        "xy_min": [0, 0]
+        "xy_max": [200, 100]
     "layer_stack":
         - { "n_layer": 1, "name": "back"}
         - { "n_layer": 2, "name": "insulation"}
         - { "n_layer": 1, "name": "front"}
     "geometry_shape":
-        - "copper":
-              -
-                  "layer_start": "front"
-                  "layer_stop": "front"
-                  "shape_operation": "add"
-                  "shape_type": "trace"
-                  "shape_data": {"xy": [[10, 10], [90, 90]], "buffer": 10}
-              -
-                  "layer_start": "insulation"
-                  "layer_stop": "front"
-                  "shape_operation": "add"
-                  "shape_type": "pad"
-                  "shape_data": {"xy": [[10, 10], [90, 90]], "buffer": 10}
-              -
-                  "layer_start": "insulation"
-                  "layer_stop": "front"
-                  "shape_operation": "sub"
-                  "shape_type": "pad"
-                  "shape_data": {"xy": [[10, 10], [90, 90]], "buffer": 5}
-        - "terminal":
-              -
-                  "layer_start": "back"
-                  "layer_stop": "back"
-                  "shape_operation": "add"
-                  "shape_type": "pad"
-                  "shape_data": {"xy": [[10, 10], [90, 90]], "buffer": 10}
+        "copper":
+            -
+                "layer_start": "front"
+                "layer_stop": "front"
+                "shape_operation": "add"
+                "shape_type": "trace"
+                "shape_data": {"xy": [[10, 10], [90, 90]], "buffer": 10}
+            -
+                "layer_start": "insulation"
+                "layer_stop": "front"
+                "shape_operation": "add"
+                "shape_type": "pad"
+                "shape_data": {"xy": [[10, 10], [90, 90]], "buffer": 10}
+            -
+                "layer_start": "insulation"
+                "layer_stop": "front"
+                "shape_operation": "sub"
+                "shape_type": "pad"
+                "shape_data": {"xy": [[10, 10], [90, 90]], "buffer": 5}
+        "terminal":
+            -
+                "layer_start": "back"
+                "layer_stop": "back"
+                "shape_operation": "add"
+                "shape_type": "pad"
+                "shape_data": {"xy": [[10, 10], [90, 90]], "buffer": 10}
 "resampling":
     "use_reduce": false
     "use_resample": false
     "resampling_factor": [1, 1, 1]
 "domain_conflict": []
-"domain_connection": []
+"domain_connection": {}

@@ -35,17 +35,19 @@ def _check_domain_stl(domain_stl):
             datachecker.check_filename("filename_list", filename)
 
 
-def _check_voxel_structure(c, xyz_min, xyz_max):
+def _check_voxel_structure(d, c, bounds):
     """
     Check the voxel structure parameters.
     """
 
+    datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
     if c is not None:
         datachecker.check_float_array("c", c, size=3)
-    if xyz_min is not None:
-        datachecker.check_float_array("xyz_min", xyz_min, size=3)
-    if xyz_max is not None:
-        datachecker.check_float_array("xyz_max", xyz_max, size=3)
+    if bounds is not None:
+        key_list = ["xyz_min", "xyz_max"]
+        datachecker.check_dict("bounds", bounds, key_list=key_list)
+        datachecker.check_float_array("xyz_min", bounds["xyz_min"], size=3)
+        datachecker.check_float_array("xyz_max", bounds["xyz_max"], size=3)
 
 
 def check_data_voxelize(data_voxelize):
@@ -54,31 +56,17 @@ def check_data_voxelize(data_voxelize):
     """
 
     # check type
-    key_list = ["n", "d", "c", "sampling", "xyz_min", "xyz_max", "domain_stl"]
+    key_list = ["d", "c", "bounds", "domain_stl"]
     datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
-    n = data_voxelize["n"]
     d = data_voxelize["d"]
     c = data_voxelize["c"]
-    sampling = data_voxelize["sampling"]
-    xyz_min = data_voxelize["xyz_min"]
-    xyz_max = data_voxelize["xyz_max"]
+    bounds = data_voxelize["bounds"]
     domain_stl = data_voxelize["domain_stl"]
 
-    # check data
-    datachecker.check_choice("sampling", sampling, ["number", "dimension"])
-    if sampling == "number":
-        datachecker.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
-        datachecker.check_assert("d", d is None, "d should be None")
-    elif sampling == "dimension":
-        datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
-        datachecker.check_assert("n", n is None, "n should be None")
-    else:
-        raise ValueError("inconsistent definition of the voxel number/size")
-
     # check voxel structure parameters
-    _check_voxel_structure(c, xyz_min, xyz_max)
+    _check_voxel_structure(d, c, bounds)
 
     # check the stl file
     _check_domain_stl(domain_stl)

@@ -8,6 +8,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_check import datachecker
 from pypeec.lib_check import check_data_geometry_png
 from pypeec.lib_check import check_data_geometry_stl
+from pypeec.lib_check import check_data_geometry_shape
 from pypeec.lib_check import check_data_geometry_voxel
 
 
@@ -108,13 +109,15 @@ def check_data_geometry(data_geometry):
     domain_connection = data_geometry["domain_connection"]
 
     # check type
-    datachecker.check_choice("mesh_type", mesh_type, ["stl", "png", "voxel"])
+    datachecker.check_choice("mesh_type", mesh_type, ["stl", "png", "shape", "voxel"])
 
     # check the mesher
     if mesh_type == "png":
         domain_name = check_data_geometry_png.check_data_voxelize(data_voxelize)
     elif mesh_type == "stl":
         domain_name = check_data_geometry_stl.check_data_voxelize(data_voxelize)
+    elif mesh_type == "shape":
+        domain_name = check_data_geometry_shape.check_data_voxelize(data_voxelize)
     elif mesh_type == "voxel":
         domain_name = check_data_geometry_voxel.check_data_voxelize(data_voxelize)
     else:

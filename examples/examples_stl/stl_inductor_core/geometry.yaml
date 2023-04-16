@@ -7,12 +7,9 @@
 
 "mesh_type": "stl"
 "data_voxelize":
-    "sampling": "number"
-    "n": [72, 70, 32]
-    "d": null
+    "d": [89.0e-6, 85.5e-6, 62.5e-6]
     "c": null
-    "xyz_min": null
-    "xyz_max": null
+    "bounds": null
     "domain_stl":
         "core": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/core.stl"]}
         "coil": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/coil.stl"]}

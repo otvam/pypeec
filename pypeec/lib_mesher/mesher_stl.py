@@ -192,7 +192,7 @@ def _get_mesh_stl(domain_stl):
     return mesh_stl, xyz_min, xyz_max
 
 
-def get_mesh(n, d, c, sampling, xyz_min, xyz_max, domain_stl):
+def get_mesh(d, c, bounds, domain_stl):
     """
     Transform STL files into a 3D voxel structure.
     Each STL file corresponds to a domain of the 3D voxel structure.
@@ -203,24 +203,25 @@ def get_mesh(n, d, c, sampling, xyz_min, xyz_max, domain_stl):
     (mesh_stl, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl)
 
     # if provided, the user specified bounds are used, otherwise the STL bounds
-    if xyz_min is None:
+    if bounds is None:
         xyz_min = xyz_min_stl
-    else:
-        xyz_min = np.array(xyz_min, NP_TYPES.FLOAT)
-    if xyz_max is None:
         xyz_max = xyz_max_stl
     else:
-        xyz_max = np.array(xyz_max, NP_TYPES.FLOAT)
+        xyz_min = np.array(bounds["xyz_min"], NP_TYPES.FLOAT)
+        xyz_max = np.array(bounds["xyz_max"], NP_TYPES.FLOAT)
+
+    # mesh size
+    xyz_diff = xyz_max-xyz_min
+
+    # disp mesh size
+    LOGGER.debug("voxel: min = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_min))
+    LOGGER.debug("voxel: max = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_max))
+    LOGGER.debug("voxel: diff = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_diff))
 
     # extract the number of voxels
-    if sampling == "number":
-        n = np.array(n, dtype=NP_TYPES.INT)
-    elif sampling == "dimension":
-        d = np.array(d, dtype=NP_TYPES.FLOAT)
-        n = np.rint((xyz_max-xyz_min)/d)
-        n = n.astype(NP_TYPES.INT)
-    else:
-        raise ValueError("inconsistent definition of the voxel number/size")
+    d = np.array(d, dtype=NP_TYPES.FLOAT)
+    n = np.rint((xyz_max-xyz_min)/d)
+    n = n.astype(NP_TYPES.INT)
 
     # get the voxel size
     d = (xyz_max-xyz_min)/n
