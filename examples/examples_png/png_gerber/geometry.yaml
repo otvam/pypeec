@@ -16,9 +16,9 @@
         "sink": [[0, 0, 255, 255]]
         "edge": [[0, 0, 0, 255]]
     "layer_stack":
-        - {"n_layer": 2, "filename_list": ["png/gerbv_front.png", "png/gerbv_terminal.png"]}
-        - {"n_layer": 23, "filename_list": ["png/gerbv_via.png"]}
         - {"n_layer": 2, "filename_list": ["png/gerbv_back.png"]}
+        - {"n_layer": 23, "filename_list": ["png/gerbv_via.png"]}
+        - {"n_layer": 2, "filename_list": ["png/gerbv_front.png", "png/gerbv_terminal.png"]}
 "resampling":
     "use_reduce": false
     "use_resample": false
