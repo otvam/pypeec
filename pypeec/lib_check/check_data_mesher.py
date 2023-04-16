@@ -84,34 +84,6 @@ def _get_layer_stack(layer_stack, path_ref):
     return layer_stack_path
 
 
-def _get_domain_def(n, domain_def):
-    """
-    Check the domain definition (mapping between domain names and indices).
-    """
-
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
-
-    # init new domain indices
-    domain_def_array = {}
-
-    # check data
-    idx_all = np.array([], dtype=NP_TYPES.INT)
-    for tag, idx in domain_def.items():
-        # parse the array
-        idx_tmp = np.array(idx, dtype=NP_TYPES.INT)
-        idx_all = np.append(idx_all, idx_tmp)
-
-        # add the new item
-        domain_def_array[tag] = idx_tmp
-
-    # check the indices
-    datachecker.check_index_array("domain_def", idx_all, bnd=nv, can_be_empty=False)
-
-    return domain_def_array
-
-
 def _check_data_voxelize_png(data_voxelize, path_ref):
     """
     Check the data used for voxelization (PNG mesher).
@@ -144,10 +116,6 @@ def _check_data_voxelize_stl(data_voxelize, path_ref):
     Check the data used for voxelization (STL mesher).
     """
 
-    # check type
-    key_list = ["n", "d", "c", "sampling", "xyz_min", "xyz_max", "domain_stl"]
-    datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
-
     # extract field
     n = data_voxelize["n"]
     d = data_voxelize["d"]
@@ -174,36 +142,6 @@ def _check_data_voxelize_stl(data_voxelize, path_ref):
     return data_voxelize
 
 
-def _check_data_voxelize_voxel(data_voxelize):
-    """
-    Check the voxel structure (number, placement, and dimension).
-    Check the mapping between domain names and indices.
-    """
-
-    # check type
-    key_list = ["n", "d", "c", "domain_def"]
-    datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
-
-    # extract field
-    n = data_voxelize["n"]
-    d = data_voxelize["d"]
-    c = data_voxelize["c"]
-    domain_def = data_voxelize["domain_def"]
-
-    # update data
-    domain_def = _get_domain_def(n, domain_def)
-
-    # assemble data
-    data_voxelize = {
-        "d": d,
-        "c": c,
-        "n": n,
-        "domain_def": domain_def,
-    }
-
-    return data_voxelize
-
-
 def get_data_mesher(data_geometry, path_ref):
     """
     Check the mesher data type and extract the data.
@@ -222,7 +160,7 @@ def get_data_mesher(data_geometry, path_ref):
     elif mesh_type == "stl":
         data_voxelize = _check_data_voxelize_stl(data_voxelize, path_ref)
     elif mesh_type == "voxel":
-        data_voxelize = _check_data_voxelize_voxel(data_voxelize)
+        pass
     else:
         raise ValueError("invalid mesh type")
 

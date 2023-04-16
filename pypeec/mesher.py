@@ -14,8 +14,9 @@ The mesher is implemented with PyVista.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-from pypeec.lib_mesher import png_mesher
-from pypeec.lib_mesher import stl_mesher
+from pypeec.lib_mesher import mesher_voxel
+from pypeec.lib_mesher import mesher_png
+from pypeec.lib_mesher import mesher_stl
 from pypeec.lib_mesher import voxel_conflict
 from pypeec.lib_mesher import voxel_resample
 from pypeec.lib_mesher import voxel_connection
@@ -41,7 +42,7 @@ def _run_mesher(data_mesher):
     # voxelize the geometry
     if mesh_type == "voxel":
         reference = None
-        data_voxel = data_voxelize
+        data_voxel = _run_voxel(data_voxelize)
     elif mesh_type == "png":
         reference = None
         data_voxel = _run_png(data_voxelize)
@@ -51,6 +52,32 @@ def _run_mesher(data_mesher):
         raise CheckError("invalid mesh type")
 
     return reference, data_voxel
+
+
+def _run_voxel(data_voxelize):
+    """
+    Generate a 3D voxel structure from indices.
+    """
+
+    # extract the data
+    n = data_voxelize["n"]
+    d = data_voxelize["d"]
+    c = data_voxelize["c"]
+    domain_def = data_voxelize["domain_def"]
+
+    # process the indices arrays
+    with utils_log.BlockTimer(LOGGER, "mesher_voxel"):
+        domain_def = mesher_voxel.get_mesh(n, domain_def)
+
+    # assemble the data
+    data_voxel = {
+        "n": n,
+        "d": d,
+        "c": c,
+        "domain_def": domain_def,
+    }
+
+    return data_voxel
 
 
 def _run_png(data_voxelize):
@@ -66,8 +93,8 @@ def _run_png(data_voxelize):
     layer_stack = data_voxelize["layer_stack"]
 
     # voxelize the PNG files
-    with utils_log.BlockTimer(LOGGER, "png_mesher"):
-        (n, domain_def) = png_mesher.get_mesh(size, domain_color, layer_stack)
+    with utils_log.BlockTimer(LOGGER, "mesher_png"):
+        (n, domain_def) = mesher_png.get_mesh(size, domain_color, layer_stack)
 
     # assemble the data
     data_voxel = {
@@ -95,8 +122,8 @@ def _run_stl(data_voxelize):
     domain_stl = data_voxelize["domain_stl"]
 
     # voxelize the STL files
-    with utils_log.BlockTimer(LOGGER, "stl_mesher"):
-        (n, d, c, domain_def, reference) = stl_mesher.get_mesh(n, d, c, sampling, xyz_min, xyz_max, domain_stl)
+    with utils_log.BlockTimer(LOGGER, "mesher_stl"):
+        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(n, d, c, sampling, xyz_min, xyz_max, domain_stl)
 
     # assemble the data
     data_voxel = {
