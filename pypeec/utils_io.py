@@ -15,6 +15,77 @@ import yaml
 from pypeec.error import FileError
 
 
+class YamlLoader(yaml.Loader):
+    """
+    This Python class offers extension to the YAML format:
+        - include YAML file in YAML file
+        - include relative filesystem paths
+    """
+
+    def __init__(self, stream):
+        """
+        Constructor of the Loader class.
+        """
+
+        # get the path of the YAML file for relative paths
+        self.path_root = os.path.abspath(stream.name)
+        self.path_root = os.path.dirname(self.path_root)
+
+        # call the constructor of the parent
+        super().__init__(stream)
+
+        # handling of inclusion inside YAML files
+        def fct_handle_include(self, node):
+            res = YamlLoader.__yaml_handling(self, node, self.__extract_yaml)
+            return res
+
+        # handling of path inside YAML files
+        def fct_handle_path(self, node):
+            res = YamlLoader.__yaml_handling(self, node, self.__extract_path)
+            return res
+
+        # add the extension to the YAML format
+        YamlLoader.add_constructor("!include", fct_handle_include)
+        YamlLoader.add_constructor("!path", fct_handle_path)
+
+    def __yaml_handling(self, node, fct):
+        """
+        Apply a function to a YAML for list, dict, scalar.
+        """
+
+        if isinstance(node, yaml.ScalarNode):
+            return fct(self.construct_scalar(node))
+        elif isinstance(node, yaml.SequenceNode):
+            result = []
+            for filename in self.construct_sequence(node):
+                result.append(fct(filename))
+            return result
+        elif isinstance(node, yaml.MappingNode):
+            result = {}
+            for k, v in self.construct_mapping(node).iteritems():
+                result[k] = fct(v)
+            return result
+        else:
+            raise yaml.YAMLError("invalid node")
+
+    def __extract_path(self, filename):
+        """
+        Find the path with respect to the YAML file path.
+        """
+
+        return os.path.join(self.path_root, filename)
+
+    def __extract_yaml(self, filename):
+        """
+        Load an included YAML file.
+        """
+
+        filepath = self.__extract_path(filename)
+        with open(filepath, "r") as f:
+            content = yaml.load(f, YamlLoader)
+            return content
+
+
 def _load_yaml(filename):
     """
     Load a YAML file.
@@ -22,7 +93,7 @@ def _load_yaml(filename):
 
     try:
         with open(filename, "r") as fid:
-            data = yaml.safe_load(fid)
+            data = yaml.load(fid, YamlLoader)
     except FileNotFoundError:
         raise FileError("cannot open the file: %s" % filename)
     except yaml.YAMLError as ex:
