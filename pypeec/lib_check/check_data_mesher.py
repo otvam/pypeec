@@ -120,8 +120,7 @@ def _check_data_voxelize_png(data_voxelize, path_ref):
     # extract field
     d = data_voxelize["d"]
     c = data_voxelize["c"]
-    nx = data_voxelize["nx"]
-    ny = data_voxelize["ny"]
+    size = data_voxelize["size"]
     domain_color = data_voxelize["domain_color"]
     layer_stack = data_voxelize["layer_stack"]
 
@@ -132,8 +131,7 @@ def _check_data_voxelize_png(data_voxelize, path_ref):
     data_voxelize = {
         "d": d,
         "c": c,
-        "nx": nx,
-        "ny": ny,
+        "size": size,
         "domain_color": domain_color,
         "layer_stack": layer_stack,
     }
@@ -147,7 +145,7 @@ def _check_data_voxelize_stl(data_voxelize, path_ref):
     """
 
     # check type
-    key_list = ["n", "d", "c", "sampling", "pts_min", "pts_max", "domain_stl"]
+    key_list = ["n", "d", "c", "sampling", "xyz_min", "xyz_max", "domain_stl"]
     datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
@@ -155,8 +153,8 @@ def _check_data_voxelize_stl(data_voxelize, path_ref):
     d = data_voxelize["d"]
     c = data_voxelize["c"]
     sampling = data_voxelize["sampling"]
-    pts_min = data_voxelize["pts_min"]
-    pts_max = data_voxelize["pts_max"]
+    xyz_min = data_voxelize["xyz_min"]
+    xyz_max = data_voxelize["xyz_max"]
     domain_stl = data_voxelize["domain_stl"]
 
     # update data
@@ -168,8 +166,8 @@ def _check_data_voxelize_stl(data_voxelize, path_ref):
         "c": c,
         "n": n,
         "sampling": sampling,
-        "pts_min": pts_min,
-        "pts_max": pts_max,
+        "xyz_min": xyz_min,
+        "xyz_max": xyz_max,
         "domain_stl": domain_stl,
     }
 

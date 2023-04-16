@@ -94,12 +94,9 @@ This file contains the definition of the voxel structure.
     # array with the coordinates of the voxel structure center (x, y, and z directions)
     "c": [0.0, 0.0, 0.0]
     
-    # size of the image in x-direction (number of voxels in the x-direction)
-    "nx": 49
-    
-    # size of the image in y-direction (number of voxels in the y-direction)
-    "ny": 49
-    
+    # size of the image in (number of voxels in the x and y direction)
+    "size": [49, 49]
+        
     # definition of the mapping between the image color and the different domains
     #   - dict with the domain name and the specified colors
     #   - the colors are specified with an array of colors (RGBA format)
@@ -152,14 +149,14 @@ This file contains the definition of the voxel structure.
     "c": null
     
     # array with the lower corner coordinates of the voxel structure (x, y, and z directions)
-    "pts_min": [-20e-3, -20e-3, -20e-3]
+    "xyz_min": [-20e-3, -20e-3, -20e-3]
     # alternatively, the coordinates can be set to null and the STL lower corner coordinate are kept
-    "pts_min": null
+    "xyz_min": null
 
     # array with the upper corner coordinates of the voxel structure (x, y, and z directions)
-    "pts_max": [+20e-3, +20e-3, +20e-3]
+    "xyz_max": [+20e-3, +20e-3, +20e-3]
     # alternatively, the coordinates can be set to null and the STL upper corner coordinate are kept
-    "pts_max": null
+    "xyz_max": null
     
     # definition of the STL files of the different domains
     #   - dict with the domain name and the STL files

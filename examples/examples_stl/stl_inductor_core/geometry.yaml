@@ -11,8 +11,8 @@
     "n": [72, 70, 32]
     "d": null
     "c": null
-    "pts_min": null
-    "pts_max": null
+    "xyz_min": null
+    "xyz_max": null
     "domain_stl":
         "core": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/core.stl"]}
         "coil": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/coil.stl"]}

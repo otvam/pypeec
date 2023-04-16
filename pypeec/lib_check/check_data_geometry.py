@@ -83,22 +83,20 @@ def _check_data_voxelize_png(data_voxelize):
     """
 
     # check type
-    key_list = ["d", "c", "nx", "ny", "domain_color", "layer_stack"]
+    key_list = ["d", "c", "size", "domain_color", "layer_stack"]
     datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     d = data_voxelize["d"]
     c = data_voxelize["c"]
-    nx = data_voxelize["nx"]
-    ny = data_voxelize["ny"]
+    size = data_voxelize["size"]
     domain_color = data_voxelize["domain_color"]
     layer_stack = data_voxelize["layer_stack"]
 
     # check data
+    datachecker.check_integer_array("size", size, size=2, is_positive=True, can_be_zero=False)
     datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
     datachecker.check_float_array("c", c, size=3)
-    datachecker.check_integer("nx", nx, is_positive=True, can_be_zero=False)
-    datachecker.check_integer("ny", ny, is_positive=True, can_be_zero=False)
 
     # check domains and layers
     _check_png_domain_color(domain_color)
@@ -116,7 +114,7 @@ def _check_data_voxelize_stl(data_voxelize):
     """
 
     # check type
-    key_list = ["n", "d", "c", "sampling", "pts_min", "pts_max", "domain_stl"]
+    key_list = ["n", "d", "c", "sampling", "xyz_min", "xyz_max", "domain_stl"]
     datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
@@ -124,8 +122,8 @@ def _check_data_voxelize_stl(data_voxelize):
     d = data_voxelize["d"]
     c = data_voxelize["c"]
     sampling = data_voxelize["sampling"]
-    pts_min = data_voxelize["pts_min"]
-    pts_max = data_voxelize["pts_max"]
+    xyz_min = data_voxelize["xyz_min"]
+    xyz_max = data_voxelize["xyz_max"]
     domain_stl = data_voxelize["domain_stl"]
 
     # check data
@@ -140,10 +138,10 @@ def _check_data_voxelize_stl(data_voxelize):
     # check data
     if c is not None:
         datachecker.check_float_array("c", c, size=3)
-    if pts_min is not None:
-        datachecker.check_float_array("pts_min", pts_min, size=3)
-    if pts_max is not None:
-        datachecker.check_float_array("pts_max", pts_max, size=3)
+    if xyz_min is not None:
+        datachecker.check_float_array("xyz_min", xyz_min, size=3)
+    if xyz_max is not None:
+        datachecker.check_float_array("xyz_max", xyz_max, size=3)
 
     # check the stl file
     _check_stl_domain_stl(domain_stl)

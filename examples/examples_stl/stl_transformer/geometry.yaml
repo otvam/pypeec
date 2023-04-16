@@ -11,8 +11,8 @@
     "n": null
     "d": [600.0e-6, 600.0e-6, 250.0e-6]
     "c": null
-    "pts_min": null
-    "pts_max": null
+    "xyz_min": null
+    "xyz_max": null
     "domain_stl":
         "pri_coil": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/pri_coil.stl"]}
         "pri_src": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/pri_src.stl"]}

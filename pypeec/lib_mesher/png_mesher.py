@@ -28,10 +28,13 @@ LOGGER = utils_log.get_logger("STL")
 NP_TYPES = config.NP_TYPES
 
 
-def _get_idx_image(nx, ny, img, color):
+def _get_idx_image(size, img, color):
     """
     Get the 2D indices of an image that correspond to a specified color.
     """
+
+    # get the image size
+    (nx, ny) = size
 
     # check image
     if not (img.shape == (nx, ny, 4)):
@@ -53,11 +56,14 @@ def _get_idx_image(nx, ny, img, color):
     return idx_img
 
 
-def _get_idx_voxel(nx, ny, nz, n_layer, idx_img):
+def _get_idx_voxel(size, nz, n_layer, idx_img):
     """
     Find the 3D voxel indices from the 2D image indices.
     The number of layers to be added is arbitrary.
     """
+
+    # get the image size
+    (nx, ny) = size
 
     # init idx
     idx_voxel = np.array([], dtype=NP_TYPES.INT)
@@ -96,7 +102,7 @@ def _get_image(filename):
     return img
 
 
-def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename_list):
+def _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list):
     """
     Add an image to the 3D voxel structure.
     Update the domain indices and the number of layers.
@@ -117,14 +123,14 @@ def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename_list):
         # get image indices (2D indices)
         for color in color_list:
             for img in img_list:
-                idx_img_tmp = _get_idx_image(nx, ny, img, color)
+                idx_img_tmp = _get_idx_image(size, img, color)
                 idx_img = np.append(idx_img, idx_img_tmp)
 
         # remove duplicate (between the images in the list)
         idx_img = np.unique(idx_img)
 
         # get voxel indices (3D indices)
-        idx_voxel = _get_idx_voxel(nx, ny, nz, n_layer, idx_img)
+        idx_voxel = _get_idx_voxel(size, nz, n_layer, idx_img)
 
         # count the number of voxels
         n_voxel += len(idx_voxel)
@@ -141,7 +147,7 @@ def _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename_list):
     return nz, domain_def
 
 
-def get_mesh(nx, ny, domain_color, layer_stack):
+def get_mesh(size, domain_color, layer_stack):
     """
     Transform a series of 2D PNG images into a 3D voxel structure.
     The 3D voxel structure is constructed from:
@@ -151,6 +157,9 @@ def get_mesh(nx, ny, domain_color, layer_stack):
 
     # init the layer stack
     nz = 0
+
+    # get the image size
+    (nx, ny) = size
 
     # init domain definition dict
     domain_def = {}
@@ -164,7 +173,7 @@ def get_mesh(nx, ny, domain_color, layer_stack):
         filename_list = layer_stack_tmp["filename_list"]
 
         # add the layer
-        (nz, domain_def) = _get_layer(nx, ny, nz, domain_color, domain_def, n_layer, filename_list)
+        (nz, domain_def) = _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list)
 
     # assemble
     n = (nx, ny, nz)

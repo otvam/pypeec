@@ -160,8 +160,8 @@ def _get_mesh_stl(domain_stl):
     mesh_stl = {}
 
     # init the coordinate (minimum and maximum coordinates)
-    pts_min = np.full(3, +np.inf, dtype=NP_TYPES.FLOAT)
-    pts_max = np.full(3, -np.inf, dtype=NP_TYPES.FLOAT)
+    xyz_min = np.full(3, +np.inf, dtype=NP_TYPES.FLOAT)
+    xyz_max = np.full(3, -np.inf, dtype=NP_TYPES.FLOAT)
 
     # load the STL files and find the bounding box
     for tag, dat_tmp in domain_stl.items():
@@ -183,16 +183,16 @@ def _get_mesh_stl(domain_stl):
         tmp_max = np.array((x_max, y_max, z_max), dtype=NP_TYPES.FLOAT)
 
         # update the bounds
-        pts_min = np.minimum(pts_min, tmp_min)
-        pts_max = np.maximum(pts_max, tmp_max)
+        xyz_min = np.minimum(xyz_min, tmp_min)
+        xyz_max = np.maximum(xyz_max, tmp_max)
 
         # assign the mesh
         mesh_stl[tag] = mesh
 
-    return mesh_stl, pts_min, pts_max
+    return mesh_stl, xyz_min, xyz_max
 
 
-def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
+def get_mesh(n, d, c, sampling, xyz_min, xyz_max, domain_stl):
     """
     Transform STL files into a 3D voxel structure.
     Each STL file corresponds to a domain of the 3D voxel structure.
@@ -200,30 +200,30 @@ def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
 
     # load the mesh and get the STL bounds
     LOGGER.debug("load STL files")
-    (mesh_stl, pts_min_stl, pts_max_stl) = _get_mesh_stl(domain_stl)
+    (mesh_stl, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl)
 
     # if provided, the user specified bounds are used, otherwise the STL bounds
-    if pts_min is None:
-        pts_min = pts_min_stl
+    if xyz_min is None:
+        xyz_min = xyz_min_stl
     else:
-        pts_min = np.array(pts_min, NP_TYPES.FLOAT)
-    if pts_max is None:
-        pts_max = pts_max_stl
+        xyz_min = np.array(xyz_min, NP_TYPES.FLOAT)
+    if xyz_max is None:
+        xyz_max = xyz_max_stl
     else:
-        pts_max = np.array(pts_max, NP_TYPES.FLOAT)
+        xyz_max = np.array(xyz_max, NP_TYPES.FLOAT)
 
     # extract the number of voxels
     if sampling == "number":
         n = np.array(n, dtype=NP_TYPES.INT)
     elif sampling == "dimension":
         d = np.array(d, dtype=NP_TYPES.FLOAT)
-        n = np.rint((pts_max-pts_min)/d)
+        n = np.rint((xyz_max-xyz_min)/d)
         n = n.astype(NP_TYPES.INT)
     else:
         raise ValueError("inconsistent definition of the voxel number/size")
 
     # get the voxel size
-    d = (pts_max-pts_min)/n
+    d = (xyz_max-xyz_min)/n
 
     # check voxel validity
     if not np.all(d > 0):
@@ -233,7 +233,7 @@ def get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl):
         RunError("invalid voxel number: should be positive")
 
     # extract the center
-    c_stl = (pts_max+pts_min)/2
+    c_stl = (xyz_max+xyz_min)/2
 
     # get the uniform grid
     grid = _get_grid(n, d, c_stl)

@@ -61,14 +61,13 @@ def _run_png(data_voxelize):
     # extract the data
     d = data_voxelize["d"]
     c = data_voxelize["c"]
-    nx = data_voxelize["nx"]
-    ny = data_voxelize["ny"]
+    size = data_voxelize["size"]
     domain_color = data_voxelize["domain_color"]
     layer_stack = data_voxelize["layer_stack"]
 
     # voxelize the PNG files
     with utils_log.BlockTimer(LOGGER, "png_mesher"):
-        (n, domain_def) = png_mesher.get_mesh(nx, ny, domain_color, layer_stack)
+        (n, domain_def) = png_mesher.get_mesh(size, domain_color, layer_stack)
 
     # assemble the data
     data_voxel = {
@@ -91,13 +90,13 @@ def _run_stl(data_voxelize):
     d = data_voxelize["d"]
     c = data_voxelize["c"]
     sampling = data_voxelize["sampling"]
-    pts_min = data_voxelize["pts_min"]
-    pts_max = data_voxelize["pts_max"]
+    xyz_min = data_voxelize["xyz_min"]
+    xyz_max = data_voxelize["xyz_max"]
     domain_stl = data_voxelize["domain_stl"]
 
     # voxelize the STL files
     with utils_log.BlockTimer(LOGGER, "stl_mesher"):
-        (n, d, c, domain_def, reference) = stl_mesher.get_mesh(n, d, c, sampling, pts_min, pts_max, domain_stl)
+        (n, d, c, domain_def, reference) = stl_mesher.get_mesh(n, d, c, sampling, xyz_min, xyz_max, domain_stl)
 
     # assemble the data
     data_voxel = {
