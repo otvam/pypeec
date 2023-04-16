@@ -16,9 +16,9 @@
         "src_bottom": [[0, 255, 0, 255]]
         "sink": [[0, 0, 255, 255]]
     "layer_stack":
-        - {"n_layer": 1, "filename_list": ["png/bottom.png"]}
-        - {"n_layer": 2, "filename_list": ["png/insulation.png"]}
-        - {"n_layer": 1, "filename_list": ["png/top.png"]}
+        - {"n_layer": 1, "filename_list": !path ["png/bottom.png"]}
+        - {"n_layer": 2, "filename_list": !path ["png/insulation.png"]}
+        - {"n_layer": 1, "filename_list": !path ["png/top.png"]}
 "resampling":
     "use_reduce": false
     "use_resample": false

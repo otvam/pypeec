@@ -16,13 +16,13 @@
         "src": [[255, 0, 0, 255]]
         "sink": [[0, 255, 0, 255]]
     "layer_stack":
-        - {"n_layer": 9, "filename_list": ["png/base.png"]}
-        - {"n_layer": 1, "filename_list": ["png/side.png"]}
-        - {"n_layer": 4, "filename_list": ["png/coil.png"]}
-        - {"n_layer": 2, "filename_list": ["png/gap.png"]}
-        - {"n_layer": 4, "filename_list": ["png/coil.png"]}
-        - {"n_layer": 1, "filename_list": ["png/side.png"]}
-        - {"n_layer": 9, "filename_list": ["png/base.png"]}
+        - {"n_layer": 9, "filename_list": !path ["png/base.png"]}
+        - {"n_layer": 1, "filename_list": !path ["png/side.png"]}
+        - {"n_layer": 4, "filename_list": !path ["png/coil.png"]}
+        - {"n_layer": 2, "filename_list": !path ["png/gap.png"]}
+        - {"n_layer": 4, "filename_list": !path ["png/coil.png"]}
+        - {"n_layer": 1, "filename_list": !path ["png/side.png"]}
+        - {"n_layer": 9, "filename_list": !path ["png/base.png"]}
 "resampling":
     "use_reduce": false
     "use_resample": false

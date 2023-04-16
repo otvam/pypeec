@@ -8,16 +8,13 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_check import datachecker
 
 
-def _check_domain_stl(domain_stl, pathref):
+def _check_domain_stl(domain_stl):
     """
     Check the validity of the domain definition (STL mesher).
     """
 
     # check type
     datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=dict)
-
-    # init new domain description
-    domain_stl_path = {}
 
     # check content
     for tag, domain_stl_tmp in domain_stl.items():
@@ -34,15 +31,8 @@ def _check_domain_stl(domain_stl, pathref):
         datachecker.check_list("filename_list", filename_list, can_be_empty=False, sub_type=str)
 
         # check files
-        filename_list_path = []
         for filename in filename_list:
-            filename = datachecker.check_filename("filename_list", pathref, filename)
-            filename_list_path.append(filename)
-
-        # add the new item
-        domain_stl_path[tag] = {"offset": offset, "filename_list": filename_list_path}
-
-    return domain_stl_path
+            datachecker.check_filename("filename_list", filename)
 
 
 def _check_voxel_structure(c, xyz_min, xyz_max):
@@ -58,7 +48,7 @@ def _check_voxel_structure(c, xyz_min, xyz_max):
         datachecker.check_float_array("xyz_max", xyz_max, size=3)
 
 
-def check_data_voxelize(data_voxelize, pathref):
+def check_data_voxelize(data_voxelize):
     """
     Check the data used for voxelization (STL mesher).
     """
@@ -91,20 +81,9 @@ def check_data_voxelize(data_voxelize, pathref):
     _check_voxel_structure(c, xyz_min, xyz_max)
 
     # check the stl file
-    domain_stl = _check_domain_stl(domain_stl, pathref)
+    _check_domain_stl(domain_stl)
 
     # get the domain name
     domain_name = domain_stl.keys()
 
-    # assemble data
-    data_voxelize = {
-        "d": d,
-        "c": c,
-        "n": n,
-        "sampling": sampling,
-        "xyz_min": xyz_min,
-        "xyz_max": xyz_max,
-        "domain_stl": domain_stl,
-    }
-
-    return domain_name, data_voxelize
+    return domain_name

@@ -14,12 +14,12 @@
     "xyz_min": null
     "xyz_max": null
     "domain_stl":
-        "pri_coil": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/pri_coil.stl"]}
-        "pri_src": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/pri_src.stl"]}
-        "pri_sink": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/pri_sink.stl"]}
-        "sec_coil": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/sec_coil.stl"]}
-        "sec_src": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/sec_src.stl"]}
-        "sec_sink": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/sec_sink.stl"]}
+        "pri_coil": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/pri_coil.stl"]}
+        "pri_src": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/pri_src.stl"]}
+        "pri_sink": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/pri_sink.stl"]}
+        "sec_coil": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/sec_coil.stl"]}
+        "sec_src": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/sec_src.stl"]}
+        "sec_sink": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/sec_sink.stl"]}
 "resampling":
     "use_reduce": false
     "use_resample": false

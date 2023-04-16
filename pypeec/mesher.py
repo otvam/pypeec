@@ -177,7 +177,7 @@ def _run_resample_graph(reference, data_voxel, data_geometry):
     return data_voxel
 
 
-def run(data_geometry, pathref):
+def run(data_geometry):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
     Handle invalid data with exceptions.
@@ -187,10 +187,6 @@ def run(data_geometry, pathref):
     data_geometry : dict
         The dict describes the meshing and resampling process.
         The voxel structure can be explicitly given or generated from PNG or STL files.
-    pathref :  path (string or None)
-        Path used to load the PNG and STL files.
-        If None, the filename specified in the mesher data are used directly.
-        If a string is given, the path is used to find the location of the files.
 
     Returns
     -------
@@ -214,7 +210,7 @@ def run(data_geometry, pathref):
     try:
         # check the input data
         LOGGER.info("check the input data")
-        data_geometry = check_data_geometry.check_data_geometry(data_geometry, pathref)
+        check_data_geometry.check_data_geometry(data_geometry)
 
         # run the mesher
         (reference, data_voxel) = _run_mesher(data_geometry)

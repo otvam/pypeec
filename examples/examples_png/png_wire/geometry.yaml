@@ -15,9 +15,9 @@
         "src": [[255, 0, 0, 255]]
         "sink": [[0, 255, 0, 255]]
     "layer_stack":
-        - {"n_layer": 1, "filename_list": ["png/src.png"]}
-        - {"n_layer": 8, "filename_list": ["png/wire.png"]}
-        - {"n_layer": 1, "filename_list": ["png/sink.png"]}
+        - {"n_layer": 1, "filename_list": !path ["png/src.png"]}
+        - {"n_layer": 8, "filename_list": !path ["png/wire.png"]}
+        - {"n_layer": 1, "filename_list": !path ["png/sink.png"]}
 "resampling":
     "use_reduce": false
     "use_resample": false

@@ -26,16 +26,13 @@ def _check_domain_color(domain_color):
             datachecker.check_integer_array("domain_color", color, size=4, is_positive=True)
 
 
-def _check_layer_stack(layer_stack, pathref):
+def _check_layer_stack(layer_stack):
     """
     Check the validity of the image layer stack (PNG mesher).
     """
 
     # check type
     datachecker.check_list("layer_stack", layer_stack, can_be_empty=False, sub_type=dict)
-
-    # init new layer stack
-    layer_stack_path = []
 
     # check value
     for layer_stack_tmp in layer_stack:
@@ -52,15 +49,8 @@ def _check_layer_stack(layer_stack, pathref):
         datachecker.check_list("filename_list", filename_list, can_be_empty=False, sub_type=str)
 
         # check files
-        filename_list_path = []
         for filename in filename_list:
-            filename = datachecker.check_filename("filename_list", pathref, filename)
-            filename_list_path.append(filename)
-
-        # add the new item
-        layer_stack_path.append({"n_layer": n_layer, "filename_list": filename_list_path})
-
-    return layer_stack_path
+            datachecker.check_filename("filename_list", filename)
 
 
 def _check_voxel_structure(d, c, size):
@@ -73,7 +63,7 @@ def _check_voxel_structure(d, c, size):
     datachecker.check_float_array("c", c, size=3)
 
 
-def check_data_voxelize(data_voxelize, pathref):
+def check_data_voxelize(data_voxelize):
     """
     Check the data used for voxelization (PNG mesher).
     """
@@ -96,18 +86,9 @@ def check_data_voxelize(data_voxelize, pathref):
     _check_domain_color(domain_color)
 
     # check layer stack
-    layer_stack = _check_layer_stack(layer_stack, pathref)
+    _check_layer_stack(layer_stack)
 
     # get the domain name
     domain_name = domain_color.keys()
 
-    # assemble data
-    data_voxelize = {
-        "d": d,
-        "c": c,
-        "size": size,
-        "domain_color": domain_color,
-        "layer_stack": layer_stack,
-    }
-
-    return domain_name, data_voxelize
+    return domain_name
