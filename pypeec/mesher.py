@@ -90,14 +90,13 @@ def _run_shape(data_voxelize):
     # extract the data
     d = data_voxelize["d"]
     c = data_voxelize["c"]
-    xy_min = data_voxelize["xy_min"]
-    xy_max = data_voxelize["xy_max"]
+    bounds = data_voxelize["bounds"]
     layer_stack = data_voxelize["layer_stack"]
     geometry_shape = data_voxelize["geometry_shape"]
 
     # process the shapes
     with utils_log.BlockTimer(LOGGER, "mesher_shape"):
-        (n, d, c, domain_def, reference) = mesher_shape.get_mesh(d, c, xy_min, xy_max, layer_stack, geometry_shape)
+        (n, d, c, domain_def, reference) = mesher_shape.get_mesh(d, c, bounds, layer_stack, geometry_shape)
 
     # assemble the data
     data_voxel = {

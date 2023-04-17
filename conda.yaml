@@ -29,4 +29,6 @@ dependencies:
   - pyvista=0.38.3
   - pyvistaqt=0.9.1
   - matplotlib=3.6.2
+  - shapely=2.0.1
+  - rasterio=1.3.6
   - pillow=9.4.0

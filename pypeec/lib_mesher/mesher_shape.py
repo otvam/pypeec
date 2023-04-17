@@ -1,12 +1,13 @@
 """
-Module for transforming a series of 2D PNG images into a 3D voxel structure.
+Module for transforming a series of 2D shapes into a 3D voxel structure.
 
 The following axis definition is used:
-    - x: x-axis of the images (standard cartesian coordinate, not image coordinate)
-    - y: y-axis of the images (standard cartesian coordinate, not image coordinate)
+    - x: x-axis of the 2D shapes
+    - y: y-axis of the 2D shapes
     - z: stacking dimension of the 2D geometries
 
-The image handling is done with Pillow.
+The shape handling is done with Shapely.
+The rasterization is done with Rasterio.
 """
 
 __author__ = "Thomas Guillod"
@@ -19,7 +20,7 @@ from pypeec import config
 from pypeec.error import RunError
 
 # get a logger
-LOGGER = utils_log.get_logger("STL")
+LOGGER = utils_log.get_logger("SHAPE")
 
 # get config
 NP_TYPES = config.NP_TYPES
