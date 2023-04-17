@@ -189,6 +189,37 @@ def _get_mesh_stl(domain_stl):
     return mesh_stl, xyz_min, xyz_max
 
 
+def _get_voxel_size(d, xyz_max, xyz_min):
+    """
+    Get the parameters (size, dimension, and center) of the voxel structure.
+    """
+
+    # geometry size
+    c = (xyz_max+xyz_min)/2
+
+    # extract the number of voxels and the voxel size
+    n = np.rint((xyz_max-xyz_min)/d)
+    d = (xyz_max-xyz_min)/n
+
+    # cast data
+    d = d.astype(NP_TYPES.FLOAT)
+    n = n.astype(NP_TYPES.INT)
+
+    # disp geometry size
+    LOGGER.debug("voxel: min = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_min))
+    LOGGER.debug("voxel: max = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_max))
+    LOGGER.debug("voxel: center = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(c))
+
+    # check voxel validity
+    if not np.all(d > 0):
+        RunError("invalid voxel dimension: should be positive")
+    # check voxel validity
+    if not np.all(n > 0):
+        RunError("invalid voxel number: should be positive")
+
+    return n, d, c
+
+
 def get_mesh(param, domain_stl):
     """
     Transform STL files into a 3D voxel structure.
@@ -215,29 +246,11 @@ def get_mesh(param, domain_stl):
         xyz_max = xyz_max_stl
 
     # geometry size
-    c = (xyz_max+xyz_min)/2
-
-    # disp geometry size
-    LOGGER.debug("voxel: min = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_min))
-    LOGGER.debug("voxel: max = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_max))
-    LOGGER.debug("voxel: center = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(c))
-
-    # extract the number of voxels and the voxel size
-    n = np.rint((xyz_max-xyz_min)/d)
-    d = (xyz_max-xyz_min)/n
-
-    # cast data
-    d = d.astype(NP_TYPES.FLOAT)
-    n = n.astype(NP_TYPES.INT)
-
-    # check voxel validity
-    if not np.all(d > 0):
-        RunError("invalid voxel dimension: should be positive")
-    # check voxel validity
-    if not np.all(n > 0):
-        RunError("invalid voxel number: should be positive")
+    LOGGER.debug("get the voxel size")
+    (n, d, c) = _get_voxel_size(d, xyz_max, xyz_min)
 
     # get the uniform grid
+    LOGGER.debug("get the voxel grid")
     grid = _get_grid(n, d, c)
 
     # voxelize the meshes and get the indices
@@ -245,6 +258,7 @@ def get_mesh(param, domain_stl):
     domain_def = _get_idx_stl(grid, mesh_stl)
 
     # merge and translate meshes
+    LOGGER.debug("merge the meshes")
     reference = _get_merge_stl(mesh_stl)
 
     # cast to lists

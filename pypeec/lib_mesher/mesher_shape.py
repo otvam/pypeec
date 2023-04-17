@@ -14,7 +14,9 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
-import PIL.Image as pmg
+import shapely as sha
+import rasterio.features as raf
+import rasterio.transform as rat
 from pypeec import utils_log
 from pypeec import config
 from pypeec.error import RunError
@@ -26,154 +28,212 @@ LOGGER = utils_log.get_logger("SHAPE")
 NP_TYPES = config.NP_TYPES
 
 
-def _get_idx_image(size, img, color):
+def _get_single_shape(shape_data):
+    shape_type = shape_data["shape_type"]
+    buffer = shape_data["buffer"]
+    coord = shape_data["coord"]
+
+    if shape_type == "trace":
+        obj_tmp = sha.geometry.LineString(coord)
+    elif shape_type == "pad":
+        obj_tmp = sha.geometry.MultiPoint(coord)
+    elif shape_type == "polygon":
+        obj_tmp = sha.geometry.Polygon(coord)
+    else:
+        raise ValueError("invalid shape type")
+
+    obj_final = obj_tmp.buffer(buffer, cap_style=1)
+
+    return obj_final
+
+
+def _get_composite_shape(shape_add, shape_sub, tol):
+    obj_add = []
+    for shape_data in shape_add:
+        obj_add.append(_get_single_shape(shape_data))
+
+    obj_sub = []
+    for shape_data in shape_sub:
+        obj_sub.append(_get_single_shape(shape_data))
+
+    obj_add = sha.unary_union(obj_add)
+    obj_sub = sha.unary_union(obj_sub)
+    obj = sha.difference(obj_add, obj_sub)
+    obj = sha.simplify(obj, tol)
+
+    return obj
+
+
+def _get_shape_position(layer_start, layer_stop, stack_pos, stack_name):
+    # find the stack position
+    layer_start = np.flatnonzero(stack_name == layer_start)
+    layer_stop = np.flatnonzero(stack_name == layer_stop)
+    layer = np.concatenate((layer_start, layer_stop))
+
+    # find the stack indices
+    idx_min = np.min(layer)
+    idx_max = np.max(layer)
+
+    # get the position
+    z_min = stack_pos[idx_min+0]
+    z_max = stack_pos[idx_max+1]
+
+    return z_min, z_max
+
+
+def _get_shape_obj(geometry_shape, stack_pos, stack_name, tol):
+    # init STL mesh dict
+    shape_obj = {}
+
+    # init the coordinate (minimum and maximum coordinates)
+    xy_min = np.full(2, +np.inf, dtype=NP_TYPES.FLOAT)
+    xy_max = np.full(2, -np.inf, dtype=NP_TYPES.FLOAT)
+
+    # load the STL files and find the bounding box
+    for tag, dat_tmp in geometry_shape.items():
+        # extract data
+        layer_start = dat_tmp["layer_start"]
+        layer_stop = dat_tmp["layer_stop"]
+        shape_add = dat_tmp["shape_add"]
+        shape_sub = dat_tmp["shape_sub"]
+
+        # get the shape
+        obj = _get_composite_shape(shape_add, shape_sub, tol)
+
+        # display the shape size
+        LOGGER.debug("%s: n_add = %d / n_sub = %d" % (tag, len(shape_add), len(shape_add)))
+
+        # find the bounds
+        (x_min, y_min, x_max, y_max) = obj.bounds
+        tmp_min = np.array((x_min, y_min), dtype=NP_TYPES.FLOAT)
+        tmp_max = np.array((x_max, y_max), dtype=NP_TYPES.FLOAT)
+
+        # update the bounds
+        xy_min = np.minimum(xy_min, tmp_min)
+        xy_max = np.maximum(xy_max, tmp_max)
+
+        # get the stack position
+        (z_min, z_max) = _get_shape_position(layer_start, layer_stop, stack_pos, stack_name)
+
+        # assign the object
+        shape_obj[tag] = {"z_min": z_min, "z_max": z_max, "obj": obj}
+
+    return shape_obj, xy_min, xy_max
+
+
+def _get_layer_stack(layer_stack, dz, cz):
+    # init the list
+    stack_name = []
+
+    # get the layer parameters
+    for dat_tmp in layer_stack:
+        n_layer = dat_tmp["n_layer"]
+        name_layer = dat_tmp["name_layer"]
+        stack_name += n_layer*[name_layer]
+
+    # get the number of layers
+    nz = len(stack_name)
+
+    # get the z dimension
+    z_min = -(nz*dz)/2+cz
+    z_max = +(nz*dz)/2+cz
+
+    # get position and name arrays
+    stack_pos = np.linspace(z_min, z_max, nz+1)
+    stack_name = np.array(stack_name)
+
+    return nz, stack_pos, stack_name
+
+
+def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     """
-    Get the 2D indices of an image that correspond to a specified color.
+    Get the parameters (size, dimension, and center) of the voxel structure.
     """
 
-    # get the image size
-    (nx, ny) = size
+    # get the voxel geometry
+    (x_min, y_min) = xy_min
+    (x_max, y_max) = xy_max
 
-    # check image
-    if not (img.shape == (nx, ny, 4)):
-        raise RunError("invalid image:  size is not compatible with the voxel structure")
+    # get the z dimension
+    z_min = np.min(stack_pos)
+    z_max = np.max(stack_pos)
 
-    # get the color vector
-    color_tmp = np.array(color, dtype=np.uint8)
-    color_tmp = np.expand_dims(color_tmp, axis=(0, 1))
-    if not (color_tmp.shape == (1, 1, 4)):
-        raise RunError("invalid color: colors should be a specified with for values")
+    # get the arrays
+    d = np.array([dx, dy, dz], dtype=NP_TYPES.FLOAT)
+    xyz_min = np.array([x_min, y_min, z_min], dtype=NP_TYPES.FLOAT)
+    xyz_max = np.array([x_max, y_max, z_max], dtype=NP_TYPES.FLOAT)
 
-    # find the color in the image
-    idx_img = np.all(img == color_tmp, axis=2)
+    # geometry size
+    c = (xyz_max+xyz_min)/2
 
-    # find the 2D indices
-    idx_img = idx_img.flatten(order="F")
-    idx_img = np.flatnonzero(idx_img).astype(NP_TYPES.INT)
+    # extract the number of voxels and the voxel size
+    n = np.rint((xyz_max-xyz_min)/d)
+    d = (xyz_max-xyz_min)/n
 
-    return idx_img
+    # cast data
+    d = d.astype(NP_TYPES.FLOAT)
+    n = n.astype(NP_TYPES.INT)
+
+    # disp geometry size
+    LOGGER.debug("voxel: min = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_min))
+    LOGGER.debug("voxel: max = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_max))
+    LOGGER.debug("voxel: center = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(c))
+
+    # check voxel validity
+    if not np.all(d > 0):
+        RunError("invalid voxel dimension: should be positive")
+    # check voxel validity
+    if not np.all(n > 0):
+        RunError("invalid voxel number: should be positive")
+
+    return n, d, c
 
 
-def _get_idx_voxel(size, nz, n_layer, idx_img):
+def get_mesh(param, layer_stack, geometry_shape):
     """
-    Find the 3D voxel indices from the 2D image indices.
-    The number of layers to be added is arbitrary.
-    """
-
-    # get the image size
-    (nx, ny) = size
-
-    # init idx
-    idx_voxel = np.array([], dtype=NP_TYPES.INT)
-
-    # convert image indices into voxel indices
-    for n_tmp in range(n_layer):
-        # convert indices
-        idx_tmp = (nz+n_tmp)*nx*ny+idx_img
-
-        # add the indices to the array
-        idx_voxel = np.append(idx_voxel, idx_tmp)
-
-    return idx_voxel
-
-
-def _get_image(filename):
-    """
-    Load an image into a tensor.
-    Flip the axis in order to get standard cartesian coordinate (non-standard image coordinate).
-    """
-
-    # load the image
-    try:
-        img = pmg.open(filename, formats=["png"])
-    except OSError:
-        raise RunError("invalid png: invalid file content: %s" % filename)
-
-    # cast to array
-    img = img.convert("RGBA")
-    img = np.array(img, dtype=np.uint8)
-
-    # transform from image coordinate to cartesian coordinate
-    img = np.swapaxes(img, 0, 1)
-    img = np.flip(img, axis=1)
-
-    return img
-
-
-def _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list):
-    """
-    Add an image to the 3D voxel structure.
-    Update the domain indices and the number of layers.
-    """
-
-    # extract the image data as a tensor
-    img_list = []
-    for filename in filename_list:
-        img = _get_image(filename)
-        img_list.append(img)
-
-    # add the indices for all the domains
-    n_voxel = 0
-    for tag, color_list in domain_color.items():
-        # init the index array
-        idx_img = np.array([], dtype=NP_TYPES.INT)
-
-        # get image indices (2D indices)
-        for color in color_list:
-            for img in img_list:
-                idx_img_tmp = _get_idx_image(size, img, color)
-                idx_img = np.append(idx_img, idx_img_tmp)
-
-        # remove duplicate (between the images in the list)
-        idx_img = np.unique(idx_img)
-
-        # get voxel indices (3D indices)
-        idx_voxel = _get_idx_voxel(size, nz, n_layer, idx_img)
-
-        # count the number of voxels
-        n_voxel += len(idx_voxel)
-
-        # append the indices into the corresponding domain
-        domain_def[tag] = np.append(domain_def[tag], idx_voxel)
-
-    # display the layer size
-    LOGGER.debug("layer: size = %d / n_voxels = %d" % (n_layer, n_voxel))
-
-    # update the layer stack
-    nz += n_layer
-
-    return nz, domain_def
-
-
-def get_mesh(size, domain_color, layer_stack):
-    """
-    Transform a series of 2D PNG images into a 3D voxel structure.
+    Transform a series of 2D shapes into a 3D voxel structure.
     The 3D voxel structure is constructed from:
-        - a dict mapping the pixel colors to domains
-        - a list containing the layer stack of images
+        - a dict containing the 2D shapes
+        - a list containing the layer stack of shapes
     """
 
-    # init the layer stack
-    nz = 0
+    # extract data
+    dx = param["dx"]
+    dy = param["dy"]
+    dz = param["dz"]
+    cz = param["cz"]
+    tol = param["tol"]
+    xy_min = param["xy_min"]
+    xy_max = param["xy_max"]
 
-    # get the image size
-    (nx, ny) = size
+    # parse layers
+    LOGGER.debug("parse the layers")
+    (nz, stack_pos, stack_name) = _get_layer_stack(layer_stack, dz, cz)
 
-    # init domain definition dict
-    domain_def = {}
-    for tag, color in domain_color.items():
-        domain_def[tag] = np.array([], NP_TYPES.INT)
+    # create the shapes
+    LOGGER.debug("create the shapes")
+    (shape_obj, xy_min_obj, xy_max_obj) = _get_shape_obj(geometry_shape, stack_pos, stack_name, tol)
 
-    # add layers
-    for layer_stack_tmp in layer_stack:
-        # get the data
-        n_layer = layer_stack_tmp["n_layer"]
-        filename_list = layer_stack_tmp["filename_list"]
+    # if provided, the user specified bounds are used, otherwise the STL bounds
+    if xy_min is not None:
+        xy_min = np.array(xy_min, NP_TYPES.FLOAT)
+    else:
+        xy_min = xy_min_obj
+    if xy_max is not None:
+        xy_max = np.array(xy_max, NP_TYPES.FLOAT)
+    else:
+        xy_max = xy_max_obj
 
-        # add the layer
-        (nz, domain_def) = _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list)
+    # geometry size
+    LOGGER.debug("get the voxel size")
+    (n, d, c) = _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min)
 
-    # assemble
-    n = (nx, ny, nz)
 
-    return n, domain_def
+
+
+    # cast to lists
+    n = n.tolist()
+    d = d.tolist()
+    c = c.tolist()
+
+    return n, d, c, domain_def
