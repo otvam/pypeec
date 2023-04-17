@@ -7,8 +7,10 @@
 
 "mesh_type": "stl"
 "data_voxelize":
-    "d": [89.0e-6, 85.5e-6, 62.5e-6]
-    "bounds": null
+    "param":
+        "d": [89.0e-6, 85.5e-6, 62.5e-6]
+        "xyz_min": null
+        "xyz_max": null
     "domain_stl":
         "core": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/core.stl"]}
         "coil": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/coil.stl"]}

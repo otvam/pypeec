@@ -189,22 +189,29 @@ def _get_mesh_stl(domain_stl):
     return mesh_stl, xyz_min, xyz_max
 
 
-def get_mesh(d, bounds, domain_stl):
+def get_mesh(param, domain_stl):
     """
     Transform STL files into a 3D voxel structure.
     Each STL file corresponds to a domain of the 3D voxel structure.
     """
+
+    # extract the data
+    d = param["d"]
+    xyz_min = param["xyz_min"]
+    xyz_max = param["xyz_max"]
 
     # load the mesh and get the STL bounds
     LOGGER.debug("load STL files")
     (mesh_stl, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl)
 
     # if provided, the specified bounds are used, otherwise the STL bounds are used
-    if bounds is not None:
-        xyz_min = np.array(bounds["xyz_min"], NP_TYPES.FLOAT)
-        xyz_max = np.array(bounds["xyz_max"], NP_TYPES.FLOAT)
+    if xyz_min is not None:
+        xyz_min = np.array(xyz_min, NP_TYPES.FLOAT)
     else:
         xyz_min = xyz_min_stl
+    if xyz_max is not None:
+        xyz_max = np.array(xyz_max, NP_TYPES.FLOAT)
+    else:
         xyz_max = xyz_max_stl
 
     # geometry size

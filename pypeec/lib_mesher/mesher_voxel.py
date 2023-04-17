@@ -19,20 +19,28 @@ LOGGER = utils_log.get_logger("VOXEL")
 NP_TYPES = config.NP_TYPES
 
 
-def get_mesh(n, domain_def):
+def get_mesh(param, domain_index):
     """
     Check the domain definition (mapping between domain names and indices).
     """
+
+    # extract the data
+    n = param["n"]
+    d = param["d"]
+    c = param["c"]
+
+    # no reference geometry, direct voxelization
+    reference = None
 
     # extract the voxel data
     (nx, ny, nz) = n
     nv = nx*ny*nz
 
     # init new domain indices
-    domain_def_array = {}
+    domain_def = {}
 
     # check data
-    for tag, idx in domain_def.items():
+    for tag, idx in domain_index.items():
         # disp
         LOGGER.debug("%s: size = %d" % (tag, len(idx)))
 
@@ -46,6 +54,6 @@ def get_mesh(n, domain_def):
             raise RunError("invalid index: %s: invalid index range" % tag)
 
         # add the new item
-        domain_def_array[tag] = idx_tmp
+        domain_def[tag] = idx_tmp
 
-    return domain_def_array
+    return n, d, c, domain_def, reference

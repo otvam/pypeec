@@ -8,27 +8,32 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_check import datachecker
 
 
-def _check_domain_def(domain_def):
+def _check_domain_index(domain_index):
     """
     Check the domain definition (mapping between domain names and indices).
     """
 
     # check type
-    datachecker.check_dict("domain_def", domain_def, can_be_empty=False, sub_type=list)
+    datachecker.check_dict("domain_index", domain_index, can_be_empty=False, sub_type=list)
 
     # check data
-    for idx in domain_def.values():
-        datachecker.check_integer_array("domain_def", idx, is_positive=True)
+    for idx in domain_index.values():
+        datachecker.check_integer_array("domain_index", idx, is_positive=True)
 
 
-def _check_voxel_structure(n, d, c):
+def _check_param(param):
     """
     Check the voxel structure parameters.
     """
 
-    datachecker.check_integer_array("n", n, size=3, is_positive=True, can_be_zero=False)
-    datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
-    datachecker.check_float_array("c", c, size=3)
+    # check type
+    key_list = ["n", "d", "c"]
+    datachecker.check_dict("param", param, key_list=key_list)
+
+    # check data
+    datachecker.check_integer_array("n", param["n"], size=3, is_positive=True, can_be_zero=False)
+    datachecker.check_float_array("d", param["d"], size=3, is_positive=True, can_be_zero=False)
+    datachecker.check_float_array("c", param["c"], size=3)
 
 
 def check_data_voxelize(data_voxelize):
@@ -38,22 +43,20 @@ def check_data_voxelize(data_voxelize):
     """
 
     # check type
-    key_list = ["n", "d", "c", "domain_def"]
+    key_list = ["param", "domain_index"]
     datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
-    n = data_voxelize["n"]
-    d = data_voxelize["d"]
-    c = data_voxelize["c"]
-    domain_def = data_voxelize["domain_def"]
+    param = data_voxelize["param"]
+    domain_index = data_voxelize["domain_index"]
 
     # check voxel structure parameters
-    _check_voxel_structure(n, d, c)
+    _check_param(param)
 
     # check domain definition
-    _check_domain_def(domain_def)
+    _check_domain_index(domain_index)
 
     # get the domain name
-    domain_name = domain_def.keys()
+    domain_name = domain_index.keys()
 
     return domain_name

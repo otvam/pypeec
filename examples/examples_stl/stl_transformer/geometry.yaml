@@ -7,8 +7,10 @@
 
 "mesh_type": "stl"
 "data_voxelize":
-    "d": [600.0e-6, 600.0e-6, 250.0e-6]
-    "bounds": null
+    "param":
+        "d": [600.0e-6, 600.0e-6, 250.0e-6]
+        "xyz_min": null
+        "xyz_max": null
     "domain_stl":
         "pri_coil": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/pri_coil.stl"]}
         "pri_src": {"offset": [0.0, 0.0, 0.0], "filename_list": !path ["stl/pri_src.stl"]}

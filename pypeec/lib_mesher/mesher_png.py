@@ -144,13 +144,21 @@ def _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list):
     return nz, domain_def
 
 
-def get_mesh(size, domain_color, layer_stack):
+def get_mesh(param, domain_color, layer_stack):
     """
     Transform a series of 2D PNG images into a 3D voxel structure.
     The 3D voxel structure is constructed from:
         - a dict mapping the pixel colors to domains
         - a list containing the layer stack of images
     """
+
+    # extract the data
+    d = param["d"]
+    c = param["c"]
+    size = param["size"]
+
+    # no reference geometry, direct voxelization
+    reference = None
 
     # init the layer stack
     nz = 0
@@ -175,4 +183,4 @@ def get_mesh(size, domain_color, layer_stack):
     # assemble
     n = (nx, ny, nz)
 
-    return n, domain_def
+    return n, d, c, domain_def, reference

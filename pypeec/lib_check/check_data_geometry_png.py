@@ -53,14 +53,19 @@ def _check_layer_stack(layer_stack):
             datachecker.check_filename("filename_list", filename)
 
 
-def _check_voxel_structure(d, c, size):
+def _check_param(param):
     """
     Check the voxel structure parameters.
     """
 
-    datachecker.check_integer_array("size", size, size=2, is_positive=True, can_be_zero=False)
-    datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
-    datachecker.check_float_array("c", c, size=3)
+    # check type
+    key_list = ["d", "c", "size"]
+    datachecker.check_dict("param", param, key_list=key_list)
+
+    # check data
+    datachecker.check_integer_array("size", param["size"], size=2, is_positive=True, can_be_zero=False)
+    datachecker.check_float_array("d", param["d"], size=3, is_positive=True, can_be_zero=False)
+    datachecker.check_float_array("c", param["c"], size=3)
 
 
 def check_data_voxelize(data_voxelize):
@@ -69,18 +74,16 @@ def check_data_voxelize(data_voxelize):
     """
 
     # check type
-    key_list = ["d", "c", "size", "domain_color", "layer_stack"]
+    key_list = ["param", "domain_color", "layer_stack"]
     datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
-    d = data_voxelize["d"]
-    c = data_voxelize["c"]
-    size = data_voxelize["size"]
+    param = data_voxelize["param"]
     domain_color = data_voxelize["domain_color"]
     layer_stack = data_voxelize["layer_stack"]
 
     # check voxel structure parameters
-    _check_voxel_structure(d, c, size)
+    _check_param(param)
 
     # check domain colors
     _check_domain_color(domain_color)

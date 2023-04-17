@@ -41,14 +41,11 @@ def _run_mesher(data_geometry):
 
     # voxelize the geometry
     if mesh_type == "voxel":
-        reference = None
-        data_voxel = _run_voxel(data_voxelize)
+        (reference, data_voxel) = _run_voxel(data_voxelize)
     elif mesh_type == "shape":
-        reference = None
-        data_voxel = _run_shape(data_voxelize)
+        (reference, data_voxel) = _run_shape(data_voxelize)
     elif mesh_type == "png":
-        reference = None
-        data_voxel = _run_png(data_voxelize)
+        (reference, data_voxel) = _run_png(data_voxelize)
     elif mesh_type == "stl":
         (reference, data_voxel) = _run_stl(data_voxelize)
     else:
@@ -63,14 +60,12 @@ def _run_voxel(data_voxelize):
     """
 
     # extract the data
-    n = data_voxelize["n"]
-    d = data_voxelize["d"]
-    c = data_voxelize["c"]
-    domain_def = data_voxelize["domain_def"]
+    param = data_voxelize["param"]
+    domain_index = data_voxelize["domain_index"]
 
     # process the indices arrays
     with utils_log.BlockTimer(LOGGER, "mesher_voxel"):
-        domain_def = mesher_voxel.get_mesh(n, domain_def)
+        (n, d, c, domain_def, reference) = mesher_voxel.get_mesh(param, domain_index)
 
     # assemble the data
     data_voxel = {
@@ -80,7 +75,7 @@ def _run_voxel(data_voxelize):
         "domain_def": domain_def,
     }
 
-    return data_voxel
+    return reference, data_voxel
 
 
 def _run_shape(data_voxelize):
@@ -89,16 +84,13 @@ def _run_shape(data_voxelize):
     """
 
     # extract the data
-    d = data_voxelize["d"]
-    c = data_voxelize["c"]
-    tol = data_voxelize["tol"]
-    bounds = data_voxelize["bounds"]
+    param = data_voxelize["param"]
     layer_stack = data_voxelize["layer_stack"]
     geometry_shape = data_voxelize["geometry_shape"]
 
     # process the shapes
     with utils_log.BlockTimer(LOGGER, "mesher_shape"):
-        (n, d, c, domain_def) = mesher_shape.get_mesh(d, c, tol, bounds, layer_stack, geometry_shape)
+        (n, d, c, domain_def, reference) = mesher_shape.get_mesh(param, layer_stack, geometry_shape)
 
     # assemble the data
     data_voxel = {
@@ -108,7 +100,7 @@ def _run_shape(data_voxelize):
         "domain_def": domain_def,
     }
 
-    return data_voxel
+    return reference, data_voxel
 
 
 def _run_png(data_voxelize):
@@ -117,15 +109,13 @@ def _run_png(data_voxelize):
     """
 
     # extract the data
-    d = data_voxelize["d"]
-    c = data_voxelize["c"]
-    size = data_voxelize["size"]
+    param = data_voxelize["param"]
     domain_color = data_voxelize["domain_color"]
     layer_stack = data_voxelize["layer_stack"]
 
     # voxelize the PNG files
     with utils_log.BlockTimer(LOGGER, "mesher_png"):
-        (n, domain_def) = mesher_png.get_mesh(size, domain_color, layer_stack)
+        (n, d, c, domain_def, reference) = mesher_png.get_mesh(param, domain_color, layer_stack)
 
     # assemble the data
     data_voxel = {
@@ -135,7 +125,7 @@ def _run_png(data_voxelize):
         "domain_def": domain_def,
     }
 
-    return data_voxel
+    return reference, data_voxel
 
 
 def _run_stl(data_voxelize):
@@ -144,13 +134,12 @@ def _run_stl(data_voxelize):
     """
 
     # extract the data
-    d = data_voxelize["d"]
-    bounds = data_voxelize["bounds"]
+    param = data_voxelize["param"]
     domain_stl = data_voxelize["domain_stl"]
 
     # voxelize the STL files
     with utils_log.BlockTimer(LOGGER, "mesher_stl"):
-        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(d, bounds, domain_stl)
+        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(param, domain_stl)
 
     # assemble the data
     data_voxel = {

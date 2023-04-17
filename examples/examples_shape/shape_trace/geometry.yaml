@@ -7,10 +7,14 @@
 
 "mesh_type": "shape"
 "data_voxelize":
-    "d": [0.5, 0.5, 0.5]
-    "c": [0.0, 0.0, 0.0]
-    "tol": 0.1
-    "bounds": null
+    "param":
+        "dx": 0.5
+        "dy": 0.5
+        "dz": 0.5
+        "cz": 0.0
+        "tol": 0.1
+        "xyz_min": null
+        "xyz_max": null
     "layer_stack":
         - { "n_layer": 1, "name_layer": "back"}
         - { "n_layer": 2, "name_layer": "insulation"}
