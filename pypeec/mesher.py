@@ -15,6 +15,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_mesher import mesher_voxel
+from pypeec.lib_mesher import mesher_shape
 from pypeec.lib_mesher import mesher_png
 from pypeec.lib_mesher import mesher_stl
 from pypeec.lib_mesher import voxel_conflict
@@ -90,13 +91,14 @@ def _run_shape(data_voxelize):
     # extract the data
     d = data_voxelize["d"]
     c = data_voxelize["c"]
+    tol = data_voxelize["tol"]
     bounds = data_voxelize["bounds"]
     layer_stack = data_voxelize["layer_stack"]
     geometry_shape = data_voxelize["geometry_shape"]
 
     # process the shapes
     with utils_log.BlockTimer(LOGGER, "mesher_shape"):
-        (n, d, c, domain_def, reference) = mesher_shape.get_mesh(d, c, bounds, layer_stack, geometry_shape)
+        (n, d, c, domain_def) = mesher_shape.get_mesh(d, c, tol, bounds, layer_stack, geometry_shape)
 
     # assemble the data
     data_voxel = {
@@ -143,13 +145,12 @@ def _run_stl(data_voxelize):
 
     # extract the data
     d = data_voxelize["d"]
-    c = data_voxelize["c"]
     bounds = data_voxelize["bounds"]
     domain_stl = data_voxelize["domain_stl"]
 
     # voxelize the STL files
     with utils_log.BlockTimer(LOGGER, "mesher_stl"):
-        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(d, c, bounds, domain_stl)
+        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(d, bounds, domain_stl)
 
     # assemble the data
     data_voxel = {

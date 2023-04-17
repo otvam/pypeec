@@ -9,31 +9,34 @@
 "data_voxelize":
     "d": [0.5, 0.5, 0.5]
     "c": [0.0, 0.0, 0.0]
-    "bounds":
-        "xy_min": [0, 0]
-        "xy_max": [200, 100]
-    "resolution": 0.1
+    "tol": 0.1
+    "bounds": null
     "layer_stack":
-        - { "n_layer": 1, "name": "back"}
-        - { "n_layer": 2, "name": "insulation"}
-        - { "n_layer": 1, "name": "front"}
+        - { "n_layer": 1, "name_layer": "back"}
+        - { "n_layer": 2, "name_layer": "insulation"}
+        - { "n_layer": 1, "name_layer": "front"}
     "geometry_shape":
         "front":
             "layer_start": "front"
             "layer_stop": "front"
-            "shape_description":
-                - {"shape_operation": "add", "shape_type": "trace", "xy": [[10, 10], [90, 90]], "buffer": 10}
+            "shape_add":
+                - {"shape_type": "trace", "coord": [[10, 10], [90, 90]], "buffer": 10}
+            "shape_sub":
+                - {"shape_type": "pad", "coord": [[10, 10], [90, 90]], "buffer": 5}
         "via":
             "layer_start": "insulation"
             "layer_stop": "insulation"
-            "shape_description":
-                - {"shape_operation": "add", "shape_type": "pad", "xy": [[10, 10], [90, 90]], "buffer": 10}
-                - {"shape_operation": "sub", "shape_type": "pad", "xy": [[10, 10], [90, 90]], "buffer": 5}
+            "shape_add":
+                - {"shape_type": "pad", "coord": [[10, 10], [90, 90]], "buffer": 10}
+            "shape_sub":
+                - {"shape_type": "pad", "coord": [[10, 10], [90, 90]], "buffer": 5}
         "terminal":
             "layer_start": "back"
             "layer_stop": "back"
-            "shape_description":
-                - {"shape_operation": "add", "shape_type": "pad", "xy": [[10, 10], [90, 90]], "buffer": 10}
+            "shape_add":
+                - {"shape_type": "pad", "coord": [[10, 10], [90, 90]], "buffer": 10}
+            "shape_sub":
+                - {"shape_type": "pad", "coord": [[10, 10], [90, 90]], "buffer": 5}
 "resampling":
     "use_reduce": false
     "use_resample": false

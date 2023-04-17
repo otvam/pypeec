@@ -35,14 +35,12 @@ def _check_domain_stl(domain_stl):
             datachecker.check_filename("filename_list", filename)
 
 
-def _check_voxel_structure(d, c, bounds):
+def _check_voxel_structure(d, bounds):
     """
     Check the voxel structure parameters.
     """
 
     datachecker.check_float_array("d", d, size=3, is_positive=True, can_be_zero=False)
-    if c is not None:
-        datachecker.check_float_array("c", c, size=3)
     if bounds is not None:
         key_list = ["xyz_min", "xyz_max"]
         datachecker.check_dict("bounds", bounds, key_list=key_list)
@@ -56,17 +54,16 @@ def check_data_voxelize(data_voxelize):
     """
 
     # check type
-    key_list = ["d", "c", "bounds", "domain_stl"]
+    key_list = ["d", "bounds", "domain_stl"]
     datachecker.check_dict("data_voxelize", data_voxelize, key_list=key_list)
 
     # extract field
     d = data_voxelize["d"]
-    c = data_voxelize["c"]
     bounds = data_voxelize["bounds"]
     domain_stl = data_voxelize["domain_stl"]
 
     # check voxel structure parameters
-    _check_voxel_structure(d, c, bounds)
+    _check_voxel_structure(d, bounds)
 
     # check the stl file
     _check_domain_stl(domain_stl)

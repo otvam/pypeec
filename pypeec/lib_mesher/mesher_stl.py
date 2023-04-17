@@ -102,7 +102,7 @@ def _get_idx_stl(grid, mesh_stl):
     return domain_def
 
 
-def _get_merge_stl(c, c_stl, mesh_stl):
+def _get_merge_stl(mesh_stl):
     """
     Merge the STL files into a single mesh.
     Translate the mesh with the provided origin.
@@ -111,9 +111,6 @@ def _get_merge_stl(c, c_stl, mesh_stl):
     # merge the meshes
     mesh_list = list(mesh_stl.values())
     reference = pv.MultiBlock(mesh_list).combine().extract_surface()
-
-    # place at the new origin
-    reference = reference.translate(c-c_stl, inplace=True)
 
     return reference
 
@@ -192,7 +189,7 @@ def _get_mesh_stl(domain_stl):
     return mesh_stl, xyz_min, xyz_max
 
 
-def get_mesh(d, c, bounds, domain_stl):
+def get_mesh(d, bounds, domain_stl):
     """
     Transform STL files into a 3D voxel structure.
     Each STL file corresponds to a domain of the 3D voxel structure.
@@ -202,29 +199,29 @@ def get_mesh(d, c, bounds, domain_stl):
     LOGGER.debug("load STL files")
     (mesh_stl, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl)
 
-    # if provided, the user specified bounds are used, otherwise the STL bounds
-    if bounds is None:
-        xyz_min = xyz_min_stl
-        xyz_max = xyz_max_stl
-    else:
+    # if provided, the specified bounds are used, otherwise the STL bounds are used
+    if bounds is not None:
         xyz_min = np.array(bounds["xyz_min"], NP_TYPES.FLOAT)
         xyz_max = np.array(bounds["xyz_max"], NP_TYPES.FLOAT)
+    else:
+        xyz_min = xyz_min_stl
+        xyz_max = xyz_max_stl
 
-    # mesh size
-    xyz_diff = xyz_max-xyz_min
+    # geometry size
+    c = (xyz_max+xyz_min)/2
 
-    # disp mesh size
+    # disp geometry size
     LOGGER.debug("voxel: min = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_min))
     LOGGER.debug("voxel: max = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_max))
-    LOGGER.debug("voxel: diff = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_diff))
+    LOGGER.debug("voxel: center = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(c))
 
-    # extract the number of voxels
-    d = np.array(d, dtype=NP_TYPES.FLOAT)
+    # extract the number of voxels and the voxel size
     n = np.rint((xyz_max-xyz_min)/d)
-    n = n.astype(NP_TYPES.INT)
-
-    # get the voxel size
     d = (xyz_max-xyz_min)/n
+
+    # cast data
+    d = d.astype(NP_TYPES.FLOAT)
+    n = n.astype(NP_TYPES.INT)
 
     # check voxel validity
     if not np.all(d > 0):
@@ -233,24 +230,15 @@ def get_mesh(d, c, bounds, domain_stl):
     if not np.all(n > 0):
         RunError("invalid voxel number: should be positive")
 
-    # extract the center
-    c_stl = (xyz_max+xyz_min)/2
-
     # get the uniform grid
-    grid = _get_grid(n, d, c_stl)
+    grid = _get_grid(n, d, c)
 
     # voxelize the meshes and get the indices
     LOGGER.debug("voxelize STL files")
     domain_def = _get_idx_stl(grid, mesh_stl)
 
-    # if provided, the user specified voxel center is used, otherwise the geometrical center
-    if c is None:
-        c = c_stl
-    else:
-        c = np.array(c, NP_TYPES.FLOAT)
-
-    # merge meshes
-    reference = _get_merge_stl(c, c_stl, mesh_stl)
+    # merge and translate meshes
+    reference = _get_merge_stl(mesh_stl)
 
     # cast to lists
     n = n.tolist()
