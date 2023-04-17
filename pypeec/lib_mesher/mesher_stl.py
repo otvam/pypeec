@@ -52,7 +52,7 @@ def _get_grid(n, d, c):
     return grid
 
 
-def _get_voxelize(grid, tag, mesh):
+def _get_voxelize_stl(grid, mesh):
     """
     Voxelize an STL mesh with respect to a uniform grid.
     Return the indices of the created voxels.
@@ -62,7 +62,7 @@ def _get_voxelize(grid, tag, mesh):
     try:
         selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=True)
     except RuntimeError:
-        raise RunError("invalid mesh: mesh cannot be voxelized: %s" % tag)
+        raise RunError("invalid mesh: mesh cannot be voxelized")
 
     # create a boolean mask
     mask = selection["SelectedPoints"].view(bool)
@@ -91,7 +91,7 @@ def _get_idx_stl(grid, mesh_stl):
     # load the STL files
     for tag, mesh in mesh_stl.items():
         # voxelize and get the indices
-        idx = _get_voxelize(grid, tag, mesh)
+        idx = _get_voxelize_stl(grid, mesh)
 
         # display number of voxels
         LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx)))

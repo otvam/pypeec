@@ -71,14 +71,15 @@ def _get_shape_position(layer_start, layer_stop, stack_pos, stack_name):
     layer = np.concatenate((layer_start, layer_stop))
 
     # find the stack indices
-    idx_min = np.min(layer)
-    idx_max = np.max(layer)
+    idx_min = np.min(layer)+0
+    idx_max = np.max(layer)+1
+    stack_idx = np.arange(idx_min, idx_max)
 
     # get the position
-    z_min = stack_pos[idx_min+0]
-    z_max = stack_pos[idx_max+1]
+    z_min = stack_pos[idx_min]
+    z_max = stack_pos[idx_max]
 
-    return z_min, z_max
+    return z_min, z_max, stack_idx
 
 
 def _get_shape_obj(geometry_shape, stack_pos, stack_name, tol):
@@ -113,10 +114,10 @@ def _get_shape_obj(geometry_shape, stack_pos, stack_name, tol):
         xy_max = np.maximum(xy_max, tmp_max)
 
         # get the stack position
-        (z_min, z_max) = _get_shape_position(layer_start, layer_stop, stack_pos, stack_name)
+        (z_min, z_max, stack_idx) = _get_shape_position(layer_start, layer_stop, stack_pos, stack_name)
 
         # assign the object
-        shape_obj[tag] = {"z_min": z_min, "z_max": z_max, "obj": obj}
+        shape_obj[tag] = {"z_min": z_min, "z_max": z_max, "stack_idx": stack_idx, "obj": obj}
 
     return shape_obj, xy_min, xy_max
 
@@ -143,6 +144,66 @@ def _get_layer_stack(layer_stack, dz, cz):
     stack_name = np.array(stack_name)
 
     return nz, stack_pos, stack_name
+
+
+def _get_voxelize_shape(n, xyz_min, xyz_max, obj, stack_idx):
+    # get the bounds for the voxelization
+    (nx, ny, nz) = n
+    (x_min, y_min, z_min) = xyz_min
+    (x_max, y_max, z_max) = xyz_max
+
+    # coordinate transformation for the bounds
+    transform = rat.from_bounds(x_min, y_min, x_max, y_max, nx, ny)
+
+    # rasterize the data
+    matrix = raf.rasterize([obj], out_shape=(ny, nx), transform=transform)
+
+    # get the boolean matrix with the voxelization result
+    matrix = np.flip(matrix, axis=1)
+    matrix = np.swapaxes(matrix, 0, 1)
+
+    # find the 2D indices
+    idx_matrix = matrix.flatten(order="F")
+    idx_matrix = np.flatnonzero(idx_matrix).astype(NP_TYPES.INT)
+
+    # init voxel indices
+    idx_voxel = np.array([], dtype=NP_TYPES.INT)
+
+    # convert image indices into voxel indices
+    for idx in stack_idx:
+        # convert indices
+        idx_tmp = idx*nx*ny+idx_matrix
+
+        # add the indices to the array
+        idx_voxel = np.append(idx_voxel, idx_tmp)
+
+    return idx_voxel
+
+
+def _get_idx_shape(n, d, c, shape_obj):
+    # get the voxelization bounds
+    xyz_min = c-(n*d)/2
+    xyz_max = c+(n*d)/2
+
+    # init the domain dict
+    domain_def = {}
+
+    # load the STL files
+    for tag, dat_tmp in shape_obj.items():
+        # get the data
+        obj = dat_tmp["obj"]
+        stack_idx = dat_tmp["stack_idx"]
+
+        # voxelize and get the indices
+        idx = _get_voxelize_shape(n, xyz_min, xyz_max, obj, stack_idx)
+
+        # display number of voxels
+        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx)))
+
+        # assign the indices to the domain
+        domain_def[tag] = idx
+
+    return domain_def
 
 
 def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
@@ -228,12 +289,16 @@ def get_mesh(param, layer_stack, geometry_shape):
     LOGGER.debug("get the voxel size")
     (n, d, c) = _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min)
 
+    # voxelize the meshes and get the indices
+    LOGGER.debug("voxelize the shapes")
+    domain_def = _get_idx_shape(n, d, c, shape_obj)
 
-
+    # no reference
+    reference = None
 
     # cast to lists
     n = n.tolist()
     d = d.tolist()
     c = c.tolist()
 
-    return n, d, c, domain_def
+    return n, d, c, domain_def, reference

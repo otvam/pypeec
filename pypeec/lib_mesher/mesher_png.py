@@ -62,13 +62,13 @@ def _get_idx_voxel(size, nz, n_layer, idx_img):
     # get the image size
     (nx, ny) = size
 
-    # init idx
+    # init voxel indices
     idx_voxel = np.array([], dtype=NP_TYPES.INT)
 
     # convert image indices into voxel indices
-    for n_tmp in range(n_layer):
+    for iz in range(n_layer):
         # convert indices
-        idx_tmp = (nz+n_tmp)*nx*ny+idx_img
+        idx_tmp = (nz+iz)*nx*ny+idx_img
 
         # add the indices to the array
         idx_voxel = np.append(idx_voxel, idx_tmp)
