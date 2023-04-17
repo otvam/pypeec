@@ -14,6 +14,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
+import pyvista as pv
 import shapely as sha
 import rasterio.features as raf
 import rasterio.transform as rat
@@ -60,6 +61,9 @@ def _get_composite_shape(shape_add, shape_sub, tol):
     obj_sub = sha.unary_union(obj_sub)
     obj = sha.difference(obj_add, obj_sub)
     obj = sha.simplify(obj, tol)
+
+    if (not obj.is_valid) or (not obj.is_simple):
+        raise RunError("invalid polygon: polygon is ill-formed")
 
     return obj
 
@@ -250,6 +254,81 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     return n, d, c
 
 
+def _get_boundary_polygon(bnd, z_min):
+    # check that the boundary is closed
+    if (not bnd.is_valid) or (not bnd.is_closed):
+        raise RunError("invalid polygon: boundary is ill-formed")
+
+    # get the 2D boundary
+    xy = np.array(bnd.xy, dtype=NP_TYPES.FLOAT)
+    xy = np.swapaxes(xy, 0, 1)
+
+    # get the 3D boundary
+    z = np.full(len(xy), z_min, dtype=NP_TYPES.FLOAT)
+    z = np.expand_dims(z, axis=1)
+    xyz = np.hstack((xy, z))
+
+    # remove the duplicated points
+    xyz = xyz[:-1]
+
+    # get the face indices
+    faces = np.arange(len(xyz)+1)
+    faces = np.roll(faces, 1)
+
+    # create the polygon
+    polygon = pv.PolyData(xyz, faces=faces)
+
+    return polygon
+
+
+def _get_shape_mesh(z_min, z_max, obj):
+    obj = sha.geometry.polygon.orient(obj)
+
+    # bounding polygon
+    bnd = obj.exterior
+    polygon = _get_boundary_polygon(bnd, z_min)
+
+    # add all holes
+    for bnd in obj.interiors:
+        polygon += _get_boundary_polygon(bnd, z_min)
+
+    # triangulate poly with all three subpolygons supplying edges
+    polygon = polygon.delaunay_2d(edge_source=polygon)
+
+    # extrude
+    mesh = polygon.extrude((0, 0, z_max-z_min), capping=True)
+
+    return mesh
+
+
+def _get_merge_shape(shape_obj):
+    # list for storing the meshes
+    mesh_list = []
+
+    # load the STL files
+    for dat_tmp in shape_obj.values():
+        # get the data
+        obj = dat_tmp["obj"]
+        z_min = dat_tmp["z_min"]
+        z_max = dat_tmp["z_max"]
+
+        if isinstance(obj, sha.Polygon):
+            mesh = _get_shape_mesh(z_min, z_max, obj)
+            mesh_list.append(mesh)
+        elif isinstance(obj, sha.MultiPolygon):
+            for obj_tmp in obj.geoms:
+                mesh = _get_shape_mesh(z_min, z_max, obj_tmp)
+                mesh_list.append(mesh)
+        else:
+            raise ValueError("invalid shape type")
+
+    # assemble the meshes
+    reference = pv.MultiBlock(mesh_list)
+    reference = reference.combine().extract_surface()
+
+    return reference
+
+
 def get_mesh(param, layer_stack, geometry_shape):
     """
     Transform a series of 2D shapes into a 3D voxel structure.
@@ -293,8 +372,9 @@ def get_mesh(param, layer_stack, geometry_shape):
     LOGGER.debug("voxelize the shapes")
     domain_def = _get_idx_shape(n, d, c, shape_obj)
 
-    # no reference
-    reference = None
+    # merge the meshes representing the original geometry
+    LOGGER.debug("merge the meshes")
+    reference = _get_merge_shape(shape_obj)
 
     # cast to lists
     n = n.tolist()

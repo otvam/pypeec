@@ -110,7 +110,8 @@ def _get_merge_stl(mesh_stl):
 
     # merge the meshes
     mesh_list = list(mesh_stl.values())
-    reference = pv.MultiBlock(mesh_list).combine().extract_surface()
+    reference = pv.MultiBlock(mesh_list)
+    reference = reference.combine().extract_surface()
 
     return reference
 
@@ -139,7 +140,8 @@ def _get_load_stl(offset, filename_list):
         mesh_list.append(mesh)
 
     # merge the meshes
-    mesh = pv.MultiBlock(mesh_list).combine().extract_surface()
+    mesh = pv.MultiBlock(mesh_list)
+    mesh = mesh.combine().extract_surface()
 
     # translate the meshes
     mesh = mesh.translate(offset, inplace=True)
@@ -257,7 +259,7 @@ def get_mesh(param, domain_stl):
     LOGGER.debug("voxelize STL files")
     domain_def = _get_idx_stl(grid, mesh_stl)
 
-    # merge and translate meshes
+    # merge the meshes representing the original geometry
     LOGGER.debug("merge the meshes")
     reference = _get_merge_stl(mesh_stl)
 
