@@ -231,7 +231,7 @@ def get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
 
     # parse the material domains
     for tag, dat_tmp in material_idx.items():
-        # get the data
+        # extract the data
         material_type = dat_tmp["material_type"]
         idx = dat_tmp["idx"]
 
@@ -275,7 +275,7 @@ def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_
 
     # parse the source terminals
     for tag, dat_tmp in source_idx.items():
-        # get the data
+        # extract the data
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
 

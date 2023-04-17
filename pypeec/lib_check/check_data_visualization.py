@@ -18,7 +18,7 @@ def _check_data_window(data_window):
     key_list = ["title", "show_menu", "window_size", "notebook_size"]
     datachecker.check_dict("data_window", data_window, key_list=key_list)
 
-    # get the data
+    # extract the data
     title = data_window["title"]
     show_menu = data_window["show_menu"]
     window_size = data_window["window_size"]
@@ -256,7 +256,7 @@ def _check_data_plotter_matplotlib(data_plot):
     key_list = ["plot_type", "data_options"]
     datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
-    # get the data
+    # extract the data
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
 
@@ -276,7 +276,7 @@ def _check_data_plotter_pyvista(data_plot):
     key_list = ["plot_type", "clip_options", "data_options", "plot_options"]
     datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
-    # get the data
+    # extract the data
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
     clip_options = data_plot["clip_options"]
@@ -340,7 +340,7 @@ def _check_data_viewer_item(data_viewer):
     key_list = ["plot_type", "clip_options", "data_options", "plot_options"]
     datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
-    # get the data
+    # extract the data
     plot_type = data_plot["plot_type"]
     clip_options = data_plot["clip_options"]
     data_options = data_plot["data_options"]

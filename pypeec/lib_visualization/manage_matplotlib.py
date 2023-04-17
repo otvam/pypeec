@@ -18,7 +18,7 @@ def _get_plot_residuum(fig, res, data_options):
     Plot the final residuum (absolute value) with a histogram.
     """
 
-    # get the data
+    # extract the data
     n_bins = data_options["n_bins"]
     tol_bins = data_options["tol_bins"]
     bar_color = data_options["bar_color"]
@@ -61,7 +61,7 @@ def _get_plot_convergence(fig, conv, data_options):
     Plot the convergence of the iterative matrix solver.
     """
 
-    # get the data
+    # extract the data
     color = data_options["color"]
     marker = data_options["marker"]
 
@@ -87,7 +87,7 @@ def get_plot_plotter(fig, res, conv, data_plot):
     Plot the solver status (for the plotter).
     """
 
-    # get the data
+    # extract the data
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
 

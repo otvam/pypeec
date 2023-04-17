@@ -1,5 +1,6 @@
 """
 Module for transforming a series of 2D shapes into a 3D voxel structure.
+The 2D geometry are stacked in order to create a voxel structure.
 
 The following axis definition is used:
     - x: x-axis of the 2D shapes
@@ -7,7 +8,7 @@ The following axis definition is used:
     - z: stacking dimension of the 2D geometries
 
 The shape handling is done with Shapely.
-The rasterization is done with Rasterio.
+The raster conversion is done with Rasterio.
 """
 
 __author__ = "Thomas Guillod"
@@ -29,11 +30,79 @@ LOGGER = utils_log.get_logger("SHAPE")
 NP_TYPES = config.NP_TYPES
 
 
+def _get_boundary_polygon(bnd, z_min):
+    """
+    Convert a Shapely boundary into a PyVista polygon.
+    """
+
+    # check that the boundary is closed
+    if (not bnd.is_valid) or (not bnd.is_closed):
+        raise RunError("invalid polygon: boundary is ill-formed")
+
+    # get the 2D boundary
+    xy = np.array(bnd.xy, dtype=NP_TYPES.FLOAT)
+    xy = np.swapaxes(xy, 0, 1)
+
+    # get the 3D boundary
+    z = np.full(len(xy), z_min, dtype=NP_TYPES.FLOAT)
+    z = np.expand_dims(z, axis=1)
+    xyz = np.hstack((xy, z))
+
+    # remove the duplicated points
+    xyz = xyz[:-1]
+
+    # get the face indices
+    faces = np.arange(len(xyz)+1)
+    faces = np.roll(faces, 1)
+
+    # create the polygon
+    polygon = pv.PolyData(xyz, faces=faces)
+
+    return polygon
+
+
+def _get_shape_mesh(z_min, z_max, obj):
+    """
+    Extrude a Shapely polygon into a PyVista mesh.
+    """
+
+    # ensure that the polygon has a positive orientation
+    obj = sha.geometry.polygon.orient(obj)
+
+    # get the exterior boundary and the holes
+    bnd = obj.exterior
+    holes = obj.interiors
+
+    # polygon for the external boundaries
+    polygon = _get_boundary_polygon(bnd, z_min)
+
+    # polygon for the holes
+    for bnd in holes:
+        polygon += _get_boundary_polygon(bnd, z_min)
+
+    # triangulate the resulting polygon
+    polygon = polygon.delaunay_2d(edge_source=polygon)
+
+    # extrude the polygon into a 3D mesh
+    mesh = polygon.extrude((0, 0, z_max-z_min), capping=True)
+
+    return mesh
+
+
 def _get_single_shape(shape_data):
+    """
+    Get a Shapely object for different shapes:
+        - a trace (multi-segment line)
+        - a pad (filled disc)
+        - a polygon
+    """
+
+    # extract the data
     shape_type = shape_data["shape_type"]
     buffer = shape_data["buffer"]
     coord = shape_data["coord"]
 
+    # get the shape
     if shape_type == "trace":
         obj_tmp = sha.geometry.LineString(coord)
     elif shape_type == "pad":
@@ -43,32 +112,99 @@ def _get_single_shape(shape_data):
     else:
         raise ValueError("invalid shape type")
 
+    # add a buffer with a given thickness around the shape
     obj_final = obj_tmp.buffer(buffer, cap_style=1)
 
     return obj_final
 
 
 def _get_composite_shape(shape_add, shape_sub, tol):
+    """
+    Get a Shapely composite shape consisting of the union/difference of several shapes.
+    Simplify the shape with a given tolerance and check the validity of the shape;
+    """
+
+    # shape to be added
     obj_add = []
     for shape_data in shape_add:
         obj_add.append(_get_single_shape(shape_data))
 
+    # shape to be subtracted
     obj_sub = []
     for shape_data in shape_sub:
         obj_sub.append(_get_single_shape(shape_data))
 
+    # form the composite shape
     obj_add = sha.unary_union(obj_add)
     obj_sub = sha.unary_union(obj_sub)
     obj = sha.difference(obj_add, obj_sub)
+
+    # simplify the shape
     obj = sha.simplify(obj, tol)
 
+    # check that the shape is valid
     if (not obj.is_valid) or (not obj.is_simple):
         raise RunError("invalid polygon: polygon is ill-formed")
 
     return obj
 
 
+def _get_voxelize_shape(n, xyz_min, xyz_max, obj):
+    """
+    Voxelize a shape with given bounds and voxel numbers.
+    """
+
+    # get the bounds for the voxelization
+    (nx, ny, nz) = n
+    (x_min, y_min, z_min) = xyz_min
+    (x_max, y_max, z_max) = xyz_max
+
+    # coordinate transformation for the bounds
+    transform = rat.from_bounds(x_min, y_min, x_max, y_max, nx, ny)
+
+    # rasterize the data
+    idx_shape = raf.rasterize([obj], out_shape=(ny, nx), transform=transform)
+
+    # get the boolean matrix with the voxelization result
+    idx_shape = np.flip(idx_shape, axis=1)
+    idx_shape = np.swapaxes(idx_shape, 0, 1)
+
+    # find the 2D indices
+    idx_shape = idx_shape.flatten(order="F")
+    idx_shape = np.flatnonzero(idx_shape).astype(NP_TYPES.INT)
+
+    return idx_shape
+
+
+def _get_idx_voxel(n, idx_shape, stack_idx):
+    """
+    Find the 3D voxel indices from the 2D image indices.
+    The number of layers to be added is arbitrary.
+    """
+
+    # get the shape size
+    (nx, ny, nz) = n
+
+    # init voxel indices
+    idx_voxel = np.array([], dtype=NP_TYPES.INT)
+
+    # convert image indices into voxel indices
+    for idx in stack_idx:
+        # convert indices
+        idx_tmp = idx*nx*ny+idx_shape
+
+        # add the indices to the array
+        idx_voxel = np.append(idx_voxel, idx_tmp)
+
+    return idx_voxel
+
+
 def _get_shape_position(layer_start, layer_stop, stack_pos, stack_name):
+    """
+    Find the position of a shape in the layer stack.
+    Find the absolute position and the indices with respect to the layer stack.
+    """
+
     # find the stack position
     layer_start = np.flatnonzero(stack_name == layer_start)
     layer_stop = np.flatnonzero(stack_name == layer_stop)
@@ -87,16 +223,21 @@ def _get_shape_position(layer_start, layer_stop, stack_pos, stack_name):
 
 
 def _get_shape_obj(geometry_shape, stack_pos, stack_name, tol):
-    # init STL mesh dict
+    """
+    Create the shapes and set the position in the layer stack.
+    Find the bounding box for all the shapes (minimum and maximum coordinates).
+    """
+
+    # init shape dict
     shape_obj = {}
 
     # init the coordinate (minimum and maximum coordinates)
     xy_min = np.full(2, +np.inf, dtype=NP_TYPES.FLOAT)
     xy_max = np.full(2, -np.inf, dtype=NP_TYPES.FLOAT)
 
-    # load the STL files and find the bounding box
+    # create the shapes and find the bounding box
     for tag, dat_tmp in geometry_shape.items():
-        # extract data
+        # extract the data
         layer_start = dat_tmp["layer_start"]
         layer_stop = dat_tmp["layer_stop"]
         shape_add = dat_tmp["shape_add"]
@@ -127,10 +268,15 @@ def _get_shape_obj(geometry_shape, stack_pos, stack_name, tol):
 
 
 def _get_layer_stack(layer_stack, dz, cz):
+    """
+    Parse the layer stack defining with a list.
+    Return the number of layers and the coordinates of the layers.
+    """
+
     # init the list
     stack_name = []
 
-    # get the layer parameters
+    # get a list with all the layers and the corresponding names
     for dat_tmp in layer_stack:
         n_layer = dat_tmp["n_layer"]
         name_layer = dat_tmp["name_layer"]
@@ -150,41 +296,11 @@ def _get_layer_stack(layer_stack, dz, cz):
     return nz, stack_pos, stack_name
 
 
-def _get_voxelize_shape(n, xyz_min, xyz_max, obj, stack_idx):
-    # get the bounds for the voxelization
-    (nx, ny, nz) = n
-    (x_min, y_min, z_min) = xyz_min
-    (x_max, y_max, z_max) = xyz_max
+def _get_domain_def(n, d, c, shape_obj):
+    """
+    Voxelize the shapes and assign the indices to a dict.
+    """
 
-    # coordinate transformation for the bounds
-    transform = rat.from_bounds(x_min, y_min, x_max, y_max, nx, ny)
-
-    # rasterize the data
-    matrix = raf.rasterize([obj], out_shape=(ny, nx), transform=transform)
-
-    # get the boolean matrix with the voxelization result
-    matrix = np.flip(matrix, axis=1)
-    matrix = np.swapaxes(matrix, 0, 1)
-
-    # find the 2D indices
-    idx_matrix = matrix.flatten(order="F")
-    idx_matrix = np.flatnonzero(idx_matrix).astype(NP_TYPES.INT)
-
-    # init voxel indices
-    idx_voxel = np.array([], dtype=NP_TYPES.INT)
-
-    # convert image indices into voxel indices
-    for idx in stack_idx:
-        # convert indices
-        idx_tmp = idx*nx*ny+idx_matrix
-
-        # add the indices to the array
-        idx_voxel = np.append(idx_voxel, idx_tmp)
-
-    return idx_voxel
-
-
-def _get_idx_shape(n, d, c, shape_obj):
     # get the voxelization bounds
     xyz_min = c-(n*d)/2
     xyz_max = c+(n*d)/2
@@ -192,20 +308,21 @@ def _get_idx_shape(n, d, c, shape_obj):
     # init the domain dict
     domain_def = {}
 
-    # load the STL files
+    # voxelize the shapes
     for tag, dat_tmp in shape_obj.items():
-        # get the data
+        # extract the data
         obj = dat_tmp["obj"]
         stack_idx = dat_tmp["stack_idx"]
 
         # voxelize and get the indices
-        idx = _get_voxelize_shape(n, xyz_min, xyz_max, obj, stack_idx)
+        idx_shape = _get_voxelize_shape(n, xyz_min, xyz_max, obj)
+        idx_voxel = _get_idx_voxel(n, idx_shape, stack_idx)
 
         # display number of voxels
-        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx)))
+        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx_voxel)))
 
         # assign the indices to the domain
-        domain_def[tag] = idx
+        domain_def[tag] = idx_voxel
 
     return domain_def
 
@@ -254,64 +371,25 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     return n, d, c
 
 
-def _get_boundary_polygon(bnd, z_min):
-    # check that the boundary is closed
-    if (not bnd.is_valid) or (not bnd.is_closed):
-        raise RunError("invalid polygon: boundary is ill-formed")
-
-    # get the 2D boundary
-    xy = np.array(bnd.xy, dtype=NP_TYPES.FLOAT)
-    xy = np.swapaxes(xy, 0, 1)
-
-    # get the 3D boundary
-    z = np.full(len(xy), z_min, dtype=NP_TYPES.FLOAT)
-    z = np.expand_dims(z, axis=1)
-    xyz = np.hstack((xy, z))
-
-    # remove the duplicated points
-    xyz = xyz[:-1]
-
-    # get the face indices
-    faces = np.arange(len(xyz)+1)
-    faces = np.roll(faces, 1)
-
-    # create the polygon
-    polygon = pv.PolyData(xyz, faces=faces)
-
-    return polygon
-
-
-def _get_shape_mesh(z_min, z_max, obj):
-    obj = sha.geometry.polygon.orient(obj)
-
-    # bounding polygon
-    bnd = obj.exterior
-    polygon = _get_boundary_polygon(bnd, z_min)
-
-    # add all holes
-    for bnd in obj.interiors:
-        polygon += _get_boundary_polygon(bnd, z_min)
-
-    # triangulate poly with all three subpolygons supplying edges
-    polygon = polygon.delaunay_2d(edge_source=polygon)
-
-    # extrude
-    mesh = polygon.extrude((0, 0, z_max-z_min), capping=True)
-
-    return mesh
-
-
 def _get_merge_shape(shape_obj):
+    """
+    Transform all the 2D shapes into 3D meshes.
+    Merge all the meshes into a single mesh.
+    The resulting mesh represent the original geometry.
+    This mesh can be used to assess the quality of the voxelization.
+    """
+
     # list for storing the meshes
     mesh_list = []
 
-    # load the STL files
+    # merge all the shapes
     for dat_tmp in shape_obj.values():
-        # get the data
+        # extract the data
         obj = dat_tmp["obj"]
         z_min = dat_tmp["z_min"]
         z_max = dat_tmp["z_max"]
 
+        # transform the shapes into meshes
         if isinstance(obj, sha.Polygon):
             mesh = _get_shape_mesh(z_min, z_max, obj)
             mesh_list.append(mesh)
@@ -337,7 +415,7 @@ def get_mesh(param, layer_stack, geometry_shape):
         - a list containing the layer stack of shapes
     """
 
-    # extract data
+    # extract the data
     dx = param["dx"]
     dy = param["dy"]
     dz = param["dz"]
@@ -368,12 +446,12 @@ def get_mesh(param, layer_stack, geometry_shape):
     LOGGER.debug("get the voxel size")
     (n, d, c) = _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min)
 
-    # voxelize the meshes and get the indices
+    # voxelize the shapes and get the indices
     LOGGER.debug("voxelize the shapes")
-    domain_def = _get_idx_shape(n, d, c, shape_obj)
+    domain_def = _get_domain_def(n, d, c, shape_obj)
 
-    # merge the meshes representing the original geometry
-    LOGGER.debug("merge the meshes")
+    # merge the shapes representing the original geometry
+    LOGGER.debug("merge the shapes")
     reference = _get_merge_shape(shape_obj)
 
     # cast to lists

@@ -384,7 +384,7 @@ def get_multiply(data, vec_in, flip):
     The output vector has the size: n_out.
     """
 
-    # extract data
+    # extract the data
     (name, n_in, n_out, idx_in, idx_out, mat_fft) = data
 
     # flip the input and output

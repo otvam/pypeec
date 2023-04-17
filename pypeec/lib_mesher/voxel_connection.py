@@ -80,7 +80,7 @@ def _check_domain_connection(domain_def, connection_def, tag_connection, data_co
     Check that the given connections between the domain exists.
     """
 
-    # extract data
+    # extract the data
     domain_list = data_connection["domain_list"]
     connected = data_connection["connected"]
 

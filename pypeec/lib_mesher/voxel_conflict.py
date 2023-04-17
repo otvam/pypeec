@@ -59,7 +59,7 @@ def get_conflict(domain_def, domain_conflict):
 
     # resolve the conflicts for all the specified domain pairs
     for domain_conflict_tmp in domain_conflict:
-        # extract data
+        # extract the data
         domain_resolve = domain_conflict_tmp["domain_resolve"]
         domain_keep = domain_conflict_tmp["domain_keep"]
 

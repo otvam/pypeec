@@ -22,7 +22,7 @@ def get_gerbv_file(filename_gerbv, data_base, stack):
     Create a "gerbv - Gerber Viewer" project file.
     """
 
-    # extract data
+    # extract the data
     gerber_edge = data_base["gerber_edge"]
     color_edge = data_base["color_edge"]
     color_none = data_base["color_none"]
@@ -48,7 +48,7 @@ def get_gerbv_file(filename_gerbv, data_base, stack):
 
         # add stack
         for i, stack_tmp in enumerate(stack):
-            # extract data
+            # extract the data
             layer = i+1
             gerber = stack_tmp["gerber"]
             color = stack_tmp["color"]
@@ -89,7 +89,7 @@ def get_png(layer, name, data_export, data_base, stack):
     Transform GERBER files into a PNG file for a given layer.
     """
 
-    # get the data
+    # extract the data
     margin = data_export["margin"]
     voxel = data_export["voxel"]
     oversampling = data_export["oversampling"]

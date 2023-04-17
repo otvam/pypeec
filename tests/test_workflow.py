@@ -86,7 +86,7 @@ class TestWorkflow(unittest.TestCase):
         # generate the results
         (data_voxel, data_solution) = test_data.run_workflow(folder, name)
 
-        # extract data
+        # extract the data
         voxel_status = data_voxel["voxel_status"]
         data_sweep = data_solution["data_sweep"]
 

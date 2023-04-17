@@ -45,7 +45,7 @@ def _check_domain_conflict(domain_name, domain_conflict):
         key_list = ["domain_keep", "domain_resolve"]
         datachecker.check_dict("domain_conflict", domain_conflict_tmp, key_list=key_list)
 
-        # extract data
+        # extract the data
         domain_keep = domain_conflict_tmp["domain_keep"]
         domain_resolve = domain_conflict_tmp["domain_resolve"]
 

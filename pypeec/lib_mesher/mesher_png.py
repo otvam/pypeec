@@ -1,5 +1,6 @@
 """
 Module for transforming a series of 2D PNG images into a 3D voxel structure.
+The 2D geometry are stacked in order to create a voxel structure.
 
 The following axis definition is used:
     - x: x-axis of the images (standard cartesian coordinate, not image coordinate)
@@ -23,6 +24,37 @@ LOGGER = utils_log.get_logger("STL")
 
 # get config
 NP_TYPES = config.NP_TYPES
+
+
+def _get_load_image(filename_list):
+    """
+    Load several images into a list of tensors.
+    Flip the axis in order to get standard cartesian coordinate (non-standard image coordinate).
+    """
+
+    # list for the images
+    img_list = []
+
+    # load the files
+    for filename in filename_list:
+        # load the image
+        try:
+            img = pmg.open(filename, formats=["png"])
+        except OSError:
+            raise RunError("invalid png: invalid file content: %s" % filename)
+
+        # cast to array
+        img = img.convert("RGBA")
+        img = np.array(img, dtype=np.uint8)
+
+        # transform from image coordinate to cartesian coordinate
+        img = np.swapaxes(img, 0, 1)
+        img = np.flip(img, axis=1)
+
+        # store the loaded image
+        img_list.append(img)
+
+    return img_list
 
 
 def _get_idx_image(size, img, color):
@@ -76,58 +108,47 @@ def _get_idx_voxel(size, nz, n_layer, idx_img):
     return idx_voxel
 
 
-def _get_image(filename):
+def _get_domain(size, nz, n_layer, color_list, img_list):
     """
-    Load an image into a tensor.
-    Flip the axis in order to get standard cartesian coordinate (non-standard image coordinate).
+    Find the voxels indices for a list a colors and a list of images.
+    Convert the 2D image indices into 3D voxel indices.
     """
 
-    # load the image
-    try:
-        img = pmg.open(filename, formats=["png"])
-    except OSError:
-        raise RunError("invalid png: invalid file content: %s" % filename)
+    # init the index array
+    idx_img = np.array([], dtype=NP_TYPES.INT)
 
-    # cast to array
-    img = img.convert("RGBA")
-    img = np.array(img, dtype=np.uint8)
+    # get image indices (2D indices)
+    for color in color_list:
+        for img in img_list:
+            idx_img_tmp = _get_idx_image(size, img, color)
+            idx_img = np.append(idx_img, idx_img_tmp)
 
-    # transform from image coordinate to cartesian coordinate
-    img = np.swapaxes(img, 0, 1)
-    img = np.flip(img, axis=1)
+    # remove duplicate (between the images in the list)
+    idx_img = np.unique(idx_img)
 
-    return img
+    # get voxel indices (3D indices)
+    idx_voxel = _get_idx_voxel(size, nz, n_layer, idx_img)
+
+    return idx_voxel
 
 
 def _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list):
     """
-    Add an image to the 3D voxel structure.
-    Update the domain indices and the number of layers.
+    Find the voxel indices for a single layer.
+    A single layer can be composed of several images.
+    A single layer can contain several domains.
     """
 
     # extract the image data as a tensor
-    img_list = []
-    for filename in filename_list:
-        img = _get_image(filename)
-        img_list.append(img)
+    img_list = _get_load_image(filename_list)
+
+    # count the number of voxel for the layer
+    n_voxel = 0
 
     # add the indices for all the domains
-    n_voxel = 0
     for tag, color_list in domain_color.items():
-        # init the index array
-        idx_img = np.array([], dtype=NP_TYPES.INT)
-
-        # get image indices (2D indices)
-        for color in color_list:
-            for img in img_list:
-                idx_img_tmp = _get_idx_image(size, img, color)
-                idx_img = np.append(idx_img, idx_img_tmp)
-
-        # remove duplicate (between the images in the list)
-        idx_img = np.unique(idx_img)
-
-        # get voxel indices (3D indices)
-        idx_voxel = _get_idx_voxel(size, nz, n_layer, idx_img)
+        # get the indices of the voxels
+        idx_voxel = _get_domain(size, nz, n_layer, color_list, img_list)
 
         # count the number of voxels
         n_voxel += len(idx_voxel)
@@ -173,7 +194,7 @@ def get_mesh(param, domain_color, layer_stack):
 
     # add layers
     for layer_stack_tmp in layer_stack:
-        # get the data
+        # extract the data
         n_layer = layer_stack_tmp["n_layer"]
         filename_list = layer_stack_tmp["filename_list"]
 

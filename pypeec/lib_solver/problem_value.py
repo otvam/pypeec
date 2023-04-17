@@ -28,7 +28,7 @@ def get_material_values(material_val, material_idx, material_type_ref):
 
     # populate the arrays
     for tag, dat_tmp in material_idx.items():
-        # get the data
+        # extract the data
         material_type = dat_tmp["material_type"]
         idx = dat_tmp["idx"]
 
@@ -70,14 +70,14 @@ def get_source_values(source_val, source_idx, source_type_ref):
 
     # populate the arrays with the current sources
     for tag, dat_tmp in source_idx.items():
-        # get the data
+        # extract the data
         source_type = dat_tmp["source_type"]
         var_type = dat_tmp["var_type"]
         idx = dat_tmp["idx"]
 
         # get the values and admittances/impedances for the source
         if source_type == "current":
-            # extract data
+            # extract the data
             I_re = source_val[tag]["I_re"]
             I_im = source_val[tag]["I_im"]
             Y_re = source_val[tag]["Y_re"]
@@ -94,7 +94,7 @@ def get_source_values(source_val, source_idx, source_type_ref):
             else:
                 raise ValueError("invalid variable type")
         elif source_type == "voltage":
-            # extract data
+            # extract the data
             V_re = source_val[tag]["V_re"]
             V_im = source_val[tag]["V_im"]
             Z_re = source_val[tag]["Z_re"]

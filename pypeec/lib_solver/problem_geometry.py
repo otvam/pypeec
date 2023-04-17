@@ -27,7 +27,7 @@ def get_material_indices(material_idx, material_type_ref):
 
     # populate the arrays
     for tag, dat_tmp in material_idx.items():
-        # get the data
+        # extract the data
         material_type = dat_tmp["material_type"]
         idx = dat_tmp["idx"]
 
@@ -48,7 +48,7 @@ def get_source_indices(source_idx, source_type_ref):
 
     # populate the arrays with the current sources
     for tag, dat_tmp in source_idx.items():
-        # get the data
+        # extract the data
         source_type = dat_tmp["source_type"]
         idx = dat_tmp["idx"]
 

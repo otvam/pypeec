@@ -2,10 +2,6 @@
 Module for transforming STL files into a 3D voxel structure.
 Each STL file corresponds to a domain of the 3D voxel structure.
 
-If a voxel is located between two domains, it can be assigned to both domains.
-This creates a conflict as the voxel to domains mapping is not anymore a bijection.
-Such conflicts should be resolved with the conflict resolution rules.
-
 The voxelization is done with PyVista.
 """
 
@@ -29,27 +25,37 @@ NP_TYPES = config.NP_TYPES
 vtk.vtkObject.GlobalWarningDisplayOff()
 
 
-def _get_grid(n, d, c):
+def _get_load_stl(offset, filename_list):
     """
-    Construct a PyVista uniform grid for the complete voxel structure.
-    The grid is located around the STL meshes to be voxelized.
+    Load several STL files and merge the meshes.
     """
 
-    # create a uniform grid for the complete structure
-    grid = pv.UniformGrid()
+    # list for the meshes
+    mesh_list = []
 
-    # set the array size and the voxel size
-    grid.origin = c-(n*d)/2
-    grid.dimensions = n+1
-    grid.spacing = d
+    # load the files
+    for filename in filename_list:
+        # load the mesh
+        try:
+            mesh = pv.read(filename, force_ext=".stl")
+        except ValueError:
+            raise RunError("invalid stl: invalid file type: %s" % filename)
 
-    # add indices for tracking the voxels after voxelization
-    grid["idx"] = np.arange(np.prod(n), dtype=NP_TYPES.INT)
+        # check that the file is valid
+        if mesh.n_cells == 0:
+            raise RunError("invalid stl: invalid file content: %s" % filename)
 
-    # cast is required for voxelization
-    grid = grid.cast_to_unstructured_grid()
+        # store the loaded mesh
+        mesh_list.append(mesh)
 
-    return grid
+    # merge the meshes
+    mesh = pv.MultiBlock(mesh_list)
+    mesh = mesh.combine().extract_surface()
+
+    # translate the meshes
+    mesh = mesh.translate(offset, inplace=True)
+
+    return mesh
 
 
 def _get_voxelize_stl(grid, mesh):
@@ -80,79 +86,10 @@ def _get_voxelize_stl(grid, mesh):
     return idx
 
 
-def _get_idx_stl(grid, mesh_stl):
-    """
-    Voxelize STL meshes and assign the indices to a dict.
-    """
-
-    # init the domain dict
-    domain_def = {}
-
-    # load the STL files
-    for tag, mesh in mesh_stl.items():
-        # voxelize and get the indices
-        idx = _get_voxelize_stl(grid, mesh)
-
-        # display number of voxels
-        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx)))
-
-        # assign the indices to the domain
-        domain_def[tag] = idx
-
-    return domain_def
-
-
-def _get_merge_stl(mesh_stl):
-    """
-    Merge the STL files into a single mesh.
-    Translate the mesh with the provided origin.
-    """
-
-    # merge the meshes
-    mesh_list = list(mesh_stl.values())
-    reference = pv.MultiBlock(mesh_list)
-    reference = reference.combine().extract_surface()
-
-    return reference
-
-
-def _get_load_stl(offset, filename_list):
-    """
-    Load several STL files and merge the meshes.
-    """
-
-    # list for the meshes
-    mesh_list = []
-
-    # load the files
-    for filename in filename_list:
-        # load the file
-        try:
-            mesh = pv.read(filename, force_ext=".stl")
-        except ValueError:
-            raise RunError("invalid stl: invalid file type: %s" % filename)
-
-        # check that the file is valid
-        if mesh.n_cells == 0:
-            raise RunError("invalid stl: invalid file content: %s" % filename)
-
-        # store the loaded mesh
-        mesh_list.append(mesh)
-
-    # merge the meshes
-    mesh = pv.MultiBlock(mesh_list)
-    mesh = mesh.combine().extract_surface()
-
-    # translate the meshes
-    mesh = mesh.translate(offset, inplace=True)
-
-    return mesh
-
-
 def _get_mesh_stl(domain_stl):
     """
     Load meshes from STL files and find the minimum and maximum coordinates.
-    The minimum and maximum coordinates defines a bounding box for all the meshes.
+    Find the bounding box for all the meshes (minimum and maximum coordinates).
     """
 
     # init STL mesh dict
@@ -164,7 +101,7 @@ def _get_mesh_stl(domain_stl):
 
     # load the STL files and find the bounding box
     for tag, dat_tmp in domain_stl.items():
-        # extract data
+        # extract the data
         offset = dat_tmp["offset"]
         filename_list = dat_tmp["filename_list"]
 
@@ -222,6 +159,65 @@ def _get_voxel_size(d, xyz_max, xyz_min):
     return n, d, c
 
 
+def _get_voxel_grid(n, d, c):
+    """
+    Construct a PyVista uniform grid for the complete voxel structure.
+    The grid is located around the STL meshes to be voxelized.
+    """
+
+    # create a uniform grid for the complete structure
+    grid = pv.UniformGrid()
+
+    # set the array size and the voxel size
+    grid.origin = c-(n*d)/2
+    grid.dimensions = n+1
+    grid.spacing = d
+
+    # add indices for tracking the voxels after voxelization
+    grid["idx"] = np.arange(np.prod(n), dtype=NP_TYPES.INT)
+
+    # cast is required for voxelization
+    grid = grid.cast_to_unstructured_grid()
+
+    return grid
+
+
+def _get_domain_def(grid, mesh_stl):
+    """
+    Voxelize meshes and assign the indices to a dict.
+    """
+
+    # init the domain dict
+    domain_def = {}
+
+    # voxelize the meshes
+    for tag, mesh in mesh_stl.items():
+        # voxelize and get the indices
+        idx = _get_voxelize_stl(grid, mesh)
+
+        # display number of voxels
+        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx)))
+
+        # assign the indices to the domain
+        domain_def[tag] = idx
+
+    return domain_def
+
+
+def _get_merge_stl(mesh_stl):
+    """
+    Merge all the meshes into a single mesh.
+    The resulting mesh represent the original geometry.
+    This mesh can be used to assess the quality of the voxelization.
+    """
+
+    mesh_list = list(mesh_stl.values())
+    reference = pv.MultiBlock(mesh_list)
+    reference = reference.combine().extract_surface()
+
+    return reference
+
+
 def get_mesh(param, domain_stl):
     """
     Transform STL files into a 3D voxel structure.
@@ -253,11 +249,11 @@ def get_mesh(param, domain_stl):
 
     # get the uniform grid
     LOGGER.debug("get the voxel grid")
-    grid = _get_grid(n, d, c)
+    grid = _get_voxel_grid(n, d, c)
 
     # voxelize the meshes and get the indices
     LOGGER.debug("voxelize STL files")
-    domain_def = _get_idx_stl(grid, mesh_stl)
+    domain_def = _get_domain_def(grid, mesh_stl)
 
     # merge the meshes representing the original geometry
     LOGGER.debug("merge the meshes")

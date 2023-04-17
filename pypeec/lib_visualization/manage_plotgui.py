@@ -202,7 +202,7 @@ class PlotGui:
         Get a PyVista plotter.
         """
 
-        # get the data
+        # extract the data
         title = data_window["title"]
         show_menu = data_window["show_menu"]
         window_size = data_window["window_size"]
@@ -232,7 +232,7 @@ class PlotGui:
         Get a Matplotlib figure.
         """
 
-        # get the data
+        # extract the data
         title = data_window["title"]
         show_menu = data_window["show_menu"]
         window_size = data_window["window_size"]

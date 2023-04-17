@@ -22,7 +22,7 @@ def _check_domain_stl(domain_stl):
         key_list = ["offset", "filename_list"]
         datachecker.check_dict("domain_stl", domain_stl_tmp, key_list=key_list)
 
-        # get the data
+        # extract the data
         offset = domain_stl_tmp["offset"]
         filename_list = domain_stl_tmp["filename_list"]
 

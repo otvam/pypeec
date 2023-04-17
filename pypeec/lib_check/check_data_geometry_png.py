@@ -40,7 +40,7 @@ def _check_layer_stack(layer_stack):
         key_list = ["n_layer", "filename_list"]
         datachecker.check_dict("layer_stack", layer_stack_tmp, key_list=key_list)
 
-        # get the data
+        # extract the data
         n_layer = layer_stack_tmp["n_layer"]
         filename_list = layer_stack_tmp["filename_list"]
 

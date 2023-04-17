@@ -12,7 +12,7 @@ def _get_mesher(voxel_status):
     Get the results produced by the mesher.
     """
 
-    # extract data
+    # extract the data
     n_total = voxel_status["n_total"]
     n_used = voxel_status["n_used"]
 
@@ -30,7 +30,7 @@ def _get_solver(data_sweep):
     Get the results produced by the solver.
     """
 
-    # extract data
+    # extract the data
     freq = data_sweep["freq"]
     has_converged = data_sweep["has_converged"]
     P_tot = data_sweep["integral"]["P_tot"]

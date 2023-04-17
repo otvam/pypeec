@@ -25,7 +25,7 @@ def _update_data(data_config):
     else:
         raise ValueError("invalid FFT library")
 
-    # get the data types
+    # get the numerical data types
     if data_config["USE_DOUBLE"]:
         data_config["NP_TYPES"] = {
             "INT": np.int_, "FLOAT": np.float_, "COMPLEX": np.complex_,

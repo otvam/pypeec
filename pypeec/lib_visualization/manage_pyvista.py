@@ -335,7 +335,7 @@ def _plot_voxelization(pl, voxel, reference, data_options, clip_options):
     Plot the reference and voxelized structures in order to assess the voxelization error.
     """
 
-    # get the data
+    # extract the data
     color_voxel = data_options["color_voxel"]
     color_reference = data_options["color_reference"]
     opacity_voxel = data_options["opacity_voxel"]
@@ -378,7 +378,7 @@ def get_plot_viewer(pl, grid, voxel, point, reference, data_plot):
         - the meshing tolerance between the reference and voxelized structures
     """
 
-    # get the data
+    # extract the data
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
     clip_options = data_plot["clip_options"]
@@ -409,7 +409,7 @@ def get_plot_plotter(pl, grid, voxel, point, data_plot):
         - plot a vector variable on the point cloud
     """
 
-    # get the data
+    # extract the data
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
     clip_options = data_plot["clip_options"]

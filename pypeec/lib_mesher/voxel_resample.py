@@ -257,7 +257,7 @@ def get_remesh(n, d, domain_def, resampling):
     # display number of voxels
     LOGGER.debug("voxel: original number = %d" % np.prod(n))
 
-    # extract data
+    # extract the data
     use_reduce = resampling["use_reduce"]
     use_resample = resampling["use_resample"]
     resampling_factor = resampling["resampling_factor"]
