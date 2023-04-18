@@ -82,13 +82,15 @@ class TestWorkflow(unittest.TestCase):
 
         # start the test
         print("run")
-        print("folder: %s" % folder)
-        print("name: %s" % name)
+        print("test: folder: %s" % folder)
+        print("test: name: %s" % name)
 
         # get the test configuration
+        print("test: config")
         (tol, check_test, generate_test) = test_data.get_config()
 
         # generate the results
+        print("test: run")
         (data_voxel, data_solution) = test_data.run_workflow(folder, name)
 
         # extract the data
@@ -98,16 +100,20 @@ class TestWorkflow(unittest.TestCase):
         # get the reference results for the tests
         if generate_test:
             # generate the new reference results
+            print("test: WARNING: generating a new reference for non-regression tests")
             (mesher, solver) = test_generate.generate_results(voxel_status, data_sweep)
 
             # write the reference results
+            print("test: WARNING: setting a new reference for non-regression tests")
             test_data.write_test_results(folder, name, mesher, solver)
         else:
             # load the stored reference results
+            print("test: load")
             (mesher, solver) = test_data.read_test_results(folder, name)
 
         # check the results
         if check_test:
+            print("test: check")
             self._check_results(voxel_status, data_sweep, solver, mesher, tol)
 
 

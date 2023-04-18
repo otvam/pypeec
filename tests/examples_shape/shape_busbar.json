@@ -2,7 +2,7 @@
     "metadata": {
         "folder": "examples_shape",
         "name": "shape_busbar",
-        "timestamp": "2023-04-18 12:47:06.100098"
+        "timestamp": "2023-04-18 17:02:40.301529"
     },
     "mesher": {
         "n_total": 10000,

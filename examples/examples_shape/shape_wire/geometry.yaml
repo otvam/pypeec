@@ -25,21 +25,30 @@
                 "layer_start": "wire"
                 "layer_stop": "wire"
                 "shape_add":
-                    - {"shape_type": "pad", "coord": [[0.0e-3, 0.0e-3]], "buffer": 1.25e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 2.5e-3
+                        "coord": [[0.0e-3, 0.0e-3]]
                 "shape_sub": []
         "src":
             -
                 "layer_start": "src"
                 "layer_stop": "src"
                 "shape_add":
-                    - {"shape_type": "pad", "coord": [[0.0e-3, 0.0e-3]], "buffer": 1.25e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 2.5e-3
+                        "coord": [[0.0e-3, 0.0e-3]]
                 "shape_sub": []
         "sink":
             -
                 "layer_start": "sink"
                 "layer_stop": "sink"
                 "shape_add":
-                    - {"shape_type": "pad", "coord": [[0.0e-3, 0.0e-3]], "buffer": 1.25e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 2.5e-3
+                        "coord": [[0.0e-3, 0.0e-3]]
                 "shape_sub": []
 "resampling":
     "use_reduce": false

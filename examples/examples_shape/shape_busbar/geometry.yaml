@@ -25,34 +25,52 @@
                 "layer_start": "back"
                 "layer_stop": "back"
                 "shape_add":
-                    - {"shape_type": "polygon", "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]], "buffer": 0.0}
+                    -
+                        "shape_type": "polygon"
+                        "buffer": 0.0
+                        "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                 "shape_sub": []
             -
                 "layer_start": "front"
                 "layer_stop": "front"
                 "shape_add":
-                    - {"shape_type": "polygon", "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]], "buffer": 0.0}
+                    -
+                        "shape_type": "polygon"
+                        "buffer": 0.0
+                        "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                 "shape_sub":
-                    - {"shape_type": "polygon", "coord": [[0.0e-3, 0.0e-3], [2.0e-3, 0.0e-3], [2.0e-3, 2.0e-3], [0.0e-3, 2.0e-3]], "buffer": 0.0}
+                    -
+                        "shape_type": "polygon"
+                        "buffer": 0.0
+                        "coord": [[0.0e-3, 0.0e-3], [2.0e-3, 0.0e-3], [2.0e-3, 2.0e-3], [0.0e-3, 2.0e-3]]
             -
                 "layer_start": "back"
                 "layer_stop": "front"
                 "shape_add":
-                    - {"shape_type": "polygon", "coord": [[2.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 0.2e-3], [2.0e-3, 0.2e-3]], "buffer": 0.0}
+                    -
+                        "shape_type": "polygon"
+                        "buffer": 0.0
+                        "coord": [[2.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 0.2e-3], [2.0e-3, 0.2e-3]]
                 "shape_sub": []
         "src":
             -
                 "layer_start": "front"
                 "layer_stop": "front"
                 "shape_add":
-                    - {"shape_type": "polygon", "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]], "buffer": 0.0}
+                    -
+                        "shape_type": "polygon"
+                        "buffer": 0.0
+                        "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                 "shape_sub": []
         "sink":
             -
                 "layer_start": "back"
                 "layer_stop": "back"
                 "shape_add":
-                    - {"shape_type": "polygon", "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]], "buffer": 0.0}
+                    -
+                        "shape_type": "polygon"
+                        "buffer": 0.0
+                        "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                 "shape_sub": []
 "resampling":
     "use_reduce": false

@@ -2,7 +2,7 @@
     "metadata": {
         "folder": "examples_stl",
         "name": "stl_inductor_core",
-        "timestamp": "2023-04-18 12:50:49.308949"
+        "timestamp": "2023-04-18 17:07:02.974298"
     },
     "mesher": {
         "n_total": 161280,

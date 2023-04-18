@@ -2,7 +2,7 @@
     "metadata": {
         "folder": "examples_shape",
         "name": "shape_wire",
-        "timestamp": "2023-04-18 12:47:42.500784"
+        "timestamp": "2023-04-18 17:03:28.624456"
     },
     "mesher": {
         "n_total": 25000,

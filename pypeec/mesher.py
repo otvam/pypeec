@@ -9,7 +9,7 @@ Three different kind of geometry can be meshed:
     - shape: the voxel structure is generated from stacked 2D vector shapes
     - voxel: the voxel structure is given with the voxel indices
 
-The mesher is implemented with PyVista.
+The mesher is implemented with PyVista, Pillow, Shapely, and Rasterio.
 """
 
 __author__ = "Thomas Guillod"

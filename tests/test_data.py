@@ -54,12 +54,6 @@ def write_test_results(folder, name, mesher, solver):
     # get timestamp
     timestamp = str(datetime.datetime.now())
 
-    # warn the user that new reference results are generated
-    print("WARNING: setting a new reference for non-regression tests")
-    print("WARNING: folder: %s" % folder)
-    print("WARNING: name: %s" % name)
-    print("WARNING: timestamp: %s" % timestamp)
-
     # get metadata
     metadata = {
         "folder": folder,

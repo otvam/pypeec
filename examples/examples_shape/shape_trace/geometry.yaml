@@ -25,42 +25,66 @@
                 "layer_start": "front"
                 "layer_stop": "front"
                 "shape_add":
-                    - {"shape_type": "trace", "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]], "buffer": 0.25e-3}
+                    -
+                        "shape_type": "trace"
+                        "width": 0.5e-3
+                        "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]]
                 "shape_sub":
-                    -  {"shape_type": "pad", "coord": [[2.5e-3, 2.5e-3]], "buffer": 0.10e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 0.2e-3
+                        "coord": [[5.0e-3, 0.0e-3]]
             -
                 "layer_start": "back"
                 "layer_stop": "back"
                 "shape_add":
-                    - {"shape_type": "trace", "coord": [[5.0e-3, 0.0e-3], [0.0e-3, 5.0e-3]], "buffer": 0.25e-3}
+                    -
+                        "shape_type": "trace"
+                        "width": 0.5e-3
+                        "coord": [[0.0e-3, 0.0e-3], [0.0e-3, 5.0e-3], [5.0e-3, 5.0e-3]]
                 "shape_sub":
-                    - {"shape_type": "pad", "coord": [ [ 2.5e-3, 2.5e-3 ] ], "buffer": 0.10e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 0.2e-3
+                        "coord": [[0.0e-3, 5.0e-3]]
         "src_front":
             -
                 "layer_start": "front"
                 "layer_stop": "front"
                 "shape_add":
-                    - {"shape_type": "pad", "coord": [[0.0e-3, 0.0e-3]], "buffer": 0.35e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 0.7e-3
+                        "coord": [[0.0e-3, 0.0e-3]]
                 "shape_sub": []
         "src_back":
             -
                 "layer_start": "back"
                 "layer_stop": "back"
                 "shape_add":
-                    - {"shape_type": "pad", "coord": [[5.0e-3, 0.0e-3]], "buffer": 0.35e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 0.7e-3
+                        "coord": [[0.0e-3, 0.0e-3]]
                 "shape_sub": []
         "sink":
             -
                 "layer_start": "front"
                 "layer_stop": "front"
                 "shape_add":
-                    - {"shape_type": "pad", "coord": [[5.0e-3, 5.0e-3]], "buffer": 0.35e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 0.7e-3
+                        "coord": [[5.0e-3, 5.0e-3]]
                 "shape_sub": []
             -
                 "layer_start": "back"
                 "layer_stop": "back"
                 "shape_add":
-                    - {"shape_type": "pad", "coord": [[0.0e-3, 5.0e-3]], "buffer": 0.35e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 0.7e-3
+                        "coord": [[5.0e-3, 5.0e-3]]
                 "shape_sub": []
 "resampling":
     "use_reduce": false

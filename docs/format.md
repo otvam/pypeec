@@ -131,36 +131,53 @@ This file contains the definition of the voxel structure.
     #   - shape definition
     #       - shape_type: type of the shape ("pad" or "trace" or "polygon")
     #       - coord: array with the 2D coordinates composing the shape
-    #       - buffer: thickness of the buffer that is added around the shape
+    #       - buffer: thickness of the buffer around the polygons
+    #       - diameter: diameter of the pads
+    #       - width: thickness of the traces
     "geometry_shape":
         "dom_cond":
             -
                 "layer_start": "cond"
                 "layer_stop": "cond"
                 "shape_add":
-                    - {"shape_type": "trace", "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]], "buffer": 0.25e-3}
+                    -
+                        "shape_type": "trace"
+                        "width": 0.5e-3
+                        "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]]
                 "shape_sub": []
         "dom_mag":
             -
                 "layer_start": "mag"
                 "layer_stop": "mag"
                 "shape_add":
-                    - {"shape_type": "polygon", "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3], [0.0e-3, 5.0e-3]], "buffer": 0.0}
+                    -
+                        "shape_type": "polygon"
+                        "buffer": 0.0
+                        "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3], [0.0e-3, 5.0e-3]]
                 "shape_sub":
-                    - {"shape_type": "polygon", "coord": [[1.0e-3, 1.0e-3], [3.0e-3, 1.0e-3], [3.0e-3, 3.0e-3], [1.0e-3, 3.0e-3]], "buffer": 0.0}
+                    -
+                        "shape_type": "polygon"
+                        "buffer": 0.0
+                        "coord": [[1.0e-3, 1.0e-3], [3.0e-3, 1.0e-3], [3.0e-3, 3.0e-3], [1.0e-3, 3.0e-3]]
         "dom_src":
             -
                 "layer_start": "insulation_terminal"
                 "layer_stop": "terminal"
                 "shape_add":
-                    - {"shape_type": "pad", "coord": [[0.0e-3, 0.0e-3]], "buffer": 0.35e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 0.7e-3
+                        "coord": [[0.0e-3, 0.0e-3]]
                 "shape_sub": []
         "dom_sink":
             -
                 "layer_start": "insulation_terminal"
                 "layer_stop": "terminal"
                 "shape_add":
-                    - {"shape_type": "pad", "coord": [[5.0e-3, 5.0e-3]], "buffer": 0.35e-3}
+                    -
+                        "shape_type": "pad"
+                        "diameter": 0.7e-3
+                        "coord": [[5.0e-3, 5.0e-3]]
                 "shape_sub": []    
 ```
 

@@ -4,6 +4,7 @@ Check the input data, solve the problem, and parse the results.
 The different parts of the code are timed.
 
 The solver is implemented with NumPy and Scipy.
+Optional HPC libraries can be used to accelerate the solver.
 """
 
 __author__ = "Thomas Guillod"

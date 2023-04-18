@@ -99,21 +99,23 @@ def _get_single_shape(shape_data):
 
     # extract the data
     shape_type = shape_data["shape_type"]
-    buffer = shape_data["buffer"]
     coord = shape_data["coord"]
 
     # get the shape
     if shape_type == "pad":
+        distance_tmp = 0.5*shape_data["diameter"]
         obj_tmp = sha.geometry.MultiPoint(coord)
     elif shape_type == "trace":
+        distance_tmp = 0.5*shape_data["width"]
         obj_tmp = sha.geometry.LineString(coord)
     elif shape_type == "polygon":
+        distance_tmp = 1.0*shape_data["buffer"]
         obj_tmp = sha.geometry.Polygon(coord)
     else:
         raise ValueError("invalid shape type")
 
     # add a buffer with a given thickness around the shape
-    obj_final = obj_tmp.buffer(buffer, cap_style=1)
+    obj_final = obj_tmp.buffer(distance_tmp, cap_style="round", join_style="round")
 
     # check if valid
     if obj_final.is_empty:
