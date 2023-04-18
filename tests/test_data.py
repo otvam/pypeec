@@ -127,9 +127,6 @@ def run_workflow(folder, name):
     The intermediate file are stored with temporary files.
     """
 
-    # start the test
-    print("run")
-
     # get input file name
     file_geometry = os.path.join(PATH_ROOT, "..", "examples", folder, name, "geometry.yaml")
     file_point = os.path.join(PATH_ROOT, "..", "examples", folder, name, "point.yaml")

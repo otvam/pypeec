@@ -33,6 +33,7 @@ status=0
 
 # run test
 test_file run_test_voxel
+test_file run_test_shape
 test_file run_test_png
 test_file run_test_stl
 

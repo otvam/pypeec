@@ -1,0 +1,19 @@
+{
+    "metadata": {
+        "folder": "examples_shape",
+        "name": "shape_trace",
+        "timestamp": "2023-04-18 12:47:07.275642"
+    },
+    "mesher": {
+        "n_total": 90972,
+        "n_used": 3332
+    },
+    "solver": {
+        "sim_default": {
+            "freq": 0.0,
+            "has_converged": true,
+            "P_tot": 0.009644872470261197,
+            "W_tot": 5.01847125302127e-09
+        }
+    }
+}

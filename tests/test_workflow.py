@@ -80,6 +80,11 @@ class TestWorkflow(unittest.TestCase):
         Run the workflow and check the results.
         """
 
+        # start the test
+        print("run")
+        print("folder: %s" % folder)
+        print("name: %s" % name)
+
         # get the test configuration
         (tol, check_test, generate_test) = test_data.get_config()
 

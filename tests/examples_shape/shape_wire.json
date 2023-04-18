@@ -1,0 +1,19 @@
+{
+    "metadata": {
+        "folder": "examples_shape",
+        "name": "shape_wire",
+        "timestamp": "2023-04-18 12:47:42.500784"
+    },
+    "mesher": {
+        "n_total": 25000,
+        "n_used": 19680
+    },
+    "solver": {
+        "sim_default": {
+            "freq": 100000.0,
+            "has_converged": true,
+            "P_tot": 2.0284442072145184e-05,
+            "W_tot": 3.034767621819869e-10
+        }
+    }
+}

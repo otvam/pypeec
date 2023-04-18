@@ -2,7 +2,7 @@
     "metadata": {
         "folder": "examples_voxel",
         "name": "voxel_transformer",
-        "timestamp": "2023-04-06 21:31:34.563028"
+        "timestamp": "2023-04-18 12:47:02.627807"
     },
     "mesher": {
         "n_total": 75,
@@ -18,8 +18,8 @@
         "sim_ac": {
             "freq": 10000000.0,
             "has_converged": true,
-            "P_tot": 0.000459670260461263,
-            "W_tot": 9.914019032458426e-10
+            "P_tot": 0.00045967026046126076,
+            "W_tot": 9.914019032458386e-10
         }
     }
 }

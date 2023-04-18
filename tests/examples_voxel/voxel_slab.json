@@ -2,7 +2,7 @@
     "metadata": {
         "folder": "examples_voxel",
         "name": "voxel_slab",
-        "timestamp": "2023-04-06 21:31:33.685662"
+        "timestamp": "2023-04-18 12:47:01.833324"
     },
     "mesher": {
         "n_total": 28,
@@ -18,8 +18,8 @@
         "sim_ac": {
             "freq": 1000.0,
             "has_converged": true,
-            "P_tot": 7.499977485100393e-07,
-            "W_tot": 1.7809326435765653e-09
+            "P_tot": 7.499977484915486e-07,
+            "W_tot": 1.7809326435326662e-09
         }
     }
 }

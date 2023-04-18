@@ -1,5 +1,5 @@
 """
-Test the example with the PNG mesher.
+Test the example with the shape mesher.
 """
 
 __author__ = "Thomas Guillod"
@@ -8,14 +8,13 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from tests import test_workflow
 
 # example folder to be tested
-folder = "examples_png"
+folder = "examples_shape"
 
 # name of the examples
 name_list = [
-    "png_inductor_spiral",
-    "png_inductor_gap",
-    "png_shield",
-    "png_gerber",
+    "shape_busbar",
+    "shape_wire",
+    "shape_trace",
 ]
 
 # get the test object

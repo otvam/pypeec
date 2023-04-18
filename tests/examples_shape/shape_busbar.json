@@ -1,0 +1,19 @@
+{
+    "metadata": {
+        "folder": "examples_shape",
+        "name": "shape_busbar",
+        "timestamp": "2023-04-18 12:47:06.100098"
+    },
+    "mesher": {
+        "n_total": 10000,
+        "n_used": 3480
+    },
+    "solver": {
+        "sim_default": {
+            "freq": 1000000.0,
+            "has_converged": true,
+            "P_tot": 0.0023151948887057652,
+            "W_tot": 2.179822971358449e-10
+        }
+    }
+}
