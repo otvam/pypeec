@@ -23,7 +23,7 @@ def _check_domain_color(domain_color):
 
         # check data
         for color in color_list:
-            datachecker.check_integer_array("domain_color", color, size=4, is_positive=True)
+            datachecker.check_integer_array("domain_color", color, size=4, is_positive=True, can_be_zero=True)
 
 
 def _check_layer_stack(layer_stack):

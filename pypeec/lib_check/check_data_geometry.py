@@ -37,7 +37,7 @@ def _check_domain_conflict(domain_list, domain_conflict):
     """
 
     # check type
-    datachecker.check_list("domain_conflict", domain_conflict, sub_type=dict)
+    datachecker.check_list("domain_conflict", domain_conflict, can_be_empty=True, sub_type=dict)
 
     # check value
     for domain_conflict_tmp in domain_conflict:

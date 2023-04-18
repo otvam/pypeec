@@ -18,7 +18,7 @@ def _check_domain_index(domain_index):
 
     # check data
     for idx in domain_index.values():
-        datachecker.check_integer_array("domain_index", idx, is_positive=True)
+        datachecker.check_integer_array("domain_index", idx, is_positive=True, can_be_zero=True)
 
 
 def _check_param(param):

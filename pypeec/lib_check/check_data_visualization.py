@@ -49,25 +49,25 @@ def _check_plot_options(plot_options):
     datachecker.check_dict("data_window", plot_options, key_list=key_list)
 
     # check title data
-    datachecker.check_string("title", plot_options["title"])
+    datachecker.check_string("title", plot_options["title"], can_be_empty=False)
 
     # check grid data
     datachecker.check_boolean("grid_plot", plot_options["grid_plot"])
-    datachecker.check_float("grid_thickness", plot_options["grid_thickness"])
-    datachecker.check_string("grid_color", plot_options["grid_color"])
-    datachecker.check_float("grid_opacity", plot_options["grid_opacity"])
+    datachecker.check_string("grid_color", plot_options["grid_color"], can_be_empty=False)
+    datachecker.check_float("grid_thickness", plot_options["grid_thickness"], is_positive=True, can_be_zero=True)
+    datachecker.check_float("grid_opacity", plot_options["grid_opacity"], is_positive=True, can_be_zero=True)
 
     # check geom data
     datachecker.check_boolean("geom_plot", plot_options["geom_plot"])
-    datachecker.check_float("geom_thickness", plot_options["geom_thickness"])
-    datachecker.check_string("geom_color", plot_options["geom_color"])
-    datachecker.check_float("geom_opacity", plot_options["geom_opacity"])
+    datachecker.check_string("geom_color", plot_options["geom_color"], can_be_empty=False)
+    datachecker.check_float("geom_thickness", plot_options["geom_thickness"], is_positive=True, can_be_zero=True)
+    datachecker.check_float("geom_opacity", plot_options["geom_opacity"], is_positive=True, can_be_zero=True)
 
     # check cloud data
     datachecker.check_boolean("point_plot", plot_options["point_plot"])
-    datachecker.check_float("point_size", plot_options["point_size"])
-    datachecker.check_string("point_color", plot_options["point_color"])
-    datachecker.check_float("point_opacity", plot_options["point_opacity"])
+    datachecker.check_string("point_color", plot_options["point_color"], can_be_empty=False)
+    datachecker.check_float("point_size", plot_options["point_size"], is_positive=True, can_be_zero=True)
+    datachecker.check_float("point_opacity", plot_options["point_opacity"], is_positive=True, can_be_zero=True)
 
 
 def _check_clip_options(clip_options):
@@ -121,10 +121,10 @@ def _check_data_options_plotter_pyvista(plot_type, data_options):
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
-        datachecker.check_string("color_electric", data_options["color_electric"])
-        datachecker.check_string("color_magnetic", data_options["color_magnetic"])
-        datachecker.check_string("color_current_source", data_options["color_current_source"])
-        datachecker.check_string("color_voltage_source", data_options["color_voltage_source"])
+        datachecker.check_string("color_electric", data_options["color_electric"], can_be_empty=False)
+        datachecker.check_string("color_magnetic", data_options["color_magnetic"], can_be_empty=False)
+        datachecker.check_string("color_current_source", data_options["color_current_source"], can_be_empty=False)
+        datachecker.check_string("color_voltage_source", data_options["color_voltage_source"], can_be_empty=False)
 
     # check the options for scalar and arrow plots
     if plot_type in ["scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"]:
@@ -133,9 +133,9 @@ def _check_data_options_plotter_pyvista(plot_type, data_options):
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
-        datachecker.check_float("scale", data_options["scale"])
         datachecker.check_boolean("log", data_options["log"])
-        datachecker.check_string("legend", data_options["legend"])
+        datachecker.check_string("legend", data_options["legend"], can_be_empty=False)
+        datachecker.check_float("scale", data_options["scale"], is_positive=True, can_be_zero=True)
         if data_options["color_lim"] is not None:
             datachecker.check_float_array("color_lim", data_options["color_lim"], size=2)
         if data_options["filter_lim"] is not None:
@@ -148,8 +148,8 @@ def _check_data_options_plotter_pyvista(plot_type, data_options):
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
-        datachecker.check_string("var", data_options["var"])
-        datachecker.check_float("point_size", data_options["point_size"])
+        datachecker.check_string("var", data_options["var"], can_be_empty=False)
+        datachecker.check_float("point_size", data_options["point_size"], is_positive=True, can_be_zero=True)
 
         # check compatibility
         if plot_type == "scalar_voxel":
@@ -166,10 +166,10 @@ def _check_data_options_plotter_pyvista(plot_type, data_options):
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
-        datachecker.check_string("var_scalar", data_options["var_scalar"])
-        datachecker.check_string("var_vector", data_options["var_vector"])
-        datachecker.check_float("arrow_scale", data_options["arrow_scale"])
-        datachecker.check_float("arrow_threshold", data_options["arrow_threshold"])
+        datachecker.check_string("var_scalar", data_options["var_scalar"], can_be_empty=False)
+        datachecker.check_string("var_vector", data_options["var_vector"], can_be_empty=False)
+        datachecker.check_float("arrow_scale", data_options["arrow_scale"], is_positive=True, can_be_zero=True)
+        datachecker.check_float("arrow_threshold", data_options["arrow_threshold"], is_positive=True, can_be_zero=True)
 
         # check compatibility
         if plot_type == "arrow_voxel":
@@ -198,8 +198,8 @@ def _check_data_options_plotter_matplotlib(plot_type, data_options):
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
-        datachecker.check_string("color", data_options["color"])
-        datachecker.check_string("marker", data_options["marker"])
+        datachecker.check_string("color", data_options["color"], can_be_empty=False)
+        datachecker.check_string("marker", data_options["marker"], can_be_empty=False)
 
     # check the residuum options
     if plot_type == "residuum":
@@ -208,10 +208,10 @@ def _check_data_options_plotter_matplotlib(plot_type, data_options):
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
-        datachecker.check_integer("n_bins", data_options["n_bins"])
-        datachecker.check_float("tol_bins", data_options["tol_bins"])
-        datachecker.check_string("edge_color", data_options["edge_color"])
-        datachecker.check_string("bar_color", data_options["bar_color"])
+        datachecker.check_integer("n_bins", data_options["n_bins"], is_positive=True, can_be_zero=False)
+        datachecker.check_float("tol_bins", data_options["tol_bins"], is_positive=True, can_be_zero=False)
+        datachecker.check_string("edge_color", data_options["edge_color"], can_be_empty=False)
+        datachecker.check_string("bar_color", data_options["bar_color"], can_be_empty=False)
 
 
 def _check_data_options_viewer(plot_type, data_options):
@@ -231,10 +231,10 @@ def _check_data_options_viewer(plot_type, data_options):
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
-        datachecker.check_string("color_voxel", data_options["color_voxel"])
-        datachecker.check_string("color_reference", data_options["color_reference"])
-        datachecker.check_float("opacity_voxel", data_options["opacity_voxel"])
-        datachecker.check_float("opacity_reference", data_options["opacity_reference"])
+        datachecker.check_string("color_voxel", data_options["color_voxel"], can_be_empty=False)
+        datachecker.check_string("color_reference", data_options["color_reference"], can_be_empty=False)
+        datachecker.check_float("opacity_voxel", data_options["opacity_voxel"], is_positive=True, can_be_zero=False)
+        datachecker.check_float("opacity_reference", data_options["opacity_reference"], is_positive=True, can_be_zero=False)
 
     # check the scalar options
     if plot_type in ["domain", "connection"]:
@@ -243,8 +243,8 @@ def _check_data_options_viewer(plot_type, data_options):
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
-        datachecker.check_string("colormap", data_options["colormap"])
-        datachecker.check_float("opacity", data_options["opacity"])
+        datachecker.check_string("colormap", data_options["colormap"], can_be_empty=False)
+        datachecker.check_float("opacity", data_options["opacity"], is_positive=True, can_be_zero=False)
 
 
 def _check_data_plotter_matplotlib(data_plot):
@@ -362,7 +362,7 @@ def check_data_point(data_point):
     """
 
     # check type
-    datachecker.check_list("data_point", data_point, sub_type=list)
+    datachecker.check_list("data_point", data_point, can_be_empty=True, sub_type=list)
 
     # check the points (if any)
     for data_point_tmp in data_point:
@@ -376,7 +376,7 @@ def check_options(data_check, tag_list):
 
     # check the list of plots
     if tag_list is not None:
-        datachecker.check_list("tag", tag_list, sub_type=str)
+        datachecker.check_list("tag", tag_list, can_be_empty=True, sub_type=str)
         for tag in tag_list:
             datachecker.check_choice("tag", tag, data_check)
 

@@ -60,15 +60,15 @@ This file contains the definition of the voxel structure.
 "mesh_type": "voxel"
 
 # definition of the voxel structure
-"data_voxelize":
-    # array with the number of voxels (x, y, and z directions)
-    "n": [4, 4, 3]
-    
-    # array with the voxel dimensions (x, y, and z directions)
-    "d": [10.0e-3, 10.0e-3, 10.0e-3]
-    
-    # array with the coordinates of the voxel structure center (x, y, and z directions)
-    "c": [0.0, 0.0, 0.0]
+"data_voxelize": 
+    # definition of the voxel structure
+    #   - n: array with the number of voxels (x, y, and z directions)
+    #   - d: array with the voxel dimensions (x, y, and z directions)
+    #   - c: array with the coordinates of the voxel structure center (x, y, and z directions)
+    "param":
+        "n": [4, 4, 3]
+        "d": [10.0e-3, 10.0e-3, 10.0e-3]
+        "c": [0.0, 0.0, 0.0]
     
     # definition of the voxel indices of the different domains
     #   - dict of arrays with the domain name and the voxel indices
@@ -88,14 +88,14 @@ This file contains the definition of the voxel structure.
 
 # definition of the voxel structure
 "data_voxelize":
-    # array with the voxel dimensions (x, y, and z directions)
-    "d": [10.0e-3, 10.0e-3, 10.0e-3]
-    
-    # array with the coordinates of the voxel structure center (x, y, and z directions)
-    "c": [0.0, 0.0, 0.0]
-    
-    # size of the image in (number of voxels in the x and y direction)
-    "size": [49, 49]
+    # definition of the voxel structure
+    #   - d: array with the voxel dimensions (x, y, and z directions)
+    #   - c: array with the coordinates of the voxel structure center (x, y, and z directions)
+    #   - size: array with the size of the images (number of voxels in the x and y direction)
+    "param":
+        "d": [10.0e-3, 10.0e-3, 10.0e-3]
+        "c": [0.0, 0.0, 0.0]
+        "size": [49, 49]
         
     # definition of the mapping between the image color and the different domains
     #   - dict with the domain name and the specified colors
@@ -127,23 +127,16 @@ This file contains the definition of the voxel structure.
 
 # definition of the voxel structure
 "data_voxelize":
-    # array with the voxel dimensions (x, y, and z directions)
-    "d": [10.0e-3, 10.0e-3, 10.0e-3]
-
-    # array with the coordinates of the voxel structure center (x, y, and z directions)
-    # alternatively, the coordinates can be set to null and the STL coordinate are kept
-    "c": [0.0, 0.0, 0.0]
+    # definition of the voxel structure
+    #   - d: array with the voxel dimensions (x, y, and z directions)
+    #   - xyz_min: array with the lower corner coordinates of the voxel structure (x, y, and z directions)
+    #   - xyz_max: array with the upper corner coordinates of the voxel structure (x, y, and z directions)
+    #   - alternatively, the xyz_min/xyz_max can be set to null and the STL coordinates are kept
+    "param":
+        "d": [10.0e-3, 10.0e-3, 10.0e-3]
+        "xyz_min": [-20e-3, -20e-3, -20e-3]
+        "xyz_max": [+20e-3, +20e-3, +20e-3]
         
-    # array with the corner coordinates of the voxel structure (x, y, and z directions)
-    # alternatively, the dictionary can be set to null and the STL coordinates are kept
-    "bounds":
-        "xyz_min": [-20e-3, -20e-3, -20e-3] # lower corner coordinates
-        "xyz_max": [+20e-3, +20e-3, +20e-3] # upper corner coordinates
-        
-    # array with the upper corner coordinates of the voxel structure (x, y, and z directions)
-    # alternatively, the coordinates can be set to null and the STL upper corner coordinate are kept
-    "xyz_max": null
-    
     # definition of the STL files of the different domains
     #   - dict with the domain name and the STL files
     #   - required information, the dict cannot be empty

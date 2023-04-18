@@ -37,7 +37,7 @@ def _get_boundary_polygon(bnd, z_min):
 
     # check that the boundary is closed
     if (not bnd.is_valid) or (not bnd.is_closed):
-        raise RunError("invalid polygon: boundary is ill-formed")
+        raise RunError("invalid shape: boundary is ill-formed")
 
     # get the 2D boundary
     xy = np.array(bnd.xy, dtype=NP_TYPES.FLOAT)
@@ -103,10 +103,10 @@ def _get_single_shape(shape_data):
     coord = shape_data["coord"]
 
     # get the shape
-    if shape_type == "trace":
-        obj_tmp = sha.geometry.LineString(coord)
-    elif shape_type == "pad":
+    if shape_type == "pad":
         obj_tmp = sha.geometry.MultiPoint(coord)
+    elif shape_type == "trace":
+        obj_tmp = sha.geometry.LineString(coord)
     elif shape_type == "polygon":
         obj_tmp = sha.geometry.Polygon(coord)
     else:
@@ -114,6 +114,10 @@ def _get_single_shape(shape_data):
 
     # add a buffer with a given thickness around the shape
     obj_final = obj_tmp.buffer(buffer, cap_style=1)
+
+    # check if valid
+    if obj_final.is_empty:
+        raise RunError("invalid shape: shape is empty")
 
     return obj_final
 
@@ -144,7 +148,7 @@ def _get_composite_shape(shape_add, shape_sub, tol):
 
     # check that the shape is valid
     if (not obj.is_valid) or (not obj.is_simple):
-        raise RunError("invalid polygon: polygon is ill-formed")
+        raise RunError("invalid shape: geometry is ill-formed")
 
     return obj
 

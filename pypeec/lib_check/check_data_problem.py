@@ -87,7 +87,7 @@ def _check_sweep_param(sweep_param, material_def, source_def):
     source_val = sweep_param["source_val"]
 
     # check data
-    datachecker.check_float("freq", freq, is_positive=True)
+    datachecker.check_float("freq", freq, is_positive=True, can_be_zero=True)
 
     # check type
     datachecker.check_dict("material_val", material_val, can_be_empty=False, sub_type=dict)

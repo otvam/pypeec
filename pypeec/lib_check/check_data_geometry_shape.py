@@ -25,7 +25,17 @@ def _check_shape_definition(shape):
     # check data
     datachecker.check_choice("shape_type", shape_type, ["trace", "pad", "polygon"])
     datachecker.check_float("buffer", buffer, is_positive=True, can_be_zero=True)
-    datachecker.check_list("coord", coord, sub_type=list)
+    datachecker.check_list("coord", coord, can_be_empty=False, sub_type=list)
+
+    # check coordinate length
+    if shape_type == "pad":
+        datachecker.check_assert("coord", len(coord) >= 1, "pad coordinate should have at least one element")
+    elif shape_type == "trace":
+        datachecker.check_assert("coord", len(coord) >= 2, "trace coordinate should have at least two elements")
+    elif shape_type == "polygon":
+        datachecker.check_assert("coord", len(coord) >= 3, "polygon coordinate should have at least three elements")
+    else:
+        raise ValueError("invalid shape type")
 
     # check the points (if any)
     for coord_tmp in coord:
@@ -55,8 +65,8 @@ def _check_geometry_shape(layer_list, geometry_shape):
         # check data
         datachecker.check_choice("layer_start", layer_start, layer_list)
         datachecker.check_choice("layer_stop", layer_stop, layer_list)
-        datachecker.check_list("shape_add", shape_add, sub_type=dict)
-        datachecker.check_list("shape_sub", shape_sub, sub_type=dict)
+        datachecker.check_list("shape_add", shape_add, can_be_empty=True, sub_type=dict)
+        datachecker.check_list("shape_sub", shape_sub, can_be_empty=True,sub_type=dict)
 
         # check shapes
         for shape_add_tmp in shape_add:
