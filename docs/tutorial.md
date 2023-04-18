@@ -4,10 +4,10 @@
 
 The **PyPEEC** package contains the following tools (`pypeec` package)::
 * **mesher** (`pypeec.mesher` module)
-  * Create the voxel structure (from STL or PNG files)
+  * Create the voxel structure
   * Import the geometry from voxel files
   * Import the geometry from STL files
-  * Create the geometry with stacked 2D PNG files
+  * Create the geometry with stacked PNG files
   * Draw the geometry with stacked 2D vector shapes
   * Assign different domain names to the voxels
   * Resampling (refine) the voxel structure
@@ -71,14 +71,15 @@ Different examples are located in the `examples` folder:
   * **stl_inductor_air**: a 3D air-core inductor
   * **stl_inductor_core**: a 3D inductor with a magnetic E-core core
   * **stl_transformer**: a planar transformer with two windings
+* voxel structure generated from 2D vector shapes (`examples_shape` folder)
+  * **png_busbar**: a coplanar L-shaped busbar
+  * **png_wire**: a straight round wire
+  * **png_trace**: a PCB with traces
 * voxel structure generated from PNG files (`examples_png` folder)
   * **png_inductor_spiral**: a planar spiral inductor
   * **png_inductor_spiral**: a gapped inductor with an E-core
   * **png_shield**: a conductor loop with a magnetic shield
-  * **png_busbar**: a coplanar L-shaped busbar
   * **png_gerber**: a PCB inductor from GERBER files
-  * **png_wire**: a straight round wire
-  * **png_trace**: a PCB with traces
 * voxel structure created from voxel indices (`examples_voxel` folder)
   * **voxel_slab**: a simple slab conductor in free space
   * **voxel_core**: a simple slab conductor surrounded by a magnetic core

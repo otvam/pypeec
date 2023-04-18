@@ -1,5 +1,5 @@
 """
-Module for transforming a series of 2D shapes into a 3D voxel structure.
+Module for transforming a series of 2D vector shapes into a 3D voxel structure.
 The 2D geometry are stacked in order to create a voxel structure.
 
 The following axis definition is used:
@@ -381,7 +381,7 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
 
 def _get_merge_shape(shape_obj):
     """
-    Transform all the 2D shapes into 3D meshes.
+    Transform all the 2D vector shapes into 3D meshes.
     Merge all the meshes into a single mesh.
     The resulting mesh represent the original geometry.
     This mesh can be used to assess the quality of the voxelization.
@@ -417,7 +417,7 @@ def _get_merge_shape(shape_obj):
 
 def get_mesh(param, layer_stack, geometry_shape):
     """
-    Transform a series of 2D shapes into a 3D voxel structure.
+    Transform a series of 2D vector shapes into a 3D voxel structure.
     The 3D voxel structure is constructed from:
         - a dict containing the 2D shapes
         - a list containing the layer stack of shapes

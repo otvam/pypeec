@@ -5,7 +5,7 @@ The different parts of the code are timed.
 
 Three different kind of geometry can be meshed:
     - stl: the voxel structure is generated from 3D STL files
-    - png: the voxel structure is generated from stacked 2D PNG images
+    - png: the voxel structure is generated from stacked PNG images
     - shape: the voxel structure is generated from stacked 2D vector shapes
     - voxel: the voxel structure is given with the voxel indices
 
@@ -81,7 +81,7 @@ def _run_voxel(data_voxelize):
 
 def _run_shape(data_voxelize):
     """
-    Generate a 3D voxel structure from 2D shapes.
+    Generate a 3D voxel structure from 2D vector shapes.
     """
 
     # extract the data
@@ -106,7 +106,7 @@ def _run_shape(data_voxelize):
 
 def _run_png(data_voxelize):
     """
-    Generate a 3D voxel structure from 2D PNG images.
+    Generate a 3D voxel structure from PNG images.
     """
 
     # extract the data

@@ -11,7 +11,7 @@ This file contains the definition of the voxel structure.
 
 ```yaml
 # mesher type
-"mesh_type": "voxel" or "png"  or "stl"
+"mesh_type": "'voxel' or 'shape' or 'png'  or 'stl'"
     
 # definition of the voxel structure
 #   - specific for the different mesher types
@@ -141,13 +141,14 @@ This file contains the definition of the voxel structure.
     #   - dict with the domain name and the STL files
     #   - required information, the dict cannot be empty
     #   - domain definition
+    #       - list of STL meshes composing the domain
     #       - offset: array with offsets for translating the STL meshes
-    #       - filename_list: list of strings with the STL files defining the domain
+    #       - filename: string with the STL filename
     "domain_stl":
-        "dom_src": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/dom_src.stl"]}
-        "dom_cond": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/dom_cond.stl"]}
-        "dom_sink": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/dom_sink.stl"]}
-        "dom_mag": {"offset": [0.0, 0.0, 0.0], "filename_list": ["stl/dom_mag.stl"]}
+        "dom_src": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_src.stl"}]
+        "dom_cond": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_cond.stl"}]
+        "dom_sink": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_sink.stl"}]
+        "dom_mag": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_mag.stl"}]
 ```
 
 ## Problem File Format

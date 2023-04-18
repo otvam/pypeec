@@ -1,5 +1,5 @@
 """
-Module for transforming a series of 2D PNG images into a 3D voxel structure.
+Module for transforming a series of PNG images into a 3D voxel structure.
 The 2D geometry are stacked in order to create a voxel structure.
 
 The following axis definition is used:
@@ -167,7 +167,7 @@ def _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list):
 
 def get_mesh(param, domain_color, layer_stack):
     """
-    Transform a series of 2D PNG images into a 3D voxel structure.
+    Transform a series of PNG images into a 3D voxel structure.
     The 3D voxel structure is constructed from:
         - a dict mapping the pixel colors to domains
         - a list containing the layer stack of images
