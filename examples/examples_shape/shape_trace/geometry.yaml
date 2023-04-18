@@ -27,14 +27,14 @@
                 "shape_add":
                     - {"shape_type": "trace", "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]], "buffer": 0.25e-3}
                 "shape_sub":
-                    -  { "shape_type": "pad", "coord": [[2.5e-3, 2.5e-3]], "buffer": 0.10e-3 }
+                    -  {"shape_type": "pad", "coord": [[2.5e-3, 2.5e-3]], "buffer": 0.10e-3}
             -
                 "layer_start": "back"
                 "layer_stop": "back"
                 "shape_add":
                     - {"shape_type": "trace", "coord": [[5.0e-3, 0.0e-3], [0.0e-3, 5.0e-3]], "buffer": 0.25e-3}
                 "shape_sub":
-                    - { "shape_type": "pad", "coord": [ [ 2.5e-3, 2.5e-3 ] ], "buffer": 0.10e-3 }
+                    - {"shape_type": "pad", "coord": [ [ 2.5e-3, 2.5e-3 ] ], "buffer": 0.10e-3}
         "src_front":
             -
                 "layer_start": "front"

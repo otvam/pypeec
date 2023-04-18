@@ -52,10 +52,11 @@ def _check_geometry_shape(layer_list, geometry_shape):
 
     # check content
     for tag, geometry_shape_tmp in geometry_shape.items():
+        datachecker.check_list("geometry_shape", geometry_shape_tmp, can_be_empty=False, sub_type=dict)
         for geometry_shape_tmp_tmp in geometry_shape_tmp:
             # check type
             key_list = ["layer_start", "layer_stop", "shape_add", "shape_sub"]
-            datachecker.check_dict("domain_stl", geometry_shape_tmp_tmp, key_list=key_list)
+            datachecker.check_dict("geometry_shape", geometry_shape_tmp_tmp, key_list=key_list)
 
             # extract the data
             layer_start = geometry_shape_tmp_tmp["layer_start"]

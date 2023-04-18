@@ -14,25 +14,23 @@ def _check_domain_stl(domain_stl):
     """
 
     # check type
-    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=dict)
+    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=list)
 
     # check content
     for tag, domain_stl_tmp in domain_stl.items():
-        # check type
-        key_list = ["offset", "filename_list"]
-        datachecker.check_dict("domain_stl", domain_stl_tmp, key_list=key_list)
+        datachecker.check_list("domain_stl", domain_stl_tmp, can_be_empty=False, sub_type=dict)
+        for domain_stl_tmp_tmp in domain_stl_tmp:
+            # check type
+            key_list = ["offset", "filename"]
+            datachecker.check_dict("domain_stl", domain_stl_tmp_tmp, key_list=key_list)
 
-        # extract the data
-        offset = domain_stl_tmp["offset"]
-        filename_list = domain_stl_tmp["filename_list"]
+            # extract the data
+            offset = domain_stl_tmp_tmp["offset"]
+            filename = domain_stl_tmp_tmp["filename"]
 
-        # check data
-        datachecker.check_float_array("domain_color", offset, size=3)
-        datachecker.check_list("filename_list", filename_list, can_be_empty=False, sub_type=str)
-
-        # check files
-        for filename in filename_list:
-            datachecker.check_filename("filename_list", filename)
+            # check data
+            datachecker.check_float_array("domain_color", offset, size=3)
+            datachecker.check_filename("filename", filename)
 
 
 def _check_param(param):

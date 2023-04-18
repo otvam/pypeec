@@ -25,32 +25,20 @@ NP_TYPES = config.NP_TYPES
 vtk.vtkObject.GlobalWarningDisplayOff()
 
 
-def _get_load_stl(offset, filename_list):
+def _get_load_stl(offset, filename):
     """
     Load several STL files and merge the meshes.
     """
 
-    # list for the meshes
-    mesh_list = []
+    # load the mesh
+    try:
+        mesh = pv.read(filename, force_ext=".stl")
+    except ValueError:
+        raise RunError("invalid stl: invalid file type: %s" % filename)
 
-    # load the files
-    for filename in filename_list:
-        # load the mesh
-        try:
-            mesh = pv.read(filename, force_ext=".stl")
-        except ValueError:
-            raise RunError("invalid stl: invalid file type: %s" % filename)
-
-        # check that the file is valid
-        if mesh.n_cells == 0:
-            raise RunError("invalid stl: invalid file content: %s" % filename)
-
-        # store the loaded mesh
-        mesh_list.append(mesh)
-
-    # merge the meshes
-    mesh = pv.MultiBlock(mesh_list)
-    mesh = mesh.combine().extract_surface()
+    # check that the file is valid
+    if mesh.n_cells == 0:
+        raise RunError("invalid stl: invalid file content: %s" % filename)
 
     # translate the meshes
     mesh = mesh.translate(offset, inplace=True)
@@ -79,11 +67,11 @@ def _get_voxelize_stl(grid, mesh):
         voxel = grid.extract_points(mask)
 
         # get the indices of the extracted voxels
-        idx = voxel["idx"]
+        idx_voxel = voxel["idx"]
     else:
-        idx = np.array([], dtype=NP_TYPES.INT)
+        idx_voxel = np.array([], dtype=NP_TYPES.INT)
 
-    return idx
+    return idx_voxel
 
 
 def _get_mesh_stl(domain_stl):
@@ -92,8 +80,9 @@ def _get_mesh_stl(domain_stl):
     Find the bounding box for all the meshes (minimum and maximum coordinates).
     """
 
-    # init STL mesh dict
-    mesh_stl = {}
+    # init STL mesh list
+    mesh_stl = []
+    mesh_all = []
 
     # init the coordinate (minimum and maximum coordinates)
     xyz_min = np.full(3, +np.inf, dtype=NP_TYPES.FLOAT)
@@ -101,31 +90,32 @@ def _get_mesh_stl(domain_stl):
 
     # load the STL files and find the bounding box
     for tag, domain_stl_tmp in domain_stl.items():
-        # extract the data
-        offset = domain_stl_tmp["offset"]
-        filename_list = domain_stl_tmp["filename_list"]
+        for domain_stl_tmp_tmp in domain_stl_tmp:
+            # extract the data
+            offset = domain_stl_tmp_tmp["offset"]
+            filename = domain_stl_tmp_tmp["filename"]
 
-        # load the STL
-        mesh = _get_load_stl(offset, filename_list)
+            # load the STL
+            mesh = _get_load_stl(offset, filename)
 
-        # display the mesh size
-        n_face = mesh.n_faces
-        n_vertice = mesh.n_points
-        LOGGER.debug("%s: n_face = %d / n_vertice = %d" % (tag, n_face, n_vertice))
+            # find the bounds
+            (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
+            tmp_min = np.array((x_min, y_min, z_min), dtype=NP_TYPES.FLOAT)
+            tmp_max = np.array((x_max, y_max, z_max), dtype=NP_TYPES.FLOAT)
 
-        # find the bounds
-        (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
-        tmp_min = np.array((x_min, y_min, z_min), dtype=NP_TYPES.FLOAT)
-        tmp_max = np.array((x_max, y_max, z_max), dtype=NP_TYPES.FLOAT)
+            # update the bounds
+            xyz_min = np.minimum(xyz_min, tmp_min)
+            xyz_max = np.maximum(xyz_max, tmp_max)
 
-        # update the bounds
-        xyz_min = np.minimum(xyz_min, tmp_min)
-        xyz_max = np.maximum(xyz_max, tmp_max)
+            # assign the mesh
+            mesh_all.append(mesh)
+            mesh_stl.append({"tag": tag, "mesh": mesh})
 
-        # assign the mesh
-        mesh_stl[tag] = mesh
+    # merge all the meshes
+    reference = pv.MultiBlock(mesh_all)
+    reference = reference.combine().extract_surface()
 
-    return mesh_stl, xyz_min, xyz_max
+    return mesh_stl, reference, xyz_min, xyz_max
 
 
 def _get_voxel_size(d, xyz_max, xyz_min):
@@ -182,40 +172,35 @@ def _get_voxel_grid(n, d, c):
     return grid
 
 
-def _get_domain_def(grid, mesh_stl):
+def _get_domain_def(grid, domain_stl, mesh_stl):
     """
     Voxelize meshes and assign the indices to a dict.
     """
 
     # init the domain dict
     domain_def = {}
+    for tag in domain_stl:
+        domain_def[tag] = np.array([], NP_TYPES.INT)
 
     # voxelize the meshes
-    for tag, mesh in mesh_stl.items():
+    for mesh_stl_tmp in mesh_stl:
+        # extract the data
+        tag = mesh_stl_tmp["tag"]
+        mesh = mesh_stl_tmp["mesh"]
+
         # voxelize and get the indices
-        idx = _get_voxelize_stl(grid, mesh)
+        idx_voxel = _get_voxelize_stl(grid, mesh)
 
-        # display number of voxels
-        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx)))
+        # append the indices into the corresponding domain
+        domain_def[tag] = np.append(domain_def[tag], idx_voxel)
 
-        # assign the indices to the domain
-        domain_def[tag] = idx
+    # remove duplicates
+    for tag, idx_voxel in domain_def.items():
+        idx_voxel = np.unique(idx_voxel)
+        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx_voxel)))
+        domain_def[tag] = idx_voxel
 
     return domain_def
-
-
-def _get_merge_stl(mesh_stl):
-    """
-    Merge all the meshes into a single mesh.
-    The resulting mesh represent the original geometry.
-    This mesh can be used to assess the quality of the voxelization.
-    """
-
-    mesh_list = list(mesh_stl.values())
-    reference = pv.MultiBlock(mesh_list)
-    reference = reference.combine().extract_surface()
-
-    return reference
 
 
 def get_mesh(param, domain_stl):
@@ -231,7 +216,7 @@ def get_mesh(param, domain_stl):
 
     # load the mesh and get the STL bounds
     LOGGER.debug("load STL files")
-    (mesh_stl, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl)
+    (mesh_stl, reference, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl)
 
     # if provided, the specified bounds are used, otherwise the STL bounds are used
     if xyz_min is not None:
@@ -253,11 +238,7 @@ def get_mesh(param, domain_stl):
 
     # voxelize the meshes and get the indices
     LOGGER.debug("voxelize STL files")
-    domain_def = _get_domain_def(grid, mesh_stl)
-
-    # merge the meshes representing the original geometry
-    LOGGER.debug("merge the meshes")
-    reference = _get_merge_stl(mesh_stl)
+    domain_def = _get_domain_def(grid, domain_stl, mesh_stl)
 
     # cast to lists
     n = n.tolist()
