@@ -232,8 +232,8 @@ def _get_shape_obj(geometry_shape, stack_pos, stack_tag, tol):
     Find the bounding box for all the shapes (minimum and maximum coordinates).
     """
 
-    # init shape dict
-    shape_obj = {}
+    # init shape list
+    shape_obj = []
 
     # init the coordinate (minimum and maximum coordinates)
     xy_min = np.full(2, +np.inf, dtype=NP_TYPES.FLOAT)
@@ -241,32 +241,30 @@ def _get_shape_obj(geometry_shape, stack_pos, stack_tag, tol):
 
     # create the shapes and find the bounding box
     for tag, geometry_shape_tmp in geometry_shape.items():
-        # extract the data
-        layer_start = geometry_shape_tmp["layer_start"]
-        layer_stop = geometry_shape_tmp["layer_stop"]
-        shape_add = geometry_shape_tmp["shape_add"]
-        shape_sub = geometry_shape_tmp["shape_sub"]
+        for geometry_shape_tmp_tmp in geometry_shape_tmp:
+            # extract the data
+            layer_start = geometry_shape_tmp_tmp["layer_start"]
+            layer_stop = geometry_shape_tmp_tmp["layer_stop"]
+            shape_add = geometry_shape_tmp_tmp["shape_add"]
+            shape_sub = geometry_shape_tmp_tmp["shape_sub"]
 
-        # get the shape
-        obj = _get_composite_shape(shape_add, shape_sub, tol)
+            # get the shape
+            obj = _get_composite_shape(shape_add, shape_sub, tol)
 
-        # display the shape size
-        LOGGER.debug("%s: n_add = %d / n_sub = %d" % (tag, len(shape_add), len(shape_add)))
+            # find the bounds
+            (x_min, y_min, x_max, y_max) = obj.bounds
+            tmp_min = np.array((x_min, y_min), dtype=NP_TYPES.FLOAT)
+            tmp_max = np.array((x_max, y_max), dtype=NP_TYPES.FLOAT)
 
-        # find the bounds
-        (x_min, y_min, x_max, y_max) = obj.bounds
-        tmp_min = np.array((x_min, y_min), dtype=NP_TYPES.FLOAT)
-        tmp_max = np.array((x_max, y_max), dtype=NP_TYPES.FLOAT)
+            # update the bounds
+            xy_min = np.minimum(xy_min, tmp_min)
+            xy_max = np.maximum(xy_max, tmp_max)
 
-        # update the bounds
-        xy_min = np.minimum(xy_min, tmp_min)
-        xy_max = np.maximum(xy_max, tmp_max)
+            # get the stack position
+            (z_min, z_max, stack_idx) = _get_shape_position(layer_start, layer_stop, stack_pos, stack_tag)
 
-        # get the stack position
-        (z_min, z_max, stack_idx) = _get_shape_position(layer_start, layer_stop, stack_pos, stack_tag)
-
-        # assign the object
-        shape_obj[tag] = {"z_min": z_min, "z_max": z_max, "stack_idx": stack_idx, "obj": obj}
+            # assign the object
+            shape_obj.append({"tag": tag, "z_min": z_min, "z_max": z_max, "stack_idx": stack_idx, "obj": obj})
 
     return shape_obj, xy_min, xy_max
 
@@ -300,7 +298,7 @@ def _get_layer_stack(layer_stack, dz, cz):
     return nz, stack_pos, stack_tag
 
 
-def _get_domain_def(n, d, c, shape_obj):
+def _get_domain_def(n, d, c, geometry_shape, shape_obj):
     """
     Voxelize the shapes and assign the indices to a dict.
     """
@@ -311,10 +309,13 @@ def _get_domain_def(n, d, c, shape_obj):
 
     # init the domain dict
     domain_def = {}
+    for tag in geometry_shape:
+        domain_def[tag] = np.array([], NP_TYPES.INT)
 
     # voxelize the shapes
-    for tag, shape_obj_tmp in shape_obj.items():
+    for shape_obj_tmp in shape_obj:
         # extract the data
+        tag = shape_obj_tmp["tag"]
         obj = shape_obj_tmp["obj"]
         stack_idx = shape_obj_tmp["stack_idx"]
 
@@ -322,10 +323,13 @@ def _get_domain_def(n, d, c, shape_obj):
         idx_shape = _get_voxelize_shape(n, xyz_min, xyz_max, obj)
         idx_voxel = _get_idx_voxel(n, idx_shape, stack_idx)
 
-        # display number of voxels
-        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx_voxel)))
+        # append the indices into the corresponding domain
+        domain_def[tag] = np.append(domain_def[tag], idx_voxel)
 
-        # assign the indices to the domain
+    # remove duplicates
+    for tag, idx_voxel in domain_def.items():
+        idx_voxel = np.unique(idx_voxel)
+        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx_voxel)))
         domain_def[tag] = idx_voxel
 
     return domain_def
@@ -387,7 +391,7 @@ def _get_merge_shape(shape_obj):
     mesh_list = []
 
     # merge all the shapes
-    for shape_obj_tmp in shape_obj.values():
+    for shape_obj_tmp in shape_obj:
         # extract the data
         obj = shape_obj_tmp["obj"]
         z_min = shape_obj_tmp["z_min"]
@@ -450,9 +454,14 @@ def get_mesh(param, layer_stack, geometry_shape):
     LOGGER.debug("get the voxel size")
     (n, d, c) = _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min)
 
+    # init domain definition dict
+    domain_def = {}
+    for tag in geometry_shape:
+        domain_def[tag] = np.array([], NP_TYPES.INT)
+
     # voxelize the shapes and get the indices
     LOGGER.debug("voxelize the shapes")
-    domain_def = _get_domain_def(n, d, c, shape_obj)
+    domain_def = _get_domain_def(n, d, c, domain_def, shape_obj)
 
     # merge the shapes representing the original geometry
     LOGGER.debug("merge the shapes")

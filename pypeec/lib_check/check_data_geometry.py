@@ -46,16 +46,16 @@ def _check_domain_conflict(domain_list, domain_conflict):
         datachecker.check_dict("domain_conflict", domain_conflict_tmp, key_list=key_list)
 
         # extract the data
-        domain_keep = domain_conflict_tmp["domain_keep"]
-        domain_resolve = domain_conflict_tmp["domain_resolve"]
+        domain_keep_tmp = domain_conflict_tmp["domain_keep"]
+        domain_resolve_tmp = domain_conflict_tmp["domain_resolve"]
 
         # check type
-        datachecker.check_string("domain_keep", domain_keep, can_be_empty=False)
-        datachecker.check_string("domain_resolve", domain_resolve, can_be_empty=False)
+        datachecker.check_string("domain_keep", domain_keep_tmp, can_be_empty=False)
+        datachecker.check_string("domain_resolve", domain_resolve_tmp, can_be_empty=False)
 
         # check data
-        datachecker.check_choice("domain_resolve", domain_resolve, domain_list)
-        datachecker.check_choice("domain_keep", domain_keep, domain_list)
+        datachecker.check_choice("domain_resolve", domain_resolve_tmp, domain_list)
+        datachecker.check_choice("domain_keep", domain_keep_tmp, domain_list)
 
 
 def _check_domain_connection(domain_list, domain_connection):
@@ -74,15 +74,15 @@ def _check_domain_connection(domain_list, domain_connection):
         datachecker.check_dict("domain_connection", domain_connection_tmp, key_list=key_list)
 
         # extract field
-        domain_list = domain_connection_tmp["domain_list"]
-        connected = domain_connection_tmp["connected"]
+        domain_list_tmp = domain_connection_tmp["domain_list"]
+        connected_tmp = domain_connection_tmp["connected"]
 
         # check data
-        datachecker.check_boolean("connected", connected)
-        datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
+        datachecker.check_boolean("connected", connected_tmp)
+        datachecker.check_list("domain_list", domain_list_tmp, can_be_empty=False, sub_type=str)
 
         # check value
-        for tag in domain_list:
+        for tag in domain_list_tmp:
             datachecker.check_choice("source_type", tag, domain_list)
 
 

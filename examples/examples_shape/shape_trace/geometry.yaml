@@ -8,11 +8,11 @@
 "mesh_type": "shape"
 "data_voxelize":
     "param":
-        "dx": 2.0
-        "dy": 2.0
-        "dz": 2.0
-        "cz": 0.0
-        "tol": 0.1
+        "dx": 50.0e-6
+        "dy": 50.0e-6
+        "dz": 50.0e-6
+        "cz": 0.0e-6
+        "tol": 1.0e-6
         "xy_min": null
         "xy_max": null
     "layer_stack":
@@ -20,30 +20,56 @@
         - { "n_layer": 5, "tag_layer": "insulation"}
         - { "n_layer": 1, "tag_layer": "front"}
     "geometry_shape":
-        "front":
-            "layer_start": "front"
-            "layer_stop": "front"
-            "shape_add":
-                - {"shape_type": "trace", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 10.0}
-            "shape_sub":
-                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 5.0}
-        "via":
-            "layer_start": "insulation"
-            "layer_stop": "insulation"
-            "shape_add":
-                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 10.0}
-            "shape_sub":
-                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 5.0}
-        "terminal":
-            "layer_start": "back"
-            "layer_stop": "back"
-            "shape_add":
-                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 10.0}
-            "shape_sub":
-                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 5.0}
+        "copper":
+            -
+                "layer_start": "front"
+                "layer_stop": "front"
+                "shape_add":
+                    - {"shape_type": "trace", "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]], "buffer": 0.25e-3}
+                "shape_sub":
+                    -  { "shape_type": "pad", "coord": [[2.5e-3, 2.5e-3]], "buffer": 0.10e-3 }
+            -
+                "layer_start": "back"
+                "layer_stop": "back"
+                "shape_add":
+                    - {"shape_type": "trace", "coord": [[5.0e-3, 0.0e-3], [0.0e-3, 5.0e-3]], "buffer": 0.25e-3}
+                "shape_sub":
+                    - { "shape_type": "pad", "coord": [ [ 2.5e-3, 2.5e-3 ] ], "buffer": 0.10e-3 }
+        "src_front":
+            -
+                "layer_start": "front"
+                "layer_stop": "front"
+                "shape_add":
+                    - {"shape_type": "pad", "coord": [[0.0e-3, 0.0e-3]], "buffer": 0.35e-3}
+                "shape_sub": []
+        "src_back":
+            -
+                "layer_start": "back"
+                "layer_stop": "back"
+                "shape_add":
+                    - {"shape_type": "pad", "coord": [[5.0e-3, 0.0e-3]], "buffer": 0.35e-3}
+                "shape_sub": []
+        "sink":
+            -
+                "layer_start": "front"
+                "layer_stop": "front"
+                "shape_add":
+                    - {"shape_type": "pad", "coord": [[5.0e-3, 5.0e-3]], "buffer": 0.35e-3}
+                "shape_sub": []
+            -
+                "layer_start": "back"
+                "layer_stop": "back"
+                "shape_add":
+                    - {"shape_type": "pad", "coord": [[0.0e-3, 5.0e-3]], "buffer": 0.35e-3}
+                "shape_sub": []
 "resampling":
     "use_reduce": false
     "use_resample": false
     "resampling_factor": [1, 1, 1]
-"domain_conflict": []
-"domain_connection": {}
+"domain_conflict":
+    - { "domain_resolve": "copper", "domain_keep": "src_front" }
+    - { "domain_resolve": "copper", "domain_keep": "src_back" }
+    - { "domain_resolve": "copper", "domain_keep": "sink" }
+"domain_connection":
+    "top": { "domain_list": [ "src_front", "copper", "sink" ], "connected": true }
+    "bottom": { "domain_list": [ "src_back", "copper", "sink" ], "connected": true }

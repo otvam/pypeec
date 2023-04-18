@@ -48,31 +48,32 @@ def _check_geometry_shape(layer_list, geometry_shape):
     """
 
     # check type
-    datachecker.check_dict("geometry_shape", geometry_shape, can_be_empty=False, sub_type=dict)
+    datachecker.check_dict("geometry_shape", geometry_shape, can_be_empty=False, sub_type=list)
 
     # check content
     for tag, geometry_shape_tmp in geometry_shape.items():
-        # check type
-        key_list = ["layer_start", "layer_stop", "shape_add", "shape_sub"]
-        datachecker.check_dict("domain_stl", geometry_shape_tmp, key_list=key_list)
+        for geometry_shape_tmp_tmp in geometry_shape_tmp:
+            # check type
+            key_list = ["layer_start", "layer_stop", "shape_add", "shape_sub"]
+            datachecker.check_dict("domain_stl", geometry_shape_tmp_tmp, key_list=key_list)
 
-        # extract the data
-        layer_start = geometry_shape_tmp["layer_start"]
-        layer_stop = geometry_shape_tmp["layer_stop"]
-        shape_add = geometry_shape_tmp["shape_add"]
-        shape_sub = geometry_shape_tmp["shape_sub"]
+            # extract the data
+            layer_start = geometry_shape_tmp_tmp["layer_start"]
+            layer_stop = geometry_shape_tmp_tmp["layer_stop"]
+            shape_add = geometry_shape_tmp_tmp["shape_add"]
+            shape_sub = geometry_shape_tmp_tmp["shape_sub"]
 
-        # check data
-        datachecker.check_choice("layer_start", layer_start, layer_list)
-        datachecker.check_choice("layer_stop", layer_stop, layer_list)
-        datachecker.check_list("shape_add", shape_add, can_be_empty=True, sub_type=dict)
-        datachecker.check_list("shape_sub", shape_sub, can_be_empty=True,sub_type=dict)
+            # check data
+            datachecker.check_choice("layer_start", layer_start, layer_list)
+            datachecker.check_choice("layer_stop", layer_stop, layer_list)
+            datachecker.check_list("shape_add", shape_add, can_be_empty=True, sub_type=dict)
+            datachecker.check_list("shape_sub", shape_sub, can_be_empty=True,sub_type=dict)
 
-        # check shapes
-        for shape_add_tmp in shape_add:
-            _check_shape_definition(shape_add_tmp)
-        for shape_sub_tmp in shape_sub:
-            _check_shape_definition(shape_sub_tmp)
+            # check shapes
+            for shape_add_tmp in shape_add:
+                _check_shape_definition(shape_add_tmp)
+            for shape_sub_tmp in shape_sub:
+                _check_shape_definition(shape_sub_tmp)
 
 
 def _check_layer_stack(layer_stack):

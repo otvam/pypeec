@@ -181,15 +181,15 @@ def get_mesh(param, domain_color, layer_stack):
     # no reference geometry, direct voxelization
     reference = None
 
-    # init the layer stack
-    nz = 0
-
     # get the image size
     (nx, ny) = size
 
+    # init the layer stack
+    nz = 0
+
     # init domain definition dict
     domain_def = {}
-    for tag, color in domain_color.items():
+    for tag in domain_color:
         domain_def[tag] = np.array([], NP_TYPES.INT)
 
     # add layers
