@@ -80,6 +80,90 @@ This file contains the definition of the voxel structure.
         "dom_mag": [36, 37, 38, 39, 40, 41, 42, 43]
 ```
 
+### Definition from 2D Vector Shapes
+
+```yaml
+# voxel definition type ("shape" for 2D vector shapes)
+"mesh_type": "shape"
+
+# definition of the voxel structure
+"data_voxelize": 
+    # definition of the voxel structure
+    #   - dx: voxel dimension for the x direction
+    #   - dy: voxel dimension for the y direction
+    #   - dz: voxel dimension for the z direction
+    #   - cz: coordinates of the voxel structure center for the z direction
+    #   - tol: tolerance for simplifying the shapes
+    #   - xy_min: array with the lower corner coordinates of the voxel structure (x and y directions)
+    #   - xy_max: array with the upper corner coordinates of the voxel structure (x and y directions)
+    #   - alternatively, the xy_min/xy_max can be set to null and the shape bounds are kept
+    "param":
+        "dx": 50.0e-6
+        "dy": 50.0e-6
+        "dz": 50.0e-6
+        "cz": 0.0e-6
+        "tol": 1.0e-6
+        "xy_min": [-20e-3, -20e-3]
+        "xy_max": [+20e-3, +20e-3]
+
+    # definition of the layer stack (voxels in the z-direction)
+    #   - list of dicts with the definition of the layers
+    #   - required information, the list cannot be empty
+    #   - layer definition
+    #       - n_layer: number of voxels in the z-direction for the layer
+    #       - tag_layer: string with the name of the layer
+    "layer_stack":
+        - { "n_layer": 1, "tag_layer": "mag"}
+        - { "n_layer": 5, "tag_layer": "insulation_mag"}
+        - { "n_layer": 1, "tag_layer": "cond"}
+        - { "n_layer": 5, "tag_layer": "insulation_terminal"}
+        - { "n_layer": 1, "tag_layer": "terminal"}
+    
+    # definition of the shapes composing the different domains
+    #   - dict with the domain name and the shape definition
+    #   - required information, the dict cannot be empty
+    #   - domain definition
+    #       - list of the different shapes composing the domain
+    #       - layer_start: name of the layer where the shape starts
+    #       - layer_stop: name of the layer where the shape stops
+    #       - shape_add: list of shapes to be merged be added
+    #       - shape_sub: list of shapes to be merged be subtracted
+    #   - shape definition
+    #       - shape_type: type of the shape ("pad" or "trace" or "polygon")
+    #       - coord: array with the 2D coordinates composing the shape
+    #       - buffer: thickness of the buffer that is added around the shape
+    "geometry_shape":
+        "dom_cond":
+            -
+                "layer_start": "cond"
+                "layer_stop": "cond"
+                "shape_add":
+                    - {"shape_type": "trace", "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]], "buffer": 0.25e-3}
+                "shape_sub": []
+        "dom_mag":
+            -
+                "layer_start": "mag"
+                "layer_stop": "mag"
+                "shape_add":
+                    - {"shape_type": "polygon", "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3], [0.0e-3, 5.0e-3]], "buffer": 0.0}
+                "shape_sub":
+                    - {"shape_type": "polygon", "coord": [[1.0e-3, 1.0e-3], [3.0e-3, 1.0e-3], [3.0e-3, 3.0e-3], [1.0e-3, 3.0e-3]], "buffer": 0.0}
+        "dom_src":
+            -
+                "layer_start": "insulation_terminal"
+                "layer_stop": "terminal"
+                "shape_add":
+                    - {"shape_type": "pad", "coord": [[0.0e-3, 0.0e-3]], "buffer": 0.35e-3}
+                "shape_sub": []
+        "dom_sink":
+            -
+                "layer_start": "insulation_terminal"
+                "layer_stop": "terminal"
+                "shape_add":
+                    - {"shape_type": "pad", "coord": [[5.0e-3, 5.0e-3]], "buffer": 0.35e-3}
+                "shape_sub": []    
+```
+
 ### Definition from PNG Files
 
 ```yaml
@@ -99,8 +183,8 @@ This file contains the definition of the voxel structure.
         
     # definition of the mapping between the image color and the different domains
     #   - dict with the domain name and the specified colors
-    #   - the colors are specified with an array of colors (RGBA format)
     #   - required information, the dict cannot be empty
+    #   - the colors are specified with an array of colors (RGBA format)
     "domain_color":
         "dom_src": [[255, 0, 0, 255]]
         "dom_cond": [[0, 0, 0, 255]]
@@ -131,7 +215,7 @@ This file contains the definition of the voxel structure.
     #   - d: array with the voxel dimensions (x, y, and z directions)
     #   - xyz_min: array with the lower corner coordinates of the voxel structure (x, y, and z directions)
     #   - xyz_max: array with the upper corner coordinates of the voxel structure (x, y, and z directions)
-    #   - alternatively, the xyz_min/xyz_max can be set to null and the STL coordinates are kept
+    #   - alternatively, the xyz_min/xyz_max can be set to null and the STL mesh bounds are kept
     "param":
         "d": [10.0e-3, 10.0e-3, 10.0e-3]
         "xyz_min": [-20e-3, -20e-3, -20e-3]
