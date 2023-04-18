@@ -1,8 +1,9 @@
 """
-Generate PNG files for the example.
+Module for generating PNG files from GERBER files.
 
 The PCB is created with "KiCad - PCB" and the following files are exported:
-    - GERBER files for the conductor and the terminals
+    - GERBER files for the different layers (main layers)
+    - GERBER files for the terminals (user layers)
     - Excellon files for the vias
 
 Finally, this script is used to generate PNG files for the layers:
@@ -14,25 +15,27 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
+import os.path
 import subprocess
 
 
-def get_gerbv_file(filename_gerbv, data_base, stack):
+def get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
     """
     Create a "gerbv - Gerber Viewer" project file.
     """
 
     # extract the data
-    gerber_edge = data_base["gerber_edge"]
-    color_edge = data_base["color_edge"]
-    color_none = data_base["color_none"]
-    color_def = data_base["color_def"]
-    gerber_def = data_base["gerber_def"]
+    gerber_edge = data_gerber["gerber_edge"]
+    color_edge = data_gerber["color_edge"]
+    color_none = data_gerber["color_none"]
+    color_def = data_gerber["color_def"]
+    gerber_def = data_gerber["gerber_def"]
 
     # get name
     color_edge = color_def[color_edge]
     color_none = color_def[color_none]
     gerber_edge = gerber_def[gerber_edge]
+    gerber_edge = os.path.join(folder_gerber, gerber_edge)
 
     # convert color
     color_edge = tuple([257 * x for x in color_edge])
@@ -47,15 +50,16 @@ def get_gerbv_file(filename_gerbv, data_base, stack):
         fid.write('(gerbv-file-version! "2.0A")\n')
 
         # add stack
-        for i, stack_tmp in enumerate(stack):
+        for i, data_stack_tmp in enumerate(data_stack):
             # extract the data
             layer = i+1
-            gerber = stack_tmp["gerber"]
-            color = stack_tmp["color"]
+            gerber = data_stack_tmp["gerber"]
+            color = data_stack_tmp["color"]
 
             # get color
             color = color_def[color]
             gerber = gerber_def[gerber]
+            gerber = os.path.join(folder_gerber, gerber)
 
             # convert color
             color = tuple([257*x for x in color])
@@ -84,7 +88,7 @@ def get_gerbv_file(filename_gerbv, data_base, stack):
         fid.write('(set-render-type! 3)\n')
 
 
-def get_png(layer, name, data_export, data_base, stack):
+def get_layer_png(tag, data_export, data_gerber, data_stack):
     """
     Transform GERBER files into a PNG file for a given layer.
     """
@@ -93,13 +97,15 @@ def get_png(layer, name, data_export, data_base, stack):
     margin = data_export["margin"]
     voxel = data_export["voxel"]
     oversampling = data_export["oversampling"]
+    folder_gerber = data_export["folder_gerber"]
+    folder_png = data_export["folder_png"]
 
     # create the file names
-    filename_gerbv = name + "_" + layer + ".gvp"
-    filename_png = name + "_" + layer + ".png"
+    filename_gerbv = "%s.gvp" % tag
+    filename_png = "%s.png" % tag
 
     # get the project files with the GERBER files
-    get_gerbv_file(filename_gerbv, data_base, stack)
+    get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack)
 
     # get the resolution and margin
     resolution = round(25.4e-3*oversampling/voxel)
@@ -126,75 +132,14 @@ def get_png(layer, name, data_export, data_base, stack):
     # remove the project file
     os.remove(filename_gerbv)
 
+    # move the PNG file
+    os.rename(filename_png, os.path.join(folder_png, filename_png))
 
-def get_layer(name, data_export, data_base):
+
+def get_convert(data_export, data_gerber, data_stack):
     """
     Transform GERBER files into PNG files.
     """
 
-    # front
-    stack = [
-        {"gerber": "drill", "color": "none"},
-        {"gerber": "front", "color": "copper"},
-    ]
-    get_png("front", name, data_export, data_base, stack)
-
-    # back
-    stack = [
-        {"gerber": "drill", "color": "none"},
-        {"gerber": "back", "color": "copper"},
-    ]
-    get_png("back", name, data_export, data_base, stack)
-
-    # terminal
-    stack = [
-        {"gerber": "drill", "color": "none"},
-        {"gerber": "sink", "color": "sink"},
-        {"gerber": "src", "color": "src"},
-    ]
-    get_png("terminal", name, data_export, data_base, stack)
-
-    # via
-    stack = [
-        {"gerber": "drill", "color": "none"},
-        {"gerber": "via", "color": "copper"},
-    ]
-    get_png("via", name, data_export, data_base, stack)
-
-
-if __name__ == "__main__":
-    # ######################## get the colors / GERBER files
-    color_def = {
-        "none":  (255, 255, 255),
-        "edge":  (0, 0, 0),
-        "copper": (255, 0, 0),
-        "sink":  (0, 0, 255),
-        "src": (0, 255, 0),
-    }
-    gerber_def = {
-        "edge":  "gerber/generate_gerber-edge.gbr",
-        "front": "gerber/generate_gerber-front_copper.gbr",
-        "back": "gerber/generate_gerber-back_copper.gbr",
-        "src": "gerber/generate_gerber-src.gbr",
-        "sink": "gerber/generate_gerber-sink.gbr",
-        "drill":  "gerber/generate_gerber-PTH.drl",
-        "via":  "gerber/generate_gerber-VIA.drl",
-    }
-    data_base = {
-        "gerber_edge": "edge",
-        "color_edge": "edge",
-        "color_none": "none",
-        "color_def": color_def,
-        "gerber_def": gerber_def
-    }
-
-    # ######################## get the variables
-    name = "gerbv"
-    data_export = {
-        "margin": 0.1,
-        "voxel": 17.0e-6,
-        "oversampling": 1.0,
-    }
-
-    # ######################## run
-    get_layer(name, data_export, data_base)
+    for tag, data_stack_tmp in data_stack.items():
+        get_layer_png(tag, data_export, data_gerber, data_stack_tmp)
