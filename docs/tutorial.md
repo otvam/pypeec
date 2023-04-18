@@ -5,6 +5,10 @@
 The **PyPEEC** package contains the following tools (`pypeec` package)::
 * **mesher** (`pypeec.mesher` module)
   * Create the voxel structure (from STL or PNG files)
+  * Import the geometry from voxel files
+  * Import the geometry from STL files
+  * Create the geometry with stacked 2D PNG files
+  * Draw the geometry with stacked 2D vector shapes
   * Assign different domain names to the voxels
   * Resampling (refine) the voxel structure
   * Construct the graph of the structure and detect connected components

@@ -31,7 +31,7 @@ def _check_resampling(resampling):
     datachecker.check_integer_array("resampling_factor", resampling["resampling_factor"], size=3, is_positive=True, can_be_zero=False)
 
 
-def _check_domain_conflict(domain_name, domain_conflict):
+def _check_domain_conflict(domain_list, domain_conflict):
     """
     Check the validity of the rules to solve conflict between domains (STL mesher).
     """
@@ -50,15 +50,15 @@ def _check_domain_conflict(domain_name, domain_conflict):
         domain_resolve = domain_conflict_tmp["domain_resolve"]
 
         # check type
-        datachecker.check_string("domain_keep", domain_keep)
-        datachecker.check_string("domain_resolve", domain_resolve)
+        datachecker.check_string("domain_keep", domain_keep, can_be_empty=False)
+        datachecker.check_string("domain_resolve", domain_resolve, can_be_empty=False)
 
         # check data
-        datachecker.check_choice("domain_resolve", domain_resolve, domain_name)
-        datachecker.check_choice("domain_keep", domain_keep, domain_name)
+        datachecker.check_choice("domain_resolve", domain_resolve, domain_list)
+        datachecker.check_choice("domain_keep", domain_keep, domain_list)
 
 
-def _check_domain_connection(domain_name, domain_connection):
+def _check_domain_connection(domain_list, domain_connection):
     """
     Check the domain connection data.
     This list is defining the required connection between the domain
@@ -83,7 +83,7 @@ def _check_domain_connection(domain_name, domain_connection):
 
         # check value
         for tag in domain_list:
-            datachecker.check_choice("source_type", tag, domain_name)
+            datachecker.check_choice("source_type", tag, domain_list)
 
 
 def check_data_geometry(data_geometry):
@@ -113,13 +113,13 @@ def check_data_geometry(data_geometry):
 
     # check the mesher
     if mesh_type == "png":
-        domain_name = check_data_geometry_png.check_data_voxelize(data_voxelize)
+        domain_list = check_data_geometry_png.check_data_voxelize(data_voxelize)
     elif mesh_type == "stl":
-        domain_name = check_data_geometry_stl.check_data_voxelize(data_voxelize)
+        domain_list = check_data_geometry_stl.check_data_voxelize(data_voxelize)
     elif mesh_type == "shape":
-        domain_name = check_data_geometry_shape.check_data_voxelize(data_voxelize)
+        domain_list = check_data_geometry_shape.check_data_voxelize(data_voxelize)
     elif mesh_type == "voxel":
-        domain_name = check_data_geometry_voxel.check_data_voxelize(data_voxelize)
+        domain_list = check_data_geometry_voxel.check_data_voxelize(data_voxelize)
     else:
         raise ValueError("invalid mesh type")
 
@@ -127,7 +127,7 @@ def check_data_geometry(data_geometry):
     _check_resampling(resampling)
 
     # check the conflict data
-    _check_domain_conflict(domain_name, domain_conflict)
+    _check_domain_conflict(domain_list, domain_conflict)
 
     # check the connection data
-    _check_domain_connection(domain_name, domain_connection)
+    _check_domain_connection(domain_list, domain_connection)

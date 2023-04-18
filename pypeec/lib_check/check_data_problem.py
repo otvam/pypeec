@@ -157,11 +157,11 @@ def check_data_problem(data_problem):
         _check_sweep_param(sweep_param_tmp, material_def, source_def)
 
     # get sweep names
-    sweep_tag = sweep_param.keys()
+    sweep_list = sweep_param.keys()
 
     # check the sweep configuration
     datachecker.check_dict("sweep_config", sweep_config, can_be_empty=False)
     for tag_run, tag_init in sweep_config.items():
-        datachecker.check_choice("tag_run", tag_run, sweep_tag)
+        datachecker.check_choice("tag_run", tag_run, sweep_list)
         if tag_init is not None:
-            datachecker.check_choice("tag_init", tag_init, sweep_tag)
+            datachecker.check_choice("tag_init", tag_init, sweep_list)

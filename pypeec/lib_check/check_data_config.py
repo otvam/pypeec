@@ -74,8 +74,8 @@ def _check_data(data_config):
 
     # check logging options content
     datachecker.check_dict("FORMAT", LOGGING_OPTIONS["FORMAT"])
-    datachecker.check_string("LEVEL", LOGGING_OPTIONS["LEVEL"])
-    datachecker.check_integer("INDENTATION", LOGGING_OPTIONS["INDENTATION"])
+    datachecker.check_string("LEVEL", LOGGING_OPTIONS["LEVEL"], can_be_empty=False)
+    datachecker.check_integer("INDENTATION", LOGGING_OPTIONS["INDENTATION"], is_positive=True)
     datachecker.check_boolean("EXCEPTION_TRACE", LOGGING_OPTIONS["EXCEPTION_TRACE"])
     datachecker.check_boolean("USE_COLOR", LOGGING_OPTIONS["USE_COLOR"])
     datachecker.check_dict("DEF_COLOR", LOGGING_OPTIONS["DEF_COLOR"])
@@ -89,11 +89,11 @@ def _check_data(data_config):
         "DURATION_TRC",
     ]
     datachecker.check_dict("FORMAT", LOGGING_OPTIONS["FORMAT"], key_list=key_list)
-    datachecker.check_string("LOGGER", LOGGING_OPTIONS["FORMAT"]["LOGGER"])
-    datachecker.check_string("TIMESTAMP_FMT", LOGGING_OPTIONS["FORMAT"]["TIMESTAMP_FMT"])
-    datachecker.check_string("DURATION_FMT", LOGGING_OPTIONS["FORMAT"]["DURATION_FMT"])
-    datachecker.check_integer("TIMESTAMP_TRC", LOGGING_OPTIONS["FORMAT"]["TIMESTAMP_TRC"])
-    datachecker.check_integer("DURATION_TRC", LOGGING_OPTIONS["FORMAT"]["DURATION_TRC"])
+    datachecker.check_string("LOGGER", LOGGING_OPTIONS["FORMAT"]["LOGGER"], can_be_empty=False)
+    datachecker.check_string("TIMESTAMP_FMT", LOGGING_OPTIONS["FORMAT"]["TIMESTAMP_FMT"], can_be_empty=False)
+    datachecker.check_string("DURATION_FMT", LOGGING_OPTIONS["FORMAT"]["DURATION_FMT"], can_be_empty=False)
+    datachecker.check_integer("TIMESTAMP_TRC", LOGGING_OPTIONS["FORMAT"]["TIMESTAMP_TRC"], is_positive=True)
+    datachecker.check_integer("DURATION_TRC", LOGGING_OPTIONS["FORMAT"]["DURATION_TRC"], is_positive=True)
 
     # check logging color definition
     key_list = [
@@ -105,12 +105,12 @@ def _check_data(data_config):
         "CL_RESET",
     ]
     datachecker.check_dict("DEF_COLOR", LOGGING_OPTIONS["DEF_COLOR"], key_list=key_list)
-    datachecker.check_string("CL_DEBUG", LOGGING_OPTIONS["DEF_COLOR"]["CL_DEBUG"])
-    datachecker.check_string("CL_INFO", LOGGING_OPTIONS["DEF_COLOR"]["CL_INFO"])
-    datachecker.check_string("CL_WARNING", LOGGING_OPTIONS["DEF_COLOR"]["CL_WARNING"])
-    datachecker.check_string("CL_ERROR", LOGGING_OPTIONS["DEF_COLOR"]["CL_ERROR"])
-    datachecker.check_string("CL_CRITICAL", LOGGING_OPTIONS["DEF_COLOR"]["CL_CRITICAL"])
-    datachecker.check_string("CL_RESET", LOGGING_OPTIONS["DEF_COLOR"]["CL_RESET"])
+    datachecker.check_string("CL_DEBUG", LOGGING_OPTIONS["DEF_COLOR"]["CL_DEBUG"], can_be_empty=False)
+    datachecker.check_string("CL_INFO", LOGGING_OPTIONS["DEF_COLOR"]["CL_INFO"], can_be_empty=False)
+    datachecker.check_string("CL_WARNING", LOGGING_OPTIONS["DEF_COLOR"]["CL_WARNING"], can_be_empty=False)
+    datachecker.check_string("CL_ERROR", LOGGING_OPTIONS["DEF_COLOR"]["CL_ERROR"], can_be_empty=False)
+    datachecker.check_string("CL_CRITICAL", LOGGING_OPTIONS["DEF_COLOR"]["CL_CRITICAL"], can_be_empty=False)
+    datachecker.check_string("CL_RESET", LOGGING_OPTIONS["DEF_COLOR"]["CL_RESET"], can_be_empty=False)
 
     # check FFT options
     FFT_OPTIONS = data_config["FFT_OPTIONS"]
@@ -126,9 +126,9 @@ def _check_data(data_config):
     if FFT_OPTIONS["FFTW_THREAD"] is not None:
         datachecker.check_integer("FFTW_THREAD", FFT_OPTIONS["FFTW_THREAD"], is_positive=True, can_be_zero=False)
     if FFT_OPTIONS["FFTW_BYTE_ALIGN"] is not None:
-        datachecker.check_integer("FFTW_BYTE_ALIGN", FFT_OPTIONS["FFTW_BYTE_ALIGN"], is_positive=True)
+        datachecker.check_integer("FFTW_BYTE_ALIGN", FFT_OPTIONS["FFTW_BYTE_ALIGN"], is_positive=True, can_be_zero=False)
     if FFT_OPTIONS["FFTW_CACHE_TIMEOUT"] is not None:
-        datachecker.check_float("FFTW_CACHE_TIMEOUT", FFT_OPTIONS["FFTW_CACHE_TIMEOUT"], is_positive=True)
+        datachecker.check_float("FFTW_CACHE_TIMEOUT", FFT_OPTIONS["FFTW_CACHE_TIMEOUT"], is_positive=True, can_be_zero=True)
 
     # check factorization options
     FACTORIZATION_OPTIONS = data_config["FACTORIZATION_OPTIONS"]
@@ -151,10 +151,10 @@ def _check_data(data_config):
     # check other switches
     datachecker.check_boolean("MATRIX_SPLIT", data_config["MATRIX_SPLIT"])
     datachecker.check_boolean("USE_DOUBLE", data_config["USE_DOUBLE"])
-    datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True)
+    datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True, can_be_zero=True)
     datachecker.check_choice("MATRIX_MULTIPLICATION", data_config["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
     if data_config["SWEEP_POOL"] is not None:
-        datachecker.check_integer("SWEEP_POOL", data_config["SWEEP_POOL"])
+        datachecker.check_integer("SWEEP_POOL", data_config["SWEEP_POOL"], is_positive=True, can_be_zero=False)
 
     # check FFT library
     lib = [

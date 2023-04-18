@@ -10,7 +10,7 @@ from pypeec.lib_check import datachecker
 
 def _check_domain_stl(domain_stl):
     """
-    Check the validity of the domain definition (STL mesher).
+    Check the validity of the domain definition.
     """
 
     # check type
@@ -47,14 +47,14 @@ def _check_param(param):
     # check data
     datachecker.check_float_array("d", param["d"], size=3, is_positive=True, can_be_zero=False)
     if param["xyz_min"] is not None:
-        datachecker.check_float_array("xyz_min", param["xyz_min"], size=3)
+        datachecker.check_float_array("xyz_min", param["xyz_min"], size=3, is_positive=False, can_be_zero=True)
     if param["xyz_max"] is not None:
-        datachecker.check_float_array("xyz_max", param["xyz_max"], size=3)
+        datachecker.check_float_array("xyz_max", param["xyz_max"], size=3, is_positive=False, can_be_zero=True)
 
 
 def check_data_voxelize(data_voxelize):
     """
-    Check the data used for voxelization (STL mesher).
+    Check the data used for voxelization.
     """
 
     # check type
@@ -68,10 +68,10 @@ def check_data_voxelize(data_voxelize):
     # check voxel structure parameters
     _check_param(param)
 
-    # check the stl file
+    # check the STL file
     _check_domain_stl(domain_stl)
 
     # get the domain name
-    domain_name = domain_stl.keys()
+    domain_list = domain_stl.keys()
 
-    return domain_name
+    return domain_list

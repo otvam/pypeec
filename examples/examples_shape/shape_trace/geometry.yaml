@@ -16,31 +16,31 @@
         "xy_min": null
         "xy_max": null
     "layer_stack":
-        - { "n_layer": 1, "name_layer": "back"}
-        - { "n_layer": 5, "name_layer": "insulation"}
-        - { "n_layer": 1, "name_layer": "front"}
+        - { "n_layer": 1, "tag_layer": "back"}
+        - { "n_layer": 5, "tag_layer": "insulation"}
+        - { "n_layer": 1, "tag_layer": "front"}
     "geometry_shape":
         "front":
             "layer_start": "front"
             "layer_stop": "front"
             "shape_add":
-                - {"shape_type": "trace", "coord": [[10, 10], [190, 90]], "buffer": 10}
+                - {"shape_type": "trace", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 10.0}
             "shape_sub":
-                - {"shape_type": "pad", "coord": [[10, 10], [190, 90]], "buffer": 5}
+                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 5.0}
         "via":
             "layer_start": "insulation"
             "layer_stop": "insulation"
             "shape_add":
-                - {"shape_type": "pad", "coord": [[10, 10], [190, 90]], "buffer": 10}
+                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 10.0}
             "shape_sub":
-                - {"shape_type": "pad", "coord": [[10, 10], [190, 90]], "buffer": 5}
+                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 5.0}
         "terminal":
             "layer_start": "back"
             "layer_stop": "back"
             "shape_add":
-                - {"shape_type": "pad", "coord": [[10, 10], [190, 90]], "buffer": 10}
+                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 10.0}
             "shape_sub":
-                - {"shape_type": "pad", "coord": [[10, 10], [190, 90]], "buffer": 5}
+                - {"shape_type": "pad", "coord": [[10.0, 10.0], [190.0, 90.0]], "buffer": 5.0}
 "resampling":
     "use_reduce": false
     "use_resample": false

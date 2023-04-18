@@ -25,7 +25,7 @@ def _check_data_window(data_window):
     notebook_size = data_window["notebook_size"]
 
     # check data
-    datachecker.check_string("title", title)
+    datachecker.check_string("title", title, can_be_empty=False)
     datachecker.check_boolean("show_menu", show_menu)
     if window_size is not None:
         datachecker.check_integer_array("window_size", window_size, size=2, is_positive=True, can_be_zero=False)

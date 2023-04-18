@@ -199,15 +199,15 @@ def _get_idx_voxel(n, idx_shape, stack_idx):
     return idx_voxel
 
 
-def _get_shape_position(layer_start, layer_stop, stack_pos, stack_name):
+def _get_shape_position(layer_start, layer_stop, stack_pos, stack_tag):
     """
     Find the position of a shape in the layer stack.
     Find the absolute position and the indices with respect to the layer stack.
     """
 
     # find the stack position
-    layer_start = np.flatnonzero(stack_name == layer_start)
-    layer_stop = np.flatnonzero(stack_name == layer_stop)
+    layer_start = np.flatnonzero(stack_tag == layer_start)
+    layer_stop = np.flatnonzero(stack_tag == layer_stop)
     layer = np.concatenate((layer_start, layer_stop))
 
     # find the stack indices
@@ -222,7 +222,7 @@ def _get_shape_position(layer_start, layer_stop, stack_pos, stack_name):
     return z_min, z_max, stack_idx
 
 
-def _get_shape_obj(geometry_shape, stack_pos, stack_name, tol):
+def _get_shape_obj(geometry_shape, stack_pos, stack_tag, tol):
     """
     Create the shapes and set the position in the layer stack.
     Find the bounding box for all the shapes (minimum and maximum coordinates).
@@ -259,7 +259,7 @@ def _get_shape_obj(geometry_shape, stack_pos, stack_name, tol):
         xy_max = np.maximum(xy_max, tmp_max)
 
         # get the stack position
-        (z_min, z_max, stack_idx) = _get_shape_position(layer_start, layer_stop, stack_pos, stack_name)
+        (z_min, z_max, stack_idx) = _get_shape_position(layer_start, layer_stop, stack_pos, stack_tag)
 
         # assign the object
         shape_obj[tag] = {"z_min": z_min, "z_max": z_max, "stack_idx": stack_idx, "obj": obj}
@@ -274,16 +274,16 @@ def _get_layer_stack(layer_stack, dz, cz):
     """
 
     # init the list
-    stack_name = []
+    stack_tag = []
 
     # get a list with all the layers and the corresponding names
     for dat_tmp in layer_stack:
         n_layer = dat_tmp["n_layer"]
-        name_layer = dat_tmp["name_layer"]
-        stack_name += n_layer*[name_layer]
+        tag_layer = dat_tmp["tag_layer"]
+        stack_tag += n_layer*[tag_layer]
 
     # get the number of layers
-    nz = len(stack_name)
+    nz = len(stack_tag)
 
     # get the z dimension
     z_min = -(nz*dz)/2+cz
@@ -291,9 +291,9 @@ def _get_layer_stack(layer_stack, dz, cz):
 
     # get position and name arrays
     stack_pos = np.linspace(z_min, z_max, nz+1)
-    stack_name = np.array(stack_name)
+    stack_tag = np.array(stack_tag)
 
-    return nz, stack_pos, stack_name
+    return nz, stack_pos, stack_tag
 
 
 def _get_domain_def(n, d, c, shape_obj):
@@ -426,11 +426,11 @@ def get_mesh(param, layer_stack, geometry_shape):
 
     # parse layers
     LOGGER.debug("parse the layers")
-    (nz, stack_pos, stack_name) = _get_layer_stack(layer_stack, dz, cz)
+    (nz, stack_pos, stack_tag) = _get_layer_stack(layer_stack, dz, cz)
 
     # create the shapes
     LOGGER.debug("create the shapes")
-    (shape_obj, xy_min_obj, xy_max_obj) = _get_shape_obj(geometry_shape, stack_pos, stack_name, tol)
+    (shape_obj, xy_min_obj, xy_max_obj) = _get_shape_obj(geometry_shape, stack_pos, stack_tag, tol)
 
     # if provided, the user specified bounds are used, otherwise the STL bounds
     if xy_min is not None:

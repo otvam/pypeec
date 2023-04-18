@@ -10,7 +10,9 @@
 * **Fast** with **moderate memory** requirements
 * Advanced **plotting** capabilities
 * Can be used with **Jupyter** notebooks
-* Import from STL, PNG, GERBER, and voxel files
+* Import the geometry from voxel files
+* Import the geometry from STL, PNG, and GERBER files
+* Draw the geometry with stacked 2D vector shapes
 * Conductive and magnetic domains
 * Frequency domain solution
 * Connection of current and voltage sources

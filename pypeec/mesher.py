@@ -4,9 +4,10 @@ Check the input data and mesh the structure.
 The different parts of the code are timed.
 
 Three different kind of geometry can be meshed:
-    - png: the voxel are taken from 2D PNG images and assembled into a 3D voxel structures
     - stl: the voxel structure is generated from 3D STL files
-    - voxel: the voxel structure is provided (do nothing)
+    - png: the voxel structure is generated from stacked 2D PNG images
+    - shape: the voxel structure is generated from stacked 2D vector shapes
+    - voxel: the voxel structure is given with the voxel indices
 
 The mesher is implemented with PyVista.
 """

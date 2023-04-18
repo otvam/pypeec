@@ -21,6 +21,8 @@ def check_dict(name, data, key_list=None, sub_type=None, can_be_empty=True):
     for tag, value in data.items():
         if not isinstance(tag, str):
             raise CheckError("%s: all the keys should be strings" % name)
+        if len(tag) == 0:
+            raise CheckError("%s: keys cannot be empty" % name)
         if (sub_type is not None) and not isinstance(value, sub_type):
             raise CheckError("%s: invalid type" % name)
     if key_list is not None:
@@ -136,13 +138,15 @@ def check_boolean(name, data):
         raise CheckError("%s: should be a boolean" % name)
 
 
-def check_string(name, data):
+def check_string(name, data, can_be_empty=True):
     """
     Check a string.
     """
 
     if not isinstance(data, str):
         raise CheckError("%s: should be a string" % name)
+    if (not can_be_empty) and (len(data) == 0):
+        raise CheckError("%s: cannot be empty" % name)
 
 
 def check_choice(name, data, choice_list):

@@ -38,8 +38,7 @@ def _check_param(param):
 
 def check_data_voxelize(data_voxelize):
     """
-    Check the voxel structure (number, placement, and dimension).
-    Check the mapping between domain names and indices.
+    Check the data used for voxelization.
     """
 
     # check type
@@ -57,6 +56,6 @@ def check_data_voxelize(data_voxelize):
     _check_domain_index(domain_index)
 
     # get the domain name
-    domain_name = domain_index.keys()
+    domain_list = domain_index.keys()
 
-    return domain_name
+    return domain_list

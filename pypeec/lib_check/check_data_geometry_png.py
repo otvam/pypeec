@@ -10,7 +10,7 @@ from pypeec.lib_check import datachecker
 
 def _check_domain_color(domain_color):
     """
-    Check that the mapping between the pixel colors and the domains is valid (PNG mesher).
+    Check that the mapping between the pixel colors and the domains is valid.
     """
 
     # check type
@@ -28,7 +28,7 @@ def _check_domain_color(domain_color):
 
 def _check_layer_stack(layer_stack):
     """
-    Check the validity of the image layer stack (PNG mesher).
+    Check the validity of the image layer stack.
     """
 
     # check type
@@ -65,12 +65,12 @@ def _check_param(param):
     # check data
     datachecker.check_integer_array("size", param["size"], size=2, is_positive=True, can_be_zero=False)
     datachecker.check_float_array("d", param["d"], size=3, is_positive=True, can_be_zero=False)
-    datachecker.check_float_array("c", param["c"], size=3)
+    datachecker.check_float_array("c", param["c"], size=3, is_positive=False, can_be_zero=True)
 
 
 def check_data_voxelize(data_voxelize):
     """
-    Check the data used for voxelization (PNG mesher).
+    Check the data used for voxelization.
     """
 
     # check type
@@ -88,10 +88,10 @@ def check_data_voxelize(data_voxelize):
     # check domain colors
     _check_domain_color(domain_color)
 
-    # check layer stack
+    # check the PNG layer stack
     _check_layer_stack(layer_stack)
 
     # get the domain name
-    domain_name = domain_color.keys()
+    domain_list = domain_color.keys()
 
-    return domain_name
+    return domain_list
