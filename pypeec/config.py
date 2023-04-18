@@ -50,9 +50,11 @@ def _parse_config(data_config):
     Make the config accessible with attributes.
     """
 
-    for tag, dat_tmp in data_config.items():
-        if isinstance(dat_tmp, dict):
-            data_config[tag] = _DictToAttributes(dat_tmp)
+    for tag, data_config_tmp in data_config.items():
+        if isinstance(data_config_tmp, dict):
+            data_config[tag] = _DictToAttributes(data_config_tmp)
+        else:
+            data_config[tag] = data_config_tmp
 
     return data_config
 

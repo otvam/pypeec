@@ -230,10 +230,10 @@ def get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
     P_vm = 0.5*np.abs(A_net_m)*P_fm
 
     # parse the material domains
-    for tag, dat_tmp in material_idx.items():
+    for tag, material_idx_tmp in material_idx.items():
         # extract the data
-        material_type = dat_tmp["material_type"]
-        idx = dat_tmp["idx"]
+        material_type = material_idx_tmp["material_type"]
+        idx = material_idx_tmp["idx"]
 
         # get the position of the domains
         idx_vc_tmp = np.in1d(idx_vc, idx)
@@ -274,10 +274,10 @@ def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_
         fact = 0.5
 
     # parse the source terminals
-    for tag, dat_tmp in source_idx.items():
+    for tag, source_idx_tmp in source_idx.items():
         # extract the data
-        source_type = dat_tmp["source_type"]
-        idx = dat_tmp["idx"]
+        source_type = source_idx_tmp["source_type"]
+        idx = source_idx_tmp["idx"]
 
         # get the position of the sources
         idx_vc_tmp = np.in1d(idx_vc, idx)

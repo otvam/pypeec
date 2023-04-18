@@ -100,10 +100,10 @@ def _get_mesh_stl(domain_stl):
     xyz_max = np.full(3, -np.inf, dtype=NP_TYPES.FLOAT)
 
     # load the STL files and find the bounding box
-    for tag, dat_tmp in domain_stl.items():
+    for tag, domain_stl_tmp in domain_stl.items():
         # extract the data
-        offset = dat_tmp["offset"]
-        filename_list = dat_tmp["filename_list"]
+        offset = domain_stl_tmp["offset"]
+        filename_list = domain_stl_tmp["filename_list"]
 
         # load the STL
         mesh = _get_load_stl(offset, filename_list)

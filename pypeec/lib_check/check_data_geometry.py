@@ -68,14 +68,14 @@ def _check_domain_connection(domain_list, domain_connection):
     datachecker.check_dict("domain_connection", domain_connection, sub_type=dict)
 
     # check value
-    for dat_tmp in domain_connection.values():
+    for domain_connection_tmp in domain_connection.values():
         # check type
         key_list = ["connected", "domain_list"]
-        datachecker.check_dict("domain_connection", dat_tmp, key_list=key_list)
+        datachecker.check_dict("domain_connection", domain_connection_tmp, key_list=key_list)
 
         # extract field
-        domain_list = dat_tmp["domain_list"]
-        connected = dat_tmp["connected"]
+        domain_list = domain_connection_tmp["domain_list"]
+        connected = domain_connection_tmp["connected"]
 
         # check data
         datachecker.check_boolean("connected", connected)

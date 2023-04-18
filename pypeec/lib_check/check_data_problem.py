@@ -8,16 +8,16 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 from pypeec.lib_check import datachecker
 
 
-def _check_field(dat_tmp, var_type, key_list):
+def _check_field(val_dict, var_type, key_list):
     """
     Check a value dict.
     """
 
     # check type
-    datachecker.check_dict("val", dat_tmp, key_list=key_list)
+    datachecker.check_dict("val", val_dict, key_list=key_list)
 
     # check data
-    for tag, val in dat_tmp.items():
+    for tag, val in val_dict.items():
         if var_type == "lumped":
             datachecker.check_float(tag, val)
         elif var_type == "distributed":
@@ -35,15 +35,15 @@ def _check_material_def(material_def):
     datachecker.check_dict("material_def", material_def, can_be_empty=False, sub_type=dict)
 
     # check value
-    for dat_tmp in material_def.values():
+    for material_def_tmp in material_def.values():
         # check type
         key_list = ["material_type", "var_type", "domain_list"]
-        datachecker.check_dict("material_def", dat_tmp, key_list=key_list)
+        datachecker.check_dict("material_def", material_def_tmp, key_list=key_list)
 
         # extract the data
-        var_type = dat_tmp["var_type"]
-        material_type = dat_tmp["material_type"]
-        domain_list = dat_tmp["domain_list"]
+        var_type = material_def_tmp["var_type"]
+        material_type = material_def_tmp["material_type"]
+        domain_list = material_def_tmp["domain_list"]
 
         # check data
         datachecker.check_choice("var_type", var_type, ["lumped", "distributed"])
@@ -60,15 +60,15 @@ def _check_source_def(source_def):
     datachecker.check_dict("source_def", source_def, can_be_empty=False, sub_type=dict)
 
     # check value
-    for dat_tmp in source_def.values():
+    for source_def_tmp in source_def.values():
         # check type
         key_list = ["source_type", "var_type", "domain_list"]
-        datachecker.check_dict("source_def", dat_tmp, key_list=key_list)
+        datachecker.check_dict("source_def", source_def_tmp, key_list=key_list)
 
         # extract the data
-        var_type = dat_tmp["var_type"]
-        source_type = dat_tmp["source_type"]
-        domain_list = dat_tmp["domain_list"]
+        var_type = source_def_tmp["var_type"]
+        source_type = source_def_tmp["source_type"]
+        domain_list = source_def_tmp["domain_list"]
 
         # check data
         datachecker.check_choice("var_type", var_type, ["lumped", "distributed"])
@@ -94,7 +94,7 @@ def _check_sweep_param(sweep_param, material_def, source_def):
     datachecker.check_dict("source_val", source_val, can_be_empty=False, sub_type=dict)
 
     # check value
-    for tag, dat_tmp in material_val.items():
+    for tag, material_val_tmp in material_val.items():
         # extract the data
         var_type = material_def[tag]["var_type"]
         material_type = material_def[tag]["material_type"]
@@ -108,10 +108,10 @@ def _check_sweep_param(sweep_param, material_def, source_def):
             raise ValueError("invalid material type")
 
         # check type
-        _check_field(dat_tmp, var_type, key_list)
+        _check_field(material_val_tmp, var_type, key_list)
 
     # check value
-    for tag, dat_tmp in source_val.items():
+    for tag, source_val_tmp in source_val.items():
         # extract the data
         var_type = source_def[tag]["var_type"]
         source_type = source_def[tag]["source_type"]
@@ -126,7 +126,7 @@ def _check_sweep_param(sweep_param, material_def, source_def):
             raise ValueError("invalid source type")
 
         # check type
-        _check_field(dat_tmp, var_type, key_list)
+        _check_field(source_val_tmp, var_type, key_list)
 
 
 def check_data_problem(data_problem):

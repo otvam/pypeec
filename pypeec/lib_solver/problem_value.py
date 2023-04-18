@@ -27,10 +27,10 @@ def get_material_values(material_val, material_idx, material_type_ref):
     rho_v = np.array([], dtype=NP_TYPES.COMPLEX)
 
     # populate the arrays
-    for tag, dat_tmp in material_idx.items():
+    for tag, material_idx_tmp in material_idx.items():
         # extract the data
-        material_type = dat_tmp["material_type"]
-        idx = dat_tmp["idx"]
+        material_type = material_idx_tmp["material_type"]
+        idx = material_idx_tmp["idx"]
 
         # vacuum permeability
         mu = 4 * np.pi * 1e-7
@@ -69,11 +69,11 @@ def get_source_values(source_val, source_idx, source_type_ref):
     element_src = np.array([], dtype=NP_TYPES.COMPLEX)
 
     # populate the arrays with the current sources
-    for tag, dat_tmp in source_idx.items():
+    for tag, source_idx_tmp in source_idx.items():
         # extract the data
-        source_type = dat_tmp["source_type"]
-        var_type = dat_tmp["var_type"]
-        idx = dat_tmp["idx"]
+        source_type = source_idx_tmp["source_type"]
+        var_type = source_idx_tmp["var_type"]
+        idx = source_idx_tmp["idx"]
 
         # get the values and admittances/impedances for the source
         if source_type == "current":

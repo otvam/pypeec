@@ -26,10 +26,10 @@ def get_material_indices(material_idx, material_type_ref):
     idx_v = np.array([], dtype=NP_TYPES.INT)
 
     # populate the arrays
-    for tag, dat_tmp in material_idx.items():
+    for tag, material_idx_tmp in material_idx.items():
         # extract the data
-        material_type = dat_tmp["material_type"]
-        idx = dat_tmp["idx"]
+        material_type = material_idx_tmp["material_type"]
+        idx = material_idx_tmp["idx"]
 
         # assign the indices
         if material_type == material_type_ref:
@@ -47,10 +47,10 @@ def get_source_indices(source_idx, source_type_ref):
     idx_src = np.array([], dtype=NP_TYPES.INT)
 
     # populate the arrays with the current sources
-    for tag, dat_tmp in source_idx.items():
+    for tag, source_idx_tmp in source_idx.items():
         # extract the data
-        source_type = dat_tmp["source_type"]
-        idx = dat_tmp["idx"]
+        source_type = source_idx_tmp["source_type"]
+        idx = source_idx_tmp["idx"]
 
         # assign the indices
         if source_type == source_type_ref:

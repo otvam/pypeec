@@ -236,12 +236,12 @@ def _get_shape_obj(geometry_shape, stack_pos, stack_tag, tol):
     xy_max = np.full(2, -np.inf, dtype=NP_TYPES.FLOAT)
 
     # create the shapes and find the bounding box
-    for tag, dat_tmp in geometry_shape.items():
+    for tag, geometry_shape_tmp in geometry_shape.items():
         # extract the data
-        layer_start = dat_tmp["layer_start"]
-        layer_stop = dat_tmp["layer_stop"]
-        shape_add = dat_tmp["shape_add"]
-        shape_sub = dat_tmp["shape_sub"]
+        layer_start = geometry_shape_tmp["layer_start"]
+        layer_stop = geometry_shape_tmp["layer_stop"]
+        shape_add = geometry_shape_tmp["shape_add"]
+        shape_sub = geometry_shape_tmp["shape_sub"]
 
         # get the shape
         obj = _get_composite_shape(shape_add, shape_sub, tol)
@@ -277,9 +277,9 @@ def _get_layer_stack(layer_stack, dz, cz):
     stack_tag = []
 
     # get a list with all the layers and the corresponding names
-    for dat_tmp in layer_stack:
-        n_layer = dat_tmp["n_layer"]
-        tag_layer = dat_tmp["tag_layer"]
+    for layer_stack_tmp in layer_stack:
+        n_layer = layer_stack_tmp["n_layer"]
+        tag_layer = layer_stack_tmp["tag_layer"]
         stack_tag += n_layer*[tag_layer]
 
     # get the number of layers
@@ -309,10 +309,10 @@ def _get_domain_def(n, d, c, shape_obj):
     domain_def = {}
 
     # voxelize the shapes
-    for tag, dat_tmp in shape_obj.items():
+    for tag, shape_obj_tmp in shape_obj.items():
         # extract the data
-        obj = dat_tmp["obj"]
-        stack_idx = dat_tmp["stack_idx"]
+        obj = shape_obj_tmp["obj"]
+        stack_idx = shape_obj_tmp["stack_idx"]
 
         # voxelize and get the indices
         idx_shape = _get_voxelize_shape(n, xyz_min, xyz_max, obj)
@@ -383,11 +383,11 @@ def _get_merge_shape(shape_obj):
     mesh_list = []
 
     # merge all the shapes
-    for dat_tmp in shape_obj.values():
+    for shape_obj_tmp in shape_obj.values():
         # extract the data
-        obj = dat_tmp["obj"]
-        z_min = dat_tmp["z_min"]
-        z_max = dat_tmp["z_max"]
+        obj = shape_obj_tmp["obj"]
+        z_min = shape_obj_tmp["z_min"]
+        z_max = shape_obj_tmp["z_max"]
 
         # transform the shapes into meshes
         if isinstance(obj, sha.Polygon):

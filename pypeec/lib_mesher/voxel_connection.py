@@ -75,14 +75,14 @@ def _get_connection_matrix(n):
     return A_connection
 
 
-def _check_domain_connection(domain_def, connection_def, tag_connection, data_connection):
+def _check_domain_connection(domain_def, connection_def, tag_connection, domain_connection):
     """
     Check that the given connections between the domain exists.
     """
 
     # extract the data
-    domain_list = data_connection["domain_list"]
-    connected = data_connection["connected"]
+    domain_list = domain_connection["domain_list"]
+    connected = domain_connection["connected"]
 
     # remove empty domains
     domain_filtered = []
@@ -146,7 +146,7 @@ def get_connection(n, domain_def, domain_connection):
         connection_def.append(idx_graph)
 
     # check the connections between the domains
-    for tag, dat_tmp in domain_connection.items():
-        _check_domain_connection(domain_def, connection_def, tag, dat_tmp)
+    for tag, domain_connection_tmp in domain_connection.items():
+        _check_domain_connection(domain_def, connection_def, tag, domain_connection_tmp)
 
     return connection_def

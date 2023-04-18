@@ -365,8 +365,8 @@ def check_data_point(data_point):
     datachecker.check_list("data_point", data_point, sub_type=list)
 
     # check the points (if any)
-    for dat_tmp in data_point:
-        datachecker.check_float_array("data_point", dat_tmp, size=3)
+    for data_point_tmp in data_point:
+        datachecker.check_float_array("data_point", data_point_tmp, size=3)
 
 
 def check_options(data_check, tag_list):

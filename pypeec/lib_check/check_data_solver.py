@@ -60,14 +60,14 @@ def _check_source_graph(idx_c, idx_m, idx_s, connection_def):
         datachecker.check_assert("index overlap", cond, "magnetic components should not include sources")
 
 
-def _get_field(dat_tmp, var_type, idx):
+def _get_field(val_dict, var_type, idx):
     """
     Cast and check the material and source vectors.
     If the variable is a scalar, cast to an array.
     If the variable is an array, check the length.
     """
 
-    for tag, val in dat_tmp.items():
+    for tag, val in val_dict.items():
         # cast
         if var_type == "lumped":
             val = np.full(len(idx), val, dtype=NP_TYPES.FLOAT)
@@ -81,9 +81,9 @@ def _get_field(dat_tmp, var_type, idx):
         datachecker.check_assert(tag, cond, "vector length does not match the number of voxels")
 
         # update
-        dat_tmp[tag] = val
+        val_dict[tag] = val
 
-    return dat_tmp
+    return val_dict
 
 
 def _get_domain_indices(domain_list, domain_def):
@@ -112,11 +112,11 @@ def _get_material_idx(material_def, domain_def):
     idx_m = np.array([], dtype=NP_TYPES.INT)
     domain_cm = []
 
-    for tag, dat_tmp in material_def.items():
+    for tag, material_def_tmp in material_def.items():
         # extract the data
-        var_type = dat_tmp["var_type"]
-        material_type = dat_tmp["material_type"]
-        domain_list = dat_tmp["domain_list"]
+        var_type = material_def_tmp["var_type"]
+        material_type = material_def_tmp["material_type"]
+        domain_list = material_def_tmp["domain_list"]
 
         # get indices
         idx = _get_domain_indices(domain_list, domain_def)
@@ -149,11 +149,11 @@ def _get_source_idx(source_def, domain_def):
     idx_s = np.array([], dtype=NP_TYPES.INT)
     domain_s = []
 
-    for tag, dat_tmp in source_def.items():
+    for tag, source_def_tmp in source_def.items():
         # extract the data
-        var_type = dat_tmp["var_type"]
-        source_type = dat_tmp["source_type"]
-        domain_list = dat_tmp["domain_list"]
+        var_type = source_def_tmp["var_type"]
+        source_type = source_def_tmp["source_type"]
+        domain_list = source_def_tmp["domain_list"]
 
         # get indices
         idx = _get_domain_indices(domain_list, domain_def)
@@ -188,22 +188,22 @@ def _get_sweep_param(sweep_param, material_idx, source_idx):
         datachecker.check_choice("source domain name", tag, source_val)
 
     # update values
-    for tag, dat_tmp in material_val.items():
+    for tag, material_val_tmp in material_val.items():
         # extract the data
         var_type = material_idx[tag]["var_type"]
         idx = material_idx[tag]["idx"]
 
         # check type
-        material_val[tag] = _get_field(dat_tmp, var_type, idx)
+        material_val[tag] = _get_field(material_val_tmp, var_type, idx)
 
     # update values
-    for tag, dat_tmp in source_val.items():
+    for tag, source_val_tmp in source_val.items():
         # extract the data
         var_type = source_idx[tag]["var_type"]
         idx = source_idx[tag]["idx"]
 
         # check type
-        source_val[tag] = _get_field(dat_tmp, var_type, idx)
+        source_val[tag] = _get_field(source_val_tmp, var_type, idx)
 
     # assign results
     sweep_param = {"freq": freq, "material_val": material_val, "source_val": source_val}
