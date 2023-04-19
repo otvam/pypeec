@@ -61,8 +61,8 @@ def _get_idx_reduce_tensor(idx_n, idx_min, idx):
 
     # reduce the size of the voxel structure
     idx_x -= idx_min[0]
-    idx_x -= idx_min[1]
-    idx_x -= idx_min[2]
+    idx_y -= idx_min[1]
+    idx_z -= idx_min[2]
 
     return idx_x, idx_y, idx_z
 
