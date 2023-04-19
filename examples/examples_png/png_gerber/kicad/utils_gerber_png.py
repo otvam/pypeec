@@ -19,7 +19,7 @@ import os.path
 import subprocess
 
 
-def get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
+def _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
     """
     Create a "gerbv - Gerber Viewer" project file.
     """
@@ -33,15 +33,17 @@ def get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
 
     # get name
     color_edge = color_def[color_edge]
-    color_none = color_def[color_none]
-    gerber_edge = gerber_def[gerber_edge]
-    gerber_edge = os.path.join(folder_gerber, gerber_edge)
 
-    # convert color
+    # get base color
+    color_none = color_def[color_none]
     color_edge = tuple([257 * x for x in color_edge])
     color_none = tuple([257 * x for x in color_none])
 
-    # get alpha
+    # get GERBER edge file
+    gerber_edge = gerber_def[gerber_edge]
+    gerber_edge = os.path.join(folder_gerber, gerber_edge)
+
+    # get transparency value
     alpha_channel = 257*255
 
     # create the file
@@ -56,13 +58,13 @@ def get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
             gerber = data_stack_tmp["gerber"]
             color = data_stack_tmp["color"]
 
-            # get color
+            # get layer color
             color = color_def[color]
+            color = tuple([257*x for x in color])
+
+            # get GERBER file
             gerber = gerber_def[gerber]
             gerber = os.path.join(folder_gerber, gerber)
-
-            # convert color
-            color = tuple([257*x for x in color])
 
             # add layer
             fid.write('(define-layer! %d (cons \'filename "%s")\n' % (layer, gerber))
@@ -88,24 +90,10 @@ def get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
         fid.write('(set-render-type! 3)\n')
 
 
-def get_layer_png(tag, data_export, data_gerber, data_stack):
+def _get_png_file(filename_gerbv, filename_png, margin, voxel, oversampling):
     """
-    Transform GERBER files into a PNG file for a given layer.
+    Transform GERBER project file into a PNG file for a given layer.
     """
-
-    # extract the data
-    margin = data_export["margin"]
-    voxel = data_export["voxel"]
-    oversampling = data_export["oversampling"]
-    folder_gerber = data_export["folder_gerber"]
-    folder_png = data_export["folder_png"]
-
-    # create the file names
-    filename_gerbv = "%s.gvp" % tag
-    filename_png = "%s.png" % tag
-
-    # get the project files with the GERBER files
-    get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack)
 
     # get the resolution and margin
     resolution = round(25.4e-3*oversampling/voxel)
@@ -129,11 +117,35 @@ def get_layer_png(tag, data_export, data_gerber, data_stack):
     cmd = "mogrify -sample %.2f%% %s" % (resize, filename_png)
     subprocess.run(cmd, shell=True)
 
+
+def _get_convert_layer(tag, data_export, data_gerber, data_stack):
+    """
+    Transform GERBER files into a PNG file for a given layer.
+    """
+
+    # extract the data
+    margin = data_export["margin"]
+    voxel = data_export["voxel"]
+    oversampling = data_export["oversampling"]
+    folder_gerber = data_export["folder_gerber"]
+    folder_png = data_export["folder_png"]
+
+    # get the absolute location
+    folder_gerber = os.path.abspath(folder_gerber)
+    folder_png = os.path.abspath(folder_png)
+
+    # create the file names
+    filename_gerbv = os.path.join(folder_png, "%s.gvp" % tag)
+    filename_png = os.path.join(folder_png, "%s.png" % tag)
+
+    # get the project file with the GERBER files
+    _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack)
+
+    # convert the project file into a PNG file
+    _get_png_file(filename_gerbv, filename_png, margin, voxel, oversampling)
+
     # remove the project file
     os.remove(filename_gerbv)
-
-    # move the PNG file
-    os.rename(filename_png, os.path.join(folder_png, filename_png))
 
 
 def get_convert(data_export, data_gerber, data_stack):
@@ -142,4 +154,4 @@ def get_convert(data_export, data_gerber, data_stack):
     """
 
     for tag, data_stack_tmp in data_stack.items():
-        get_layer_png(tag, data_export, data_gerber, data_stack_tmp)
+        _get_convert_layer(tag, data_export, data_gerber, data_stack_tmp)
