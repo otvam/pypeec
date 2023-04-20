@@ -8,10 +8,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 import numpy as np
 from pypeec.lib_matrix import matrix_condition
 from pypeec.lib_matrix import matrix_gmres
-from pypeec import utils_log
+from pypeec import log
 
 # get a logger
-LOGGER = utils_log.get_logger("EQUATION")
+LOGGER = log.get_logger("EQUATION")
 
 
 def get_solver(sol_init, sys_op, pcd_op, rhs, solver_options):

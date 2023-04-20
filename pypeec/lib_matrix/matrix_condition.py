@@ -6,11 +6,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import scipy.sparse.linalg as sla
-from pypeec import utils_log
+from pypeec import log
 from pypeec import config
 
 # get a logger
-LOGGER = utils_log.get_logger("CONDITION")
+LOGGER = log.get_logger("CONDITION")
 
 # get config
 NP_TYPES = config.NP_TYPES

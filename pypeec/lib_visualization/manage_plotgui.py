@@ -32,11 +32,11 @@ import matplotlib
 import matplotlib.pyplot
 import qtpy.QtWidgets
 import qtpy.QtGui
-from pypeec import utils_log
+from pypeec import log
 from pypeec import config
 
 # get a logger
-LOGGER = utils_log.get_logger("PLOTGUI")
+LOGGER = log.get_logger("PLOTGUI")
 
 # get config
 PAUSE_GUI = config.PAUSE_GUI

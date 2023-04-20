@@ -22,11 +22,11 @@ from pypeec.lib_solver import extract_solution
 from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_solver
-from pypeec import utils_log
+from pypeec import log
 from pypeec.error import CheckError, RunError
 
 # get a logger
-LOGGER = utils_log.get_logger("SOLVER")
+LOGGER = log.get_logger("SOLVER")
 
 
 def _run_solver_init(data_solver):
@@ -47,7 +47,7 @@ def _run_solver_init(data_solver):
     source_idx = data_solver["source_idx"]
 
     # get the voxel geometry and the incidence matrix
-    with utils_log.BlockTimer(LOGGER, "voxel_geometry"):
+    with log.BlockTimer(LOGGER, "voxel_geometry"):
         # get the coordinate of the voxels
         pts_vox = voxel_geometry.get_voxel_coordinate(n, d, c)
 
@@ -55,7 +55,7 @@ def _run_solver_init(data_solver):
         A_vox = voxel_geometry.get_incidence_matrix(n)
 
     # get the Green functions
-    with utils_log.BlockTimer(LOGGER, "system_tensor"):
+    with log.BlockTimer(LOGGER, "system_tensor"):
         # Green function self-coefficient
         G_self = system_tensor.get_green_self(d)
 
@@ -66,7 +66,7 @@ def _run_solver_init(data_solver):
         K_tsr = system_tensor.get_coupling_tensor(n, d, coupling_simplify, has_coupling)
 
     # parse the problem geometry (materials and sources)
-    with utils_log.BlockTimer(LOGGER, "problem_geometry"):
+    with log.BlockTimer(LOGGER, "problem_geometry"):
         # parse the materials
         idx_vc = problem_geometry.get_material_indices(material_idx, "electric")
         idx_vm = problem_geometry.get_material_indices(material_idx, "magnetic")
@@ -87,7 +87,7 @@ def _run_solver_init(data_solver):
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
 
     # get the system operators
-    with utils_log.BlockTimer(LOGGER, "system_matrix"):
+    with log.BlockTimer(LOGGER, "system_matrix"):
         # get the inductance tensor (preconditioner and full problem)
         (L_c, L_op_c) = system_matrix.get_inductance_matrix(n, d, idx_fc, G_self, G_mutual, has_electric)
 
@@ -172,7 +172,7 @@ def _run_solver_sweep(data_solver, data_init, data_internal, sweep_param, sol_in
     source_val = sweep_param["source_val"]
 
     # get the material and source values
-    with utils_log.BlockTimer(LOGGER, "problem_value"):
+    with log.BlockTimer(LOGGER, "problem_value"):
         # parse the material parameters
         rho_vc = problem_value.get_material_values(material_val, material_idx, "electric")
         rho_vm = problem_value.get_material_values(material_val, material_idx, "magnetic")
@@ -186,7 +186,7 @@ def _run_solver_sweep(data_solver, data_init, data_internal, sweep_param, sol_in
         R_m = problem_value.get_resistance_vector(n, d, A_net_m, idx_fm, rho_vm)
 
     # assemble the equation system
-    with utils_log.BlockTimer(LOGGER, "equation_system"):
+    with log.BlockTimer(LOGGER, "equation_system"):
         # compute the right-hand vector with the sources
         rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
 
@@ -200,7 +200,7 @@ def _run_solver_sweep(data_solver, data_init, data_internal, sweep_param, sol_in
         sys_op = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
 
     # solve the equation system
-    with utils_log.BlockTimer(LOGGER, "equation_solver"):
+    with log.BlockTimer(LOGGER, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
         (condition_ok, condition_status) = equation_solver.get_condition(S_mat_c, S_mat_m, condition_options)
 
@@ -219,7 +219,7 @@ def _run_solver_sweep(data_solver, data_init, data_internal, sweep_param, sol_in
         has_converged = solver_ok and condition_ok
 
     # extract the solution
-    with utils_log.BlockTimer(LOGGER, "extract_solution"):
+    with log.BlockTimer(LOGGER, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
         n_offset = 0
         (I_fc, V_vc, n_offset) = extract_solution.get_sol_extract_field(sol, idx_fc, idx_vc, n_offset)
@@ -316,7 +316,7 @@ def run(data_voxel, data_problem, data_tolerance):
     """
 
     # get timestamp
-    timestamp = utils_log.get_timer()
+    timestamp = log.get_timer()
 
     # run the solver
     try:
@@ -330,12 +330,12 @@ def run(data_voxel, data_problem, data_tolerance):
         (data_solver, sweep_config, sweep_param) = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
 
         # create the problem
-        with utils_log.BlockTimer(LOGGER, "init"):
+        with log.BlockTimer(LOGGER, "init"):
             (data_init, data_internal) = _run_solver_init(data_solver)
 
         # function for solving a single sweep
         def fct_compute(tag, param, init):
-            with utils_log.BlockTimer(LOGGER, "run sweep: " + tag):
+            with log.BlockTimer(LOGGER, "run sweep: " + tag):
                 (output, init) = _run_solver_sweep(data_solver, data_init, data_internal, param, init)
             return output, init
 
@@ -348,11 +348,11 @@ def run(data_voxel, data_problem, data_tolerance):
             "data_sweep": data_sweep,
         }
     except (CheckError, RunError) as ex:
-        utils_log.log_exception(LOGGER, ex)
+        log.log_exception(LOGGER, ex)
         return False, None, ex
 
     # end message
-    duration = utils_log.get_duration(timestamp)
+    duration = log.get_duration(timestamp)
     LOGGER.info("duration: %s" % duration)
     LOGGER.info("successful termination")
 

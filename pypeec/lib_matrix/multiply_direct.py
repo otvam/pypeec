@@ -7,10 +7,10 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from pypeec import config
-from pypeec import utils_log
+from pypeec import log
 
 # get a logger
-LOGGER = utils_log.get_logger("DIRECT")
+LOGGER = log.get_logger("DIRECT")
 
 # get config
 NP_TYPES = config.NP_TYPES

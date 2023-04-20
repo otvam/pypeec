@@ -19,11 +19,11 @@ from pypeec.lib_visualization import manage_voxel
 from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
-from pypeec import utils_log
+from pypeec import log
 from pypeec.error import CheckError, RunError
 
 # get a logger
-LOGGER = utils_log.get_logger("VIEWER")
+LOGGER = log.get_logger("VIEWER")
 
 
 def _get_grid_voxel(data_voxel, data_point):
@@ -130,12 +130,12 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
         (grid, voxel, point, reference) = _get_grid_voxel(data_voxel, data_point)
 
         # make the plots
-        with utils_log.BlockTimer(LOGGER, "generate the different plots"):
+        with log.BlockTimer(LOGGER, "generate the different plots"):
             for i, (tag_plot, data_viewer_tmp) in enumerate(data_viewer.items()):
                 LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_viewer), tag_plot))
                 _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)
     except (CheckError, RunError) as ex:
-        utils_log.log_exception(LOGGER, ex)
+        log.log_exception(LOGGER, ex)
         return False, ex
 
     # end message

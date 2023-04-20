@@ -8,7 +8,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import sys
 import importlib.resources
-from pypeec import utils_io
+from pypeec import io
 from pypeec.lib_check import check_data_config
 from pypeec.error import RunError, FileError, CheckError
 
@@ -89,7 +89,7 @@ def set_config(file_config):
 
     try:
         # parse the file
-        data_config = utils_io.load_config(file_config)
+        data_config = io.load_config(file_config)
 
         # check the data integrity and complete the config
         data_config = check_data_config.check_data_config(data_config)

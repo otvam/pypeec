@@ -15,11 +15,11 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os
 import warnings
-from pypeec import utils_log
+from pypeec import log
 from pypeec import config
 
 # get a logger
-LOGGER = utils_log.get_logger("FACTOR")
+LOGGER = log.get_logger("FACTOR")
 
 # get config
 NP_TYPES = config.NP_TYPES

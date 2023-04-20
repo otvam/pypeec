@@ -8,12 +8,12 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
-from pypeec import utils_log
+from pypeec import log
 from pypeec import config
 from pypeec.error import RunError
 
 # get a logger
-LOGGER = utils_log.get_logger("VOXEL")
+LOGGER = log.get_logger("VOXEL")
 
 # get config
 NP_TYPES = config.NP_TYPES

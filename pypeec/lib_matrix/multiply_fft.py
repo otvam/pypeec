@@ -13,11 +13,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_matrix import fourier_transform
-from pypeec import utils_log
+from pypeec import log
 from pypeec import config
 
 # get a logger
-LOGGER = utils_log.get_logger("FFT")
+LOGGER = log.get_logger("FFT")
 
 # get config
 NP_TYPES = config.NP_TYPES

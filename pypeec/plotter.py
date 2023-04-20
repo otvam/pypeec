@@ -25,11 +25,11 @@ from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_matplotlib
 from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
-from pypeec import utils_log
+from pypeec import log
 from pypeec.error import CheckError, RunError
 
 # get a logger
-LOGGER = utils_log.get_logger("PLOTTER")
+LOGGER = log.get_logger("PLOTTER")
 
 
 def _get_grid_voxel(data_init, data_sweep, data_point):
@@ -135,7 +135,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_point, data_plotter, gui_o
     (grid, voxel, point, res, conv) = _get_grid_voxel(data_init, data_sweep, data_point)
 
     # make the plots
-    with utils_log.BlockTimer(LOGGER, "generate the different plots"):
+    with log.BlockTimer(LOGGER, "generate the different plots"):
         for i, (tag_plot, data_plotter_tmp) in enumerate(data_plotter.items()):
             LOGGER.info("plotting %d / %d / %s" % (i + 1, len(data_plotter), tag_plot))
             _get_plot(tag_sweep + " / " + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)
@@ -216,10 +216,10 @@ def run(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, 
 
         # plot the sweeps
         for tag_sweep, data_sweep_tmp in data_sweep.items():
-            with utils_log.BlockTimer(LOGGER, "plot sweep: " + tag_sweep):
+            with log.BlockTimer(LOGGER, "plot sweep: " + tag_sweep):
                 _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_point, data_plotter, gui_obj)
     except (CheckError, RunError) as ex:
-        utils_log.log_exception(LOGGER, ex)
+        log.log_exception(LOGGER, ex)
         return False, ex
 
     # end message

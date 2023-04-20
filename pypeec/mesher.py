@@ -24,11 +24,11 @@ from pypeec.lib_mesher import voxel_resample
 from pypeec.lib_mesher import voxel_connection
 from pypeec.lib_mesher import voxel_summary
 from pypeec.lib_check import check_data_geometry
-from pypeec import utils_log
+from pypeec import log
 from pypeec.error import CheckError, RunError
 
 # get a logger
-LOGGER = utils_log.get_logger("MESHER")
+LOGGER = log.get_logger("MESHER")
 
 
 def _run_mesher(data_geometry):
@@ -65,7 +65,7 @@ def _run_voxel(data_voxelize):
     domain_index = data_voxelize["domain_index"]
 
     # process the indices arrays
-    with utils_log.BlockTimer(LOGGER, "mesher_voxel"):
+    with log.BlockTimer(LOGGER, "mesher_voxel"):
         (n, d, c, domain_def, reference) = mesher_voxel.get_mesh(param, domain_index)
 
     # assemble the data
@@ -90,7 +90,7 @@ def _run_shape(data_voxelize):
     geometry_shape = data_voxelize["geometry_shape"]
 
     # process the shapes
-    with utils_log.BlockTimer(LOGGER, "mesher_shape"):
+    with log.BlockTimer(LOGGER, "mesher_shape"):
         (n, d, c, domain_def, reference) = mesher_shape.get_mesh(param, layer_stack, geometry_shape)
 
     # assemble the data
@@ -115,7 +115,7 @@ def _run_png(data_voxelize):
     layer_stack = data_voxelize["layer_stack"]
 
     # voxelize the PNG files
-    with utils_log.BlockTimer(LOGGER, "mesher_png"):
+    with log.BlockTimer(LOGGER, "mesher_png"):
         (n, d, c, domain_def, reference) = mesher_png.get_mesh(param, domain_color, layer_stack)
 
     # assemble the data
@@ -139,7 +139,7 @@ def _run_stl(data_voxelize):
     domain_stl = data_voxelize["domain_stl"]
 
     # voxelize the STL files
-    with utils_log.BlockTimer(LOGGER, "mesher_stl"):
+    with log.BlockTimer(LOGGER, "mesher_stl"):
         (n, d, c, domain_def, reference) = mesher_stl.get_mesh(param, domain_stl)
 
     # assemble the data
@@ -169,16 +169,16 @@ def _run_resample_graph(reference, data_voxel, data_geometry):
     c = data_voxel["c"]
     domain_def = data_voxel["domain_def"]
 
-    with utils_log.BlockTimer(LOGGER, "voxel_conflict"):
+    with log.BlockTimer(LOGGER, "voxel_conflict"):
         domain_def = voxel_conflict.get_conflict(domain_def, domain_conflict)
 
-    with utils_log.BlockTimer(LOGGER, "voxel_resample"):
+    with log.BlockTimer(LOGGER, "voxel_resample"):
         (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, resampling)
 
-    with utils_log.BlockTimer(LOGGER, "voxel_connection"):
+    with log.BlockTimer(LOGGER, "voxel_connection"):
         connection_def = voxel_connection.get_connection(n, domain_def, domain_connection)
 
-    with utils_log.BlockTimer(LOGGER, "voxel_summary"):
+    with log.BlockTimer(LOGGER, "voxel_summary"):
         voxel_status = voxel_summary.get_status(n, d, c, domain_def, connection_def)
 
     # assemble the data
@@ -222,7 +222,7 @@ def run(data_geometry):
     """
 
     # get timestamp
-    timestamp = utils_log.get_timer()
+    timestamp = log.get_timer()
 
     # run the code
     try:
@@ -236,11 +236,11 @@ def run(data_geometry):
         # resample and assemble
         data_voxel = _run_resample_graph(reference, data_voxel, data_geometry)
     except (CheckError, RunError) as ex:
-        utils_log.log_exception(LOGGER, ex)
+        log.log_exception(LOGGER, ex)
         return False, None, ex
 
     # end message
-    duration = utils_log.get_duration(timestamp)
+    duration = log.get_duration(timestamp)
     LOGGER.info("duration: %s" % duration)
     LOGGER.info("successful termination")
 

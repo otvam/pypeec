@@ -19,12 +19,12 @@ import pyvista as pv
 import shapely as sha
 import rasterio.features as raf
 import rasterio.transform as rat
-from pypeec import utils_log
+from pypeec import log
 from pypeec import config
 from pypeec.error import RunError
 
 # get a logger
-LOGGER = utils_log.get_logger("SHAPE")
+LOGGER = log.get_logger("SHAPE")
 
 # get config
 NP_TYPES = config.NP_TYPES
