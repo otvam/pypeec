@@ -40,12 +40,12 @@ def _get_assign_matrix(n_mat, var_idx, sol):
     The coefficients are given in a vector.
     """
 
-    res = np.zeros((n_mat, n_mat), dtype=np.complex_)
+    mat = np.zeros((n_mat, n_mat), dtype=np.complex_)
     for i, (idx_i_1, idx_i_2) in enumerate(var_idx):
-        res[idx_i_1, idx_i_2] = sol[i]
-        res[idx_i_2, idx_i_1] = sol[i]
+        mat[idx_i_1, idx_i_2] = sol[i]
+        mat[idx_i_2, idx_i_1] = sol[i]
 
-    return res
+    return mat
 
 
 def _get_eqn_matrix(n_mat, var_idx, current):
@@ -119,9 +119,9 @@ def _get_solve_matrix(n_mat, terminal, condition_list, tol):
     assert np.all(res < tol["tol_res"]), "invalid solution: residuum issue"
 
     # assign the coefficients to the full impedance matrix
-    res = _get_assign_matrix(n_mat, var_idx, sol)
+    Z_mat = _get_assign_matrix(n_mat, var_idx, sol)
 
-    return freq, res
+    return freq, Z_mat
 
 
 def _get_coupling_matrix(n_mat, RL_mat):
@@ -138,7 +138,7 @@ def _get_coupling_matrix(n_mat, RL_mat):
     return k_mat
 
 
-def _get_circuit(n_mat, freq, res):
+def _get_circuit(n_mat, freq, Z_mat):
     """
     Get the equivalent circuit of the component from the impedance matrix.
     """
@@ -147,8 +147,8 @@ def _get_circuit(n_mat, freq, res):
     w = 2*np.pi*freq
 
     # get the inductance and resistance
-    R_mat = np.real(res)
-    L_mat = np.imag(res)/w
+    R_mat = np.real(Z_mat)
+    L_mat = np.imag(Z_mat)/w
 
     # # get the quality factor
     Q_mat = (w*L_mat)/R_mat
@@ -159,7 +159,7 @@ def _get_circuit(n_mat, freq, res):
 
     # assign the results
     data_matrix = {
-        "freq": freq, "R_mat": R_mat, "L_mat": L_mat,
+        "freq": freq, "Z_mat": Z_mat, "R_mat": R_mat, "L_mat": L_mat,
         "k_R_mat": k_R_mat, "k_L_mat": k_L_mat, "Q_mat": Q_mat,
     }
 
