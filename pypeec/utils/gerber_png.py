@@ -9,6 +9,9 @@ The PCB is created with "KiCad - PCB" and the following files are exported:
 Finally, this script is used to generate PNG files for the layers:
     - using "gerbv - Gerber Viewer" for parsing the GERBER files
     - using "mogrify - ImageMagick" for trimming the PNG files
+
+WARNING: This code requires the following external tools: "gerbv" and "mogrify".
+         This code has only been tested on Linux.
 """
 
 __author__ = "Thomas Guillod"
