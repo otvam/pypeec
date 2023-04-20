@@ -72,6 +72,11 @@ def _get_solve_matrix(n_mat, terminal, condition_list, tol):
         - solution: impedance coefficients
     """
 
+    # extract the data
+    tol_res = tol["tol_res"]
+    tol_freq = tol["tol_freq"]
+    check_convergence = tol["check_convergence"]
+
     # get the matrix size and indices of the coefficients
     var_idx = _get_idx_matrix(n_mat)
 
@@ -90,7 +95,8 @@ def _get_solve_matrix(n_mat, terminal, condition_list, tol):
         current = solution_tmp["current"]
 
         # check convergence
-        assert has_converged, "invalid solution: convergence issue"
+        if check_convergence:
+            assert has_converged, "invalid solution: convergence issue"
 
         # get the equation matrix
         eqn = _get_eqn_matrix(n_mat, var_idx, current)
@@ -101,7 +107,7 @@ def _get_solve_matrix(n_mat, terminal, condition_list, tol):
         eqn_mat = np.concatenate((eqn_mat, eqn), axis=0)
 
     # check that the frequency is constant
-    assert np.ptp(freq_vec) < tol["tol_freq"], "invalid solution: residuum issue"
+    assert np.ptp(freq_vec) < tol_freq, "invalid solution: residuum issue"
 
     # compute the frequency
     freq = np.mean(freq_vec)
@@ -116,7 +122,7 @@ def _get_solve_matrix(n_mat, terminal, condition_list, tol):
     (sol, res, _, _) = lna.lstsq(eqn_mat, rhs_vec, rcond=None)
 
     # check residuum
-    assert np.all(res < tol["tol_res"]), "invalid solution: residuum issue"
+    assert np.all(res < tol_res), "invalid solution: residuum issue"
 
     # assign the coefficients to the full impedance matrix
     Z_mat = _get_assign_matrix(n_mat, var_idx, sol)
