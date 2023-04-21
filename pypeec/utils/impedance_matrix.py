@@ -61,7 +61,7 @@ def _get_eqn_matrix(n_mat, var_idx, current):
     return eqn
 
 
-def _get_solve_matrix(n_mat, terminal, condition_list, tol):
+def _get_solve_matrix(n_mat, terminal, sweep_list, tol):
     """
     Extract the impedance matrix of the component.
 
@@ -86,7 +86,7 @@ def _get_solve_matrix(n_mat, terminal, condition_list, tol):
     eqn_mat = np.zeros((0, len(var_idx)), dtype=np.complex_)
 
     # get the matrices
-    for tag in condition_list:
+    for tag in sweep_list:
         # extract the data
         solution_tmp = terminal[tag]
         freq = solution_tmp["freq"]
@@ -172,7 +172,7 @@ def _get_circuit(n_mat, freq, Z_mat):
     return data_matrix
 
 
-def _get_load_terminal(freq, source, has_converged, winding):
+def _get_load_terminal(freq, source, has_converged, winding_list):
     """
     Get the terminal currents and voltages for a specific sweep.
     """
@@ -182,10 +182,10 @@ def _get_load_terminal(freq, source, has_converged, winding):
     current = []
 
     # get the solution
-    for dat_tmp in winding:
+    for winding_list_tmp in winding_list:
         # extract the terminal name
-        src = dat_tmp["src"]
-        sink = dat_tmp["sink"]
+        src = winding_list_tmp["src"]
+        sink = winding_list_tmp["sink"]
 
         # extract the terminal quantities
         V_tmp = source[src]["V"] - source[sink]["V"]
@@ -208,7 +208,7 @@ def _get_load_terminal(freq, source, has_converged, winding):
     return terminal
 
 
-def _get_load_solution(data_solution, winding):
+def _get_load_solution(data_solution, winding_list, sweep_list):
     """
     Get the terminal currents and voltages for all the sweeps.
     """
@@ -222,42 +222,35 @@ def _get_load_solution(data_solution, winding):
     assert isinstance(data_sweep, dict), "invalid solution"
 
     # matrix size
-    n_mat = len(winding)
+    n_mat = len(winding_list)
 
     # extract data
     terminal = {}
-    for tag, dat_tmp in data_sweep.items():
+    for tag in sweep_list:
         # extract the data
-        freq = dat_tmp["freq"]
-        source = dat_tmp["source"]
-        has_converged = dat_tmp["has_converged"]
+        data_sweep_tmp = data_sweep[tag]
+        freq = data_sweep_tmp["freq"]
+        source = data_sweep_tmp["source"]
+        has_converged = data_sweep_tmp["has_converged"]
 
         # assign
-        terminal[tag] = _get_load_terminal(freq, source, has_converged, winding)
+        terminal[tag] = _get_load_terminal(freq, source, has_converged, winding_list)
 
     return n_mat, terminal
 
 
-def get_extract(data_solution, winding, condition, tol):
+def get_extract(data_solution, winding_list, sweep_list, tol):
     """
     Extract the equivalent circuit of a component.
     """
 
     # extract terminal behaviour from the solution
-    (n_mat, terminal) = _get_load_solution(data_solution, winding)
+    (n_mat, terminal) = _get_load_solution(data_solution, winding_list, sweep_list)
 
-    # init results
-    data_matrix = {}
+    # get the impedance matrix
+    (freq, res) = _get_solve_matrix(n_mat, terminal, sweep_list, tol)
 
-    # get the data for each operating condition
-    for tag, condition_list in condition.items():
-        # get the impedance matrix
-        (freq, res) = _get_solve_matrix(n_mat, terminal, condition_list, tol)
-
-        # get the complete circuit
-        data_matrix_tmp = _get_circuit(n_mat, freq, res)
-
-        # assign the data
-        data_matrix[tag] = data_matrix_tmp
+    # get the complete circuit
+    data_matrix = _get_circuit(n_mat, freq, res)
 
     return data_matrix
