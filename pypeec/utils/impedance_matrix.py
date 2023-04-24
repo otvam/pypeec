@@ -172,7 +172,7 @@ def _get_circuit(n_mat, freq, Z_mat):
     return data_matrix
 
 
-def _get_load_terminal(freq, source, has_converged, winding_list):
+def _get_load_terminal(freq, source, has_converged, winding_dict):
     """
     Get the terminal currents and voltages for a specific sweep.
     """
@@ -182,10 +182,10 @@ def _get_load_terminal(freq, source, has_converged, winding_list):
     current = []
 
     # get the solution
-    for winding_list_tmp in winding_list:
+    for winding_dict_tmp in winding_dict:
         # extract the terminal name
-        src = winding_list_tmp["src"]
-        sink = winding_list_tmp["sink"]
+        src = winding_dict_tmp["src"]
+        sink = winding_dict_tmp["sink"]
 
         # extract the terminal quantities
         V_tmp = source[src]["V"] - source[sink]["V"]
@@ -208,7 +208,7 @@ def _get_load_terminal(freq, source, has_converged, winding_list):
     return terminal
 
 
-def _get_load_solution(data_solution, winding_list, sweep_list):
+def _get_load_solution(data_solution, winding_dict, sweep_list):
     """
     Get the terminal currents and voltages for all the sweeps.
     """
@@ -222,7 +222,7 @@ def _get_load_solution(data_solution, winding_list, sweep_list):
     assert isinstance(data_sweep, dict), "invalid solution"
 
     # matrix size
-    n_mat = len(winding_list)
+    n_mat = len(winding_dict)
 
     # extract data
     terminal = {}
@@ -234,18 +234,18 @@ def _get_load_solution(data_solution, winding_list, sweep_list):
         has_converged = data_sweep_tmp["has_converged"]
 
         # assign
-        terminal[tag] = _get_load_terminal(freq, source, has_converged, winding_list)
+        terminal[tag] = _get_load_terminal(freq, source, has_converged, winding_dict)
 
     return n_mat, terminal
 
 
-def get_extract(data_solution, winding_list, sweep_list, tol):
+def get_extract(data_solution, winding_dict, sweep_list, tol):
     """
     Extract the equivalent circuit of a component.
     """
 
     # extract terminal behaviour from the solution
-    (n_mat, terminal) = _get_load_solution(data_solution, winding_list, sweep_list)
+    (n_mat, terminal) = _get_load_solution(data_solution, winding_dict, sweep_list)
 
     # get the impedance matrix
     (freq, res) = _get_solve_matrix(n_mat, terminal, sweep_list, tol)
