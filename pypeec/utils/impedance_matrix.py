@@ -48,20 +48,20 @@ def _get_assign_matrix(n_mat, var_idx, sol):
     return mat
 
 
-def _get_eqn_matrix(n_mat, var_idx, current):
+def _get_eqn_matrix(n_mat, var_idx, I_vec):
     """
     Create the equation matrix for a given current excitation.
     """
 
-    eqn = np.zeros((n_mat, len(var_idx)), dtype=np.complex_)
+    eqn_mat = np.zeros((n_mat, len(var_idx)), dtype=np.complex_)
     for i, (idx_i_1, idx_i_2) in enumerate(var_idx):
-        eqn[idx_i_1, i] = current[idx_i_2]
-        eqn[idx_i_2, i] = current[idx_i_1]
+        eqn_mat[idx_i_1, i] = I_vec[idx_i_2]
+        eqn_mat[idx_i_2, i] = I_vec[idx_i_1]
 
-    return eqn
+    return eqn_mat
 
 
-def _get_solve_matrix(n_mat, terminal, sweep_list, tol):
+def _get_solve_matrix(n_mat, terminal, tol):
     """
     Extract the impedance matrix of the component.
 
@@ -86,25 +86,24 @@ def _get_solve_matrix(n_mat, terminal, sweep_list, tol):
     eqn_mat = np.zeros((0, len(var_idx)), dtype=np.complex_)
 
     # get the matrices
-    for tag in sweep_list:
+    for terminal_tmp in terminal.values():
         # extract the data
-        solution_tmp = terminal[tag]
-        freq = solution_tmp["freq"]
-        has_converged = solution_tmp["has_converged"]
-        voltage = solution_tmp["voltage"]
-        current = solution_tmp["current"]
+        freq = terminal_tmp["freq"]
+        has_converged = terminal_tmp["has_converged"]
+        V_vec = terminal_tmp["V_vec"]
+        I_vec = terminal_tmp["I_vec"]
 
         # check convergence
         if check_convergence:
             assert has_converged, "invalid solution: convergence issue"
 
         # get the equation matrix
-        eqn = _get_eqn_matrix(n_mat, var_idx, current)
+        eqn_tmp = _get_eqn_matrix(n_mat, var_idx, I_vec)
 
         # append the data
         freq_vec = np.append(freq_vec, freq)
-        rhs_vec = np.concatenate((rhs_vec, voltage), axis=0)
-        eqn_mat = np.concatenate((eqn_mat, eqn), axis=0)
+        rhs_vec = np.concatenate((rhs_vec, V_vec), axis=0)
+        eqn_mat = np.concatenate((eqn_mat, eqn_tmp), axis=0)
 
     # check that the frequency is constant
     assert np.ptp(freq_vec) < tol_freq, "invalid solution: residuum issue"
@@ -172,83 +171,13 @@ def _get_circuit(n_mat, freq, Z_mat):
     return data_matrix
 
 
-def _get_load_terminal(freq, source, has_converged, winding_dict):
-    """
-    Get the terminal currents and voltages for a specific sweep.
-    """
-
-    # init list
-    voltage = []
-    current = []
-
-    # get the solution
-    for winding_dict_tmp in winding_dict:
-        # extract the terminal name
-        src = winding_dict_tmp["src"]
-        sink = winding_dict_tmp["sink"]
-
-        # extract the terminal quantities
-        V_tmp = source[src]["V"] - source[sink]["V"]
-        I_tmp = (source[src]["I"] - source[sink]["I"]) / 2
-
-        # add the quantities
-        voltage.append(V_tmp)
-        current.append(I_tmp)
-
-    # assign the data
-    current = np.array(current, dtype=np.complex_)
-    voltage = np.array(voltage, dtype=np.complex_)
-
-    # assign
-    terminal = {
-        "freq": freq, "has_converged": has_converged,
-        "voltage": voltage, "current": current,
-    }
-
-    return terminal
-
-
-def _get_load_solution(data_solution, winding_dict, sweep_list):
-    """
-    Get the terminal currents and voltages for all the sweeps.
-    """
-
-    # extract the data
-    data_init = data_solution["data_init"]
-    data_sweep = data_solution["data_sweep"]
-
-    # check solution
-    assert isinstance(data_init, dict), "invalid solution"
-    assert isinstance(data_sweep, dict), "invalid solution"
-
-    # matrix size
-    n_mat = len(winding_dict)
-
-    # extract data
-    terminal = {}
-    for tag in sweep_list:
-        # extract the data
-        data_sweep_tmp = data_sweep[tag]
-        freq = data_sweep_tmp["freq"]
-        source = data_sweep_tmp["source"]
-        has_converged = data_sweep_tmp["has_converged"]
-
-        # assign
-        terminal[tag] = _get_load_terminal(freq, source, has_converged, winding_dict)
-
-    return n_mat, terminal
-
-
-def get_extract(data_solution, winding_dict, sweep_list, tol):
+def get_extract(n_mat, terminal, tol):
     """
     Extract the equivalent circuit of a component.
     """
 
-    # extract terminal behaviour from the solution
-    (n_mat, terminal) = _get_load_solution(data_solution, winding_dict, sweep_list)
-
     # get the impedance matrix
-    (freq, res) = _get_solve_matrix(n_mat, terminal, sweep_list, tol)
+    (freq, res) = _get_solve_matrix(n_mat, terminal, tol)
 
     # get the complete circuit
     data_matrix = _get_circuit(n_mat, freq, res)
