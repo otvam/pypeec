@@ -16,9 +16,9 @@
         "xy_min": null
         "xy_max": null
     "layer_stack":
-        - { "n_layer": 1, "tag_layer": "back"}
-        - { "n_layer": 2, "tag_layer": "insulation"}
-        - { "n_layer": 1, "tag_layer": "front"}
+        - {"n_layer": 1, "tag_layer": "back"}
+        - {"n_layer": 2, "tag_layer": "insulation"}
+        - {"n_layer": 1, "tag_layer": "front"}
     "geometry_shape":
         "copper":
             -

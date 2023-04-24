@@ -16,9 +16,9 @@
         "xy_min": null
         "xy_max": null
     "layer_stack":
-        - { "n_layer": 1, "tag_layer": "src"}
-        - { "n_layer": 8, "tag_layer": "wire"}
-        - { "n_layer": 1, "tag_layer": "sink"}
+        - {"n_layer": 1, "tag_layer": "src"}
+        - {"n_layer": 8, "tag_layer": "wire"}
+        - {"n_layer": 1, "tag_layer": "sink"}
     "geometry_shape":
         "wire":
             -
