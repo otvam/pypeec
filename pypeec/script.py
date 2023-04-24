@@ -283,12 +283,12 @@ def run_script():
 
     # run the code
     if command in ["mesher", "me"]:
-        (status, ex) = main.run_mesher(
+        (status, ex) = main.run_mesher_file(
             args.file_geometry,
             args.file_voxel,
         )
     elif command in ["viewer", "vi"]:
-        (status, ex) = main.run_viewer(
+        (status, ex) = main.run_viewer_file(
             args.file_voxel,
             args.file_point,
             args.file_viewer,
@@ -296,14 +296,14 @@ def run_script():
             args.is_silent,
         )
     elif command in ["solver", "so"]:
-        (status, ex) = main.run_solver(
+        (status, ex) = main.run_solver_file(
             args.file_voxel,
             args.file_problem,
             args.file_tolerance,
             args.file_solution,
         )
     elif command in ["plotter", "pl"]:
-        (status, ex) = main.run_plotter(
+        (status, ex) = main.run_plotter_file(
             args.file_solution,
             args.file_point,
             args.file_plotter,

@@ -211,14 +211,14 @@ def run(data_geometry):
     status : boolean
         True if the call is successful.
         False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     data_voxel: dict
         The dict describes the voxel structure.
         The voxel grid (number, size, and origin) is defined.
         Different domains (with the indices of the voxel) are defined.
         The connected components of the graph defined by the voxel structure are defined.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # get timestamp
@@ -237,11 +237,11 @@ def run(data_geometry):
         data_voxel = _run_resample_graph(reference, data_voxel, data_geometry)
     except (CheckError, RunError) as ex:
         log.log_exception(LOGGER, ex)
-        return False, None, ex
+        return False, ex, None
 
     # end message
     duration = log.get_duration(timestamp)
     LOGGER.info("duration: %s" % duration)
     LOGGER.info("successful termination")
 
-    return True, data_voxel, None
+    return True, None, data_voxel

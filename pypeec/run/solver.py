@@ -302,6 +302,9 @@ def run(data_voxel, data_problem, data_tolerance):
     status : boolean
         True if the call is successful.
         False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
     data_solution: dict
         The dict describes the problem solution.
         The voxel structure is defined.
@@ -310,9 +313,6 @@ def run(data_voxel, data_problem, data_tolerance):
         The resistivity, potential, current density, and loss density of the different voxel are defined.
         The terminals quantities (voltage and current) of the sources are defined.
         The integral quantities (total losses and energy) of the problem are defined.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # get timestamp
@@ -349,11 +349,11 @@ def run(data_voxel, data_problem, data_tolerance):
         }
     except (CheckError, RunError) as ex:
         log.log_exception(LOGGER, ex)
-        return False, None, ex
+        return False, ex, None
 
     # end message
     duration = log.get_duration(timestamp)
     LOGGER.info("duration: %s" % duration)
     LOGGER.info("successful termination")
 
-    return True, data_solution, None
+    return True, None, data_solution

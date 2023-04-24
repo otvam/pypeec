@@ -11,8 +11,8 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import joblib
-from pypeec.error import RunError
 from pypeec import config
+from pypeec.error import RunError
 
 # get config
 SWEEP_POOL = config.SWEEP_POOL

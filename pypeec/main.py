@@ -7,15 +7,43 @@ This allows for a minimization of the loaded dependencies.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
-import os.path
 from pypeec import log
 from pypeec import io
 from pypeec.error import FileError
 
 
-def run_mesher(file_geometry, file_voxel):
+def run_mesher_data(data_geometry):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
+
+    Parameters
+    ----------
+    data_geometry : dict (input data)
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
+    data_voxel: dict (output data)
+    """
+
+    # load the tool
+    from pypeec.run import mesher
+
+    # run the tool
+    (status, ex, data_voxel) = mesher.run(data_geometry)
+
+    return status, ex, data_voxel
+
+
+def run_mesher_file(file_geometry, file_voxel):
+    """
+    Main script for meshing the geometry and generating a 3D voxel structure.
+    Load the input data from files.
     Write the resulting voxel file.
 
     Parameters
@@ -36,11 +64,9 @@ def run_mesher(file_geometry, file_voxel):
     # create the logger
     logger = log.get_logger("MAIN")
 
-    # reset the timer logger
-
     # load the tool
     logger.info("load the mesher")
-    from pypeec import mesher
+    from pypeec.run import mesher
 
     # run the tool
     try:
@@ -49,7 +75,7 @@ def run_mesher(file_geometry, file_voxel):
         data_geometry = io.load_config(file_geometry)
 
         # call the mesher
-        (status, data_voxel, ex) = mesher.run(data_geometry)
+        (status, ex, data_voxel) = mesher.run(data_geometry)
 
         # save results
         if status:
@@ -62,9 +88,45 @@ def run_mesher(file_geometry, file_voxel):
     return status, ex
 
 
-def run_viewer(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=False):
+def run_viewer_data(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
     """
     Main script for visualizing a 3D voxel structure.
+
+    Parameters
+    ----------
+    data_voxel : dict (input data)
+    data_point: list (input data)
+    data_viewer: dict (input data)
+    tag_plot : list
+        The list describes plots to be shown.
+        If None, all the plots are shown.
+    is_silent : boolean
+        If true, the plots are not shown (non-blocking call).
+        If true, the plots are shown (blocking call).
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
+    """
+
+    # load the tool
+    from pypeec.run import viewer
+
+    # run the tool
+    (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent)
+
+    return status, ex
+
+
+def run_viewer_file(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=False):
+    """
+    Main script for visualizing a 3D voxel structure.
+    Load the input data from files.
 
     Parameters
     ----------
@@ -93,7 +155,7 @@ def run_viewer(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=Fal
 
     # load the tool
     logger.info("load the viewer")
-    from pypeec import viewer
+    from pypeec.run import viewer
 
     # run the tool
     try:
@@ -112,9 +174,40 @@ def run_viewer(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=Fal
     return status, ex
 
 
-def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
+def run_solver_data(data_voxel, data_problem, data_tolerance):
     """
     Main script for solving a problem with the PEEC solver.
+
+    Parameters
+    ----------
+    data_voxel :  dict (input data)
+    data_problem: dict (input data)
+    data_tolerance: dict (input data)
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
+    data_solution: dict (output data)
+    """
+
+    # load the tool
+    from pypeec.run import solver
+
+    # run the tool
+    (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance)
+
+    return status, ex, data_solution
+
+
+def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
+    """
+    Main script for solving a problem with the PEEC solver.
+    Load the input data from files.
     Write the resulting solution file.
 
     Parameters
@@ -139,7 +232,7 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
 
     # load the tool
     logger.info("load the solver")
-    from pypeec import solver
+    from pypeec.run import solver
 
     # run the tool
     try:
@@ -150,7 +243,7 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
         data_tolerance = io.load_config(file_tolerance)
 
         # call the solver
-        (status, data_solution, ex) = solver.run(data_voxel, data_problem, data_tolerance)
+        (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance)
 
         # save results
         if status:
@@ -163,9 +256,48 @@ def run_solver(file_voxel, file_problem, file_tolerance, file_solution):
     return status, ex
 
 
-def run_plotter(file_solution, file_point, file_plotter, tag_sweep=None, tag_plot=None, is_silent=False):
+def run_plotter_data(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, is_silent=False):
     """
     Main script for plotting the solution of a PEEC problem.
+
+    Parameters
+    ----------
+    data_solution : dict (input data)
+    data_point: list (input data)
+    data_plotter: dict (input data)
+    tag_sweep : list
+        The list describes sweeps to be shown.
+        If None, all the sweeps are shown.
+    tag_plot : list
+        The list describes plots to be shown.
+        If None, all the plots are shown.
+    is_silent : boolean
+        If true, the plots are not shown (non-blocking call).
+        If true, the plots are shown (blocking call).
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if the problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
+    """
+
+    # load the tool
+    from pypeec.run import plotter
+
+    # run the tool
+    (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent)
+
+    return status, ex
+
+
+def run_plotter_file(file_solution, file_point, file_plotter, tag_sweep=None, tag_plot=None, is_silent=False):
+    """
+    Main script for plotting the solution of a PEEC problem.
+    Load the input data from files.
 
     Parameters
     ----------
@@ -197,7 +329,7 @@ def run_plotter(file_solution, file_point, file_plotter, tag_sweep=None, tag_plo
 
     # load the tool
     logger.info("load the plotter")
-    from pypeec import plotter
+    from pypeec.run import plotter
 
     # run the tool
     try:
