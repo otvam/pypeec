@@ -34,23 +34,22 @@ This file contains the definition of the voxel structure.
 #   - list of dicts with the conflict resolution rules
 #   - optional feature, the list can be empty if no conflict resolution is required
 #   - conflict definition
-#       - domain_resolve: domain name where the shared voxels should be removed
-#       - domain_keep: domain name where the shared voxels should be kept
+#       - domain_resolve: list of domain names where the shared voxels should be removed
+#       - domain_keep: list of domain names where the shared voxels should be kept
 "domain_conflict":
-    - {"domain_resolve": "dom_cond", "domain_keep": "dom_src"}
-    - {"domain_resolve": "dom_cond", "domain_keep": "dom_sink"}
+    - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_src"]}
+    - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_sink"]}
 
 # pledge the existence or absence of connections between domains
 #   - dict of dicts with the connection name and the connection definition
 #   - optional feature, the dict can be empty without having an impact on the results
 #   - connection definition
-#       - domain_list: list of domains where the connections are checks
-#       - connected: boolean specified if the listed domains should be connected or not
+#       - connected: boolean specified if the two domain lists should be connected
+#       - domain_a: first list of domains where the connections are checks
+#       - domain_b: second list of domains where the connections are checks
 "domain_connection":
-    "connected": {"domain_list": ["dom_src", "dom_cond", "dom_sink"], "connected": true}
-    "insulated_1": {"domain_list": ["dom_src", "dom_mag"], "connected": false}
-    "insulated_2": {"domain_list": ["dom_cond", "dom_mag"], "connected": false}
-    "insulated_3": {"domain_list": ["dom_sink", "dom_mag"], "connected": false}
+    "connected": {"connected": true, "domain_a": ["dom_cond""], "domain_b": ["dom_src", "dom_sink"]}
+    "insulated": {"connected": false, "domain_a": ["dom_mag"], "domain_b": ["dom_src", "dom_cond", "dom_sink"]}
 ```
 
 ### Definition from Index Arrays
