@@ -80,4 +80,4 @@
     - {"domain_resolve": ["copper"], "domain_keep": ["src"]}
     - {"domain_resolve": ["copper"], "domain_keep": ["sink"]}
 "domain_connection":
-    "connect": {"domain_a": ["copper"], "domain_b": ["src", "sink"], "connected": true}
+    "connect": {"domain_group": [["copper"], ["src"], ["sink"]], "connected": true}

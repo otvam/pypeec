@@ -95,5 +95,5 @@
     - {"domain_resolve": ["copper"], "domain_keep": ["src_back"]}
     - {"domain_resolve": ["copper"], "domain_keep": ["sink"]}
 "domain_connection":
-    "top": {"domain_a": ["copper"], "domain_b": ["src_front", "sink"], "connected": true}
-    "bottom": {"domain_a": ["copper"], "domain_b": ["src_back", "sink"], "connected": true}
+    "top": {"domain_group": [["copper"], ["src_front"], ["sink"]], "connected": true}
+    "bottom": {"domain_group": [["copper"], ["src_back"], ["sink"]], "connected": true}

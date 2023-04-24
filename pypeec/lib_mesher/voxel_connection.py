@@ -98,34 +98,35 @@ def _check_domain_connection(domain_def, connection_def, tag_connection, domain_
     """
 
     # extract the data
-    domain_a = domain_connection["domain_a"]
-    domain_b = domain_connection["domain_b"]
+    domain_group = domain_connection["domain_group"]
     connected = domain_connection["connected"]
 
     # remove empty domains
-    idx_a = _get_tag_indices(domain_def, domain_a)
-    idx_b = _get_tag_indices(domain_def, domain_b)
+    idx_group = []
+    for domain_group_tmp in domain_group:
+        idx_tmp = _get_tag_indices(domain_def, domain_group_tmp)
+        idx_group.append(idx_tmp)
 
     # init the connection matrix
-    vector_a = np.full(len(connection_def), True, dtype=bool)
-    vector_b = np.full(len(connection_def), True, dtype=bool)
+    matrix = np.full((len(connection_def), len(idx_group)), True, dtype=bool)
 
     # fill the connection matrix
     for i, idx_graph in enumerate(connection_def):
-        idx_shared_a = np.intersect1d(idx_graph, idx_a)
-        idx_shared_b = np.intersect1d(idx_graph, idx_b)
-        vector_a[i] = len(idx_shared_a) > 0
-        vector_b[i] = len(idx_shared_b) > 0
+        for j, idx_domain in enumerate(idx_group):
+            idx_shared = np.intersect1d(idx_graph, idx_domain)
+            matrix[i, j] = len(idx_shared) > 0
 
-    # check connection
-    connect = np.any(np.logical_and(vector_a, vector_b))
+    # count connection
+    vector = np.count_nonzero(matrix, axis=1)
 
     # check validity
     if connected:
-        if not connect:
+        idx_ok = vector == len(idx_group)
+        if not np.any(idx_ok):
             raise RunError("domain connection: domain connection is missing: %s" % tag_connection)
     else:
-        if connect:
+        idx_ok = np.logical_or(vector == 0, vector == 1)
+        if not np.all(idx_ok):
             raise RunError("domain connection: domain connection is illegal: %s" % tag_connection)
 
 

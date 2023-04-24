@@ -24,4 +24,4 @@
     - {"domain_resolve": ["coil"], "domain_keep": ["src"]}
     - {"domain_resolve": ["coil"], "domain_keep": ["sink"]}
 "domain_connection":
-    "coil": {"domain_a": ["coil"], "domain_b": ["src", "sink"], "connected": true}
+    "coil": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}

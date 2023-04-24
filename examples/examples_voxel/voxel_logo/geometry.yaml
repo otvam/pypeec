@@ -21,4 +21,4 @@
     "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":
-    "connect": {"domain_a": ["coil"], "domain_b": ["src", "sink"], "connected": true}
+    "connect": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}

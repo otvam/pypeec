@@ -28,6 +28,6 @@
     - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_src"]}
     - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_sink"]}
 "domain_connection":
-    "pri": {"domain_a": ["pri_coil"], "domain_b": ["pri_src", "pri_sink"], "connected": true}
-    "sec": {"domain_a": ["sec_coil"], "domain_b": ["sec_src", "sec_sink"], "connected": true}
-    "pri_sec": {"domain_a": ["pri_coil"], "domain_b": ["sec_coil"], "connected": false}
+    "pri": {"domain_group": [["pri_coil"], ["pri_src"], ["pri_sink"]], "connected": true}
+    "sec": {"domain_group": [["sec_coil"], ["sec_src"], ["sec_sink"]], "connected": true}
+    "pri_sec": {"domain_group": [["pri_coil"], ["sec_coil"]], "connected": false}

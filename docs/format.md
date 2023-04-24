@@ -45,11 +45,12 @@ This file contains the definition of the voxel structure.
 #   - optional feature, the dict can be empty without having an impact on the results
 #   - connection definition
 #       - connected: boolean specified if the two domain lists should be connected
-#       - domain_a: first list of domains where the connections are checks
-#       - domain_b: second list of domains where the connections are checks
+#       - domain_group: list of list of domains where the connections are checks
+#           - the outer list domains are used for the connection checks
+#           - the inner list domains are merged together
 "domain_connection":
-    "connected": {"connected": true, "domain_a": ["dom_cond""], "domain_b": ["dom_src", "dom_sink"]}
-    "insulated": {"connected": false, "domain_a": ["dom_mag"], "domain_b": ["dom_src", "dom_cond", "dom_sink"]}
+    "connected": {"connected": true, "domain_group": [["dom_cond"], ["dom_src"], ["dom_sink"]]}
+    "insulated": {"connected": false, "domain_group": [["dom_mag"], ["dom_src", "dom_cond", "dom_sink"]]}
 ```
 
 ### Definition from Index Arrays

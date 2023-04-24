@@ -23,6 +23,6 @@
     "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":
-    "pri": {"domain_a": ["pri"], "domain_b": ["src", "sink"], "connected": true}
-    "sec": {"domain_a": ["sec"], "domain_b": ["short"], "connected": true}
-    "pri_sec": {"domain_a": ["pri"], "domain_b": ["sec"], "connected": false}
+    "pri": {"domain_group": [["pri"], ["src"], ["sink"]], "connected": true}
+    "sec": {"domain_group": [["sec"], ["short"]], "connected": true}
+    "pri_sec": {"domain_group": [["pri"], ["sec"]], "connected": false}

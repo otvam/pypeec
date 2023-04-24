@@ -72,24 +72,22 @@ def _check_domain_connection(domain_list, domain_connection):
     # check value
     for domain_connection_tmp in domain_connection.values():
         # check type
-        key_list = ["connected", "domain_a", "domain_b"]
+        key_list = ["connected", "domain_group"]
         datachecker.check_dict("domain_connection", domain_connection_tmp, key_list=key_list)
 
         # extract field
-        domain_a = domain_connection_tmp["domain_a"]
-        domain_b = domain_connection_tmp["domain_b"]
+        domain_group = domain_connection_tmp["domain_group"]
         connected = domain_connection_tmp["connected"]
 
         # check type
         datachecker.check_boolean("connected", connected)
-        datachecker.check_list("domain_a", domain_a, sub_type=str, can_be_empty=False)
-        datachecker.check_list("domain_b", domain_b, sub_type=str, can_be_empty=False)
+        datachecker.check_list("domain_group", domain_group, sub_type=list, can_be_empty=False)
 
         # check value
-        for tag in domain_a:
-            datachecker.check_choice("domain_a", tag, domain_list)
-        for tag in domain_b:
-            datachecker.check_choice("domain_a", tag, domain_list)
+        for domain_group_tmp in domain_group:
+            datachecker.check_list("domain_group", domain_group_tmp, sub_type=str, can_be_empty=False)
+            for tag in domain_group_tmp:
+                datachecker.check_choice("domain_group", tag, domain_list)
 
 
 def check_data_geometry(data_geometry):
