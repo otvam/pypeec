@@ -23,11 +23,11 @@
     "use_resample": false
     "resampling_factor": [1, 1, 1]
 "domain_conflict":
-    - {"domain_resolve": "pri_coil", "domain_keep": "pri_src"}
-    - {"domain_resolve": "pri_coil", "domain_keep": "pri_sink"}
-    - {"domain_resolve": "sec_coil", "domain_keep": "sec_src"}
-    - {"domain_resolve": "sec_coil", "domain_keep": "sec_sink"}
+    - {"domain_resolve": ["pri_coil"], "domain_keep": ["pri_src"]}
+    - {"domain_resolve": ["pri_coil"], "domain_keep": ["pri_sink"]}
+    - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_src"]}
+    - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_sink"]}
 "domain_connection":
-    "pri": {"domain_list": ["pri_coil", "pri_src", "pri_sink"], "connected": true}
-    "sec": {"domain_list": ["sec_coil", "sec_src", "sec_sink"], "connected": true}
-    "pri_sec": {"domain_list": ["pri_coil", "sec_coil"], "connected": false}
+    "pri": {"domain_a": ["pri_coil"], "domain_b": ["pri_src", "pri_sink"], "connected": true}
+    "sec": {"domain_a": ["sec_coil"], "domain_b": ["sec_src", "sec_sink"], "connected": true}
+    "pri_sec": {"domain_a": ["pri_coil"], "domain_b": ["sec_coil"], "connected": false}

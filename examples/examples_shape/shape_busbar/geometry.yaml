@@ -77,7 +77,7 @@
     "use_resample": false
     "resampling_factor": [1, 1, 1]
 "domain_conflict":
-    - { "domain_resolve": "copper", "domain_keep": "src" }
-    - { "domain_resolve": "copper", "domain_keep": "sink" }
+    - {"domain_resolve": ["copper"], "domain_keep": ["src"]}
+    - {"domain_resolve": ["copper"], "domain_keep": ["sink"]}
 "domain_connection":
-    "connect": {"domain_list": ["copper", "src", "sink"], "connected": true}
+    "connect": {"domain_a": ["copper"], "domain_b": ["src", "sink"], "connected": true}

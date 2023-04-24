@@ -91,9 +91,9 @@
     "use_resample": false
     "resampling_factor": [1, 1, 1]
 "domain_conflict":
-    - { "domain_resolve": "copper", "domain_keep": "src_front" }
-    - { "domain_resolve": "copper", "domain_keep": "src_back" }
-    - { "domain_resolve": "copper", "domain_keep": "sink" }
+    - {"domain_resolve": ["copper"], "domain_keep": ["src_front"]}
+    - {"domain_resolve": ["copper"], "domain_keep": ["src_back"]}
+    - {"domain_resolve": ["copper"], "domain_keep": ["sink"]}
 "domain_connection":
-    "top": { "domain_list": [ "src_front", "copper", "sink" ], "connected": true }
-    "bottom": { "domain_list": [ "src_back", "copper", "sink" ], "connected": true }
+    "top": {"domain_a": ["copper"], "domain_b": ["src_front", "sink"], "connected": true}
+    "bottom": {"domain_a": ["copper"], "domain_b": ["src_back", "sink"], "connected": true}

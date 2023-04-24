@@ -17,16 +17,33 @@ from pypeec.error import RunError
 NP_TYPES = config.NP_TYPES
 
 
-def _get_domain_indices(domain_def):
+def _get_all_indices(domain_def):
     """
-    Get the indices of the non-empty voxels.
+    Get the indices of the non-empty voxels for all the domains.
     """
 
     # init
     idx = np.empty(0, dtype=NP_TYPES.INT)
 
     # get the indices and colors
-    for idx_tmp in domain_def.values():
+    for tag in domain_def:
+        idx_tmp = domain_def[tag]
+        idx = np.append(idx, idx_tmp)
+
+    return idx
+
+
+def _get_tag_indices(domain_def, domain_list):
+    """
+    Get the indices of the non-empty voxels for the given domains.
+    """
+
+    # init
+    idx = np.empty(0, dtype=NP_TYPES.INT)
+
+    # get the indices and colors
+    for tag in domain_list:
+        idx_tmp = domain_def[tag]
         idx = np.append(idx, idx_tmp)
 
     return idx
@@ -81,37 +98,34 @@ def _check_domain_connection(domain_def, connection_def, tag_connection, domain_
     """
 
     # extract the data
-    domain_list = domain_connection["domain_list"]
+    domain_a = domain_connection["domain_a"]
+    domain_b = domain_connection["domain_b"]
     connected = domain_connection["connected"]
 
     # remove empty domains
-    domain_filtered = []
-    for tag in domain_list:
-        idx_domain = domain_def[tag]
-        if len(idx_domain) > 0:
-            domain_filtered.append(tag)
+    idx_a = _get_tag_indices(domain_def, domain_a)
+    idx_b = _get_tag_indices(domain_def, domain_b)
 
     # init the connection matrix
-    matrix = np.full((len(connection_def), len(domain_filtered)), True, dtype=bool)
+    vector_a = np.full(len(connection_def), True, dtype=bool)
+    vector_b = np.full(len(connection_def), True, dtype=bool)
 
     # fill the connection matrix
     for i, idx_graph in enumerate(connection_def):
-        for j, tag in enumerate(domain_filtered):
-            idx_domain = domain_def[tag]
-            idx_shared = np.intersect1d(idx_graph, idx_domain)
-            matrix[i, j] = len(idx_shared) > 0
+        idx_shared_a = np.intersect1d(idx_graph, idx_a)
+        idx_shared_b = np.intersect1d(idx_graph, idx_b)
+        vector_a[i] = len(idx_shared_a) > 0
+        vector_b[i] = len(idx_shared_b) > 0
 
     # check connection
-    vector = np.count_nonzero(matrix, axis=1)
+    connect = np.any(np.logical_and(vector_a, vector_b))
 
-    # check connection
+    # check validity
     if connected:
-        idx_ok = vector == len(domain_filtered)
-        if not np.any(idx_ok):
+        if not connect:
             raise RunError("domain connection: domain connection is missing: %s" % tag_connection)
     else:
-        idx_ok = np.logical_or(vector == 0, vector == 1)
-        if not np.all(idx_ok):
+        if connect:
             raise RunError("domain connection: domain connection is illegal: %s" % tag_connection)
 
 
@@ -121,7 +135,7 @@ def get_connection(n, domain_def, domain_connection):
     """
 
     # get the indices of the non-empty voxels
-    idx = _get_domain_indices(domain_def)
+    idx = _get_all_indices(domain_def)
 
     # get the connection matrix between the voxels
     A_connection = _get_connection_matrix(n)

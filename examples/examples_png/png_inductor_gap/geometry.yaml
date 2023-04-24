@@ -30,5 +30,5 @@
     "resampling_factor": [1, 1, 1]
 "domain_conflict": []
 "domain_connection":
-    "cond": {"domain_list": ["coil", "src", "sink"], "connected": true}
-    "core": {"domain_list": ["coil", "core"], "connected": false}
+    "cond": {"domain_a": ["coil"], "domain_b": ["src", "sink"], "connected": true}
+    "core": {"domain_a": ["coil"], "domain_b": ["core"], "connected": false}

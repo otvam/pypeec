@@ -21,7 +21,7 @@
     "use_resample": false
     "resampling_factor": [1, 1, 1]
 "domain_conflict":
-    - {"domain_resolve": "coil", "domain_keep": "src"}
-    - {"domain_resolve": "coil", "domain_keep": "sink"}
+    - {"domain_resolve": ["coil"], "domain_keep": ["src"]}
+    - {"domain_resolve": ["coil"], "domain_keep": ["sink"]}
 "domain_connection":
-    "coil": {"domain_list": ["coil", "src", "sink"], "connected": true}
+    "coil": {"domain_a": ["coil"], "domain_b": ["src", "sink"], "connected": true}

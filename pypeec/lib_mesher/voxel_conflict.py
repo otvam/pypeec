@@ -22,15 +22,17 @@ def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
         - the shared indices are removed from the domain to be fixed
     """
 
-    # get the indices
-    idx_keep = domain_def[domain_keep]
-    idx_resolve = domain_def[domain_resolve]
+    for domain_keep_tmp in domain_keep:
+        for domain_resolve_tmp in domain_resolve:
+            # get the indices
+            idx_keep = domain_def[domain_keep_tmp]
+            idx_resolve = domain_def[domain_resolve_tmp]
 
-    # resolve the conflict
-    idx_resolve = np.setdiff1d(idx_resolve, idx_keep)
+            # resolve the conflict
+            idx_resolve = np.setdiff1d(idx_resolve, idx_keep)
 
-    # update the domain indices
-    domain_def[domain_resolve] = idx_resolve
+            # update the domain indices
+            domain_def[domain_resolve_tmp] = idx_resolve
 
     return domain_def
 
