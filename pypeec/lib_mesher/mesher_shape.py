@@ -166,13 +166,12 @@ def _get_voxelize_shape(n, xyz_min, xyz_max, obj):
     (x_max, y_max, z_max) = xyz_max
 
     # coordinate transformation for the bounds
-    transform = rat.from_bounds(x_min, y_min, x_max, y_max, nx, ny)
+    transform = rat.from_bounds(x_min, y_max, x_max, y_min, nx, ny)
 
     # rasterize the data
     idx_shape = raf.rasterize([obj], out_shape=(ny, nx), transform=transform)
 
     # get the boolean matrix with the voxelization result
-    idx_shape = np.flip(idx_shape, axis=1)
     idx_shape = np.swapaxes(idx_shape, 0, 1)
 
     # find the 2D indices
