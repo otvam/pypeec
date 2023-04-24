@@ -138,7 +138,7 @@ def run_workflow(folder, name):
     # run the code
     try:
         # run the mesher
-        (status, ex) = main.run_mesher(file_geometry, file_voxel)
+        (status, ex) = main.run_mesher_file(file_geometry, file_voxel)
         if not status:
             raise ex
 
@@ -147,17 +147,17 @@ def run_workflow(folder, name):
             data_voxel = pickle.load(fid)
 
         # run the viewer
-        (status, ex) = main.run_viewer(file_voxel, file_point, file_viewer, is_silent=True)
+        (status, ex) = main.run_viewer_file(file_voxel, file_point, file_viewer, is_silent=True)
         if not status:
             raise ex
 
         # run the solver
-        (status, ex) = main.run_solver(file_voxel, file_problem, file_tolerance, file_solution)
+        (status, ex) = main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
         if not status:
             raise ex
 
         # run the plotter
-        (status, ex) = main.run_plotter(file_solution, file_point, file_plotter, is_silent=True)
+        (status, ex) = main.run_plotter_file(file_solution, file_point, file_plotter, is_silent=True)
         if not status:
             raise ex
 

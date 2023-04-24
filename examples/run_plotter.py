@@ -24,5 +24,5 @@ if __name__ == "__main__":
     file_plotter = os.path.join(PATH_ROOT, FOLDER_CONFIG, "plotter.json")
 
     # run
-    (status, ex) = main.run_plotter(file_solution, file_point, file_plotter)
+    (status, ex) = main.run_plotter_file(file_solution, file_point, file_plotter)
     sys.exit(int(not status))

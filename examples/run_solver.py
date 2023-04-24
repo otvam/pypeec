@@ -25,5 +25,5 @@ if __name__ == "__main__":
     file_tolerance = os.path.join(PATH_ROOT, FOLDER_CONFIG, "tolerance.json")
 
     # run
-    (status, ex) = main.run_solver(file_voxel, file_problem, file_tolerance, file_solution)
+    (status, ex) = main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
     sys.exit(int(not status))

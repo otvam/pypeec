@@ -22,5 +22,5 @@ if __name__ == "__main__":
     file_voxel = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "voxel.pck")
 
     # run
-    (status, ex) = main.run_mesher(file_geometry, file_voxel)
+    (status, ex) = main.run_mesher_file(file_geometry, file_voxel)
     sys.exit(int(not status))
