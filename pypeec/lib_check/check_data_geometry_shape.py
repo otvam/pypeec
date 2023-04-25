@@ -23,7 +23,7 @@ def _check_shape_definition(shape):
 
     # check data
     datachecker.check_choice("shape_type", shape_type, ["trace", "pad", "polygon"])
-    datachecker.check_list("coord", coord, can_be_empty=False, sub_type=list)
+    datachecker.check_float_pts("coord", coord, size=2, can_be_empty=False)
 
     # check coordinate length
     if shape_type == "pad":
@@ -41,10 +41,6 @@ def _check_shape_definition(shape):
     else:
         raise ValueError("invalid shape type")
 
-    # check the points (if any)
-    for coord_tmp in coord:
-        datachecker.check_float_array("coord", coord_tmp, size=2)
-
 
 def _check_geometry_shape(layer_list, geometry_shape):
     """
@@ -52,11 +48,11 @@ def _check_geometry_shape(layer_list, geometry_shape):
     """
 
     # check type
-    datachecker.check_dict("geometry_shape", geometry_shape, can_be_empty=False, sub_type=list)
+    datachecker.check_dict("geometry_shape", geometry_shape, can_be_empty=False)
 
     # check content
     for tag, geometry_shape_tmp in geometry_shape.items():
-        datachecker.check_list("geometry_shape", geometry_shape_tmp, can_be_empty=False, sub_type=dict)
+        datachecker.check_list("geometry_shape", geometry_shape_tmp, can_be_empty=False)
         for geometry_shape_tmp_tmp in geometry_shape_tmp:
             # check type
             key_list = ["layer_start", "layer_stop", "shape_add", "shape_sub"]
@@ -71,8 +67,8 @@ def _check_geometry_shape(layer_list, geometry_shape):
             # check data
             datachecker.check_choice("layer_start", layer_start, layer_list)
             datachecker.check_choice("layer_stop", layer_stop, layer_list)
-            datachecker.check_list("shape_add", shape_add, can_be_empty=True, sub_type=dict)
-            datachecker.check_list("shape_sub", shape_sub, can_be_empty=True,sub_type=dict)
+            datachecker.check_list("shape_add", shape_add, can_be_empty=True)
+            datachecker.check_list("shape_sub", shape_sub, can_be_empty=True)
 
             # check shapes
             for shape_add_tmp in shape_add:
@@ -90,7 +86,7 @@ def _check_layer_stack(layer_stack):
     layer_list = []
 
     # check type
-    datachecker.check_list("layer_stack", layer_stack, can_be_empty=False, sub_type=dict)
+    datachecker.check_list("layer_stack", layer_stack, can_be_empty=False)
 
     # check value
     for layer_stack_tmp in layer_stack:

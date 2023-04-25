@@ -37,7 +37,7 @@ def _check_domain_conflict(domain_list, domain_conflict):
     """
 
     # check type
-    datachecker.check_list("domain_conflict", domain_conflict, can_be_empty=True, sub_type=dict)
+    datachecker.check_list("domain_conflict", domain_conflict, can_be_empty=True)
 
     # check value
     for domain_conflict_tmp in domain_conflict:
@@ -67,7 +67,7 @@ def _check_domain_connection(domain_list, domain_connection):
     """
 
     # check type
-    datachecker.check_dict("domain_connection", domain_connection, sub_type=dict)
+    datachecker.check_dict("domain_connection", domain_connection)
 
     # check value
     for domain_connection_tmp in domain_connection.values():
@@ -81,7 +81,7 @@ def _check_domain_connection(domain_list, domain_connection):
 
         # check type
         datachecker.check_boolean("connected", connected)
-        datachecker.check_list("domain_group", domain_group, sub_type=list, can_be_empty=False)
+        datachecker.check_list("domain_group", domain_group, can_be_empty=False)
 
         # check value
         for domain_group_tmp in domain_group:

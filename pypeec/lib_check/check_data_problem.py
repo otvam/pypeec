@@ -32,7 +32,7 @@ def _check_material_def(material_def):
     """
 
     # check type
-    datachecker.check_dict("material_def", material_def, can_be_empty=False, sub_type=dict)
+    datachecker.check_dict("material_def", material_def, can_be_empty=False)
 
     # check value
     for material_def_tmp in material_def.values():
@@ -57,7 +57,7 @@ def _check_source_def(source_def):
     """
 
     # check type
-    datachecker.check_dict("source_def", source_def, can_be_empty=False, sub_type=dict)
+    datachecker.check_dict("source_def", source_def, can_be_empty=False)
 
     # check value
     for source_def_tmp in source_def.values():
@@ -81,6 +81,10 @@ def _check_sweep_param(sweep_param, material_def, source_def):
     Check that the excitation definition (materials and sources) is valid.
     """
 
+    # check type
+    key_list = ["freq", "material_val", "source_val"]
+    datachecker.check_dict("sweep_param", sweep_param, key_list=key_list)
+
     # extract field
     freq = sweep_param["freq"]
     material_val = sweep_param["material_val"]
@@ -90,8 +94,8 @@ def _check_sweep_param(sweep_param, material_def, source_def):
     datachecker.check_float("freq", freq, is_positive=True, can_be_zero=True)
 
     # check type
-    datachecker.check_dict("material_val", material_val, can_be_empty=False, sub_type=dict)
-    datachecker.check_dict("source_val", source_val, can_be_empty=False, sub_type=dict)
+    datachecker.check_dict("material_val", material_val, can_be_empty=False)
+    datachecker.check_dict("source_val", source_val, can_be_empty=False)
 
     # check value
     for tag, material_val_tmp in material_val.items():
@@ -152,7 +156,7 @@ def check_data_problem(data_problem):
     _check_source_def(source_def)
 
     # check excitation values
-    datachecker.check_dict("sweep_param", sweep_param, sub_type=dict, can_be_empty=False)
+    datachecker.check_dict("sweep_param", sweep_param, can_be_empty=False)
     for sweep_param_tmp in sweep_param.values():
         _check_sweep_param(sweep_param_tmp, material_def, source_def)
 

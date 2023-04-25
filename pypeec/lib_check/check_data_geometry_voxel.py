@@ -14,7 +14,7 @@ def _check_domain_index(domain_index):
     """
 
     # check type
-    datachecker.check_dict("domain_index", domain_index, can_be_empty=False, sub_type=list)
+    datachecker.check_dict("domain_index", domain_index, can_be_empty=False)
 
     # check data
     for idx in domain_index.values():

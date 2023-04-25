@@ -14,11 +14,11 @@ def _check_domain_stl(domain_stl):
     """
 
     # check type
-    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False, sub_type=list)
+    datachecker.check_dict("domain_stl", domain_stl, can_be_empty=False)
 
     # check content
     for tag, domain_stl_tmp in domain_stl.items():
-        datachecker.check_list("domain_stl", domain_stl_tmp, can_be_empty=False, sub_type=dict)
+        datachecker.check_list("domain_stl", domain_stl_tmp, can_be_empty=False)
         for domain_stl_tmp_tmp in domain_stl_tmp:
             # check type
             key_list = ["offset", "filename"]
@@ -29,7 +29,7 @@ def _check_domain_stl(domain_stl):
             filename = domain_stl_tmp_tmp["filename"]
 
             # check data
-            datachecker.check_float_array("domain_color", offset, size=3)
+            datachecker.check_float_array("offset", offset, size=3)
             datachecker.check_filename("filename", filename)
 
 

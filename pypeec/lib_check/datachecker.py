@@ -45,12 +45,38 @@ def check_list(name, data, sub_type=None, can_be_empty=True):
             raise CheckError("%s: invalid type" % name)
 
 
+def check_float_pts(name, data, size=None, is_positive=False, can_be_zero=True, can_be_empty=True):
+    """
+    Check a 2D float array.
+    """
+
+    data = np.array(data)
+    if (not can_be_empty) and (len(data) == 0):
+        raise CheckError("%s: cannot be empty" % name)
+    for data_tmp in data:
+        check_float_array(name, data_tmp, size, is_positive, can_be_zero, can_be_empty)
+
+
+def check_integer_pts(name, data, size=None, is_positive=False, can_be_zero=True, can_be_empty=True):
+    """
+    Check a 2D integer array.
+    """
+
+    data = np.array(data)
+    if (not can_be_empty) and (len(data) == 0):
+        raise CheckError("%s: cannot be empty" % name)
+    for data_tmp in data:
+        check_integer_array(name, data_tmp, size, is_positive, can_be_zero, can_be_empty)
+
+
 def check_float_array(name, data, size=None, is_positive=False, can_be_zero=True, can_be_empty=True):
     """
     Check a float array.
     """
 
     data = np.array(data)
+    if len(data.shape) != 1:
+        raise CheckError("%s: invalid shape" % name)
     if size is not None:
         if not (len(data) == size):
             raise CheckError("%s: invalid array size" % name)
@@ -71,6 +97,8 @@ def check_integer_array(name, data, size=None, is_positive=False, can_be_zero=Tr
     """
 
     data = np.array(data)
+    if len(data.shape) != 1:
+        raise CheckError("%s: invalid shape" % name)
     if size is not None:
         if not (len(data) == size):
             raise CheckError("%s: invalid array size" % name)

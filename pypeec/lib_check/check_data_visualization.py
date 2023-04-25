@@ -362,11 +362,7 @@ def check_data_point(data_point):
     """
 
     # check type
-    datachecker.check_list("data_point", data_point, can_be_empty=True, sub_type=list)
-
-    # check the points (if any)
-    for data_point_tmp in data_point:
-        datachecker.check_float_array("data_point", data_point_tmp, size=3)
+    datachecker.check_float_pts("data_point", data_point, size=3, can_be_empty=True)
 
 
 def check_options(data_check, tag_list):
@@ -396,7 +392,7 @@ def check_data_plotter(data_plotter):
     """
 
     # check type
-    datachecker.check_dict("data_plotter", data_plotter, sub_type=dict)
+    datachecker.check_dict("data_plotter", data_plotter)
 
     # check items
     for data_plotter_tmp in data_plotter.values():
@@ -410,7 +406,7 @@ def check_data_viewer(data_viewer):
     """
 
     # check type
-    datachecker.check_dict("data_viewer", data_viewer, sub_type=dict)
+    datachecker.check_dict("data_viewer", data_viewer)
 
     # check items
     for data_viewer_tmp in data_viewer.values():

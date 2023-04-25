@@ -14,16 +14,11 @@ def _check_domain_color(domain_color):
     """
 
     # check type
-    datachecker.check_dict("domain_color", domain_color, can_be_empty=False, sub_type=list)
+    datachecker.check_dict("domain_color", domain_color, can_be_empty=False)
 
     # check value
     for color_list in domain_color.values():
-        # check type
-        datachecker.check_list("domain_color", color_list, can_be_empty=False, sub_type=list)
-
-        # check data
-        for color in color_list:
-            datachecker.check_integer_array("domain_color", color, size=4, is_positive=True, can_be_zero=True)
+        datachecker.check_integer_pts("domain_color", color_list, size=4, can_be_empty=False, is_positive=True, can_be_zero=True)
 
 
 def _check_layer_stack(layer_stack):
@@ -32,7 +27,7 @@ def _check_layer_stack(layer_stack):
     """
 
     # check type
-    datachecker.check_list("layer_stack", layer_stack, can_be_empty=False, sub_type=dict)
+    datachecker.check_list("layer_stack", layer_stack, can_be_empty=False)
 
     # check value
     for layer_stack_tmp in layer_stack:
