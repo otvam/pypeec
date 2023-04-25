@@ -20,7 +20,7 @@ def _get_value_terminal(source, src, sink):
     return V, I, S
 
 
-def _get_load_terminal(freq, source, has_converged, winding_dict):
+def _get_load_terminal(freq, source, has_converged, winding_description):
     """
     Get the terminal currents and voltages for a specific sweep.
     """
@@ -31,10 +31,10 @@ def _get_load_terminal(freq, source, has_converged, winding_dict):
     S_vec = []
 
     # get the solution
-    for winding_dict_tmp in winding_dict:
+    for winding_description_tmp in winding_description:
         # extract the terminal name
-        src = winding_dict_tmp["src"]
-        sink = winding_dict_tmp["sink"]
+        src = winding_description_tmp["src"]
+        sink = winding_description_tmp["sink"]
 
         # extract the terminal quantities
         (V, I, S) = _get_value_terminal(source, src, sink)
@@ -58,7 +58,7 @@ def _get_load_terminal(freq, source, has_converged, winding_dict):
     return terminal
 
 
-def get_extract(data_solution, winding_dict, sweep_list):
+def get_extract(data_solution, winding_description, sweep_list):
     """
     Get the terminal currents and voltages for all the sweeps.
     """
@@ -72,7 +72,7 @@ def get_extract(data_solution, winding_dict, sweep_list):
     assert isinstance(data_sweep, dict), "invalid solution"
 
     # matrix size
-    n_mat = len(winding_dict)
+    n_winding = len(winding_description)
 
     # extract data
     terminal = {}
@@ -84,6 +84,6 @@ def get_extract(data_solution, winding_dict, sweep_list):
         has_converged = data_sweep_tmp["has_converged"]
 
         # assign
-        terminal[tag] = _get_load_terminal(freq, source, has_converged, winding_dict)
+        terminal[tag] = _get_load_terminal(freq, source, has_converged, winding_description)
 
-    return n_mat, terminal
+    return n_winding, terminal

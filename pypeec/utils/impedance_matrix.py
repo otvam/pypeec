@@ -18,7 +18,7 @@ import numpy as np
 import numpy.linalg as lna
 
 
-def _get_idx_matrix(n_mat):
+def _get_idx_matrix(n_winding):
     """
     Mapping of the impedance coefficients into a vector.
     The indices (row and column) of the impedance coefficients are returned.
@@ -27,20 +27,20 @@ def _get_idx_matrix(n_mat):
     """
 
     var_idx = []
-    for i in range(n_mat):
+    for i in range(n_winding):
         for j in range(i+1):
             var_idx.append([i, j])
 
     return var_idx
 
 
-def _get_assign_matrix(n_mat, var_idx, sol):
+def _get_assign_matrix(n_winding, var_idx, sol):
     """
     Assign the full impedance matrix from the coefficients.
     The coefficients are given in a vector.
     """
 
-    mat = np.zeros((n_mat, n_mat), dtype=np.complex_)
+    mat = np.zeros((n_winding, n_winding), dtype=np.complex_)
     for i, (idx_i_1, idx_i_2) in enumerate(var_idx):
         mat[idx_i_1, idx_i_2] = sol[i]
         mat[idx_i_2, idx_i_1] = sol[i]
@@ -48,12 +48,12 @@ def _get_assign_matrix(n_mat, var_idx, sol):
     return mat
 
 
-def _get_eqn_matrix(n_mat, var_idx, I_vec):
+def _get_eqn_matrix(n_winding, var_idx, I_vec):
     """
     Create the equation matrix for a given current excitation.
     """
 
-    eqn_mat = np.zeros((n_mat, len(var_idx)), dtype=np.complex_)
+    eqn_mat = np.zeros((n_winding, len(var_idx)), dtype=np.complex_)
     for i, (idx_i_1, idx_i_2) in enumerate(var_idx):
         eqn_mat[idx_i_1, i] = I_vec[idx_i_2]
         eqn_mat[idx_i_2, i] = I_vec[idx_i_1]
@@ -61,7 +61,7 @@ def _get_eqn_matrix(n_mat, var_idx, I_vec):
     return eqn_mat
 
 
-def _get_solve_matrix(n_mat, terminal, tol):
+def _get_solve_matrix(n_winding, terminal, tol):
     """
     Extract the impedance matrix of the component.
 
@@ -78,7 +78,7 @@ def _get_solve_matrix(n_mat, terminal, tol):
     check_convergence = tol["check_convergence"]
 
     # get the matrix size and indices of the coefficients
-    var_idx = _get_idx_matrix(n_mat)
+    var_idx = _get_idx_matrix(n_winding)
 
     # init the matrices
     freq_vec = np.zeros(0, dtype=np.float_)
@@ -98,7 +98,7 @@ def _get_solve_matrix(n_mat, terminal, tol):
             assert has_converged, "invalid solution: convergence issue"
 
         # get the equation matrix
-        eqn_tmp = _get_eqn_matrix(n_mat, var_idx, I_vec)
+        eqn_tmp = _get_eqn_matrix(n_winding, var_idx, I_vec)
 
         # append the data
         freq_vec = np.append(freq_vec, freq)
@@ -106,10 +106,13 @@ def _get_solve_matrix(n_mat, terminal, tol):
         eqn_mat = np.concatenate((eqn_mat, eqn_tmp), axis=0)
 
     # check that the frequency is constant
-    assert np.ptp(freq_vec) < tol_freq, "invalid solution: residuum issue"
+    assert np.ptp(freq_vec) < tol_freq, "invalid solution: invalid frequency"
 
     # compute the frequency
     freq = np.mean(freq_vec)
+
+    # check that the frequency is positive
+    assert freq > 0, "invalid solution: invalid frequency"
 
     # check system size
     assert len(rhs_vec) >= len(var_idx), "invalid solution: number of equation is too low"
@@ -124,26 +127,26 @@ def _get_solve_matrix(n_mat, terminal, tol):
     assert np.all(res < tol_res), "invalid solution: residuum issue"
 
     # assign the coefficients to the full impedance matrix
-    Z_mat = _get_assign_matrix(n_mat, var_idx, sol)
+    Z_mat = _get_assign_matrix(n_winding, var_idx, sol)
 
     return freq, Z_mat
 
 
-def _get_coupling_matrix(n_mat, RL_mat):
+def _get_coupling_matrix(n_winding, RL_mat):
     """
     Get the coupling matrix between the windings.
     """
 
-    k_mat = np.zeros((n_mat, n_mat), dtype=np.float_)
-    for i in range(n_mat):
-        for j in range(n_mat):
+    k_mat = np.zeros((n_winding, n_winding), dtype=np.float_)
+    for i in range(n_winding):
+        for j in range(n_winding):
             k_mat[i, j] = RL_mat[i, j]/np.sqrt(RL_mat[i, i]*RL_mat[j, j])
             k_mat[j, i] = RL_mat[j, i]/np.sqrt(RL_mat[i, i]*RL_mat[j, j])
 
     return k_mat
 
 
-def _get_circuit(n_mat, freq, Z_mat):
+def _get_circuit(n_winding, freq, Z_mat):
     """
     Get the equivalent circuit of the component from the impedance matrix.
     """
@@ -159,8 +162,8 @@ def _get_circuit(n_mat, freq, Z_mat):
     Q_mat = (w*L_mat)/R_mat
 
     # get the coupling
-    k_R_mat = _get_coupling_matrix(n_mat, R_mat)
-    k_L_mat = _get_coupling_matrix(n_mat, L_mat)
+    k_R_mat = _get_coupling_matrix(n_winding, R_mat)
+    k_L_mat = _get_coupling_matrix(n_winding, L_mat)
 
     # assign the results
     data_matrix = {
@@ -171,15 +174,15 @@ def _get_circuit(n_mat, freq, Z_mat):
     return data_matrix
 
 
-def get_extract(n_mat, terminal, tol):
+def get_extract(n_winding, terminal, tol):
     """
     Extract the equivalent circuit of a component.
     """
 
     # get the impedance matrix
-    (freq, res) = _get_solve_matrix(n_mat, terminal, tol)
+    (freq, res) = _get_solve_matrix(n_winding, terminal, tol)
 
     # get the complete circuit
-    data_matrix = _get_circuit(n_mat, freq, res)
+    data_matrix = _get_circuit(n_winding, freq, res)
 
     return data_matrix

@@ -100,6 +100,7 @@ def _check_sweep_param(sweep_param, material_def, source_def):
     # check value
     for tag, material_val_tmp in material_val.items():
         # extract the data
+        datachecker.check_choice("tag", tag, material_def)
         var_type = material_def[tag]["var_type"]
         material_type = material_def[tag]["material_type"]
 
@@ -117,6 +118,7 @@ def _check_sweep_param(sweep_param, material_def, source_def):
     # check value
     for tag, source_val_tmp in source_val.items():
         # extract the data
+        datachecker.check_choice("tag", tag, source_def)
         var_type = source_def[tag]["var_type"]
         source_type = source_def[tag]["source_type"]
 
