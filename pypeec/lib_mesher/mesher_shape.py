@@ -149,7 +149,7 @@ def _get_composite_shape(shape_add, shape_sub, tol):
     obj = sha.simplify(obj, tol)
 
     # check that the shape is valid
-    if (not obj.is_valid) or (not obj.is_simple):
+    if not obj.is_valid:
         raise RunError("invalid shape: geometry is ill-formed")
 
     return obj
@@ -252,20 +252,22 @@ def _get_shape_obj(geometry_shape, stack_pos, stack_tag, tol):
             # get the shape
             obj = _get_composite_shape(shape_add, shape_sub, tol)
 
+            # get the stack position
+            (z_min, z_max, stack_idx) = _get_shape_position(layer_start, layer_stop, stack_pos, stack_tag)
+
             # find the bounds
             (x_min, y_min, x_max, y_max) = obj.bounds
             tmp_min = np.array((x_min, y_min), dtype=NP_TYPES.FLOAT)
             tmp_max = np.array((x_max, y_max), dtype=NP_TYPES.FLOAT)
 
-            # update the bounds
-            xy_min = np.minimum(xy_min, tmp_min)
-            xy_max = np.maximum(xy_max, tmp_max)
+            # add the object if not empty
+            if not obj.is_empty:
+                # update the bounds
+                xy_min = np.minimum(xy_min, tmp_min)
+                xy_max = np.maximum(xy_max, tmp_max)
 
-            # get the stack position
-            (z_min, z_max, stack_idx) = _get_shape_position(layer_start, layer_stop, stack_pos, stack_tag)
-
-            # assign the object
-            shape_obj.append({"tag": tag, "z_min": z_min, "z_max": z_max, "stack_idx": stack_idx, "obj": obj})
+                # assign the object
+                shape_obj.append({"tag": tag, "z_min": z_min, "z_max": z_max, "stack_idx": stack_idx, "obj": obj})
 
     return shape_obj, xy_min, xy_max
 
