@@ -16,31 +16,30 @@ def get_status(n, d, c, domain_def, connection_def):
     Get a dict summarizing a 3D voxel structure.
     """
 
+    # object size
+    s = tuple(x*y for x, y in zip(n, d))
+
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
     (cx, cy, cz) = c
+    (sx, sy, sz) = s
 
-    # compute
+    # compute voxel numbers
     n_total = nx*ny*nz
     n_graph = len(connection_def)
     n_domain = len(domain_def)
 
-    # object size
-    sx = dx*nx
-    sy = dy*ny
-    sz = dz*nz
-
     # get the used voxels
-    n_used = 0
-    for tag, idx in domain_def.items():
-        n_used += len(idx)
+    n_used = sum(len(idx) for idx in domain_def.values())
 
     # voxel utilization ratio
     ratio = n_used/n_total
 
     # assign data
     voxel_status = {
+        "n": n,
+        "s": s,
         "n_total": n_total,
         "n_used": n_used,
         "n_domain": n_domain,
