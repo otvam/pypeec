@@ -81,6 +81,7 @@ Different examples are located in the `examples` folder:
   * **png_busbar**: a coplanar L-shaped busbar
   * **png_wire**: a straight round wire
   * **png_trace**: a PCB with traces
+  * **shape_coplanar**: a set of coplanar traces
 * voxel structure generated from PNG files (`examples_png` folder)
   * **png_inductor_spiral**: a planar spiral inductor
   * **png_inductor_spiral**: a gapped inductor with an E-core

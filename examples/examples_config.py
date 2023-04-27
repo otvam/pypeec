@@ -24,6 +24,7 @@ FOLDER_CONFIG = "config"
 #       shape_busbar
 #       shape_wire
 #       shape_trace
+#       shape_coplanar
 #   examples_stl
 #       stl_inductor_air
 #       stl_inductor_core
@@ -33,5 +34,5 @@ FOLDER_CONFIG = "config"
 #       png_inductor_gap
 #       png_shield
 #       png_gerber
-FOLDER_NAME = "examples_voxel"
-EXAMPLE_NAME = "voxel_core"
+FOLDER_NAME = "examples_shape"
+EXAMPLE_NAME = "shape_coplanar"

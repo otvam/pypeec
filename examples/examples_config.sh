@@ -20,6 +20,7 @@ FOLDER_CONFIG="config"
 #       shape_busbar
 #       shape_wire
 #       shape_trace
+#       shape_coplanar
 #   examples_stl
 #       stl_inductor_air
 #       stl_inductor_core
