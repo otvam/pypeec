@@ -15,6 +15,7 @@ name_list = [
     "shape_busbar",
     "shape_wire",
     "shape_trace",
+    "shape_coplanar",
 ]
 
 # get the test object

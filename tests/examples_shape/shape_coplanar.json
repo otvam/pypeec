@@ -1,0 +1,19 @@
+{
+    "metadata": {
+        "folder": "examples_shape",
+        "name": "shape_coplanar",
+        "timestamp": "2023-04-27 16:08:46.702786"
+    },
+    "mesher": {
+        "n_total": 44800,
+        "n_used": 12632
+    },
+    "solver": {
+        "sim_default": {
+            "freq": 1000000.0,
+            "has_converged": true,
+            "P_tot": 0.004693488639423641,
+            "W_tot": 8.125014931570545e-10
+        }
+    }
+}
