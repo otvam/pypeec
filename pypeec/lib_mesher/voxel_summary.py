@@ -11,13 +11,10 @@ from pypeec import log
 LOGGER = log.get_logger("SUMMARY")
 
 
-def get_status(n, d, c, domain_def, connection_def):
+def get_status(n, d, s, c, domain_def, connection_def):
     """
     Get a dict summarizing a 3D voxel structure.
     """
-
-    # object size
-    s = tuple(x*y for x, y in zip(n, d))
 
     # extract the voxel data
     (nx, ny, nz) = n
@@ -50,8 +47,8 @@ def get_status(n, d, c, domain_def, connection_def):
     # display status
     LOGGER.debug("voxel: number = (nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
     LOGGER.debug("voxel: dimension = (dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
-    LOGGER.debug("voxel: center = (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
     LOGGER.debug("voxel: span = (sx, sy, sz) =  (%.3e, %.3e, %.3e)" % (sx, sy, sz))
+    LOGGER.debug("voxel: center = (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
 
     # plot the voxel number
     LOGGER.debug("size: n_graph = %d" % n_graph)

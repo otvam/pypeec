@@ -270,7 +270,10 @@ def get_remesh(n, d, domain_def, resampling):
     if use_resample:
         (n, d, domain_def) = _get_resample(n, d, domain_def, resampling_factor)
 
+    # voxel structure size
+    s = tuple(x*y for x, y in zip(n, d))
+
     # display number of voxels
     LOGGER.debug("voxel: final number = %d" % np.prod(n))
 
-    return n, d, domain_def
+    return n, d, s, domain_def

@@ -173,18 +173,19 @@ def _run_resample_graph(reference, data_voxel, data_geometry):
         domain_def = voxel_conflict.get_conflict(domain_def, domain_conflict)
 
     with log.BlockTimer(LOGGER, "voxel_resample"):
-        (n, d, domain_def) = voxel_resample.get_remesh(n, d, domain_def, resampling)
+        (n, d, s, domain_def) = voxel_resample.get_remesh(n, d, domain_def, resampling)
 
     with log.BlockTimer(LOGGER, "voxel_connection"):
         connection_def = voxel_connection.get_connection(n, domain_def, domain_connection)
 
     with log.BlockTimer(LOGGER, "voxel_summary"):
-        voxel_status = voxel_summary.get_status(n, d, c, domain_def, connection_def)
+        voxel_status = voxel_summary.get_status(n, d, s, c, domain_def, connection_def)
 
     # assemble the data
     data_voxel = {
         "n": n,
         "d": d,
+        "s": s,
         "c": c,
         "domain_def": domain_def,
         "connection_def": connection_def,
