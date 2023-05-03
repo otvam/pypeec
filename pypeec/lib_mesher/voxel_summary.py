@@ -33,10 +33,13 @@ def get_status(n, d, s, c, domain_def, connection_def):
     # voxel utilization ratio
     ratio = n_used/n_total
 
-    # get the volume
+    # get the volume and areas
     V_voxel = dx*dy*dz
     V_total = n_total*V_voxel
     V_used = n_used*V_voxel
+    A_xy = sx*sy
+    A_yz = sy*sz
+    A_xz = sx*sz
 
     # assign data
     voxel_status = {
@@ -44,6 +47,9 @@ def get_status(n, d, s, c, domain_def, connection_def):
         "s": s,
         "n_total": n_total,
         "n_used": n_used,
+        "A_xy": A_xy,
+        "A_yz": A_yz,
+        "A_xz": A_xz,
         "V_total": V_total,
         "V_used": V_used,
         "ratio": ratio,
@@ -58,10 +64,11 @@ def get_status(n, d, s, c, domain_def, connection_def):
     LOGGER.debug("voxel: center = (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
 
     # plot the voxel number
-    LOGGER.debug("size: n_total = %d" % n_total)
-    LOGGER.debug("size: n_used = %d" % n_used)
-    LOGGER.debug("size: V_total = %.3e" % V_total)
-    LOGGER.debug("size: V_used = %.3e" % V_used)
+    LOGGER.debug("size: A_xy = %.3e / A_yz = %.3e / A_xz = %.3e" % (A_xy, A_yz, A_xz))
+    LOGGER.debug("size: V_total = %.3e / V_used = %.3e" % (V_total, V_used))
+    LOGGER.debug("size: V_total = %.3e / V_used = %.3e" % (V_total, V_used))
+    LOGGER.debug("size: n_total = %d / n_used = %d" % (n_total, n_used))
+
     LOGGER.debug("size: ratio = %.3e" % ratio)
     LOGGER.debug("size: n_domain = %d" % n_domain)
     LOGGER.debug("size: n_graph = %d" % n_graph)
