@@ -53,6 +53,7 @@ def _get_plot_options(pl, grid, voxel, point, plot_options):
             line_width=plot_options["geom_thickness"]
         )
 
+    # plot the cloud points
     if plot_options["point_plot"] and (point.n_cells > 0):
         pl.add_mesh(
             point,
@@ -61,6 +62,14 @@ def _get_plot_options(pl, grid, voxel, point, plot_options):
             opacity=plot_options["point_opacity"],
             render_points_as_spheres=True,
         )
+
+    # set the camera position
+    if plot_options["camera_roll"] is not None:
+        pl.camera.roll = plot_options["camera_roll"]
+    if plot_options["camera_azimuth"] is not None:
+        pl.camera.azimuth = plot_options["camera_azimuth"]
+    if plot_options["camera_elevation"] is not None:
+        pl.camera.elevation = plot_options["camera_elevation"]
 
     # add title and axes
     pl.add_axes(line_width=2, interactive=False)

@@ -45,6 +45,7 @@ def _check_plot_options(plot_options):
         "grid_plot", "grid_thickness", "grid_color", "grid_opacity",
         "geom_plot", "geom_thickness", "geom_color", "geom_opacity",
         "point_plot", "point_size", "point_color", "point_opacity",
+        "camera_roll", "camera_azimuth", "camera_elevation",
     ]
     datachecker.check_dict("data_window", plot_options, key_list=key_list)
 
@@ -68,6 +69,14 @@ def _check_plot_options(plot_options):
     datachecker.check_string("point_color", plot_options["point_color"], can_be_empty=False)
     datachecker.check_float("point_size", plot_options["point_size"], is_positive=True, can_be_zero=True)
     datachecker.check_float("point_opacity", plot_options["point_opacity"], is_positive=True, can_be_zero=True)
+
+    # check camera data
+    if plot_options["camera_roll"] is not None:
+        datachecker.check_float("camera_roll", plot_options["camera_roll"])
+    if plot_options["camera_azimuth"] is not None:
+        datachecker.check_float("camera_azimuth", plot_options["camera_azimuth"])
+    if plot_options["camera_elevation"] is not None:
+        datachecker.check_float("camera_elevation", plot_options["camera_elevation"])
 
 
 def _check_clip_options(clip_options):

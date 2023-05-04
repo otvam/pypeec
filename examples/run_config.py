@@ -35,6 +35,9 @@ def _get_plot_options(name):
         "point_color": "red",  # color of the point cloud dots
         "point_size": 5.0,  # size of the point cloud dots
         "point_opacity": 0.5,  # opacity of the point cloud dots
+        "camera_roll": None, # camera roll angle (None for default)
+        "camera_azimuth": None, # camera azimuth angle (None for default)
+        "camera_elevation": None, # camera elevation angle (None for default)
     }
 
     return plot_options

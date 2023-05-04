@@ -42,7 +42,10 @@
                 "point_plot": true,
                 "point_color": "red",
                 "point_size": 5.0,
-                "point_opacity": 0.5
+                "point_opacity": 0.5,
+                "camera_roll": null,
+                "camera_azimuth": null,
+                "camera_elevation": null
             }
         }
     },
@@ -89,7 +92,10 @@
                 "point_plot": true,
                 "point_color": "red",
                 "point_size": 5.0,
-                "point_opacity": 0.5
+                "point_opacity": 0.5,
+                "camera_roll": null,
+                "camera_azimuth": null,
+                "camera_elevation": null
             }
         }
     },
@@ -138,7 +144,10 @@
                 "point_plot": true,
                 "point_color": "red",
                 "point_size": 5.0,
-                "point_opacity": 0.5
+                "point_opacity": 0.5,
+                "camera_roll": null,
+                "camera_azimuth": null,
+                "camera_elevation": null
             }
         }
     }
