@@ -148,6 +148,21 @@ class PlotGui:
         return pl
 
     @staticmethod
+    def _get_plotter_pyvista_nop(image_size):
+        """
+        Create a PyVista plotter for silent rendering.
+        """
+
+        # cast window size
+        if image_size is not None:
+            notebook_size = tuple(image_size)
+
+        # create plotter
+        pl = pyvista.Plotter(off_screen=True, window_size=image_size)
+
+        return pl
+
+    @staticmethod
     def _get_figure_matplotlib_qt(title, show_menu, window_size):
         """
         Create a Matplotlib figure for the Qt framework.
@@ -193,7 +208,23 @@ class PlotGui:
         # set window size
         if notebook_size is not None:
             (sx, sy) = notebook_size
-            fig.set_size_inches(sx / fig.dpi, sy / fig.dpi)
+            fig.set_size_inches(sx/fig.dpi, sy/fig.dpi)
+
+        return fig
+
+    @staticmethod
+    def _get_figure_matplotlib_nop(image_size):
+        """
+        Create a Matplotlib figure for silent rendering.
+        """
+
+        # create figure
+        fig = matplotlib.pyplot.figure(tight_layout=True)
+
+        # set window size
+        if image_size is not None:
+            (sx, sy) = image_size
+            fig.set_size_inches(sx/fig.dpi, sy/fig.dpi)
 
         return fig
 
@@ -218,7 +249,7 @@ class PlotGui:
         elif self.plot_mode == "nb":
             pl = self._get_plotter_pyvista_nb(notebook_size)
         elif self.plot_mode == "nop":
-            pl = pyvista.Plotter(off_screen=True)
+            pl = self._get_plotter_pyvista_nop(window_size)
         else:
             raise ValueError("invalid plot mode")
 
@@ -248,7 +279,7 @@ class PlotGui:
         elif self.plot_mode == "nb":
             fig = self._get_figure_matplotlib_nb(notebook_size)
         elif self.plot_mode == "nop":
-            fig = matplotlib.pyplot.figure()
+            fig = self._get_figure_matplotlib_nop(window_size)
         else:
             raise ValueError("invalid plot mode")
 
@@ -311,9 +342,17 @@ class PlotGui:
         elif self.plot_mode == "nop":
             LOGGER.debug("close all the plots")
 
+            for idx, pl in enumerate(self.pl_list):
+                filename = "pyvista_%d.png" % idx
+                pl.screenshot(filename)
+            for idx, fig in enumerate(self.fig_list):
+                filename = "matplotlib_%d.png" % idx
+                fig.savefig(filename)
+
             for pl in self.pl_list:
                 pl.close()
             matplotlib.pyplot.close("all")
+
 
             return True
         else:
