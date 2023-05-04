@@ -66,9 +66,7 @@ def get_status(n, d, s, c, domain_def, connection_def):
     # plot the voxel number
     LOGGER.debug("size: A_xy = %.3e / A_yz = %.3e / A_xz = %.3e" % (A_xy, A_yz, A_xz))
     LOGGER.debug("size: V_total = %.3e / V_used = %.3e" % (V_total, V_used))
-    LOGGER.debug("size: V_total = %.3e / V_used = %.3e" % (V_total, V_used))
     LOGGER.debug("size: n_total = %d / n_used = %d" % (n_total, n_used))
-
     LOGGER.debug("size: ratio = %.3e" % ratio)
     LOGGER.debug("size: n_domain = %d" % n_domain)
     LOGGER.debug("size: n_graph = %d" % n_graph)
