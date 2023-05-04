@@ -147,7 +147,7 @@ def run_workflow(folder, name):
             data_voxel = pickle.load(fid)
 
         # run the viewer
-        (status, ex) = main.run_viewer_file(file_voxel, file_point, file_viewer, is_silent=True)
+        (status, ex) = main.run_viewer_file(file_voxel, file_point, file_viewer, is_silent=True, folder=None)
         if not status:
             raise ex
 
@@ -157,7 +157,7 @@ def run_workflow(folder, name):
             raise ex
 
         # run the plotter
-        (status, ex) = main.run_plotter_file(file_solution, file_point, file_plotter, is_silent=True)
+        (status, ex) = main.run_plotter_file(file_solution, file_point, file_plotter, is_silent=True, folder=None)
         if not status:
             raise ex
 

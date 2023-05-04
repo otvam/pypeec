@@ -122,18 +122,24 @@ def _get_arg_viewer(subparsers):
         dest="file_viewer",
     )
     parser.add_argument(
-        "-s", "--silent",
-        help="do not display the plots (default: show the plots)",
-        action="store_true",
-        dest="is_silent",
-    )
-    parser.add_argument(
         "-tp", "--tag_plot",
         help="list of plots to be shown (default: show the plots)",
         nargs='+',
         default=None,
         metavar="tag_plot",
         dest="tag_plot",
+    )
+    parser.add_argument(
+        "-s", "--silent",
+        help="do not display the plots (default: show the plots)",
+        action="store_true",
+        dest="is_silent",
+    )
+    parser.add_argument(
+        "-f", "--folder",
+        help="folder for saving the screenshots (default: do not save)",
+        action="store_true",
+        dest="folder",
     )
 
 
@@ -215,12 +221,6 @@ def _get_arg_plotter(subparsers):
         dest="file_plotter",
     )
     parser.add_argument(
-        "-s", "--silent",
-        help="do not display the plots (default: show the plots)",
-        action="store_true",
-        dest="is_silent",
-    )
-    parser.add_argument(
         "-ts", "--tag_sweep",
         help="list of sweeps to be shown (default: show the sweeps)",
         nargs='+',
@@ -235,6 +235,18 @@ def _get_arg_plotter(subparsers):
         default=None,
         metavar="tag_plot",
         dest="tag_plot",
+    )
+    parser.add_argument(
+        "-s", "--silent",
+        help="do not display the plots (default: show the plots)",
+        action="store_true",
+        dest="is_silent",
+    )
+    parser.add_argument(
+        "-f", "--folder",
+        help="folder for saving the screenshots (default: do not save)",
+        action="store_true",
+        dest="folder",
     )
 
 
@@ -294,6 +306,7 @@ def run_script():
             args.file_viewer,
             args.tag_plot,
             args.is_silent,
+            args.folder,
         )
     elif command in ["solver", "so"]:
         (status, ex) = main.run_solver_file(
@@ -310,6 +323,7 @@ def run_script():
             args.tag_sweep,
             args.tag_plot,
             args.is_silent,
+            args.folder,
         )
     else:
         raise ValueError("invalid command")

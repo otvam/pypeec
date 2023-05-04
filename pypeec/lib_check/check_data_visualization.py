@@ -383,7 +383,8 @@ def check_options(is_silent, folder):
     """
 
     datachecker.check_boolean("is_silent", is_silent)
-    datachecker.check_folder("folder", folder)
+    if folder is not None:
+        datachecker.check_folder("folder", folder)
 
 
 def check_data_plotter(data_plotter):
