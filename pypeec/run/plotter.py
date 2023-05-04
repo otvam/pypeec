@@ -138,10 +138,13 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_point, data_plotter, gui_o
     with log.BlockTimer(LOGGER, "generate the different plots"):
         for i, (tag_plot, data_plotter_tmp) in enumerate(data_plotter.items()):
             LOGGER.info("plotting %d / %d / %s" % (i + 1, len(data_plotter), tag_plot))
-            _get_plot(tag_sweep + " / " + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)
+            _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)
 
 
-def run(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, is_silent=False):
+def run(
+        data_solution, data_point, data_plotter,
+        tag_sweep=None, tag_plot=None, is_silent=False, folder=None,
+):
     """
     Main script for plotting the solution of a PEEC problem.
     Handle invalid data with exceptions.
@@ -179,6 +182,9 @@ def run(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, 
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
         If true, the plots are shown (blocking call).
+    folder : string
+        Folder name for saving the screenshots.
+        If None, the screenshots are not saved.
 
     Returns
     -------
@@ -200,9 +206,9 @@ def run(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, 
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_plotter(data_plotter)
-        check_data_visualization.check_is_silent(is_silent)
-        check_data_visualization.check_options(data_sweep, tag_sweep)
-        check_data_visualization.check_options(data_plotter, tag_plot)
+        check_data_visualization.check_options(is_silent, folder)
+        check_data_visualization.check_tag(data_sweep, tag_sweep)
+        check_data_visualization.check_tag(data_plotter, tag_plot)
 
         # find the plots
         if tag_sweep is not None:
@@ -212,7 +218,7 @@ def run(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, 
 
         # create the Qt app (should be at the beginning)
         LOGGER.info("init the plot manager")
-        gui_obj = manage_plotgui.PlotGui(is_silent)
+        gui_obj = manage_plotgui.PlotGui(is_silent, folder)
 
         # plot the sweeps
         for tag_sweep, data_sweep_tmp in data_sweep.items():

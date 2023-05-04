@@ -365,7 +365,7 @@ def check_data_point(data_point):
     datachecker.check_float_pts("data_point", data_point, size=3, can_be_empty=True)
 
 
-def check_options(data_check, tag_list):
+def check_tag(data_check, tag_list):
     """
     Check the list of plots to be shown.
     """
@@ -377,12 +377,13 @@ def check_options(data_check, tag_list):
             datachecker.check_choice("tag", tag, data_check)
 
 
-def check_is_silent(is_silent):
+def check_options(is_silent, folder):
     """
     Check the plot mode (display or not the plots).
     """
 
     datachecker.check_boolean("is_silent", is_silent)
+    datachecker.check_folder("folder", folder)
 
 
 def check_data_plotter(data_plotter):

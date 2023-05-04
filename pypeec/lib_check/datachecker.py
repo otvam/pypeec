@@ -5,6 +5,7 @@ Module for checking the data type and content.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import os.path
 import numpy as np
 from pypeec.error import CheckError
 
@@ -188,6 +189,20 @@ def check_choice(name, data, choice_list):
         raise CheckError("%s: invalid value: %s" % (name, data))
 
 
+def check_folder(name, folder):
+    """
+    Check that a folder is existing.
+    """
+
+    # check the type
+    if not isinstance(folder, str):
+        raise CheckError("%s: folder name should be a string" % name)
+
+    # check that the folder exist
+    if not os.path.isdir(folder):
+        raise CheckError("%s: folder does not exist: %s" % (name, folder))
+
+
 def check_filename(name, filename):
     """
     Check that a filename is existing.
@@ -198,10 +213,7 @@ def check_filename(name, filename):
         raise CheckError("%s: file name should be a string" % name)
 
     # check that the file exist
-    try:
-        fid = open(filename, "rb")
-        fid.close()
-    except FileNotFoundError:
+    if not os.path.isfile(filename):
         raise CheckError("%s: file does not exist: %s" % (name, filename))
 
     return filename

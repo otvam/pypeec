@@ -120,8 +120,8 @@ def run(
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
-        check_data_visualization.check_is_silent(is_silent)
-        check_data_visualization.check_options(data_viewer, tag_plot)
+        check_data_visualization.check_options(is_silent, folder)
+        check_data_visualization.check_tag(data_viewer, tag_plot)
 
         # find the plots
         if tag_plot is not None:

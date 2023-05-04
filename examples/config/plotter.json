@@ -4,6 +4,10 @@
         "data_window": {
             "title": "Material",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -49,6 +53,10 @@
         "data_window": {
             "title": "El. Potential",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -97,6 +105,10 @@
         "data_window": {
             "title": "Mag. Potential",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -145,6 +157,10 @@
         "data_window": {
             "title": "El. Source",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -193,6 +209,10 @@
         "data_window": {
             "title": "Mag. Source",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -241,6 +261,10 @@
         "data_window": {
             "title": "El. Losses",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -289,6 +313,10 @@
         "data_window": {
             "title": "Mag. Losses",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -337,6 +365,10 @@
         "data_window": {
             "title": "Current",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -385,6 +417,10 @@
         "data_window": {
             "title": "Re. Current",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -435,6 +471,10 @@
         "data_window": {
             "title": "Im. Current",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -485,6 +525,10 @@
         "data_window": {
             "title": "Flux Density",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -533,6 +577,10 @@
         "data_window": {
             "title": "Re. Flux Density",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -583,6 +631,10 @@
         "data_window": {
             "title": "Im. Flux Density",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -633,6 +685,10 @@
         "data_window": {
             "title": "Mag. Field Norm",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -681,6 +737,10 @@
         "data_window": {
             "title": "Re. Mag. Field",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -731,6 +791,10 @@
         "data_window": {
             "title": "Im. Mag. Field",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -781,6 +845,10 @@
         "data_window": {
             "title": "Convergence",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -803,6 +871,10 @@
         "data_window": {
             "title": "Residuum",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
