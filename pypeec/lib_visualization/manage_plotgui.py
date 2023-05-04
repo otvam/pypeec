@@ -155,7 +155,7 @@ class PlotGui:
 
         # cast window size
         if image_size is not None:
-            notebook_size = tuple(image_size)
+            image_size = tuple(image_size)
 
         # create plotter
         pl = pyvista.Plotter(off_screen=True, window_size=image_size)
@@ -228,6 +228,18 @@ class PlotGui:
 
         return fig
 
+    def _save_screenshot(self):
+        """
+        Save all the plots in images.
+        """
+
+        for tag, pl in self.pl_list:
+            filename = "%s.png" % tag
+            pl.screenshot(filename)
+        for tag, fig in self.fig_list:
+            filename = "%s.png" % tag
+            fig.savefig(filename)
+
     def open_pyvista(self, tag, data_window):
         """
         Get a PyVista plotter.
@@ -236,12 +248,12 @@ class PlotGui:
         # extract the data
         title = data_window["title"]
         show_menu = data_window["show_menu"]
+        image_size = data_window["image_size"]
         window_size = data_window["window_size"]
         notebook_size = data_window["notebook_size"]
 
         # prepend tag
-        if tag is not None:
-            title = tag + " / " + title
+        title = tag + " / " + title
 
         # create the figure
         if self.plot_mode == "qt":
@@ -249,12 +261,12 @@ class PlotGui:
         elif self.plot_mode == "nb":
             pl = self._get_plotter_pyvista_nb(notebook_size)
         elif self.plot_mode == "nop":
-            pl = self._get_plotter_pyvista_nop(window_size)
+            pl = self._get_plotter_pyvista_nop(image_size)
         else:
             raise ValueError("invalid plot mode")
 
         # add the plotter to the list
-        self.pl_list.append(pl)
+        self.pl_list.append((tag, pl))
 
         return pl
 
@@ -266,6 +278,7 @@ class PlotGui:
         # extract the data
         title = data_window["title"]
         show_menu = data_window["show_menu"]
+        image_size = data_window["image_size"]
         window_size = data_window["window_size"]
         notebook_size = data_window["notebook_size"]
 
@@ -279,12 +292,12 @@ class PlotGui:
         elif self.plot_mode == "nb":
             fig = self._get_figure_matplotlib_nb(notebook_size)
         elif self.plot_mode == "nop":
-            fig = self._get_figure_matplotlib_nop(window_size)
+            fig = self._get_figure_matplotlib_nop(image_size)
         else:
             raise ValueError("invalid plot mode")
 
         # add the figure to the list
-        self.fig_list.append(fig)
+        self.fig_list.append((tag, fig))
 
         return fig
 
@@ -308,7 +321,7 @@ class PlotGui:
 
             # signal handler for closing all the windows
             def signal_handler(*_):
-                for pl in self.pl_list:
+                for tag, pl in self.pl_list:
                     pl.app_window.close()
                 matplotlib.pyplot.close("all")
                 sys.exit(130)
@@ -320,9 +333,11 @@ class PlotGui:
             time.sleep(PAUSE_GUI)
 
             # show the different plots
-            for pl in self.pl_list:
+            for tag, pl in self.pl_list:
                 pl.app_window.show()
             matplotlib.pyplot.show(block=False)
+
+            self._save_screenshot()
 
             # enter the event loop
             exit_code = self.app.exec_()
@@ -334,25 +349,21 @@ class PlotGui:
             LOGGER.debug("display notebook plots")
 
             # show the different plots
-            for pl in self.pl_list:
+            for tag, pl in self.pl_list:
                 pl.show(jupyter_backend='trame')
             matplotlib.pyplot.show(block=False)
+
+            self._save_screenshot()
 
             return True
         elif self.plot_mode == "nop":
             LOGGER.debug("close all the plots")
 
-            for idx, pl in enumerate(self.pl_list):
-                filename = "pyvista_%d.png" % idx
-                pl.screenshot(filename)
-            for idx, fig in enumerate(self.fig_list):
-                filename = "matplotlib_%d.png" % idx
-                fig.savefig(filename)
+            self._save_screenshot()
 
-            for pl in self.pl_list:
+            for tag, pl in self.pl_list:
                 pl.close()
             matplotlib.pyplot.close("all")
-
 
             return True
         else:
