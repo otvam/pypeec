@@ -64,8 +64,9 @@ def _get_data_window(name):
     data_window = {
         "title": name,  # window name
         "show_menu": False,  # show (or not) the window menu
-        "window_size": (800, 600),  # initial window size, None for default
-        "notebook_size": (800, 600),  # initial window size, None for default
+        "image_size": (800, 600),  # initial window size, silent renderer, None for default
+        "window_size": (800, 600),  # initial window size, Qt renderer, None for default
+        "notebook_size": (800, 600),  # initial window size, Jupyter renderer, None for default
     }
 
     return data_window

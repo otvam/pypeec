@@ -71,7 +71,10 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
     manage_pyvista.get_plot_viewer(pl, grid, voxel, point, reference, data_plot)
 
 
-def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
+def run(
+        data_voxel, data_point, data_viewer,
+        tag_plot=None, is_silent=False, folder=None,
+):
     """
     Main script for visualizing a 3D voxel structure.
     Handle invalid data with exceptions.
@@ -97,6 +100,9 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
         If true, the plots are shown (blocking call).
+    folder : string
+        Folder name for saving the screenshots.
+        If None, the screenshots are not saved.
 
     Returns
     -------
@@ -123,7 +129,7 @@ def run(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
 
         # create the Qt app (should be at the beginning)
         LOGGER.info("init the plot manager")
-        gui_obj = manage_plotgui.PlotGui(is_silent)
+        gui_obj = manage_plotgui.PlotGui(is_silent, folder)
 
         # handle the data
         LOGGER.info("parse the voxel geometry and the data")

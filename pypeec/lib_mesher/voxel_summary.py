@@ -59,7 +59,7 @@ def get_status(n, d, s, c, domain_def, connection_def):
 
     # display status
     LOGGER.debug("voxel: number = (nx, ny, nz)) = (%d, %d, %d)" % (nx, ny, nz))
-    LOGGER.debug("voxel: dimension = (dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
+    LOGGER.debug("voxel: size = (dx, dy, dz) =  (%.3e, %.3e, %.3e)" % (dx, dy, dz))
     LOGGER.debug("voxel: span = (sx, sy, sz) =  (%.3e, %.3e, %.3e)" % (sx, sy, sz))
     LOGGER.debug("voxel: center = (cx, cy, cz) =  (%.3e, %.3e, %.3e)" % (cx, cy, cz))
 

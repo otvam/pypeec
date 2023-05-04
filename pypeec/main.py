@@ -88,7 +88,10 @@ def run_mesher_file(file_geometry, file_voxel):
     return status, ex
 
 
-def run_viewer_data(data_voxel, data_point, data_viewer, tag_plot=None, is_silent=False):
+def run_viewer_data(
+        data_voxel, data_point, data_viewer,
+        tag_plot=None, is_silent=False, folder=None,
+):
     """
     Main script for visualizing a 3D voxel structure.
 
@@ -103,6 +106,9 @@ def run_viewer_data(data_voxel, data_point, data_viewer, tag_plot=None, is_silen
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
         If true, the plots are shown (blocking call).
+    folder : string
+        Folder name for saving the screenshots.
+        If None, the screenshots are not saved.
 
     Returns
     -------
@@ -118,12 +124,15 @@ def run_viewer_data(data_voxel, data_point, data_viewer, tag_plot=None, is_silen
     from pypeec.run import viewer
 
     # run the tool
-    (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent)
+    (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent, folder)
 
     return status, ex
 
 
-def run_viewer_file(file_voxel, file_point, file_viewer, tag_plot=None, is_silent=False):
+def run_viewer_file(
+        file_voxel, file_point, file_viewer,
+        tag_plot=None, is_silent=False, folder=None,
+):
     """
     Main script for visualizing a 3D voxel structure.
     Load the input data from files.
@@ -139,6 +148,9 @@ def run_viewer_file(file_voxel, file_point, file_viewer, tag_plot=None, is_silen
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
         If true, the plots are shown (blocking call).
+    folder : string
+        Folder name for saving the screenshots.
+        If None, the screenshots are not saved.
 
     Returns
     -------
@@ -166,7 +178,7 @@ def run_viewer_file(file_voxel, file_point, file_viewer, tag_plot=None, is_silen
         data_viewer = io.load_config(file_viewer)
 
         # call the viewer
-        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent)
+        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent, folder)
     except FileError as ex:
         log.log_exception(logger, ex)
         return False, ex
@@ -256,7 +268,10 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     return status, ex
 
 
-def run_plotter_data(data_solution, data_point, data_plotter, tag_sweep=None, tag_plot=None, is_silent=False):
+def run_plotter_data(
+        data_solution, data_point, data_plotter,
+        tag_sweep=None, tag_plot=None, is_silent=False, folder=None,
+):
     """
     Main script for plotting the solution of a PEEC problem.
 
@@ -274,6 +289,9 @@ def run_plotter_data(data_solution, data_point, data_plotter, tag_sweep=None, ta
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
         If true, the plots are shown (blocking call).
+    folder : string
+        Folder name for saving the screenshots.
+        If None, the screenshots are not saved.
 
     Returns
     -------
@@ -289,12 +307,15 @@ def run_plotter_data(data_solution, data_point, data_plotter, tag_sweep=None, ta
     from pypeec.run import plotter
 
     # run the tool
-    (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent)
+    (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent, folder)
 
     return status, ex
 
 
-def run_plotter_file(file_solution, file_point, file_plotter, tag_sweep=None, tag_plot=None, is_silent=False):
+def run_plotter_file(
+        file_solution, file_point, file_plotter,
+        tag_sweep=None, tag_plot=None, is_silent=False, folder=None,
+):
     """
     Main script for plotting the solution of a PEEC problem.
     Load the input data from files.
@@ -313,6 +334,9 @@ def run_plotter_file(file_solution, file_point, file_plotter, tag_sweep=None, ta
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
         If true, the plots are shown (blocking call).
+    folder : string
+        Folder name for saving the screenshots.
+        If None, the screenshots are not saved.
 
     Returns
     -------
@@ -340,7 +364,7 @@ def run_plotter_file(file_solution, file_point, file_plotter, tag_sweep=None, ta
         data_plotter = io.load_config(file_plotter)
 
         # call the plotter
-        (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent)
+        (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent, folder)
     except FileError as ex:
         log.log_exception(logger, ex)
         return False, ex

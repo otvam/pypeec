@@ -4,6 +4,10 @@
         "data_window": {
             "title": "Domain",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -47,6 +51,10 @@
         "data_window": {
             "title": "Connection",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600
@@ -90,6 +98,10 @@
         "data_window": {
             "title": "Voxelization",
             "show_menu": false,
+            "image_size": [
+                800,
+                600
+            ],
             "window_size": [
                 800,
                 600

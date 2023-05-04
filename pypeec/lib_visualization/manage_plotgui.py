@@ -25,6 +25,7 @@ import sys
 import ctypes
 import signal
 import time
+import os.path
 import importlib.resources
 import pyvista
 import pyvistaqt
@@ -51,13 +52,14 @@ class PlotGui:
         - silent: close all the plots without showing them
     """
 
-    def __init__(self, is_silent):
+    def __init__(self, is_silent, folder):
         """
         Constructor.
         Init the plots.
         """
 
         # assign variable
+        self.folder = folder
         self.pl_list = []
         self.fig_list = []
 
@@ -233,12 +235,16 @@ class PlotGui:
         Save all the plots in images.
         """
 
-        for tag, pl in self.pl_list:
-            filename = "%s.png" % tag
-            pl.screenshot(filename)
-        for tag, fig in self.fig_list:
-            filename = "%s.png" % tag
-            fig.savefig(filename)
+        if self.folder is not None:
+            # save the PyVista plots
+            for tag, pl in self.pl_list:
+                filename = os.path.join(self.folder, "%s.png" % tag)
+                pl.screenshot(filename)
+
+            # save the Matplotlib plots
+            for tag, fig in self.fig_list:
+                filename = os.path.join(self.folder, "%s.png" % tag)
+                fig.savefig(filename)
 
     def open_pyvista(self, tag, data_window):
         """
