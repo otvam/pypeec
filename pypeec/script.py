@@ -130,17 +130,17 @@ def _get_arg_viewer(subparsers):
         dest="tag_plot",
     )
     parser.add_argument(
-        "-s", "--silent",
-        help="do not display the plots (default: show the plots)",
-        action="store_true",
-        dest="is_silent",
-    )
-    parser.add_argument(
         "-f", "--folder",
         help="folder for saving the screenshots (default: do not save)",
         default=None,
         metavar="folder",
         dest="folder",
+    )
+    parser.add_argument(
+        "-s", "--silent",
+        help="do not display the plots (default: show the plots)",
+        action="store_true",
+        dest="is_silent",
     )
 
 
@@ -238,17 +238,17 @@ def _get_arg_plotter(subparsers):
         dest="tag_plot",
     )
     parser.add_argument(
-        "-s", "--silent",
-        help="do not display the plots (default: show the plots)",
-        action="store_true",
-        dest="is_silent",
-    )
-    parser.add_argument(
         "-f", "--folder",
         help="folder for saving the screenshots (default: do not save)",
         default=None,
         metavar="folder",
         dest="folder",
+    )
+    parser.add_argument(
+        "-s", "--silent",
+        help="do not display the plots (default: show the plots)",
+        action="store_true",
+        dest="is_silent",
     )
 
 

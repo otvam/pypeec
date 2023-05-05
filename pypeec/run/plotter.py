@@ -8,12 +8,14 @@ Plot the following features:
     - magnetic field
     - solver convergence
 
-Two different mode are available for the plots:
-    - interactive mode: the plots are shown (blocking call at the end)
-    - silent mode: nothing is shown and the program exit (for debugging and testing)
+Three different mode are available for the plots:
+    - windowed mode: with the Qt Framework
+    - notebook mode: with Jupyter notebook
+    - silent mode: nothing is shown and the program exit
 
-The 3D plots are done with PyVista with the Qt framework.
-The 2D plots are done with Matplotlib with the Qt framework.
+The 3D plots are generated with PyVista.
+The 2D plots are generated with Matplotlib.
+The plots can be saved as PNG images.
 """
 
 __author__ = "Thomas Guillod"

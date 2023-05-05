@@ -3,12 +3,15 @@ Main script for visualizing a 3D voxel structure.
 Plot the following features:
     - the different domain composing the voxel structure
     - the connected components of the voxel structure
+    - the deviation between the original geometry and the voxel structure
 
-Two different mode are available for the plots:
-    - interactive mode: the plots are shown (blocking call at the end)
-    - silent mode: nothing is shown and the program exit (for debugging and testing)
+Three different mode are available for the plots:
+    - windowed mode: with the Qt Framework
+    - notebook mode: with Jupyter notebook
+    - silent mode: nothing is shown and the program exit
 
-The plotting is done with PyVista with the Qt framework.
+The plots are generated with PyVista.
+The plots can be saved as PNG images.
 """
 
 __author__ = "Thomas Guillod"
