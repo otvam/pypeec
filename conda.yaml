@@ -8,7 +8,7 @@
 #
 # (c) Thomas Guillod - Dartmouth College
 
-name: PyPEEC
+name: pypeec
 channels:
   - conda-forge
   - defaults
