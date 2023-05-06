@@ -4,7 +4,7 @@
 #          The following optional libraries are not installed:
 #              - FFTW, UMFPACK, and MKL/PARDISO
 #              - CuPy and CUDA
-#              - Jupyter and Trame
+#              - Jupyter
 #
 # (c) Thomas Guillod - Dartmouth College
 
