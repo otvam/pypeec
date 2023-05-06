@@ -101,9 +101,9 @@ Moreover, the memory consumption is not heavily optimized.
 ## Packaging and Environment
 
 * A Python package can be built from the `pyproject.toml` and `setup.cfg` files.
-* In order to create a Python Virtual Environment, use `requirements.txt`.
-* In order to create a Conda Environment, use `conda.yml`.
-* In order to create a development environment, use `run_env.sh`.
+* In order to create a minimal Python Virtual Environment, use `requirements.txt`.
+* In order to create a minimal Conda Environment, use `conda_base.yaml`.
+* In order to create a development environment, use `conda_dev.yaml`.
 
 ## Tests
 
