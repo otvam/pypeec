@@ -9,7 +9,7 @@
 * Pillow (for the mesher)
 * VTK, PyVista (for the mesher, viewer, and plotter)
 * Matplotlib (for the viewer and plotter)
-* PyVistaQt, QtPy, PySide2 (for the viewer and plotter)
+* PyVistaQt and PySide2 (for the viewer and plotter)
 
 The following optional packages can be used for speeding up the solver:
 * UMFPACK (available through SciKits)
@@ -29,7 +29,7 @@ The following platforms are passing the automated tests:
 * Microsoft / Windows Server 2022 on x86/x64
 * Apple / macOS Monterey 12 on x86/x64
 
-If you deploy PyPEEC on computing nodes, GUI libraries (Matplotlib, PyVistaQt, QtPy, PySide2) are not required.
+If you deploy PyPEEC on computing nodes, GUI libraries (Matplotlib, PyVistaQt, PySide2) are not required.
 If you want to use PyPEEC with Jupyter, PyVista has to be installed with the optional Trame support.
 
 ## FFT-Accelerated PEEC Method

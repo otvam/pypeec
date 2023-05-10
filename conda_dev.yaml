@@ -23,7 +23,6 @@ dependencies:
   - scipy
   - joblib
   # Qt bindings
-  - qtpy
   - PySide2
   # geometry manipulation and plotting libraries
   - vtk
