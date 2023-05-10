@@ -15,7 +15,7 @@ The following optional packages can be used for speeding up the solver:
 * UMFPACK (available through SciKits)
 * MKL/PARDISO (available through Pydiso)
 * FFTW (available through pyFFTW)
-* CuPy (using GPUs through CUDA
+* CuPy (using GPUs through CUDA)
 
 The following platforms and systems have been tested:
 * Linux / RedHat 7.9 on x86/x64
@@ -94,7 +94,7 @@ Moreover, the memory consumption is not heavily optimized.
 
 * The default configuration file is `pypeec/pypeec.yaml`.
 * The default configuration file is loaded at the startup.
-* Afterwards, a custom configuration (JSON or YAML) file can be set:
+* Afterward, a custom configuration (JSON or YAML) file can be set:
   * With a function call (see `pypeec.config` module).
   * With a command line option (see `pypeec.script` module).
   * The custom configuration should be set immediately after the startup.
