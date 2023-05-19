@@ -86,7 +86,7 @@ def _get_solve_matrix(n_winding, terminal, tol):
     eqn_mat = np.zeros((0, len(var_idx)), dtype=np.complex_)
 
     # get the matrices
-    for terminal_tmp in terminal.values():
+    for terminal_tmp in terminal:
         # extract the data
         freq = terminal_tmp["freq"]
         has_converged = terminal_tmp["has_converged"]

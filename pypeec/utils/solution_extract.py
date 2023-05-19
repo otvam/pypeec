@@ -30,6 +30,9 @@ def _get_load_terminal(freq, source, has_converged, winding_description):
     I_vec = []
     S_vec = []
 
+    # get length
+    n_winding = len(winding_description)
+
     # get the solution
     for winding_description_tmp in winding_description:
         # extract the terminal name
@@ -55,10 +58,10 @@ def _get_load_terminal(freq, source, has_converged, winding_description):
         "V_vec": V_vec, "I_vec": I_vec, "S_vec": S_vec,
     }
 
-    return terminal
+    return n_winding, terminal
 
 
-def get_extract(data_solution, winding_description, sweep_list):
+def get_extract(data_solution, sweep_description):
     """
     Get the terminal currents and voltages for all the sweeps.
     """
@@ -71,19 +74,32 @@ def get_extract(data_solution, winding_description, sweep_list):
     assert isinstance(data_init, dict), "invalid solution"
     assert isinstance(data_sweep, dict), "invalid solution"
 
-    # matrix size
-    n_winding = len(winding_description)
-
     # extract data
-    terminal = {}
-    for tag in sweep_list:
+    terminal = []
+    n_winding = []
+    for sweep_description_tmp in sweep_description:
+        # extract data
+        sweep_name = sweep_description_tmp["sweep_name"]
+        winding_description = sweep_description_tmp["winding_description"]
+
         # extract the data
-        data_sweep_tmp = data_sweep[tag]
+        data_sweep_tmp = data_sweep[sweep_name]
         freq = data_sweep_tmp["freq"]
         source = data_sweep_tmp["source"]
         has_converged = data_sweep_tmp["has_converged"]
 
+        # compute
+        (n_winding_tmp, terminal_tmp) = _get_load_terminal(freq, source, has_converged, winding_description)
+
         # assign
-        terminal[tag] = _get_load_terminal(freq, source, has_converged, winding_description)
+        terminal.append(terminal_tmp)
+        n_winding.append(n_winding_tmp)
+
+    # check winding length
+    n_winding = np.unique(n_winding)
+    assert len(n_winding) == 1, "invalid winding number"
+
+    # cast to scalar
+    n_winding = n_winding.item()
 
     return n_winding, terminal
