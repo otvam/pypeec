@@ -170,7 +170,7 @@ def _get_filter_scalar(obj, var, filter_lim):
 def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     """
     Clamp a scalar variable between a lower and upper bound.
-    Afterwards, the clamped variable is scaled.
+    Afterward, the clamped variable is scaled.
     """
 
     # if the voxel structure is empty, nothing to do

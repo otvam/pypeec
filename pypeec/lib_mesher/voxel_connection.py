@@ -1,7 +1,7 @@
 """
 Different functions for finding the connected components of a voxel structure.
 First, a sparse undirected graph is constructed from the voxel structure.
-Afterwards, the connected components of the graph are extracted.
+Afterward, the connected components of the graph are extracted.
 """
 
 __author__ = "Thomas Guillod"
