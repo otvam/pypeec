@@ -63,7 +63,8 @@ def _get_load_terminal(freq, source, has_converged, winding_description):
 
 def get_extract(data_solution, sweep_description):
     """
-    Get the terminal currents and voltages for all the sweeps.
+    Get the terminal currents and voltages for given sweep and windings.
+    The winding description can be different for the sweeps.
     """
 
     # extract the data
@@ -101,5 +102,40 @@ def get_extract(data_solution, sweep_description):
 
     # cast to scalar
     n_winding = n_winding.item()
+
+    return n_winding, terminal
+
+
+def get_extract_complete(data_solution, sweep_name_list, winding_description):
+    """
+    Get the terminal currents and voltages for given sweep and windings.
+    The winding description is the same for all the sweeps.
+    """
+
+    # create the sweep and winding description
+    sweep_description = []
+    for sweep_name in sweep_name_list:
+        sweep_description.append({"sweep_name": sweep_name, "winding_description": winding_description})
+
+    # extract the data
+    (n_winding, terminal) = get_extract(data_solution, sweep_description)
+
+    return n_winding, terminal
+
+
+def get_extract_symmetric(data_solution, sweep_name, winding_description):
+    """
+    Get the terminal currents and voltages for a simulation with symmetric windings.
+    A single sweep is used and the winding description circularly shifted.
+    """
+
+    # create the sweep and winding description
+    sweep_description = []
+    for i in range(len(winding_description)):
+        winding_description_shift = np.roll(winding_description, i).tolist()
+        sweep_description.append({"sweep_name": sweep_name, "winding_description": winding_description_shift})
+
+    # extract the data
+    (n_winding, terminal) = get_extract(data_solution, sweep_description)
 
     return n_winding, terminal
