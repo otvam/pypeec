@@ -1,5 +1,5 @@
 """
-Generate the configuration files (tolerance, viewer, and plotter files).
+Generate the configuration files (viewer, and plotter files).
 These configurations are dumped into JSON files.
 """
 
@@ -12,7 +12,7 @@ from examples import examples_config
 
 # get config
 PATH_ROOT = examples_config.PATH_ROOT
-FOLDER_CONFIG = examples_config.FOLDER_CONFIG
+CFG_PLOT = examples_config.CFG_PLOT
 
 
 def _get_plot_options(name):
@@ -267,55 +267,6 @@ def _get_data_matplotlib(plot_type, data_options, name):
     return data
 
 
-def get_data_tolerance():
-    """
-    Get the numerical options for the solver.
-    This dict is used by the solver.
-    """
-
-    # iterative solver options
-    solver_options = {
-        # tolerance for checking the solution residuum
-        "tolerance": 1e-6,
-        # options for the GMRES iterative solver
-        "gmres_options": {
-            "rel_tol": 1e-6,  # relative preconditioned tolerance for GMRES stopping
-            "abs_tol": 1e-12,  # absolute preconditioned tolerance for GMRES stopping
-            "n_between_restart": 20,  # number of GMRES iterations between restarts
-            "n_maximum_restart": 100,  # maximum number of GMRES restart
-        }
-    }
-
-    # matrix condition check options
-    condition_options = {
-        # check (or not) the condition number of the matrices
-        "check": True,
-        # maximum allowable condition number for the matrices
-        "tolerance": 1e15,
-        # options for computing the one-norm estimate
-        "norm_options": {
-            "t_accuracy": 2,  # accuracy parameter for the one-norm estimate
-            "n_iter_max": 25,  # maximum number of iterations for the one-norm estimate
-        }
-    }
-
-    # control where numerical approximations are used for the Green anc coupling functions
-    #   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used
-    #   - if the normalized voxel distance is larger than the threshold, numerical approximations are used
-    green_simplify = 20.0
-    coupling_simplify = 20.0
-
-    # assemble the data
-    data_tolerance = {
-        "green_simplify": green_simplify,
-        "coupling_simplify": coupling_simplify,
-        "solver_options": solver_options,
-        "condition_options": condition_options,
-    }
-
-    return data_tolerance
-
-
 def get_data_viewer():
     """
     Get the options for visualizing the voxel structure.
@@ -367,18 +318,14 @@ def get_data_plotter():
 
 if __name__ == "__main__":
     # get the filenames
-    file_tolerance = os.path.join(PATH_ROOT, FOLDER_CONFIG, "tolerance.json")
-    file_plotter = os.path.join(PATH_ROOT, FOLDER_CONFIG, "plotter.json")
-    file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.json")
+    file_plotter = os.path.join(PATH_ROOT, CFG_PLOT, "plotter.json")
+    file_viewer = os.path.join(PATH_ROOT, CFG_PLOT, "viewer.json")
 
     # get data
-    data_tolerance = get_data_tolerance()
     data_viewer = get_data_viewer()
     data_plotter = get_data_plotter()
 
     # create file
-    with open(file_tolerance, "w") as fid:
-        json.dump(data_tolerance, fid, indent=4)
     with open(file_viewer, "w") as fid:
         json.dump(data_viewer, fid, indent=4)
     with open(file_plotter, "w") as fid:

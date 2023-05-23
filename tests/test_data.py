@@ -127,9 +127,9 @@ def run_workflow(folder, name):
     file_problem = os.path.join(PATH_ROOT, "..", "examples", folder, name, "problem.yaml")
 
     # get config file name
-    file_plotter = os.path.join(PATH_ROOT, "..", "examples", "config", "plotter.json")
-    file_viewer = os.path.join(PATH_ROOT, "..", "examples", "config", "viewer.json")
-    file_tolerance = os.path.join(PATH_ROOT, "..", "examples", "config", "tolerance.json")
+    file_plotter = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot", "plotter.json")
+    file_viewer = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot", "viewer.json")
+    file_tolerance = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot", "tolerance.json")
 
     # get the temporary files
     file_voxel = _create_temp_file()

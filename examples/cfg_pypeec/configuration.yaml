@@ -1,4 +1,4 @@
-# PyPEEC default configuration file.
+# PyPEEC configuration file for the examples.
 #
 # This configuration does not require:
 #   - GPU support (CPU is used)

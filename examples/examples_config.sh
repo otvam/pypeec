@@ -7,8 +7,11 @@
 # get the path of the root of the code
 PATH_ROOT="."
 
-# name of config folder
-FOLDER_CONFIG="config"
+# name of plot configuration folder
+CFG_PLOT="cfg_plot"
+
+# name of solver configuration folder
+CFG_PYPEEC="cfg_pypeec"
 
 # name of the considered example
 #   examples_voxel

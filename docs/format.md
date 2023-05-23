@@ -366,7 +366,7 @@ This file contains the definition of the points used for magnetic field evaluati
 
 ## Other File Formats
 
-* The `file_tolerance` format is documented in `examples/run_config.py`.
-* The `file_viewer` format is documented in `examples/run_config.py`.
-* The `file_plotter` format is documented in `examples/run_config.py`.
-* The configuration file format is documented in `PyPEEC/pypeec.yaml`.
+* The configuration file format is documented in `examples/cfg_pypeec/config.yaml`.
+* The `file_tolerance` format is documented in `examples/cfg_pypeec/tolerance.yaml`.
+* The `file_viewer` format is documented in `examples/generate_plot.py`.
+* The `file_plotter` format is documented in `examples/generate_plot.py`.
