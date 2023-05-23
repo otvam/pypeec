@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # get the filenames
     file_geometry = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "geometry.yaml")
     file_voxel = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "voxel.pck")
-    file_config = os.path.join(PATH_ROOT, CFG_PYPEEC, "configuration.yaml")
+    file_config = os.path.join(PATH_ROOT, CFG_PYPEEC, "config.yaml")
 
     # set config
     status = config.set_config(file_config)

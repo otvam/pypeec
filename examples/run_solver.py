@@ -23,7 +23,7 @@ if __name__ == "__main__":
     file_problem = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "problem.yaml")
     file_voxel = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "voxel.pck")
     file_solution = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "solution.pck")
-    file_config = os.path.join(PATH_ROOT, CFG_PYPEEC, "configuration.yaml")
+    file_config = os.path.join(PATH_ROOT, CFG_PYPEEC, "config.yaml")
     file_tolerance = os.path.join(PATH_ROOT, CFG_PYPEEC, "tolerance.yaml")
 
     # set config

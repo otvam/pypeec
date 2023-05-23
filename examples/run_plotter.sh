@@ -13,7 +13,7 @@ source examples_config.sh
 # get the filenames
 FILE_SOLUTION="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/solution.pck"
 FILE_POINT="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/point.yaml"
-FILE_CONFIG="$PATH_ROOT/$CFG_PYPEEC/configuration.yaml"
+FILE_CONFIG="$PATH_ROOT/$CFG_PYPEEC/config.yaml"
 FILE_PLOTTER="$PATH_ROOT/$CFG_PLOT/plotter.json"
 
 # run

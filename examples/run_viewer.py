@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # get the filenames
     file_voxel = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "voxel.pck")
     file_point = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "point.yaml")
-    file_config = os.path.join(PATH_ROOT, CFG_PYPEEC, "configuration.yaml")
+    file_config = os.path.join(PATH_ROOT, CFG_PYPEEC, "config.yaml")
     file_viewer = os.path.join(PATH_ROOT, CFG_PLOT, "viewer.json")
 
     # set config

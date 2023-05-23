@@ -50,7 +50,7 @@ def set_init():
     """
 
     # get config file name
-    file_config = os.path.join(CFG_PYPEEC, "configuration.yaml")
+    file_config = os.path.join(CFG_PYPEEC, "config.yaml")
 
     # set the configuration
     status = config.set_config(file_config)
