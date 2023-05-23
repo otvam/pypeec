@@ -19,8 +19,8 @@ name_list = [
 ]
 
 # get the test object
-obj = test_workflow.TestWorkflow
+obj = test_workflow.set_init()
 
 # add the tests
 for name in name_list:
-    test_workflow.set_test(folder, name)
+    test_workflow.set_test(obj, folder, name)

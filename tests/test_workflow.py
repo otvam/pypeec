@@ -9,7 +9,8 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import unittest
-from tests import test_data
+from tests import test_pypeec
+from tests import test_read_write
 from tests import test_generate
 
 
@@ -86,12 +87,12 @@ class TestWorkflow(unittest.TestCase):
         print("test: name: %s" % name)
 
         # get the test configuration
-        print("test: config")
-        (tol, check_test, generate_test) = test_data.get_config()
+        print("test: get config")
+        (tol, check_test, generate_test) = test_read_write.get_config()
 
         # generate the results
-        print("test: run")
-        (data_voxel, data_solution) = test_data.run_workflow(folder, name)
+        print("test: run workflow")
+        (data_voxel, data_solution) = test_pypeec.run_workflow(folder, name)
 
         # extract the data
         voxel_status = data_voxel["voxel_status"]
@@ -105,15 +106,15 @@ class TestWorkflow(unittest.TestCase):
 
             # write the reference results
             print("test: WARNING: setting a new reference for non-regression tests")
-            test_data.write_test_results(folder, name, mesher, solver)
+            test_read_write.write_results(folder, name, mesher, solver)
         else:
             # load the stored reference results
-            print("test: load")
-            (mesher, solver) = test_data.read_test_results(folder, name)
+            print("test: load results")
+            (mesher, solver) = test_read_write.read_results(folder, name)
 
         # check the results
         if check_test:
-            print("test: check")
+            print("test: check results")
             self._check_results(voxel_status, data_sweep, solver, mesher, tol)
 
 
@@ -122,17 +123,23 @@ def set_init():
     Set the configuration file.
     """
 
-    test_data.set_init()
+    # set the PyPEEC config
+    test_pypeec.set_init()
+
+    # return the test object
+    obj = TestWorkflow
+
+    return obj
 
 
-def set_test(folder, name):
+def set_test(obj, folder, name):
     """
     Add a test case to the test class.
     """
 
     # function describing the test
     def get(self):
-        return TestWorkflow.run_test(self, folder, name)
+        return obj.run_test(self, folder, name)
 
     # dynamically add the method as an attribute
-    setattr(TestWorkflow, "test_" + name, get)
+    setattr(obj, "test_" + name, get)

@@ -1,18 +1,11 @@
 """
-Module for getting/reading/writing the test data.
-
-Load the test configuration file.
-Read the prescribed test results.
-Write the prescribed test results.
-Run the mesher, viewer, solver, and plotter.
+Module for running the PyPEEC workflow.
 """
 
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os.path
-import datetime
-import json
 import pickle
 import tempfile
 import logging
@@ -25,6 +18,10 @@ logging.disable(logging.INFO)
 # get the path the folder
 PATH_ROOT = os.path.dirname(__file__)
 
+# construct the config folder path
+CFG_PLOT = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot")
+CFG_PYPEEC = os.path.join(PATH_ROOT, "..", "examples", "cfg_pypeec")
+PATH_EXAMPLES = os.path.join(PATH_ROOT, "..", "examples")
 
 def _create_temp_file():
     """
@@ -53,76 +50,12 @@ def set_init():
     """
 
     # get config file name
-    file_config = os.path.join(PATH_ROOT, "..", "examples", "cfg_pypeec", "configuration.yaml")
+    file_config = os.path.join(CFG_PYPEEC, "configuration.yaml")
 
     # set the configuration
     status = config.set_config(file_config)
     if not status:
         raise ValueError("invalid configuration")
-
-
-def write_test_results(folder, name, mesher, solver):
-    """
-    Write the file containing the prescribed test results.
-    """
-
-    # get timestamp
-    timestamp = str(datetime.datetime.now())
-
-    # get metadata
-    metadata = {
-        "folder": folder,
-        "name": name,
-        "timestamp": timestamp,
-    }
-
-    # assemble results
-    data_test = {"metadata": metadata, "mesher": mesher, "solver": solver}
-
-    # file containing the test results
-    file_test = os.path.join(PATH_ROOT, folder, name + ".json")
-
-    with open(file_test, "w") as fid:
-        json.dump(data_test, fid, indent=4)
-
-
-def read_test_results(folder, name):
-    """
-    Load the file containing the prescribed test results.
-    """
-
-    # file containing the test results
-    file_test = os.path.join(PATH_ROOT, folder, name + ".json")
-
-    # load the test results
-    with open(file_test, "r") as fid:
-        data_test = json.load(fid)
-
-    # extract results
-    mesher = data_test["mesher"]
-    solver = data_test["solver"]
-
-    return mesher, solver
-
-
-def get_config():
-    """
-    Load the test configuration file.
-    """
-
-    # file containing the test results
-    file_test = os.path.join(PATH_ROOT, "test_config.json")
-
-    # load the test results
-    with open(file_test, "r") as fid:
-        data_config = json.load(fid)
-
-    # extract results
-    tol = data_config["tol"]
-    check_test = data_config["check_test"]
-    generate_test = data_config["generate_test"]
-
-    return tol, check_test, generate_test
 
 
 def run_workflow(folder, name):
@@ -137,14 +70,14 @@ def run_workflow(folder, name):
     """
 
     # get input file name
-    file_geometry = os.path.join(PATH_ROOT, "..", "examples", folder, name, "geometry.yaml")
-    file_point = os.path.join(PATH_ROOT, "..", "examples", folder, name, "point.yaml")
-    file_problem = os.path.join(PATH_ROOT, "..", "examples", folder, name, "problem.yaml")
+    file_geometry = os.path.join(PATH_EXAMPLES, folder, name, "geometry.yaml")
+    file_point = os.path.join(PATH_EXAMPLES, folder, name, "point.yaml")
+    file_problem = os.path.join(PATH_EXAMPLES, folder, name, "problem.yaml")
 
     # get config file name
-    file_plotter = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot", "plotter.json")
-    file_viewer = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot", "viewer.json")
-    file_tolerance = os.path.join(PATH_ROOT, "..", "examples", "cfg_pypeec", "tolerance.yaml")
+    file_plotter = os.path.join(CFG_PLOT, "plotter.json")
+    file_viewer = os.path.join(CFG_PLOT, "viewer.json")
+    file_tolerance = os.path.join(CFG_PYPEEC, "tolerance.yaml")
 
     # get the temporary files
     file_voxel = _create_temp_file()
