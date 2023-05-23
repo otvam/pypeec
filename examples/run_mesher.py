@@ -25,7 +25,8 @@ if __name__ == "__main__":
     file_config = os.path.join(PATH_ROOT, CFG_PYPEEC, "configuration.yaml")
 
     # set config
-    config.set_config(file_config)
+    status = config.set_config(file_config)
+    assert status, "invalid configuration"
 
     # run
     (status, ex) = main.run_mesher_file(file_geometry, file_voxel)

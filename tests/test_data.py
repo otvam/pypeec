@@ -56,7 +56,9 @@ def set_init():
     file_config = os.path.join(PATH_ROOT, "..", "examples", "cfg_pypeec", "configuration.yaml")
 
     # set the configuration
-    config.set_config(file_config)
+    status = config.set_config(file_config)
+    if not status:
+        raise ValueError("invalid configuration")
 
 
 def write_test_results(folder, name, mesher, solver):

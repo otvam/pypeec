@@ -27,7 +27,8 @@ if __name__ == "__main__":
     file_tolerance = os.path.join(PATH_ROOT, CFG_PYPEEC, "tolerance.yaml")
 
     # set config
-    config.set_config(file_config)
+    status = config.set_config(file_config)
+    assert status, "invalid configuration"
 
     # run
     (status, ex) = main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
