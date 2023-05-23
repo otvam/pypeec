@@ -17,6 +17,7 @@ import pickle
 import tempfile
 import logging
 from pypeec import main
+from pypeec import config
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.INFO)
@@ -44,6 +45,18 @@ def _delete_temp_file(filename):
         os.remove(filename)
     except OSError:
         pass
+
+
+def set_init():
+    """
+    Set the configuration file.
+    """
+
+    # get config file name
+    file_config = os.path.join(PATH_ROOT, "..", "examples", "cfg_pypeec", "configuration.yaml")
+
+    # set the configuration
+    config.set_config(file_config)
 
 
 def write_test_results(folder, name, mesher, solver):
@@ -129,7 +142,7 @@ def run_workflow(folder, name):
     # get config file name
     file_plotter = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot", "plotter.json")
     file_viewer = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot", "viewer.json")
-    file_tolerance = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot", "tolerance.json")
+    file_tolerance = os.path.join(PATH_ROOT, "..", "examples", "cfg_pypeec", "tolerance.yaml")
 
     # get the temporary files
     file_voxel = _create_temp_file()

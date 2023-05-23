@@ -117,6 +117,14 @@ class TestWorkflow(unittest.TestCase):
             self._check_results(voxel_status, data_sweep, solver, mesher, tol)
 
 
+def set_init():
+    """
+    Set the configuration file.
+    """
+
+    test_data.set_init()
+
+
 def set_test(folder, name):
     """
     Add a test case to the test class.

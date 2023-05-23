@@ -211,7 +211,7 @@ def run(data_geometry):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.

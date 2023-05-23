@@ -24,7 +24,7 @@ def run_mesher_data(data_geometry):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.
@@ -55,7 +55,7 @@ def run_mesher_file(file_geometry, file_voxel):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.
@@ -114,7 +114,7 @@ def run_viewer_data(
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.
@@ -156,7 +156,7 @@ def run_viewer_file(
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.
@@ -200,7 +200,7 @@ def run_solver_data(data_voxel, data_problem, data_tolerance):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.
@@ -233,7 +233,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.
@@ -297,7 +297,7 @@ def run_plotter_data(
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.
@@ -342,7 +342,7 @@ def run_plotter_file(
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.

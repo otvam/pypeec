@@ -84,7 +84,7 @@ def set_config(file_config):
     -------
     status : boolean
         True if the call is successful.
-        False if the problems are encountered.
+        False if problems are encountered.
     """
 
     try:
