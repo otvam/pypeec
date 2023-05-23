@@ -13,6 +13,9 @@ source examples_config.sh
 # get the filenames
 FILE_GEOMETRY="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/geometry.yaml"
 FILE_VOXEL="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/voxel.pck"
+FILE_CONFIG="$PATH_ROOT/$CFG_PYPEEC/configuration.yaml"
 
 # run
-pypeec mesher --geometry $FILE_GEOMETRY --voxel $FILE_VOXEL
+pypeec --config $FILE_CONFIG mesher \
+    --geometry $FILE_GEOMETRY \
+    --voxel $FILE_VOXEL

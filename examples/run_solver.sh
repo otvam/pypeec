@@ -14,7 +14,12 @@ source examples_config.sh
 FILE_PROBLEM="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/problem.yaml"
 FILE_VOXEL="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/voxel.pck"
 FILE_SOLUTION="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/solution.pck"
-FILE_TOLERANCE="$PATH_ROOT/$FOLDER_CONFIG/tolerance.json"
+FILE_CONFIG="$PATH_ROOT/$CFG_PYPEEC/configuration.yaml"
+FILE_TOLERANCE="$PATH_ROOT/$CFG_PYPEEC/tolerance.yaml"
 
 # run
-pypeec solver --voxel $FILE_VOXEL --problem $FILE_PROBLEM --tolerance $FILE_TOLERANCE --solution $FILE_SOLUTION
+pypeec --config $FILE_CONFIG solver \
+    --voxel $FILE_VOXEL \
+    --problem $FILE_PROBLEM \
+    --tolerance $FILE_TOLERANCE \
+    --solution $FILE_SOLUTION

@@ -13,7 +13,11 @@ source examples_config.sh
 # get the filenames
 FILE_SOLUTION="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/solution.pck"
 FILE_POINT="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/point.yaml"
-FILE_PLOTTER="$PATH_ROOT/$FOLDER_CONFIG/plotter.json"
+FILE_CONFIG="$PATH_ROOT/$CFG_PYPEEC/configuration.yaml"
+FILE_PLOTTER="$PATH_ROOT/$CFG_PLOT/plotter.json"
 
 # run
-pypeec plotter --solution $FILE_SOLUTION --point $FILE_POINT --plotter $FILE_PLOTTER
+pypeec --config $FILE_CONFIG plotter \
+    --solution $FILE_SOLUTION \
+    --point $FILE_POINT \
+    --plotter $FILE_PLOTTER
