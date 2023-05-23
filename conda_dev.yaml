@@ -31,7 +31,6 @@ dependencies:
   - matplotlib
   # optional HPC libs
   - mkl-devel
-  - scikit-umfpack
   - cudatoolkit
   - cupy
   - pip:
