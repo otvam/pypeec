@@ -24,6 +24,7 @@ from pypeec.lib_mesher import voxel_resample
 from pypeec.lib_mesher import voxel_connection
 from pypeec.lib_mesher import voxel_summary
 from pypeec.lib_check import check_data_geometry
+from pypeec.lib_check import check_data_options
 from pypeec import log
 from pypeec.error import CheckError, RunError
 
@@ -187,12 +188,18 @@ def _run_resample_graph(reference, data_voxel, data_geometry, is_truncated):
         "d": d,
         "s": s,
         "c": c,
+        "voxel_status": voxel_status,
         "domain_def": domain_def,
         "connection_def": connection_def,
-        "voxel_status": voxel_status,
         "reference": reference,
         "is_truncated": is_truncated,
     }
+
+    # if required, remove the optional data
+    tag_list = ["domain_def", "connection_def", "reference"]
+    if is_truncated:
+        for tag in tag_list:
+            del data_voxel[tag]
 
     return data_voxel
 
@@ -234,6 +241,7 @@ def run(data_geometry, is_truncated=False):
         # check the input data
         LOGGER.info("check the input data")
         check_data_geometry.check_data_geometry(data_geometry)
+        check_data_options.check_data_options(is_truncated)
 
         # run the mesher
         (reference, data_voxel) = _run_mesher(data_geometry)

@@ -27,6 +27,7 @@ from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_matplotlib
 from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
+from pypeec.lib_check import check_data_options
 from pypeec import log
 from pypeec.error import CheckError, RunError
 
@@ -203,14 +204,19 @@ def run(
         # extract the data
         data_init = data_solution["data_init"]
         data_sweep = data_solution["data_sweep"]
+        is_truncated = data_solution["is_truncated"]
+
+        # check data
+        if is_truncated:
+            raise CheckError("truncated input data cannot be used")
 
         # check the input data
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_plotter(data_plotter)
-        check_data_visualization.check_options(is_silent, folder)
-        check_data_visualization.check_tag(data_sweep, tag_sweep)
-        check_data_visualization.check_tag(data_plotter, tag_plot)
+        check_data_options.check_plot_options(is_silent, folder)
+        check_data_options.check_tag_list(data_sweep, tag_sweep)
+        check_data_options.check_tag_list(data_plotter, tag_plot)
 
         # find the plots
         if tag_sweep is not None:

@@ -86,7 +86,7 @@ def run_workflow(folder, name):
     # run the code
     try:
         # run the mesher
-        (status, ex) = main.run_mesher_file(file_geometry, file_voxel)
+        (status, ex) = main.run_mesher_file(file_geometry, file_voxel, is_truncated=False)
         if not status:
             raise ex
 
@@ -100,7 +100,7 @@ def run_workflow(folder, name):
             raise ex
 
         # run the solver
-        (status, ex) = main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
+        (status, ex) = main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_truncated=False)
         if not status:
             raise ex
 

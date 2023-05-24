@@ -22,6 +22,7 @@ from pypeec.lib_solver import extract_solution
 from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_solver
+from pypeec.lib_check import check_data_options
 from pypeec import log
 from pypeec.error import CheckError, RunError
 
@@ -29,7 +30,7 @@ from pypeec.error import CheckError, RunError
 LOGGER = log.get_logger("SOLVER")
 
 
-def _run_solver_init(data_solver):
+def _run_solver_init(data_solver, is_truncated):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
     """
@@ -120,6 +121,17 @@ def _run_solver_init(data_solver):
         "problem_status": problem_status,
     }
 
+    # if required, remove the optional data
+    tag_list = [
+        "idx_vc", "idx_vm",
+        "idx_fc", "idx_fm",
+        "idx_src_c", "idx_src_v",
+        "pts_net_c", "pts_net_m",
+    ]
+    if is_truncated:
+        for tag in tag_list:
+            del data_init[tag]
+
     # assign the results (internal data required to solve the problem)
     data_internal = {
         "idx_vc": idx_vc,
@@ -141,7 +153,7 @@ def _run_solver_init(data_solver):
     return data_init, data_internal
 
 
-def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init):
+def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_truncated):
     """
     Create the equation system, solve the system, and extract the solution.
     """
@@ -276,6 +288,18 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init):
         "Q_vm": Q_vm,
     }
 
+    # if required, remove the optional data
+    tag_list = [
+        "res", "conv",
+        "V_vc", "V_vm",
+        "J_vc", "B_vm",
+        "P_vc", "P_vm",
+        "S_vc", "Q_vm"
+    ]
+    if is_truncated:
+        for tag in tag_list:
+            del data_sweep[tag]
+
     return data_sweep, sol
 
 
@@ -331,6 +355,7 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
         LOGGER.info("check the input data")
         check_data_problem.check_data_problem(data_problem)
         check_data_tolerance.check_data_tolerance(data_tolerance)
+        check_data_options.check_data_options(is_truncated)
 
         # combine the problem and voxel data
         LOGGER.info("combine the input data")
@@ -338,12 +363,12 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
 
         # create the problem
         with log.BlockTimer(LOGGER, "init"):
-            (data_init, data_internal) = _run_solver_init(data_solver)
+            (data_init, data_internal) = _run_solver_init(data_solver, is_truncated)
 
         # function for solving a single sweep
         def fct_compute(tag, param, init):
             with log.BlockTimer(LOGGER, "run sweep: " + tag):
-                (output, init) = _run_solver_sweep(data_solver, data_internal, param, init)
+                (output, init) = _run_solver_sweep(data_solver, data_internal, param, init, is_truncated)
             return output, init
 
         # compute the different sweeps

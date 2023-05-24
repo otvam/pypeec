@@ -22,6 +22,7 @@ from pypeec.lib_visualization import manage_voxel
 from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
+from pypeec.lib_check import check_data_options
 from pypeec import log
 from pypeec.error import CheckError, RunError
 
@@ -43,6 +44,11 @@ def _get_grid_voxel(data_voxel, data_point):
     domain_def = data_voxel["domain_def"]
     connection_def = data_voxel["connection_def"]
     reference = data_voxel["reference"]
+    is_truncated = data_voxel["is_truncated"]
+
+    # check data
+    if is_truncated:
+        raise CheckError("truncated input data cannot be used")
 
     # get the indices of the non-empty voxels and the domain and connection description
     (idx, domain, connection) = manage_compute.get_geometry_tag(domain_def, connection_def)
@@ -123,8 +129,8 @@ def run(
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
-        check_data_visualization.check_options(is_silent, folder)
-        check_data_visualization.check_tag(data_viewer, tag_plot)
+        check_data_options.check_plot_options(is_silent, folder)
+        check_data_options.check_tag_list(data_viewer, tag_plot)
 
         # find the plots
         if tag_plot is not None:

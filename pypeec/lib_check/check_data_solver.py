@@ -229,6 +229,10 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     # extract field
     domain_def = data_voxel["domain_def"]
     connection_def = data_voxel["connection_def"]
+    is_truncated = data_voxel["is_truncated"]
+
+    # check data
+    datachecker.check_assert("is_truncated", not is_truncated, "truncated input data cannot be used")
 
     # get material and source indices
     (domain_cm, idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
