@@ -102,7 +102,7 @@ def run(
         If None, all the plots are shown.
     is_silent : boolean
         If true, the plots are not shown (non-blocking call).
-        If true, the plots are shown (blocking call).
+        If false, the plots are shown (blocking call).
     folder : string
         Folder name for saving the screenshots.
         If None, the screenshots are not saved.

@@ -122,6 +122,12 @@ def _run_solver_init(data_solver):
 
     # assign the results (internal data required to solve the problem)
     data_internal = {
+        "idx_vc": idx_vc,
+        "idx_vm": idx_vm,
+        "idx_fc": idx_fc,
+        "idx_fm": idx_fm,
+        "idx_src_c": idx_src_c,
+        "idx_src_v": idx_src_v,
         "A_net_c": A_net_c,
         "A_net_m": A_net_m,
         "L_c": L_c,
@@ -135,7 +141,7 @@ def _run_solver_init(data_solver):
     return data_init, data_internal
 
 
-def _run_solver_sweep(data_solver, data_init, data_internal, sweep_param, sol_init):
+def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init):
     """
     Create the equation system, solve the system, and extract the solution.
     """
@@ -149,14 +155,12 @@ def _run_solver_sweep(data_solver, data_init, data_internal, sweep_param, sol_in
     solver_options = data_solver["solver_options"]
 
     # extract the data
-    idx_vc = data_init["idx_vc"]
-    idx_vm = data_init["idx_vm"]
-    idx_fc = data_init["idx_fc"]
-    idx_fm = data_init["idx_fm"]
-    idx_src_c = data_init["idx_src_c"]
-    idx_src_v = data_init["idx_src_v"]
-
-    # extract the data
+    idx_vc = data_internal["idx_vc"]
+    idx_vm = data_internal["idx_vm"]
+    idx_fc = data_internal["idx_fc"]
+    idx_fm = data_internal["idx_fm"]
+    idx_src_c = data_internal["idx_src_c"]
+    idx_src_v = data_internal["idx_src_v"]
     A_net_c = data_internal["A_net_c"]
     A_net_m = data_internal["A_net_m"]
     L_c = data_internal["L_c"]
@@ -275,7 +279,7 @@ def _run_solver_sweep(data_solver, data_init, data_internal, sweep_param, sol_in
     return data_sweep, sol
 
 
-def run(data_voxel, data_problem, data_tolerance):
+def run(data_voxel, data_problem, data_tolerance, is_complete=True):
     """
     Main script for solving a problem with the PEEC solver.
     Handle invalid data with exceptions.
@@ -296,6 +300,9 @@ def run(data_voxel, data_problem, data_tolerance):
         The tolerances for simplifying the Green functions are defined.
         The tolerances for the matrix condition numbers are defined.
         The options for the iterative solver are defined.
+    is_complete : boolean
+        If true, the complete results are returned.
+        If false, only the scalar results are returned.
 
     Returns
     -------
@@ -336,7 +343,7 @@ def run(data_voxel, data_problem, data_tolerance):
         # function for solving a single sweep
         def fct_compute(tag, param, init):
             with log.BlockTimer(LOGGER, "run sweep: " + tag):
-                (output, init) = _run_solver_sweep(data_solver, data_init, data_internal, param, init)
+                (output, init) = _run_solver_sweep(data_solver, data_internal, param, init)
             return output, init
 
         # compute the different sweeps
@@ -344,6 +351,7 @@ def run(data_voxel, data_problem, data_tolerance):
 
         # extract the solution
         data_solution = {
+            "is_complete": is_complete,
             "data_init": data_init,
             "data_sweep": data_sweep,
         }

@@ -153,7 +153,7 @@ def _run_stl(data_voxelize):
     return reference, data_voxel
 
 
-def _run_resample_graph(reference, data_voxel, data_geometry):
+def _run_resample_graph(reference, data_voxel, data_geometry, is_complete):
     """
     Resampling of a 3D voxel structure (increases the number of voxels).
     """
@@ -191,12 +191,13 @@ def _run_resample_graph(reference, data_voxel, data_geometry):
         "connection_def": connection_def,
         "voxel_status": voxel_status,
         "reference": reference,
+        "is_complete": is_complete,
     }
 
     return data_voxel
 
 
-def run(data_geometry):
+def run(data_geometry, is_complete=True):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
     Handle invalid data with exceptions.
@@ -206,6 +207,9 @@ def run(data_geometry):
     data_geometry : dict
         The dict describes the meshing and resampling process.
         The voxel structure can be explicitly given or generated from PNG or STL files.
+    is_complete : boolean
+        If true, the complete results are returned.
+        If false, only the scalar results are returned.
 
     Returns
     -------
@@ -235,7 +239,7 @@ def run(data_geometry):
         (reference, data_voxel) = _run_mesher(data_geometry)
 
         # resample and assemble
-        data_voxel = _run_resample_graph(reference, data_voxel, data_geometry)
+        data_voxel = _run_resample_graph(reference, data_voxel, data_geometry, is_complete)
     except (CheckError, RunError) as ex:
         log.log_exception(LOGGER, ex)
         return False, ex, None
