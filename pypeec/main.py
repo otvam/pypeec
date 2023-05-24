@@ -12,13 +12,16 @@ from pypeec import io
 from pypeec.error import FileError
 
 
-def run_mesher_data(data_geometry):
+def run_mesher_data(data_geometry, is_truncated=False):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
 
     Parameters
     ----------
     data_geometry : dict (input data)
+    is_truncated : boolean
+        If true, the results are truncated to save space.
+        If false, the complete results are returned.
 
     Returns
     -------
@@ -35,12 +38,12 @@ def run_mesher_data(data_geometry):
     from pypeec.run import mesher
 
     # run the tool
-    (status, ex, data_voxel) = mesher.run(data_geometry)
+    (status, ex, data_voxel) = mesher.run(data_geometry, is_truncated)
 
     return status, ex, data_voxel
 
 
-def run_mesher_file(file_geometry, file_voxel):
+def run_mesher_file(file_geometry, file_voxel, is_truncated=False):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
     Load the input data from files.
@@ -50,6 +53,9 @@ def run_mesher_file(file_geometry, file_voxel):
     ----------
     file_geometry : string (input file, JSON or YAML format)
     file_voxel :  string (output file, Pickle format)
+    is_truncated : boolean
+        If true, the results are truncated to save space.
+        If false, the complete results are returned.
 
     Returns
     -------
@@ -75,7 +81,7 @@ def run_mesher_file(file_geometry, file_voxel):
         data_geometry = io.load_config(file_geometry)
 
         # call the mesher
-        (status, ex, data_voxel) = mesher.run(data_geometry)
+        (status, ex, data_voxel) = mesher.run(data_geometry, is_truncated)
 
         # save results
         if status:
@@ -186,7 +192,7 @@ def run_viewer_file(
     return status, ex
 
 
-def run_solver_data(data_voxel, data_problem, data_tolerance):
+def run_solver_data(data_voxel, data_problem, data_tolerance, is_truncated=False):
     """
     Main script for solving a problem with the PEEC solver.
 
@@ -195,6 +201,9 @@ def run_solver_data(data_voxel, data_problem, data_tolerance):
     data_voxel :  dict (input data)
     data_problem: dict (input data)
     data_tolerance: dict (input data)
+    is_truncated : boolean
+        If true, the results are truncated to save space.
+        If false, the complete results are returned.
 
     Returns
     -------
@@ -211,12 +220,12 @@ def run_solver_data(data_voxel, data_problem, data_tolerance):
     from pypeec.run import solver
 
     # run the tool
-    (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance)
+    (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance, is_truncated)
 
     return status, ex, data_solution
 
 
-def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
+def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_truncated=False):
     """
     Main script for solving a problem with the PEEC solver.
     Load the input data from files.
@@ -228,6 +237,9 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     file_problem: string (input file, JSON or YAML format)
     file_tolerance: string (input file, JSON or YAML format)
     file_solution: string (output file, Pickle format)
+    is_truncated : boolean
+        If true, the results are truncated to save space.
+        If false, the complete results are returned.
 
     Returns
     -------
@@ -255,7 +267,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
         data_tolerance = io.load_config(file_tolerance)
 
         # call the solver
-        (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance)
+        (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance, is_truncated)
 
         # save results
         if status:

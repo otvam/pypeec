@@ -279,7 +279,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init):
     return data_sweep, sol
 
 
-def run(data_voxel, data_problem, data_tolerance, is_complete=True):
+def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
     """
     Main script for solving a problem with the PEEC solver.
     Handle invalid data with exceptions.
@@ -300,9 +300,9 @@ def run(data_voxel, data_problem, data_tolerance, is_complete=True):
         The tolerances for simplifying the Green functions are defined.
         The tolerances for the matrix condition numbers are defined.
         The options for the iterative solver are defined.
-    is_complete : boolean
-        If true, the complete results are returned.
-        If false, only the scalar results are returned.
+    is_truncated : boolean
+        If true, the results are truncated to save space.
+        If false, the complete results are returned.
 
     Returns
     -------
@@ -351,7 +351,7 @@ def run(data_voxel, data_problem, data_tolerance, is_complete=True):
 
         # extract the solution
         data_solution = {
-            "is_complete": is_complete,
+            "is_truncated": is_truncated,
             "data_init": data_init,
             "data_sweep": data_sweep,
         }
