@@ -215,6 +215,9 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         # get the linear operator for the full system (matrix-vector multiplication)
         sys_op = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
 
+        # get the source indices
+        sol_idx = equation_system.get_system_sol_idx(A_net_c, A_net_m, A_src)
+
     # solve the equation system
     with log.BlockTimer(LOGGER, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
@@ -237,10 +240,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     # extract the solution
     with log.BlockTimer(LOGGER, "extract_solution"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        n_offset = 0
-        (I_fc, V_vc, n_offset) = extract_solution.get_sol_extract_field(sol, idx_fc, idx_vc, n_offset)
-        (I_src_c, I_src_v, n_offset) = extract_solution.get_sol_extract_source(sol, idx_src_c, idx_src_v, n_offset)
-        (I_fm, V_vm, n_offset) = extract_solution.get_sol_extract_field(sol, idx_fm, idx_vm, n_offset)
+        (I_fc, V_vc, I_fm, V_vm, I_src) = extract_solution.get_sol_extract(sol, sol_idx)
 
         # get the losses and energy
         (P_fc, P_fm) = extract_solution.get_losses(freq, I_fc, I_fm, R_c, R_m)
@@ -262,7 +262,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         material = extract_solution.get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm)
 
         # get the terminal voltages and currents for the sources
-        source = extract_solution.get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v)
+        source = extract_solution.get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src)
 
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)

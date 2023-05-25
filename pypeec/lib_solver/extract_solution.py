@@ -21,43 +21,18 @@ LOGGER = log.get_logger("SOLUTION")
 NP_TYPES = config.NP_TYPES
 
 
-def _get_sol_var(sol, idx, n_offset):
-    """
-    Extract a variable from the solution vector.
-    """
-
-    # size of the slice
-    n_var = len(idx)
-
-    # get the variable
-    var = sol[n_offset:n_offset+n_var]
-
-    # update the offset
-    n_offset += n_var
-
-    return var, n_offset
-
-
-def get_sol_extract_field(sol, idx_f, idx_v, n_offset):
+def get_sol_extract(sol, sol_idx):
     """
     Extract the electric/magnetic variables from the solution vector.
     """
 
-    (I_f, n_offset) = _get_sol_var(sol, idx_f, n_offset)
-    (V_v, n_offset) = _get_sol_var(sol, idx_v, n_offset)
+    I_fc = sol[sol_idx["I_fc"]]
+    V_vc = sol[sol_idx["V_vc"]]
+    I_fm = sol[sol_idx["I_fm"]]
+    V_vm = sol[sol_idx["V_vm"]]
+    I_src = sol[sol_idx["I_src"]]
 
-    return I_f, V_v, n_offset
-
-
-def get_sol_extract_source(sol, idx_src_c, idx_src_v, n_offset):
-    """
-    Extract the electric/magnetic variables from the solution vector.
-    """
-
-    (I_src_c, n_offset) = _get_sol_var(sol, idx_src_c, n_offset)
-    (I_src_v, n_offset) = _get_sol_var(sol, idx_src_v, n_offset)
-
-    return I_src_c, I_src_v, n_offset
+    return I_fc, V_vc, I_fm, V_vm, I_src
 
 
 def get_vector_density(n, d, idx_f, A_net, var_f):
@@ -256,7 +231,7 @@ def get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
     return material
 
 
-def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_src_v):
+def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
@@ -273,6 +248,9 @@ def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_
     else:
         fact = 0.5
 
+    # get the source indices
+    idx_src = np.concatenate((idx_src_c, idx_src_v))
+
     # parse the source terminals
     for tag, source_idx_tmp in source_idx.items():
         # extract the data
@@ -281,8 +259,7 @@ def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_
 
         # get the position of the sources
         idx_vc_tmp = np.in1d(idx_vc, idx)
-        idx_src_c_tmp = np.in1d(idx_src_c, idx)
-        idx_src_v_tmp = np.in1d(idx_src_v, idx)
+        idx_src_tmp = np.in1d(idx_src, idx)
 
         # extract the terminal variables
         if len(idx) == 0:
@@ -293,12 +270,7 @@ def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src_c, I_
             V_tmp = NP_TYPES.COMPLEX(np.mean(V_vc[idx_vc_tmp]))
 
             # current is the sum between all the voxels composing the terminal
-            if source_type == "current":
-                I_tmp = NP_TYPES.COMPLEX(np.sum(I_src_c[idx_src_c_tmp]))
-            elif source_type == "voltage":
-                I_tmp = NP_TYPES.COMPLEX(np.sum(I_src_v[idx_src_v_tmp]))
-            else:
-                raise ValueError("invalid terminal type")
+            I_tmp = NP_TYPES.COMPLEX(np.sum(I_src[idx_src_tmp]))
 
         # compute the apparent power
         S_tmp = fact*V_tmp*np.conj(I_tmp)

@@ -574,3 +574,36 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
     op = sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX)
 
     return op
+
+
+def get_system_sol_idx(A_net_c, A_net_m, A_src):
+    """
+    Get the indices of the vectors composing the solution.
+    """
+
+    # get the system size and the solution scaling
+    (n_vc, n_fc, n_vm, n_fm, n_src, n_dof) = _get_system_size(A_net_c, A_net_m, A_src)
+
+    # init index dict
+    sol_idx = {}
+
+    # init the index offset
+    n_offset = 0
+
+    # get the variable
+    sol_idx["I_fc"] = range(n_offset, n_offset+n_fc)
+    n_offset += n_fc
+    sol_idx["V_vc"] = range(n_offset, n_offset+n_vc)
+    n_offset += n_vc
+
+    # get the variable
+    sol_idx["I_src"] = range(n_offset, n_offset+n_src)
+    n_offset += n_src
+
+    # get the variable
+    sol_idx["I_fm"] = range(n_offset, n_offset+n_fm)
+    n_offset += n_fm
+    sol_idx["V_vm"] = range(n_offset, n_offset+n_vm)
+    n_offset += n_vm
+
+    return sol_idx
