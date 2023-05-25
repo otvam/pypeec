@@ -38,6 +38,40 @@ def get_material_indices(material_idx, material_type_ref):
     return idx_v
 
 
+def get_material_pos(material_idx, idx_vc, idx_vm):
+    """
+    Get the indices of the electric and magnetic materials.
+    """
+
+    # init material dict
+    material_pos = {}
+
+    # parse the material domains
+    for tag, material_idx_tmp in material_idx.items():
+        # extract the data
+        material_type = material_idx_tmp["material_type"]
+        idx = material_idx_tmp["idx"]
+
+        # get the position of the domains
+        if material_type == "electric":
+            idx_vc_tmp = np.in1d(idx_vc, idx)
+            idx_vm_tmp = np.array([], NP_TYPES.INT)
+        elif material_type == "magnetic":
+            idx_vm_tmp = np.in1d(idx_vm, idx)
+            idx_vc_tmp = np.array([], NP_TYPES.INT)
+        else:
+            raise ValueError("invalid material type")
+
+        # find indices
+        idx_vc_tmp = np.flatnonzero(idx_vc_tmp)
+        idx_vm_tmp = np.flatnonzero(idx_vm_tmp)
+
+        # assign the losses
+        material_pos[tag] = {"idx_vc": idx_vc_tmp, "idx_vm": idx_vm_tmp}
+
+    return material_pos
+
+
 def get_source_indices(source_idx, source_type_ref):
     """
     Get the indices of the source voxels for a given source type.
@@ -57,6 +91,41 @@ def get_source_indices(source_idx, source_type_ref):
             idx_src = np.append(idx_src, idx)
 
     return idx_src
+
+
+def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
+    """
+    Get the indices of the source terminal voltages and currents.
+    """
+
+    # init source dict
+    source_pos = {}
+
+    # parse the source terminals
+    for tag, source_idx_tmp in source_idx.items():
+        # extract the data
+        source_type = source_idx_tmp["source_type"]
+        idx = source_idx_tmp["idx"]
+
+        # get the position of the voltage terminals
+        idx_vc_tmp = np.in1d(idx_vc, idx)
+
+        # get the position of the current terminals
+        if source_type == "current":
+            idx_src_tmp = np.in1d(idx_src_c, idx)
+        elif source_type == "voltage":
+            idx_src_tmp = np.in1d(idx_src_v, idx)
+        else:
+            raise ValueError("invalid source type")
+
+        # find indices
+        idx_vc_tmp = np.flatnonzero(idx_vc_tmp)
+        idx_src_tmp = np.flatnonzero(idx_src_tmp)
+
+        # assign the current and voltage
+        source_pos[tag] = {"idx_vc": idx_vc_tmp, "idx_src": idx_src_tmp}
+
+    return source_pos
 
 
 def get_reduce_matrix(pts_vox, A_vox, idx_v):

@@ -71,10 +71,12 @@ def _run_solver_init(data_solver, is_truncated):
         # parse the materials
         idx_vc = problem_geometry.get_material_indices(material_idx, "electric")
         idx_vm = problem_geometry.get_material_indices(material_idx, "magnetic")
+        material_pos = problem_geometry.get_material_pos(material_idx, idx_vc, idx_vm)
 
         # parse the sources
         idx_src_c = problem_geometry.get_source_indices(source_idx, "current")
         idx_src_v = problem_geometry.get_source_indices(source_idx, "voltage")
+        source_pos = problem_geometry.get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v)
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
         (pts_net_c, A_net_c, idx_fc) = problem_geometry.get_reduce_matrix(pts_vox, A_vox, idx_vc)
@@ -148,6 +150,8 @@ def _run_solver_init(data_solver, is_truncated):
         "P_op_m": P_op_m,
         "K_op_c": K_op_c,
         "K_op_m": K_op_m,
+        "source_pos": source_pos,
+        "material_pos": material_pos,
     }
 
     return data_init, data_internal
@@ -181,6 +185,8 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     P_op_m = data_internal["P_op_m"]
     K_op_c = data_internal["K_op_c"]
     K_op_m = data_internal["K_op_m"]
+    material_pos = data_internal["material_pos"]
+    source_pos = data_internal["source_pos"]
 
     # extract the data
     freq = sweep_param["freq"]
@@ -259,10 +265,10 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         Q_vm = extract_solution.get_divergence_density(d, A_net_m, I_fm)
 
         # get the domain losses for the different materials
-        material = extract_solution.get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm)
+        material = extract_solution.get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm)
 
         # get the terminal voltages and currents for the sources
-        source = extract_solution.get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src)
+        source = extract_solution.get_source(freq, source_pos, idx_src_c, idx_src_v, idx_vc, I_src, V_vc)
 
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)

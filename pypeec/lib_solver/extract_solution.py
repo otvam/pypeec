@@ -191,7 +191,7 @@ def get_integral(P_fc, P_fm, W_fc, W_fm):
     return integral
 
 
-def get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
+def get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm):
     """
     Parse the losses for the materials.
     The results are assigned to a dict with the magnetic and electric losses.
@@ -205,25 +205,20 @@ def get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
     P_vm = 0.5*np.abs(A_net_m)*P_fm
 
     # parse the material domains
-    for tag, material_idx_tmp in material_idx.items():
+    for tag, material_pos_tmp in material_pos.items():
         # extract the data
-        material_type = material_idx_tmp["material_type"]
-        idx = material_idx_tmp["idx"]
-
-        # get the position of the domains
-        idx_vc_tmp = np.in1d(idx_vc, idx)
-        idx_vm_tmp = np.in1d(idx_vm, idx)
+        idx_vc = material_pos_tmp["idx_vc"]
+        idx_vm = material_pos_tmp["idx_vm"]
 
         # get the domain losses
-        P_vc_tmp = NP_TYPES.FLOAT(np.sum(P_vc[idx_vc_tmp]))
-        P_vm_tmp = NP_TYPES.FLOAT(np.sum(P_vm[idx_vm_tmp]))
+        P_vc_tmp = NP_TYPES.FLOAT(np.sum(P_vc[idx_vc]))
+        P_vm_tmp = NP_TYPES.FLOAT(np.sum(P_vm[idx_vm]))
         P_tmp = P_vc_tmp+P_vm_tmp
 
         # assign the losses
-        material[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_tot": P_tmp, "material_type": material_type}
+        material[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_tot": P_tmp}
 
         # display
-        LOGGER.debug("domain: %s : material_type = %s" % (tag, material_type))
         LOGGER.debug("domain: %s : P_electric = %.3e W" % (tag, P_vc_tmp))
         LOGGER.debug("domain: %s : P_magnetic = %.3e W" % (tag, P_vm_tmp))
         LOGGER.debug("domain: %s : P_tot = %.3e W" % (tag, P_tmp))
@@ -231,7 +226,7 @@ def get_material(material_idx, idx_vc, idx_vm, A_net_c, A_net_m, P_fc, P_fm):
     return material
 
 
-def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
+def get_source(freq, source_pos, idx_src_c, idx_src_v, idx_vc, I_src, V_vc):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
@@ -248,38 +243,31 @@ def get_source(freq, source_idx, idx_src_c, idx_src_v, idx_vc, V_vc, I_src):
     else:
         fact = 0.5
 
-    # get the source indices
-    idx_src = np.concatenate((idx_src_c, idx_src_v))
-
     # parse the source terminals
-    for tag, source_idx_tmp in source_idx.items():
+    for tag, source_pos_tmp in source_pos.items():
         # extract the data
-        source_type = source_idx_tmp["source_type"]
-        idx = source_idx_tmp["idx"]
+        idx_vc = source_pos_tmp["idx_vc"]
+        idx_src = source_pos_tmp["idx_src"]
 
-        # get the position of the sources
-        idx_vc_tmp = np.in1d(idx_vc, idx)
-        idx_src_tmp = np.in1d(idx_src, idx)
-
-        # extract the terminal variables
-        if len(idx) == 0:
+        # voltage is the average between all the voxels composing the terminal
+        if len(idx_vc) == 0:
             V_tmp = NP_TYPES.COMPLEX(0)
+        else:
+            V_tmp = NP_TYPES.COMPLEX(np.mean(V_vc[idx_vc]))
+
+        # current is the sum between all the voxels composing the terminal
+        if len(idx_src) == 0:
             I_tmp = NP_TYPES.COMPLEX(0)
         else:
-            # voltage is the average between all the voxels composing the terminal
-            V_tmp = NP_TYPES.COMPLEX(np.mean(V_vc[idx_vc_tmp]))
-
-            # current is the sum between all the voxels composing the terminal
-            I_tmp = NP_TYPES.COMPLEX(np.sum(I_src[idx_src_tmp]))
+            I_tmp = NP_TYPES.COMPLEX(np.sum(I_src[idx_src]))
 
         # compute the apparent power
         S_tmp = fact*V_tmp*np.conj(I_tmp)
 
         # assign the current and voltage
-        source[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp, "source_type": source_type}
+        source[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp}
 
         # display
-        LOGGER.debug("terminal: %s : source_type = %s" % (tag, source_type))
         LOGGER.debug("terminal: %s : V = %+.3e + %+.3ej V" % (tag, V_tmp.real, V_tmp.imag))
         LOGGER.debug("terminal: %s : I = %+.3e + %+.3ej A" % (tag, I_tmp.real, I_tmp.imag))
         LOGGER.debug("terminal: %s : S = %+.3e + %+.3ej VA" % (tag, S_tmp.real, S_tmp.imag))
