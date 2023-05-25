@@ -61,7 +61,7 @@ def _get_eqn_matrix(n_winding, var_idx, I_vec):
     return eqn_mat
 
 
-def _get_solve_matrix(n_winding, terminal, tol):
+def _get_solve_matrix(n_winding, terminal, extraction_tolerance):
     """
     Extract the impedance matrix of the component.
 
@@ -73,9 +73,9 @@ def _get_solve_matrix(n_winding, terminal, tol):
     """
 
     # extract the data
-    tol_res = tol["tol_res"]
-    tol_freq = tol["tol_freq"]
-    check_convergence = tol["check_convergence"]
+    tol_res = extraction_tolerance["tol_res"]
+    tol_freq = extraction_tolerance["tol_freq"]
+    check_convergence = extraction_tolerance["check_convergence"]
 
     # get the matrix size and indices of the coefficients
     var_idx = _get_idx_matrix(n_winding)
@@ -174,13 +174,13 @@ def _get_circuit(n_winding, freq, Z_mat):
     return data_matrix
 
 
-def get_extract(n_winding, terminal, tol):
+def get_extract(n_winding, terminal, extraction_tolerance):
     """
     Extract the equivalent circuit of a component.
     """
 
     # get the impedance matrix
-    (freq, res) = _get_solve_matrix(n_winding, terminal, tol)
+    (freq, res) = _get_solve_matrix(n_winding, terminal, extraction_tolerance)
 
     # get the complete circuit
     data_matrix = _get_circuit(n_winding, freq, res)
