@@ -146,7 +146,7 @@ def _get_coupling_matrix(n_winding, RL_mat):
     return k_mat
 
 
-def _get_circuit(n_winding, freq, Z_mat):
+def _get_matrix(n_winding, freq, Z_mat):
     """
     Get the equivalent circuit of the component from the impedance matrix.
     """
@@ -166,12 +166,12 @@ def _get_circuit(n_winding, freq, Z_mat):
     k_L_mat = _get_coupling_matrix(n_winding, L_mat)
 
     # assign the results
-    data_matrix = {
+    matrix = {
         "freq": freq, "Z_mat": Z_mat, "R_mat": R_mat, "L_mat": L_mat,
         "k_R_mat": k_R_mat, "k_L_mat": k_L_mat, "Q_mat": Q_mat,
     }
 
-    return data_matrix
+    return matrix
 
 
 def get_extract(n_winding, terminal, extraction_tolerance):
@@ -183,6 +183,6 @@ def get_extract(n_winding, terminal, extraction_tolerance):
     (freq, res) = _get_solve_matrix(n_winding, terminal, extraction_tolerance)
 
     # get the complete circuit
-    data_matrix = _get_circuit(n_winding, freq, res)
+    matrix = _get_matrix(n_winding, freq, res)
 
-    return data_matrix
+    return matrix
