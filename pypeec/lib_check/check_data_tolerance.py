@@ -22,7 +22,7 @@ def _check_solver_options(solver_options):
     gmres_options = solver_options["gmres_options"]
 
     # check type
-    key_list = ["rel_tol", "abs_tol", "n_between_restart", "n_maximum_restart"]
+    key_list = ["rel_tol", "abs_tol", "n_between_restart", "n_maximum_restart", "callback_type"]
     datachecker.check_dict("gmres_options", gmres_options, key_list=key_list)
 
     # check the data
@@ -31,6 +31,7 @@ def _check_solver_options(solver_options):
     datachecker.check_float("abs_tol", gmres_options["abs_tol"], is_positive=True, can_be_zero=False)
     datachecker.check_integer("n_between_restart", gmres_options["n_between_restart"], is_positive=True, can_be_zero=False)
     datachecker.check_integer("n_maximum_restart", gmres_options["n_maximum_restart"], is_positive=True, can_be_zero=False)
+    datachecker.check_choice("callback_type", gmres_options["callback_type"], ["res", "sol"])
 
 
 def _check_condition_options(condition_options):

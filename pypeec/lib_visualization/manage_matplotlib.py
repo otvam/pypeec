@@ -69,17 +69,23 @@ def _get_plot_convergence(fig, conv, data_options):
     plt.figure(fig)
 
     # counts
-    n_iter = len(conv)
+    iter_vec = conv["iter_vec"]
+    callback_type = conv["callback_type"]
 
     # plot the data
-    idx_iter = np.arange(1, n_iter+1)
-    plt.semilogy(idx_iter, conv, color=color, marker=marker)
+    if callback_type == "sol":
+        plt.plot(iter_vec, conv["P_vec"], color=color, marker=marker)
+        plt.plot(iter_vec, conv["Q_vec"], color=color, marker=marker)
+    elif callback_type == "res":
+        plt.semilogy(iter_vec, conv["res_vec"], color=color, marker=marker)
+    else:
+        raise ValueError("invalid callback type")
 
     # add cosmetics
     plt.grid()
     plt.xlabel("iterations (#)")
     plt.ylabel("residuum (a.u.)")
-    plt.title("Solver Convergence / n_iter = %d" % n_iter)
+    plt.title("Solver Convergence / n_iter = %d" % len(iter_vec))
 
 
 def get_plot_plotter(fig, res, conv, data_plot):
