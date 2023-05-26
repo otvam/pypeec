@@ -14,13 +14,14 @@ LOGGER = log.get_logger("GMRES")
 
 class _IterCounter:
     """
-    Simple class used as a callback to count the number of iteration of the matrix solver.
+    Simple class used as a callback to monitor the iterative solver iterations:
+        - using the residuum as the callback input data
+        - using the solution as the callback input data
     """
 
     def __init__(self, fct_conv, callback_type):
         """
         Constructor.
-        Init the number of iteration.
         """
 
         # assign data
@@ -34,19 +35,9 @@ class _IterCounter:
         self.Q_vec = []
         self.res_vec = []
 
-    def get_callback_tag(self):
-        if self.callback_type == "sol":
-            callback_tag = "x"
-        elif self.callback_type == "res":
-            callback_tag = "pr_norm"
-        else:
-            raise ValueError("invalid callback type")
-
-        return callback_tag
-
     def get_callback_run(self, data):
         """
-        Callback increasing the iteration count.
+        Callback displaying and saving the iteration.
         """
 
         # update the iteration
@@ -82,7 +73,7 @@ class _IterCounter:
 
     def get_conv(self):
         """
-        Get the number of iterations.
+        Get a summary of the convergence process.
         """
 
         if self.callback_type == "sol":
@@ -123,12 +114,17 @@ def get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, gmres_options):
     # object for counting the solver iterations (callback)
     obj = _IterCounter(fct_conv, callback_type)
 
-    # get callback tag
-    callback_tag = obj.get_callback_tag()
-
     # define callback
     def fct_callback(data):
         obj.get_callback_run(data)
+
+    # get callback tag
+    if callback_type == "sol":
+        callback_tag = "x"
+    elif callback_type == "res":
+        callback_tag = "pr_norm"
+    else:
+        raise ValueError("invalid callback type")
 
     # call the solver
     (sol, flag) = sla.gmres(

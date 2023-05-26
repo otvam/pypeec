@@ -1,5 +1,9 @@
 """
-Different functions for extracting the fields and terminal currents and voltages from the solution vector.
+Provide a function to extract convergence metrics from the solution vector.
+
+The complex power is extracted at the different terminals.
+The total complex power is computed for all the terminals.
+The active and reactive power are returned as metrics.
 """
 
 __author__ = "Thomas Guillod"
@@ -14,7 +18,7 @@ NP_TYPES = config.NP_TYPES
 
 def _get_sol_extract(sol, sol_idx):
     """
-    Extract the electric/magnetic variables from the solution vector.
+    Extract the different variables from the solution vector.
     """
 
     V_vc = sol[sol_idx["V_vc"]]
@@ -26,10 +30,7 @@ def _get_sol_extract(sol, sol_idx):
 
 def _get_total_power(freq, source_pos, I_src, V_vc):
     """
-    Parse the terminal voltages and currents for the sources.
-    The sources have internal resistances/admittances.
-    Therefore, the extracted value can differ from the source value.
-    The results are assigned to a dict with the voltage and current values.
+    Compute the total complex power is computed for all the terminals.
     """
 
     # get the factor for getting the power time-averaged values
@@ -62,6 +63,10 @@ def _get_total_power(freq, source_pos, I_src, V_vc):
 
 
 def _get_conv_eval(sol, freq, source_pos, sol_idx):
+    """
+    Extract the convergence metrics (active and reactive power) from a solution vector.
+    """
+
     # extract the data
     (V_vc, I_fc, I_src) = _get_sol_extract(sol, sol_idx)
 
@@ -76,6 +81,10 @@ def _get_conv_eval(sol, freq, source_pos, sol_idx):
 
 
 def get_fct_conv(freq, source_pos, sol_idx):
+    """
+    Return a function that extract convergence metrics from the solution vector.
+    """
+
     def fct_conv(sol):
         source = _get_conv_eval(sol, freq, source_pos, sol_idx)
         return source

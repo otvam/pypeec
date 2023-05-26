@@ -41,6 +41,7 @@ def get_material_indices(material_idx, material_type_ref):
 def get_material_pos(material_idx, idx_vc, idx_vm):
     """
     Get the indices of the electric and magnetic materials.
+    Convert from voxel indices to solver indices.
     """
 
     # init material dict
@@ -89,6 +90,7 @@ def get_source_indices(source_idx, source_type_ref):
 def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
     """
     Get the indices of the source terminal voltages and currents.
+    Convert from voxel indices to solver indices.
     """
 
     # init source dict
@@ -100,7 +102,6 @@ def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
     # parse the source terminals
     for tag, source_idx_tmp in source_idx.items():
         # extract the data
-        source_type = source_idx_tmp["source_type"]
         idx = source_idx_tmp["idx"]
 
         # get the position of the voltage terminals

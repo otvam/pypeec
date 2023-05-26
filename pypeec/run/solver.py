@@ -225,10 +225,8 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         # get the source indices
         sol_idx = equation_system.get_system_sol_idx(A_net_c, A_net_m, A_src)
 
-    # evaluation of the solution metrics
-    with log.BlockTimer(LOGGER, "extract_convergence"):
-        # split the solution vector to get the face currents, the voxel potentials, and the sources
-        fct_conv = extract_convergence.get_fct_conv(freq, source_pos, sol_idx)
+    # get a function to evaluate the solver convergence
+    fct_conv = extract_convergence.get_fct_conv(freq, source_pos, sol_idx)
 
     # solve the equation system
     with log.BlockTimer(LOGGER, "equation_solver"):

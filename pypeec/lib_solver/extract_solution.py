@@ -1,10 +1,10 @@
 """
 Different functions for extracting the fields and terminal currents and voltages from the solution vector.
 
-The voxel structure has the following size: (nx, ny, nz).
-The problem contains n_vc non-empty electric voxels and n_vm non-empty magnetic voxels.
-The problem contains n_fc internal electric faces and n_fm internal magnetic faces.
-The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
+Extract the different fields.
+Extract the losses and energy.
+Extract the integral quantities.
+Extract the source terminal currents and voltages.
 """
 
 __author__ = "Thomas Guillod"
@@ -23,7 +23,7 @@ NP_TYPES = config.NP_TYPES
 
 def get_sol_extract(sol, sol_idx):
     """
-    Extract the electric/magnetic variables from the solution vector.
+    Extract the different variables from the solution vector.
     """
 
     I_fc = sol[sol_idx["I_fc"]]
@@ -230,8 +230,8 @@ def get_source(freq, source_pos, I_src, V_vc):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
-    Therefore, the extracted value can differ from the source value.
-    The results are assigned to a dict with the voltage and current values.
+    Therefore, the extracted value can differ from the prescribed value.
+    The results are assigned to a dict with the voltage, current, and power values.
     """
 
     # init source dict
