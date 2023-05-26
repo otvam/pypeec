@@ -155,7 +155,8 @@ def _get_data_plotter_convergence(name):
     """
 
     data_options = {
-        "color": "red",  # color of the plot
+        "color_active": "red",  # color of the plot for the active power
+        "color_reactive": "blue",  # color of the plot for the reactive power
         "marker": "o",  # marker shape
     }
 

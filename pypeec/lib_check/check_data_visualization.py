@@ -203,11 +203,12 @@ def _check_data_options_plotter_matplotlib(plot_type, data_options):
     # check the convergence options
     if plot_type == "convergence":
         # check type
-        key_list = ["color", "marker"]
+        key_list = ["color_active", "color_reactive", "marker"]
         datachecker.check_dict("data_options", data_options, key_list=key_list)
 
         # check data
-        datachecker.check_string("color", data_options["color"], can_be_empty=False)
+        datachecker.check_string("color_active", data_options["color_active"], can_be_empty=False)
+        datachecker.check_string("color_reactive", data_options["color_reactive"], can_be_empty=False)
         datachecker.check_string("marker", data_options["marker"], can_be_empty=False)
 
     # check the residuum options

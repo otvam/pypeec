@@ -62,7 +62,8 @@ def _get_plot_convergence(fig, conv, data_options):
     """
 
     # extract the data
-    color = data_options["color"]
+    color_active = data_options["color_active"]
+    color_reactive = data_options["color_reactive"]
     marker = data_options["marker"]
 
     # activate the figure
@@ -72,11 +73,12 @@ def _get_plot_convergence(fig, conv, data_options):
     iter_vec = conv["iter_vec"]
 
     # plot the data
-    plt.plot(iter_vec, conv["P_vec"], color=color, marker=marker)
-    plt.plot(iter_vec, conv["Q_vec"], color=color, marker=marker)
+    plt.plot(iter_vec, conv["P_vec"], color=color_active, marker=marker, label="P")
+    plt.plot(iter_vec, conv["Q_vec"], color=color_reactive, marker=marker, label="Q")
 
     # add cosmetics
     plt.grid()
+    plt.legend()
     plt.xlabel("iterations (#)")
     plt.ylabel("convergence (a.u.)")
     plt.title("Solver Convergence / n_iter = %d" % len(iter_vec))

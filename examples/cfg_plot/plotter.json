@@ -909,7 +909,8 @@
         "data_plot": {
             "plot_type": "convergence",
             "data_options": {
-                "color": "red",
+                "color_active": "red",
+                "color_reactive": "blue",
                 "marker": "o"
             }
         }
