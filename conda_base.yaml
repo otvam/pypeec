@@ -22,7 +22,7 @@ dependencies:
   - scipy=1.9.3
   - joblib=1.2.0
   # Qt bindings
-  - pyside2=5.15.8
+  - pyqt=5.15.7
   # geometry manipulation and plotting libraries
   - vtk=9.2.5
   - pyvista=0.38.3

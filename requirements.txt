@@ -17,7 +17,7 @@ scipy>=1.9
 joblib>=1.2
 
 # Qt bindings
-PySide2>=5.15
+PyQt5>=5.15
 
 # geometry manipulation and plotting libraries
 vtk>=9.2

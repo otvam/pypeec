@@ -31,8 +31,8 @@ import pyvista
 import pyvistaqt
 import matplotlib
 import matplotlib.pyplot
-import PySide2.QtWidgets
-import PySide2.QtGui
+import PyQt5.QtWidgets
+import PyQt5.QtGui
 from pypeec import log
 from pypeec import config
 
@@ -75,7 +75,7 @@ class PlotGui:
 
         # create the Qt App
         if self.plot_mode == "qt":
-            self.app = PySide2.QtWidgets.QApplication([])
+            self.app = PyQt5.QtWidgets.QApplication([])
         else:
             self.app = None
 
@@ -172,7 +172,7 @@ class PlotGui:
 
         # get the icon
         with importlib.resources.path("pypeec", "pypeec.png") as file_icon:
-            res_icon = PySide2.QtGui.QIcon(str(file_icon))
+            res_icon = PyQt5.QtGui.QIcon(str(file_icon))
 
         # get the figure
         fig = matplotlib.pyplot.figure(tight_layout=True)
