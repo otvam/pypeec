@@ -49,18 +49,11 @@ def get_material_pos(material_idx, idx_vc, idx_vm):
     # parse the material domains
     for tag, material_idx_tmp in material_idx.items():
         # extract the data
-        material_type = material_idx_tmp["material_type"]
         idx = material_idx_tmp["idx"]
 
-        # get the position of the domains
-        if material_type == "electric":
-            idx_vc_tmp = np.in1d(idx_vc, idx)
-            idx_vm_tmp = np.array([], NP_TYPES.INT)
-        elif material_type == "magnetic":
-            idx_vm_tmp = np.in1d(idx_vm, idx)
-            idx_vc_tmp = np.array([], NP_TYPES.INT)
-        else:
-            raise ValueError("invalid material type")
+        # get the position of the material domain
+        idx_vc_tmp = np.in1d(idx_vc, idx)
+        idx_vm_tmp = np.in1d(idx_vm, idx)
 
         # find indices
         idx_vc_tmp = np.flatnonzero(idx_vc_tmp)
@@ -101,6 +94,9 @@ def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
     # init source dict
     source_pos = {}
 
+    # assemble indices
+    idx_src = np.concatenate((idx_src_c, idx_src_v))
+
     # parse the source terminals
     for tag, source_idx_tmp in source_idx.items():
         # extract the data
@@ -109,14 +105,7 @@ def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
 
         # get the position of the voltage terminals
         idx_vc_tmp = np.in1d(idx_vc, idx)
-
-        # get the position of the current terminals
-        if source_type == "current":
-            idx_src_tmp = np.in1d(idx_src_c, idx)
-        elif source_type == "voltage":
-            idx_src_tmp = np.in1d(idx_src_v, idx)
-        else:
-            raise ValueError("invalid source type")
+        idx_src_tmp = np.in1d(idx_src, idx)
 
         # find indices
         idx_vc_tmp = np.flatnonzero(idx_vc_tmp)

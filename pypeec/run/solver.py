@@ -228,7 +228,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     # evaluation of the solution metrics
     with log.BlockTimer(LOGGER, "extract_convergence"):
         # split the solution vector to get the face currents, the voxel potentials, and the sources
-        fct_conv = extract_convergence.get_fct_conv(freq, source_pos, sol_idx, R_c, R_m)
+        fct_conv = extract_convergence.get_fct_conv(freq, source_pos, sol_idx)
 
     # solve the equation system
     with log.BlockTimer(LOGGER, "equation_solver"):
@@ -240,7 +240,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         del S_mat_m
 
         # solve the equation system
-        (sol, res, conv, solver_ok, solver_status) = equation_solver.get_solver(sol_init, sys_op, pcd_op, rhs, solver_options)
+        (sol, res, conv, solver_ok, solver_status) = equation_solver.get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options)
 
         # free memory
         del pcd_op
@@ -279,9 +279,6 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
 
-    # get the terminal voltages and currents for the sources
-    (losses, source) = fct_conv(sol)
-
     # assign the results (will be merged in the solver output)
     data_sweep = {
         "freq": freq,
@@ -305,7 +302,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
 
     # if required, remove the optional data
     tag_list = [
-        "res", "conv",
+        "res",
         "V_vc", "V_vm",
         "J_vc", "B_vm",
         "P_vc", "P_vm",

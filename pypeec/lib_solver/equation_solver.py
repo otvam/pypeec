@@ -14,7 +14,7 @@ from pypeec import log
 LOGGER = log.get_logger("EQUATION")
 
 
-def get_solver(sol_init, sys_op, pcd_op, rhs, solver_options):
+def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     """
     Solve a sparse equation system with gmres.
     The equation system and the preconditioner are described with linear operator.
@@ -31,13 +31,12 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, solver_options):
     status_pcd = pcd_op is not None
 
     # call the solver
-    (status_gmres, conv, sol) = matrix_gmres.get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, gmres_options)
+    (status_gmres, n_iter, conv, sol) = matrix_gmres.get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, gmres_options)
 
     # compute and check the residuum
     res = sys_op(sol)-rhs
     res_rms = np.sqrt(np.mean(np.abs(res)**2))
     status_res = res_rms < tolerance
-    n_iter = len(conv)
 
     # assign the results
     solver_status = {
