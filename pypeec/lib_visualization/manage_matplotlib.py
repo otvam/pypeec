@@ -84,7 +84,7 @@ def _get_plot_convergence(fig, conv, data_options):
     # add cosmetics
     plt.grid()
     plt.xlabel("iterations (#)")
-    plt.ylabel("residuum (a.u.)")
+    plt.ylabel("convergence (a.u.)")
     plt.title("Solver Convergence / n_iter = %d" % len(iter_vec))
 
 

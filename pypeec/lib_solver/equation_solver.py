@@ -22,46 +22,59 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
 
     # get the condition options
     tolerance = solver_options["tolerance"]
-    gmres_options = solver_options["gmres_options"]
-
-    # get problem size
-    n_dof = len(rhs)
-
-    # check preconditioner
-    status_pcd = pcd_op is not None
+    iter_options = solver_options["iter_options"]
 
     # call the solver
-    (status_gmres, n_iter, conv, sol) = matrix_gmres.get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, gmres_options)
+    (status_solver, alg, sol) = matrix_gmres.get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)
 
     # compute and check the residuum
     res = sys_op(sol)-rhs
     res_rms = np.sqrt(np.mean(np.abs(res)**2))
+
+    # get problem size
+    n_dof = len(rhs)
+
+    # get status
+    status_pcd = pcd_op is not None
     status_res = res_rms < tolerance
+
+    # extract alg results
+    n_sys_eval = alg["n_sys_eval"]
+    n_pcd_eval = alg["n_pcd_eval"]
+    n_iter = alg["n_iter"]
+    conv = alg["conv"]
 
     # assign the results
     solver_status = {
-        "res_rms": res_rms,
-        "n_iter": n_iter,
         "n_dof": n_dof,
-        "status_gmres": status_gmres,
+        "n_iter": n_iter,
+        "n_sys_eval": n_sys_eval,
+        "n_pcd_eval": n_pcd_eval,
+        "res_rms": res_rms,
+        "status_pcd": status_pcd,
+        "status_solver": status_solver,
         "status_res": status_res,
     }
 
     # solver success
-    status = status_gmres and status_res and status_pcd
+    status = status_solver and status_res and status_pcd
 
     # display results
     LOGGER.debug("matrix solver: n_dof = %d" % n_dof)
     LOGGER.debug("matrix solver: n_iter = %d" % n_iter)
+    LOGGER.debug("matrix solver: n_sys_eval = %d" % n_sys_eval)
+    LOGGER.debug("matrix solver: n_pcd_eval = %d" % n_pcd_eval)
     LOGGER.debug("matrix solver: res_rms = %.3e" % res_rms)
     LOGGER.debug("matrix solver: status_pcd = %s" % status_pcd)
-    LOGGER.debug("matrix solver: status_gmres = %s" % status_gmres)
+    LOGGER.debug("matrix solver: status_solver = %s" % status_solver)
     LOGGER.debug("matrix solver: status_res = %s" % status_res)
-    if pcd_op is None:
+
+    # display warnings
+    if not status_pcd:
         LOGGER.warning("matrix solver: preconditioner issue")
-    if status_gmres is None:
-        LOGGER.warning("matrix solver: gmres issue")
-    if status_res is None:
+    if not status_solver:
+        LOGGER.warning("matrix solver: iterative solver issue")
+    if not status_res:
         LOGGER.warning("matrix solver: residuum issue")
 
     # display status

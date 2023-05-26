@@ -6,6 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import scipy.sparse.linalg as sla
+import pyamg.krylov as kry
 from pypeec import log
 
 # get a logger
@@ -95,18 +96,56 @@ class _IterCounter:
         return conv
 
 
-def get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, gmres_options):
+class _OperatorCounter:
+    """
+    Simple wrapper class for linear operator counting the number of evaluations.
+    """
+
+    def __init__(self, op):
+        """
+        Constructor.
+        """
+
+        # assign data
+        self.op = op
+
+        # init data
+        self.n_eval = 0
+
+    def get_op(self):
+        """
+        Get an operator that counts the number of evaluations.
+        """
+
+        def fct(x):
+            self.n_eval += 1
+            y = self.op(x)
+            return y
+
+        op_count = sla.LinearOperator(self.op.shape, matvec=fct, dtype=self.op.dtype)
+
+        return op_count
+
+    def get_n_eval(self):
+        """
+        Get the number of evaluations.
+        """
+
+        return self.n_eval
+
+
+def get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
     """
     Solve a sparse equation system with GMRES.
     The equation system and the preconditioner are described with linear operator.
     """
 
     # get the options
-    rel_tol = gmres_options["rel_tol"]
-    abs_tol = gmres_options["abs_tol"]
-    n_between_restart = gmres_options["n_between_restart"]
-    n_maximum_restart = gmres_options["n_maximum_restart"]
-    callback_type = gmres_options["callback_type"]
+    rel_tol = iter_options["rel_tol"]
+    abs_tol = iter_options["abs_tol"]
+    n_between_restart = iter_options["n_between_restart"]
+    n_maximum_restart = iter_options["n_maximum_restart"]
+    callback_type = iter_options["callback_type"]
 
     # init list for storing the residuum (callback)
     LOGGER.debug("enter matrix solver")
@@ -126,22 +165,33 @@ def get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, gmres_options):
     else:
         raise ValueError("invalid callback type")
 
+    # objects for counting the operator evaluations
+    sys_obj = _OperatorCounter(sys_op)
+    pcd_obj = _OperatorCounter(pcd_op)
+    sys_op_tmp = sys_obj.get_op()
+    pcd_op_tmp = pcd_obj.get_op()
+
     # call the solver
     (sol, flag) = sla.gmres(
-        sys_op, rhs,
+        sys_op_tmp, rhs,
         x0=sol_init, tol=rel_tol, atol=abs_tol,
         restart=n_between_restart, maxiter=n_maximum_restart,
-        M=pcd_op, callback=fct_callback, callback_type=callback_tag,
+        M=pcd_op_tmp, callback=fct_callback, callback_type=callback_tag,
     )
-
-    # get the number of iterations
-    n_iter = obj.get_n_iter()
-    conv = obj.get_conv()
 
     # check for convergence
     status = flag == 0
 
+    # get the number of iterations
+    n_sys_eval = sys_obj.get_n_eval()
+    n_pcd_eval = pcd_obj.get_n_eval()
+    n_iter = obj.get_n_iter()
+    conv = obj.get_conv()
+
+    # assign results
+    alg = {"n_sys_eval": n_sys_eval, "n_pcd_eval": n_pcd_eval, "n_iter": n_iter, "conv": conv}
+
     # exit
     LOGGER.debug("exit matrix solver")
 
-    return status, n_iter, conv, sol
+    return status, alg, sol
