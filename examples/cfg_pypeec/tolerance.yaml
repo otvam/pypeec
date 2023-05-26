@@ -13,13 +13,14 @@
 
 # iterative solver options
 "solver_options":
+    "check": true                  # check (or not) the solver tolerance
     "tolerance": 1.0e-6            # tolerance for checking the solution residuum
-    "iter_options":               # options for the GMRES iterative solver
+    "iter_options":                # options for the iterative solver
+        "solver": "GMRES"          # name of the solver ("GMRES" or "GCROT")
         "rel_tol": 1.0e-6          # relative preconditioned tolerance for GMRES stopping
         "abs_tol": 1.0e-12         # absolute preconditioned tolerance for GMRES stopping
-        "n_between_restart": 20    # number of GMRES iterations between restarts
-        "n_maximum_restart": 100   # maximum number of GMRES restart
-        "callback_type": "sol"     # callback type ("res" for residuum and "sol" for solution vector)
+        "n_inner": 20              # maximum number of solver inner iterations
+        "n_outer": 20              # maximum number of solver outer iterations
 
 # matrix condition check options
 "condition_options":

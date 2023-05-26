@@ -6,7 +6,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import scipy.sparse.linalg as sla
-import pyamg.krylov as kry
 from pypeec import log
 
 # get a logger
@@ -20,21 +19,19 @@ class _IterCounter:
         - using the solution as the callback input data
     """
 
-    def __init__(self, fct_conv, callback_type):
+    def __init__(self, fct_conv):
         """
         Constructor.
         """
 
         # assign data
         self.fct_conv = fct_conv
-        self.callback_type = callback_type
 
         # init data
         self.n_iter = 0
         self.iter_vec = []
         self.P_vec = []
         self.Q_vec = []
-        self.res_vec = []
 
     def get_callback_run(self, data):
         """
@@ -45,25 +42,15 @@ class _IterCounter:
         self.n_iter += 1
         self.iter_vec.append(self.n_iter)
 
-        # run the callback
-        if self.callback_type == "sol":
-            # get the power
-            (P_tot, Q_tot) = self.fct_conv(data)
+        # get the power
+        (P_tot, Q_tot) = self.fct_conv(data)
 
-            # save the data
-            self.P_vec.append(P_tot)
-            self.Q_vec.append(Q_tot)
+        # save the data
+        self.P_vec.append(P_tot)
+        self.Q_vec.append(Q_tot)
 
-            # log the results
-            LOGGER.debug("matrix iter: iter = %d / P_tot = %.3e / Q_tot = %.3e" % (self.n_iter, P_tot, Q_tot))
-        elif self.callback_type == "res":
-            # save the data
-            self.res_vec.append(data)
-
-            # log the results
-            LOGGER.debug("matrix iter: iter = %d / res = %.3e" % (self.n_iter, data))
-        else:
-            raise ValueError("invalid callback type")
+        # log the results
+        LOGGER.debug("matrix iter: iter = %d / P_tot = %.3e / Q_tot = %.3e" % (self.n_iter, P_tot, Q_tot))
 
     def get_n_iter(self):
         """
@@ -77,21 +64,11 @@ class _IterCounter:
         Get a summary of the convergence process.
         """
 
-        if self.callback_type == "sol":
-            conv = {
-                "callback_type": self.callback_type,
-                "iter_vec": self.iter_vec,
-                "P_vec": self.P_vec,
-                "Q_vec": self.Q_vec
-            }
-        elif self.callback_type == "res":
-            conv = {
-                "callback_type": self.callback_type,
-                "iter_vec": self.iter_vec,
-                "res_vec": self.res_vec,
-            }
-        else:
-            raise ValueError("invalid callback type")
+        conv = {
+            "iter_vec": self.iter_vec,
+            "P_vec": self.P_vec,
+            "Q_vec": self.Q_vec
+        }
 
         return conv
 
@@ -134,36 +111,24 @@ class _OperatorCounter:
         return self.n_eval
 
 
-def get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
+def get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
     """
     Solve a sparse equation system with GMRES.
     The equation system and the preconditioner are described with linear operator.
     """
 
     # get the options
+    solver = iter_options["solver"]
     rel_tol = iter_options["rel_tol"]
     abs_tol = iter_options["abs_tol"]
-    n_between_restart = iter_options["n_between_restart"]
-    n_maximum_restart = iter_options["n_maximum_restart"]
-    callback_type = iter_options["callback_type"]
+    n_inner = iter_options["n_inner"]
+    n_outer = iter_options["n_outer"]
 
     # init list for storing the residuum (callback)
     LOGGER.debug("enter matrix solver")
 
     # object for counting the solver iterations (callback)
-    obj = _IterCounter(fct_conv, callback_type)
-
-    # define callback
-    def fct_callback(data):
-        obj.get_callback_run(data)
-
-    # get callback tag
-    if callback_type == "sol":
-        callback_tag = "x"
-    elif callback_type == "res":
-        callback_tag = "pr_norm"
-    else:
-        raise ValueError("invalid callback type")
+    obj = _IterCounter(fct_conv)
 
     # objects for counting the operator evaluations
     sys_obj = _OperatorCounter(sys_op)
@@ -171,13 +136,27 @@ def get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
     sys_op_tmp = sys_obj.get_op()
     pcd_op_tmp = pcd_obj.get_op()
 
+    # define callback
+    def fct_callback(data):
+        obj.get_callback_run(data)
+
     # call the solver
-    (sol, flag) = sla.gmres(
-        sys_op_tmp, rhs,
-        x0=sol_init, tol=rel_tol, atol=abs_tol,
-        restart=n_between_restart, maxiter=n_maximum_restart,
-        M=pcd_op_tmp, callback=fct_callback, callback_type=callback_tag,
-    )
+    if solver == "GMRES":
+        (sol, flag) = sla.gmres(
+            sys_op_tmp, rhs, M=pcd_op_tmp, x0=sol_init,
+            tol=rel_tol, atol=abs_tol,
+            restart=n_inner, maxiter=n_outer,
+            callback=fct_callback, callback_type="x",
+        )
+    elif solver == "GCROT":
+        (sol, flag) = sla.gcrotmk(
+            sys_op_tmp, rhs, M=pcd_op_tmp, x0=sol_init,
+            tol=rel_tol, atol=abs_tol,
+            m=n_inner, maxiter=n_outer,
+            callback=fct_callback,
+        )
+    else:
+        raise ValueError("invalid matrix solver")
 
     # check for convergence
     status = flag == 0

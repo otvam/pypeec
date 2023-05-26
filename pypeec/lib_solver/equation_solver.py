@@ -7,7 +7,7 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from pypeec.lib_matrix import matrix_condition
-from pypeec.lib_matrix import matrix_gmres
+from pypeec.lib_matrix import matrix_iter
 from pypeec import log
 
 # get a logger
@@ -21,11 +21,12 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     """
 
     # get the condition options
+    check = solver_options["check"]
     tolerance = solver_options["tolerance"]
     iter_options = solver_options["iter_options"]
 
     # call the solver
-    (status_solver, alg, sol) = matrix_gmres.get_matrix_gmres(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)
+    (status_solver, alg, sol) = matrix_iter.get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)
 
     # compute and check the residuum
     res = sys_op(sol)-rhs
@@ -46,6 +47,7 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
 
     # assign the results
     solver_status = {
+        "check": check,
         "n_dof": n_dof,
         "n_iter": n_iter,
         "n_sys_eval": n_sys_eval,
@@ -57,7 +59,10 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     }
 
     # solver success
-    status = status_solver and status_res and status_pcd
+    if check:
+        status = status_solver and status_res and status_pcd
+    else:
+        status = True
 
     # display results
     LOGGER.debug("matrix solver: n_dof = %d" % n_dof)
@@ -65,6 +70,7 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     LOGGER.debug("matrix solver: n_sys_eval = %d" % n_sys_eval)
     LOGGER.debug("matrix solver: n_pcd_eval = %d" % n_pcd_eval)
     LOGGER.debug("matrix solver: res_rms = %.3e" % res_rms)
+    LOGGER.debug("matrix solver: check = %s" % check)
     LOGGER.debug("matrix solver: status_pcd = %s" % status_pcd)
     LOGGER.debug("matrix solver: status_solver = %s" % status_solver)
     LOGGER.debug("matrix solver: status_res = %s" % status_res)

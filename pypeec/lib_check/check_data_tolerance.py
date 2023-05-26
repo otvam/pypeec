@@ -14,24 +14,26 @@ def _check_solver_options(solver_options):
     """
 
     # check type
-    key_list = ["tolerance", "iter_options"]
+    key_list = ["check", "tolerance", "iter_options"]
     datachecker.check_dict("solver_options", solver_options, key_list=key_list)
 
     # extract field
+    check = solver_options["check"]
     tolerance = solver_options["tolerance"]
     iter_options = solver_options["iter_options"]
 
     # check type
-    key_list = ["rel_tol", "abs_tol", "n_between_restart", "n_maximum_restart", "callback_type"]
+    key_list = ["solver", "rel_tol", "abs_tol", "n_inner", "n_outer"]
     datachecker.check_dict("iter_options", iter_options, key_list=key_list)
 
     # check the data
+    datachecker.check_boolean("tolerance", check)
     datachecker.check_float("tolerance", tolerance, is_positive=True, can_be_zero=False)
+    datachecker.check_choice("solver", iter_options["solver"], ["GMRES", "GCROT"])
     datachecker.check_float("rel_tol", iter_options["rel_tol"], is_positive=True, can_be_zero=False)
     datachecker.check_float("abs_tol", iter_options["abs_tol"], is_positive=True, can_be_zero=False)
-    datachecker.check_integer("n_between_restart", iter_options["n_between_restart"], is_positive=True, can_be_zero=False)
-    datachecker.check_integer("n_maximum_restart", iter_options["n_maximum_restart"], is_positive=True, can_be_zero=False)
-    datachecker.check_choice("callback_type", iter_options["callback_type"], ["res", "sol"])
+    datachecker.check_integer("n_inner", iter_options["n_inner"], is_positive=True, can_be_zero=False)
+    datachecker.check_integer("n_outer", iter_options["n_outer"], is_positive=True, can_be_zero=False)
 
 
 def _check_condition_options(condition_options):

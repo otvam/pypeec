@@ -70,16 +70,10 @@ def _get_plot_convergence(fig, conv, data_options):
 
     # counts
     iter_vec = conv["iter_vec"]
-    callback_type = conv["callback_type"]
 
     # plot the data
-    if callback_type == "sol":
-        plt.plot(iter_vec, conv["P_vec"], color=color, marker=marker)
-        plt.plot(iter_vec, conv["Q_vec"], color=color, marker=marker)
-    elif callback_type == "res":
-        plt.semilogy(iter_vec, conv["res_vec"], color=color, marker=marker)
-    else:
-        raise ValueError("invalid callback type")
+    plt.plot(iter_vec, conv["P_vec"], color=color, marker=marker)
+    plt.plot(iter_vec, conv["Q_vec"], color=color, marker=marker)
 
     # add cosmetics
     plt.grid()
