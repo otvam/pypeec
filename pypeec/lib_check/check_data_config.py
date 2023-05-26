@@ -133,16 +133,10 @@ def _check_data(data_config):
     # check factorization options
     FACTORIZATION_OPTIONS = data_config["FACTORIZATION_OPTIONS"]
     key_list = [
-        "ITER_REL_TOL",
-        "ITER_ABS_TOL",
-        "ITER_N_MAX",
         "THREAD_PARDISO",
         "THREAD_MKL",
     ]
     datachecker.check_dict("FACTORIZATION_OPTIONS", FACTORIZATION_OPTIONS, key_list=key_list)
-    datachecker.check_float("ITER_REL_TOL", FACTORIZATION_OPTIONS["ITER_REL_TOL"], is_positive=True, can_be_zero=False)
-    datachecker.check_float("ITER_ABS_TOL", FACTORIZATION_OPTIONS["ITER_ABS_TOL"], is_positive=True, can_be_zero=False)
-    datachecker.check_integer("ITER_N_MAX", FACTORIZATION_OPTIONS["ITER_N_MAX"], is_positive=True, can_be_zero=False)
     if FACTORIZATION_OPTIONS["THREAD_PARDISO"] is not None:
         datachecker.check_integer("THREAD_PARDISO", FACTORIZATION_OPTIONS["THREAD_PARDISO"], is_positive=True, can_be_zero=False)
     if FACTORIZATION_OPTIONS["THREAD_MKL"] is not None:
@@ -169,9 +163,6 @@ def _check_data(data_config):
         "SuperLU",
         "UMFPACK",
         "PARDISO",
-        "GCROT",
-        "BICG",
-        "GMRES",
     ]
     datachecker.check_choice("FACTORIZATION_LIBRARY", data_config["FACTORIZATION_LIBRARY"], lib)
 
@@ -195,7 +186,7 @@ def _check_library(data_config):
         raise ValueError("invalid FFT library")
 
     # check factorization library
-    if data_config["FACTORIZATION_LIBRARY"] in ["SuperLU", "GCROT", "BICG", "GMRES"]:
+    if data_config["FACTORIZATION_LIBRARY"] == "SuperLU":
         lib = importlib.util.find_spec("scipy.sparse.linalg")
         datachecker.check_assert("library", lib is not None, "SciPy is not installed")
     elif data_config["FACTORIZATION_LIBRARY"] == "UMFPACK":

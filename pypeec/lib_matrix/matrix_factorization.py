@@ -5,9 +5,6 @@ This module is used as a common interface for different solvers:
     - SuperLU is typically slower but is always available (integrated with SciPy)
     - UMFPACK is typically faster than SuperLU (available through SciKits)
     - PARDISO is typically faster than UMFPACK (available through Pydiso)
-    - GCROT is quite unstable but has low memory requirements (integrated with SciPy)
-    - BICG is quite unstable but has low memory requirements (integrated with SciPy)
-    - GMRES is quite unstable but has low memory requirements (integrated with SciPy)
 """
 
 __author__ = "Thomas Guillod"
@@ -26,9 +23,6 @@ NP_TYPES = config.NP_TYPES
 
 # get factorization config
 FACTORIZATION_LIBRARY = config.FACTORIZATION_LIBRARY
-ITER_REL_TOL = config.FACTORIZATION_OPTIONS.ITER_REL_TOL
-ITER_ABS_TOL = config.FACTORIZATION_OPTIONS.ITER_ABS_TOL
-ITER_N_MAX = config.FACTORIZATION_OPTIONS.ITER_N_MAX
 THREAD_PARDISO = config.FACTORIZATION_OPTIONS.THREAD_PARDISO
 THREAD_MKL = config.FACTORIZATION_OPTIONS.THREAD_MKL
 
@@ -39,7 +33,7 @@ if THREAD_MKL is None:
     THREAD_MKL = os.cpu_count()
 
 # import the right library
-if FACTORIZATION_LIBRARY in ["SuperLU", "GCROT", "BICG", "GMRES"]:
+if FACTORIZATION_LIBRARY == "SuperLU":
     from scipy.sparse import linalg
 elif FACTORIZATION_LIBRARY == "UMFPACK":
     # import the UMFPACK binding
@@ -123,19 +117,6 @@ def _get_fact_umfpack(mat):
     return factor
 
 
-def _get_fact_iter(solver, mat):
-    """
-    Factorize a matrix with iterative method.
-    """
-
-    # factorize the matrix
-    def factor(rhs):
-        (sol, flag) = solver(mat, rhs, tol=ITER_REL_TOL, atol=ITER_ABS_TOL, maxiter=ITER_N_MAX)
-        return sol
-
-    return factor
-
-
 def get_factorize(name, mat):
     """
     Factorize a sparse matrix.
@@ -171,12 +152,6 @@ def get_factorize(name, mat):
         factor = _get_fact_umfpack(mat)
     elif FACTORIZATION_LIBRARY == "PARDISO":
         factor = _get_fact_pardiso(mat)
-    elif FACTORIZATION_LIBRARY == "GCROT":
-        factor = _get_fact_iter(linalg.gcrotmk, mat)
-    elif FACTORIZATION_LIBRARY == "BICG":
-        factor = _get_fact_iter(linalg.bicg, mat)
-    elif FACTORIZATION_LIBRARY == "GMRES":
-        factor = _get_fact_iter(linalg.gmres, mat)
     else:
         raise ValueError("invalid matrix factorization library")
 
