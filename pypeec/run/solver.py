@@ -19,6 +19,7 @@ from pypeec.lib_solver import system_matrix
 from pypeec.lib_solver import equation_system
 from pypeec.lib_solver import equation_solver
 from pypeec.lib_solver import extract_solution
+from pypeec.lib_solver import extract_convergence
 from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_solver
@@ -224,6 +225,11 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         # get the source indices
         sol_idx = equation_system.get_system_sol_idx(A_net_c, A_net_m, A_src)
 
+    # evaluation of the solution metrics
+    with log.BlockTimer(LOGGER, "extract_convergence"):
+        # split the solution vector to get the face currents, the voxel potentials, and the sources
+        fct_conv = extract_convergence.get_fct_conv(freq, source_pos, sol_idx, R_c, R_m)
+
     # solve the equation system
     with log.BlockTimer(LOGGER, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
@@ -268,10 +274,13 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         material = extract_solution.get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm)
 
         # get the terminal voltages and currents for the sources
-        source = extract_solution.get_source(freq, source_pos, idx_src_c, idx_src_v, idx_vc, I_src, V_vc)
+        source = extract_solution.get_source(freq, source_pos, I_src, V_vc)
 
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
+
+    # get the terminal voltages and currents for the sources
+    (losses, source) = fct_conv(sol)
 
     # assign the results (will be merged in the solver output)
     data_sweep = {

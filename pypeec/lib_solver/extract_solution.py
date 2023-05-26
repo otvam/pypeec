@@ -226,7 +226,7 @@ def get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm):
     return material
 
 
-def get_source(freq, source_pos, idx_src_c, idx_src_v, idx_vc, I_src, V_vc):
+def get_source(freq, source_pos, I_src, V_vc):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
