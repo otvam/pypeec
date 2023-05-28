@@ -183,7 +183,7 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
         voxel_status = voxel_summary.get_status(n, d, s, c, domain_def, connection_def)
 
     # assemble the data
-    data_info = {
+    data_geom = {
         "n": n,
         "d": d,
         "s": s,
@@ -192,16 +192,15 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
     }
 
     # if required, add the complete data
-    if is_truncated:
-        data_geom = None
-    else:
-        data_geom = {
+    if not is_truncated:
+        data_add = {
             "domain_def": domain_def,
             "connection_def": connection_def,
             "reference": reference,
         }
+        data_geom = {**data_geom, **data_add}
 
-    return data_info, data_geom
+    return data_geom
 
 
 def run(data_geometry, is_truncated=False):
@@ -247,9 +246,8 @@ def run(data_geometry, is_truncated=False):
         (reference, data_internal) = _run_mesher(data_geometry)
 
         # resample and assemble
-        (data_info, data_geom) = _run_resample_graph(reference, data_internal, data_geometry, is_truncated)
+        data_geom = _run_resample_graph(reference, data_internal, data_geometry, is_truncated)
     except (CheckError, RunError) as ex:
-        data_info = None
         data_geom = None
         status = False
         log.log_exception(LOGGER, ex)
@@ -268,7 +266,6 @@ def run(data_geometry, is_truncated=False):
         "status": status,
         "duration": duration,
         "is_truncated": is_truncated,
-        "data_info": data_info,
         "data_geom": data_geom,
     }
 

@@ -38,18 +38,20 @@ def _get_grid_voxel(data_voxel, data_point):
     """
 
     # extract the data
+    status = data_voxel["status"]
     is_truncated = data_voxel["is_truncated"]
-    data_info = data_voxel["data_info"]
     data_geom = data_voxel["data_geom"]
 
     # check data
+    if not status:
+        raise CheckError("invalid input data cannot be used")
     if is_truncated:
         raise CheckError("truncated input data cannot be used")
 
     # extract the data
-    n = data_info["n"]
-    d = data_info["d"]
-    c = data_info["c"]
+    n = data_geom["n"]
+    d = data_geom["d"]
+    c = data_geom["c"]
     domain_def = data_geom["domain_def"]
     connection_def = data_geom["connection_def"]
     reference = data_geom["reference"]

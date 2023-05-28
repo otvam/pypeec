@@ -202,11 +202,14 @@ def run(
     # run the code
     try:
         # extract the data
+        status = data_solution["status"]
+        is_truncated = data_solution["is_truncated"]
         data_init = data_solution["data_init"]
         data_sweep = data_solution["data_sweep"]
-        is_truncated = data_solution["is_truncated"]
 
         # check data
+        if not status:
+            raise CheckError("invalid input data cannot be used")
         if is_truncated:
             raise CheckError("truncated input data cannot be used")
 
