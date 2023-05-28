@@ -94,10 +94,10 @@ def _load_yaml(filename):
     try:
         with open(filename, "r") as fid:
             data = yaml.load(fid, YamlLoader)
-    except FileNotFoundError:
-        raise FileError("cannot open the file: %s" % filename)
+    except FileNotFoundError as ex:
+        raise FileError("cannot open the file: %s" % filename) from ex
     except yaml.YAMLError as ex:
-        raise FileError("invalid YAML file: %s\n%s" % (filename, str(ex)))
+        raise FileError("invalid YAML file: %s\n%s" % (filename, str(ex))) from ex
 
     return data
 
@@ -110,10 +110,10 @@ def _load_json(filename):
     try:
         with open(filename, "r") as fid:
             data = json.load(fid)
-    except FileNotFoundError:
-        raise FileError("cannot open the file: %s" % filename)
+    except FileNotFoundError as ex:
+        raise FileError("cannot open the file: %s" % filename) from ex
     except json.JSONDecodeError as ex:
-        raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
+        raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex))) from ex
 
     return data
 
@@ -149,12 +149,12 @@ def load_pickle(filename):
     try:
         with open(filename, "rb") as fid:
             data = pickle.load(fid)
-    except pickle.UnpicklingError:
-        raise FileError("invalid Pickle file: %s" % filename)
-    except EOFError:
-        raise FileError("file not found: %s" % filename)
-    except FileNotFoundError:
-        raise FileError("invalid Pickle file: %s" % filename)
+    except pickle.UnpicklingError as ex:
+        raise FileError("invalid Pickle file: %s" % filename) from ex
+    except EOFError as ex:
+        raise FileError("file not found: %s" % filename) from ex
+    except FileNotFoundError as ex:
+        raise FileError("invalid Pickle file: %s" % filename) from ex
 
     return data
 
@@ -172,7 +172,7 @@ def write_pickle(filename, data):
     try:
         with open(filename, "wb") as fid:
             pickle.dump(data, fid)
-    except pickle.PicklingError:
-        raise FileError("invalid data for Pickle: %s" % filename)
-    except FileNotFoundError:
-        raise FileError("cannot write the file: %s" % filename)
+    except pickle.PicklingError as ex:
+        raise FileError("invalid data for Pickle: %s" % filename) from ex
+    except FileNotFoundError as ex:
+        raise FileError("cannot write the file: %s" % filename) from ex
