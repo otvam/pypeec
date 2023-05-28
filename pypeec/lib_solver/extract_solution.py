@@ -161,7 +161,7 @@ def get_energy(freq, I_fc, I_fm, L_op_c, K_op_c):
     return W_fc, W_fm
 
 
-def get_integral(P_fc, P_fm, W_fc, W_fm):
+def get_integral(P_fc, P_fm, W_fc, W_fm, S_tot):
     """
     Sum the loss/energy in order to obtain global quantities.
     """
@@ -176,11 +176,13 @@ def get_integral(P_fc, P_fm, W_fc, W_fm):
 
     # assign the integral quantities
     integral = {
-        "P_electric": P_electric, "P_magnetic": P_magnetic, "P_tot": P_tot,
-        "W_electric": W_electric, "W_magnetic": W_magnetic, "W_tot": W_tot,
+        "P_electric": P_electric, "P_magnetic": P_magnetic,
+        "W_electric": W_electric, "W_magnetic": W_magnetic,
+        "P_tot": P_tot, "W_tot": W_tot, "S_tot": S_tot,
     }
 
     # display
+    LOGGER.debug("integral: S_tot = %.3e + %.3ej VA" % (S_tot.real, S_tot.imag))
     LOGGER.debug("integral: P_electric = %.3e W" % P_electric)
     LOGGER.debug("integral: P_magnetic = %.3e W" % P_magnetic)
     LOGGER.debug("integral: W_electric = %.3e J" % W_electric)
@@ -237,6 +239,9 @@ def get_source(freq, source_pos, I_src, V_vc):
     # init source dict
     source = {}
 
+    # total complex power
+    S_tot = 0.0
+
     # get the factor for getting the power time-averaged values
     if freq == 0:
         fact = 1.0
@@ -267,9 +272,12 @@ def get_source(freq, source_pos, I_src, V_vc):
         # assign the current and voltage
         source[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp}
 
+        # add the power
+        S_tot += S_tmp
+
         # display
         LOGGER.debug("terminal: %s : V = %+.3e + %+.3ej V" % (tag, V_tmp.real, V_tmp.imag))
         LOGGER.debug("terminal: %s : I = %+.3e + %+.3ej A" % (tag, I_tmp.real, I_tmp.imag))
         LOGGER.debug("terminal: %s : S = %+.3e + %+.3ej VA" % (tag, S_tmp.real, S_tmp.imag))
 
-    return source
+    return source, S_tot

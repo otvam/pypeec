@@ -267,10 +267,10 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         material = extract_solution.get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm)
 
         # get the terminal voltages and currents for the sources
-        source = extract_solution.get_source(freq, source_pos, I_src, V_vc)
+        (source, S_tot) = extract_solution.get_source(freq, source_pos, I_src, V_vc)
 
         # get the global quantities (energy and losses)
-        integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm)
+        integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm, S_tot)
 
     # assign the results (will be merged in the solver output)
     data_sweep = {
