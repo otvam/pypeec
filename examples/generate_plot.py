@@ -7,7 +7,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import os.path
-import json
+from pypeec import io
 from examples import examples_config
 
 # get config
@@ -327,7 +327,5 @@ if __name__ == "__main__":
     data_plotter = get_data_plotter()
 
     # create file
-    with open(file_viewer, "w") as fid:
-        json.dump(data_viewer, fid, indent=4)
-    with open(file_plotter, "w") as fid:
-        json.dump(data_plotter, fid, indent=4)
+    io.write_config(file_viewer, data_viewer)
+    io.write_config(file_plotter, data_plotter)

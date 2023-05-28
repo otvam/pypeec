@@ -94,10 +94,10 @@ def _load_yaml(filename):
     try:
         with open(filename, "r") as fid:
             data = yaml.load(fid, YamlLoader)
-    except FileNotFoundError as ex:
-        raise FileError("cannot open the file: %s" % filename) from ex
     except yaml.YAMLError as ex:
         raise FileError("invalid YAML file: %s\n%s" % (filename, str(ex))) from ex
+    except OSError as ex:
+        raise FileError("cannot open the file: %s" % filename) from ex
 
     return data
 
@@ -110,10 +110,10 @@ def _load_json(filename):
     try:
         with open(filename, "r") as fid:
             data = json.load(fid)
-    except FileNotFoundError as ex:
-        raise FileError("cannot open the file: %s" % filename) from ex
     except json.JSONDecodeError as ex:
         raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex))) from ex
+    except OSError as ex:
+        raise FileError("cannot open the file: %s" % filename) from ex
 
     return data
 
@@ -135,6 +135,26 @@ def load_config(filename):
     return data
 
 
+def write_config(filename, data):
+    """
+    Write a config file (JSON).
+    """
+
+    # check extension
+    (name, ext) = os.path.splitext(filename)
+    if ext != ".json":
+        raise FileError("invalid file extension: %s" % filename)
+
+    # save the Pickle file
+    try:
+        with open(filename, "w") as fid:
+            json.dump(data, fid, indent=4)
+    except (TypeError, ValueError, RecursionError) as ex:
+        raise FileError("invalid data for JSON: %s" % filename) from ex
+    except OSError as ex:
+        raise FileError("cannot write the file: %s" % filename) from ex
+
+
 def load_pickle(filename):
     """
     Load a pickle file.
@@ -153,7 +173,7 @@ def load_pickle(filename):
         raise FileError("invalid Pickle file: %s" % filename) from ex
     except EOFError as ex:
         raise FileError("file not found: %s" % filename) from ex
-    except FileNotFoundError as ex:
+    except OSError as ex:
         raise FileError("invalid Pickle file: %s" % filename) from ex
 
     return data
@@ -169,10 +189,11 @@ def write_pickle(filename, data):
     if ext != ".pck":
         raise FileError("invalid file extension: %s" % filename)
 
+    # save the Pickle file
     try:
         with open(filename, "wb") as fid:
             pickle.dump(data, fid)
     except pickle.PicklingError as ex:
         raise FileError("invalid data for Pickle: %s" % filename) from ex
-    except FileNotFoundError as ex:
+    except OSError as ex:
         raise FileError("cannot write the file: %s" % filename) from ex
