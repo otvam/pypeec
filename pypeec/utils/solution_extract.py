@@ -71,8 +71,10 @@ def get_extract(data_solution, sweep_description):
     data_init = data_solution["data_init"]
     data_sweep = data_solution["data_sweep"]
     is_truncated = data_solution["is_truncated"]
+    status = data_solution["status"]
 
-    # check solution
+    # check status
+    assert status, "invalid solution"
     assert isinstance(data_init, dict), "invalid solution"
     assert isinstance(data_init, dict), "invalid solution"
     assert isinstance(is_truncated, bool), "invalid solution"
