@@ -43,17 +43,17 @@ def _run_mesher(data_geometry):
 
     # voxelize the geometry
     if mesh_type == "voxel":
-        (reference, data_voxel) = _run_voxel(data_voxelize)
+        (reference, data_internal) = _run_voxel(data_voxelize)
     elif mesh_type == "shape":
-        (reference, data_voxel) = _run_shape(data_voxelize)
+        (reference, data_internal) = _run_shape(data_voxelize)
     elif mesh_type == "png":
-        (reference, data_voxel) = _run_png(data_voxelize)
+        (reference, data_internal) = _run_png(data_voxelize)
     elif mesh_type == "stl":
-        (reference, data_voxel) = _run_stl(data_voxelize)
+        (reference, data_internal) = _run_stl(data_voxelize)
     else:
         raise CheckError("invalid mesh type")
 
-    return reference, data_voxel
+    return reference, data_internal
 
 
 def _run_voxel(data_voxelize):
@@ -70,14 +70,14 @@ def _run_voxel(data_voxelize):
         (n, d, c, domain_def, reference) = mesher_voxel.get_mesh(param, domain_index)
 
     # assemble the data
-    data_voxel = {
+    data_internal = {
         "n": n,
         "d": d,
         "c": c,
         "domain_def": domain_def,
     }
 
-    return reference, data_voxel
+    return reference, data_internal
 
 
 def _run_shape(data_voxelize):
@@ -95,14 +95,14 @@ def _run_shape(data_voxelize):
         (n, d, c, domain_def, reference) = mesher_shape.get_mesh(param, layer_stack, geometry_shape)
 
     # assemble the data
-    data_voxel = {
+    data_internal = {
         "n": n,
         "d": d,
         "c": c,
         "domain_def": domain_def,
     }
 
-    return reference, data_voxel
+    return reference, data_internal
 
 
 def _run_png(data_voxelize):
@@ -120,14 +120,14 @@ def _run_png(data_voxelize):
         (n, d, c, domain_def, reference) = mesher_png.get_mesh(param, domain_color, layer_stack)
 
     # assemble the data
-    data_voxel = {
+    data_internal = {
         "n": n,
         "d": d,
         "c": c,
         "domain_def": domain_def,
     }
 
-    return reference, data_voxel
+    return reference, data_internal
 
 
 def _run_stl(data_voxelize):
@@ -144,17 +144,17 @@ def _run_stl(data_voxelize):
         (n, d, c, domain_def, reference) = mesher_stl.get_mesh(param, domain_stl)
 
     # assemble the data
-    data_voxel = {
+    data_internal = {
         "n": n,
         "d": d,
         "c": c,
         "domain_def": domain_def,
     }
 
-    return reference, data_voxel
+    return reference, data_internal
 
 
-def _run_resample_graph(reference, data_voxel, data_geometry, is_truncated):
+def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
     """
     Resampling of a 3D voxel structure (increases the number of voxels).
     """
@@ -165,10 +165,10 @@ def _run_resample_graph(reference, data_voxel, data_geometry, is_truncated):
     domain_conflict = data_geometry["domain_conflict"]
 
     # extract the data
-    n = data_voxel["n"]
-    d = data_voxel["d"]
-    c = data_voxel["c"]
-    domain_def = data_voxel["domain_def"]
+    n = data_internal["n"]
+    d = data_internal["d"]
+    c = data_internal["c"]
+    domain_def = data_internal["domain_def"]
 
     with log.BlockTimer(LOGGER, "voxel_conflict"):
         domain_def = voxel_conflict.get_conflict(domain_def, domain_conflict)
@@ -183,25 +183,25 @@ def _run_resample_graph(reference, data_voxel, data_geometry, is_truncated):
         voxel_status = voxel_summary.get_status(n, d, s, c, domain_def, connection_def)
 
     # assemble the data
-    data_voxel = {
+    data_info = {
         "n": n,
         "d": d,
         "s": s,
         "c": c,
         "voxel_status": voxel_status,
-        "domain_def": domain_def,
-        "connection_def": connection_def,
-        "reference": reference,
-        "is_truncated": is_truncated,
     }
 
-    # if required, remove the optional data
-    tag_list = ["domain_def", "connection_def", "reference"]
+    # if required, add the complete data
     if is_truncated:
-        for tag in tag_list:
-            del data_voxel[tag]
+        data_geom = None
+    else:
+        data_geom = {
+            "domain_def": domain_def,
+            "connection_def": connection_def,
+            "reference": reference,
+        }
 
-    return data_voxel
+    return data_info, data_geom
 
 
 def run(data_geometry, is_truncated=False):
@@ -244,17 +244,33 @@ def run(data_geometry, is_truncated=False):
         check_data_options.check_data_options(is_truncated)
 
         # run the mesher
-        (reference, data_voxel) = _run_mesher(data_geometry)
+        (reference, data_internal) = _run_mesher(data_geometry)
 
         # resample and assemble
-        data_voxel = _run_resample_graph(reference, data_voxel, data_geometry, is_truncated)
+        (data_info, data_geom) = _run_resample_graph(reference, data_internal, data_geometry, is_truncated)
     except (CheckError, RunError) as ex:
+        data_info = None
+        data_geom = None
+        status = False
         log.log_exception(LOGGER, ex)
-        return False, ex, None
+    else:
+        ex = None
+        status = True
 
     # end message
     duration = log.get_duration(timestamp)
     LOGGER.info("duration: %s" % duration)
     LOGGER.info("successful termination")
 
-    return True, None, data_voxel
+    # extract the solution
+    data_voxel = {
+        "ex": ex,
+        "status": status,
+        "duration": duration,
+        "is_truncated": is_truncated,
+        "data_info": data_info,
+        "data_geom": data_geom,
+    }
+
+    return status, ex, data_voxel
+

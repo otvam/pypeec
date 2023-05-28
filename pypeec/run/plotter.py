@@ -232,14 +232,16 @@ def run(
         for tag_sweep, data_sweep_tmp in data_sweep.items():
             with log.BlockTimer(LOGGER, "plot sweep: " + tag_sweep):
                 _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_point, data_plotter, gui_obj)
+
+        # end message
+        LOGGER.info("successful termination")
+
+        # enter the event loop (should be at the end, blocking call)
+        status = gui_obj.show()
     except (CheckError, RunError) as ex:
+        status = False
         log.log_exception(LOGGER, ex)
-        return False, ex
+    else:
+        ex = None
 
-    # end message
-    LOGGER.info("successful termination")
-
-    # enter the event loop (should be at the end, blocking call)
-    status = gui_obj.show()
-
-    return status, None
+    return status, ex

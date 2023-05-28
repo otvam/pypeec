@@ -227,12 +227,19 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     sweep_param = data_problem["sweep_param"]
 
     # extract field
-    domain_def = data_voxel["domain_def"]
-    connection_def = data_voxel["connection_def"]
     is_truncated = data_voxel["is_truncated"]
+    data_info = data_voxel["data_info"]
+    data_geom = data_voxel["data_geom"]
 
     # check data
     datachecker.check_assert("is_truncated", not is_truncated, "truncated input data cannot be used")
+
+    # extract geometry
+    n = data_info["n"]
+    d = data_info["d"]
+    c = data_info["c"]
+    domain_def = data_geom["domain_def"]
+    connection_def = data_geom["connection_def"]
 
     # get material and source indices
     (domain_cm, idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
@@ -258,18 +265,17 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
 
     # assign combined data
     data_solver = {
-        "n": data_voxel["n"],
-        "d": data_voxel["d"],
-        "c": data_voxel["c"],
-        "green_simplify": data_tolerance["green_simplify"],
-        "coupling_simplify": data_tolerance["coupling_simplify"],
-        "solver_options": data_tolerance["solver_options"],
-        "condition_options": data_tolerance["condition_options"],
+        "n": n,
+        "d": d,
+        "c": c,
         "material_idx": material_idx,
         "source_idx": source_idx,
         "has_electric": has_electric,
         "has_magnetic": has_magnetic,
         "has_coupling": has_coupling,
     }
+
+    # add tolerance data
+    data_solver = {**data_solver, **data_tolerance}
 
     return data_solver, sweep_config, sweep_param

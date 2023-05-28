@@ -38,17 +38,21 @@ def _get_grid_voxel(data_voxel, data_point):
     """
 
     # extract the data
-    n = data_voxel["n"]
-    d = data_voxel["d"]
-    c = data_voxel["c"]
-    domain_def = data_voxel["domain_def"]
-    connection_def = data_voxel["connection_def"]
-    reference = data_voxel["reference"]
     is_truncated = data_voxel["is_truncated"]
+    data_info = data_voxel["data_info"]
+    data_geom = data_voxel["data_geom"]
 
     # check data
     if is_truncated:
         raise CheckError("truncated input data cannot be used")
+
+    # extract the data
+    n = data_info["n"]
+    d = data_info["d"]
+    c = data_info["c"]
+    domain_def = data_geom["domain_def"]
+    connection_def = data_geom["connection_def"]
+    reference = data_geom["reference"]
 
     # get the indices of the non-empty voxels and the domain and connection description
     (idx, domain, connection) = manage_compute.get_geometry_tag(domain_def, connection_def)
@@ -149,14 +153,16 @@ def run(
             for i, (tag_plot, data_viewer_tmp) in enumerate(data_viewer.items()):
                 LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_viewer), tag_plot))
                 _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)
+
+        # end message
+        LOGGER.info("successful termination")
+
+        # enter the event loop (should be at the end, blocking call)
+        status = gui_obj.show()
     except (CheckError, RunError) as ex:
+        status = False
         log.log_exception(LOGGER, ex)
-        return False, ex
+    else:
+        ex = None
 
-    # end message
-    LOGGER.info("successful termination")
-
-    # enter the event loop (should be at the end, blocking call)
-    status = gui_obj.show()
-
-    return status, None
+    return status, ex

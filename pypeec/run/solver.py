@@ -108,33 +108,6 @@ def _run_solver_init(data_solver, is_truncated):
         # free memory
         del K_tsr
 
-    # assign the results (will be merged in the solver output)
-    data_init = {
-        "n": n,
-        "d": d,
-        "c": c,
-        "idx_vc": idx_vc,
-        "idx_vm": idx_vm,
-        "idx_fc": idx_fc,
-        "idx_fm": idx_fm,
-        "idx_src_c": idx_src_c,
-        "idx_src_v": idx_src_v,
-        "pts_net_c": pts_net_c,
-        "pts_net_m": pts_net_m,
-        "problem_status": problem_status,
-    }
-
-    # if required, remove the optional data
-    tag_list = [
-        "idx_vc", "idx_vm",
-        "idx_fc", "idx_fm",
-        "idx_src_c", "idx_src_v",
-        "pts_net_c", "pts_net_m",
-    ]
-    if is_truncated:
-        for tag in tag_list:
-            del data_init[tag]
-
     # assign the results (internal data required to solve the problem)
     data_internal = {
         "idx_vc": idx_vc,
@@ -154,6 +127,28 @@ def _run_solver_init(data_solver, is_truncated):
         "source_pos": source_pos,
         "material_pos": material_pos,
     }
+
+    # assign the results (will be merged in the solver output)
+    data_init = {
+        "n": n,
+        "d": d,
+        "c": c,
+        "problem_status": problem_status,
+    }
+
+    # if required, add the complete data
+    if not is_truncated:
+        data_add = {
+            "idx_vc": idx_vc,
+            "idx_vm": idx_vm,
+            "idx_fc": idx_fc,
+            "idx_fm": idx_fm,
+            "idx_src_c": idx_src_c,
+            "idx_src_v": idx_src_v,
+            "pts_net_c": pts_net_c,
+            "pts_net_m": pts_net_m,
+        }
+        data_init = {**data_init, **data_add}
 
     return data_init, data_internal
 
@@ -298,17 +293,20 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         "Q_vm": Q_vm,
     }
 
-    # if required, remove the optional data
-    tag_list = [
-        "res",
-        "V_vc", "V_vm",
-        "J_vc", "B_vm",
-        "P_vc", "P_vm",
-        "S_vc", "Q_vm"
-    ]
-    if is_truncated:
-        for tag in tag_list:
-            del data_sweep[tag]
+    # if required, add the complete data
+    if not is_truncated:
+        data_add = {
+            "res": res,
+            "V_vc": V_vc,
+            "V_vm": V_vm,
+            "J_vc": J_vc,
+            "B_vm": B_vm,
+            "P_vc": P_vc,
+            "P_vm": P_vm,
+            "S_vc": S_vc,
+            "Q_vm": Q_vm,
+        }
+        data_sweep = {**data_sweep, **data_add}
 
     return data_sweep, sol
 
@@ -383,20 +381,28 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
 
         # compute the different sweeps
         data_sweep = sweep_solver.get_run_sweep(sweep_config, sweep_param, fct_compute)
-
-        # extract the solution
-        data_solution = {
-            "is_truncated": is_truncated,
-            "data_init": data_init,
-            "data_sweep": data_sweep,
-        }
     except (CheckError, RunError) as ex:
+        data_init = None
+        data_sweep = None
+        status = False
         log.log_exception(LOGGER, ex)
-        return False, ex, None
+    else:
+        ex = None
+        status = True
 
     # end message
     duration = log.get_duration(timestamp)
     LOGGER.info("duration: %s" % duration)
     LOGGER.info("successful termination")
 
-    return True, None, data_solution
+    # extract the solution
+    data_solution = {
+        "ex": ex,
+        "status": status,
+        "duration": duration,
+        "is_truncated": is_truncated,
+        "data_init": data_init,
+        "data_sweep": data_sweep,
+    }
+
+    return status, ex, data_solution
