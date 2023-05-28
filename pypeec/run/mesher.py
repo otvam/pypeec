@@ -203,6 +203,36 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
     return data_geom
 
 
+def _get_data(ex, data_geom, timestamp, is_truncated):
+    """
+    Assemble the returned data.
+    """
+
+    # end message
+    duration = log.get_duration(timestamp)
+
+    if ex is None:
+        status = True
+        LOGGER.info("duration: %s" % duration)
+        LOGGER.info("successful termination")
+    else:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("duration: %s" % duration)
+        LOGGER.error("invalid termination")
+        status = False
+
+    # extract the solution
+    data_voxel = {
+        "ex": ex,
+        "status": status,
+        "duration": duration,
+        "is_truncated": is_truncated,
+        "data_geom": data_geom,
+    }
+
+    return status, ex, data_voxel
+
+
 def run(data_geometry, is_truncated=False):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
@@ -248,26 +278,9 @@ def run(data_geometry, is_truncated=False):
         # resample and assemble
         data_geom = _run_resample_graph(reference, data_internal, data_geometry, is_truncated)
     except (CheckError, RunError) as ex:
-        data_geom = None
-        status = False
-        log.log_exception(LOGGER, ex)
+        (status, ex, data_voxel) = _get_data(ex, None, timestamp, is_truncated)
     else:
-        ex = None
-        status = True
-
-    # end message
-    duration = log.get_duration(timestamp)
-    LOGGER.info("duration: %s" % duration)
-    LOGGER.info("successful termination")
-
-    # extract the solution
-    data_voxel = {
-        "ex": ex,
-        "status": status,
-        "duration": duration,
-        "is_truncated": is_truncated,
-        "data_geom": data_geom,
-    }
+        (status, ex, data_voxel) = _get_data(None, data_geom, timestamp, is_truncated)
 
     return status, ex, data_voxel
 

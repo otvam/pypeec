@@ -311,6 +311,37 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     return data_sweep, sol
 
 
+def _get_data(ex, data_init, data_sweep, timestamp, is_truncated):
+    """
+    Assemble the returned data.
+    """
+
+    # end message
+    duration = log.get_duration(timestamp)
+
+    if ex is None:
+        status = True
+        LOGGER.info("duration: %s" % duration)
+        LOGGER.info("successful termination")
+    else:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("duration: %s" % duration)
+        LOGGER.error("invalid termination")
+        status = False
+
+    # extract the solution
+    data_solution = {
+        "ex": ex,
+        "status": status,
+        "duration": duration,
+        "is_truncated": is_truncated,
+        "data_init": data_init,
+        "data_sweep": data_sweep,
+    }
+
+    return status, ex, data_solution
+
+
 def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
     """
     Main script for solving a problem with the PEEC solver.
@@ -382,27 +413,8 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
         # compute the different sweeps
         data_sweep = sweep_solver.get_run_sweep(sweep_config, sweep_param, fct_compute)
     except (CheckError, RunError) as ex:
-        data_init = None
-        data_sweep = None
-        status = False
-        log.log_exception(LOGGER, ex)
+        (status, ex, data_solution) = _get_data(ex, None, None, timestamp, is_truncated)
     else:
-        ex = None
-        status = True
-
-    # end message
-    duration = log.get_duration(timestamp)
-    LOGGER.info("duration: %s" % duration)
-    LOGGER.info("successful termination")
-
-    # extract the solution
-    data_solution = {
-        "ex": ex,
-        "status": status,
-        "duration": duration,
-        "is_truncated": is_truncated,
-        "data_init": data_init,
-        "data_sweep": data_sweep,
-    }
+        (status, ex, data_solution) = _get_data(None, data_init, data_sweep, timestamp, is_truncated)
 
     return status, ex, data_solution

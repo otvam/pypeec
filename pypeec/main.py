@@ -84,9 +84,8 @@ def run_mesher_file(file_geometry, file_voxel, is_truncated=False):
         (status, ex, data_voxel) = mesher.run(data_geometry, is_truncated)
 
         # save results
-        if status:
-            logger.info("save the results")
-            io.write_pickle(file_voxel, data_voxel)
+        logger.info("save the results")
+        io.write_pickle(file_voxel, data_voxel)
     except FileError as ex:
         log.log_exception(logger, ex)
         return False, ex
@@ -270,9 +269,8 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_
         (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance, is_truncated)
 
         # save results
-        if status:
-            logger.info("save the results")
-            io.write_pickle(file_solution, data_solution)
+        logger.info("save the results")
+        io.write_pickle(file_solution, data_solution)
     except FileError as ex:
         log.log_exception(logger, ex)
         return False, ex

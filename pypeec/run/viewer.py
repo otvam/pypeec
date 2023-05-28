@@ -162,9 +162,7 @@ def run(
         # enter the event loop (should be at the end, blocking call)
         status = gui_obj.show()
     except (CheckError, RunError) as ex:
-        status = False
         log.log_exception(LOGGER, ex)
-    else:
-        ex = None
+        return False, ex
 
-    return status, ex
+    return True, None
