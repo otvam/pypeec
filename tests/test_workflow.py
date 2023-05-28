@@ -19,7 +19,7 @@ class TestWorkflow(unittest.TestCase):
     Run the complete workflow.
     """
 
-    def _check_mesher(self, voxel_status, mesher):
+    def _check_mesher(self, data_geom, mesher):
         """
         Check the results produced by the mesher.
         """
@@ -29,8 +29,8 @@ class TestWorkflow(unittest.TestCase):
         n_used_ref = mesher["n_used"]
 
         # extract the solution
-        n_total = voxel_status["n_total"]
-        n_used = voxel_status["n_used"]
+        n_total = data_geom["voxel_status"]["n_total"]
+        n_used = data_geom["voxel_status"]["n_used"]
 
         # check solution
         self.assertEqual(n_total, n_total_ref, msg="invalid number of voxels (complete grid)")
@@ -95,14 +95,14 @@ class TestWorkflow(unittest.TestCase):
         (data_voxel, data_solution) = test_pypeec.run_workflow(folder, name)
 
         # extract the data
-        voxel_status = data_voxel["voxel_status"]
+        data_geom = data_voxel["data_geom"]
         data_sweep = data_solution["data_sweep"]
 
         # get the reference results for the tests
         if generate_test:
             # generate the new reference results
             print("test: WARNING: generating a new reference for non-regression tests")
-            (mesher, solver) = test_generate.generate_results(voxel_status, data_sweep)
+            (mesher, solver) = test_generate.generate_results(data_geom, data_sweep)
 
             # write the reference results
             print("test: WARNING: setting a new reference for non-regression tests")
@@ -115,7 +115,7 @@ class TestWorkflow(unittest.TestCase):
         # check the results
         if check_test:
             print("test: check results")
-            self._check_results(voxel_status, data_sweep, solver, mesher, tol)
+            self._check_results(data_geom, data_sweep, solver, mesher, tol)
 
 
 def set_init():

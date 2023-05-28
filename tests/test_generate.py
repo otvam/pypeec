@@ -7,14 +7,14 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 
-def _get_mesher(voxel_status):
+def _get_mesher(data_geom):
     """
     Get the results produced by the mesher.
     """
 
     # extract the data
-    n_total = voxel_status["n_total"]
-    n_used = voxel_status["n_used"]
+    n_total = data_geom["voxel_status"]["n_total"]
+    n_used = data_geom["voxel_status"]["n_used"]
 
     # assemble results
     mesher = {
@@ -47,13 +47,13 @@ def _get_solver(data_sweep):
     return solver
 
 
-def generate_results(voxel_status, data_sweep):
+def generate_results(data_geom, data_sweep):
     """
     Get the results.
     """
 
     # check the mesher
-    mesher = _get_mesher(voxel_status)
+    mesher = _get_mesher(data_geom)
 
     # check the solver
     solver = {}
