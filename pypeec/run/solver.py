@@ -281,16 +281,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         "material": material,
         "source": source,
         "integral": integral,
-        "res": res,
         "conv": conv,
-        "V_vc": V_vc,
-        "V_vm": V_vm,
-        "J_vc": J_vc,
-        "B_vm": B_vm,
-        "P_vc": P_vc,
-        "P_vm": P_vm,
-        "S_vc": S_vc,
-        "Q_vm": Q_vm,
     }
 
     # if required, add the complete data
