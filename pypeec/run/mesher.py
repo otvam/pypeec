@@ -209,15 +209,15 @@ def _get_data(ex, data_geom, timestamp, is_truncated):
     """
 
     # end message
-    duration = log.get_duration(timestamp)
+    (duration, fmt) = log.get_duration(timestamp)
 
     if ex is None:
         status = True
-        LOGGER.info("duration: %s" % duration)
+        LOGGER.info("duration: %s" % fmt)
         LOGGER.info("successful termination")
     else:
         log.log_exception(LOGGER, ex)
-        LOGGER.error("duration: %s" % duration)
+        LOGGER.error("duration: %s" % fmt)
         LOGGER.error("invalid termination")
         status = False
 

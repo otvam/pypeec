@@ -66,8 +66,7 @@ def _get_compute_timestamp():
     Get the current time.
     """
 
-    timestamp = time.time()
-    timestamp = datetime.datetime.fromtimestamp(timestamp)
+    timestamp = datetime.datetime.today()
 
     return timestamp
 
@@ -78,7 +77,7 @@ def _get_compute_duration(timestamp):
     """
 
     duration = time.time()-timestamp
-    duration = datetime.datetime.utcfromtimestamp(duration)
+    duration = datetime.timedelta(seconds=duration)
 
     return duration
 
@@ -99,7 +98,14 @@ def _get_format_duration(duration):
     Format the duration into a string.
     """
 
-    duration_str = duration.strftime(FORMAT["DURATION_FMT"])
+    # get reference timestamp
+    timestamp = datetime.datetime.utcfromtimestamp(0)
+
+    # convert timestamp to duration
+    timestamp = timestamp+duration
+
+    # format timestamp
+    duration_str = timestamp.strftime(FORMAT["DURATION_FMT"])
     duration_str = duration_str[0:len(duration_str)-FORMAT["DURATION_TRC"]]
 
     return duration_str
@@ -258,9 +264,9 @@ def get_duration(timestamp):
     """
 
     duration = _get_compute_duration(timestamp)
-    duration = _get_format_duration(duration)
+    fmt = _get_format_duration(duration)
 
-    return duration
+    return duration, fmt
 
 
 def get_logger(name):
