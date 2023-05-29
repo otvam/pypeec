@@ -160,8 +160,8 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     (nx, ny, nz) = n
 
     # count
-    n_voxel = nx*ny*nz
-    n_face = 3*nx*ny*nz
+    n_voxel_total = nx*ny*nz
+    n_face_total = 3*nx*ny*nz
     n_voxel_electric = len(idx_vc)
     n_voxel_magnetic = len(idx_vm)
     n_face_electric = len(idx_fc)
@@ -170,13 +170,17 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     n_src_voltage = len(idx_src_v)
 
     # fraction of voxels
-    ratio_voxel = (n_voxel_electric+n_voxel_magnetic)/n_voxel
-    ratio_face = (n_face_electric+n_face_magnetic)/n_face
+    n_voxel_used = n_voxel_electric+n_voxel_magnetic
+    n_face_used = n_face_electric+n_face_magnetic
+    ratio_voxel = n_voxel_used/n_voxel_total
+    ratio_face = n_face_used/n_face_total
 
     # assign data
     problem_status = {
-        "n_voxel": n_voxel,
-        "n_face": n_face,
+        "n_voxel_total": n_voxel_total,
+        "n_face_total": n_face_total,
+        "n_voxel_used": n_voxel_used,
+        "n_face_used": n_face_used,
         "n_voxel_electric": n_voxel_electric,
         "n_voxel_magnetic": n_voxel_magnetic,
         "n_face_electric": n_face_electric,
@@ -188,14 +192,11 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     }
 
     # display status
-    LOGGER.debug("problem size: n_voxel = %d" % n_voxel)
-    LOGGER.debug("problem size: n_face = %d" % n_face)
-    LOGGER.debug("problem size: n_voxel_electric = %d" % n_voxel_electric)
-    LOGGER.debug("problem size: n_voxel_magnetic = %d" % n_voxel_magnetic)
-    LOGGER.debug("problem size: n_face_electric = %d" % n_face_electric)
-    LOGGER.debug("problem size: n_face_magnetic = %d" % n_face_magnetic)
-    LOGGER.debug("problem size: n_src_current = %d" % n_src_current)
-    LOGGER.debug("problem size: n_src_voltage = %d" % n_src_voltage)
+    LOGGER.debug("problem size: n_voxel_total = %d / n_voxel_used = %d" % (n_voxel_total, n_voxel_used))
+    LOGGER.debug("problem size: n_face_total = %d / n_face_used = %d" % (n_face_total, n_face_used))
+    LOGGER.debug("problem size: n_voxel_electric = %d / n_voxel_magnetic = %d" % (n_voxel_electric, n_voxel_magnetic))
+    LOGGER.debug("problem size: n_face_electric = %d / n_face_magnetic = %d" % (n_face_electric, n_face_magnetic))
+    LOGGER.debug("problem size: n_src_current = %d / n_src_voltage = %d" % (n_src_current, n_src_voltage))
     LOGGER.debug("problem size: ratio_voxel = %.3e" % ratio_voxel)
     LOGGER.debug("problem size: ratio_face = %.3e" % ratio_face)
 
