@@ -60,9 +60,9 @@ Other interesting papers and codes about similar methods:
 
 ## Project Repository
 
-* [Repository](https://github.com/otvam/PyPEEC)
-* [Releases](https://github.com/otvam/PyPEEC/tags)
-* [Issues](https://github.com/otvam/PyPEEC/issues)
+* [Repository](https://github.com/otvam/pypeec)
+* [Releases](https://github.com/otvam/pypeec/tags)
+* [Issues](https://github.com/otvam/pypeec/issues)
 
 ## Author
 
