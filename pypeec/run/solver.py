@@ -403,8 +403,8 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
 
         # compute the different sweeps
         data_sweep = sweep_solver.get_run_sweep(sweep_config, sweep_param, fct_compute)
-    except (CheckError, RunError) as ex:
-        (status, ex, data_solution) = _get_data(ex, None, None, timestamp, is_truncated)
+    except (CheckError, RunError) as ex_local:
+        (status, ex, data_solution) = _get_data(ex_local, None, None, timestamp, is_truncated)
     else:
         (status, ex, data_solution) = _get_data(None, data_init, data_sweep, timestamp, is_truncated)
 

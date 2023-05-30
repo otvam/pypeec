@@ -277,8 +277,8 @@ def run(data_geometry, is_truncated=False):
 
         # resample and assemble
         data_geom = _run_resample_graph(reference, data_internal, data_geometry, is_truncated)
-    except (CheckError, RunError) as ex:
-        (status, ex, data_voxel) = _get_data(ex, None, timestamp, is_truncated)
+    except (CheckError, RunError) as ex_local:
+        (status, ex, data_voxel) = _get_data(ex_local, None, timestamp, is_truncated)
     else:
         (status, ex, data_voxel) = _get_data(None, data_geom, timestamp, is_truncated)
 
