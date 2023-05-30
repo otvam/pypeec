@@ -71,7 +71,43 @@ def _assign_config(data_config):
         raise RunError("config data already used and cannot be updated")
 
 
-def set_config(file_config):
+def set_data_config(data_config):
+    """
+    Set the configuration data.
+    This function should be called immediately after initializing the module.
+
+    Parameters
+    ----------
+    data_config : dict (input data)
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if problems are encountered.
+    """
+
+    try:
+        # check the data integrity and complete the config
+        data_config = check_data_config.check_data_config(data_config)
+
+        # make the dictionary accessible with attributes
+        data_config = _parse_config(data_config)
+
+        # assign config to a global variable
+        _assign_config(data_config)
+    except (CheckError, RunError) as ex:
+        print("==========================")
+        print("INVALID CONFIGURATION DATA")
+        print("==========================")
+        print(str(ex))
+        print("==========================")
+        return False
+
+    return True
+
+
+def set_file_config(file_config):
     """
     Load and set a configuration file.
     This function should be called immediately after initializing the module.
@@ -87,18 +123,9 @@ def set_config(file_config):
         False if problems are encountered.
     """
 
+    # load the config file
     try:
-        # parse the file
         data_config = io.load_config(file_config)
-
-        # check the data integrity and complete the config
-        data_config = check_data_config.check_data_config(data_config)
-
-        # make the dictionary accessible with attributes
-        data_config = _parse_config(data_config)
-
-        # assign config to a global variable
-        _assign_config(data_config)
     except (FileError, CheckError, RunError) as ex:
         print("==========================")
         print("INVALID CONFIGURATION FILE")
@@ -106,6 +133,9 @@ def set_config(file_config):
         print(str(ex))
         print("==========================")
         return False
+
+    # set the config data
+    set_data_config(data_config)
 
     return True
 
@@ -118,6 +148,6 @@ DATA_CONFIG = dict()
 
 # load the default config files
 with importlib.resources.path("pypeec", "pypeec.yaml") as default_file_config:
-    status = set_config(default_file_config)
+    status = set_file_config(default_file_config)
     if not status:
         sys.exit(1)

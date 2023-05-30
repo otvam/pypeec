@@ -27,7 +27,7 @@ if __name__ == "__main__":
     file_viewer = os.path.join(PATH_ROOT, CFG_PLOT, "viewer.json")
 
     # set config
-    status = config.set_config(file_config)
+    status = config.set_file_config(file_config)
     assert status, "invalid configuration"
 
     # run viewer

@@ -53,7 +53,7 @@ def set_init():
     file_config = os.path.join(CFG_PYPEEC, "config.yaml")
 
     # set the configuration
-    status = config.set_config(file_config)
+    status = config.set_file_config(file_config)
     if not status:
         raise ValueError("invalid configuration")
 

@@ -25,7 +25,7 @@ if __name__ == "__main__":
     file_config = os.path.join(PATH_ROOT, CFG_PYPEEC, "config.yaml")
 
     # set config
-    status = config.set_config(file_config)
+    status = config.set_file_config(file_config)
     assert status, "invalid configuration"
 
     # run
