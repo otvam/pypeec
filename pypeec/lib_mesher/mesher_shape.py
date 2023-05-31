@@ -103,25 +103,26 @@ def _get_single_shape(shape_data):
 
     # get the shape
     if shape_type == "pad":
-        distance_tmp = 0.5*shape_data["diameter"]
-        obj_tmp = sha.geometry.MultiPoint(coord)
+        buffer = 0.5*shape_data["diameter"]
+        obj = sha.geometry.MultiPoint(coord)
     elif shape_type == "trace":
-        distance_tmp = 0.5*shape_data["width"]
-        obj_tmp = sha.geometry.LineString(coord)
+        buffer = 0.5*shape_data["width"]
+        obj = sha.geometry.LineString(coord)
     elif shape_type == "polygon":
-        distance_tmp = 1.0*shape_data["buffer"]
-        obj_tmp = sha.geometry.Polygon(coord)
+        buffer = shape_data["buffer"]
+        obj = sha.geometry.Polygon(coord)
     else:
         raise ValueError("invalid shape type")
 
     # add a buffer with a given thickness around the shape
-    obj_final = obj_tmp.buffer(distance_tmp, cap_style="round", join_style="round")
+    if buffer is not None:
+        obj = obj.buffer(buffer, cap_style="round", join_style="round")
 
     # check if valid
-    if obj_final.is_empty:
+    if obj.is_empty:
         raise RunError("invalid shape: shape is empty")
 
-    return obj_final
+    return obj
 
 
 def _get_composite_shape(shape_add, shape_sub, tol):

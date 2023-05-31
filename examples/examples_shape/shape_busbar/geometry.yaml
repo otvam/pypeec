@@ -27,7 +27,7 @@
                 "shape_add":
                     -
                         "shape_type": "polygon"
-                        "buffer": 0.0
+                        "buffer": null
                         "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                 "shape_sub": []
             -
@@ -36,12 +36,12 @@
                 "shape_add":
                     -
                         "shape_type": "polygon"
-                        "buffer": 0.0
+                        "buffer": null
                         "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                 "shape_sub":
                     -
                         "shape_type": "polygon"
-                        "buffer": 0.0
+                        "buffer": null
                         "coord": [[0.0e-3, 0.0e-3], [2.0e-3, 0.0e-3], [2.0e-3, 2.0e-3], [0.0e-3, 2.0e-3]]
             -
                 "layer_start": "back"
@@ -49,7 +49,7 @@
                 "shape_add":
                     -
                         "shape_type": "polygon"
-                        "buffer": 0.0
+                        "buffer": null
                         "coord": [[2.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 0.2e-3], [2.0e-3, 0.2e-3]]
                 "shape_sub": []
         "src":
@@ -59,7 +59,7 @@
                 "shape_add":
                     -
                         "shape_type": "polygon"
-                        "buffer": 0.0
+                        "buffer": null
                         "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                 "shape_sub": []
         "sink":
@@ -69,7 +69,7 @@
                 "shape_add":
                     -
                         "shape_type": "polygon"
-                        "buffer": 0.0
+                        "buffer": null
                         "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                 "shape_sub": []
 "resampling":

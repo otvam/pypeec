@@ -36,8 +36,9 @@ def _check_shape_definition(shape):
         datachecker.check_assert("coord", len(coord) >= 2, "trace coordinate should have at least two elements")
     elif shape_type == "polygon":
         datachecker.check_dict("shape", shape, key_list=["buffer"])
-        datachecker.check_float("buffer", shape["buffer"], is_positive=True, can_be_zero=True)
         datachecker.check_assert("coord", len(coord) >= 3, "polygon coordinate should have at least three elements")
+        if shape["buffer"] is not None:
+            datachecker.check_float("buffer", shape["buffer"], is_positive=True, can_be_zero=True)
     else:
         raise ValueError("invalid shape type")
 
