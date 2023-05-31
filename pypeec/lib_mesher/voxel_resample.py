@@ -206,7 +206,7 @@ def _get_update_size(n, d, resampling_factor):
     return n, d
 
 
-def _get_reduce(n, d, domain_def):
+def _get_reduce(n, d, c, domain_def):
     """
     Remove unused voxels from a voxel structure.
     """
@@ -217,16 +217,21 @@ def _get_reduce(n, d, domain_def):
     # update the indices of the problem
     (idx_min, idx_max) = _get_grid_bounds(idx_n, domain_def)
 
+    # get the center shift
+    n_diff = (idx_min+idx_max+1-n)/2
+    c += n_diff*d
+
     # get the new voxel number
     n = idx_max-idx_min+1
 
     # cast to list
     n = n.tolist()
+    c = c.tolist()
 
     # update the indices of the problem
     domain_def = _get_reduce_indices(n, idx_n, idx_min, domain_def)
 
-    return n, d, domain_def
+    return n, c, domain_def
 
 
 def _get_resample(n, d, domain_def, resampling_factor):
@@ -249,7 +254,7 @@ def _get_resample(n, d, domain_def, resampling_factor):
     return n, d, domain_def
 
 
-def get_remesh(n, d, domain_def, resampling):
+def get_remesh(n, d, c, domain_def, resampling):
     """
     Remesh of a voxel structure (remove unused voxels and resampling).
     """
@@ -264,7 +269,7 @@ def get_remesh(n, d, domain_def, resampling):
 
     # remove unused voxels
     if use_reduce:
-        (n, d, domain_def) = _get_reduce(n, d, domain_def)
+        (n, c, domain_def) = _get_reduce(n, d, c, domain_def)
 
     # resampling of the voxel structure
     if use_resample:
@@ -276,4 +281,4 @@ def get_remesh(n, d, domain_def, resampling):
     # display number of voxels
     LOGGER.debug("voxel: final number = %d" % np.prod(n))
 
-    return n, d, s, domain_def
+    return n, d, c, s, domain_def
