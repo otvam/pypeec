@@ -7,6 +7,9 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import sys
+import os
+import os.path
+import pathlib
 import importlib.resources
 from pypeec import io
 from pypeec.lib_check import check_data_config
@@ -71,23 +74,17 @@ def _assign_config(data_config):
         raise RunError("config data already used and cannot be updated")
 
 
-def set_data_config(data_config):
+def _set_file_config(file_config):
     """
-    Set the configuration data.
-    This function should be called immediately after initializing the module.
-
-    Parameters
-    ----------
-    data_config : dict (input data)
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
+    Load and set a configuration file.
+    This function is be called immediately after initializing the module.
     """
 
+    # load the config file
     try:
+        # load the config file
+        data_config = io.load_config(file_config)
+
         # check the data integrity and complete the config
         data_config = check_data_config.check_data_config(data_config)
 
@@ -96,48 +93,13 @@ def set_data_config(data_config):
 
         # assign config to a global variable
         _assign_config(data_config)
-    except (CheckError, RunError) as ex:
-        print("==========================")
-        print("INVALID CONFIGURATION DATA")
-        print("==========================")
-        print(str(ex))
-        print("==========================")
-        return False
-
-    return True
-
-
-def set_file_config(file_config):
-    """
-    Load and set a configuration file.
-    This function should be called immediately after initializing the module.
-
-    Parameters
-    ----------
-    file_config : string (input file, JSON or YAML format)
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    """
-
-    # load the config file
-    try:
-        data_config = io.load_config(file_config)
     except (FileError, CheckError, RunError) as ex:
         print("==========================")
         print("INVALID CONFIGURATION FILE")
         print("==========================")
         print(str(ex))
         print("==========================")
-        return False
-
-    # set the config data
-    set_data_config(data_config)
-
-    return True
+        sys.exit(1)
 
 
 # flag determined if the config can be set
@@ -147,7 +109,28 @@ CAN_UPDATE = True
 DATA_CONFIG = dict()
 
 # load the default config files
-with importlib.resources.path("pypeec", "pypeec.yaml") as default_file_config:
-    status = set_file_config(default_file_config)
-    if not status:
-        sys.exit(1)
+with importlib.resources.path("pypeec", "config.yaml") as file_config:
+    _set_file_config(file_config)
+
+# find the custom files
+file_config_list = [
+    pathlib.Path.home().joinpath(".pypeec.json"),
+    pathlib.Path.home().joinpath(".pypeec.yaml"),
+    pathlib.Path.home().joinpath("pypeec.json"),
+    pathlib.Path.home().joinpath("pypeec.yaml"),
+    pathlib.Path.cwd().joinpath(".pypeec.json"),
+    pathlib.Path.cwd().joinpath(".pypeec.yaml"),
+    pathlib.Path.cwd().joinpath("pypeec.json"),
+    pathlib.Path.cwd().joinpath("pypeec.yaml"),
+]
+
+# set the custom files
+for file_config in file_config_list:
+    if file_config.is_file():
+        _set_file_config(file_config)
+
+# check for env variables
+file_config = os.getenv("PYPEEC")
+if file_config is not None:
+    file_config = pathlib.Path(file_config)
+    _set_file_config(file_config)

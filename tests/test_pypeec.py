@@ -19,8 +19,7 @@ logging.disable(logging.INFO)
 PATH_ROOT = os.path.dirname(__file__)
 
 # construct the config folder path
-CFG_PLOT = os.path.join(PATH_ROOT, "..", "examples", "cfg_plot")
-CFG_PYPEEC = os.path.join(PATH_ROOT, "..", "examples", "cfg_pypeec")
+FOLDER_CONFIG = os.path.join(PATH_ROOT, "..", "examples", "config")
 PATH_EXAMPLES = os.path.join(PATH_ROOT, "..", "examples")
 
 def _create_temp_file():
@@ -44,20 +43,6 @@ def _delete_temp_file(filename):
         pass
 
 
-def set_init():
-    """
-    Set the configuration file.
-    """
-
-    # get config file name
-    file_config = os.path.join(CFG_PYPEEC, "config.yaml")
-
-    # set the configuration
-    status = config.set_file_config(file_config)
-    if not status:
-        raise ValueError("invalid configuration")
-
-
 def run_workflow(folder, name):
     """
     Run the complete workflow:
@@ -75,9 +60,9 @@ def run_workflow(folder, name):
     file_problem = os.path.join(PATH_EXAMPLES, folder, name, "problem.yaml")
 
     # get config file name
-    file_plotter = os.path.join(CFG_PLOT, "plotter.json")
-    file_viewer = os.path.join(CFG_PLOT, "viewer.json")
-    file_tolerance = os.path.join(CFG_PYPEEC, "tolerance.yaml")
+    file_plotter = os.path.join(FOLDER_CONFIG, "plotter.json")
+    file_viewer = os.path.join(FOLDER_CONFIG, "viewer.json")
+    file_tolerance = os.path.join(FOLDER_CONFIG, "tolerance.yaml")
 
     # get the temporary files
     file_voxel = _create_temp_file()

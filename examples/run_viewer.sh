@@ -13,11 +13,10 @@ source examples_config.sh
 # get the filenames
 FILE_VOXEL="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/voxel.pck"
 FILE_POINT="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/point.yaml"
-FILE_CONFIG="$PATH_ROOT/$CFG_PYPEEC/config.yaml"
-FILE_VIEWER="$PATH_ROOT/$CFG_PLOT/viewer.json"
+FILE_VIEWER="$PATH_ROOT/$FOLDER_CONFIG/viewer.json"
 
 # run
-pypeec --config $FILE_CONFIG viewer \
+pypeec viewer \
     --voxel $FILE_VOXEL \
     --point $FILE_POINT \
     --viewer $FILE_VIEWER

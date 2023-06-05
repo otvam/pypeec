@@ -123,9 +123,6 @@ def set_init():
     Set the configuration file.
     """
 
-    # set the PyPEEC config
-    test_pypeec.set_init()
-
     # return the test object
     obj = TestWorkflow
 
