@@ -8,7 +8,6 @@ __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import sys
 import argparse
-from pypeec import config
 from pypeec import main
 
 # get the version number
@@ -37,15 +36,6 @@ def _get_parser():
         "-v", "--version",
         action="version",
         version="PyPEEC %s" % VERSION,
-    )
-
-    # switch for a custom config file
-    parser.add_argument(
-        "-c", "--config",
-        help="config file (custom configuration file / JSON or YAML)",
-        required=False,
-        metavar="file",
-        dest="file_config",
     )
 
     # add subparsers
@@ -264,31 +254,6 @@ def _get_arg_plotter(subparsers):
     )
 
 
-def _get_arguments(parser):
-    """
-    Parse the command line arguments.
-    Load a custom config file (if provided).
-    """
-
-    # parse and call
-    args = parser.parse_args()
-
-    # get the config file
-    command = args.command
-    file_config = args.file_config
-
-    # if provided, load a custom config file
-    if file_config is not None:
-        # load the config
-        status = config.set_file_config(file_config)
-
-        # exit if config is problematic
-        if not status:
-            sys.exit(1)
-
-    return command, args
-
-
 def run_script():
     """
     User script for running PyPEEC.
@@ -305,16 +270,16 @@ def run_script():
     _get_arg_plotter(subparsers)
 
     # parse the config and get arguments
-    (command, args) = _get_arguments(parser)
+    args = parser.parse_args()
 
     # run the code
-    if command in ["mesher", "me"]:
+    if args.command in ["mesher", "me"]:
         (status, ex) = main.run_mesher_file(
             args.file_geometry,
             args.file_voxel,
             args.is_truncated,
         )
-    elif command in ["viewer", "vi"]:
+    elif args.command in ["viewer", "vi"]:
         (status, ex) = main.run_viewer_file(
             args.file_voxel,
             args.file_point,
@@ -323,7 +288,7 @@ def run_script():
             args.is_silent,
             args.folder,
         )
-    elif command in ["solver", "so"]:
+    elif args.command in ["solver", "so"]:
         (status, ex) = main.run_solver_file(
             args.file_voxel,
             args.file_problem,
@@ -331,7 +296,7 @@ def run_script():
             args.file_solution,
             args.is_truncated,
         )
-    elif command in ["plotter", "pl"]:
+    elif args.command in ["plotter", "pl"]:
         (status, ex) = main.run_plotter_file(
             args.file_solution,
             args.file_point,

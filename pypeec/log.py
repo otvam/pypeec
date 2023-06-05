@@ -14,38 +14,18 @@ import logging
 from pypeec import config
 
 # get config
-FORMAT = dict()
-LEVEL = str()
-INDENTATION = int()
-EXCEPTION_TRACE = bool()
-USE_COLOR = bool()
-DEF_COLOR = dict()
+FORMAT = config.LOGGING_OPTIONS.FORMAT
+LEVEL = config.LOGGING_OPTIONS.LEVEL
+INDENTATION = config.LOGGING_OPTIONS.INDENTATION
+EXCEPTION_TRACE = config.LOGGING_OPTIONS.EXCEPTION_TRACE
+USE_COLOR = config.LOGGING_OPTIONS.USE_COLOR
+DEF_COLOR = config.LOGGING_OPTIONS.DEF_COLOR
 
 # global timestamp (constant over the complete run)
 GLOBAL_TIMESTAMP = time.time()
 
 # logging indentation level (updated inside the blocks)
 CURRENT_LEVEL = 0
-
-
-def _load_config():
-    """
-    Load the config from the config file.
-    """
-
-    global FORMAT
-    global LEVEL
-    global INDENTATION
-    global EXCEPTION_TRACE
-    global USE_COLOR
-    global DEF_COLOR
-
-    FORMAT = config.LOGGING_OPTIONS.FORMAT
-    LEVEL = config.LOGGING_OPTIONS.LEVEL
-    INDENTATION = config.LOGGING_OPTIONS.INDENTATION
-    EXCEPTION_TRACE = config.LOGGING_OPTIONS.EXCEPTION_TRACE
-    USE_COLOR = config.LOGGING_OPTIONS.USE_COLOR
-    DEF_COLOR = config.LOGGING_OPTIONS.DEF_COLOR
 
 
 def _get_fmt(color, reset):
@@ -280,9 +260,6 @@ def get_logger(name):
 
     The elapsed time measurement method and the logging level are specified in the config.
     """
-
-    # load the configuration
-    _load_config()
 
     # get the logger
     logger = logging.getLogger(name)
