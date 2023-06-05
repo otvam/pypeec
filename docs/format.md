@@ -357,6 +357,7 @@ This file contains the definition of the points used for magnetic field evaluati
 # 2D array containing the points used for magnetic field evaluation
 #   - the number of points (n_pts) can be zero.
 #   - the array has the following size: (n_pts, 3)
+#   - the points should be located outside the active voxels
 [
     [-1.0, +1.0, +1.0],
     [+1.0, -1.0, +1.0],
@@ -366,7 +367,7 @@ This file contains the definition of the points used for magnetic field evaluati
 
 ## Other File Formats
 
-* The configuration file format is documented in `examples/cfg_pypeec/config.yaml`.
-* The `file_tolerance` format is documented in `examples/cfg_pypeec/tolerance.yaml`.
-* The `file_viewer` format is documented in `examples/generate_plot.py`.
-* The `file_plotter` format is documented in `examples/generate_plot.py`.
+* The configuration file format is documented in `pypeec/config.yaml`.
+* The `file_tolerance` format is documented in `examples/config/tolerance.yaml`.
+* The `file_viewer` format is documented in `examples/generate_plot.py` and `examples/config/viewer.json`.
+* The `file_plotter` format is documented in `examples/generate_plot.py` and `examples/config/plotter.json`.
