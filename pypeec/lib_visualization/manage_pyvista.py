@@ -72,8 +72,16 @@ def _get_plot_options(pl, grid, voxel, point, plot_options):
         pl.camera.elevation = plot_options["camera_elevation"]
 
     # add title and axes
-    pl.add_axes(line_width=2, interactive=False)
-    pl.add_text(plot_options["title"], font_size=10)
+    pl.add_axes(
+        line_width=plot_options["axis_size"],
+        interactive=False,
+    )
+    pl.add_text(
+        plot_options["title_text"],
+        color=plot_options["title_color"],
+        font_size=plot_options["title_font"],
+    )
+    pl.set_background(plot_options["background_color"])
 
 
 def _get_clip_mesh(pl, obj, arg, clip_options):

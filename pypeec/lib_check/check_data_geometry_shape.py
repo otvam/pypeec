@@ -37,8 +37,7 @@ def _check_shape_definition(shape):
     elif shape_type == "polygon":
         datachecker.check_dict("shape", shape, key_list=["buffer"])
         datachecker.check_assert("coord", len(coord) >= 3, "polygon coordinate should have at least three elements")
-        if shape["buffer"] is not None:
-            datachecker.check_float("buffer", shape["buffer"], is_positive=True, can_be_zero=True)
+        datachecker.check_float("buffer", shape["buffer"], is_positive=True, can_be_zero=True, can_be_none=True)
     else:
         raise ValueError("invalid shape type")
 
@@ -124,10 +123,8 @@ def _check_param(param):
     datachecker.check_float("dz", param["dz"], is_positive=True, can_be_zero=False)
     datachecker.check_float("tol", param["tol"], is_positive=True, can_be_zero=False)
     datachecker.check_float("cz", param["cz"], is_positive=False, can_be_zero=True)
-    if param["xy_min"] is not None:
-        datachecker.check_float_array("xy_min", param["xy_min"], size=3, is_positive=False, can_be_zero=True)
-    if param["xy_max"] is not None:
-        datachecker.check_float_array("xy_max", param["xy_max"], size=3, is_positive=False, can_be_zero=True)
+    datachecker.check_float_array("xy_min", param["xy_min"], size=3, is_positive=False, can_be_zero=True, can_be_none=True)
+    datachecker.check_float_array("xy_max", param["xy_max"], size=3, is_positive=False, can_be_zero=True, can_be_none=True)
 
 
 def check_data_voxelize(data_voxelize):

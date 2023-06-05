@@ -44,10 +44,8 @@ def _check_param(param):
 
     # check data
     datachecker.check_float_array("d", param["d"], size=3, is_positive=True, can_be_zero=False)
-    if param["xyz_min"] is not None:
-        datachecker.check_float_array("xyz_min", param["xyz_min"], size=3, is_positive=False, can_be_zero=True)
-    if param["xyz_max"] is not None:
-        datachecker.check_float_array("xyz_max", param["xyz_max"], size=3, is_positive=False, can_be_zero=True)
+    datachecker.check_float_array("xyz_min", param["xyz_min"], size=3, is_positive=False, can_be_zero=True, can_be_none=True)
+    datachecker.check_float_array("xyz_max", param["xyz_max"], size=3, is_positive=False, can_be_zero=True, can_be_none=True)
 
 
 def check_data_voxelize(data_voxelize):

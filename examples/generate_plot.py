@@ -22,7 +22,11 @@ def _get_plot_options(name):
     """
 
     plot_options = {
-        "title": name,  # name displayed on the window corner
+        "title_text": name,  # name displayed on the window corner
+        "title_color": "black",  # color of the text displayed on the window corner
+        "title_font": 10.0,  # font size of the text displayed on the window corner
+        "background_color": "gray",  # background color of the plot
+        "axis_size": 2.0,  # size of the axis marker
         "grid_plot": True,  # plot (or not) the complete voxel geometry as wireframe
         "grid_thickness": 1.0,  # line thickness for the complete voxel geometry
         "grid_color": "black",  # line opacity for the complete voxel geometry

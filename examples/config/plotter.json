@@ -32,7 +32,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Material",
+                "title_text": "Material",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -87,7 +91,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "El. Potential",
+                "title_text": "El. Potential",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -142,7 +150,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Mag. Potential",
+                "title_text": "Mag. Potential",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -197,7 +209,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "El. Source",
+                "title_text": "El. Source",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -252,7 +268,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Mag. Source",
+                "title_text": "Mag. Source",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -307,7 +327,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "El. Losses",
+                "title_text": "El. Losses",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -362,7 +386,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Mag. Losses",
+                "title_text": "Mag. Losses",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -417,7 +445,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Current",
+                "title_text": "Current",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -474,7 +506,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Re. Current",
+                "title_text": "Re. Current",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -531,7 +567,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Im. Current",
+                "title_text": "Im. Current",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -586,7 +626,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Flux Density",
+                "title_text": "Flux Density",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -643,7 +687,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Re. Flux Density",
+                "title_text": "Re. Flux Density",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -700,7 +748,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Im. Flux Density",
+                "title_text": "Im. Flux Density",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -755,7 +807,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Mag. Field Norm",
+                "title_text": "Mag. Field Norm",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -812,7 +868,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Re. Mag. Field",
+                "title_text": "Re. Mag. Field",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -869,7 +929,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Im. Mag. Field",
+                "title_text": "Im. Mag. Field",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",

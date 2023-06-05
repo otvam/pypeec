@@ -27,10 +27,8 @@ def _check_data_window(data_window):
     # check data
     datachecker.check_string("title", title, can_be_empty=False)
     datachecker.check_boolean("show_menu", show_menu)
-    if window_size is not None:
-        datachecker.check_integer_array("window_size", window_size, size=2, is_positive=True, can_be_zero=False)
-    if notebook_size is not None:
-        datachecker.check_integer_array("notebook_size", notebook_size, size=2, is_positive=True, can_be_zero=False)
+    datachecker.check_integer_array("window_size", window_size, size=2, is_positive=True, can_be_zero=False, can_be_none=True)
+    datachecker.check_integer_array("notebook_size", notebook_size, size=2, is_positive=True, can_be_zero=False, can_be_none=True)
 
 
 def _check_plot_options(plot_options):
@@ -41,7 +39,8 @@ def _check_plot_options(plot_options):
 
     # check type
     key_list = [
-        "title",
+        "background_color", "axis_size",
+        "title_text", "title_color", "title_font",
         "grid_plot", "grid_thickness", "grid_color", "grid_opacity",
         "geom_plot", "geom_thickness", "geom_color", "geom_opacity",
         "point_plot", "point_size", "point_color", "point_opacity",
@@ -50,7 +49,15 @@ def _check_plot_options(plot_options):
     datachecker.check_dict("data_window", plot_options, key_list=key_list)
 
     # check title data
-    datachecker.check_string("title", plot_options["title"], can_be_empty=False)
+    datachecker.check_string("title_text", plot_options["title_text"], can_be_empty=False)
+    datachecker.check_string("title_color", plot_options["title_color"], can_be_empty=False)
+    datachecker.check_float("title_font", plot_options["title_font"], is_positive=True, can_be_zero=False)
+
+    # check background
+    datachecker.check_string("background_color", plot_options["background_color"], can_be_empty=False)
+
+    # check axis
+    datachecker.check_float("axis_size", plot_options["axis_size"], is_positive=True, can_be_zero=False)
 
     # check grid data
     datachecker.check_boolean("grid_plot", plot_options["grid_plot"])
@@ -71,12 +78,9 @@ def _check_plot_options(plot_options):
     datachecker.check_float("point_opacity", plot_options["point_opacity"], is_positive=True, can_be_zero=True)
 
     # check camera data
-    if plot_options["camera_roll"] is not None:
-        datachecker.check_float("camera_roll", plot_options["camera_roll"])
-    if plot_options["camera_azimuth"] is not None:
-        datachecker.check_float("camera_azimuth", plot_options["camera_azimuth"])
-    if plot_options["camera_elevation"] is not None:
-        datachecker.check_float("camera_elevation", plot_options["camera_elevation"])
+    datachecker.check_float("camera_roll", plot_options["camera_roll"], can_be_none=True)
+    datachecker.check_float("camera_azimuth", plot_options["camera_azimuth"], can_be_none=True)
+    datachecker.check_float("camera_elevation", plot_options["camera_elevation"], can_be_none=True)
 
 
 def _check_clip_options(clip_options):
@@ -145,10 +149,8 @@ def _check_data_options_plotter_pyvista(plot_type, data_options):
         datachecker.check_boolean("log", data_options["log"])
         datachecker.check_string("legend", data_options["legend"], can_be_empty=False)
         datachecker.check_float("scale", data_options["scale"], is_positive=True, can_be_zero=True)
-        if data_options["color_lim"] is not None:
-            datachecker.check_float_array("color_lim", data_options["color_lim"], size=2)
-        if data_options["filter_lim"] is not None:
-            datachecker.check_float_array("filter_lim", data_options["filter_lim"], size=2)
+        datachecker.check_float_array("color_lim", data_options["color_lim"], size=2, can_be_none=True)
+        datachecker.check_float_array("filter_lim", data_options["filter_lim"], size=2, can_be_none=True)
 
     # check the scalar options
     if plot_type in ["scalar_voxel", "scalar_point"]:

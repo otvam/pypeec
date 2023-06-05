@@ -30,7 +30,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Domain",
+                "title_text": "Domain",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -80,7 +84,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Connection",
+                "title_text": "Connection",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -132,7 +140,11 @@
                 "clip_value": 0.0
             },
             "plot_options": {
-                "title": "Voxelization",
+                "title_text": "Voxelization",
+                "title_color": "black",
+                "title_font": 10.0,
+                "background_color": "gray",
+                "axis_size": 2.0,
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",

@@ -14,10 +14,10 @@ def check_tag_list(data_check, tag_list):
     """
 
     # check the list of plots
+    datachecker.check_list("tag_list", tag_list, can_be_empty=True, sub_type=str, can_be_none=True)
     if tag_list is not None:
-        datachecker.check_list("tag", tag_list, can_be_empty=True, sub_type=str)
         for tag in tag_list:
-            datachecker.check_choice("tag", tag, data_check)
+            datachecker.check_choice("tag_list", tag, data_check)
 
 
 def check_plot_options(is_silent, folder):
@@ -26,8 +26,7 @@ def check_plot_options(is_silent, folder):
     """
 
     datachecker.check_boolean("is_silent", is_silent)
-    if folder is not None:
-        datachecker.check_folder("folder", folder)
+    datachecker.check_folder("folder", folder, can_be_none=True)
 
 
 def check_data_options(is_truncated):

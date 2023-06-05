@@ -168,6 +168,5 @@ def check_data_problem(data_problem):
     # check the sweep configuration
     datachecker.check_dict("sweep_config", sweep_config, can_be_empty=False)
     for tag_run, tag_init in sweep_config.items():
-        datachecker.check_choice("tag_run", tag_run, sweep_list)
-        if tag_init is not None:
-            datachecker.check_choice("tag_init", tag_init, sweep_list)
+        datachecker.check_choice("tag_run", tag_run, sweep_list, can_be_none=False)
+        datachecker.check_choice("tag_init", tag_init, sweep_list, can_be_none=True)

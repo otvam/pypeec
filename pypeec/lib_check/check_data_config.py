@@ -121,14 +121,10 @@ def _check_data(data_config):
         "FFTW_CACHE_TIMEOUT",
     ]
     datachecker.check_dict("FFT_OPTIONS", FFT_OPTIONS, key_list=key_list)
-    if FFT_OPTIONS["FFTS_WORKER"] is not None:
-        datachecker.check_integer("FFTS_WORKER", FFT_OPTIONS["FFTS_WORKER"], is_positive=True, can_be_zero=False)
-    if FFT_OPTIONS["FFTW_THREAD"] is not None:
-        datachecker.check_integer("FFTW_THREAD", FFT_OPTIONS["FFTW_THREAD"], is_positive=True, can_be_zero=False)
-    if FFT_OPTIONS["FFTW_BYTE_ALIGN"] is not None:
-        datachecker.check_integer("FFTW_BYTE_ALIGN", FFT_OPTIONS["FFTW_BYTE_ALIGN"], is_positive=True, can_be_zero=False)
-    if FFT_OPTIONS["FFTW_CACHE_TIMEOUT"] is not None:
-        datachecker.check_float("FFTW_CACHE_TIMEOUT", FFT_OPTIONS["FFTW_CACHE_TIMEOUT"], is_positive=True, can_be_zero=True)
+    datachecker.check_integer("FFTS_WORKER", FFT_OPTIONS["FFTS_WORKER"], is_positive=True, can_be_zero=False, can_be_none=True)
+    datachecker.check_integer("FFTW_THREAD", FFT_OPTIONS["FFTW_THREAD"], is_positive=True, can_be_zero=False, can_be_none=True)
+    datachecker.check_integer("FFTW_BYTE_ALIGN", FFT_OPTIONS["FFTW_BYTE_ALIGN"], is_positive=True, can_be_zero=False, can_be_none=True)
+    datachecker.check_float("FFTW_CACHE_TIMEOUT", FFT_OPTIONS["FFTW_CACHE_TIMEOUT"], is_positive=True, can_be_zero=True, can_be_none=True)
 
     # check factorization options
     FACTORIZATION_OPTIONS = data_config["FACTORIZATION_OPTIONS"]
@@ -137,18 +133,15 @@ def _check_data(data_config):
         "THREAD_MKL",
     ]
     datachecker.check_dict("FACTORIZATION_OPTIONS", FACTORIZATION_OPTIONS, key_list=key_list)
-    if FACTORIZATION_OPTIONS["THREAD_PARDISO"] is not None:
-        datachecker.check_integer("THREAD_PARDISO", FACTORIZATION_OPTIONS["THREAD_PARDISO"], is_positive=True, can_be_zero=False)
-    if FACTORIZATION_OPTIONS["THREAD_MKL"] is not None:
-        datachecker.check_integer("THREAD_MKL", FACTORIZATION_OPTIONS["THREAD_MKL"], is_positive=True, can_be_zero=False)
+    datachecker.check_integer("THREAD_PARDISO", FACTORIZATION_OPTIONS["THREAD_PARDISO"], is_positive=True, can_be_zero=False, can_be_none=True)
+    datachecker.check_integer("THREAD_MKL", FACTORIZATION_OPTIONS["THREAD_MKL"], is_positive=True, can_be_zero=False, can_be_none=True)
 
     # check other switches
     datachecker.check_boolean("MATRIX_SPLIT", data_config["MATRIX_SPLIT"])
     datachecker.check_boolean("USE_DOUBLE", data_config["USE_DOUBLE"])
     datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True, can_be_zero=True)
     datachecker.check_choice("MATRIX_MULTIPLICATION", data_config["MATRIX_MULTIPLICATION"], ["FFT", "DIRECT"])
-    if data_config["SWEEP_POOL"] is not None:
-        datachecker.check_integer("SWEEP_POOL", data_config["SWEEP_POOL"], is_positive=True, can_be_zero=False)
+    datachecker.check_integer("SWEEP_POOL", data_config["SWEEP_POOL"], is_positive=True, can_be_zero=False, can_be_none=True)
 
     # check FFT library
     lib = [
