@@ -11,6 +11,9 @@ from pypeec import log
 from pypeec import io
 from pypeec.error import FileError
 
+# create the logger
+LOGGER = log.get_logger("MAIN")
+
 
 def run_mesher_data(data_geometry, is_truncated=False):
     """
@@ -67,27 +70,24 @@ def run_mesher_file(file_geometry, file_voxel, is_truncated=False):
         None if the termination is successful.
     """
 
-    # create the logger
-    logger = log.get_logger("MAIN")
-
     # load the tool
-    logger.info("load the mesher")
+    LOGGER.info("load the mesher")
     from pypeec.run import mesher
 
     # run the tool
     try:
         # load data
-        logger.info("load the input data")
+        LOGGER.info("load the input data")
         data_geometry = io.load_config(file_geometry)
 
         # call the mesher
         (status, ex, data_voxel) = mesher.run(data_geometry, is_truncated)
 
         # save results
-        logger.info("save the results")
+        LOGGER.info("save the results")
         io.write_pickle(file_voxel, data_voxel)
     except FileError as ex:
-        log.log_exception(logger, ex)
+        log.log_exception(LOGGER, ex)
         return False, ex
 
     return status, ex
@@ -167,17 +167,14 @@ def run_viewer_file(
         None if the termination is successful.
     """
 
-    # create the logger
-    logger = log.get_logger("MAIN")
-
     # load the tool
-    logger.info("load the viewer")
+    LOGGER.info("load the viewer")
     from pypeec.run import viewer
 
     # run the tool
     try:
         # load data
-        logger.info("load the input data")
+        LOGGER.info("load the input data")
         data_voxel = io.load_pickle(file_voxel)
         data_point = io.load_config(file_point)
         data_viewer = io.load_config(file_viewer)
@@ -185,7 +182,7 @@ def run_viewer_file(
         # call the viewer
         (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent, folder)
     except FileError as ex:
-        log.log_exception(logger, ex)
+        log.log_exception(LOGGER, ex)
         return False, ex
 
     return status, ex
@@ -250,17 +247,14 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_
         None if the termination is successful.
     """
 
-    # create the logger
-    logger = log.get_logger("MAIN")
-
     # load the tool
-    logger.info("load the solver")
+    LOGGER.info("load the solver")
     from pypeec.run import solver
 
     # run the tool
     try:
         # load data
-        logger.info("load the input data")
+        LOGGER.info("load the input data")
         data_voxel = io.load_pickle(file_voxel)
         data_problem = io.load_config(file_problem)
         data_tolerance = io.load_config(file_tolerance)
@@ -269,10 +263,10 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_
         (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance, is_truncated)
 
         # save results
-        logger.info("save the results")
+        LOGGER.info("save the results")
         io.write_pickle(file_solution, data_solution)
     except FileError as ex:
-        log.log_exception(logger, ex)
+        log.log_exception(LOGGER, ex)
         return False, ex
 
     return status, ex
@@ -358,17 +352,14 @@ def run_plotter_file(
         None if the termination is successful.
     """
 
-    # create the logger
-    logger = log.get_logger("MAIN")
-
     # load the tool
-    logger.info("load the plotter")
+    LOGGER.info("load the plotter")
     from pypeec.run import plotter
 
     # run the tool
     try:
         # load data
-        logger.info("load the input data")
+        LOGGER.info("load the input data")
         data_solution = io.load_pickle(file_solution)
         data_point = io.load_config(file_point)
         data_plotter = io.load_config(file_plotter)
@@ -376,7 +367,7 @@ def run_plotter_file(
         # call the plotter
         (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent, folder)
     except FileError as ex:
-        log.log_exception(logger, ex)
+        log.log_exception(LOGGER, ex)
         return False, ex
 
     return status, ex
