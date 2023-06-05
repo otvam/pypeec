@@ -343,8 +343,6 @@ class PlotGui:
                 pl.app_window.show()
             matplotlib.pyplot.show(block=False)
 
-            self._save_screenshot()
-
             # enter the event loop
             exit_code = self.app.exec_()
             status = exit_code == 0
@@ -358,8 +356,6 @@ class PlotGui:
             for tag, pl in self.pl_list:
                 pl.show(jupyter_backend='trame')
             matplotlib.pyplot.show(block=False)
-
-            self._save_screenshot()
 
             return True
         elif self.plot_mode == "nop":
