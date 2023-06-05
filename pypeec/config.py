@@ -21,10 +21,6 @@ def __getattr__(name):
     Wrapper to access the config data with attributes.
     """
 
-    # once used, the config cannot be updated
-    global CAN_UPDATE
-    CAN_UPDATE = False
-
     return DATA_CONFIG[name]
 
 
@@ -62,18 +58,6 @@ def _parse_config(data_config):
     return data_config
 
 
-def _assign_config(data_config):
-    """
-    Assign the config (if possible).
-    """
-
-    if CAN_UPDATE:
-        global DATA_CONFIG
-        DATA_CONFIG = data_config
-    else:
-        raise RunError("config data already used and cannot be updated")
-
-
 def _set_file_config(file_config):
     """
     Load and set a configuration file.
@@ -92,7 +76,8 @@ def _set_file_config(file_config):
         data_config = _parse_config(data_config)
 
         # assign config to a global variable
-        _assign_config(data_config)
+        global DATA_CONFIG
+        DATA_CONFIG = data_config
     except (FileError, CheckError, RunError) as ex:
         print("==========================")
         print("INVALID CONFIGURATION FILE")
@@ -101,9 +86,6 @@ def _set_file_config(file_config):
         print("==========================")
         sys.exit(1)
 
-
-# flag determined if the config can be set
-CAN_UPDATE = True
 
 # init config data
 DATA_CONFIG = dict()
