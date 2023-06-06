@@ -10,14 +10,14 @@ name: Test Python Versions
 on: ["workflow_dispatch"]
 
 env:
-  ALLOW_PLOTTING: true
+  ALLOW_PLOTTING: "true"
 
 permissions:
   contents: read
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     timeout-minutes: 20
     strategy:
       fail-fast: false

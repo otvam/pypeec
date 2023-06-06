@@ -10,7 +10,7 @@ name: Test Different Platforms
 on: ["workflow_dispatch"]
 
 env:
-  ALLOW_PLOTTING: true
+  ALLOW_PLOTTING: "true"
 
 permissions:
   contents: read

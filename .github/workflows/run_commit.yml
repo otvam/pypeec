@@ -9,21 +9,21 @@ name: Automated Tests
 
 on:
   workflow_dispatch:
-    branches: [ "main" ]
+    branches: ["main"]
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
 
 env:
-  ALLOW_PLOTTING: true
+  ALLOW_PLOTTING: "true"
 
 permissions:
   contents: read
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
