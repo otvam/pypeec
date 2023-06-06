@@ -5,6 +5,7 @@ Generate PNG files from the GERBER files for the example.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import sys
 from pypeec.utils import gerber_png
 
 
@@ -66,3 +67,6 @@ if __name__ == "__main__":
 
     # ######################## run
     gerber_png.get_convert(data_export, data_gerber, data_stack)
+
+    # ######################## exit
+    sys.exit(0)

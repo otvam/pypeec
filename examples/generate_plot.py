@@ -6,6 +6,7 @@ These configurations are dumped into JSON files.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import sys
 import os.path
 from pypeec import io
 from examples import examples_config
@@ -333,3 +334,6 @@ if __name__ == "__main__":
     # create file
     io.write_config(file_viewer, data_viewer)
     io.write_config(file_plotter, data_plotter)
+
+    # exit
+    sys.exit(0)
