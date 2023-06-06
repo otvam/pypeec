@@ -18,6 +18,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Material",
             "plot_type": "material",
             "data_options": {
                 "color_electric": "darkorange",
@@ -31,12 +32,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Material",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -74,6 +78,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "El. Potential",
             "plot_type": "scalar_voxel",
             "data_options": {
                 "var": "V_c_abs",
@@ -90,12 +95,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "El. Potential",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -133,6 +141,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Mag. Potential",
             "plot_type": "scalar_voxel",
             "data_options": {
                 "var": "V_m_abs",
@@ -149,12 +158,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Mag. Potential",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -192,6 +204,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "El. Source",
             "plot_type": "scalar_voxel",
             "data_options": {
                 "var": "S_c_abs",
@@ -208,12 +221,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "El. Source",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -251,6 +267,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Mag. Source",
             "plot_type": "scalar_voxel",
             "data_options": {
                 "var": "Q_m_abs",
@@ -267,12 +284,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Mag. Source",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -310,6 +330,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "El. Losses",
             "plot_type": "scalar_voxel",
             "data_options": {
                 "var": "P_c_abs",
@@ -326,12 +347,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "El. Losses",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -369,6 +393,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Mag. Losses",
             "plot_type": "scalar_voxel",
             "data_options": {
                 "var": "P_m_abs",
@@ -385,12 +410,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Mag. Losses",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -428,6 +456,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Current",
             "plot_type": "scalar_voxel",
             "data_options": {
                 "var": "J_c_norm_abs",
@@ -444,12 +473,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Current",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -487,6 +519,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Re. Current",
             "plot_type": "arrow_voxel",
             "data_options": {
                 "var_scalar": "J_c_norm_re",
@@ -505,12 +538,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Re. Current",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -548,6 +584,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Im. Current",
             "plot_type": "arrow_voxel",
             "data_options": {
                 "var_scalar": "J_c_norm_im",
@@ -566,12 +603,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Im. Current",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -609,6 +649,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Flux Density",
             "plot_type": "scalar_voxel",
             "data_options": {
                 "var": "B_m_norm_abs",
@@ -625,12 +666,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Flux Density",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -668,6 +712,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Re. Flux Density",
             "plot_type": "arrow_voxel",
             "data_options": {
                 "var_scalar": "B_m_norm_re",
@@ -686,12 +731,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Re. Flux Density",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -729,6 +777,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Im. Flux Density",
             "plot_type": "arrow_voxel",
             "data_options": {
                 "var_scalar": "B_m_norm_im",
@@ -747,12 +796,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Im. Flux Density",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -790,6 +842,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Mag. Field Norm",
             "plot_type": "scalar_point",
             "data_options": {
                 "var": "H_norm_abs",
@@ -806,12 +859,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Mag. Field Norm",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -849,6 +905,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Re. Mag. Field",
             "plot_type": "arrow_point",
             "data_options": {
                 "var_scalar": "H_norm_re",
@@ -867,12 +924,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Re. Mag. Field",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",
@@ -910,6 +970,7 @@
             ]
         },
         "data_plot": {
+            "plot_title": "Im. Mag. Field",
             "plot_type": "arrow_point",
             "data_options": {
                 "var_scalar": "H_norm_im",
@@ -928,12 +989,15 @@
                 "clip_axis": "z",
                 "clip_value": 0.0
             },
-            "plot_options": {
-                "title_text": "Im. Mag. Field",
-                "title_color": "black",
-                "title_font": 10.0,
+            "plot_theme": {
+                "text_color": "black",
+                "title_font": 10,
+                "colorbar_font": 15,
+                "colorbar_size": 5,
                 "background_color": "gray",
-                "axis_size": 2.0,
+                "axis_size": 2
+            },
+            "plot_options": {
                 "grid_plot": true,
                 "grid_thickness": 1.0,
                 "grid_color": "black",

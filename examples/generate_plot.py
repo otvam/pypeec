@@ -16,18 +16,13 @@ PATH_ROOT = examples_config.PATH_ROOT
 FOLDER_CONFIG = examples_config.FOLDER_CONFIG
 
 
-def _get_plot_options(name):
+def _get_plot_options():
     """
     The plot options are controlling the 3D wireframe rendering.
     This structure is used by the viewer and the plotter.
     """
 
     plot_options = {
-        "title_text": name,  # name displayed on the window corner
-        "title_color": "black",  # color of the text displayed on the window corner
-        "title_font": 10.0,  # font size of the text displayed on the window corner
-        "background_color": "gray",  # background color of the plot
-        "axis_size": 2.0,  # size of the axis marker
         "grid_plot": True,  # plot (or not) the complete voxel geometry as wireframe
         "grid_thickness": 1.0,  # line thickness for the complete voxel geometry
         "grid_color": "black",  # line opacity for the complete voxel geometry
@@ -46,6 +41,24 @@ def _get_plot_options(name):
     }
 
     return plot_options
+
+
+def _get_plot_theme():
+    """
+    The plot theme are is controlling the 3D plot color and size.
+    This structure is used by the viewer and the plotter.
+    """
+
+    plot_theme = {
+        "text_color": "black",  # color of the text
+        "title_font": 10,  # font size of the text displayed on the window corner
+        "colorbar_font": 15,  # font size of the color bar
+        "colorbar_size": 5,  # number of division for the colorbar
+        "background_color": "gray",  # background color of the plot
+        "axis_size": 2,  # size of the axis marker
+    }
+
+    return plot_theme
 
 
 def _get_clip_options():
@@ -245,10 +258,12 @@ def _get_data_pyvista(plot_type, data_options, name):
         "plot_framework": "pyvista",
         "data_window": _get_data_window(name),
         "data_plot": {
+            "plot_title": name,
             "plot_type": plot_type,
             "data_options": data_options,
             "clip_options": _get_clip_options(),
-            "plot_options": _get_plot_options(name),
+            "plot_theme": _get_plot_theme(),
+            "plot_options": _get_plot_options(),
         },
     }
 

@@ -34,7 +34,46 @@ def _check_data_window(data_window):
 def _check_plot_options(plot_options):
     """
     Check the validity of the plot options (for the viewer and plotter).
-    The plot options are controlling the wireframe rendering.
+    The plot options are controlling the 3D wireframe rendering.
+    """
+
+    # check type
+    key_list = [
+        "grid_plot", "grid_thickness", "grid_color", "grid_opacity",
+        "geom_plot", "geom_thickness", "geom_color", "geom_opacity",
+        "point_plot", "point_size", "point_color", "point_opacity",
+        "camera_roll", "camera_azimuth", "camera_elevation",
+    ]
+    datachecker.check_dict("data_window", plot_options, key_list=key_list)
+
+    # check grid data
+    datachecker.check_boolean("grid_plot", plot_options["grid_plot"])
+    datachecker.check_string("grid_color", plot_options["grid_color"], can_be_empty=False)
+    datachecker.check_float("grid_thickness", plot_options["grid_thickness"], is_positive=True, can_be_zero=True)
+    datachecker.check_float("grid_opacity", plot_options["grid_opacity"], is_positive=True, can_be_zero=True)
+
+    # check geom data
+    datachecker.check_boolean("geom_plot", plot_options["geom_plot"])
+    datachecker.check_string("geom_color", plot_options["geom_color"], can_be_empty=False)
+    datachecker.check_float("geom_thickness", plot_options["geom_thickness"], is_positive=True, can_be_zero=True)
+    datachecker.check_float("geom_opacity", plot_options["geom_opacity"], is_positive=True, can_be_zero=True)
+
+    # check cloud data
+    datachecker.check_boolean("point_plot", plot_options["point_plot"])
+    datachecker.check_string("point_color", plot_options["point_color"], can_be_empty=False)
+    datachecker.check_float("point_size", plot_options["point_size"], is_positive=True, can_be_zero=True)
+    datachecker.check_float("point_opacity", plot_options["point_opacity"], is_positive=True, can_be_zero=True)
+
+    # check camera data
+    datachecker.check_float("camera_roll", plot_options["camera_roll"], can_be_none=True)
+    datachecker.check_float("camera_azimuth", plot_options["camera_azimuth"], can_be_none=True)
+    datachecker.check_float("camera_elevation", plot_options["camera_elevation"], can_be_none=True)
+
+
+def _check_plot_theme(plot_options):
+    """
+    Check the validity of the plot theme (for the viewer and plotter).
+    The plot options are controlling the 3D plot color and size.
     """
 
     # check type
@@ -285,10 +324,11 @@ def _check_data_plotter_pyvista(data_plot):
     """
 
     # check type
-    key_list = ["plot_type", "clip_options", "data_options", "plot_options"]
+    key_list = ["plot_title", "plot_type", "clip_options", "data_options", "plot_options"]
     datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
     # extract the data
+    plot_title = data_plot["plot_title"]
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
     clip_options = data_plot["clip_options"]
@@ -296,6 +336,9 @@ def _check_data_plotter_pyvista(data_plot):
 
     # check plot type
     datachecker.check_choice("plot_type", plot_type, ["material", "scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"])
+
+    # check title data
+    datachecker.check_string("plot_title", plot_title, can_be_empty=False)
 
     # check data
     _check_data_options_plotter_pyvista(plot_type, data_options)

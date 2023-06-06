@@ -25,7 +25,7 @@ import numpy as np
 import numpy.linalg as lna
 
 
-def _get_plot_options(pl, grid, voxel, point, plot_options):
+def _get_plot_options(pl, grid, voxel, point, plot_title, plot_options, plot_theme):
     """
     Plot the geometry as wireframe (complete grid and non-empty voxels).
     Plot the point cloud used for the field evaluation.
@@ -73,15 +73,16 @@ def _get_plot_options(pl, grid, voxel, point, plot_options):
 
     # add title and axes
     pl.add_axes(
-        line_width=plot_options["axis_size"],
+        line_width=plot_theme["axis_size"],
+        color=plot_theme["text_color"],
         interactive=False,
     )
     pl.add_text(
-        plot_options["title_text"],
-        color=plot_options["title_color"],
-        font_size=plot_options["title_font"],
+        plot_title,
+        font_size=plot_theme["title_font"],
+        color=plot_theme["text_color"],
     )
-    pl.set_background(plot_options["background_color"])
+    pl.set_background(plot_theme["background_color"])
 
 
 def _get_clip_mesh(pl, obj, arg, clip_options):
@@ -208,7 +209,7 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     return obj
 
 
-def _plot_scalar(pl, obj, data_options, clip_options):
+def _plot_scalar(pl, obj, data_options, clip_options, plot_theme):
     """
     Plot a scalar variable.
     The plot is either made on:
@@ -227,10 +228,11 @@ def _plot_scalar(pl, obj, data_options, clip_options):
 
     # color bar options
     scalar_bar_args = dict(
-        n_labels=5,
-        label_font_size=15,
-        title_font_size=15,
         title=legend,
+        n_labels=plot_theme["colorbar_size"],
+        label_font_size=plot_theme["colorbar_font"],
+        title_font_size=plot_theme["colorbar_font"],
+        color=plot_theme["text_color"],
     )
 
     # scale and clamp the variable
@@ -250,7 +252,7 @@ def _plot_scalar(pl, obj, data_options, clip_options):
         _get_clip_mesh(pl, obj_tmp, arg, clip_options)
 
 
-def _plot_arrow(pl, grid, obj, data_options, clip_options):
+def _plot_arrow(pl, grid, obj, data_options, clip_options, plot_theme):
     """
     Plot a vector variable with an arrow plot (quiver plot).
     The plot is either made on:
@@ -274,10 +276,11 @@ def _plot_arrow(pl, grid, obj, data_options, clip_options):
 
     # color bar options
     scalar_bar_args = dict(
-        n_labels=5,
-        label_font_size=15,
-        title_font_size=15,
         title=legend,
+        n_labels=plot_theme["colorbar_size"],
+        label_font_size=plot_theme["colorbar_font"],
+        title_font_size=plot_theme["colorbar_font"],
+        color=plot_theme["text_color"],
     )
 
     # scale and clamp the variable
@@ -396,10 +399,12 @@ def get_plot_viewer(pl, grid, voxel, point, reference, data_plot):
     """
 
     # extract the data
+    plot_title = data_plot["plot_title"]
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
     clip_options = data_plot["clip_options"]
     plot_options = data_plot["plot_options"]
+    plot_theme = data_plot["plot_theme"]
 
     # get the main plot
     if plot_type == "domain":
@@ -412,7 +417,7 @@ def get_plot_viewer(pl, grid, voxel, point, reference, data_plot):
         raise ValueError("invalid plot type and plot feature")
 
     # add the wireframe and axis
-    _get_plot_options(pl, grid, voxel, point, plot_options)
+    _get_plot_options(pl, grid, voxel, point, plot_title, plot_options, plot_theme)
 
 
 def get_plot_plotter(pl, grid, voxel, point, data_plot):
@@ -427,24 +432,26 @@ def get_plot_plotter(pl, grid, voxel, point, data_plot):
     """
 
     # extract the data
+    plot_title = data_plot["plot_title"]
     plot_type = data_plot["plot_type"]
     data_options = data_plot["data_options"]
     clip_options = data_plot["clip_options"]
     plot_options = data_plot["plot_options"]
+    plot_theme = data_plot["plot_theme"]
 
     # get the main plot
     if plot_type == "material":
         _plot_material(pl, voxel, data_options, clip_options)
     elif plot_type == "scalar_voxel":
-        _plot_scalar(pl, voxel, data_options, clip_options)
+        _plot_scalar(pl, voxel, data_options, clip_options, plot_theme)
     elif plot_type == "scalar_point":
-        _plot_scalar(pl, point, data_options, clip_options)
+        _plot_scalar(pl, point, data_options, clip_options, plot_theme)
     elif plot_type == "arrow_voxel":
-        _plot_arrow(pl, grid, voxel, data_options, clip_options)
+        _plot_arrow(pl, grid, voxel, data_options, clip_options, plot_theme)
     elif plot_type == "arrow_point":
-        _plot_arrow(pl, grid, point, data_options, clip_options)
+        _plot_arrow(pl, grid, point, data_options, clip_options, plot_theme)
     else:
         raise ValueError("invalid plot type and plot feature")
 
     # add the wireframe and axis
-    _get_plot_options(pl, grid, voxel, point, plot_options)
+    _get_plot_options(pl, grid, voxel, point, plot_title, plot_options, plot_theme)
