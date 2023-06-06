@@ -11,6 +11,7 @@ on: ["workflow_dispatch"]
 
 env:
   ALLOW_PLOTTING: "true"
+  PYTHONUNBUFFERED: "1"
 
 permissions:
   contents: read
