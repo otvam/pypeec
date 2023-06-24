@@ -1,4 +1,4 @@
-# PyPEEC tolerance file for the examples:
+# PyPEEC tolerance data for the solver:
 #   - define the numerical options for discretization
 #   - define the numerical options for matrix condition check
 #   - define the numerical options for the matrix solver

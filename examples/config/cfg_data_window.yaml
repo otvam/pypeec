@@ -1,4 +1,8 @@
-"show_menu": false
-"image_size": [800, 600]
-"window_size": [800, 600]
-"notebook_size": [800, 600]
+# PyPEEC options for the rendering windows.
+#
+# (c) Thomas Guillod - Dartmouth College
+
+"show_menu": false                  # show (or not) the window menu
+"image_size": [800, 600]            # initial window size, silent renderer, null for default
+"window_size": [800, 600]           # initial window size, Qt renderer, null for default
+"notebook_size": [800, 600]         # initial window size, Jupyter renderer, null for default

@@ -1,4 +1,8 @@
-"style": "default"
-"legend": "best"
-"font": 12
+# PyPEEC options for the 2D plots (using Matplotlib).
+#
+# (c) Thomas Guillod - Dartmouth College
+
+"style": "default"         # string with a Matplotlib style
+"legend": "best"           # location of the legend box
+"font": 12                 # reference font size of the figure
 

@@ -1,3 +1,59 @@
+# PyPEEC options for the plotter renderings.
+#
+# A plot is described with a dictionary with the following fields:
+#   - framework: framework used for the rendering ("pyvista" or "matplotlib")
+#   - format: string describing the plot type
+#   - title: title of the plot window
+#   - data_window: dictionary describing the plot window
+#   - data_options: dictionary describing the plot options
+#   - data_plot: dictionary describing the plot content
+#
+# For the plotter, the following types of plots are available:
+#
+#   - "material": plot the different materials composing the voxel structures
+#       - title: title located at the corner of the plot
+#       - color_electric: color of the electric domains
+#       - color_magnetic: "color of the magnetic domains
+#       - color_current_source: "color of the current source domains"
+#       - color_voltage_source: color of the voltage source domains
+#
+#   - "scalar_voxel": plot a scalar variable on the voxel structure
+#   - "scalar_point": plot a scalar variable on the point cloud
+#       - title: title located at the corner of the plot
+#       - legend: legend of variable being shown with the color axis
+#       - var: name of the scalar variable to be plotted (color scale)
+#       - scale: scaling of the variable (scaling done just before plotting)
+#       - log: use (or not) a log scale for the color axis
+#       - color_lim: clamping range for the color axis (null for complete range)
+#       - filter_lim: hide voxels/points with values outside this range (null for complete range)
+#       - point_size: size of the marker used for plotting on the point cloud
+#
+#   - "arrow_voxel": plot a vector variable on the voxel structure (arrow plot)
+#   - "arrow_voxel": plot a vector variable on the point cloud (arrow plot)
+#       - title: title located at the corner of the plot
+#       - legend: legend of variable being shown with the color axis
+#       - var_scalar: name of the scalar variable to be plotted (arrow color)
+#       - var_vector: name of the vector variable to be plotted (arrow direction)
+#       - scale: scaling of the scalar variable (scaling done just before plotting)
+#       - log: use (or not) a log scale for the color axis
+#       - color_lim: clamping range for the color axis (null for complete range)
+#       - filter_lim: hide arrows with scalar values outside this range (null for complete range)
+#       - arrow_threshold: relative threshold for hiding arrows with small scalar values
+#       - arrow_scale: relative arrow length (with respect to the voxel size)
+#
+#   - "convergence": plot the convergence of the iterative matrix solver
+#       - color_active: color of the plot for the active power
+#       - color_reactive: color of the plot for the reactive power
+#       - marker: marker shape
+#
+#   - "convergence": plot the solver residuum (histogram)
+#       - n_bins: number of bins
+#       - tol_bins: relative tolerance for the bin boundaries
+#       - bar_color: fill color of the bins
+#       - edge_color: "edge color of the bins
+#
+# (c) Thomas Guillod - Dartmouth College
+
 "material":
     "framework": "pyvista"
     "format": "material"

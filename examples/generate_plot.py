@@ -55,7 +55,7 @@ def _get_plot_theme():
         "colorbar_font": 15,  # font size of the color bar
         "colorbar_size": 5,  # number of division for the colorbar
         "background_color": "gray",  # background color of the plot
-        "axis_size": 2,  # size of the axis marker
+        "axis_size": 2, # size of the axis marker
     }
 
     return plot_theme
@@ -238,7 +238,7 @@ def _get_data_plotter_arrow(plot_geom, var_scalar, var_vector, scale, unit, name
         "log": False,  # use (or not) a log scale for the color axis
         "color_lim": None,  # clamping range for the color axis (None for complete range)
         "filter_lim": None,  # hide arrows with scalar values outside this range (None for complete range)
-        "arrow_threshold": 1e-3,  # relative threshold for arrows with small scalar values
+        "arrow_threshold": 1e-3,  # relative threshold for hiding arrows with small scalar values
         "arrow_scale": 0.75,  # relative arrow length (with respect to the voxel size)
         "legend": "%s [%s]" % (name, unit),  # legend of the color axis
     }
