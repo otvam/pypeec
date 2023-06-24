@@ -1,272 +1,270 @@
 "material":
+    "framework": "pyvista"
+    "format": "material"
     "title": "Material"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "material"
-        "plot_content":
-            "color_electric": "darkorange"
-            "color_magnetic": "gainsboro"
-            "color_current_source": "forestgreen"
-            "color_voltage_source": "royalblue"
+        "title": "Material"
+        "color_electric": "darkorange"
+        "color_magnetic": "gainsboro"
+        "color_current_source": "forestgreen"
+        "color_voltage_source": "royalblue"
 "V_c_abs":
+    "framework": "pyvista"
+    "format": "scalar_voxel"
     "title": "El. Potential"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "scalar_voxel"
-        "plot_content":
-            "var": "V_c_abs"
-            "scale": 1.0
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "point_size": 10.0
-            "legend": "El. Potential [V]"
+        "title": "El. Potential"
+        "legend": "El. Potential [V]"
+        "var": "V_c_abs"
+        "scale": 1.0
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "point_size": 10.0
 "V_m_abs":
+    "framework": "pyvista"
+    "format": "scalar_voxel"
     "title": "Mag. Potential"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "scalar_voxel"
-        "plot_content":
-            "var": "V_m_abs"
-            "scale": 1.0
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "point_size": 10.0
-            "legend": "Mag. Potential [A]"
+        "title": "Mag. Potential"
+        "legend": "Mag. Potential [A]"
+        "var": "V_m_abs"
+        "scale": 1.0
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "point_size": 10.0
 "S_c_abs":
+    "framework": "pyvista"
+    "format": "scalar_voxel"
     "title": "El. Source"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "scalar_voxel"
-        "plot_content":
-            "var": "S_c_abs"
-            "scale": 1.0e-9
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "point_size": 10.0
-            "legend": "El. Source [A/mm3]"
+        "title": "El. Source"
+        "legend": "El. Source [A/mm3]"
+        "var": "S_c_abs"
+        "scale": 1.0e-9
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "point_size": 10.0
 "Q_m_abs":
+    "framework": "pyvista"
+    "format": "scalar_voxel"
     "title": "Mag. Source"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "scalar_voxel"
-        "plot_content":
-            "var": "Q_m_abs"
-            "scale": 1.0
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "point_size": 10.0
-            "legend": "Mag. Source [mT/mm]"
+        "title": "Mag. Source"
+        "legend": "Mag. Source [mT/mm]"
+        "var": "Q_m_abs"
+        "scale": 1.0
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "point_size": 10.0
 "P_c_abs":
+    "framework": "pyvista"
+    "format": "scalar_voxel"
     "title": "El. Losses"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "scalar_voxel"
-        "plot_content":
-            "var": "P_c_abs"
-            "scale": 1.0e-6
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "point_size": 10.0
-            "legend": "El. Losses [W/cm3]"
+        "title": "El. Losses"
+        "legend": "El. Losses [W/cm3]"
+        "var": "P_c_abs"
+        "scale": 1.0e-6
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "point_size": 10.0
 "P_m_abs":
+    "framework": "pyvista"
+    "format": "scalar_voxel"
     "title": "Mag. Losses"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "scalar_voxel"
-        "plot_content":
-            "var": "P_m_abs"
-            "scale": 1.0e-6
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "point_size": 10.0
-            "legend": "Mag. Losses [W/cm3]"
+        "title": "Mag. Losses"
+        "legend": "Mag. Losses [W/cm3]"
+        "var": "P_m_abs"
+        "scale": 1.0e-6
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "point_size": 10.0
 "J_c_norm_abs":
+    "framework": "pyvista"
+    "format": "scalar_voxel"
     "title": "Current"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "scalar_voxel"
-        "plot_content":
-            "var": "J_c_norm_abs"
-            "scale": 1.0e-6
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "point_size": 10.0
-            "legend": "Current [A/mm2]"
+        "title": "Current"
+        "legend": "Current [A/mm2]"
+        "var": "J_c_norm_abs"
+        "scale": 1.0e-6
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "point_size": 10.0
 "J_c_norm_re":
+    "framework": "pyvista"
+    "format": "arrow_voxel"
     "title": "Re. Current"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "arrow_voxel"
-        "plot_content":
-            "var_scalar": "J_c_norm_re"
-            "var_vector": "J_c_vec_re"
-            "scale": 1.0e-6
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "arrow_threshold": 1.0e-3
-            "arrow_scale": 0.75
-            "legend": "Re. Current [A/mm2]"
+        "title": "Re. Current"
+        "legend": "Re. Current [A/mm2]"
+        "var_scalar": "J_c_norm_re"
+        "var_vector": "J_c_vec_re"
+        "scale": 1.0e-6
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "arrow_threshold": 1.0e-3
+        "arrow_scale": 0.75
 "J_c_norm_im":
+    "framework": "pyvista"
+    "format": "arrow_voxel"
     "title": "Im. Current"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "arrow_voxel"
-        "plot_content":
-            "var_scalar": "J_c_norm_im"
-            "var_vector": "J_c_vec_im"
-            "scale": 1.0e-6
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "arrow_threshold": 1.0e-3
-            "arrow_scale": 0.75
-            "legend": "Im. Current [A/mm2]"
+        "title": "Im. Current"
+        "legend": "Im. Current [A/mm2]"
+        "var_scalar": "J_c_norm_im"
+        "var_vector": "J_c_vec_im"
+        "scale": 1.0e-6
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "arrow_threshold": 1.0e-3
+        "arrow_scale": 0.75
 "B_m_norm_abs":
+    "framework": "pyvista"
+    "format": "scalar_voxel"
     "title": "Flux Density"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "scalar_voxel"
-        "plot_content":
-            "var": "B_m_norm_abs"
-            "scale": 1.0e+3
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "point_size": 10.0
-            "legend": "Flux Density [mT]"
+        "title": "Flux Density"
+        "legend": "Flux Density [mT]"
+        "var": "B_m_norm_abs"
+        "scale": 1.0e+3
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "point_size": 10.0
 "B_m_norm_re":
+    "framework": "pyvista"
+    "format": "arrow_voxel"
     "title": "Re. Flux Density"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "arrow_voxel"
-        "plot_content":
-            "var_scalar": "B_m_norm_re"
-            "var_vector": "B_m_vec_re"
-            "scale": 1.0e+3
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "arrow_threshold": 1.0e-3
-            "arrow_scale": 0.75
-            "legend": "Re. Flux Density [mT]"
+        "title": "Re. Flux Density"
+        "legend": "Re. Flux Density [mT]"
+        "var_scalar": "B_m_norm_re"
+        "var_vector": "B_m_vec_re"
+        "scale": 1.0e+3
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "arrow_threshold": 1.0e-3
+        "arrow_scale": 0.75
 "B_m_norm_im":
+    "framework": "pyvista"
+    "format": "arrow_voxel"
     "title": "Im. Flux Density"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "arrow_voxel"
-        "plot_content":
-            "var_scalar": "B_m_norm_im"
-            "var_vector": "B_m_vec_im"
-            "scale": 1.0e+3
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "arrow_threshold": 1.0e-3
-            "arrow_scale": 0.75
-            "legend": "Im. Flux Density [mT]"
+        "title": "Im. Flux Density"
+        "legend": "Im. Flux Density [mT]"
+        "var_scalar": "B_m_norm_im"
+        "var_vector": "B_m_vec_im"
+        "scale": 1.0e+3
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "arrow_threshold": 1.0e-3
+        "arrow_scale": 0.75
 "H_norm_abs":
+    "framework": "pyvista"
+    "format": "scalar_point"
     "title": "Mag. Field Norm"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "scalar_point"
-        "plot_content":
-            "var": "H_norm_abs"
-            "scale": 1.0
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "point_size": 10.0
-            "legend": "Mag. Field Norm [A/m]"
+        "title": "Mag. Field Norm"
+        "legend": "Mag. Field Norm [A/m]"
+        "var": "H_norm_abs"
+        "scale": 1.0
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "point_size": 10.0
 "H_norm_re":
+    "framework": "pyvista"
+    "format": "arrow_point"
     "title": "Re. Mag. Field"
-    "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "arrow_point"
-        "plot_content":
-            "var_scalar": "H_norm_re"
-            "var_vector": "H_vec_re"
-            "scale": 1.0
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "arrow_threshold": 1.0e-3
-            "arrow_scale": 0.75
-            "legend": "Re. Mag. Field [A/m]"
+        "title": "Re. Mag. Field"
+        "legend": "Re. Mag. Field [A/m]"
+        "var_scalar": "H_norm_re"
+        "var_vector": "H_vec_re"
+        "scale": 1.0
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "arrow_threshold": 1.0e-3
+        "arrow_scale": 0.75
 "H_norm_im":
-    "title": "Im. Mag. Field"
     "framework": "pyvista"
+    "format": "arrow_point"
+    "title": "Im. Mag. Field"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "arrow_point"
-        "plot_content":
-            "var_scalar": "H_norm_im"
-            "var_vector": "H_vec_im"
-            "scale": 1.0
-            "log": false
-            "color_lim": null
-            "filter_lim": null
-            "arrow_threshold": 1.0e-3
-            "arrow_scale": 0.75
-            "legend": "Im. Mag. Field [A/m]"
+        "title": "Im. Mag. Field"
+        "legend": "Im. Mag. Field [A/m]"
+        "var_scalar": "H_norm_im"
+        "var_vector": "H_vec_im"
+        "scale": 1.0
+        "log": false
+        "color_lim": null
+        "filter_lim": null
+        "arrow_threshold": 1.0e-3
+        "arrow_scale": 0.75
 "convergence":
+    "framework": "matplotlib"
+    "format": "convergence"
     "title": "Convergence"
-    "framework": "matplotlib"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
-        "plot_type": "convergence"
-        "plot_content":
-            "color_active": "red"
-            "color_reactive": "blue"
-            "marker": "o"
+        "color_active": "red"
+        "color_reactive": "blue"
+        "marker": "o"
 "residuum":
-    "title": "Residuum"
     "framework": "matplotlib"
+    "format": "residuum"
+    "title": "Residuum"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
-        "plot_type": "residuum"
-        "plot_content":
-            "n_bins": 10
-            "tol_bins": 0.05
-            "bar_color": "blue"
-            "edge_color": "black"
+        "n_bins": 10
+        "tol_bins": 0.05
+        "bar_color": "blue"
+        "edge_color": "black"

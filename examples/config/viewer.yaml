@@ -1,7 +1,7 @@
 "domain":
     "framework": "pyvista"
-    "plot_title": "Domain"
-    "plot_type": "domain"
+    "format": "domain"
+    "title": "Domain"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -10,8 +10,8 @@
         "opacity": 1.0
 "connection":
     "framework": "pyvista"
-    "plot_title": "Connection"
-    "plot_type": "connection"
+    "format": "connection"
+    "title": "Connection"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -20,8 +20,8 @@
         "opacity": 1.0
 "voxelization":
     "framework": "pyvista"
-    "plot_title": "Voxelization"
-    "plot_type": "voxelization"
+    "format": "voxelization"
+    "title": "Voxelization"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":

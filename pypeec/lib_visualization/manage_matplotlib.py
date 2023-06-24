@@ -13,16 +13,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def _get_plot_residuum(fig, title, res, plot_content):
+def _get_plot_residuum(fig, res, data_plot):
     """
     Plot the final residuum (absolute value) with a histogram.
     """
 
     # extract the data
-    n_bins = plot_content["n_bins"]
-    tol_bins = plot_content["tol_bins"]
-    bar_color = plot_content["bar_color"]
-    edge_color = plot_content["edge_color"]
+    n_bins = data_plot["n_bins"]
+    tol_bins = data_plot["tol_bins"]
+    bar_color = data_plot["bar_color"]
+    edge_color = data_plot["edge_color"]
 
     # activate the figure
     plt.figure(fig)
@@ -53,18 +53,18 @@ def _get_plot_residuum(fig, title, res, plot_content):
     plt.grid()
     plt.xlabel("residuum (a.u.)")
     plt.ylabel("counts (a.u.)")
-    plt.title("%s / n_tot = %d / n_plt = %d" % (title, n_tot, n_plt))
+    plt.title("Solver Residuum / n_tot = %d / n_plt = %d" % (n_tot, n_plt))
 
 
-def _get_plot_convergence(fig, title, conv, plot_content):
+def _get_plot_convergence(fig, conv, data_plot):
     """
     Plot the convergence of the iterative matrix solver.
     """
 
     # extract the data
-    color_active = plot_content["color_active"]
-    color_reactive = plot_content["color_reactive"]
-    marker = plot_content["marker"]
+    color_active = data_plot["color_active"]
+    color_reactive = data_plot["color_reactive"]
+    marker = data_plot["marker"]
 
     # activate the figure
     plt.figure(fig)
@@ -83,17 +83,15 @@ def _get_plot_convergence(fig, title, conv, plot_content):
     plt.legend()
     plt.xlabel("iterations (#)")
     plt.ylabel("convergence (a.u.)")
-    plt.title("%s / n_iter = %d" % (title, len(iter_vec)))
+    plt.title("Solver Convergence / n_iter = %d" % len(iter_vec))
 
 
-def get_plot_plotter(fig, title, res, conv, data_plot, data_options):
+def get_plot_plotter(fig, res, conv, format, data_plot, data_options):
     """
     Plot the solver status (for the plotter).
     """
 
     # extract the data
-    plot_type = data_plot["plot_type"]
-    plot_content = data_plot["plot_content"]
     style = data_options["style"]
     legend = data_options["legend"]
     font = data_options["font"]
@@ -104,9 +102,9 @@ def get_plot_plotter(fig, title, res, conv, data_plot, data_options):
     # get the main plot
     with plt.style.context(style):
         with plt.rc_context(param):
-            if plot_type == "convergence":
-                _get_plot_convergence(fig, title, conv, plot_content)
-            elif plot_type == "residuum":
-                _get_plot_residuum(fig, title, res, plot_content)
+            if format == "convergence":
+                _get_plot_convergence(fig, conv, data_plot)
+            elif format == "residuum":
+                _get_plot_residuum(fig, res, data_plot)
             else:
                 raise ValueError("invalid plot type and plot feature")
