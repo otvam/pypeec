@@ -312,7 +312,8 @@
     "data_plot":
         "color_active": "red"
         "color_reactive": "blue"
-        "marker": "o"
+        "marker": 8.0
+        "width": 2.0
 "residuum":
     "framework": "matplotlib"
     "format": "residuum"

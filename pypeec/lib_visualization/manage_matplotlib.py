@@ -65,6 +65,7 @@ def _get_plot_convergence(fig, conv, data_plot):
     color_active = data_plot["color_active"]
     color_reactive = data_plot["color_reactive"]
     marker = data_plot["marker"]
+    width = data_plot["width"]
 
     # activate the figure
     plt.figure(fig)
@@ -75,8 +76,8 @@ def _get_plot_convergence(fig, conv, data_plot):
     Q_vec = conv["Q_vec"]
 
     # plot the data
-    plt.plot(iter_vec, P_vec, color=color_active, marker=marker, label="P")
-    plt.plot(iter_vec, Q_vec, color=color_reactive, marker=marker, label="Q")
+    plt.plot(iter_vec, P_vec, "-o", color=color_active, markersize=marker, linewidth=width, label="P")
+    plt.plot(iter_vec, Q_vec, "-o", color=color_reactive, markersize=marker, linewidth=width, label="Q")
 
     # add cosmetics
     plt.grid()

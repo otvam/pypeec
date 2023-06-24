@@ -192,7 +192,8 @@ def _check_data_plot_plotter(format, data_plot):
         # check data
         datachecker.check_string("color_active", data_plot["color_active"], can_be_empty=False)
         datachecker.check_string("color_reactive", data_plot["color_reactive"], can_be_empty=False)
-        datachecker.check_string("marker", data_plot["marker"], can_be_empty=False)
+        datachecker.check_float("marker", data_plot["marker"], is_positive=True, can_be_zero=False)
+        datachecker.check_float("width", data_plot["width"], is_positive=True, can_be_zero=False)
 
     # check the residuum options
     if format == "residuum":
