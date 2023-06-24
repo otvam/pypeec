@@ -1,0 +1,10 @@
+"domain":
+    "title": "Domain"
+    "framework": "pyvista"
+    "data_window": !include cfg_data_window.yaml
+    "data_options": !include cfg_data_options.yaml
+    "data_plot":
+        "plot_type": "domain"
+        "plot_content":
+            "colormap": "Accent"
+            "opacity": 1.0

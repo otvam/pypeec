@@ -1,0 +1,28 @@
+"plot_clip":
+    "clip_plot": false
+    "clip_invert": false
+    "clip_axis": "z"
+    "clip_value": 0.0
+"plot_theme":
+    "text_color": "black"
+    "title_font": 10
+    "colorbar_font": 15
+    "colorbar_size": 5
+    "background_color": "gray"
+    "axis_size": 2
+"plot_view":
+    "grid_plot": true
+    "grid_thickness": 1.0
+    "grid_color": "black"
+    "grid_opacity": 0.1
+    "geom_plot": true
+    "geom_thickness": 1.0
+    "geom_color": "black"
+    "geom_opacity": 0.5
+    "point_plot": true
+    "point_color": "red"
+    "point_size": 5.0
+    "point_opacity": 0.5
+    "camera_roll": null
+    "camera_azimuth": null
+    "camera_elevation": null

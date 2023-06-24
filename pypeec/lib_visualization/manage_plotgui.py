@@ -246,13 +246,12 @@ class PlotGui:
                 filename = os.path.join(self.folder, "%s.png" % tag)
                 fig.savefig(filename)
 
-    def open_pyvista(self, tag, data_window):
+    def open_pyvista(self, tag, title, data_window):
         """
         Get a PyVista plotter.
         """
 
         # extract the data
-        title = data_window["title"]
         show_menu = data_window["show_menu"]
         image_size = data_window["image_size"]
         window_size = data_window["window_size"]
@@ -276,13 +275,12 @@ class PlotGui:
 
         return pl
 
-    def open_matplotlib(self, tag, data_window):
+    def open_matplotlib(self, tag, title, data_window):
         """
         Get a Matplotlib figure.
         """
 
         # extract the data
-        title = data_window["title"]
         show_menu = data_window["show_menu"]
         image_size = data_window["image_size"]
         window_size = data_window["window_size"]

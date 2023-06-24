@@ -13,16 +13,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def _get_plot_residuum(fig, res, data_options):
+def _get_plot_residuum(fig, res, plot_content):
     """
     Plot the final residuum (absolute value) with a histogram.
     """
 
     # extract the data
-    n_bins = data_options["n_bins"]
-    tol_bins = data_options["tol_bins"]
-    bar_color = data_options["bar_color"]
-    edge_color = data_options["edge_color"]
+    n_bins = plot_content["n_bins"]
+    tol_bins = plot_content["tol_bins"]
+    bar_color = plot_content["bar_color"]
+    edge_color = plot_content["edge_color"]
 
     # activate the figure
     plt.figure(fig)
@@ -56,15 +56,15 @@ def _get_plot_residuum(fig, res, data_options):
     plt.title("Solver Residuum / n_tot = %d / n_plt = %d" % (n_tot, n_plt))
 
 
-def _get_plot_convergence(fig, conv, data_options):
+def _get_plot_convergence(fig, conv, plot_content):
     """
     Plot the convergence of the iterative matrix solver.
     """
 
     # extract the data
-    color_active = data_options["color_active"]
-    color_reactive = data_options["color_reactive"]
-    marker = data_options["marker"]
+    color_active = plot_content["color_active"]
+    color_reactive = plot_content["color_reactive"]
+    marker = plot_content["marker"]
 
     # activate the figure
     plt.figure(fig)
@@ -91,12 +91,12 @@ def get_plot_plotter(fig, res, conv, data_plot):
 
     # extract the data
     plot_type = data_plot["plot_type"]
-    data_options = data_plot["data_options"]
+    plot_content = data_plot["plot_content"]
 
     # get the main plot
     if plot_type == "convergence":
-        _get_plot_convergence(fig, conv, data_options)
+        _get_plot_convergence(fig, conv, plot_content)
     elif plot_type == "residuum":
-        _get_plot_residuum(fig, res, data_options)
+        _get_plot_residuum(fig, res, plot_content)
     else:
         raise ValueError("invalid plot type and plot feature")

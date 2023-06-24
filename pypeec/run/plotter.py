@@ -125,7 +125,7 @@ def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
         # make the plot
         manage_matplotlib.get_plot_plotter(fig, res, conv, data_plot)
     else:
-        raise ValueError("invalid plot framework")
+        raise RunError("invalid plot framework")
 
 
 def _get_sweep(tag_sweep, data_sweep, data_init, data_point, data_plotter, gui_obj):

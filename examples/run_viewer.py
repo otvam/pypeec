@@ -21,7 +21,7 @@ if __name__ == "__main__":
     # get the filenames
     file_voxel = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "voxel.pck")
     file_point = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "point.yaml")
-    file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.json")
+    file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.yaml")
 
     # run viewer
     (status, ex) = main.run_viewer_file(file_voxel, file_point, file_viewer)
