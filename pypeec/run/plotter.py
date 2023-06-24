@@ -107,8 +107,9 @@ def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
     """
 
     # extract the data
-    title = data_plotter["title"]
     framework = data_plotter["framework"]
+    plot_title = data_plotter["plot_title"]
+    plot_type = data_plotter["plot_type"]
     data_window = data_plotter["data_window"]
     data_plot = data_plotter["data_plot"]
     data_options = data_plotter["data_options"]
@@ -116,13 +117,13 @@ def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
     # make the plots
     if framework == "pyvista":
         # get the plotter (with the Qt framework)
-        pl = gui_obj.open_pyvista(tag, title, data_window)
+        pl = gui_obj.open_pyvista(tag, plot_title, data_window)
 
         # make the plot
-        manage_pyvista.get_plot_plotter(pl, title, grid, voxel, point, data_plot, data_options)
+        manage_pyvista.get_plot_plotter(pl, grid, voxel, point, data_plot, data_options)
     elif framework == "matplotlib":
         # get the figure (with the Qt framework)
-        fig = gui_obj.open_matplotlib(tag, title, data_window)
+        fig = gui_obj.open_matplotlib(tag, plot_title, data_window)
 
         # make the plot
         manage_matplotlib.get_plot_plotter(fig, title, res, conv, data_plot, data_options)

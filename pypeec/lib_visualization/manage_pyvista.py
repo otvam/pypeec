@@ -25,12 +25,12 @@ import numpy as np
 import numpy.linalg as lna
 
 
-def _get_plot_view(pl, title, grid, voxel, point, plot_view, plot_theme):
+def _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme):
     """
     Plot the geometry as wireframe (complete grid and non-empty voxels).
     Plot the point cloud used for the field evaluation.
     Add the axis descriptor to orientate the geometry.
-    Add a plot title.
+    Set the plot theme.
     """
 
     # set background
@@ -80,6 +80,12 @@ def _get_plot_view(pl, title, grid, voxel, point, plot_view, plot_theme):
         color=plot_theme["text_color"],
         interactive=False,
     )
+
+
+def _get_plot_title(pl, title, plot_theme):
+    """
+    Add a title located at the corner of the plot.
+    """
 
     # add titles
     pl.add_text(
@@ -213,7 +219,7 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     return obj
 
 
-def _plot_scalar(pl, obj, plot_content, plot_clip, plot_theme):
+def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
     """
     Plot a scalar variable.
     The plot is either made on:
@@ -222,13 +228,17 @@ def _plot_scalar(pl, obj, plot_content, plot_clip, plot_theme):
     """
 
     # extract
-    var = plot_content["var"]
-    scale = plot_content["scale"]
-    log = plot_content["log"]
-    filter_lim = plot_content["filter_lim"]
-    color_lim = plot_content["color_lim"]
-    point_size = plot_content["point_size"]
-    legend = plot_content["legend"]
+    var = data_plot["var"]
+    scale = data_plot["scale"]
+    log = data_plot["log"]
+    filter_lim = data_plot["filter_lim"]
+    color_lim = data_plot["color_lim"]
+    point_size = data_plot["point_size"]
+    legend = data_plot["legend"]
+    title = data_plot["title"]
+
+    # set title
+    _get_plot_title(pl, title, plot_theme)
 
     # color bar options
     scalar_bar_args = dict(
@@ -256,7 +266,7 @@ def _plot_scalar(pl, obj, plot_content, plot_clip, plot_theme):
         _get_clip_mesh(pl, obj_tmp, arg, plot_clip)
 
 
-def _plot_arrow(pl, grid, obj, plot_content, plot_clip, plot_theme):
+def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     """
     Plot a vector variable with an arrow plot (quiver plot).
     The plot is either made on:
@@ -268,15 +278,19 @@ def _plot_arrow(pl, grid, obj, plot_content, plot_clip, plot_theme):
     """
 
     # extract
-    var_scalar = plot_content["var_scalar"]
-    var_vector = plot_content["var_vector"]
-    scale = plot_content["scale"]
-    log = plot_content["log"]
-    filter_lim = plot_content["filter_lim"]
-    color_lim = plot_content["color_lim"]
-    arrow_scale = plot_content["arrow_scale"]
-    arrow_threshold = plot_content["arrow_threshold"]
-    legend = plot_content["legend"]
+    var_scalar = data_plot["var_scalar"]
+    var_vector = data_plot["var_vector"]
+    scale = data_plot["scale"]
+    log = data_plot["log"]
+    filter_lim = data_plot["filter_lim"]
+    color_lim = data_plot["color_lim"]
+    arrow_scale = data_plot["arrow_scale"]
+    arrow_threshold = data_plot["arrow_threshold"]
+    legend = data_plot["legend"]
+    title = data_plot["title"]
+
+    # set title
+    _get_plot_title(pl, title, plot_theme)
 
     # color bar options
     scalar_bar_args = dict(
@@ -304,17 +318,27 @@ def _plot_arrow(pl, grid, obj, plot_content, plot_clip, plot_theme):
         _get_clip_mesh(pl, glyph_tmp, arg, plot_clip)
 
 
-def _plot_material(pl, voxel, plot_content, plot_clip):
+def _plot_material(pl, voxel, data_plot, plot_clip, plot_theme):
     """
     Plot the material and source description.
     """
 
+    # extract
+    color_electric = data_plot["color_electric"]
+    color_magnetic = data_plot["color_magnetic"]
+    color_current_source = data_plot["color_current_source"]
+    color_voltage_source = data_plot["color_voltage_source"]
+    title = data_plot["title"]
+
+    # set title
+    _get_plot_title(pl, title, plot_theme)
+
     # get a colormap with three discrete color
     cmap = [
-        plot_content["color_electric"],
-        plot_content["color_magnetic"],
-        plot_content["color_current_source"],
-        plot_content["color_voltage_source"],
+        color_electric,
+        color_magnetic,
+        color_current_source,
+        color_voltage_source,
     ]
 
     # make a copy (for avoid cross coupling)
@@ -331,14 +355,18 @@ def _plot_material(pl, voxel, plot_content, plot_clip):
         _get_clip_mesh(pl, voxel_tmp, arg, plot_clip)
 
 
-def _plot_geometry(pl, voxel, plot_content, plot_clip, tag):
+def _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, tag):
     """
     Plot an integer variable on the voxel structure (material or connection).
     """
 
     # extract
-    colormap = plot_content["colormap"]
-    opacity = plot_content["opacity"]
+    colormap = data_plot["colormap"]
+    opacity = data_plot["opacity"]
+    title = data_plot["title"]
+
+    # set title
+    _get_plot_title(pl, title, plot_theme)
 
     # make a copy (for avoid cross coupling)
     voxel_tmp = voxel.copy(deep=True)
@@ -354,17 +382,21 @@ def _plot_geometry(pl, voxel, plot_content, plot_clip, tag):
         _get_clip_mesh(pl, voxel_tmp, arg, plot_clip)
 
 
-def _plot_voxelization(pl, voxel, reference, plot_content, plot_clip):
+def _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme):
     """
     Plot the reference and voxelized structures in order to assess the voxelization error.
     """
 
     # extract the data
-    color_voxel = plot_content["color_voxel"]
-    color_reference = plot_content["color_reference"]
-    opacity_voxel = plot_content["opacity_voxel"]
-    opacity_reference = plot_content["opacity_reference"]
-    
+    color_voxel = data_plot["color_voxel"]
+    color_reference = data_plot["color_reference"]
+    opacity_voxel = data_plot["opacity_voxel"]
+    opacity_reference = data_plot["opacity_reference"]
+    title = data_plot["title"]
+
+    # set title
+    _get_plot_title(pl, title, plot_theme)
+
     # make a copy (for avoid cross coupling)
     voxel_tmp = voxel.copy(deep=True)
 
@@ -393,7 +425,7 @@ def _plot_voxelization(pl, voxel, reference, plot_content, plot_clip):
         _get_clip_mesh(pl, reference_tmp, arg, plot_clip)
 
 
-def get_plot_viewer(pl, title, grid, voxel, point, reference, data_plot, data_options):
+def get_plot_viewer(pl, grid, voxel, point, reference, plot_type, data_plot, data_options):
     """
     Plot the voxel structure (for the viewer).
     The following plot types are available:
@@ -402,28 +434,26 @@ def get_plot_viewer(pl, title, grid, voxel, point, reference, data_plot, data_op
         - the meshing tolerance between the reference and voxelized structures
     """
 
-    # extract the data
-    plot_type = data_plot["plot_type"]
-    plot_content = data_plot["plot_content"]
+    # get options
     plot_clip = data_options["plot_clip"]
     plot_view = data_options["plot_view"]
     plot_theme = data_options["plot_theme"]
 
     # get the main plot
     if plot_type == "domain":
-        _plot_geometry(pl, voxel, plot_content, plot_clip, "domain")
+        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "domain")
     elif plot_type == "connection":
-        _plot_geometry(pl, voxel, plot_content, plot_clip, "connection")
+        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "connection")
     elif plot_type == "voxelization":
-        _plot_voxelization(pl, voxel, reference, plot_content, plot_clip)
+        _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme)
     else:
         raise ValueError("invalid plot type and plot feature")
 
     # add the wireframe and axis
-    _get_plot_view(pl, title, grid, voxel, point, plot_view, plot_theme)
+    _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme)
 
 
-def get_plot_plotter(pl, title, grid, voxel, point, data_plot, data_options):
+def get_plot_plotter(pl, grid, voxel, point, plot_type, data_plot, data_options):
     """
     Plot the solution (for the plotter).
     The following plot types are available:
@@ -435,25 +465,23 @@ def get_plot_plotter(pl, title, grid, voxel, point, data_plot, data_options):
     """
 
     # extract the data
-    plot_type = data_plot["plot_type"]
-    plot_content = data_plot["plot_content"]
     plot_clip = data_options["plot_clip"]
     plot_view = data_options["plot_view"]
     plot_theme = data_options["plot_theme"]
 
     # get the main plot
     if plot_type == "material":
-        _plot_material(pl, voxel, plot_content, plot_clip)
+        _plot_material(pl, voxel, data_plot, plot_clip, plot_theme)
     elif plot_type == "scalar_voxel":
-        _plot_scalar(pl, voxel, plot_content, plot_clip, plot_theme)
+        _plot_scalar(pl, voxel, data_plot, plot_clip, plot_theme)
     elif plot_type == "scalar_point":
-        _plot_scalar(pl, point, plot_content, plot_clip, plot_theme)
+        _plot_scalar(pl, point, data_plot, plot_clip, plot_theme)
     elif plot_type == "arrow_voxel":
-        _plot_arrow(pl, grid, voxel, plot_content, plot_clip, plot_theme)
+        _plot_arrow(pl, grid, voxel, data_plot, plot_clip, plot_theme)
     elif plot_type == "arrow_point":
-        _plot_arrow(pl, grid, point, plot_content, plot_clip, plot_theme)
+        _plot_arrow(pl, grid, point, data_plot, plot_clip, plot_theme)
     else:
         raise ValueError("invalid plot type and plot feature")
 
     # add the wireframe and axis
-    _get_plot_view(pl, title, grid, voxel, point, plot_view, plot_theme)
+    _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme)

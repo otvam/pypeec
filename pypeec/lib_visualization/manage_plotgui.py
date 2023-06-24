@@ -287,8 +287,7 @@ class PlotGui:
         notebook_size = data_window["notebook_size"]
 
         # prepend tag
-        if tag is not None:
-            title = tag + " / " + title
+        title = tag + " / " + title
 
         # create the figure
         if self.plot_mode == "qt":

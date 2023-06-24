@@ -1,32 +1,32 @@
 "domain":
-    "title": "Domain"
     "framework": "pyvista"
+    "plot_title": "Domain"
+    "plot_type": "domain"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "domain"
-        "plot_content":
-            "colormap": "Accent"
-            "opacity": 1.0
+        "title": "Domain"
+        "colormap": "Accent"
+        "opacity": 1.0
 "connection":
-    "title": "Connection"
     "framework": "pyvista"
+    "plot_title": "Connection"
+    "plot_type": "connection"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "connection"
-        "plot_content":
-            "colormap": "Accent"
-            "opacity": 1.0
+        "title": "Connection"
+        "colormap": "Accent"
+        "opacity": 1.0
 "voxelization":
-    "title": "Voxelization"
     "framework": "pyvista"
+    "plot_title": "Voxelization"
+    "plot_type": "voxelization"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "plot_type": "voxelization"
-        "plot_content":
-            "color_voxel": "red"
-            "color_reference": "blue"
-            "opacity_voxel": 0.5
-            "opacity_reference": 0.5
+        "title": "Voxelization"
+        "color_voxel": "red"
+        "color_reference": "blue"
+        "opacity_voxel": 0.5
+        "opacity_reference": 0.5
