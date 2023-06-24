@@ -2,7 +2,7 @@
     "title": "Domain"
     "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
-    "data_options": !include cfg_data_options.yaml
+    "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
         "plot_type": "domain"
         "plot_content":
@@ -12,7 +12,7 @@
     "title": "Connection"
     "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
-    "data_options": !include cfg_data_options.yaml
+    "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
         "plot_type": "connection"
         "plot_content":
@@ -22,7 +22,7 @@
     "title": "Voxelization"
     "framework": "pyvista"
     "data_window": !include cfg_data_window.yaml
-    "data_options": !include cfg_data_options.yaml
+    "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
         "plot_type": "voxelization"
         "plot_content":

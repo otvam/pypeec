@@ -86,7 +86,7 @@ def _get_plot_convergence(fig, title, conv, plot_content):
     plt.title("%s / n_iter = %d" % (title, len(iter_vec)))
 
 
-def get_plot_plotter(fig, title, res, conv, data_plot):
+def get_plot_plotter(fig, title, res, conv, data_plot, data_options):
     """
     Plot the solver status (for the plotter).
     """
@@ -94,11 +94,19 @@ def get_plot_plotter(fig, title, res, conv, data_plot):
     # extract the data
     plot_type = data_plot["plot_type"]
     plot_content = data_plot["plot_content"]
+    style = data_options["style"]
+    legend = data_options["legend"]
+    font = data_options["font"]
+
+    # plot parameters
+    param = {"font.size": font, "legend.loc": legend}
 
     # get the main plot
-    if plot_type == "convergence":
-        _get_plot_convergence(fig, title, conv, plot_content)
-    elif plot_type == "residuum":
-        _get_plot_residuum(fig, title, res, plot_content)
-    else:
-        raise ValueError("invalid plot type and plot feature")
+    with plt.style.context(style):
+        with plt.rc_context(param):
+            if plot_type == "convergence":
+                _get_plot_convergence(fig, title, conv, plot_content)
+            elif plot_type == "residuum":
+                _get_plot_residuum(fig, title, res, plot_content)
+            else:
+                raise ValueError("invalid plot type and plot feature")

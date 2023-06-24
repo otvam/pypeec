@@ -31,7 +31,7 @@ def _check_data_window(data_window):
     datachecker.check_integer_array("notebook_size", notebook_size, size=2, is_positive=True, can_be_zero=False, can_be_none=True)
 
 
-def _check_data_options(data_options):
+def _check_data_options_pyvista(data_options):
     """
     Check the plot options (for the viewer and plotter).
     """
@@ -48,6 +48,14 @@ def _check_data_options(data_options):
     _check_plot_clip(plot_clip)
     _check_plot_view(plot_view)
     _check_plot_theme(plot_theme)
+
+
+def _check_data_options_matplotlib(data_options):
+    """
+    Check the plot options (for the viewer and plotter).
+    """
+
+    pass
 
 
 def _check_plot_view(plot_view):
@@ -356,7 +364,12 @@ def _check_data_item(data_item):
     _check_data_window(data_window)
 
     # check options
-    _check_data_options(data_options)
+    if framework == "pyvista":
+        _check_data_options_pyvista(data_options)
+    elif framework == "matplotlib":
+        _check_data_options_matplotlib(data_options)
+    else:
+        raise ValueError("invalid plot framework")
 
     return data_plot
 
