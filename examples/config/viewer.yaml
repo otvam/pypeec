@@ -8,3 +8,25 @@
         "plot_content":
             "colormap": "Accent"
             "opacity": 1.0
+"connection":
+    "title": "Connection"
+    "framework": "pyvista"
+    "data_window": !include cfg_data_window.yaml
+    "data_options": !include cfg_data_options.yaml
+    "data_plot":
+        "plot_type": "connection"
+        "plot_content":
+            "colormap": "Accent"
+            "opacity": 1.0
+"voxelization":
+    "title": "Voxelization"
+    "framework": "pyvista"
+    "data_window": !include cfg_data_window.yaml
+    "data_options": !include cfg_data_options.yaml
+    "data_plot":
+        "plot_type": "voxelization"
+        "plot_content":
+            "color_voxel": "red"
+            "color_reference": "blue"
+            "opacity_voxel": 0.5
+            "opacity_reference": 0.5

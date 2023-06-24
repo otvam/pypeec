@@ -423,7 +423,7 @@ def get_plot_viewer(pl, title, grid, voxel, point, reference, data_plot, data_op
     _get_plot_view(pl, title, grid, voxel, point, plot_view, plot_theme)
 
 
-def get_plot_plotter(pl, title, grid, voxel, point, data_plot):
+def get_plot_plotter(pl, title, grid, voxel, point, data_plot, data_options):
     """
     Plot the solution (for the plotter).
     The following plot types are available:
@@ -437,9 +437,9 @@ def get_plot_plotter(pl, title, grid, voxel, point, data_plot):
     # extract the data
     plot_type = data_plot["plot_type"]
     plot_content = data_plot["plot_content"]
-    plot_clip = data_plot["plot_clip"]
-    plot_view = data_plot["plot_view"]
-    plot_theme = data_plot["plot_theme"]
+    plot_clip = data_options["plot_clip"]
+    plot_view = data_options["plot_view"]
+    plot_theme = data_options["plot_theme"]
 
     # get the main plot
     if plot_type == "material":

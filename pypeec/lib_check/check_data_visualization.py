@@ -288,9 +288,9 @@ def _check_plot_content_viewer(plot_type, plot_content):
         datachecker.check_float("opacity", plot_content["opacity"], is_positive=True, can_be_zero=False)
 
 
-def _check_data_plotter_matplotlib(data_plot):
+def _check_data_plotter_item(data_plot):
     """
-    Check the data describing a Matplotlib plot (for the plotter).
+    Check the validity of the dict describing a single plot (for the plotter).
     """
 
     # check type
@@ -301,92 +301,19 @@ def _check_data_plotter_matplotlib(data_plot):
     plot_type = data_plot["plot_type"]
     plot_content = data_plot["plot_content"]
 
-    # check plot type
-    datachecker.check_choice("plot_type", plot_type, ["convergence", "residuum"])
-
-    # check data
-    _check_plot_content_plotter_matplotlib(plot_type, plot_content)
-
-
-def _check_data_plotter_pyvista(data_plot):
-    """
-    Check the data describing a PyVista plot (for the plotter).
-    """
-
-    # check type
-    key_list = ["plot_title", "plot_type", "plot_clip", "plot_content", "plot_view"]
-    datachecker.check_dict("data_plot", data_plot, key_list=key_list)
-
-    # extract the data
-    plot_title = data_plot["plot_title"]
-    plot_type = data_plot["plot_type"]
-    plot_content = data_plot["plot_content"]
-    plot_clip = data_plot["plot_clip"]
-    plot_view = data_plot["plot_view"]
-    plot_theme = data_plot["plot_theme"]
-
-    # check plot type
-    datachecker.check_choice("plot_type", plot_type, ["material", "scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"])
-
-    # check title data
-    datachecker.check_string("plot_title", plot_title, can_be_empty=False)
-
-    # check data
-    _check_plot_content_plotter_pyvista(plot_type, plot_content)
-    _check_plot_clip(plot_clip)
-    _check_plot_view(plot_view)
-    _check_plot_theme(plot_theme)
-
-
-def _check_data_plotter_item(data_plotter):
-    """
-    Check the validity of the dict describing a single plot (for the plotter).
-    """
-
-    # check type
-    key_list = ["plot_framework", "data_window", "data_plot"]
-    datachecker.check_dict("data_plotter", data_plotter, key_list=key_list)
-
-    # extract field
-    plot_framework = data_plotter["plot_framework"]
-    data_window = data_plotter["data_window"]
-    data_plot = data_plotter["data_plot"]
-
-    # check plot framework
-    datachecker.check_choice("plot_framework", plot_framework, ["matplotlib", "pyvista"])
-
-    # check window data
-    _check_data_window(data_window)
-
     # check the plot data for the framework
-    if plot_framework == "matplotlib":
-        _check_data_plotter_matplotlib(data_plot)
-    elif plot_framework == "pyvista":
-        _check_data_plotter_pyvista(data_plot)
+    if plot_type in ["convergence", "residuum"]:
+        _check_plot_content_plotter_matplotlib(plot_type, plot_content)
+    elif plot_type in ["material", "scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"]:
+        _check_plot_content_plotter_pyvista(plot_type, plot_content)
     else:
         raise ValueError("plot_framework: plot framework is invalid")
 
 
-def _check_data_viewer_item(data_viewer):
+def _check_data_viewer_item(data_plot):
     """
     Check the validity of the dict describing a single plot (for the viewer).
     """
-
-    # check type
-    key_list = ["title", "framework", "data_window", "data_plot", "data_options"]
-    datachecker.check_dict("data_viewer", data_viewer, key_list=key_list)
-
-    # extract field
-    title = data_viewer["title"]
-    data_window = data_viewer["data_window"]
-    data_plot = data_viewer["data_plot"]
-    data_options = data_viewer["data_options"]
-
-    # check title
-    datachecker.check_string("title", title, can_be_empty=False)
-
-    # check window data
-    _check_data_window(data_window)
 
     # check type
     key_list = ["plot_type", "plot_content"]
@@ -401,7 +328,37 @@ def _check_data_viewer_item(data_viewer):
 
     # check options
     _check_plot_content_viewer(plot_type, plot_content)
+
+
+def _check_data_item(data_item):
+    """
+    Check the validity of the dict describing a single plot (for the viewer and plotter).
+    """
+
+    # check type
+    key_list = ["title", "framework", "data_window", "data_plot", "data_options"]
+    datachecker.check_dict("data_item", data_item, key_list=key_list)
+
+    # extract field
+    title = data_item["title"]
+    framework = data_item["framework"]
+    data_window = data_item["data_window"]
+    data_plot = data_item["data_plot"]
+    data_options = data_item["data_options"]
+
+    # check title
+    datachecker.check_string("title", title, can_be_empty=False)
+
+    # check plot framework
+    datachecker.check_choice("framework", framework, ["matplotlib", "pyvista"])
+
+    # check window data
+    _check_data_window(data_window)
+
+    # check options
     _check_data_options(data_options)
+
+    return data_plot
 
 
 def check_data_point(data_point):
@@ -425,7 +382,8 @@ def check_data_plotter(data_plotter):
 
     # check items
     for data_plotter_tmp in data_plotter.values():
-        _check_data_plotter_item(data_plotter_tmp)
+        data_plot_tmp = _check_data_item(data_plotter_tmp)
+        _check_data_plotter_item(data_plot_tmp)
 
 
 def check_data_viewer(data_viewer):
@@ -439,4 +397,5 @@ def check_data_viewer(data_viewer):
 
     # check items
     for data_viewer_tmp in data_viewer.values():
-        _check_data_viewer_item(data_viewer_tmp)
+        data_plot_tmp = _check_data_item(data_viewer_tmp)
+        _check_data_viewer_item(data_plot_tmp)

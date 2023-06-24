@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def _get_plot_residuum(fig, res, plot_content):
+def _get_plot_residuum(fig, title, res, plot_content):
     """
     Plot the final residuum (absolute value) with a histogram.
     """
@@ -53,10 +53,10 @@ def _get_plot_residuum(fig, res, plot_content):
     plt.grid()
     plt.xlabel("residuum (a.u.)")
     plt.ylabel("counts (a.u.)")
-    plt.title("Solver Residuum / n_tot = %d / n_plt = %d" % (n_tot, n_plt))
+    plt.title("%s / n_tot = %d / n_plt = %d" % (title, n_tot, n_plt))
 
 
-def _get_plot_convergence(fig, conv, plot_content):
+def _get_plot_convergence(fig, title, conv, plot_content):
     """
     Plot the convergence of the iterative matrix solver.
     """
@@ -71,20 +71,22 @@ def _get_plot_convergence(fig, conv, plot_content):
 
     # counts
     iter_vec = conv["iter_vec"]
+    P_vec = conv["P_vec"]
+    Q_vec = conv["Q_vec"]
 
     # plot the data
-    plt.plot(iter_vec, conv["P_vec"], color=color_active, marker=marker, label="P")
-    plt.plot(iter_vec, conv["Q_vec"], color=color_reactive, marker=marker, label="Q")
+    plt.plot(iter_vec, P_vec, color=color_active, marker=marker, label="P")
+    plt.plot(iter_vec, Q_vec, color=color_reactive, marker=marker, label="Q")
 
     # add cosmetics
     plt.grid()
     plt.legend()
     plt.xlabel("iterations (#)")
     plt.ylabel("convergence (a.u.)")
-    plt.title("Solver Convergence / n_iter = %d" % len(iter_vec))
+    plt.title("%s / n_iter = %d" % (title, len(iter_vec)))
 
 
-def get_plot_plotter(fig, res, conv, data_plot):
+def get_plot_plotter(fig, title, res, conv, data_plot):
     """
     Plot the solver status (for the plotter).
     """
@@ -95,8 +97,8 @@ def get_plot_plotter(fig, res, conv, data_plot):
 
     # get the main plot
     if plot_type == "convergence":
-        _get_plot_convergence(fig, conv, plot_content)
+        _get_plot_convergence(fig, title, conv, plot_content)
     elif plot_type == "residuum":
-        _get_plot_residuum(fig, res, plot_content)
+        _get_plot_residuum(fig, title, res, plot_content)
     else:
         raise ValueError("invalid plot type and plot feature")
