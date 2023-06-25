@@ -8,16 +8,18 @@
 * Pillow (for the mesher, image manipulation)
 * Shapely and Rasterio (for the mesher, 2D shape manipulation)
 * VTK and PyVista (for the mesher, 3D shape manipulation)
-* Matplotlib (for the viewer and plotter, 2D plots)
-* PyVistaQt and PyQt5 (for the viewer and plotter, 2D plots)
 
-The following optional packages can be used for speeding up the solver:
+Additionally, the following **libraries** are used for the **plotter** and **viewer**:
+* Matplotlib and PyQt5 (2D plots)
+* VTK, PyVista, PyVistaQt, and PyQt5 (3D plots)
+
+The following **optional packages** can be used for speeding up the solver:
 * UMFPACK (available through SciKits)
 * MKL/PARDISO (available through Pydiso)
 * FFTW (available through pyFFTW)
 * CuPy (using GPUs through CUDA)
 
-The following platforms and systems have been tested:
+The following **platforms** and systems have been **tested**:
 * Linux / RedHat 7.9 on x86/x64
 * Linux / Ubuntu 20.04 on x86/x64
 * Linux / Ubuntu 22.04 on x86/x64
@@ -25,7 +27,7 @@ The following platforms and systems have been tested:
 * GPU / NVIDIA T4 Tensor
 * GPU / NVIDIA Tesla K80
 
-The following platforms are passing the automated tests:
+The following **platforms** are passing the **automated tests**:
 * Linux / Ubuntu 22.04 on x86/x64
 * Microsoft / Windows Server 2022 on x86/x64
 * Apple / macOS Monterey 12 on x86/x64
