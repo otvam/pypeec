@@ -60,8 +60,8 @@ def run_workflow(folder, name):
     file_problem = os.path.join(PATH_EXAMPLES, folder, name, "problem.yaml")
 
     # get config file name
-    file_plotter = os.path.join(FOLDER_CONFIG, "plotter.json")
-    file_viewer = os.path.join(FOLDER_CONFIG, "viewer.json")
+    file_plotter = os.path.join(FOLDER_CONFIG, "plotter.yaml")
+    file_viewer = os.path.join(FOLDER_CONFIG, "viewer.yaml")
     file_tolerance = os.path.join(FOLDER_CONFIG, "tolerance.yaml")
 
     # get the temporary files
