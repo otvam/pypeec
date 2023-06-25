@@ -96,7 +96,7 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
 
 def run(
         data_voxel, data_point, data_viewer,
-        tag_plot=None, plot_mode="window", folder=".",
+        tag_plot=None, plot_mode="qt", folder=".",
 ):
     """
     Main script for visualizing a 3D voxel structure.
@@ -121,10 +121,10 @@ def run(
         The list describes plots to be shown.
         If None, all the plots are shown.
     plot_mode : string
-        If "window", the Qt framework is used for the rendering (default).
-        If "notebook", the plots are rendered within the Jupyter notebook.
-        If "screenshot", the plots are not shown but saved as screenshots.
-        If "silent", the plots are not shown (test mode).
+        If "qt", the Qt framework is used for the rendering (default).
+        If "nb", the plots are rendered within the Jupyter notebook.
+        If "save", the plots are not shown but saved as screenshots.
+        If "none", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.

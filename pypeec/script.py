@@ -126,17 +126,18 @@ def _get_arg_viewer(subparsers):
         dest="tag_plot",
     )
     parser.add_argument(
+        "-pm", "--plot_mode",
+        help="selection of the plot mode (default: window)",
+        choices=["qt", "nb", "save", "none"],
+        default="qt",
+        dest="plot_mode",
+    )
+    parser.add_argument(
         "-f", "--folder",
-        help="folder for saving the screenshots (default: do not save)",
+        help="folder for saving the screenshots (default: cwd)",
         default=None,
         metavar="folder",
         dest="folder",
-    )
-    parser.add_argument(
-        "-s", "--silent",
-        help="do not display the plots (default: show the plots)",
-        action="store_true",
-        dest="is_silent",
     )
 
 
@@ -240,17 +241,18 @@ def _get_arg_plotter(subparsers):
         dest="tag_plot",
     )
     parser.add_argument(
+        "-pm", "--plot_mode",
+        help="selection of the plot mode (default: window)",
+        choices=["qt", "nb", "save", "none"],
+        default="qt",
+        dest="plot_mode",
+    )
+    parser.add_argument(
         "-f", "--folder",
-        help="folder for saving the screenshots (default: do not save)",
+        help="folder for saving the screenshots (default: cwd)",
         default=None,
         metavar="folder",
         dest="folder",
-    )
-    parser.add_argument(
-        "-s", "--silent",
-        help="do not display the plots (default: show the plots)",
-        action="store_true",
-        dest="is_silent",
     )
 
 
@@ -285,7 +287,7 @@ def run_script():
             args.file_point,
             args.file_viewer,
             args.tag_plot,
-            args.is_silent,
+            args.plot_mode,
             args.folder,
         )
     elif args.command in ["solver", "so"]:
@@ -303,7 +305,7 @@ def run_script():
             args.file_plotter,
             args.tag_sweep,
             args.tag_plot,
-            args.is_silent,
+            args.plot_mode,
             args.folder,
         )
     else:

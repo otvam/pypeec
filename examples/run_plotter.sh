@@ -19,4 +19,5 @@ FILE_PLOTTER="$PATH_ROOT/$FOLDER_CONFIG/plotter.yaml"
 pypeec plotter \
     --solution $FILE_SOLUTION \
     --point $FILE_POINT \
-    --plotter $FILE_PLOTTER
+    --plotter $FILE_PLOTTER \
+    --plot_mode qt

@@ -95,7 +95,7 @@ def run_mesher_file(file_geometry, file_voxel, is_truncated=False):
 
 def run_viewer_data(
         data_voxel, data_point, data_viewer,
-        tag_plot=None, plot_mode="window", folder=".",
+        tag_plot=None, plot_mode="qt", folder=".",
 ):
     """
     Main script for visualizing a 3D voxel structure.
@@ -109,10 +109,10 @@ def run_viewer_data(
         The list describes plots to be shown.
         If None, all the plots are shown.
     plot_mode : string
-        If "window", the Qt framework is used for the rendering (default).
-        If "notebook", the plots are rendered within the Jupyter notebook.
-        If "screenshot", the plots are not shown but saved as screenshots.
-        If "silent", the plots are not shown (test mode).
+        If "qt", the Qt framework is used for the rendering (default).
+        If "nb", the plots are rendered within the Jupyter notebook.
+        If "save", the plots are not shown but saved as screenshots.
+        If "none", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
@@ -138,7 +138,7 @@ def run_viewer_data(
 
 def run_viewer_file(
         file_voxel, file_point, file_viewer,
-        tag_plot=None, plot_mode="window", folder=".",
+        tag_plot=None, plot_mode="qt", folder=".",
 ):
     """
     Main script for visualizing a 3D voxel structure.
@@ -153,10 +153,10 @@ def run_viewer_file(
         The list describes plots to be shown.
         If None, all the plots are shown.
     plot_mode : string
-        If "window", the Qt framework is used for the rendering (default).
-        If "notebook", the plots are rendered within the Jupyter notebook.
-        If "screenshot", the plots are not shown but saved as screenshots.
-        If "silent", the plots are not shown (test mode).
+        If "qt", the Qt framework is used for the rendering (default).
+        If "nb", the plots are rendered within the Jupyter notebook.
+        If "save", the plots are not shown but saved as screenshots.
+        If "none", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
@@ -278,7 +278,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_
 
 def run_plotter_data(
         data_solution, data_point, data_plotter,
-        tag_sweep=None, tag_plot=None, plot_mode="window", folder=".",
+        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".",
 ):
     """
     Main script for plotting the solution of a PEEC problem.
@@ -295,10 +295,10 @@ def run_plotter_data(
         The list describes plots to be shown.
         If None, all the plots are shown.
     plot_mode : string
-        If "window", the Qt framework is used for the rendering (default).
-        If "notebook", the plots are rendered within the Jupyter notebook.
-        If "screenshot", the plots are not shown but saved as screenshots.
-        If "silent", the plots are not shown (test mode).
+        If "qt", the Qt framework is used for the rendering (default).
+        If "nb", the plots are rendered within the Jupyter notebook.
+        If "save", the plots are not shown but saved as screenshots.
+        If "none", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
@@ -324,7 +324,7 @@ def run_plotter_data(
 
 def run_plotter_file(
         file_solution, file_point, file_plotter,
-        tag_sweep=None, tag_plot=None, plot_mode="window", folder=".",
+        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".",
 ):
     """
     Main script for plotting the solution of a PEEC problem.
@@ -342,10 +342,10 @@ def run_plotter_file(
         The list describes plots to be shown.
         If None, all the plots are shown.
     plot_mode : string
-        If "window", the Qt framework is used for the rendering (default).
-        If "notebook", the plots are rendered within the Jupyter notebook.
-        If "screenshot", the plots are not shown but saved as screenshots.
-        If "silent", the plots are not shown (test mode).
+        If "qt", the Qt framework is used for the rendering (default).
+        If "nb", the plots are rendered within the Jupyter notebook.
+        If "save", the plots are not shown but saved as screenshots.
+        If "none", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.

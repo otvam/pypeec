@@ -47,10 +47,10 @@ class PlotGui:
     """
     Manage PyVista and Matplotlib plots.
     Three different plot mode are available:
-        - "window", the Qt framework is used for the rendering (default).
-        - "notebook", the plots are rendered within the Jupyter notebook.
-        - "screenshot", the plots are not shown but saved as screenshots.
-        - "silent", the plots are not shown (test mode).
+        - "qt", the Qt framework is used for the rendering (default).
+        - "nb", the plots are rendered within the Jupyter notebook.
+        - "save", the plots are not shown but saved as screenshots.
+        - "none", the plots are not shown (test mode).
     """
 
     def __init__(self, plot_mode, folder):
@@ -66,20 +66,20 @@ class PlotGui:
         self.fig_list = []
 
         # create the Qt App
-        if self.plot_mode == "window":
+        if self.plot_mode == "qt":
             self.app = PyQt5.QtWidgets.QApplication([])
         else:
             self.app = None
 
         # set the app ID in order to get a consistent icon on MS Windows
-        if (self.plot_mode == "window") and (os.name == "nt"):
+        if (self.plot_mode == "qt") and (os.name == "nt"):
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("pypeec")
 
         # setup PyVista and Matplotlib
-        if self.plot_mode == "window":
+        if self.plot_mode == "qt":
             pyvista.set_plot_theme("default")
             matplotlib.use("QtAgg")
-        if self.plot_mode == "notebook":
+        if self.plot_mode == "nb":
             pyvista.set_plot_theme("default")
             pyvista.set_jupyter_backend("trame")
 
@@ -236,11 +236,11 @@ class PlotGui:
         title = tag + " / " + title
 
         # create the figure
-        if self.plot_mode == "window":
+        if self.plot_mode == "qt":
             pl = self._get_plotter_pyvista_qt(title, show_menu, window_size)
-        elif self.plot_mode == "notebook":
+        elif self.plot_mode == "nb":
             pl = self._get_plotter_pyvista_nb(notebook_size)
-        elif self.plot_mode in ["screenshot", "silent"]:
+        elif self.plot_mode in ["save", "none"]:
             pl = self._get_plotter_pyvista_nop(image_size)
         else:
             raise ValueError("invalid plot mode")
@@ -265,11 +265,11 @@ class PlotGui:
         title = tag + " / " + title
 
         # create the figure
-        if self.plot_mode == "window":
+        if self.plot_mode == "qt":
             fig = self._get_figure_matplotlib_qt(title, show_menu, window_size)
-        elif self.plot_mode == "notebook":
+        elif self.plot_mode == "nb":
             fig = self._get_figure_matplotlib_nb(notebook_size)
-        elif self.plot_mode in ["screenshot", "silent"]:
+        elif self.plot_mode in ["save", "none"]:
             fig = self._get_figure_matplotlib_nop(image_size)
         else:
             raise ValueError("invalid plot mode")
@@ -294,7 +294,7 @@ class PlotGui:
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
             return True
 
-        if self.plot_mode == "window":
+        if self.plot_mode == "qt":
             LOGGER.debug("entering the plot event loop")
 
             # signal handler for closing all the windows
@@ -320,7 +320,7 @@ class PlotGui:
             status = exit_code == 0
 
             return status
-        elif self.plot_mode == "notebook":
+        elif self.plot_mode == "nb":
             # display the non-blocking call
             LOGGER.debug("display notebook plots")
 
@@ -330,7 +330,7 @@ class PlotGui:
             matplotlib.pyplot.show(block=False)
 
             return True
-        elif self.plot_mode == "screenshot":
+        elif self.plot_mode == "save":
             LOGGER.debug("save and close all the plots")
 
             self._save_screenshot()
@@ -340,7 +340,7 @@ class PlotGui:
             matplotlib.pyplot.close("all")
 
             return True
-        elif self.plot_mode == "silent":
+        elif self.plot_mode == "none":
             LOGGER.debug("close all the plots")
 
             for tag, pl in self.pl_list:

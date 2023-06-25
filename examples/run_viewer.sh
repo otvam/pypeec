@@ -19,4 +19,5 @@ FILE_VIEWER="$PATH_ROOT/$FOLDER_CONFIG/viewer.yaml"
 pypeec viewer \
     --voxel $FILE_VOXEL \
     --point $FILE_POINT \
-    --viewer $FILE_VIEWER
+    --viewer $FILE_VIEWER \
+    --plot_mode qt

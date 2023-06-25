@@ -25,7 +25,7 @@ def check_plot_options(plot_mode, folder):
     Check the plot mode (display or not the plots).
     """
 
-    datachecker.check_choice("plot_mode", plot_mode, ["window", "notebook", "screenshot", "silent"])
+    datachecker.check_choice("plot_mode", plot_mode, ["qt", "nb", "save", "none"])
     datachecker.check_folder("folder", folder, can_be_none=True)
 
 
