@@ -96,7 +96,7 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
 
 def run(
         data_voxel, data_point, data_viewer,
-        tag_plot=None, is_silent=False, folder=None,
+        tag_plot=None, plot_mode="window", folder=".",
 ):
     """
     Main script for visualizing a 3D voxel structure.
@@ -120,12 +120,14 @@ def run(
     tag_plot : list
         The list describes plots to be shown.
         If None, all the plots are shown.
-    is_silent : boolean
-        If true, the plots are not shown (non-blocking call).
-        If false, the plots are shown (blocking call).
+    plot_mode : string
+        If "window", the Qt framework is used for the rendering (default).
+        If "notebook", the plots are rendered within the Jupyter notebook.
+        If "screenshot", the plots are not shown but saved as screenshots.
+        If "silent", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
-        If None, the screenshots are not saved.
+        The current directory is used as the default directory.
 
     Returns
     -------
@@ -143,7 +145,7 @@ def run(
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
-        check_data_options.check_plot_options(is_silent, folder)
+        check_data_options.check_plot_options(plot_mode, folder)
         check_data_options.check_tag_list(data_viewer, tag_plot)
 
         # find the plots
@@ -152,7 +154,7 @@ def run(
 
         # create the Qt app (should be at the beginning)
         LOGGER.info("init the plot manager")
-        gui_obj = manage_plotgui.PlotGui(is_silent, folder)
+        gui_obj = manage_plotgui.PlotGui(plot_mode, folder)
 
         # handle the data
         LOGGER.info("parse the voxel geometry and the data")

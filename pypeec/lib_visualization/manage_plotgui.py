@@ -47,65 +47,41 @@ class PlotGui:
     """
     Manage PyVista and Matplotlib plots.
     Three different plot mode are available:
-        - qt: show plot windows with the Qt framework
-        - nb: show the plot inside a Jupyter notebook
-        - silent: close all the plots without showing them
+        - "window", the Qt framework is used for the rendering (default).
+        - "notebook", the plots are rendered within the Jupyter notebook.
+        - "screenshot", the plots are not shown but saved as screenshots.
+        - "silent", the plots are not shown (test mode).
     """
 
-    def __init__(self, is_silent, folder):
+    def __init__(self, plot_mode, folder):
         """
         Constructor.
         Init the plots.
         """
 
         # assign variable
+        self.plot_mode = plot_mode
         self.folder = folder
         self.pl_list = []
         self.fig_list = []
 
-        # find the plot mode
-        is_notebook = self._get_notebook()
-        if is_silent:
-            self.plot_mode = "nop"
-        else:
-            if is_notebook:
-                self.plot_mode = "nb"
-            else:
-                self.plot_mode = "qt"
-
         # create the Qt App
-        if self.plot_mode == "qt":
+        if self.plot_mode == "window":
             self.app = PyQt5.QtWidgets.QApplication([])
         else:
             self.app = None
 
         # set the app ID in order to get a consistent icon on MS Windows
-        if (self.plot_mode == "qt") and (os.name == "nt"):
+        if (self.plot_mode == "window") and (os.name == "nt"):
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("pypeec")
 
         # setup PyVista and Matplotlib
-        if self.plot_mode == "qt":
+        if self.plot_mode == "window":
             pyvista.set_plot_theme("default")
             matplotlib.use("QtAgg")
-        if self.plot_mode == "nb":
+        if self.plot_mode == "notebook":
             pyvista.set_plot_theme("default")
             pyvista.set_jupyter_backend("trame")
-
-    @staticmethod
-    def _get_notebook():
-        """
-        Check if the code is executed inside a Jupyter notebook.
-        """
-
-        try:
-            import IPython
-            res = IPython.get_ipython()
-            if res is not None:
-                return True
-            else:
-                return False
-        except ImportError:
-            return False
 
     @staticmethod
     def _get_plotter_pyvista_qt(title, show_menu, window_size):
@@ -235,16 +211,15 @@ class PlotGui:
         Save all the plots in images.
         """
 
-        if self.folder is not None:
-            # save the PyVista plots
-            for tag, pl in self.pl_list:
-                filename = os.path.join(self.folder, "%s.png" % tag)
-                pl.screenshot(filename)
+        # save the PyVista plots
+        for tag, pl in self.pl_list:
+            filename = os.path.join(self.folder, "%s.png" % tag)
+            pl.screenshot(filename)
 
-            # save the Matplotlib plots
-            for tag, fig in self.fig_list:
-                filename = os.path.join(self.folder, "%s.png" % tag)
-                fig.savefig(filename)
+        # save the Matplotlib plots
+        for tag, fig in self.fig_list:
+            filename = os.path.join(self.folder, "%s.png" % tag)
+            fig.savefig(filename)
 
     def open_pyvista(self, tag, title, data_window):
         """
@@ -261,11 +236,11 @@ class PlotGui:
         title = tag + " / " + title
 
         # create the figure
-        if self.plot_mode == "qt":
+        if self.plot_mode == "window":
             pl = self._get_plotter_pyvista_qt(title, show_menu, window_size)
-        elif self.plot_mode == "nb":
+        elif self.plot_mode == "notebook":
             pl = self._get_plotter_pyvista_nb(notebook_size)
-        elif self.plot_mode == "nop":
+        elif self.plot_mode in ["screenshot", "silent"]:
             pl = self._get_plotter_pyvista_nop(image_size)
         else:
             raise ValueError("invalid plot mode")
@@ -290,11 +265,11 @@ class PlotGui:
         title = tag + " / " + title
 
         # create the figure
-        if self.plot_mode == "qt":
+        if self.plot_mode == "window":
             fig = self._get_figure_matplotlib_qt(title, show_menu, window_size)
-        elif self.plot_mode == "nb":
+        elif self.plot_mode == "notebook":
             fig = self._get_figure_matplotlib_nb(notebook_size)
-        elif self.plot_mode == "nop":
+        elif self.plot_mode in ["screenshot", "silent"]:
             fig = self._get_figure_matplotlib_nop(image_size)
         else:
             raise ValueError("invalid plot mode")
@@ -319,7 +294,7 @@ class PlotGui:
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
             return True
 
-        if self.plot_mode == "qt":
+        if self.plot_mode == "window":
             LOGGER.debug("entering the plot event loop")
 
             # signal handler for closing all the windows
@@ -345,7 +320,7 @@ class PlotGui:
             status = exit_code == 0
 
             return status
-        elif self.plot_mode == "nb":
+        elif self.plot_mode == "notebook":
             # display the non-blocking call
             LOGGER.debug("display notebook plots")
 
@@ -355,10 +330,18 @@ class PlotGui:
             matplotlib.pyplot.show(block=False)
 
             return True
-        elif self.plot_mode == "nop":
-            LOGGER.debug("close all the plots")
+        elif self.plot_mode == "screenshot":
+            LOGGER.debug("save and close all the plots")
 
             self._save_screenshot()
+
+            for tag, pl in self.pl_list:
+                pl.close()
+            matplotlib.pyplot.close("all")
+
+            return True
+        elif self.plot_mode == "silent":
+            LOGGER.debug("close all the plots")
 
             for tag, pl in self.pl_list:
                 pl.close()

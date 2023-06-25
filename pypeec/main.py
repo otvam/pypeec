@@ -95,7 +95,7 @@ def run_mesher_file(file_geometry, file_voxel, is_truncated=False):
 
 def run_viewer_data(
         data_voxel, data_point, data_viewer,
-        tag_plot=None, is_silent=False, folder=None,
+        tag_plot=None, plot_mode="window", folder=".",
 ):
     """
     Main script for visualizing a 3D voxel structure.
@@ -108,12 +108,14 @@ def run_viewer_data(
     tag_plot : list
         The list describes plots to be shown.
         If None, all the plots are shown.
-    is_silent : boolean
-        If true, the plots are not shown (non-blocking call).
-        If false, the plots are shown (blocking call).
+    plot_mode : string
+        If "window", the Qt framework is used for the rendering (default).
+        If "notebook", the plots are rendered within the Jupyter notebook.
+        If "screenshot", the plots are not shown but saved as screenshots.
+        If "silent", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
-        If None, the screenshots are not saved.
+        The current directory is used as the default directory.
 
     Returns
     -------
@@ -129,14 +131,14 @@ def run_viewer_data(
     from pypeec.run import viewer
 
     # run the tool
-    (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent, folder)
+    (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, plot_mode, folder)
 
     return status, ex
 
 
 def run_viewer_file(
         file_voxel, file_point, file_viewer,
-        tag_plot=None, is_silent=False, folder=None,
+        tag_plot=None, plot_mode="window", folder=".",
 ):
     """
     Main script for visualizing a 3D voxel structure.
@@ -150,12 +152,14 @@ def run_viewer_file(
     tag_plot : list
         The list describes plots to be shown.
         If None, all the plots are shown.
-    is_silent : boolean
-        If true, the plots are not shown (non-blocking call).
-        If false, the plots are shown (blocking call).
+    plot_mode : string
+        If "window", the Qt framework is used for the rendering (default).
+        If "notebook", the plots are rendered within the Jupyter notebook.
+        If "screenshot", the plots are not shown but saved as screenshots.
+        If "silent", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
-        If None, the screenshots are not saved.
+        The current directory is used as the default directory.
 
     Returns
     -------
@@ -180,7 +184,7 @@ def run_viewer_file(
         data_viewer = io.load_config(file_viewer)
 
         # call the viewer
-        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, is_silent, folder)
+        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, plot_mode, folder)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
         return False, ex
@@ -274,7 +278,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_
 
 def run_plotter_data(
         data_solution, data_point, data_plotter,
-        tag_sweep=None, tag_plot=None, is_silent=False, folder=None,
+        tag_sweep=None, tag_plot=None, plot_mode="window", folder=".",
 ):
     """
     Main script for plotting the solution of a PEEC problem.
@@ -290,12 +294,14 @@ def run_plotter_data(
     tag_plot : list
         The list describes plots to be shown.
         If None, all the plots are shown.
-    is_silent : boolean
-        If true, the plots are not shown (non-blocking call).
-        If false, the plots are shown (blocking call).
+    plot_mode : string
+        If "window", the Qt framework is used for the rendering (default).
+        If "notebook", the plots are rendered within the Jupyter notebook.
+        If "screenshot", the plots are not shown but saved as screenshots.
+        If "silent", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
-        If None, the screenshots are not saved.
+        The current directory is used as the default directory.
 
     Returns
     -------
@@ -311,14 +317,14 @@ def run_plotter_data(
     from pypeec.run import plotter
 
     # run the tool
-    (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent, folder)
+    (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, plot_mode, folder)
 
     return status, ex
 
 
 def run_plotter_file(
         file_solution, file_point, file_plotter,
-        tag_sweep=None, tag_plot=None, is_silent=False, folder=None,
+        tag_sweep=None, tag_plot=None, plot_mode="window", folder=".",
 ):
     """
     Main script for plotting the solution of a PEEC problem.
@@ -335,12 +341,14 @@ def run_plotter_file(
     tag_plot : list
         The list describes plots to be shown.
         If None, all the plots are shown.
-    is_silent : boolean
-        If true, the plots are not shown (non-blocking call).
-        If false, the plots are shown (blocking call).
+    plot_mode : string
+        If "window", the Qt framework is used for the rendering (default).
+        If "notebook", the plots are rendered within the Jupyter notebook.
+        If "screenshot", the plots are not shown but saved as screenshots.
+        If "silent", the plots are not shown (test mode).
     folder : string
         Folder name for saving the screenshots.
-        If None, the screenshots are not saved.
+        The current directory is used as the default directory.
 
     Returns
     -------
@@ -365,7 +373,7 @@ def run_plotter_file(
         data_plotter = io.load_config(file_plotter)
 
         # call the plotter
-        (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, is_silent, folder)
+        (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, plot_mode, folder)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
         return False, ex

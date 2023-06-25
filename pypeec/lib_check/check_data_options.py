@@ -20,12 +20,12 @@ def check_tag_list(data_check, tag_list):
             datachecker.check_choice("tag_list", tag, data_check)
 
 
-def check_plot_options(is_silent, folder):
+def check_plot_options(plot_mode, folder):
     """
     Check the plot mode (display or not the plots).
     """
 
-    datachecker.check_boolean("is_silent", is_silent)
+    datachecker.check_choice("plot_mode", plot_mode, ["window", "notebook", "screenshot", "silent"])
     datachecker.check_folder("folder", folder, can_be_none=True)
 
 
