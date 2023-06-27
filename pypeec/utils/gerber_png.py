@@ -30,20 +30,15 @@ def _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
     # extract the data
     gerber_edge = data_gerber["gerber_edge"]
     color_edge = data_gerber["color_edge"]
-    color_none = data_gerber["color_none"]
+    color_background = data_gerber["color_background"]
     color_def = data_gerber["color_def"]
     gerber_def = data_gerber["gerber_def"]
 
-    # get name
-    color_edge = color_def[color_edge]
-
     # get base color
-    color_none = color_def[color_none]
     color_edge = tuple([257 * x for x in color_edge])
-    color_none = tuple([257 * x for x in color_none])
+    color_background = tuple([257 * x for x in color_background])
 
     # get GERBER edge file
-    gerber_edge = gerber_def[gerber_edge]
     gerber_edge = os.path.join(folder_gerber, gerber_edge)
 
     # get transparency value
@@ -85,7 +80,7 @@ def _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
 
         # add background
         fid.write('(define-layer! -1 (cons \'filename "%s")\n' % filename_gerbv)
-        fid.write('\t(cons \'color #(%d %d %d))\n' % tuple(color_none))
+        fid.write('\t(cons \'color #(%d %d %d))\n' % tuple(color_background))
         fid.write('\t(cons \'alpha #(%d))\n' % alpha_channel)
         fid.write(')\n')
 
