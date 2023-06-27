@@ -15,13 +15,12 @@
         "coil": [[255, 0, 0, 255]]
         "src": [[0, 255, 0, 255]]
         "sink": [[0, 0, 255, 255]]
-        "edge": [[0, 0, 0, 255]]
     "layer_stack":
         - {"n_layer": 2, "filename_list": !path ["png/back.png"]}
         - {"n_layer": 23, "filename_list": !path ["png/via.png"]}
         - {"n_layer": 2, "filename_list": !path ["png/front.png", "png/terminal.png"]}
 "resampling":
-    "use_reduce": false
+    "use_reduce": true
     "use_resample": false
     "resampling_factor": [1, 1, 1]
 "domain_conflict":

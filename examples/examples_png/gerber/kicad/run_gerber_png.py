@@ -10,7 +10,7 @@ from pypeec.utils import gerber_png
 
 
 if __name__ == "__main__":
-    # ######################## get the colors / GERBER files
+    # ######################## definition of the colors
     color_def = {
         "none":  (255, 255, 255),
         "edge":  (0, 0, 0),
@@ -18,6 +18,8 @@ if __name__ == "__main__":
         "sink":  (0, 0, 255),
         "src": (0, 255, 0),
     }
+
+    # ######################## definition of the GERBER files
     gerber_def = {
         "edge": "pcb-edge.gbr",
         "front": "pcb-front_copper.gbr",
@@ -27,6 +29,8 @@ if __name__ == "__main__":
         "drill": "pcb-PTH.drl",
         "via":  "pcb-VIA.drl",
     }
+
+    # ######################## assemble the GERBER data
     data_gerber = {
         "gerber_edge": "edge",
         "color_edge": "edge",

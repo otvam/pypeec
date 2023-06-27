@@ -146,7 +146,7 @@ def _get_coupling_matrix(n_winding, RL_mat):
     return k_mat
 
 
-def _get_matrix(n_winding, freq, Z_mat):
+def _get_parse_matrix(n_winding, freq, Z_mat):
     """
     Get the equivalent circuit of the component from the impedance matrix.
     """
@@ -183,6 +183,6 @@ def get_extract(n_winding, terminal, extraction_tolerance):
     (freq, res) = _get_solve_matrix(n_winding, terminal, extraction_tolerance)
 
     # get the complete circuit
-    matrix = _get_matrix(n_winding, freq, res)
+    matrix = _get_parse_matrix(n_winding, freq, res)
 
     return matrix
