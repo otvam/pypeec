@@ -74,24 +74,24 @@ The following files (Pickle format) are generated:
 
 Different examples are located in the `examples` folder:
 * voxel structure generated from STL files (`examples_stl` folder)
-  * **stl_inductor_air**: a 3D air-core inductor
-  * **stl_inductor_core**: a 3D inductor with a magnetic E-core core
-  * **stl_transformer**: a planar transformer with two windings
+  * **inductor_air**: a 3D air-core inductor
+  * **inductor_core**: a 3D inductor with a magnetic E-core core
+  * **transformer**: a planar transformer with two windings
 * voxel structure generated from 2D vector shapes (`examples_shape` folder)
-  * **png_busbar**: a coplanar L-shaped busbar
-  * **png_wire**: a straight round wire
-  * **png_trace**: a PCB with traces
-  * **shape_coplanar**: a set of coplanar traces
+  * **busbar**: a coplanar L-shaped busbar
+  * **wire**: a straight round wire
+  * **trace**: a PCB with traces
+  * **coplanar**: a set of coplanar traces
 * voxel structure generated from PNG files (`examples_png` folder)
-  * **png_inductor_spiral**: a planar spiral inductor
-  * **png_inductor_spiral**: a gapped inductor with an E-core
-  * **png_shield**: a conductor loop with a magnetic shield
-  * **png_gerber**: a PCB inductor from GERBER files
+  * **inductor_spiral**: a planar spiral inductor
+  * **inductor_spiral**: a gapped inductor with an E-core
+  * **shield**: a conductor loop with a magnetic shield
+  * **gerber**: a PCB inductor from GERBER files
 * voxel structure created from voxel indices (`examples_voxel` folder)
-  * **voxel_slab**: a simple slab conductor in free space
-  * **voxel_core**: a simple slab conductor surrounded by a magnetic core
-  * **voxel_transformer**: a simple coil with a secondary short-circuit winding
-  * **voxel_logo**: a simple geometry used for the PyPEEC logo
+  * **slab**: a simple slab conductor in free space
+  * **core**: a simple slab conductor surrounded by a magnetic core
+  * **transformer**: a simple coil with a secondary short-circuit winding
+  * **logo**: a simple geometry used for the PyPEEC logo
 
 ## Running the Example Problems
 

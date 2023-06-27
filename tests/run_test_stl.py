@@ -12,9 +12,9 @@ folder = "examples_stl"
 
 # name of the examples
 name_list = [
-    "stl_inductor_air",
-    "stl_inductor_core",
-    "stl_transformer",
+    "inductor_air",
+    "inductor_core",
+    "transformer",
 ]
 
 # get the test object

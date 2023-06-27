@@ -1,8 +1,8 @@
 {
     "metadata": {
         "folder": "examples_voxel",
-        "name": "voxel_transformer",
-        "timestamp": "2023-04-18 17:02:37.099543"
+        "name": "transformer",
+        "timestamp": "2023-06-27 10:55:28.316119"
     },
     "mesher": {
         "n_total": 75,

@@ -1,8 +1,8 @@
 {
     "metadata": {
         "folder": "examples_stl",
-        "name": "stl_inductor_core",
-        "timestamp": "2023-04-18 17:07:02.974298"
+        "name": "inductor_core",
+        "timestamp": "2023-06-27 11:00:47.934533"
     },
     "mesher": {
         "n_total": 161280,

@@ -1,8 +1,8 @@
 {
     "metadata": {
         "folder": "examples_voxel",
-        "name": "voxel_logo",
-        "timestamp": "2023-04-18 17:02:35.537310"
+        "name": "logo",
+        "timestamp": "2023-06-27 10:55:26.091109"
     },
     "mesher": {
         "n_total": 27,

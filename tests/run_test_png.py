@@ -12,10 +12,10 @@ folder = "examples_png"
 
 # name of the examples
 name_list = [
-    "png_inductor_spiral",
-    "png_inductor_gap",
-    "png_shield",
-    "png_gerber",
+    "inductor_spiral",
+    "inductor_gap",
+    "shield",
+    "gerber",
 ]
 
 # get the test object

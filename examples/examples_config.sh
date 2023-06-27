@@ -12,23 +12,23 @@ FOLDER_CONFIG="config"
 
 # name of the considered example
 #   examples_voxel
-#       voxel_slab
-#       voxel_transformer
-#       voxel_core
-#       voxel_logo
+#       slab
+#       transformer
+#       core
+#       logo
 #   examples_shape
-#       shape_busbar
-#       shape_wire
-#       shape_trace
-#       shape_coplanar
+#       busbar
+#       wire
+#       trace
+#       coplanar
 #   examples_stl
-#       stl_inductor_air
-#       stl_inductor_core
-#       stl_transformer
+#       inductor_air
+#       inductor_core
+#       transformer
 #   examples_png
-#       png_inductor_spiral
-#       png_inductor_gap
-#       png_shield
-#       png_gerber
+#       inductor_spiral
+#       inductor_gap
+#       shield
+#       gerber
 FOLDER_NAME="examples_voxel"
-EXAMPLE_NAME="voxel_core"
+EXAMPLE_NAME="core"

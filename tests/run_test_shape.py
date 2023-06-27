@@ -12,10 +12,10 @@ folder = "examples_shape"
 
 # name of the examples
 name_list = [
-    "shape_busbar",
-    "shape_wire",
-    "shape_trace",
-    "shape_coplanar",
+    "busbar",
+    "wire",
+    "trace",
+    "coplanar",
 ]
 
 # get the test object

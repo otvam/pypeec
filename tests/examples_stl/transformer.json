@@ -1,8 +1,8 @@
 {
     "metadata": {
         "folder": "examples_stl",
-        "name": "stl_transformer",
-        "timestamp": "2023-04-18 12:51:08.973613"
+        "name": "transformer",
+        "timestamp": "2023-06-27 11:01:05.446640"
     },
     "mesher": {
         "n_total": 102510,

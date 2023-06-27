@@ -12,10 +12,10 @@ folder = "examples_voxel"
 
 # name of the examples
 name_list = [
-    "voxel_slab",
-    "voxel_transformer",
-    "voxel_core",
-    "voxel_logo",
+    "slab",
+    "transformer",
+    "core",
+    "logo",
 ]
 
 # get the test object
