@@ -7,6 +7,7 @@ For large changes,  please first discuss the change you wish to make with the is
 
 Please include a clear and concise description of what the bug is.
 Ideally, provide a minimal working example for the bug.
+
 Additionally, please report the following parameters:
 * The version of the PyPEEC you are using.
 * The platform/hardware you are using.
