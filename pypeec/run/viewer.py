@@ -170,7 +170,7 @@ def run(
         LOGGER.info("successful termination")
 
         # enter the event loop (should be at the end, blocking call)
-        status = gui_obj.show()
+        gui_obj.show()
     except (CheckError, RunError) as ex:
         log.log_exception(LOGGER, ex)
         return False, ex

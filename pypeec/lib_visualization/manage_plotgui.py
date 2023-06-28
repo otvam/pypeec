@@ -35,6 +35,7 @@ import PyQt5.QtWidgets
 import PyQt5.QtGui
 from pypeec import log
 from pypeec import config
+from pypeec.error import RunError
 
 # get a logger
 LOGGER = log.get_logger("PLOTGUI")
@@ -206,6 +207,62 @@ class PlotGui:
 
         return fig
 
+    def _show_figure_qt(self):
+        """
+        Show all the figures (Qt framework).
+        """
+
+        # signal handler for closing all the windows
+        def signal_handler(*_):
+            for tag, pl in self.pl_list:
+                pl.app_window.close()
+            matplotlib.pyplot.close("all")
+            sys.exit(130)
+
+        # signal for quitting the event loop with interrupt signal
+        signal.signal(signal.SIGINT, signal_handler)
+
+        # pause to avoid race conditions
+        time.sleep(PAUSE_GUI)
+
+        # show the different PyVista plots
+        for tag, pl in self.pl_list:
+            pl.app_window.show()
+
+        # show the different Matplotlib plots
+        matplotlib.pyplot.show(block=False)
+
+        # enter the event loop
+        exit_code = self.app.exec_()
+
+        # check status
+        if exit_code != 0:
+            RunError("error during the Qt event loop / exit_code = %d" % exit_code)
+
+    def _show_figure_nb(self):
+        """
+        Show all the figures (Jupyter notebooks)
+        """
+
+        # show the different PyVista plots
+        for tag, pl in self.pl_list:
+            pl.show(jupyter_backend='trame')
+
+        # show the different Matplotlib plots
+        matplotlib.pyplot.show(block=False)
+
+    def _show_figure_nop(self):
+        """
+        Show all the figures (silent rendering)
+        """
+
+        # close the different PyVista plots
+        for tag, pl in self.pl_list:
+            pl.close()
+
+        # close the different Matplotlib plots
+        matplotlib.pyplot.close("all")
+
     def _save_screenshot(self):
         """
         Save all the plots in images.
@@ -292,61 +349,20 @@ class PlotGui:
         LOGGER.debug("number of Matplotlib plots: %s" % len(self.fig_list))
 
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
-            return True
+            return
 
         if self.plot_mode == "qt":
             LOGGER.debug("entering the plot event loop")
-
-            # signal handler for closing all the windows
-            def signal_handler(*_):
-                for tag, pl in self.pl_list:
-                    pl.app_window.close()
-                matplotlib.pyplot.close("all")
-                sys.exit(130)
-
-            # signal for quitting the event loop with interrupt signal
-            signal.signal(signal.SIGINT, signal_handler)
-
-            # pause to avoid race conditions
-            time.sleep(PAUSE_GUI)
-
-            # show the different plots
-            for tag, pl in self.pl_list:
-                pl.app_window.show()
-            matplotlib.pyplot.show(block=False)
-
-            # enter the event loop
-            exit_code = self.app.exec_()
-            status = exit_code == 0
-
-            return status
+            self._show_figure_qt()
         elif self.plot_mode == "nb":
-            # display the non-blocking call
             LOGGER.debug("display notebook plots")
-
-            # show the different plots
-            for tag, pl in self.pl_list:
-                pl.show(jupyter_backend='trame')
-            matplotlib.pyplot.show(block=False)
-
-            return True
+            self._show_figure_nb()
         elif self.plot_mode == "save":
             LOGGER.debug("save and close all the plots")
-
             self._save_screenshot()
-
-            for tag, pl in self.pl_list:
-                pl.close()
-            matplotlib.pyplot.close("all")
-
-            return True
+            self._show_figure_nop()
         elif self.plot_mode == "none":
             LOGGER.debug("close all the plots")
-
-            for tag, pl in self.pl_list:
-                pl.close()
-            matplotlib.pyplot.close("all")
-
-            return True
+            self._show_figure_nop()
         else:
             raise ValueError("invalid plot mode")
