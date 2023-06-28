@@ -9,7 +9,8 @@
 
 ![viewer_1](gallery/viewer_1.png)
 ![viewer_2](gallery/viewer_2.png)
-![viewer_2](gallery/viewer_3.png)
+![viewer_3](gallery/viewer_3.png)
+![viewer_4](gallery/viewer_4.png)
 
 ## Plotter (Solver Results)
 
