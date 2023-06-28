@@ -20,14 +20,13 @@ def check_tag_list(data_check, tag_list):
             datachecker.check_choice("tag_list", tag, data_check)
 
 
-def check_plot_options(plot_mode, folder, prefix):
+def check_plot_options(plot_mode, folder):
     """
     Check the plot mode (display or not the plots).
     """
 
     datachecker.check_choice("plot_mode", plot_mode, ["qt", "nb", "save", "none"])
     datachecker.check_folder("folder", folder, can_be_none=True)
-    datachecker.check_string("prefix", prefix, can_be_empty=False)
 
 
 def check_data_options(is_truncated):

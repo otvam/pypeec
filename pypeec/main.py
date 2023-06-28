@@ -111,9 +111,6 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
-    prefix : string
-        Filename prefix for saving the screenshots.
-        The string "def" is used as the default value.
 
     Returns
     -------
@@ -157,9 +154,6 @@ def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
-    prefix : string
-        Filename prefix for saving the screenshots.
-        The string "def" is used as the default value.
 
     Returns
     -------
@@ -293,9 +287,6 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
-    prefix : string
-        Filename prefix for saving the screenshots.
-        The string "def" is used as the default value.
 
     Returns
     -------
@@ -342,9 +333,6 @@ def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
-    prefix : string
-        Filename prefix for saving the screenshots.
-        The string "def" is used as the default value.
 
     Returns
     -------

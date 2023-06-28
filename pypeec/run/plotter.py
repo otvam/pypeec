@@ -149,7 +149,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_point, data_plotter, gui_o
 
 def run(
         data_solution, data_point, data_plotter,
-        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".", prefix="def",
+        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".",
 ):
     """
     Main script for plotting the solution of a PEEC problem.
@@ -193,9 +193,6 @@ def run(
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
-    prefix : string
-        Filename prefix for saving the screenshots.
-        The string "def" is used as the default value.
 
     Returns
     -------
@@ -225,7 +222,7 @@ def run(
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_plotter(data_plotter)
-        check_data_options.check_plot_options(plot_mode, folder, prefix)
+        check_data_options.check_plot_options(plot_mode, folder)
         check_data_options.check_tag_list(data_sweep, tag_sweep)
         check_data_options.check_tag_list(data_plotter, tag_plot)
 
@@ -237,7 +234,7 @@ def run(
 
         # create the Qt app (should be at the beginning)
         LOGGER.info("init the plot manager")
-        gui_obj = manage_plotgui.PlotGui(plot_mode, folder, prefix)
+        gui_obj = manage_plotgui.PlotGui(plot_mode, folder)
 
         # plot the sweeps
         for tag_sweep, data_sweep_tmp in data_sweep.items():
