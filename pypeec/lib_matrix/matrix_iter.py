@@ -43,14 +43,14 @@ class _IterCounter:
         self.iter_vec.append(self.n_iter)
 
         # get the power
-        (P_tot, Q_tot) = self.fct_conv(data)
+        (P, Q) = self.fct_conv(data)
 
         # save the data
-        self.P_vec.append(P_tot)
-        self.Q_vec.append(Q_tot)
+        self.P_vec.append(P)
+        self.Q_vec.append(Q)
 
         # log the results
-        LOGGER.debug("matrix iter: iter = %d / P_tot = %.3e / Q_tot = %.3e" % (self.n_iter, P_tot, Q_tot))
+        LOGGER.debug("matrix iter: iter = %d / P = %.3e / Q = %.3e" % (self.n_iter, P, Q))
 
     def get_n_iter(self):
         """

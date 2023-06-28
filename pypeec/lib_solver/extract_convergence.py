@@ -71,13 +71,13 @@ def _get_conv_eval(sol, freq, source_pos, sol_idx):
     (V_vc, I_fc, I_src) = _get_sol_extract(sol, sol_idx)
 
     # get the sources
-    S_tot = _get_total_power(freq, source_pos, I_src, V_vc)
+    S = _get_total_power(freq, source_pos, I_src, V_vc)
 
     # extract the data
-    P_tot = np.real(S_tot)
-    Q_tot = np.imag(S_tot)
+    P = np.real(S)
+    Q = np.imag(S)
 
-    return P_tot, Q_tot
+    return P, Q
 
 
 def get_fct_conv(freq, source_pos, sol_idx):
