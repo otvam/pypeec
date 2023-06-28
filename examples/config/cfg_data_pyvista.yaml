@@ -16,6 +16,7 @@
     "colorbar_font": 15                # font size of the color bar
     "colorbar_size": 5                 # number of division for the colorbar
     "background_color": "gray"         # background color of the plot
+    "axis_add": true                   # add (or not) the axis marker
     "axis_size": 2                     # size of the axis marker
 
 # options controlling the view rendering

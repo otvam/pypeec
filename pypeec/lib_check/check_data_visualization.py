@@ -117,11 +117,13 @@ def _check_plot_theme(plot_theme):
     key_list = [
         "text_color", "title_font",
         "colorbar_font", "colorbar_size",
-        "background_color", "axis_size",
+        "axis_add", "axis_size",
+        "background_color",
     ]
     datachecker.check_dict("data_window", plot_theme, key_list=key_list)
 
     # check data
+    datachecker.check_boolean("axis_add", plot_theme["axis_add"])
     datachecker.check_string("text_color", plot_theme["text_color"], can_be_empty=False)
     datachecker.check_string("background_color", plot_theme["background_color"], can_be_empty=False)
     datachecker.check_integer("title_font", plot_theme["title_font"], is_positive=True, can_be_zero=False)
@@ -214,7 +216,7 @@ def _check_data_plot_plotter(format, data_plot):
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
-        datachecker.check_string("title", data_plot["title"], can_be_empty=False)
+        datachecker.check_string("title", data_plot["title"], can_be_empty=True)
         datachecker.check_string("color_electric", data_plot["color_electric"], can_be_empty=False)
         datachecker.check_string("color_magnetic", data_plot["color_magnetic"], can_be_empty=False)
         datachecker.check_string("color_current_source", data_plot["color_current_source"], can_be_empty=False)
@@ -228,8 +230,8 @@ def _check_data_plot_plotter(format, data_plot):
 
         # check data
         datachecker.check_boolean("log", data_plot["log"])
-        datachecker.check_string("title", data_plot["title"], can_be_empty=False)
-        datachecker.check_string("legend", data_plot["legend"], can_be_empty=False)
+        datachecker.check_string("title", data_plot["title"], can_be_empty=True)
+        datachecker.check_string("legend", data_plot["legend"], can_be_empty=True)
         datachecker.check_float("scale", data_plot["scale"], is_positive=True, can_be_zero=True)
         datachecker.check_float_array("color_lim", data_plot["color_lim"], size=2, can_be_none=True)
         datachecker.check_float_array("filter_lim", data_plot["filter_lim"], size=2, can_be_none=True)
@@ -291,6 +293,7 @@ def _check_data_plot_viewer(format, data_plot):
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
+        datachecker.check_string("title", data_plot["title"], can_be_empty=True)
         datachecker.check_string("color_voxel", data_plot["color_voxel"], can_be_empty=False)
         datachecker.check_string("color_reference", data_plot["color_reference"], can_be_empty=False)
         datachecker.check_float("opacity_voxel", data_plot["opacity_voxel"], is_positive=True, can_be_zero=False)
@@ -303,6 +306,7 @@ def _check_data_plot_viewer(format, data_plot):
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
+        datachecker.check_string("title", data_plot["title"], can_be_empty=True)
         datachecker.check_string("colormap", data_plot["colormap"], can_be_empty=False)
         datachecker.check_float("opacity", data_plot["opacity"], is_positive=True, can_be_zero=False)
 

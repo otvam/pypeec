@@ -75,11 +75,12 @@ def _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme):
         pl.camera.elevation = plot_view["camera_elevation"]
 
     # add axes
-    pl.add_axes(
-        line_width=plot_theme["axis_size"],
-        color=plot_theme["text_color"],
-        interactive=False,
-    )
+    if plot_theme["axis_add"]:
+        pl.add_axes(
+            line_width=plot_theme["axis_size"],
+            color=plot_theme["text_color"],
+            interactive=False,
+        )
 
 
 def _get_plot_title(pl, title, plot_theme):
