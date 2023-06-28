@@ -96,8 +96,7 @@ Different examples are located in the `examples` folder:
 ## Running the Example Problems
 
 The following files (located in the `examples` folder) are used to run the examples.
-* `run_config.py` is used to regenerate the configuration files
-* `notebook.ipynb` for running the example from a Jupyter notebook
+* for running the examples from a Jupyter notebook, use `notebook.ipynb` 
 * for running the examples from Python
   * `examples_config.py` is used to select the example
   * `run_mesher.py` runs the mesher
