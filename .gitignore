@@ -6,9 +6,11 @@
 *.pyc
 *.pyo
 **/__pycache__
+
+# remove Jupyter data
 **/.ipynb_checkpoints
 
-# exclude pickle file
+# exclude Pickle file
 *.pck
 
 # remove packinging files
@@ -21,7 +23,7 @@ pypeec/version.py
 venv/*
 cenv/*
 
-# exclude scratch directory for temporary tests
+# exclude scratch directory
 scratch/*
 
 # exclude the PyCharm project

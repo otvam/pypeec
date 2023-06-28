@@ -23,7 +23,7 @@ The following **platforms** and systems have been **tested**:
 * Linux / RedHat 7.9 on x86/x64
 * Linux / Ubuntu 20.04 on x86/x64
 * Linux / Ubuntu 22.04 on x86/x64
-* MS Windows / Pro 10 21H2
+* MS Windows / Pro 10 21H2 on x86/x64
 * GPU / NVIDIA T4 Tensor
 * GPU / NVIDIA Tesla K80
 
@@ -73,7 +73,7 @@ Here are some interesting papers about the PEEC method:
 The code is reasonably optimized, leveraging NumPy and SciPy for the heavy operations.
 All the code is vectorized, no loops are used for the array operations.
 Sparse matrix algebra is used wherever appropriate to speed up the code and limit the memory consumption.
-Wherever possible, multithreading is used for exploiting multicore CPUs.
+Wherever possible, multithreading/multiprocessing is used for exploiting multicore CPUs.
 
 The following optimizations are available for the computationally heavy operations:
 * Computation of the Green functions and electric-magnetic coupling functions.
@@ -83,14 +83,11 @@ The following optimizations are available for the computationally heavy operatio
   * SuperLU is typically slower but is always available (integrated with SciPy).
   * UMFPACK is typically faster than SuperLU (available through SciKits).
   * MKL/PARDISO is typically faster than UMFPACK (available through Pydiso).
-  * Iterative solvers are also available (quite unstable, low memory requirements, integrated with SciPy).
+* Two different iterative solvers are available for solving the equation system ("GMRES" or "GCROT").
 * The FFTs for computing matrix-vector product with circulant tensors can be done with several algorithms.
-  * SciPy is typically slightly slower but is always available (integrated with SciPy)
-  * FFTW is typically faster but has to be installed separately (available through pyFFTW)
+  * SciPy FFT library is always available (integrated with SciPy)
+  * FFTW has to be installed separately (available through pyFFTW)
   * CuPy is extremely fast but require GPUs with the corresponding libraries (CUDA platform)
-
-Advanced optimizations (MKL, MPI, OpenMP, or C/FORTRAN) are not implemented.
-Moreover, the memory consumption is not heavily optimized.
 
 ## Configuration
 
@@ -124,13 +121,13 @@ Moreover, the memory consumption is not heavily optimized.
 > For **large problems**, the code might allocate huge amounts of **memory**.
 > This might crash the program and/or your operating system.
 
-> During the **voxelization of STL** files, the same voxel can be assigned to several domains.
+> During the **voxelization** process, the same voxel can be assigned to several domains.
 > The problem is solved with used-provided **conflict** resolution rules between the domains.
 
 ## Library Warnings
 
 > The **plotting code** is likely sensitive to the environment (platform and the version of the libraries).
-> Therefore, the Qt and Jupyter dependencies are minimized and insulated from the rest of the code.
+> Therefore, these dependencies are minimized and insulated from the rest of the code.
 > The plotting code (viewer and plotter) is separated from the simulation code (mesher and solver).
 
 > **Jupyter** is not included in the package dependencies.

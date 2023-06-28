@@ -67,10 +67,7 @@ FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW" or "CuPy"
 #   - SuperLU is typically slower but is always available (integrated with SciPy)
 #   - UMFPACK is typically faster than SuperLU (available through SciKits)
 #   - PARDISO is typically faster than UMFPACK (available through Pydiso)
-#   - GCROT is quite unstable but has low memory requirements (integrated with SciPy)
-#   - BICG is quite unstable but has low memory requirements (integrated with SciPy)
-#   - GMRES is quite unstable but has low memory requirements (integrated with SciPy)
-FACTORIZATION_LIBRARY: "SuperLU"  # "SuperLU" or "UMFPACK" or "PARDISO" or "GCROT" or "BICG" or "GMRES"
+FACTORIZATION_LIBRARY: "SuperLU"  # "SuperLU" or "UMFPACK" or "PARDISO"
 
 # method for dense matrix multiplication
 #   - FFT for doing the multiplication with circulant tensors and FFT
