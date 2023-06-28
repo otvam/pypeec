@@ -6,5 +6,44 @@
 build-backend = "setuptools.build_meta"
 requires = ["setuptools", "wheel", "setuptools_scm"]
 
+[project]
+name = "pypeec"
+authors = [
+    {name = "Thomas Guillod", email = "guillod@otvam.ch"},
+]
+maintainers = [
+    {name = "Thomas Guillod", email = "guillod@otvam.ch"},
+]
+
+description = "PyPEEC - 3D PEEC Solver"
+license = {file = "LICENSE.txt"}
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = [
+    "one",
+]
+classifiers = [
+    "Framework :: Django",
+    "Programming Language :: Python :: 3",
+]
+
+dynamic = ["version"]
+
+dependencies = [
+    "PyYAML >= 6.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/otvam/pypeec"
+"Source" = "https://github.com/otvam/pypeec"
+"Issues" = "https://github.com/otvam/pypeec/issues"
+"Tags" = "https://github.com/otvam/pypeec/tags"
+
+[project.scripts]
+pypeec = "pypeec.script:run_script"
+
+[tool.setuptools.package-data]
+pypeec = ["*.yaml"]
+
 [tool.setuptools_scm]
-write_to = "pypeec/version.py"
+write_to = "src/version.py"
