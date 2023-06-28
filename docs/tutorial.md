@@ -35,17 +35,17 @@ The **PyPEEC** package contains the following tools::
 
 ## Workflow
 
-![viewer](images/workflow.png)
+![workflow](images/workflow.png)
 
 ## Entry Points and Scripts
 
 The entry points of the different tools are located in the `pypeec.main` module:
-* running the tools with files as input/ouput
+* Running the tools with files as input/ouput:
   * `run_mesher_file` for running the **mesher**
   * `run_viewer_file` for running the **viewer**
   * `run_solver_file` for running the **solver**
   * `run_plotter_file` for running the **plotter**
-* running the tools with data as input/ouput
+* Running the tools with data as input/ouput:
   * `run_mesher_data` for running the **mesher**
   * `run_viewer_data` for running the **viewer**
   * `run_solver_data` for running the **solver**
@@ -71,43 +71,3 @@ The following input files (JSON or YAML format) are used:
 The following files (Pickle format) are generated:
 * `file_voxel` (Pickle, output file): file with the definition of the voxel structure
 * `file_solution` (Pickle, output file): file with the solution of the magnetic problem
-
-## Definition of the Example Problems
-
-Different examples are located in the `examples` folder:
-* voxel structure generated from STL files (`examples_stl` folder)
-  * **inductor_air**: a 3D air-core inductor
-  * **inductor_core**: a 3D inductor with a magnetic E-core core
-  * **transformer**: a planar transformer with two windings
-* voxel structure generated from 2D vector shapes (`examples_shape` folder)
-  * **busbar**: a coplanar L-shaped busbar
-  * **wire**: a straight round wire
-  * **trace**: a PCB with traces
-  * **coplanar**: a set of coplanar traces
-* voxel structure generated from PNG files (`examples_png` folder)
-  * **inductor_spiral**: a planar spiral inductor
-  * **inductor_spiral**: a gapped inductor with an E-core
-  * **shield**: a conductor loop with a magnetic shield
-  * **gerber**: a PCB inductor from GERBER files
-* voxel structure created from voxel indices (`examples_voxel` folder)
-  * **slab**: a simple slab conductor in free space
-  * **core**: a simple slab conductor surrounded by a magnetic core
-  * **transformer**: a simple coil with a secondary short-circuit winding
-  * **logo**: a simple geometry used for the PyPEEC logo
-
-## Running the Example Problems
-
-The following files (located in the `examples` folder) are used to run the examples.
-* for running the examples from a Jupyter notebook, use `notebook.ipynb` 
-* for running the examples from Python
-  * `examples_config.py` is used to select the example
-  * `run_mesher.py` runs the mesher
-  * `run_viewer.py` runs the viewer
-  * `run_solver.py` runs the solver
-  * `run_plotter.py` runs the plotter
-* for running the examples from the Shell
-  * `examples_config.sh` is used to select the example
-  * `run_mesher.sh` runs the mesher
-  * `run_viewer.sh` runs the viewer
-  * `run_solver.sh` runs the solver
-  * `run_plotter.sh` runs the plotter
