@@ -15,7 +15,7 @@ from pypeec.error import FileError
 LOGGER = log.get_logger("MAIN")
 
 
-def run_mesher_data(data_geometry, is_truncated=False):
+def run_mesher_data(data_geometry, **kwargs):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
 
@@ -38,15 +38,17 @@ def run_mesher_data(data_geometry, is_truncated=False):
     """
 
     # load the tool
+    LOGGER.info("load the mesher")
     from pypeec.run import mesher
 
     # run the tool
-    (status, ex, data_voxel) = mesher.run(data_geometry, is_truncated)
+    LOGGER.info("run the mesher")
+    (status, ex, data_voxel) = mesher.run(data_geometry, **kwargs)
 
     return status, ex, data_voxel
 
 
-def run_mesher_file(file_geometry, file_voxel, is_truncated=False):
+def run_mesher_file(file_geometry, file_voxel, **kwargs):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
     Load the input data from files.
@@ -70,10 +72,6 @@ def run_mesher_file(file_geometry, file_voxel, is_truncated=False):
         None if the termination is successful.
     """
 
-    # load the tool
-    LOGGER.info("load the mesher")
-    from pypeec.run import mesher
-
     # run the tool
     try:
         # load data
@@ -81,7 +79,7 @@ def run_mesher_file(file_geometry, file_voxel, is_truncated=False):
         data_geometry = io.load_config(file_geometry)
 
         # call the mesher
-        (status, ex, data_voxel) = mesher.run(data_geometry, is_truncated)
+        (status, ex, data_voxel) = run_mesher_data(data_geometry, **kwargs)
 
         # save results
         LOGGER.info("save the results")
@@ -93,10 +91,7 @@ def run_mesher_file(file_geometry, file_voxel, is_truncated=False):
     return status, ex
 
 
-def run_viewer_data(
-        data_voxel, data_point, data_viewer,
-        tag_plot=None, plot_mode="qt", folder=".",
-):
+def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
     """
     Main script for visualizing a 3D voxel structure.
 
@@ -116,6 +111,9 @@ def run_viewer_data(
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
+    prefix : string
+        Filename prefix for saving the screenshots.
+        The string "def" is used as the default value.
 
     Returns
     -------
@@ -128,18 +126,17 @@ def run_viewer_data(
     """
 
     # load the tool
+    LOGGER.info("load the viewer")
     from pypeec.run import viewer
 
     # run the tool
-    (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, plot_mode, folder)
+    LOGGER.info("run the viewer")
+    (status, ex) = viewer.run(data_voxel, data_point, data_viewer, **kwargs)
 
     return status, ex
 
 
-def run_viewer_file(
-        file_voxel, file_point, file_viewer,
-        tag_plot=None, plot_mode="qt", folder=".",
-):
+def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
     """
     Main script for visualizing a 3D voxel structure.
     Load the input data from files.
@@ -160,6 +157,9 @@ def run_viewer_file(
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
+    prefix : string
+        Filename prefix for saving the screenshots.
+        The string "def" is used as the default value.
 
     Returns
     -------
@@ -171,10 +171,6 @@ def run_viewer_file(
         None if the termination is successful.
     """
 
-    # load the tool
-    LOGGER.info("load the viewer")
-    from pypeec.run import viewer
-
     # run the tool
     try:
         # load data
@@ -184,7 +180,7 @@ def run_viewer_file(
         data_viewer = io.load_config(file_viewer)
 
         # call the viewer
-        (status, ex) = viewer.run(data_voxel, data_point, data_viewer, tag_plot, plot_mode, folder)
+        (status, ex) = run_viewer_data(data_voxel, data_point, data_viewer, **kwargs)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
         return False, ex
@@ -192,7 +188,7 @@ def run_viewer_file(
     return status, ex
 
 
-def run_solver_data(data_voxel, data_problem, data_tolerance, is_truncated=False):
+def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
     """
     Main script for solving a problem with the PEEC solver.
 
@@ -217,15 +213,17 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, is_truncated=False
     """
 
     # load the tool
+    LOGGER.info("load the solver")
     from pypeec.run import solver
 
     # run the tool
-    (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance, is_truncated)
+    LOGGER.info("run the solver")
+    (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance, **kwargs)
 
     return status, ex, data_solution
 
 
-def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_truncated=False):
+def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **kwargs):
     """
     Main script for solving a problem with the PEEC solver.
     Load the input data from files.
@@ -251,10 +249,6 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_
         None if the termination is successful.
     """
 
-    # load the tool
-    LOGGER.info("load the solver")
-    from pypeec.run import solver
-
     # run the tool
     try:
         # load data
@@ -264,7 +258,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_
         data_tolerance = io.load_config(file_tolerance)
 
         # call the solver
-        (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance, is_truncated)
+        (status, ex, data_solution) = run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs)
 
         # save results
         LOGGER.info("save the results")
@@ -276,10 +270,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_
     return status, ex
 
 
-def run_plotter_data(
-        data_solution, data_point, data_plotter,
-        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".",
-):
+def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
     """
     Main script for plotting the solution of a PEEC problem.
 
@@ -302,6 +293,9 @@ def run_plotter_data(
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
+    prefix : string
+        Filename prefix for saving the screenshots.
+        The string "def" is used as the default value.
 
     Returns
     -------
@@ -314,18 +308,17 @@ def run_plotter_data(
     """
 
     # load the tool
+    LOGGER.info("load the plotter")
     from pypeec.run import plotter
 
     # run the tool
-    (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, plot_mode, folder)
+    LOGGER.info("run the plotter")
+    (status, ex) = plotter.run(data_solution, data_point, data_plotter, **kwargs)
 
     return status, ex
 
 
-def run_plotter_file(
-        file_solution, file_point, file_plotter,
-        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".",
-):
+def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
     """
     Main script for plotting the solution of a PEEC problem.
     Load the input data from files.
@@ -349,6 +342,9 @@ def run_plotter_file(
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
+    prefix : string
+        Filename prefix for saving the screenshots.
+        The string "def" is used as the default value.
 
     Returns
     -------
@@ -360,10 +356,6 @@ def run_plotter_file(
         None if the termination is successful.
     """
 
-    # load the tool
-    LOGGER.info("load the plotter")
-    from pypeec.run import plotter
-
     # run the tool
     try:
         # load data
@@ -373,7 +365,7 @@ def run_plotter_file(
         data_plotter = io.load_config(file_plotter)
 
         # call the plotter
-        (status, ex) = plotter.run(data_solution, data_point, data_plotter, tag_sweep, tag_plot, plot_mode, folder)
+        (status, ex) = run_plotter_data(data_solution, data_point, data_plotter, **kwargs)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
         return False, ex
