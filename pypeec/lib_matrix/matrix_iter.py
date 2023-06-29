@@ -14,9 +14,7 @@ LOGGER = log.get_logger("GMRES")
 
 class _IterCounter:
     """
-    Simple class used as a callback to monitor the iterative solver iterations:
-        - using the residuum as the callback input data
-        - using the solution as the callback input data
+    Simple class used as a callback to monitor the iterative solver iterations.
     """
 
     def __init__(self, fct_conv):
@@ -30,27 +28,28 @@ class _IterCounter:
         # init data
         self.n_iter = 0
         self.iter_vec = []
-        self.P_vec = []
-        self.Q_vec = []
+        self.power_vec = []
 
-    def get_callback_run(self, data):
+    def get_callback_run(self, sol):
         """
         Callback displaying and saving the iteration.
         """
 
         # update the iteration
         self.n_iter += 1
-        self.iter_vec.append(self.n_iter)
+
+        # add the iteration
+        iter_tmp = self.get_n_iter()
 
         # get the power
-        (P, Q) = self.fct_conv(data)
+        power_tmp = self.fct_conv(sol)
 
         # save the data
-        self.P_vec.append(P)
-        self.Q_vec.append(Q)
+        self.iter_vec.append(iter_tmp)
+        self.power_vec.append(power_tmp)
 
         # log the results
-        LOGGER.debug("matrix iter: iter = %d / P = %.3e / Q = %.3e" % (self.n_iter, P, Q))
+        LOGGER.debug(f"matrix iter: iter = {iter_tmp:d} / S = {power_tmp:.3e} VA")
 
     def get_n_iter(self):
         """
@@ -66,8 +65,7 @@ class _IterCounter:
 
         conv = {
             "iter_vec": self.iter_vec,
-            "P_vec": self.P_vec,
-            "Q_vec": self.Q_vec
+            "power_vec": self.power_vec,
         }
 
         return conv
@@ -137,8 +135,8 @@ def get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
     pcd_op_tmp = pcd_obj.get_op()
 
     # define callback
-    def fct_callback(data):
-        obj.get_callback_run(data)
+    def fct_callback(sol):
+        obj.get_callback_run(sol)
 
     # call the solver
     if solver == "GMRES":

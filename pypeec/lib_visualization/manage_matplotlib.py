@@ -31,8 +31,10 @@ def _get_plot_residuum(fig, res, data_plot):
     n_dof = len(res)
     res_rms = np.sqrt(np.mean(np.abs(res)**2))
 
-    # get absolute value and the log
+    # get absolute value
     res_abs = np.abs(res)
+
+    # clamp small and large values
     v_min = np.finfo(res_abs.dtype).eps
     v_max = np.finfo(res_abs.dtype).max
     res_abs = np.clip(res_abs, v_min, v_max)
@@ -72,22 +74,21 @@ def _get_plot_convergence(fig, conv, data_plot):
 
     # counts
     iter_vec = conv["iter_vec"]
-    P_vec = conv["P_vec"]
-    Q_vec = conv["Q_vec"]
+    power_vec = conv["power_vec"]
 
     # get final iteration
-    n_iter = len(iter_vec)
-    P_final = P_vec[-1]
-    Q_final = Q_vec[-1]
+    iter_final = iter_vec[-1]
+    power_final = power_vec[-1]
 
     # get convergence
     iter_vec = iter_vec[0:-1]
-    P_vec = np.abs((P_vec[0:-1]-P_final)/P_final)
-    Q_vec = np.abs((Q_vec[0:-1]-Q_final)/Q_final)
+    power_vec = (power_vec[0:-1]-power_final)/np.abs(power_final)
+    real_vec = np.abs(np.real(power_vec))
+    imag_vec = np.abs(np.imag(power_vec))
 
     # plot the data
-    plt.plot(iter_vec, P_vec, "-o", color=color_active, markersize=marker, linewidth=width, label="P")
-    plt.plot(iter_vec, Q_vec, "-o", color=color_reactive, markersize=marker, linewidth=width, label="Q")
+    plt.plot(iter_vec, real_vec, "-o", color=color_active, markersize=marker, linewidth=width, label="P")
+    plt.plot(iter_vec, imag_vec, "-o", color=color_reactive, markersize=marker, linewidth=width, label="Q")
 
     # get log axis
     plt.yscale("log")
@@ -97,7 +98,7 @@ def _get_plot_convergence(fig, conv, data_plot):
     plt.legend()
     plt.xlabel("iterations (#)")
     plt.ylabel("convergence (a.u.)")
-    plt.title("Convergence / iter = %d / P = %.3e / Q = %.3e" % (n_iter, P_final, Q_final))
+    plt.title(f"Convergence: iter = {iter_final:d} / S = {power_final:.3e} VA")
 
 
 def get_plot_plotter(fig, res, conv, format, data_plot, data_options):

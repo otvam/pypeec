@@ -40,7 +40,7 @@ def _get_total_power(freq, source_pos, I_src, V_vc):
         fact = 0.5
 
     # init terminal power
-    S_tot = 0.0
+    power = 0.0
 
     # parse the source terminals
     for tag, source_pos_tmp in source_pos.items():
@@ -54,12 +54,12 @@ def _get_total_power(freq, source_pos, I_src, V_vc):
             I_tmp = NP_TYPES.COMPLEX(np.sum(I_src[idx_src]))
 
             # compute the apparent power
-            S_tmp = fact*V_tmp*np.conj(I_tmp)
+            power_tmp = fact*V_tmp*np.conj(I_tmp)
 
             # add the power
-            S_tot += S_tmp
+            power += power_tmp
 
-    return S_tot
+    return power
 
 
 def _get_conv_eval(sol, freq, source_pos, sol_idx):
@@ -71,13 +71,9 @@ def _get_conv_eval(sol, freq, source_pos, sol_idx):
     (V_vc, I_fc, I_src) = _get_sol_extract(sol, sol_idx)
 
     # get the sources
-    S = _get_total_power(freq, source_pos, I_src, V_vc)
+    power = _get_total_power(freq, source_pos, I_src, V_vc)
 
-    # extract the data
-    P = np.real(S)
-    Q = np.imag(S)
-
-    return P, Q
+    return power
 
 
 def get_fct_conv(freq, source_pos, sol_idx):
@@ -86,7 +82,7 @@ def get_fct_conv(freq, source_pos, sol_idx):
     """
 
     def fct_conv(sol):
-        source = _get_conv_eval(sol, freq, source_pos, sol_idx)
-        return source
+        power = _get_conv_eval(sol, freq, source_pos, sol_idx)
+        return power
 
     return fct_conv
