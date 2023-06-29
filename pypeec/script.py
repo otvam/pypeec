@@ -279,16 +279,16 @@ def run_script():
         (status, ex) = main.run_mesher_file(
             args.file_geometry,
             args.file_voxel,
-            args.is_truncated,
+            is_truncated=args.is_truncated,
         )
     elif args.command in ["viewer", "vi"]:
         (status, ex) = main.run_viewer_file(
             args.file_voxel,
             args.file_point,
             args.file_viewer,
-            args.tag_plot,
-            args.plot_mode,
-            args.folder,
+            tag_plot=args.tag_plot,
+            plot_mode=args.plot_mode,
+            folder=args.folder,
         )
     elif args.command in ["solver", "so"]:
         (status, ex) = main.run_solver_file(
@@ -296,17 +296,17 @@ def run_script():
             args.file_problem,
             args.file_tolerance,
             args.file_solution,
-            args.is_truncated,
+            is_truncated=args.is_truncated,
         )
     elif args.command in ["plotter", "pl"]:
         (status, ex) = main.run_plotter_file(
             args.file_solution,
             args.file_point,
             args.file_plotter,
-            args.tag_sweep,
-            args.tag_plot,
-            args.plot_mode,
-            args.folder,
+            tag_sweep=args.tag_sweep,
+            tag_plot=args.tag_plot,
+            plot_mode=args.plot_mode,
+            folder=args.folder,
         )
     else:
         raise ValueError("invalid command")
