@@ -52,6 +52,7 @@ def _check_data(data_config):
         "FFT_LIBRARY",
         "FACTORIZATION_OPTIONS",
         "FACTORIZATION_LIBRARY",
+        "DISPLAY_LOGO",
         "MATRIX_SPLIT",
         "MATRIX_MULTIPLICATION",
         "USE_DOUBLE",
@@ -137,6 +138,7 @@ def _check_data(data_config):
     datachecker.check_integer("THREAD_MKL", FACTORIZATION_OPTIONS["THREAD_MKL"], is_positive=True, can_be_zero=False, can_be_none=True)
 
     # check other switches
+    datachecker.check_boolean("DISPLAY_LOGO", data_config["DISPLAY_LOGO"])
     datachecker.check_boolean("MATRIX_SPLIT", data_config["MATRIX_SPLIT"])
     datachecker.check_boolean("USE_DOUBLE", data_config["USE_DOUBLE"])
     datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True, can_be_zero=True)

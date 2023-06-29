@@ -97,3 +97,8 @@ SWEEP_POOL: null
 #   - this parameter should not be required
 #   - however, it seems to mitigate a race condition in PyVista/PyVistaQt
 PAUSE_GUI: 0.2
+
+# display the PyPEEC logo
+#   - if false, the logo is not shown
+#   - if true, the logo is shown
+DISPLAY_LOGO: true

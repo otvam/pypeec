@@ -7,12 +7,23 @@ This allows for a minimization of the loaded dependencies.
 __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
+import importlib.resources
+from pypeec import config
 from pypeec import log
 from pypeec import io
 from pypeec.error import FileError
 
 # create the logger
 LOGGER = log.get_logger("MAIN")
+
+# get logo display status
+DISPLAY_LOGO = config.DISPLAY_LOGO
+
+# display the logo
+if DISPLAY_LOGO:
+    with importlib.resources.open_text("pypeec", "pypeec.txt") as file_logo:
+        data = file_logo.read()
+        print(data)
 
 
 def run_mesher_data(data_geometry, **kwargs):

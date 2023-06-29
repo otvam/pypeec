@@ -7,7 +7,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 import sys
-import os
 import os.path
 import pathlib
 import importlib.resources
