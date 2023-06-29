@@ -2,26 +2,28 @@
 
 ## Summary
 
-**PyPEEC** is a **3D magnetic field solver** with the following characteristics:
-* **3D voxel** geometry
+**PyPEEC** is a **3D quasi-magnetostatic field solver** with the following characteristics:
 * **PEEC method** with **FFT acceleration**
-* **GPU acceleration** is available
-* Pure **Python** implementation
+* Representation of the **geometry** with **3D voxels**
+* **Multithreading and GPU acceleration** are available
 * **Fast** with **moderate memory** requirements
+* Import the **geometry** from **STL**, **PNG**, and **GERBER** files
+* Draw the **geometry** with stacked 2D **vector shapes** or **voxel indices**
+* **Pure Python** implementation
+* Can be used from the **command line**
+* Can be used with **Jupyter notebooks**
 * Advanced **plotting** capabilities
-* Can be used with **Jupyter** notebooks
-* Import the geometry from voxel files
-* Import the geometry from STL, PNG, and GERBER files
-* Draw the geometry with stacked 2D vector shapes
-* Conductive and magnetic domains
-* Frequency domain solution
-* Connection of current and voltage sources
-* Extraction of the current density and potential
-* Extraction of the losses and energy
-* Extraction of the terminal impedances
-* Computation of the magnetic field 
 
-**PyPEEC** has the following limitations:
+**PyPEEC** solves the following **3D quasi-magnetostatic problems**:
+* Frequency domain solution (DC and AC)
+* Conductive and magnetic domains (ideal or lossy)
+* Connection of current and voltage sources
+* Extraction of the loss and energy densities
+* Extraction of the current density, flux density, and potential
+* Extraction of the terminal voltage, current, and power
+* Computation of the free-space magnetic field 
+
+**PyPEEC** has the following **limitations**:
 * No capacitive effects
 * No dielectric domains
 * No advanced boundaries conditions
