@@ -1,14 +1,14 @@
 
   ╔═══════════════════════════════════════════════════════╗
-  ║  ╔═══╗   ╔═══╦═══╦═══╦═══╗             3D PEEC Solver ║
-  ║  ║╔═╗║   ║╔═╗║╔══╣╔══╣╔═╗║       Quasi-Magnetostatics ║
-  ║  ║╚═╝╠╗ ╔╣╚═╝║╚══╣╚══╣║ ╚╝           Frequency Domain ║
-  ║  ║╔══╣║ ║║╔══╣╔══╣╔══╣║ ╔╗           Voxel Geometries ║
-  ║  ║║  ║╚═╝║║  ║╚══╣╚══╣╚═╝║        FFT/GPU Accelerated ║
-  ║  ╚╝  ╚═╗ ╠╝  ╚═══╩═══╩═══╝     Python and Open Source ║
+  ║  ╔═══╗   ╔═══╦═══╦═══╦═══╗            3D PEEC Solver  ║
+  ║  ║╔═╗║   ║╔═╗║╔══╣╔══╣╔═╗║      Quasi-Magnetostatics  ║
+  ║  ║╚═╝╠╗ ╔╣╚═╝║╚══╣╚══╣║ ╚╝          Frequency Domain  ║
+  ║  ║╔══╣║ ║║╔══╣╔══╣╔══╣║ ╔╗          Voxel Geometries  ║
+  ║  ║║  ║╚═╝║║  ║╚══╣╚══╣╚═╝║       FFT/GPU Accelerated  ║
+  ║  ╚╝  ╚═╗ ╠╝  ╚═══╩═══╩═══╝    Python and Open Source  ║
   ╚══════╦═╝ ╠════════════════════════════════════════════╝
          ╚═══╝
   ╔═══════════════════════════════════════════════════════╗
   ║ (c) 2023 - Thomas Guillod - Dartmouth College         ║
-  ║ (c) 2023 - Proprietary, all rights reserved           ║
+  ║ (c) 2023 - Proprietary - All rights reserved          ║
   ╚═══════════════════════════════════════════════════════╝
