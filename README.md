@@ -47,8 +47,6 @@ The **PyPEEC** package contains the following tools:
 
 ![summary](docs/images/summary.png)
 
-![screenshot](docs/images/screenshot.png)
-
 ## Credits
 
 The FFT-accelerated PEEC method with voxels has been first described and implemented in:
