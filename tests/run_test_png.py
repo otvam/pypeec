@@ -6,6 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "(c) Thomas Guillod - Dartmouth College"
 
 from tests import test_workflow
+from pypeec import main
 
 # example folder to be tested
 folder = "examples_png"
@@ -17,6 +18,9 @@ name_list = [
     "shield",
     "gerber",
 ]
+
+# show the logo
+main.run_display_logo()
 
 # get the test object
 obj = test_workflow.set_init()

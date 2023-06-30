@@ -23,7 +23,7 @@ DISPLAY_LOGO = config.DISPLAY_LOGO
 STATUS_LOGO = False
 
 
-def _display_logo():
+def run_display_logo():
     """
     Display the logo as a splash screen.
     """
@@ -32,7 +32,7 @@ def _display_logo():
     global STATUS_LOGO
 
     # display the logo
-    if DISPLAY_LOGO and not STATUS_LOGO:
+    if not STATUS_LOGO:
         with importlib.resources.open_text("pypeec", "pypeec.txt") as file_logo:
             data = file_logo.read()
             print(data, flush=True)
@@ -64,7 +64,8 @@ def run_mesher_data(data_geometry, **kwargs):
     """
 
     # display logo
-    _display_logo()
+    if DISPLAY_LOGO:
+        run_display_logo()
 
     # load the tool
     LOGGER.info("load the mesher")
@@ -102,7 +103,8 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
     """
 
     # display logo
-    _display_logo()
+    if DISPLAY_LOGO:
+        run_display_logo()
 
     # run the tool
     try:
@@ -155,7 +157,8 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
     """
 
     # display logo
-    _display_logo()
+    if DISPLAY_LOGO:
+        run_display_logo()
 
     # load the tool
     LOGGER.info("load the viewer")
@@ -201,7 +204,8 @@ def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
     """
 
     # display logo
-    _display_logo()
+    if DISPLAY_LOGO:
+        run_display_logo()
 
     # run the tool
     try:
@@ -245,7 +249,8 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
     """
 
     # display logo
-    _display_logo()
+    if DISPLAY_LOGO:
+        run_display_logo()
 
     # load the tool
     LOGGER.info("load the solver")
@@ -285,7 +290,8 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
     """
 
     # display logo
-    _display_logo()
+    if DISPLAY_LOGO:
+        run_display_logo()
 
     # run the tool
     try:
@@ -343,7 +349,8 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
     """
 
     # display logo
-    _display_logo()
+    if DISPLAY_LOGO:
+        run_display_logo()
 
     # load the tool
     LOGGER.info("load the plotter")
@@ -392,7 +399,8 @@ def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
     """
 
     # display logo
-    _display_logo()
+    if DISPLAY_LOGO:
+        run_display_logo()
 
     # run the tool
     try:

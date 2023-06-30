@@ -10,7 +10,6 @@ import pickle
 import tempfile
 import logging
 from pypeec import main
-from pypeec import config
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.INFO)
