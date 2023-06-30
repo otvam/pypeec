@@ -16,14 +16,29 @@ from pypeec.error import FileError
 # create the logger
 LOGGER = log.get_logger("MAIN")
 
-# get logo display status
+# get the logo display status
 DISPLAY_LOGO = config.DISPLAY_LOGO
 
-# display the logo
-if DISPLAY_LOGO:
-    with importlib.resources.open_text("pypeec", "pypeec.txt") as file_logo:
-        data = file_logo.read()
-        print(data, flush=True)
+# init the logo display status
+STATUS_LOGO = False
+
+
+def _display_logo():
+    """
+    Display the logo as a splash screen.
+    """
+
+    # variable with the logo status
+    global STATUS_LOGO
+
+    # display the logo
+    if DISPLAY_LOGO and not STATUS_LOGO:
+        with importlib.resources.open_text("pypeec", "pypeec.txt") as file_logo:
+            data = file_logo.read()
+            print(data, flush=True)
+
+    # logo has been displayed
+    STATUS_LOGO = True
 
 
 def run_mesher_data(data_geometry, **kwargs):
@@ -47,6 +62,9 @@ def run_mesher_data(data_geometry, **kwargs):
         None if the termination is successful.
     data_voxel: dict (output data)
     """
+
+    # display logo
+    _display_logo()
 
     # load the tool
     LOGGER.info("load the mesher")
@@ -82,6 +100,9 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
         The encountered exception (if any).
         None if the termination is successful.
     """
+
+    # display logo
+    _display_logo()
 
     # run the tool
     try:
@@ -133,6 +154,9 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
         None if the termination is successful.
     """
 
+    # display logo
+    _display_logo()
+
     # load the tool
     LOGGER.info("load the viewer")
     from pypeec.run import viewer
@@ -176,6 +200,9 @@ def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
         None if the termination is successful.
     """
 
+    # display logo
+    _display_logo()
+
     # run the tool
     try:
         # load data
@@ -217,6 +244,9 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
     data_solution: dict (output data)
     """
 
+    # display logo
+    _display_logo()
+
     # load the tool
     LOGGER.info("load the solver")
     from pypeec.run import solver
@@ -253,6 +283,9 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         The encountered exception (if any).
         None if the termination is successful.
     """
+
+    # display logo
+    _display_logo()
 
     # run the tool
     try:
@@ -309,6 +342,9 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
         None if the termination is successful.
     """
 
+    # display logo
+    _display_logo()
+
     # load the tool
     LOGGER.info("load the plotter")
     from pypeec.run import plotter
@@ -354,6 +390,9 @@ def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
         The encountered exception (if any).
         None if the termination is successful.
     """
+
+    # display logo
+    _display_logo()
 
     # run the tool
     try:
