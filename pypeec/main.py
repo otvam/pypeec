@@ -23,7 +23,7 @@ DISPLAY_LOGO = config.DISPLAY_LOGO
 if DISPLAY_LOGO:
     with importlib.resources.open_text("pypeec", "pypeec.txt") as file_logo:
         data = file_logo.read()
-        print(data)
+        print(data, flush=True)
 
 
 def run_mesher_data(data_geometry, **kwargs):
