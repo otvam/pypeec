@@ -27,6 +27,7 @@
 * No capacitive effects
 * No dielectric domains
 * No advanced boundaries conditions
+* No model order reduction techniques
 * Limited to voxel geometries
 
 The **PyPEEC** package contains the following tools:
@@ -59,7 +60,7 @@ Other interesting papers and codes about similar methods:
 * N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864, 2021
 * A. Yucel, https://github.com/acyucel/VoxHenry
 
-## Project Repository
+## Project Links
 
 * [Repository](https://github.com/otvam/pypeec)
 * [Tags](https://github.com/otvam/pypeec/tags)
