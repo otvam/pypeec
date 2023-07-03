@@ -8,6 +8,7 @@ For the plotter, the following plots are available:
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 import matplotlib.pyplot as plt

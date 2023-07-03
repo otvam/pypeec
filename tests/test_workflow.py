@@ -7,6 +7,7 @@ Only non-regression integration tests are implemented.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import unittest
 from tests import test_pypeec

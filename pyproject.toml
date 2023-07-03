@@ -2,6 +2,7 @@
 # The detailed configuration is located "setup.cfg".
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 [build-system]
 build-backend = "setuptools.build_meta"

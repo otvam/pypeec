@@ -24,6 +24,7 @@
 #       - opacity_reference: face opacity for the reference structure
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 "domain":
     "framework": "pyvista"

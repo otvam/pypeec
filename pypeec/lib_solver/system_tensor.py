@@ -6,6 +6,7 @@ Get the dense matrices used for the PEEC problem:
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 import numpy.linalg as lna

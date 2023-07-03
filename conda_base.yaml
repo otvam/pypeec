@@ -7,6 +7,7 @@
 #              - CuPy and CUDA
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 name: pypeec
 channels:

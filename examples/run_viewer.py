@@ -4,6 +4,7 @@ User script for visualizing a 3D voxel structure.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import sys
 import os.path

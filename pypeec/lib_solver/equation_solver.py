@@ -4,6 +4,7 @@ Module for checking the matrix condition number and solving a sparse equation sy
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 from pypeec.lib_matrix import matrix_condition

@@ -9,6 +9,7 @@ This module is used as a common interface for different FFT libraries:
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import os
 from pypeec import config

@@ -4,6 +4,7 @@ Module for checking the geometry data.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 from pypeec.lib_check import datachecker
 from pypeec.lib_check import check_data_geometry_png

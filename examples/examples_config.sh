@@ -2,6 +2,7 @@
 # Defined with global variables.
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 # get the path of the root of the code
 PATH_ROOT="."

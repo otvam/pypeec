@@ -7,6 +7,7 @@
 #              - Jupyter
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 # YAML parsing library
 PyYAML>=6.0

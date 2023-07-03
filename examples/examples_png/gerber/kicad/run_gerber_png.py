@@ -4,6 +4,7 @@ Generate PNG files from the GERBER files for the example.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import sys
 from pypeec.utils import gerber_png

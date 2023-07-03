@@ -9,6 +9,7 @@ Optional HPC libraries can be used to accelerate the solver.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 from pypeec.lib_solver import sweep_solver
 from pypeec.lib_solver import voxel_geometry

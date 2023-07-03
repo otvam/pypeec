@@ -22,6 +22,7 @@ A matrix-vector operator is returned for performing the matrix-vector multiplica
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import multiply_direct

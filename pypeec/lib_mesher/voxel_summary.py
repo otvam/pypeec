@@ -4,6 +4,7 @@ Compute and display metrics about 3D voxel structures.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 from pypeec import log
 

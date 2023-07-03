@@ -1,6 +1,7 @@
 # List of files to ignore for Git.
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 # remove Python object
 *.pyc

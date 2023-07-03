@@ -6,6 +6,7 @@ This allows for a minimization of the loaded dependencies.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import importlib.resources
 from pypeec import config

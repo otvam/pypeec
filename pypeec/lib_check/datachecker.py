@@ -4,6 +4,7 @@ Module for checking the data type and content.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import os.path
 import numpy as np

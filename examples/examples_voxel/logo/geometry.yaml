@@ -4,6 +4,7 @@
 # Definition of the voxel structure.
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 "mesh_type": "voxel"
 "data_voxelize":

@@ -2,6 +2,7 @@
 # User script for solving a problem with the FFT-PEEC solver.
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 set -o nounset
 set -o pipefail

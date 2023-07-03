@@ -5,6 +5,7 @@ Parse the command line arguments and call the corresponding entry point.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import sys
 import argparse

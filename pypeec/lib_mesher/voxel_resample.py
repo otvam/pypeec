@@ -5,6 +5,7 @@ Refine and reduce a voxel structure and update the voxel indices.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 from pypeec import log

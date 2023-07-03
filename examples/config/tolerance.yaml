@@ -4,6 +4,7 @@
 #   - define the numerical options for the matrix solver
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 # control where numerical approximations are used for the Green and coupling functions
 #   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used

@@ -4,6 +4,7 @@
 # Definition of the magnetic problem to be solved.
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 "material_def":
     "pri": {"domain_list": ["pri_src", "pri_sink", "pri_coil"], "material_type": "electric", "var_type": "lumped"}

@@ -4,6 +4,7 @@ Combine the voxel and problem data into a new solver data structure.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 from pypeec.lib_check import datachecker

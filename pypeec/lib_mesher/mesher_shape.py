@@ -16,6 +16,7 @@ TODO: The warning triggered by Rasterio should be handled in a cleaner way.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import warnings
 import numpy as np

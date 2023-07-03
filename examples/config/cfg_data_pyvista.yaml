@@ -1,6 +1,7 @@
 # PyPEEC options for the 3D plots (using PyVista).
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 # options for defining cut planes
 "plot_clip":

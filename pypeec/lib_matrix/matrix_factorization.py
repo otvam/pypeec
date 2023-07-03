@@ -12,6 +12,7 @@ TODO: The warning triggered by UMFPACK should be handled in a cleaner way.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import os
 import warnings

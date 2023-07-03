@@ -4,6 +4,7 @@ Module for solving a sparse equation system with GMRES.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import scipy.sparse.linalg as sla
 from pypeec import log

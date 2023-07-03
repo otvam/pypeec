@@ -14,6 +14,7 @@ The mesher is implemented with PyVista, Pillow, Shapely, and Rasterio.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 from pypeec.lib_mesher import mesher_voxel
 from pypeec.lib_mesher import mesher_shape

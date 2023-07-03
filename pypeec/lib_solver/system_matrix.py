@@ -9,6 +9,7 @@ The multiplication can either be done with the dense matrices or with FFT circul
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 import scipy.sparse as sps

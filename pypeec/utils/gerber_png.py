@@ -16,6 +16,7 @@ WARNING: This code requires the following external tools: "gerbv" and "mogrify".
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import os
 import os.path

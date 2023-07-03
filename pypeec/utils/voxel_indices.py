@@ -4,6 +4,7 @@ Module for handling voxel indices (linear and tensor indices).
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 

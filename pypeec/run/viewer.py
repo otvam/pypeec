@@ -16,6 +16,7 @@ The plots can be saved as PNG images.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 from pypeec.lib_visualization import manage_compute
 from pypeec.lib_visualization import manage_voxel

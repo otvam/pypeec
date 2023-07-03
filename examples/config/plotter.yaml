@@ -53,6 +53,7 @@
 #       - edge_color: "edge color of the bins
 #
 # Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
 
 "material":
     "framework": "pyvista"

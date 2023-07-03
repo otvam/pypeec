@@ -5,6 +5,7 @@ The values are extracted from the mesher and solver results.
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 
 def _get_mesher(data_geom):
