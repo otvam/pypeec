@@ -63,6 +63,7 @@ Other interesting papers and codes about similar methods:
 ## Project Links
 
 * [Repository](https://github.com/otvam/pypeec)
+* [Releases](https://github.com/otvam/pypeec/releases)
 * [Tags](https://github.com/otvam/pypeec/tags)
 * [Issues](https://github.com/otvam/pypeec/issues)
 
