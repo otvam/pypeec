@@ -9,6 +9,6 @@
   ╚══════╦═╝ ╠════════════════════════════════════════════╝
          ╚═══╝
   ╔═══════════════════════════════════════════════════════╗
-  ║ (c) 2023 - Thomas Guillod - Dartmouth College         ║
-  ║ (c) 2023 - Proprietary - All rights reserved          ║
+  ║ Thomas Guillod - Dartmouth College                    ║
+  ║ Mozilla Public License Version 2.0                    ║
   ╚═══════════════════════════════════════════════════════╝
