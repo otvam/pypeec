@@ -3,7 +3,7 @@ Module for checking the geometry data.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_check import datachecker
 from pypeec.lib_check import check_data_geometry_png

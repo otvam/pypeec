@@ -3,7 +3,7 @@ Module for checking the data type and content.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import os.path
 import numpy as np

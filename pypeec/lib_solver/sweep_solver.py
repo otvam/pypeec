@@ -8,7 +8,7 @@ Run the sweeps in the correct order and return the results.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import joblib
 from pypeec import config

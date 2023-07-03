@@ -3,7 +3,7 @@ Module for checking the solver config data.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import importlib.util
 import numpy as np

@@ -3,7 +3,7 @@ Combine the voxel and problem data into a new solver data structure.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from pypeec.lib_check import datachecker

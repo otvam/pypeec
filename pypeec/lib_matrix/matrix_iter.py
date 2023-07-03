@@ -3,7 +3,7 @@ Module for solving a sparse equation system with GMRES.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import scipy.sparse.linalg as sla
 from pypeec import log

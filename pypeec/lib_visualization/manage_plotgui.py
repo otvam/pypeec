@@ -18,7 +18,7 @@ TODO: Quitting or making screenshot might cause a crash of PyVista.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import os
 import sys

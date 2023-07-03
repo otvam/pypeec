@@ -52,7 +52,7 @@
 #       - bar_color: fill color of the bins
 #       - edge_color: "edge color of the bins
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 "material":
     "framework": "pyvista"

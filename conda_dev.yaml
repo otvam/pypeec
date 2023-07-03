@@ -5,7 +5,7 @@
 #          The packaging/development tools are included.
 #          Jupyter is not included.
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 name: pypeec
 channels:

@@ -5,7 +5,7 @@ Different functions for handling the problem values:
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from pypeec import log

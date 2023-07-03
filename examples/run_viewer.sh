@@ -1,8 +1,7 @@
 #!/bin/bash
 # User script for visualizing a 3D voxel structure.
 #
-# Thomas Guillod
-# (c) 2023 - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 set -o nounset
 set -o pipefail

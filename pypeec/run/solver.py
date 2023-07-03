@@ -8,7 +8,7 @@ Optional HPC libraries can be used to accelerate the solver.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_solver import sweep_solver
 from pypeec.lib_solver import voxel_geometry

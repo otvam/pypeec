@@ -8,7 +8,7 @@ This module is used as a common interface for different FFT libraries:
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import os
 from pypeec import config

@@ -11,7 +11,7 @@ TODO: The warning triggered by UMFPACK should be handled in a cleaner way.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import os
 import warnings

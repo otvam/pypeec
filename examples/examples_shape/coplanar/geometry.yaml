@@ -3,7 +3,7 @@
 # This file is used by the mesher.
 # Definition of the voxel structure.
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 "mesh_type": "shape"
 "data_voxelize":

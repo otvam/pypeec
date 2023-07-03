@@ -14,7 +14,7 @@ Z. Piatek and B. Baron, 2021
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import numpy.linalg as lna

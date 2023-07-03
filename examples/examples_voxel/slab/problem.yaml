@@ -3,7 +3,7 @@
 # This file is used by the solver.
 # Definition of the magnetic problem to be solved.
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 "material_def":
     "cond": {"domain_list": ["cond", "src", "sink"], "material_type": "electric", "var_type": "lumped"}

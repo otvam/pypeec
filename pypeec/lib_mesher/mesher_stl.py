@@ -6,7 +6,7 @@ The voxelization is done with PyVista.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import vtk
 import numpy as np

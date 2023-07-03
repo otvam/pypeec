@@ -4,7 +4,7 @@ Parse the command line arguments and call the corresponding entry point.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import sys
 import argparse
@@ -27,7 +27,7 @@ def _get_parser():
     parser = argparse.ArgumentParser(
         prog="pypeec",
         description="PyPEEC - 3D PEEC Solver",
-        epilog="(c) Thomas Guillod - Dartmouth College",
+        epilog="Thomas Guillod - Dartmouth College",
         allow_abbrev=False,
     )
 

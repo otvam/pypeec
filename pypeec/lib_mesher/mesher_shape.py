@@ -15,7 +15,7 @@ TODO: The warning triggered by Rasterio should be handled in a cleaner way.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import warnings
 import numpy as np

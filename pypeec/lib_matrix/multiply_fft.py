@@ -10,7 +10,7 @@ The "split" mode features a reduced memory footprint.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_matrix import fourier_transform
 from pypeec import log

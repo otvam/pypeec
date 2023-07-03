@@ -4,7 +4,7 @@ Create and manage the indices of the different voxels and faces.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from pypeec import log

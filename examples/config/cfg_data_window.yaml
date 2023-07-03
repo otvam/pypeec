@@ -1,6 +1,6 @@
 # PyPEEC options for the rendering windows.
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 "show_menu": false                  # show (or not) the window menu
 "image_size": [800, 600]            # initial window size, silent renderer, null for default

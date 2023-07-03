@@ -6,7 +6,7 @@
 #              - FFTW, UMFPACK, and MKL/PARDISO
 #              - CuPy and CUDA
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 name: pypeec
 channels:

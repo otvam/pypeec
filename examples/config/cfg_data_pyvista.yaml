@@ -1,6 +1,6 @@
 # PyPEEC options for the 3D plots (using PyVista).
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 # options for defining cut planes
 "plot_clip":

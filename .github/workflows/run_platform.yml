@@ -3,7 +3,7 @@
 #
 # The environment variable "ALLOW_PLOTTING" is used to prevent warnings without display server.
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 name: Test Different Platforms
 

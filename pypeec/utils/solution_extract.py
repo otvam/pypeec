@@ -3,7 +3,7 @@ Module for extracting the terminal currents and voltage from a solution.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import numpy as np
 

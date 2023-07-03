@@ -23,7 +23,7 @@
 #       - opacity_voxel: face opacity for the voxelized structure
 #       - opacity_reference: face opacity for the reference structure
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 "domain":
     "framework": "pyvista"

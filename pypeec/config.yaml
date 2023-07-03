@@ -5,7 +5,7 @@
 #   - External FFT library (SciPy FFT is used)
 #   - External matrix solver (SciPy SuperLU is used)
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 # logging options
 LOGGING_OPTIONS:

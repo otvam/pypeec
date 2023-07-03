@@ -3,7 +3,7 @@ User script for visualizing a 3D voxel structure.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import sys
 import os.path

@@ -15,7 +15,7 @@ The plots can be saved as PNG images.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_visualization import manage_compute
 from pypeec.lib_visualization import manage_voxel

@@ -13,7 +13,7 @@ The mesher is implemented with PyVista, Pillow, Shapely, and Rasterio.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 from pypeec.lib_mesher import mesher_voxel
 from pypeec.lib_mesher import mesher_shape

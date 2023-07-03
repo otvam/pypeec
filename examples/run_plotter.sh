@@ -1,8 +1,7 @@
 #!/bin/bash
 # User script for plotting the solution of a FFT-PEEC problem.
 #
-# Thomas Guillod
-# (c) 2023 - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 set -o nounset
 set -o pipefail

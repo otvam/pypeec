@@ -3,7 +3,7 @@
 #   - run the tests
 #   - check the test status
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 set -o nounset
 set -o pipefail

@@ -6,7 +6,7 @@
 #              - CuPy and CUDA
 #              - Jupyter
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 # YAML parsing library
 PyYAML>=6.0

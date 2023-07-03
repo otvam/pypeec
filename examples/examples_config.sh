@@ -1,8 +1,7 @@
 # Configuration for the examples.
 # Defined with global variables.
 #
-# Thomas Guillod
-# (c) 2023 - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 # get the path of the root of the code
 PATH_ROOT="."

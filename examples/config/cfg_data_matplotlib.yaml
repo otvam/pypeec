@@ -1,6 +1,6 @@
 # PyPEEC options for the 2D plots (using Matplotlib).
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 "style": "default"         # string with a Matplotlib style
 "legend": "best"           # location of the legend box

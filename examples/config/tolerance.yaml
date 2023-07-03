@@ -3,7 +3,7 @@
 #   - define the numerical options for matrix condition check
 #   - define the numerical options for the matrix solver
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 # control where numerical approximations are used for the Green and coupling functions
 #   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used

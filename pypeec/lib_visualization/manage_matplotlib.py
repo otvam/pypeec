@@ -7,7 +7,7 @@ For the plotter, the following plots are available:
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import matplotlib.pyplot as plt

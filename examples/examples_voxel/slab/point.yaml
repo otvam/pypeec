@@ -3,7 +3,7 @@
 # This file is used by the viewer and plotter.
 # Definition of the points used for magnetic field evaluation.
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 [
     [30.0e-3, 0.0e-3, -30.0e-3],

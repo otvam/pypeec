@@ -12,7 +12,7 @@ The impedance matrix is post-processed:
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import numpy as np
 import numpy.linalg as lna

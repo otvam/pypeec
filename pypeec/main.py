@@ -5,7 +5,7 @@ This allows for a minimization of the loaded dependencies.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import importlib.resources
 from pypeec import config

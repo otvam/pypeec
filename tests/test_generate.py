@@ -4,7 +4,7 @@ The values are extracted from the mesher and solver results.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 
 def _get_mesher(data_geom):

@@ -4,7 +4,7 @@ Refine and reduce a voxel structure and update the voxel indices.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import numpy as np
 from pypeec import log

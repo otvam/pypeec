@@ -15,7 +15,7 @@ WARNING: This code requires the following external tools: "gerbv" and "mogrify".
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import os
 import os.path

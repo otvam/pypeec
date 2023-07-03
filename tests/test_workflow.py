@@ -6,7 +6,7 @@ Only non-regression integration tests are implemented.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import unittest
 from tests import test_pypeec

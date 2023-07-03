@@ -3,7 +3,7 @@ Generate PNG files from the GERBER files for the example.
 """
 
 __author__ = "Thomas Guillod"
-__copyright__ = "(c) Thomas Guillod - Dartmouth College"
+__copyright__ = "Thomas Guillod - Dartmouth College"
 
 import sys
 from pypeec.utils import gerber_png

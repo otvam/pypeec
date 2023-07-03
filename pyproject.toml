@@ -1,7 +1,7 @@
 # Configuration file for bootstraping the package.
 # The detailed configuration is located "setup.cfg".
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 [build-system]
 build-backend = "setuptools.build_meta"

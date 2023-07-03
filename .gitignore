@@ -1,6 +1,6 @@
 # List of files to ignore for Git.
 #
-# (c) Thomas Guillod - Dartmouth College
+# Thomas Guillod - Dartmouth College
 
 # remove Python object
 *.pyc
