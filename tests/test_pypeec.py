@@ -22,6 +22,7 @@ PATH_ROOT = os.path.dirname(__file__)
 FOLDER_CONFIG = os.path.join(PATH_ROOT, "..", "examples", "config")
 PATH_EXAMPLES = os.path.join(PATH_ROOT, "..", "examples")
 
+
 def _create_temp_file():
     """
     Get a temporary file.
