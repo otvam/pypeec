@@ -149,14 +149,14 @@ def _check_plot_clip(plot_clip):
     datachecker.check_float("clip_value", plot_clip["clip_value"])
 
 
-def _check_data_plot_plotter(format, data_plot):
+def _check_data_plot_plotter(layout, data_plot):
     """
     Check the validity of the data options (for the plotter).
     The data options are controlling the plot content.
     """
 
     # list of allowed plot types
-    format_list = [
+    layout_list = [
         "convergence",
         "residuum",
         "material",
@@ -184,10 +184,10 @@ def _check_data_plot_plotter(format, data_plot):
     vec_point_list = ["H_vec_re", "H_vec_im"]
 
     # check plot type
-    datachecker.check_choice(format, format, format_list)
+    datachecker.check_choice("layout", layout, layout_list)
 
     # check the convergence options
-    if format == "convergence":
+    if layout == "convergence":
         # check type
         key_list = ["color_active", "color_reactive", "marker"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
@@ -199,7 +199,7 @@ def _check_data_plot_plotter(format, data_plot):
         datachecker.check_float("width", data_plot["width"], is_positive=True, can_be_zero=False)
 
     # check the residuum options
-    if format == "residuum":
+    if layout == "residuum":
         # check type
         key_list = ["n_bins", "tol_bins", "edge_color", "bar_color"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
@@ -211,7 +211,7 @@ def _check_data_plot_plotter(format, data_plot):
         datachecker.check_string("bar_color", data_plot["bar_color"], can_be_empty=False)
 
     # check the material options
-    if format == "material":
+    if layout == "material":
         # check type
         key_list = ["color_electric", "color_magnetic", "color_current_source", "color_voltage_source"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
@@ -224,7 +224,7 @@ def _check_data_plot_plotter(format, data_plot):
         datachecker.check_string("color_voltage_source", data_plot["color_voltage_source"], can_be_empty=False)
 
     # check the options for scalar and arrow plots
-    if format in ["scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"]:
+    if layout in ["scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"]:
         # check type
         key_list = ["scale", "log", "legend", "color_lim", "filter_lim"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
@@ -238,7 +238,7 @@ def _check_data_plot_plotter(format, data_plot):
         datachecker.check_float_array("filter_lim", data_plot["filter_lim"], size=2, can_be_none=True)
 
     # check the scalar options
-    if format in ["scalar_voxel", "scalar_point"]:
+    if layout in ["scalar_voxel", "scalar_point"]:
         # check type
         key_list = ["var", "point_size"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
@@ -248,15 +248,15 @@ def _check_data_plot_plotter(format, data_plot):
         datachecker.check_float("point_size", data_plot["point_size"], is_positive=True, can_be_zero=True)
 
         # check compatibility
-        if format == "scalar_voxel":
+        if layout == "scalar_voxel":
             datachecker.check_choice("var", data_plot["var"], var_voxel_list)
-        elif format == "scalar_point":
+        elif layout == "scalar_point":
             datachecker.check_choice("var", data_plot["var"], var_point_list)
         else:
             raise ValueError("plot_geom: the plot geometry option is incompatible with the plot type")
 
     # check the arrow options
-    if format in ["arrow_voxel", "arrow_point"]:
+    if layout in ["arrow_voxel", "arrow_point"]:
         # check type
         key_list = ["var_scalar", "var_vector", "arrow_scale", "arrow_threshold"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
@@ -268,27 +268,27 @@ def _check_data_plot_plotter(format, data_plot):
         datachecker.check_float("arrow_threshold", data_plot["arrow_threshold"], is_positive=True, can_be_zero=True)
 
         # check compatibility
-        if format == "arrow_voxel":
+        if layout == "arrow_voxel":
             datachecker.check_choice("var_scalar", data_plot["var_scalar"], var_voxel_list)
             datachecker.check_choice("var_vector", data_plot["var_vector"], vec_voxel_list)
-        elif format == "arrow_point":
+        elif layout == "arrow_point":
             datachecker.check_choice("var_scalar", data_plot["var_scalar"], var_point_list)
             datachecker.check_choice("var_vector", data_plot["var_vector"], vec_point_list)
         else:
             raise ValueError("plot_geom: the plot geometry option is incompatible with the plot type")
 
 
-def _check_data_plot_viewer(format, data_plot):
+def _check_data_plot_viewer(layout, data_plot):
     """
     Check the validity of the data options (for the viewer).
     The data options are controlling the plot content.
     """
 
     # check plot type
-    datachecker.check_choice(format, format, ["domain", "connection", "voxelization"])
+    datachecker.check_choice("layout", layout, ["domain", "connection", "voxelization"])
 
     # check the material options
-    if format == "voxelization":
+    if layout == "voxelization":
         # check type
         key_list = ["color_voxel", "color_reference", "opacity_voxel", "opacity_reference"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
@@ -301,7 +301,7 @@ def _check_data_plot_viewer(format, data_plot):
         datachecker.check_float("opacity_reference", data_plot["opacity_reference"], is_positive=True, can_be_zero=False)
 
     # check the scalar options
-    if format in ["domain", "connection"]:
+    if layout in ["domain", "connection"]:
         # check type
         key_list = ["colormap", "opacity"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
@@ -318,13 +318,13 @@ def _check_data_item(data_item, handler):
     """
 
     # check type
-    key_list = ["title", "framework", "format", "data_window", "data_plot", "data_options"]
+    key_list = ["title", "framework", "layout", "data_window", "data_plot", "data_options"]
     datachecker.check_dict("data_item", data_item, key_list=key_list)
 
     # extract field
     framework = data_item["framework"]
     title = data_item["title"]
-    format = data_item["format"]
+    layout = data_item["layout"]
     data_window = data_item["data_window"]
     data_plot = data_item["data_plot"]
     data_options = data_item["data_options"]
@@ -348,9 +348,9 @@ def _check_data_item(data_item, handler):
 
     # check content
     if handler == "plotter":
-        _check_data_plot_plotter(format, data_plot)
+        _check_data_plot_plotter(layout, data_plot)
     elif handler == "viewer":
-        _check_data_plot_viewer(format, data_plot)
+        _check_data_plot_viewer(layout, data_plot)
     else:
         raise ValueError("invalid plot framework")
 

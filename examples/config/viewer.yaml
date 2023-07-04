@@ -2,7 +2,7 @@
 #
 # A plot is described with a dictionary with the following fields:
 #   - framework: framework used for the rendering ("pyvista" or "matplotlib")
-#   - format: string describing the plot type
+#   - layout: string describing the plot type
 #   - title: title of the plot window
 #   - data_window: dictionary describing the plot window
 #   - data_options: dictionary describing the plot options
@@ -28,7 +28,7 @@
 
 "domain":
     "framework": "pyvista"
-    "format": "domain"
+    "layout": "domain"
     "title": "Domain"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -38,7 +38,7 @@
         "opacity": 1.0
 "connection":
     "framework": "pyvista"
-    "format": "connection"
+    "layout": "connection"
     "title": "Connection"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -48,7 +48,7 @@
         "opacity": 1.0
 "voxelization":
     "framework": "pyvista"
-    "format": "voxelization"
+    "layout": "voxelization"
     "title": "Voxelization"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml

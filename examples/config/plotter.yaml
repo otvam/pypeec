@@ -2,7 +2,7 @@
 #
 # A plot is described with a dictionary with the following fields:
 #   - framework: framework used for the rendering ("pyvista" or "matplotlib")
-#   - format: string describing the plot type
+#   - layout: string describing the plot type
 #   - title: title of the plot window
 #   - data_window: dictionary describing the plot window
 #   - data_options: dictionary describing the plot options
@@ -57,7 +57,7 @@
 
 "material":
     "framework": "pyvista"
-    "format": "material"
+    "layout": "material"
     "title": "Material"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -69,7 +69,7 @@
         "color_voltage_source": "royalblue"
 "V_c_abs":
     "framework": "pyvista"
-    "format": "scalar_voxel"
+    "layout": "scalar_voxel"
     "title": "El. Potential"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -84,7 +84,7 @@
         "point_size": 10.0
 "V_m_abs":
     "framework": "pyvista"
-    "format": "scalar_voxel"
+    "layout": "scalar_voxel"
     "title": "Mag. Potential"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -99,7 +99,7 @@
         "point_size": 10.0
 "S_c_abs":
     "framework": "pyvista"
-    "format": "scalar_voxel"
+    "layout": "scalar_voxel"
     "title": "El. Source"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -114,7 +114,7 @@
         "point_size": 10.0
 "Q_m_abs":
     "framework": "pyvista"
-    "format": "scalar_voxel"
+    "layout": "scalar_voxel"
     "title": "Mag. Source"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -129,7 +129,7 @@
         "point_size": 10.0
 "P_c_abs":
     "framework": "pyvista"
-    "format": "scalar_voxel"
+    "layout": "scalar_voxel"
     "title": "El. Losses"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -144,7 +144,7 @@
         "point_size": 10.0
 "P_m_abs":
     "framework": "pyvista"
-    "format": "scalar_voxel"
+    "layout": "scalar_voxel"
     "title": "Mag. Losses"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -159,7 +159,7 @@
         "point_size": 10.0
 "J_c_norm_abs":
     "framework": "pyvista"
-    "format": "scalar_voxel"
+    "layout": "scalar_voxel"
     "title": "Current"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -174,7 +174,7 @@
         "point_size": 10.0
 "J_c_norm_re":
     "framework": "pyvista"
-    "format": "arrow_voxel"
+    "layout": "arrow_voxel"
     "title": "Re. Current"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -191,7 +191,7 @@
         "arrow_scale": 0.75
 "J_c_norm_im":
     "framework": "pyvista"
-    "format": "arrow_voxel"
+    "layout": "arrow_voxel"
     "title": "Im. Current"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -208,7 +208,7 @@
         "arrow_scale": 0.75
 "B_m_norm_abs":
     "framework": "pyvista"
-    "format": "scalar_voxel"
+    "layout": "scalar_voxel"
     "title": "Flux Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -223,7 +223,7 @@
         "point_size": 10.0
 "B_m_norm_re":
     "framework": "pyvista"
-    "format": "arrow_voxel"
+    "layout": "arrow_voxel"
     "title": "Re. Flux Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -240,7 +240,7 @@
         "arrow_scale": 0.75
 "B_m_norm_im":
     "framework": "pyvista"
-    "format": "arrow_voxel"
+    "layout": "arrow_voxel"
     "title": "Im. Flux Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -257,7 +257,7 @@
         "arrow_scale": 0.75
 "H_norm_abs":
     "framework": "pyvista"
-    "format": "scalar_point"
+    "layout": "scalar_point"
     "title": "Mag. Field Norm"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -272,7 +272,7 @@
         "point_size": 10.0
 "H_norm_re":
     "framework": "pyvista"
-    "format": "arrow_point"
+    "layout": "arrow_point"
     "title": "Re. Mag. Field"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -289,7 +289,7 @@
         "arrow_scale": 0.75
 "H_norm_im":
     "framework": "pyvista"
-    "format": "arrow_point"
+    "layout": "arrow_point"
     "title": "Im. Mag. Field"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
@@ -306,7 +306,7 @@
         "arrow_scale": 0.75
 "convergence":
     "framework": "matplotlib"
-    "format": "convergence"
+    "layout": "convergence"
     "title": "Convergence"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
@@ -317,7 +317,7 @@
         "width": 2.0
 "residuum":
     "framework": "matplotlib"
-    "format": "residuum"
+    "layout": "residuum"
     "title": "Residuum"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml

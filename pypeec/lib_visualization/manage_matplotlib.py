@@ -102,7 +102,7 @@ def _get_plot_convergence(fig, conv, data_plot):
     plt.title(f"Convergence: iter = {iter_final:d} / S = {power_final:.3e} VA")
 
 
-def get_plot_plotter(fig, res, conv, format, data_plot, data_options):
+def get_plot_plotter(fig, res, conv, layout, data_plot, data_options):
     """
     Plot the solver status (for the plotter).
     """
@@ -118,9 +118,9 @@ def get_plot_plotter(fig, res, conv, format, data_plot, data_options):
     # get the main plot
     with plt.style.context(style):
         with plt.rc_context(param):
-            if format == "convergence":
+            if layout == "convergence":
                 _get_plot_convergence(fig, conv, data_plot)
-            elif format == "residuum":
+            elif layout == "residuum":
                 _get_plot_residuum(fig, res, data_plot)
             else:
                 raise ValueError("invalid plot type and plot feature")

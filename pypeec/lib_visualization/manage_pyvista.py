@@ -427,7 +427,7 @@ def _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme):
         _get_clip_mesh(pl, reference_tmp, arg, plot_clip)
 
 
-def get_plot_viewer(pl, grid, voxel, point, reference, format, data_plot, data_options):
+def get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_options):
     """
     Plot the voxel structure (for the viewer).
     The following plot types are available:
@@ -442,11 +442,11 @@ def get_plot_viewer(pl, grid, voxel, point, reference, format, data_plot, data_o
     plot_theme = data_options["plot_theme"]
 
     # get the main plot
-    if format == "domain":
+    if layout == "domain":
         _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "domain")
-    elif format == "connection":
+    elif layout == "connection":
         _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "connection")
-    elif format == "voxelization":
+    elif layout == "voxelization":
         _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme)
     else:
         raise ValueError("invalid plot type and plot feature")
@@ -455,7 +455,7 @@ def get_plot_viewer(pl, grid, voxel, point, reference, format, data_plot, data_o
     _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme)
 
 
-def get_plot_plotter(pl, grid, voxel, point, format, data_plot, data_options):
+def get_plot_plotter(pl, grid, voxel, point, layout, data_plot, data_options):
     """
     Plot the solution (for the plotter).
     The following plot types are available:
@@ -472,15 +472,15 @@ def get_plot_plotter(pl, grid, voxel, point, format, data_plot, data_options):
     plot_theme = data_options["plot_theme"]
 
     # get the main plot
-    if format == "material":
+    if layout == "material":
         _plot_material(pl, voxel, data_plot, plot_clip, plot_theme)
-    elif format == "scalar_voxel":
+    elif layout == "scalar_voxel":
         _plot_scalar(pl, voxel, data_plot, plot_clip, plot_theme)
-    elif format == "scalar_point":
+    elif layout == "scalar_point":
         _plot_scalar(pl, point, data_plot, plot_clip, plot_theme)
-    elif format == "arrow_voxel":
+    elif layout == "arrow_voxel":
         _plot_arrow(pl, grid, voxel, data_plot, plot_clip, plot_theme)
-    elif format == "arrow_point":
+    elif layout == "arrow_point":
         _plot_arrow(pl, grid, point, data_plot, plot_clip, plot_theme)
     else:
         raise ValueError("invalid plot type and plot feature")
