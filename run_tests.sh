@@ -14,7 +14,7 @@ function test_file {
   echo "TEST: $1"
   echo "======================================================================"
 
-  python -W ignore:DeprecationWarning -m unittest -v "tests/$1.py"
+  python -m unittest -v "tests/$1.py"
   status=$(( status || $? ))
 }
 

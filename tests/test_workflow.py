@@ -82,17 +82,10 @@ class TestWorkflow(unittest.TestCase):
         Run the workflow and check the results.
         """
 
-        # start the test
-        print("run")
-        print("test: folder: %s" % folder)
-        print("test: name: %s" % name)
-
         # get the test configuration
-        print("test: get config")
         (tol, check_test, generate_test) = test_read_write.get_config()
 
         # generate the results
-        print("test: run workflow")
         (data_voxel, data_solution) = test_pypeec.run_workflow(folder, name)
 
         # extract the data
@@ -102,20 +95,16 @@ class TestWorkflow(unittest.TestCase):
         # get the reference results for the tests
         if generate_test:
             # generate the new reference results
-            print("test: WARNING: generating a new reference for non-regression tests")
             (mesher, solver) = test_generate.generate_results(data_geom, data_sweep)
 
             # write the reference results
-            print("test: WARNING: setting a new reference for non-regression tests")
             test_read_write.write_results(folder, name, mesher, solver)
         else:
             # load the stored reference results
-            print("test: load results")
             (mesher, solver) = test_read_write.read_results(folder, name)
 
         # check the results
         if check_test:
-            print("test: check results")
             self._check_results(data_geom, data_sweep, solver, mesher, tol)
 
 
