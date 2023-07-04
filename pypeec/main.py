@@ -35,8 +35,11 @@ def run_display_logo():
     # display the logo
     if not STATUS_LOGO:
         with importlib.resources.open_text("pypeec", "pypeec.txt") as file_logo:
-            data = file_logo.read()
-            print(data, flush=True)
+            try:
+                data = file_logo.read()
+                print(data, flush=True)
+            except UnicodeError:
+                pass
 
     # logo has been displayed
     STATUS_LOGO = True
