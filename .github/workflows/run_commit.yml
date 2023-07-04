@@ -18,6 +18,7 @@ on:
 
 env:
   ALLOW_PLOTTING: "true"
+  PYTHONIOENCODING: "utf8"
   PYTHONUNBUFFERED: "1"
 
 permissions:
