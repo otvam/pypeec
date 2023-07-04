@@ -157,7 +157,7 @@ def _get_voxel_grid(n, d, c):
     """
 
     # create a uniform grid for the complete structure
-    grid = pv.UniformGrid()
+    grid = pv.ImageData()
 
     # set the array size and the voxel size
     grid.origin = c-(n*d)/2

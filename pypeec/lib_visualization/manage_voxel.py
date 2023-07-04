@@ -40,7 +40,7 @@ def get_grid(n, d, c):
     oz = cz-(nz*dz)/2
 
     # create a uniform grid for the complete structure
-    grid = pv.UniformGrid()
+    grid = pv.ImageData()
 
     # set the array size and the voxel size
     grid.origin = (ox, oy, oz)
