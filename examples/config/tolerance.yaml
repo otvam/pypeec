@@ -10,7 +10,7 @@
 #   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used
 #   - if the normalized voxel distance is larger than the threshold, numerical approximations are used
 "green_simplify": 20.0
-"coupling_simplify": 20.
+"coupling_simplify": 20.0
 
 # iterative solver options
 "solver_options":
