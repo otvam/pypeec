@@ -45,6 +45,18 @@ def run_display_logo():
     STATUS_LOGO = True
 
 
+def run_hide_logo():
+    """
+    Prevent the display of the splash screen.
+    """
+
+    # variable with the logo status
+    global STATUS_LOGO
+
+    # logo should not be displayed
+    STATUS_LOGO = True
+
+
 def run_mesher_data(data_geometry, **kwargs):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
