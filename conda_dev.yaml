@@ -16,35 +16,29 @@ dependencies:
   # base installation
   - python=3.10
   # pip
-  - pip
+  - pip=23.1.2
+  - python-build=0.10.0
   # YAML parsing library
-  - pyyaml
+  - pyyaml=6.0
   # numerical libraries
-  - numpy
-  - scipy
-  - joblib
+  - numpy=1.24.1
+  - scipy=1.9.3
+  - joblib=1.3.0
   # Qt bindings
-  - pyqt
+  - pyqt=5.15.7
   # geometry manipulation and plotting libraries
-  - vtk
-  - pyvista
-  - pyvistaqt
-  - matplotlib
+  - vtk=9.2.6
+  - pyvista=0.40.0
+  - pyvistaqt=0.11.0
+  - matplotlib=3.7.1
+  - shapely=2.0.1
+  - rasterio=1.3.8
+  - pillow=10.0.0
   # optional HPC libs
+  - cupy=12.1.0
+  - pyfftw=0.13.1
+  - pydiso=0.0.3
+  - scikit-umfpack=0.3.3
+  # optional HPC toolkits
   - mkl-devel
   - cudatoolkit
-  - cupy
-  # packages from PyPi
-  - pip:
-     # graphic tools
-    - shapely
-    - rasterio
-    - pillow
-    # HPC binding
-    - pyFFTW
-    - pydiso
-    - scikit-umfpack
-    # dev tools
-    - build
-    - memory-profiler
-    - gprof2dot
