@@ -1,5 +1,5 @@
 """
-Module for solving a sparse equation system with GMRES.
+Module for solving a sparse equation system with GMRES or GCROT.
 """
 
 __author__ = "Thomas Guillod"
@@ -10,7 +10,7 @@ import scipy.sparse.linalg as sla
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("GMRES")
+LOGGER = log.get_logger("ITER")
 
 
 class _IterCounter:
@@ -112,7 +112,7 @@ class _OperatorCounter:
 
 def get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
     """
-    Solve a sparse equation system with GMRES.
+    Solve a sparse equation system with GMRES or GCROT.
     The equation system and the preconditioner are described with linear operator.
     """
 
