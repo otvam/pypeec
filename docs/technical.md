@@ -23,6 +23,7 @@ The following **platforms** and systems have been **tested**:
 * Linux / RedHat 7.9 on x86/x64
 * Linux / Ubuntu 20.04 on x86/x64
 * Linux / Ubuntu 22.04 on x86/x64
+* Apple / macOS Ventura 13 on M1 Pro
 * MS Windows / Pro 10 21H2 on x86/x64
 * GPU / NVIDIA T4 Tensor
 * GPU / NVIDIA Tesla K80
