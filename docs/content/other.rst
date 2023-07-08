@@ -1,8 +1,0 @@
-Other
-=====
-
-Section
--------
-
-Section
--------

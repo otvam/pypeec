@@ -36,3 +36,14 @@ html_theme_path = ['_static']
 html_logo = "images/header.png"
 html_favicon = "images/icon.png"
 html_show_sphinx = False
+
+html_theme_options = {
+    'logo_only': False,
+    'display_version': True,
+    'style_nav_header_background': '#2980B9',
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 2,
+    'includehidden': True,
+    'titles_only': False
+}
