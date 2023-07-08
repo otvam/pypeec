@@ -36,17 +36,9 @@ The **PyPEEC** package contains the following tools:
 * **solver**: solver for the magnetic field problem
 * **plotter**: visualization of the problem solution
 
-## Documentation
+## Banner
 
-* [**Gallery**](docs/gallery.md) - Gallery of screenshots
-* [**Getting Started**](docs/tutorial.md) - Explanation of the workflow of PyPEEC
-* [**Included Examples**](docs/examples.md) - List of the included example problems
-* [**Technical Details**](docs/technical.md) - Technical explanations about PyPEEC
-* [**File Formats**](docs/format.md) - Definition of the different file formats
-
-## Screenshot
-
-![summary](docs/images/summary.png)
+![banner](docs/images/banner.png)
 
 ## Credits
 

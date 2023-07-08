@@ -1,5 +1,5 @@
-Test
-====
+Other
+=====
 
 Section
 -------

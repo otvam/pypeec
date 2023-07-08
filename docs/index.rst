@@ -1,12 +1,12 @@
-:hide-toc:
-
 PyPEEC - 3D PEEC Solver
 =======================
 
 .. toctree::
    :hidden:
 
-   test
+   Home <self>
+   content/test
+   content/other
 
 aaa
 ---

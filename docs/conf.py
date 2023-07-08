@@ -33,5 +33,6 @@ html_title = "PyPEEC"
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_theme_path = ['_static']
-html_logo = "_static/logo.png"
+html_logo = "images/header.png"
+html_favicon = "images/icon.png"
 html_show_sphinx = False
