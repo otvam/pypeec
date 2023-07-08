@@ -15,6 +15,7 @@
 *.pck
 
 # remove packinging files
+html/*
 dist/*
 build/*
 pypeec.egg-info/*

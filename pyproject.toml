@@ -10,3 +10,4 @@ requires = ["setuptools", "wheel", "setuptools_scm"]
 
 [tool.setuptools_scm]
 write_to = "pypeec/version.py"
+version_scheme = "guess-next-dev"
