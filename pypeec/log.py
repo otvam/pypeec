@@ -1,5 +1,5 @@
 """
-Module for handle the logging:
+Module for handling the logging.
     - Use a global timer to measure the elapsed time.
     - Provide a class for timing (and logging) code blocks.
     - Measure duration with local timers.
@@ -160,8 +160,9 @@ class _DeltaTimeFormatter(logging.Formatter):
 class BlockTimer:
     """
     Class for timing block of code:
-        - Uses enter and exit magic methods.
-        - Display the results with a logger.
+
+    Uses enter and exit magic methods.
+    Display the results with a logger.
 
     Parameters
     ----------
@@ -214,8 +215,9 @@ class BlockTimer:
 def log_exception(logger, ex):
     """
     Log an exception:
-        - Log the exception type, message, and trace.
-        - Remove the context from the exception before the logging.
+
+    Log the exception type, message, and trace.
+    Remove the context from the exception before the logging.
 
     Parameters
     ----------

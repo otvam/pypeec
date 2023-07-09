@@ -238,29 +238,6 @@ def run(data_geometry, is_truncated=False):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
     Handle invalid data with exceptions.
-
-    Parameters
-    ----------
-    data_geometry : dict
-        The dict describes the meshing and resampling process.
-        The voxel structure can be explicitly given or generated from PNG or STL files.
-    is_truncated : boolean
-        If true, the results are truncated to save space.
-        If false, the complete results are returned.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
-    data_voxel: dict
-        The dict describes the voxel structure.
-        The voxel grid (number, size, and origin) is defined.
-        Different domains (with the indices of the voxel) are defined.
-        The connected components of the graph defined by the voxel structure are defined.
     """
 
     # get timestamp
@@ -284,4 +261,3 @@ def run(data_geometry, is_truncated=False):
         (status, ex, data_voxel) = _get_data(None, data_geom, timestamp, is_truncated)
 
     return status, ex, data_voxel
-

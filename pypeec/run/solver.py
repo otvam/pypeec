@@ -338,43 +338,6 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
     """
     Main script for solving a problem with the PEEC solver.
     Handle invalid data with exceptions.
-
-    Parameters
-    ----------
-    data_voxel :  dict
-        The dict describes the voxel structure.
-        The voxel grid (number, size, and origin) is defined.
-        Different domains (with the indices of the voxel) are defined.
-        The connected components of the graph defined by the voxel structure are defined.
-    data_problem: dict
-        The frequency of the problem is defined.
-        The electric and magnetic materials are defined.
-        The current and voltage sources are defined.
-    data_tolerance: dict
-        The dict describes the numerical options.
-        The tolerances for simplifying the Green functions are defined.
-        The tolerances for the matrix condition numbers are defined.
-        The options for the iterative solver are defined.
-    is_truncated : boolean
-        If true, the results are truncated to save space.
-        If false, the complete results are returned.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
-    data_solution: dict
-        The dict describes the problem solution.
-        The voxel structure is defined.
-        The frequency of the problem is defined.
-        The status of the solution (solver convergence and condition number) is described.
-        The resistivity, potential, current density, and loss density of the different voxel are defined.
-        The terminals quantities (voltage and current) of the sources are defined.
-        The integral quantities (total losses and energy) of the problem are defined.
     """
 
     # get timestamp

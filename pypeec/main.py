@@ -1,7 +1,9 @@
 """
 Contain the program entry points (mesher, viewer, solver, and plotter).
-The import statements for the different modules are located inside the code.
-This allows for a minimization of the loaded dependencies.
+    - Files can be used for the input and output data.
+    - Data structure can be used for the input and output data.
+    - The import statements for the different modules are located inside the code.
+    - This allows for a minimization of the loaded dependencies.
 """
 
 __author__ = "Thomas Guillod"
@@ -26,7 +28,7 @@ STATUS_LOGO = False
 
 def run_display_logo():
     """
-    Display the logo as a splash screen.
+    Display the logo as a splash screen
     """
 
     # variable with the logo status
@@ -63,7 +65,8 @@ def run_mesher_data(data_geometry, **kwargs):
 
     Parameters
     ----------
-    data_geometry : dict (input data)
+    data_geometry : data
+        The dict describes the geometry, meshing and resampling process.
     is_truncated : boolean
         If true, the results are truncated to save space.
         If false, the complete results are returned.
@@ -76,7 +79,8 @@ def run_mesher_data(data_geometry, **kwargs):
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.
-    data_voxel: dict (output data)
+    data_voxel : data
+        The dict describes the voxel structure.
     """
 
     # display logo
@@ -97,13 +101,18 @@ def run_mesher_data(data_geometry, **kwargs):
 def run_mesher_file(file_geometry, file_voxel, **kwargs):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
-    Load the input data from files.
-    Write the resulting voxel file.
+
+    Load the geometry data from a file.
+    Write the created voxel data in a file.
 
     Parameters
     ----------
-    file_geometry : string (input file, JSON or YAML format)
-    file_voxel :  string (output file, Pickle format)
+    file_geometry : filename
+        The file content describes the geometry, meshing and resampling process.
+        This input file is loaded by this function (JSON or YAML format).
+    file_voxel :  filename
+        The file content describes the voxel structure.
+        This output file is written by this function (Pickle format).
     is_truncated : boolean
         If true, the results are truncated to save space.
         If false, the complete results are returned.
@@ -147,9 +156,12 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
 
     Parameters
     ----------
-    data_voxel : dict (input data)
-    data_point: list (input data)
-    data_viewer: dict (input data)
+    data_voxel : data
+        The dict describes the voxel structure.
+    data_point: data
+        The array describes the point cloud used for field evaluation.
+    data_viewer: data
+        The dict describes the different plots to be created.
     tag_plot : list
         The list describes plots to be shown.
         If None, all the plots are shown.
@@ -190,13 +202,22 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
 def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
     """
     Main script for visualizing a 3D voxel structure.
-    Load the input data from files.
+
+    Load the voxel data from a file.
+    Load the point data from a file.
+    Load the viewer data from a file.
 
     Parameters
     ----------
-    file_voxel : string (input file, Pickle format)
-    file_point: string (input file, JSON or YAML format)
-    file_viewer: string (input file, JSON or YAML format)
+    file_voxel : filename
+        The file content describes the voxel structure.
+        This input file is loaded by this function (Pickle format).
+    file_point: filename
+        The file content describes the point cloud used for field evaluation.
+        This input file is loaded by this function (JSON or YAML format).
+    file_viewer: filename
+        The file content describes the different plots to be created.
+        This input file is loaded by this function (JSON or YAML format).
     tag_plot : list
         The list describes plots to be shown.
         If None, all the plots are shown.
@@ -246,9 +267,12 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
 
     Parameters
     ----------
-    data_voxel :  dict (input data)
-    data_problem: dict (input data)
-    data_tolerance: dict (input data)
+    data_voxel :  data
+        The dict describes the voxel structure.
+    data_problem: data
+        The dict describes the problem to be solved.
+    data_tolerance: data
+        The dict describes the numerical options.
     is_truncated : boolean
         If true, the results are truncated to save space.
         If false, the complete results are returned.
@@ -261,7 +285,8 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
     ex : exception
         The encountered exception (if any).
         None if the termination is successful.
-    data_solution: dict (output data)
+    data_solution : data
+        The dict describes the problem solution.
     """
 
     # display logo
@@ -282,15 +307,26 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
 def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **kwargs):
     """
     Main script for solving a problem with the PEEC solver.
-    Load the input data from files.
-    Write the resulting solution file.
+
+    Load the voxel data from a file.
+    Load the problem data from a file.
+    Load the tolerance data from a file.
+    Write the created solution data in a file.
 
     Parameters
     ----------
-    file_voxel :  string (input file, Pickle format)
-    file_problem: string (input file, JSON or YAML format)
-    file_tolerance: string (input file, JSON or YAML format)
-    file_solution: string (output file, Pickle format)
+    file_voxel :  filename
+        The file content describes the voxel structure.
+        This input file is loaded by this function (Pickle format).
+    file_problem: filename
+        The file content describes the problem to be solved.
+        This input file is loaded by this function (JSON or YAML format).
+    file_tolerance: filename
+        The file content describes the numerical options.
+        This input file is loaded by this function (JSON or YAML format).
+    file_solution :  filename
+        The file content describes the problem solution.
+        This output file is written by this function (Pickle format).
     is_truncated : boolean
         If true, the results are truncated to save space.
         If false, the complete results are returned.
@@ -336,9 +372,12 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
 
     Parameters
     ----------
-    data_solution : dict (input data)
-    data_point: list (input data)
-    data_plotter: dict (input data)
+    data_solution : data
+        The dict describes the problem solution.
+    data_point : data
+        The array describes the point cloud used for field evaluation.
+    data_plotter : data
+        The dict describes the different plots to be created.
     tag_sweep : list
         The list describes sweeps to be shown.
         If None, all the sweeps are shown.
@@ -386,9 +425,15 @@ def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
 
     Parameters
     ----------
-    file_solution : string (input file, Pickle format)
-    file_point: string (input file, JSON or YAML format)
-    file_plotter: string (input file, JSON or YAML format)
+    file_solution : filename
+        The dict describes the problem solution.
+        This input file is loaded by this function (Pickle format).
+    file_point : filename
+        The array describes the point cloud used for field evaluation.
+        This input file is loaded by this function (JSON or YAML format).
+    file_plotter : filename
+        The dict describes the different plots to be created.
+        This input file is loaded by this function (JSON or YAML format).
     tag_sweep : list
         The list describes sweeps to be shown.
         If None, all the sweeps are shown.

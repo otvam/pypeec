@@ -7,7 +7,7 @@ Module managing the configuration of the program.
 Warning
 -------
     - The configuration is loaded by different PyPEEC modules.
-    - Afterward, the configuration cannot be updated.
+    - The configuration cannot be updated after the initialization.
 """
 
 __author__ = "Thomas Guillod"

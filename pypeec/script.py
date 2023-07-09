@@ -1,6 +1,7 @@
 """
-Contain the console script with CLI interface.
-Parse the command line arguments and call the corresponding entry point.
+Module containing the command line script.
+    - Parse the command line arguments.
+    - Call the corresponding entry point.
 """
 
 __author__ = "Thomas Guillod"
@@ -259,8 +260,11 @@ def _get_arg_plotter(subparsers):
 
 def run_script():
     """
-    User script for running PyPEEC.
-    This script is parsing the command line arguments.
+    User script for running PyPEEC from the command line.
+
+    The script offer a CLI for the mesher, solver, viewer, and plotter.
+    The script is installed with the package.
+    The name of the command line script is "pypeec".
     """
 
     # get the parser

@@ -102,42 +102,6 @@ def run(
     """
     Main script for visualizing a 3D voxel structure.
     Handle invalid data with exceptions.
-
-    Parameters
-    ----------
-    data_voxel : dict
-        The dict describes the voxel structure.
-        The voxel grid (number, size, and origin) is defined.
-        Different domains (with the indices of the voxel) are defined.
-        The connected components of the graph defined by the voxel structure are defined.
-    data_point: list
-        The array describes a point cloud.
-        The cloud point will be used for field evaluation.
-    data_viewer: dict
-        The dict describes the different plots to be created.
-        Different types of plots are available.
-        Plot of the different domain composing the voxel structure.
-        Plot of the connected components composing the voxel structure.
-    tag_plot : list
-        The list describes plots to be shown.
-        If None, all the plots are shown.
-    plot_mode : string
-        If "qt", the Qt framework is used for the rendering (default).
-        If "nb", the plots are rendered within the Jupyter notebook.
-        If "save", the plots are not shown but saved as screenshots.
-        If "none", the plots are not shown (test mode).
-    folder : string
-        Folder name for saving the screenshots.
-        The current directory is used as the default directory.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # run the code

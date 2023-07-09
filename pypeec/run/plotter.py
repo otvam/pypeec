@@ -155,54 +155,6 @@ def run(
     """
     Main script for plotting the solution of a PEEC problem.
     Handle invalid data with exceptions.
-
-    Parameters
-    ----------
-    data_solution:  dict
-        The dict describes the problem solution.
-        The voxel structure is defined.
-        The frequency of the problem is defined.
-        The status of the solution (solver convergence and condition number) is described.
-        The potential, current density, and flux density of the different voxel are defined.
-        The terminals quantities (voltage and current) of the sources are defined.
-        The integral quantities (total losses and energy) of the problem are defined.
-    data_point: list
-        The array describes a point cloud.
-        The cloud point is used for field evaluation.
-    data_plotter: dict
-        The dict describes the different plots to be created.
-        Different types of plots are available.
-        Plot showing the materials and sources.
-        Scalar plot of the potential (electric and magnetic) on the voxels.
-        Scalar plot of the current density divergence and magnetic charges on the voxels.
-        Scalar plot of the current density and flux density on the voxels.
-        Vector plot (with arrows) of the current density and flux density on the voxels.
-        Scalar plot of the magnetic field on the point cloud.
-        Vector plot (with arrows) of the magnetic field on the point cloud.
-        Plots describing the solver convergence.
-    tag_sweep : list
-        The list describes sweeps to be shown.
-        If None, all the sweeps are shown.
-    tag_plot : list
-        The list describes plots to be shown.
-        If None, all the plots are shown.
-    plot_mode : string
-        If "qt", the Qt framework is used for the rendering (default).
-        If "nb", the plots are rendered within the Jupyter notebook.
-        If "save", the plots are not shown but saved as screenshots.
-        If "none", the plots are not shown (test mode).
-    folder : string
-        Folder name for saving the screenshots.
-        The current directory is used as the default directory.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # run the code

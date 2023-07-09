@@ -1,5 +1,5 @@
 """
-Simple module for serialization and deserialization:
+Simple module for serialization and deserialization.
     - load JSON/YAML configuration files
     - load and write Pickle files
 
@@ -137,8 +137,8 @@ def load_config(filename):
 
     Returns
     -------
-    data : object
-        Python object contained in the file content
+    data : data
+        Python data contained in the file content
     """
 
     # check extension
@@ -164,8 +164,8 @@ def load_pickle(filename):
 
     Returns
     -------
-    data : object
-        Python object contained in the file content
+    data : data
+        Python data contained in the file content
     """
 
     # check extension
@@ -193,8 +193,8 @@ def write_pickle(filename, data):
     ----------
     filename : string
         Name and path of the file to be created.
-    data : object
-        Python object to be saved.
+    data : data
+        Python data to be saved.
     """
 
     # check extension
