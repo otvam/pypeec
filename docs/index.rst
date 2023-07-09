@@ -14,8 +14,10 @@ PyPEEC - 3D PEEC Solver
    content/format
    content/api
 
-Summary
--------
+.. image:: images/banner.png
+  :width: 780
+  :align: left
+  :alt: PyPEEC Banner
 
 **PyPEEC** is a **3D quasi-magnetostatic field solver** with the following characteristics:
 
@@ -54,10 +56,3 @@ The **PyPEEC** package contains the following tools:
 * **viewer**: visualization of the 3D voxel structure
 * **solver**: solver for the magnetic field problem
 * **plotter**: visualization of the problem solution
-
-Banner
-------
-
-.. image:: images/banner.png
-  :width: 780
-  :alt: PyPEEC Banner

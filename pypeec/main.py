@@ -1,5 +1,6 @@
 """
-Contain the program entry points (mesher, viewer, solver, and plotter).
+Module containing the program entry points.
+    - Used for calling the mesher, solver, viewer, and plotter.
     - Files can be used for the input and output data.
     - Data structure can be used for the input and output data.
     - The import statements for the different modules are located inside the code.

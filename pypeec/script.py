@@ -1,5 +1,6 @@
 """
 Module containing the command line script.
+    - Used for calling the mesher, solver, viewer, and plotter.
     - Parse the command line arguments.
     - Call the corresponding entry point.
 """

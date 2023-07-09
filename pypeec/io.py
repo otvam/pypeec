@@ -1,5 +1,5 @@
 """
-Simple module for serialization and deserialization.
+Module for serialization and deserialization.
     - load JSON/YAML configuration files
     - load and write Pickle files
 
