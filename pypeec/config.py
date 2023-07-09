@@ -94,23 +94,6 @@ DATA_CONFIG = dict()
 with importlib.resources.path("pypeec", "config.yaml") as file_config:
     _set_file_config(file_config)
 
-# find the custom files
-file_config_list = [
-    pathlib.Path.home().joinpath(".pypeec.json"),
-    pathlib.Path.home().joinpath(".pypeec.yaml"),
-    pathlib.Path.home().joinpath("pypeec.json"),
-    pathlib.Path.home().joinpath("pypeec.yaml"),
-    pathlib.Path.cwd().joinpath(".pypeec.json"),
-    pathlib.Path.cwd().joinpath(".pypeec.yaml"),
-    pathlib.Path.cwd().joinpath("pypeec.json"),
-    pathlib.Path.cwd().joinpath("pypeec.yaml"),
-]
-
-# set the custom files
-for file_config in file_config_list:
-    if file_config.is_file():
-        _set_file_config(file_config)
-
 # check for env variables
 file_config = os.getenv("PYPEEC")
 if file_config is not None:
