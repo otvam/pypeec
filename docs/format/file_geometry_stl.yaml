@@ -1,0 +1,27 @@
+# voxel definition type ("stl" for STL files)
+"mesh_type": "stl"
+
+# definition of the voxel structure
+"data_voxelize":
+    # definition of the voxel structure
+    #   - d: array with the voxel dimensions (x, y, and z directions)
+    #   - xyz_min: array with the lower corner coordinates of the voxel structure (x, y, and z directions)
+    #   - xyz_max: array with the upper corner coordinates of the voxel structure (x, y, and z directions)
+    #   - alternatively, the xyz_min/xyz_max can be set to null and the STL mesh bounds are kept
+    "param":
+        "d": [10.0e-3, 10.0e-3, 10.0e-3]
+        "xyz_min": [-20e-3, -20e-3, -20e-3]
+        "xyz_max": [+20e-3, +20e-3, +20e-3]
+
+    # definition of the STL files of the different domains
+    #   - dict with the domain name and the STL files
+    #   - required information, the dict cannot be empty
+    #   - domain definition
+    #       - list of STL meshes composing the domain
+    #       - offset: array with offsets for translating the STL meshes
+    #       - filename: string with the STL filename
+    "domain_stl":
+        "dom_src": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_src.stl"}]
+        "dom_cond": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_cond.stl"}]
+        "dom_sink": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_sink.stl"}]
+        "dom_mag": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_mag.stl"}]

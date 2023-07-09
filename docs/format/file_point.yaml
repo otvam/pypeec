@@ -1,0 +1,9 @@
+# 2D array containing the points used for magnetic field evaluation
+#   - the number of points (n_pts) can be zero.
+#   - the array has the following size: (n_pts, 3)
+#   - the points should be located outside the active voxels
+[
+    [-1.0, +1.0, +1.0],
+    [+1.0, -1.0, +1.0],
+    [+1.0, +1.0, -1.0],
+]

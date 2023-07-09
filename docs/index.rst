@@ -9,6 +9,7 @@ PyPEEC - 3D PEEC Solver
    content/about
    content/gallery
    content/examples
+   content/format
 
 Summary
 -------

@@ -1,0 +1,34 @@
+# voxel definition type ("png" for PNG files)
+"mesh_type": "png"
+
+# definition of the voxel structure
+"data_voxelize":
+    # definition of the voxel structure
+    #   - d: array with the voxel dimensions (x, y, and z directions)
+    #   - c: array with the coordinates of the voxel structure center (x, y, and z directions)
+    #   - size: array with the size of the images (number of voxels in the x and y direction)
+    "param":
+        "d": [10.0e-3, 10.0e-3, 10.0e-3]
+        "c": [0.0, 0.0, 0.0]
+        "size": [49, 49]
+
+    # definition of the mapping between the image color and the different domains
+    #   - dict with the domain name and the specified colors
+    #   - required information, the dict cannot be empty
+    #   - the colors are specified with an array of colors (RGBA format)
+    "domain_color":
+        "dom_src": [[255, 0, 0, 255]]
+        "dom_cond": [[0, 0, 0, 255]]
+        "dom_sink": [[0, 255, 0, 255]]
+        "dom_mag": [[0, 0, 255, 255]]
+
+    # definition of the layer stack (voxels in the z-direction)
+    #   - list of dicts with the definition of the layers
+    #   - required information, the list cannot be empty
+    #   - layer definition
+    #       - n_layer: number of voxels in the z-direction for the layer
+    #       - filename_list: list of strings with the PNG files defining the layer
+    "layer_stack":
+        - {"n_layer": 1, "filename_list": ["png/layer_bottom.png"]}
+        - {"n_layer": 8, "filename_list": ["png/layer_mid.png"]}
+        - {"n_layer": 1, "filename_list": ["png/layer_top.png"]}

@@ -1,0 +1,45 @@
+# mesher type
+#   - "voxel" for index arrays
+#   - "shape" for 2D vector shapes
+#   - "png" for PNG files
+#   - "stl" for STL files
+"mesh_type": "'voxel' or 'shape' or 'png'  or 'stl'"
+
+# definition of the voxel structure
+#   - specific for the different mesher types
+#   - format definition is located in the next subsections
+"data_voxelize": {}
+
+# resampling of the voxel structure
+#   - use_reduce: reduce (or not) the voxel structure by removing unused voxels
+#   - use_resample: resample (or not) the voxel structure by subdividing voxels
+#   - resampling_factor: array with resampling factors (x, y, and z directions)
+"resampling":
+    "use_reduce": true
+    "use_resample": true
+    "resampling_factor": [2, 2, 1]
+
+# definition of the conflict resolution between domains
+#   - during the voxelization, the same voxel can be assigned to several domains
+#   - the shared voxels are located at the boundaries between domain
+#   - the shared voxels are conflicts and should be assigned to a single domain
+#   - list of dicts with the conflict resolution rules
+#   - optional feature, the list can be empty if no conflict resolution is required
+#   - conflict definition
+#       - domain_resolve: list of domain names where the shared voxels should be removed
+#       - domain_keep: list of domain names where the shared voxels should be kept
+"domain_conflict":
+    - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_src"]}
+    - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_sink"]}
+
+# pledge the existence or absence of connections between domains
+#   - dict of dicts with the connection name and the connection definition
+#   - optional feature, the dict can be empty without having an impact on the results
+#   - connection definition
+#       - connected: boolean specified if the two domain lists should be connected
+#       - domain_group: list of list of domains where the connections are checks
+#           - the outer list domains are used for the connection checks
+#           - the inner list domains are merged together
+"domain_connection":
+    "connected": {"connected": true, "domain_group": [["dom_cond"], ["dom_src"], ["dom_sink"]]}
+    "insulated": {"connected": false, "domain_group": [["dom_mag"], ["dom_src", "dom_cond", "dom_sink"]]}

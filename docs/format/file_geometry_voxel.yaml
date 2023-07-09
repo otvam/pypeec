@@ -1,0 +1,22 @@
+# voxel definition type ("voxel" for index arrays)
+"mesh_type": "voxel"
+
+# definition of the voxel structure
+"data_voxelize":
+    # definition of the voxel structure
+    #   - n: array with the number of voxels (x, y, and z directions)
+    #   - d: array with the voxel dimensions (x, y, and z directions)
+    #   - c: array with the coordinates of the voxel structure center (x, y, and z directions)
+    "param":
+        "n": [4, 4, 3]
+        "d": [10.0e-3, 10.0e-3, 10.0e-3]
+        "c": [0.0, 0.0, 0.0]
+
+    # definition of the voxel indices of the different domains
+    #   - dict of arrays with the domain name and the voxel indices
+    #   - required information, the dict cannot be empty
+    "domain_def":
+        "dom_src": [1, 2]
+        "dom_cond": [5, 6, 9, 10]
+        "dom_sink": [13, 14]
+        "dom_mag": [36, 37, 38, 39, 40, 41, 42, 43]
