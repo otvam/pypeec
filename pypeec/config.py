@@ -21,7 +21,10 @@ def __getattr__(name):
     Wrapper to access the config data with attributes.
     """
 
-    return DATA_CONFIG[name]
+    if name in DATA_CONFIG:
+        return DATA_CONFIG[name]
+    else:
+        return None
 
 
 class _DictToAttributes:

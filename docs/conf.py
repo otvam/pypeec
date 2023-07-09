@@ -6,7 +6,12 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import os
+import sys
 import setuptools_scm
+
+# define the package path
+sys.path.insert(0, os.path.abspath('..'))
 
 # get the version number
 version = setuptools_scm.get_version(
@@ -26,6 +31,7 @@ release = version
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
+    'sphinx.ext.napoleon',
 ]
 
 # define paths

@@ -12,6 +12,7 @@ PyPEEC - 3D PEEC Solver
    content/examples
    content/technical
    content/format
+   content/api
 
 Summary
 -------

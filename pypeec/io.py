@@ -16,7 +16,7 @@ import yaml
 from pypeec.error import FileError
 
 
-class YamlLoader(yaml.Loader):
+class _YamlLoader(yaml.Loader):
     """
     This Python class offers extension to the YAML format:
         - include YAML file in YAML file
@@ -37,17 +37,17 @@ class YamlLoader(yaml.Loader):
 
         # handling of inclusion inside YAML files
         def fct_handle_include(self, node):
-            res = YamlLoader.__yaml_handling(self, node, self.__extract_yaml)
+            res = _YamlLoader.__yaml_handling(self, node, self.__extract_yaml)
             return res
 
         # handling of path inside YAML files
         def fct_handle_path(self, node):
-            res = YamlLoader.__yaml_handling(self, node, self.__extract_path)
+            res = _YamlLoader.__yaml_handling(self, node, self.__extract_path)
             return res
 
         # add the extension to the YAML format
-        YamlLoader.add_constructor("!include", fct_handle_include)
-        YamlLoader.add_constructor("!path", fct_handle_path)
+        _YamlLoader.add_constructor("!include", fct_handle_include)
+        _YamlLoader.add_constructor("!path", fct_handle_path)
 
     def __yaml_handling(self, node, fct):
         """
@@ -83,7 +83,7 @@ class YamlLoader(yaml.Loader):
 
         filepath = self.__extract_path(filename)
         with open(filepath, "r") as f:
-            content = yaml.load(f, YamlLoader)
+            content = yaml.load(f, _YamlLoader)
             return content
 
 
@@ -94,7 +94,7 @@ def _load_yaml(filename):
 
     try:
         with open(filename, "r") as fid:
-            data = yaml.load(fid, YamlLoader)
+            data = yaml.load(fid, _YamlLoader)
     except yaml.YAMLError as ex:
         raise FileError("invalid YAML file: %s\n%s" % (filename, str(ex))) from ex
     except OSError as ex:
