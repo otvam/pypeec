@@ -37,6 +37,9 @@ extensions = [
 # autodoc order
 autodoc_member_order = 'bysource'
 
+# disable API file generation
+autosummary_generate = False
+
 # define paths
 templates_path = ['_templates']
 html_static_path = ['_static']

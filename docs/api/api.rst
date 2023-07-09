@@ -2,8 +2,7 @@ API
 ===
 
 .. autosummary::
-    :toctree: ../generated
-    :template: autosummary.rst
+    :toctree: .
 
     pypeec.main
     pypeec.script

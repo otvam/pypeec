@@ -12,7 +12,7 @@ PyPEEC - 3D PEEC Solver
    content/examples
    content/technical
    content/format
-   content/api
+   api/api
 
 .. image:: images/banner.png
   :width: 780
