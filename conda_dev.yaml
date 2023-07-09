@@ -15,9 +15,12 @@ channels:
 dependencies:
   # base installation
   - python=3.10
-  # pip
+  # dev tools
   - pip=23.1.2
   - python-build=0.10.0
+  - setuptools_scm=7.1.0
+  - sphinx_rtd_theme=1.2.2
+  - sphinx=6.2.1
   # YAML parsing library
   - pyyaml=6.0
   # numerical libraries
