@@ -1,42 +1,45 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+"""
+Configuration file for the Sphinx documentation generator.
+"""
 
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+__author__ = "Thomas Guillod"
+__copyright__ = "Thomas Guillod - Dartmouth College"
+__license__ = "Mozilla Public License Version 2.0"
 
 import setuptools_scm
 
+# get the version number
 version = setuptools_scm.get_version(
     root='..',
     relative_to=__file__,
     version_scheme="guess-next-dev",
 )
 
+# project metadata
 project = 'PyPEEC'
+html_title = "PyPEEC"
 copyright = 'Thomas Guillod'
 author = 'Thomas Guillod'
 release = version
 
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+# load extensions
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+]
 
-extensions = []
+# define paths
 templates_path = ['_templates']
-
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
-
-html_title = "PyPEEC"
-
-html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_theme_path = ['_static']
+
+# html options
+html_theme = 'sphinx_rtd_theme'
 html_logo = "images/header.png"
 html_favicon = "images/icon.png"
 html_show_sphinx = False
 
+# html theme
 html_theme_options = {
     'logo_only': False,
     'display_version': True,

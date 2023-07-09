@@ -51,6 +51,8 @@ Workflow
 Entry Points and Scripts
 ------------------------
 
+PyPEEC can be install from PyPi with the following command: ``pip install pypeec``.
+
 The entry points of the different tools are located in the ``pypeec.main``
 
 * Running the tools with files as input/ouput:
@@ -66,7 +68,6 @@ The entry points of the different tools are located in the ``pypeec.main``
   * ``run_viewer_data`` for running the **viewer**
   * ``run_solver_data`` for running the **solver**
   * ``run_plotter_data`` for running the **plotter**
-
 
 Additionally, a command line tool is located in the ``pypeec.script`` module:
 
