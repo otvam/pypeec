@@ -83,8 +83,8 @@ Here are some interesting papers about the PEEC method:
 * R. Torchio, IEEE TAP, 10.1109/TAP.2019.2927789, 2019
 * R. Torchio, IEEE TPEL, 10.1109/TPEL.2021.3092431, 2022
 
-Optimization
-------------
+Numerical Optimization
+----------------------
 
 The code is reasonably optimized, leveraging NumPy and SciPy for the heavy operations.
 All the code is vectorized, no loops are used for the array operations.
@@ -115,8 +115,8 @@ The following optimizations are available for the computationally heavy operatio
   * FFTW has to be installed separately (available through pyFFTW)
   * CuPy is extremely fast but require GPUs with the corresponding libraries (CUDA platform)
 
-Configuration
--------------
+Configuration File
+------------------
 
 * The default configuration file is ``pypeec/config.yaml``.
 
@@ -137,13 +137,19 @@ Packaging and Environment
 * In order to create a minimal Conda Environment, use ``conda_base.yaml``.
 * In order to create a development environment, use ``conda_dev.yaml``.
 
-Tests
------
+Automated Tests
+---------------
 
 * The tests are located in the ``tests`` folder (using the ``unittest`` framework).
 * The shell script ``run_tests.sh`` is used to run the tests.
 * The tests are checking that the examples are running correctly.
 * Only integration tests currently exist (no unit tests).
+
+Sphinx Documentation
+--------------------
+
+* The documentation is located in the ``docs`` folder (using the ``Sphinx`` generator).
+* The shell script ``run_docs.sh`` is used to build the HTML documentation.
 
 PyPEEC Warnings
 ---------------
