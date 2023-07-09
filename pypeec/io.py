@@ -1,8 +1,12 @@
 """
-Simple module for serialization and deserialization.
+Simple module for serialization and deserialization:
+    - load JSON/YAML configuration files
+    - load and write Pickle files
 
-WARNING: Pickling data is not secure.
-         Only load pickle files that you trust.
+Warning:
+    - Pickling data is not secure.
+    - Only load pickle files that you trust.
+    - Do not commit the Pickle files in the Git repository.
 """
 
 __author__ = "Thomas Guillod"
@@ -122,6 +126,19 @@ def _load_json(filename):
 def load_config(filename):
     """
     Load a config file (JSON or YAML).
+
+    Parameters
+    ----------
+    filename : string)
+        Name and path of the file to be loaded.
+        The file type is determined by the extension.
+        For YAML files, the extension should be "yaml" or "yml".
+        For JSON files, the extension should be "json" or "js".
+
+    Returns
+    -------
+    data : object
+        Python object contained in the file content
     """
 
     # check extension
@@ -136,35 +153,23 @@ def load_config(filename):
     return data
 
 
-def write_config(filename, data):
-    """
-    Write a config file (JSON).
-    """
-
-    # check extension
-    (name, ext) = os.path.splitext(filename)
-    if ext != ".json":
-        raise FileError("invalid file extension: %s" % filename)
-
-    # save the Pickle file
-    try:
-        with open(filename, "w") as fid:
-            json.dump(data, fid, indent=4)
-    except (TypeError, ValueError, RecursionError) as ex:
-        raise FileError("invalid data for JSON: %s" % filename) from ex
-    except OSError as ex:
-        raise FileError("cannot write the file: %s" % filename) from ex
-
-
 def load_pickle(filename):
     """
     Load a pickle file.
+
+    Parameters
+    ----------
+    filename  : string
+        Name and path of the file to be loaded.
+
+    Returns
+    -------
+    data : object
+        Python object contained in the file content
     """
 
     # check extension
     (name, ext) = os.path.splitext(filename)
-    if ext != ".pck":
-        raise FileError("invalid file extension: %s" % filename)
 
     # load the Pickle file
     try:
@@ -183,12 +188,17 @@ def load_pickle(filename):
 def write_pickle(filename, data):
     """
     Write a pickle file.
+
+    Parameters
+    ----------
+    filename : string
+        Name and path of the file to be created.
+    data : object
+        Python object to be saved.
     """
 
     # check extension
     (name, ext) = os.path.splitext(filename)
-    if ext != ".pck":
-        raise FileError("invalid file extension: %s" % filename)
 
     # save the Pickle file
     try:

@@ -1,6 +1,10 @@
 """
-Module for handle the logging (with timer for elapsed time).
-Provide a class for timing (and logging) code blocks.
+Module for handle the logging:
+    - Use a global timer to measure the elapsed time.
+    - Provide a class for timing (and logging) code blocks.
+    - Measure duration with local timers.
+    - Log exceptions.
+
 """
 
 __author__ = "Thomas Guillod"
@@ -155,16 +159,22 @@ class _DeltaTimeFormatter(logging.Formatter):
 
 class BlockTimer:
     """
-    Class for timing block of code.
-    Uses enter and exit magic methods.
-    Display the results with a logger.
+    Class for timing block of code:
+        - Uses enter and exit magic methods.
+        - Display the results with a logger.
+
+    Parameters
+    ----------
+    logger : logger
+        Logger object instance.
+    name : string
+        Name of the code block.
     """
 
     def __init__(self, logger, name):
         """
         Constructor.
-        Assign block name and logger.
-        Create a timer.
+        Set the logger.
         """
 
         self.logger = logger
@@ -203,8 +213,16 @@ class BlockTimer:
 
 def log_exception(logger, ex):
     """
-    Log an exception (type, message, and trace).
-    Remove the context from the exception before the logging.
+    Log an exception:
+        - Log the exception type, message, and trace.
+        - Remove the context from the exception before the logging.
+
+    Parameters
+    ----------
+        logger : logger
+            Logger object instance.
+        ex : exception
+            Exception to be logged.
     """
 
     # remove the expression context
@@ -220,18 +238,14 @@ def log_exception(logger, ex):
         logger.error("exception error : " + name + "\n" + str(ex))
 
 
-def reset_timer():
-    """
-    Reset the global timer to the current time.
-    """
-
-    global GLOBAL_TIMESTAMP
-    GLOBAL_TIMESTAMP = time.time()
-
-
 def get_timer():
     """
     Get a timestamp with the current time.
+
+    Returns
+    -------
+    timestamp : timestamp
+        Timestamp with the current time.
     """
 
     timestamp = time.time()
@@ -242,6 +256,17 @@ def get_timer():
 def get_duration(timestamp):
     """
     Get the elapsed time with respect to a timestamp.
+
+    Parameters
+    ----------
+        timestamp (timestamp): Timestamp with the reference time.
+
+    Returns
+    -------
+    duration : duration
+        Duration object with the elapsed time.
+    fmt : string
+        String with the formatted elapsed time.
     """
 
     duration = _get_compute_duration(timestamp)
@@ -252,14 +277,19 @@ def get_duration(timestamp):
 
 def get_logger(name):
     """
-    Get a logger with a name.
-    Display elapsed time, time, name, level, and message.
+    Get a logger with a specified name.
 
-    The elapsed time can be measured with respect to:
-        - the time the module is imported
-        - the time the logger is called/created
+    Parameters
+    ----------
+    name : string
+        Name of the logger to be returned.
+        If the logger does not exist, the logger is created.
+        If the logger does exist, the logger is returned.
 
-    The elapsed time measurement method and the logging level are specified in the config.
+    Returns
+    -------
+    logger: logger
+        Logger object instance.
     """
 
     # get the logger

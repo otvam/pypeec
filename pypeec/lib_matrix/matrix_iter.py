@@ -21,6 +21,7 @@ class _IterCounter:
     def __init__(self, fct_conv):
         """
         Constructor.
+        Init the counters.
         """
 
         # assign data
@@ -80,6 +81,7 @@ class _OperatorCounter:
     def __init__(self, op):
         """
         Constructor.
+        Init the counters.
         """
 
         # assign data

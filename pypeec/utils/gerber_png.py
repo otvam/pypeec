@@ -10,8 +10,10 @@ Finally, this script is used to generate PNG files for the layers:
     - using "gerbv - Gerber Viewer 2.8" for parsing the GERBER files
     - using "mogrify - ImageMagick 6.9" for trimming the PNG files
 
-WARNING: This code requires the following external tools: "gerbv" and "mogrify".
-         This code has only been tested on Linux.
+Warning
+-------
+    - This code requires the following external tools: "gerbv" and "mogrify".
+    - This code has only been tested on Linux (Ubuntu 22.04).
 """
 
 __author__ = "Thomas Guillod"

@@ -10,8 +10,11 @@ The following axis definition is used:
 The shape handling is done with Shapely.
 The raster conversion is done with Rasterio.
 
-TODO: The warning triggered by Rasterio should be handled in a cleaner way.
-      It is not clear which shapes are causing these warnings.
+Todo
+----
+- The warning triggered by Shapely and Rasterio should be handled in a cleaner way.
+    - Rasterio triggers warnings for some coordinate transformations.
+    - Shapely triggers warnings on Apple Silicon CPUs.
 """
 
 __author__ = "Thomas Guillod"
@@ -29,6 +32,7 @@ from pypeec import config
 from pypeec.error import RunError
 
 # prevent problematic linear transform to trigger warnings
+warnings.filterwarnings("ignore", module="shapely")
 warnings.filterwarnings("ignore", module="rasterio.features")
 warnings.filterwarnings("ignore", module="rasterio.transform")
 

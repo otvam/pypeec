@@ -1,6 +1,13 @@
 """
-Module for managing the configuration of the program.
-The config variables are accessed with attributes.
+Module managing the configuration of the program.
+    - The config variables are accessed with attributes.
+    - First the default configuration is loaded ("pypeec/config.yaml").
+    - Afterward, a custom file can be loaded via the environment variable ("PYPEEC").
+
+Warning
+-------
+    - The configuration is loaded by different PyPEEC modules.
+    - Afterward, the configuration cannot be updated.
 """
 
 __author__ = "Thomas Guillod"

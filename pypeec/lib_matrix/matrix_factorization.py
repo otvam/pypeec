@@ -6,8 +6,10 @@ This module is used as a common interface for different solvers:
     - UMFPACK is typically faster than SuperLU (available through SciKits)
     - PARDISO is typically faster than UMFPACK (available through Pydiso)
 
-TODO: The warning triggered by UMFPACK should be handled in a cleaner way.
-      Such warnings are triggered by ill-conditioned matrices.
+Todo
+----
+    - The warning triggered by UMFPACK should be handled in a cleaner way.
+    - Such warnings are triggered by ill-conditioned matrices.
 """
 
 __author__ = "Thomas Guillod"
