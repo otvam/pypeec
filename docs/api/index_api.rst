@@ -1,5 +1,5 @@
-API
-===
+API Doc
+=======
 
 .. autosummary::
     :toctree: .

@@ -2,6 +2,7 @@ PyPEEC - 3D PEEC Solver
 =======================
 
 .. toctree::
+   :caption: General Doc
    :maxdepth: 0
    :hidden:
 
@@ -10,9 +11,17 @@ PyPEEC - 3D PEEC Solver
    content/gallery
    content/tutorial
    content/examples
+
+.. toctree::
+   :caption: Technical Doc
+   :maxdepth: 0
+   :hidden:
+
    content/technical
+   content/implementation
+   content/warnings
    content/format
-   api/api
+   api/index_api
 
 .. image:: images/banner.png
   :alt: PyPEEC Banner
