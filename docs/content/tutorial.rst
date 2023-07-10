@@ -45,7 +45,6 @@ Workflow
 --------
 
 .. image:: ../images/workflow.png
-  :width: 780
   :alt: PyPEEC Workflow
 
 Entry Points and Scripts

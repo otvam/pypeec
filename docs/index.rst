@@ -15,9 +15,11 @@ PyPEEC - 3D PEEC Solver
    api/api
 
 .. image:: images/banner.png
-  :width: 780
-  :align: left
   :alt: PyPEEC Banner
+
+.. Important::
+    * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
+    * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`_
 
 **PyPEEC** is a **3D quasi-magnetostatic field solver** with the following characteristics:
 

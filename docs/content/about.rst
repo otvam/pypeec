@@ -1,6 +1,16 @@
 About
 =====
 
+Project Links
+-------------
+
+* `Website <https://pypeec.otvam.ch>`_
+* `Repository <https://github.com/otvam/pypeec>`_
+* `Releases <https://github.com/otvam/pypeec/releases>`_
+* `Tags <https://github.com/otvam/pypeec/tags>`_
+* `Issues <https://github.com/otvam/pypeec/issues>`_
+* `PyPi <https://pypi.org/project/pypeec>`_
+
 Credits
 -------
 
@@ -16,21 +26,14 @@ Other interesting papers and codes about similar methods:
 * N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864, 2021
 * A. Yucel, https://github.com/acyucel/VoxHenry
 
-Project Links
--------------
-
-* `Repository <https://github.com/otvam/pypeec>`_
-* `Releases <https://github.com/otvam/pypeec/releases>`_
-* `Tags <https://github.com/otvam/pypeec/tags>`_
-* `Issues <https://github.com/otvam/pypeec/issues>`_
-
 Author
 ------
 
 * **Thomas Guillod**, Dartmouth College, NH, USA
 * Email: `guillod@otvam.ch <mailto:guillod@otvam.ch>`_
-* Personal website: `https://otvam.ch <https://otvam.ch>`_
-* Lab website: `https://pmic.engineering.dartmouth.edu <https://pmic.engineering.dartmouth.edu>`_
+* Personal Website: `otvam.ch <https://otvam.ch>`_
+* Dartmouth Engineering: `engineering.dartmouth.edu <https://engineering.dartmouth.edu>`_
+* PMIC: `pmic.engineering.dartmouth.edu <https://pmic.engineering.dartmouth.edu>`_
 
 Copyright
 ---------

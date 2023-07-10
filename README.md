@@ -2,6 +2,9 @@
 
 ![banner](banner.png)
 
+> * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**
+> * **Repository: [github.com/otvam/pypeec](https://github.com/otvam/pypeec)**
+
 ## Summary
 
 **PyPEEC** is a **3D quasi-magnetostatic field solver** with the following characteristics:
@@ -38,6 +41,15 @@ The **PyPEEC** package contains the following tools:
 * **solver**: solver for the magnetic field problem
 * **plotter**: visualization of the problem solution
 
+## Project Links
+
+* [Website](https://pypeec.otvam.ch)
+* [Repository](https://github.com/otvam/pypeec)
+* [Releases](https://github.com/otvam/pypeec/releases)
+* [Tags](https://github.com/otvam/pypeec/tags)
+* [Issues](https://github.com/otvam/pypeec/issues)
+* [PyPi](https://pypi.org/project/pypeec)
+
 ## Credits
 
 The FFT-accelerated PEEC method with voxels has been first described and implemented in:
@@ -50,19 +62,13 @@ Other interesting papers and codes about similar methods:
 * N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864, 2021
 * A. Yucel, https://github.com/acyucel/VoxHenry
 
-## Project Links
-
-* [Repository](https://github.com/otvam/pypeec)
-* [Releases](https://github.com/otvam/pypeec/releases)
-* [Tags](https://github.com/otvam/pypeec/tags)
-* [Issues](https://github.com/otvam/pypeec/issues)
-
 ## Author
 
 * **Thomas Guillod**, Dartmouth College, NH, USA
 * Email: [guillod@otvam.ch](mailto:guillod@otvam.ch)
-* Personal website: [https://otvam.ch](https://otvam.ch)
-* Lab website: [https://pmic.engineering.dartmouth.edu](https://pmic.engineering.dartmouth.edu)
+* Personal Website: [otvam.ch](https://otvam.ch)
+* Dartmouth Engineering: [engineering.dartmouth.edu](https://engineering.dartmouth.edu)
+* PMIC: [pmic.engineering.dartmouth.edu](https://pmic.engineering.dartmouth.edu)
 
 ## Copyright
 
