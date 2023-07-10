@@ -3,15 +3,15 @@
 
 <svg
    width="1108mm"
-   height="615mm"
-   viewBox="0 0 4187.7194 2324.4134"
+   height="645mm"
+   viewBox="0 0 4187.7194 2437.7984"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="banner.svg"
    inkscape:export-filename="/home/tguillod/pypeec/docs/images/banner.png"
-   inkscape:export-xdpi="17.880867"
-   inkscape:export-ydpi="17.880867"
+   inkscape:export-xdpi="18.351009"
+   inkscape:export-ydpi="18.351009"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -27,11 +27,11 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:zoom="0.2"
-     inkscape:cx="1772.5"
-     inkscape:cy="2272.5"
-     inkscape:window-width="1846"
-     inkscape:window-height="1016"
+     inkscape:zoom="0.28284271"
+     inkscape:cx="1525.5829"
+     inkscape:cy="1550.3316"
+     inkscape:window-width="2486"
+     inkscape:window-height="1376"
      inkscape:window-x="74"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -123,156 +123,166 @@
        transform="translate(-1036.2137,-335.4167)"><tspan
          x="1029.7383"
          y="286.19065"
-         id="tspan1263"><tspan
+         id="tspan19271"><tspan
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1261">
+           id="tspan19269">
 </tspan></tspan><tspan
          x="1029.7383"
          y="399.94184"
-         id="tspan1267"><tspan
+         id="tspan19275"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1265">╔═════════════╦══════════════════════════════════════════════════════╗
+           id="tspan19273">╔═════════════╦══════════════════════════════════════════════════════╗
 </tspan></tspan><tspan
          x="1029.7383"
          y="513.69303"
-         id="tspan1271"><tspan
+         id="tspan19279"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1269">║             ║ ╔═══╗   ╔═══╦═══╦═══╦═══╗            3D PEEC Solver  ║
+           id="tspan19277">║             ║ ╔═══╗   ╔═══╦═══╦═══╦═══╗            3D PEEC Solver  ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="627.44425"
-         id="tspan1275"><tspan
+         id="tspan19283"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1273">║             ║ ║╔═╗║   ║╔═╗║╔══╣╔══╣╔═╗║      Quasi-Magnetostatics  ║
+           id="tspan19281">║             ║ ║╔═╗║   ║╔═╗║╔══╣╔══╣╔═╗║      Quasi-Magnetostatics  ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="741.19548"
-         id="tspan1279"><tspan
+         id="tspan19287"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1277">║             ║ ║╚═╝╠╗ ╔╣╚═╝║╚══╣╚══╣║ ╚╝          Frequency Domain  ║
+           id="tspan19285">║             ║ ║╚═╝╠╗ ╔╣╚═╝║╚══╣╚══╣║ ╚╝          Frequency Domain  ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="854.9467"
-         id="tspan1283"><tspan
+         id="tspan19291"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1281">║             ║ ║╔══╣║ ║║╔══╣╔══╣╔══╣║ ╔╗          Voxel Geometries  ║
+           id="tspan19289">║             ║ ║╔══╣║ ║║╔══╣╔══╣╔══╣║ ╔╗          Voxel Geometries  ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="968.69792"
-         id="tspan1287"><tspan
+         id="tspan19295"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1285">║             ║ ║║  ║╚═╝║║  ║╚══╣╚══╣╚═╝║       FFT/GPU Accelerated  ║
+           id="tspan19293">║             ║ ║║  ║╚═╝║║  ║╚══╣╚══╣╚═╝║       FFT/GPU Accelerated  ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="1082.4491"
-         id="tspan1291"><tspan
+         id="tspan19299"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1289">║             ║ ╚╝  ╚═╗ ╠╝  ╚═══╩═══╩═══╝    Python and Open Source  ║
+           id="tspan19297">║             ║ ╚╝  ╚═╗ ╠╝  ╚═══╩═══╩═══╝    Python and Open Source  ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="1196.2003"
-         id="tspan1295"><tspan
+         id="tspan19303"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1293">╚═════════════╩═════╦═╝ ╠════════════════════════════════════════════╝
+           id="tspan19301">╚═════════════╩═════╦═╝ ╠════════════════════════════════════════════╝
 </tspan></tspan><tspan
          x="1029.7383"
          y="1309.9515"
-         id="tspan1299"><tspan
+         id="tspan19307"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1297">                    ╚═══╝
+           id="tspan19305">                    ╚═══╝
 </tspan></tspan><tspan
          x="1029.7383"
          y="1423.7027"
-         id="tspan1303"><tspan
+         id="tspan19311"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1301">╔════════════════════════════════════════════════════════════════════╗
+           id="tspan19309">╔════════════════════════════════════════════════════════════════════╗
 </tspan></tspan><tspan
          x="1029.7383"
          y="1537.454"
-         id="tspan1307"><tspan
+         id="tspan19315"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1305">║ Thomas Guillod - Dartmouth College                                 ║
+           id="tspan19313">║ Website - https://pypeec.otvam.ch                                  ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="1651.2052"
-         id="tspan1311"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
+         id="tspan19321"><tspan
+           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1309">║ Mozilla Public License Version 2.0                                 ║
+           id="tspan19317">║ Thomas Guillod - Dartmouth College                                 ║</tspan><tspan
+           dx="-0.00025939941"
+           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
+           id="tspan19319">
 </tspan></tspan><tspan
          x="1029.7383"
          y="1764.9564"
-         id="tspan1315"><tspan
+         id="tspan19325"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1313">╚════════════════════════════════════════════════════════════════════╝
+           id="tspan19323">║ Mozilla Public License Version 2.0                                 ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="1878.7076"
-         id="tspan1319"><tspan
+         id="tspan19329"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1317">╔════════════════════════════════════════════════════════════════════╗
+           id="tspan19327">╚════════════════════════════════════════════════════════════════════╝
 </tspan></tspan><tspan
          x="1029.7383"
          y="1992.4588"
-         id="tspan1323"><tspan
+         id="tspan19333"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1321">║                                                                    ║
+           id="tspan19331">╔════════════════════════════════════════════════════════════════════╗
 </tspan></tspan><tspan
          x="1029.7383"
          y="2106.2101"
-         id="tspan1327"><tspan
+         id="tspan19337"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1325">║                                                                    ║
+           id="tspan19335">║                                                                    ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="2219.9612"
-         id="tspan1331"><tspan
+         id="tspan19341"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1329">║                                                                    ║
+           id="tspan19339">║                                                                    ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="2333.7124"
-         id="tspan1335"><tspan
+         id="tspan19345"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1333">║                                                                    ║
+           id="tspan19343">║                                                                    ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="2447.4636"
-         id="tspan1339"><tspan
+         id="tspan19349"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1337">║                                                                    ║
+           id="tspan19347">║                                                                    ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="2561.2148"
-         id="tspan1343"><tspan
+         id="tspan19353"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1341">║                                                                    ║
+           id="tspan19351">║                                                                    ║
 </tspan></tspan><tspan
          x="1029.7383"
          y="2674.966"
-         id="tspan1347"><tspan
+         id="tspan19357"><tspan
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
            style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan1345">╚════════════════════════════════════════════════════════════════════╝
+           id="tspan19355">║                                                                    ║
+</tspan></tspan><tspan
+         x="1029.7383"
+         y="2788.7173"
+         id="tspan19361"><tspan
+           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184 -0.00025939941"
+           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
+           id="tspan19359">╚════════════════════════════════════════════════════════════════════╝
 </tspan></tspan></text>
     <image
        width="965.61664"
