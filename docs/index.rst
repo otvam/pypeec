@@ -38,7 +38,7 @@ PyPEEC - 3D PEEC Solver
 * **Fast** with **moderate memory** requirements
 * Import the **geometry** from **STL**, **PNG**, and **GERBER** files
 * Draw the **geometry** with stacked 2D **vector shapes** or **voxel indices**
-* **Pure Python** and **Open source** implementation
+* **Pure Python** and **open source** implementation
 * Can be used from the **command line**
 * Can be used with **Jupyter notebooks**
 * Advanced **plotting** capabilities
