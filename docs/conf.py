@@ -57,7 +57,7 @@ html_domain_indices = False
 
 # html theme
 html_theme_options = {
-    'logo_only': False,
+    'logo_only': True,
     'display_version': True,
     'style_nav_header_background': '#2980B9',
     'prev_next_buttons_location': None,
@@ -65,5 +65,5 @@ html_theme_options = {
     'sticky_navigation': True,
     'navigation_depth': 2,
     'includehidden': True,
-    'titles_only': False
+    'titles_only': False,
 }

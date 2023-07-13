@@ -27,6 +27,7 @@ The following **optional packages** can be used for speeding up the solver:
 Platforms
 ---------
 
+The main **target platform** of PyPEEC is **Linux**.
 The following **platforms** and systems have been **tested**:
 
 * Linux / RedHat 7.9 on x86/x64
@@ -34,6 +35,10 @@ The following **platforms** and systems have been **tested**:
 * Linux / Ubuntu 22.04 on x86/x64
 * Apple / macOS Ventura 13 on M1 Pro
 * MS Windows / Pro 10 21H2 on x86/x64
+
+The following **GPUs** have been tested:
+
+# GPU / NVIDIA RTX 2070 Max-Q
 * GPU / NVIDIA T4 Tensor
 * GPU / NVIDIA Tesla K80
 
