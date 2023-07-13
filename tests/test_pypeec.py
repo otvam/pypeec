@@ -95,7 +95,7 @@ def run_workflow(folder, name):
         if not status:
             raise ex
 
-        # check the solution file
+        # load the solution file
         with open(file_solution, "rb") as fid:
             data_solution = pickle.load(fid)
     finally:

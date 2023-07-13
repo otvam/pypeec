@@ -20,7 +20,7 @@ name_list = [
 ]
 
 # show the logo
-main.run_display_logo()
+main.run_hide_logo()
 
 # get the test object
 obj = test_workflow.set_init()
