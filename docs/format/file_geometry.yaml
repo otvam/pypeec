@@ -19,6 +19,12 @@
     "use_resample": true
     "resampling_factor": [2, 2, 1]
 
+# perform (or not) the conflict resolution between the voxels
+"check_conflict": true
+
+# compute (or not) the connections between the domains
+"check_connection": true
+
 # definition of the conflict resolution between domains
 #   - during the voxelization, the same voxel can be assigned to several domains
 #   - the shared voxels are located at the boundaries between domain

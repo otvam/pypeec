@@ -78,7 +78,10 @@ def _get_graph_component(idx, connection_def):
     """
 
     # init the data with invalid data
-    tag = np.zeros(len(idx), dtype=NP_TYPES.INT)
+    if len(connection_def) == 0:
+        tag = np.ones(len(idx), dtype=NP_TYPES.INT)
+    else:
+        tag = np.zeros(len(idx), dtype=NP_TYPES.INT)
 
     # find to corresponding connected components
     for i, idx_graph in enumerate(connection_def):

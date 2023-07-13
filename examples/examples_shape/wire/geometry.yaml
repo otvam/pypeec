@@ -55,6 +55,8 @@
     "use_reduce": false
     "use_resample": false
     "resampling_factor": [1, 1, 1]
+"check_conflict": true
+"check_connection": true
 "domain_conflict":
     - {"domain_resolve": ["wire"], "domain_keep": ["src"]}
     - {"domain_resolve": ["wire"], "domain_keep": ["sink"]}

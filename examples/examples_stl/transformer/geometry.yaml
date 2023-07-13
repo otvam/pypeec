@@ -23,6 +23,8 @@
     "use_reduce": false
     "use_resample": false
     "resampling_factor": [1, 1, 1]
+"check_conflict": true
+"check_connection": true
 "domain_conflict":
     - {"domain_resolve": ["pri_coil"], "domain_keep": ["pri_src"]}
     - {"domain_resolve": ["pri_coil"], "domain_keep": ["pri_sink"]}

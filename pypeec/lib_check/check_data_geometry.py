@@ -101,6 +101,8 @@ def check_data_geometry(data_geometry):
         "mesh_type",
         "data_voxelize",
         "resampling",
+        "check_conflict",
+        "check_connection",
         "domain_conflict",
         "domain_connection",
     ]
@@ -110,11 +112,15 @@ def check_data_geometry(data_geometry):
     mesh_type = data_geometry["mesh_type"]
     data_voxelize = data_geometry["data_voxelize"]
     resampling = data_geometry["resampling"]
+    check_conflict = data_geometry["check_conflict"]
+    check_connection = data_geometry["check_connection"]
     domain_conflict = data_geometry["domain_conflict"]
     domain_connection = data_geometry["domain_connection"]
 
     # check type
     datachecker.check_choice("mesh_type", mesh_type, ["stl", "png", "shape", "voxel"])
+    datachecker.check_boolean("check_conflict", check_conflict)
+    datachecker.check_boolean("check_connection", check_connection)
 
     # check the mesher
     if mesh_type == "png":

@@ -84,6 +84,8 @@
     "use_reduce": false
     "use_resample": false
     "resampling_factor": [1, 1, 1]
+"check_conflict": true
+"check_connection": true
 "domain_conflict":
     - {"domain_resolve": ["copper"], "domain_keep": ["src_front", "sink_front"]}
     - {"domain_resolve": ["copper"], "domain_keep": ["src_back", "sink_back"]}
