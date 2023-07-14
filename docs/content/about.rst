@@ -26,14 +26,18 @@ Other interesting papers and codes about similar methods:
 * N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864, 2021
 * A. Yucel, https://github.com/acyucel/VoxHenry
 
+PyPEEC was created at **Dartmouth College** by the research group of **Prof. Sullivan**:
+
+* Dartmouth College, NH, USA: `dartmouth.edu <https://dartmouth.edu>`_
+* Dartmouth Engineering: `engineering.dartmouth.edu <https://engineering.dartmouth.edu>`_
+* PMIC: `pmic.engineering.dartmouth.edu <https://pmic.engineering.dartmouth.edu>`_
+
 Author
 ------
 
 * **Thomas Guillod**, Dartmouth College, NH, USA
 * Email: `guillod@otvam.ch <mailto:guillod@otvam.ch>`_
-* Personal Website: `otvam.ch <https://otvam.ch>`_
-* Dartmouth Engineering: `engineering.dartmouth.edu <https://engineering.dartmouth.edu>`_
-* PMIC: `pmic.engineering.dartmouth.edu <https://pmic.engineering.dartmouth.edu>`_
+* Website: `otvam.ch <https://otvam.ch>`_
 
 Copyright
 ---------
