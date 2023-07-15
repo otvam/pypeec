@@ -1,6 +1,13 @@
 Included Examples
 =================
 
+Installing the Examples
+-----------------------
+
+* Create a Python Virtual Environment or a Conda Environment.
+* Install PyPEEC from PyPi: ``pip install pypeec``.
+* Copy the content of the ``examples`` folder.
+
 Running the Examples
 --------------------
 
