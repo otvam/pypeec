@@ -13,8 +13,10 @@ function build_package {
   echo "======================================================================"
 
   rm -rf dist
-  rm -rf pypeec/examples
-  git archive -o pypeec/examples.zip HEAD:examples
+  rm -rf pypeec.egg-info
+  rm -rf pypeec/data/examples.zip
+  rm -rf pypeec/data/version.txt
+  git archive -o pypeec/data/examples.zip HEAD:examples
   python -m build
   status=$(( status || $? ))
 }

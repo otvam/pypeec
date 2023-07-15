@@ -38,12 +38,12 @@ def run_display_logo():
 
     # display the logo
     if not STATUS_LOGO:
-        with importlib.resources.open_text("pypeec", "pypeec.txt") as file_logo:
-            try:
+        try:
+            with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file_logo:
                 data = file_logo.read()
                 print(data, flush=True)
-            except UnicodeError:
-                pass
+        except UnicodeError:
+            pass
 
     # logo has been displayed
     STATUS_LOGO = True
@@ -86,7 +86,7 @@ def run_examples(path_examples):
 
     LOGGER.info("examples extraction")
     try:
-        with importlib.resources.path("pypeec", "examples.zip") as file_examples:
+        with importlib.resources.path("pypeec.data", "examples.zip") as file_examples:
             shutil.unpack_archive(file_examples, path_examples)
     except OSError as ex:
         log.log_exception(LOGGER, ex)

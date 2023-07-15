@@ -13,6 +13,7 @@ Packages
 ``pypeec.lib_mesher``         Modules used by the mesher.
 ``pypeec.lib_solver``         Modules used by the solver.
 ``pypeec.lib_visualization``  Modules used by the viewer and plotter.
+``pypeec.data``               Modules containing the static data.
 ============================  =====================================================
 
 Main Modules

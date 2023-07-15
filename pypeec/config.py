@@ -101,21 +101,6 @@ def _set_file_config(file_config):
         sys.exit(1)
 
 
-# init config data
-DATA_CONFIG = dict()
-FILE_CONFIG = None
-
-# load the default config files
-with importlib.resources.path("pypeec", "config.yaml") as file_config:
-    _set_file_config(file_config)
-
-# check for env variables
-file_config = os.getenv("PYPEEC")
-if file_config is not None:
-    file_config = pathlib.Path(file_config)
-    _set_file_config(file_config)
-
-
 def get_file_config():
     """
     Return the loaded configuration file.
@@ -144,3 +129,37 @@ def get_data_config():
     global DATA_CONFIG
 
     return DATA_CONFIG
+
+
+def get_version():
+    """
+    Get the PyPEEC version.
+
+    Returns
+    -------
+    version : string
+        String with the PyPEEC version.
+    """
+
+    try:
+        with importlib.resources.open_text("pypeec.data", "version.txt") as file_version:
+            version = file_version.read()
+    except FileNotFoundError:
+        version = 'x.x.x'
+
+    return version
+
+
+# init config data
+DATA_CONFIG = dict()
+FILE_CONFIG = None
+
+# load the default config files
+with importlib.resources.path("pypeec.data", "config.yaml") as file_config:
+    _set_file_config(file_config)
+
+# check for env variables
+file_config = os.getenv("PYPEEC")
+if file_config is not None:
+    file_config = pathlib.Path(file_config)
+    _set_file_config(file_config)

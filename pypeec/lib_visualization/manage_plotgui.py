@@ -111,7 +111,7 @@ class PlotGui:
             window_size=window_size,
         )
         # set icon
-        with importlib.resources.path("pypeec", "pypeec.png") as file_icon:
+        with importlib.resources.path("pypeec.data", "pypeec.png") as file_icon:
             pl.set_icon(str(file_icon))
 
         # pause to avoid race conditions
@@ -156,7 +156,7 @@ class PlotGui:
         """
 
         # get the icon
-        with importlib.resources.path("pypeec", "pypeec.png") as file_icon:
+        with importlib.resources.path("pypeec.data", "pypeec.png") as file_icon:
             res_icon = PyQt5.QtGui.QIcon(str(file_icon))
 
         # get the figure
