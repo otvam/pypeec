@@ -221,10 +221,10 @@ def log_exception(logger, ex):
 
     Parameters
     ----------
-        logger : logger
-            Logger object instance.
-        ex : exception
-            Exception to be logged.
+    logger : logger
+        Logger object instance.
+    ex : exception
+        Exception to be logged.
     """
 
     # remove the expression context
@@ -261,7 +261,8 @@ def get_duration(timestamp):
 
     Parameters
     ----------
-        timestamp (timestamp): Timestamp with the reference time.
+    timestamp : timestamp
+        Timestamp with the reference time.
 
     Returns
     -------

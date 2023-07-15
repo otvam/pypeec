@@ -116,19 +116,31 @@ if file_config is not None:
     _set_file_config(file_config)
 
 
-def get_config():
+def get_file_config():
     """
-    Return the loaded configuration.
+    Return the loaded configuration file.
 
     Returns
     -------
     file_config : string
         String with the loaded configuration file.
+    """
+
+    global FILE_CONFIG
+
+    return FILE_CONFIG
+
+
+def get_data_config():
+    """
+    Return the loaded configuration data.
+
+    Returns
+    -------
     data_config : dict
         Dict with the loaded configuration data.
     """
 
-    global FILE_CONFIG
     global DATA_CONFIG
 
-    return FILE_CONFIG, DATA_CONFIG
+    return DATA_CONFIG

@@ -11,6 +11,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import shutil
 import importlib.resources
 from pypeec import config
 from pypeec import log
@@ -58,6 +59,42 @@ def run_hide_logo():
 
     # logo should not be displayed
     STATUS_LOGO = True
+
+
+def run_examples(path_examples):
+    """
+    Extract the examples.
+
+    Parameters
+    ----------
+    path_examples : string
+        Path where the examples will be extracted.
+
+    Returns
+    -------
+    status : boolean
+        True if the call is successful.
+        False if problems are encountered.
+    ex : exception
+        The encountered exception (if any).
+        None if the termination is successful.
+    """
+
+    # display logo
+    if DISPLAY_LOGO:
+        run_display_logo()
+
+    LOGGER.info("examples extraction")
+    try:
+        with importlib.resources.path("pypeec", "examples.zip") as file_examples:
+            shutil.unpack_archive(file_examples, path_examples)
+    except OSError as ex:
+        log.log_exception(LOGGER, ex)
+        LOGGER.info("invalid termination")
+        return False, ex
+    else:
+        LOGGER.info("successful termination")
+        return True, None
 
 
 def run_mesher_data(data_geometry, **kwargs):

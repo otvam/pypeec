@@ -259,6 +259,25 @@ def _get_arg_plotter(subparsers):
     )
 
 
+def _get_arg_examples(subparsers):
+    """
+    Add the examples extraction arguments.
+    """
+
+    # add the subparser
+    parser = subparsers.add_parser(
+        "examples",
+        aliases=["ex"],
+        help="extract the examples",
+    )
+    parser.add_argument(
+        help="path where the examples should be extracted",
+        type=str,
+        metavar="path",
+        dest="path_examples",
+    )
+
+
 def run_script():
     """
     User script for running PyPEEC from the command line.
@@ -276,6 +295,7 @@ def run_script():
     _get_arg_viewer(subparsers)
     _get_arg_solver(subparsers)
     _get_arg_plotter(subparsers)
+    _get_arg_examples(subparsers)
 
     # parse the config and get arguments
     args = parser.parse_args()
@@ -314,6 +334,9 @@ def run_script():
             plot_mode=args.plot_mode,
             folder=args.folder,
         )
+    elif args.command in ["examples", "ex"]:
+        print(args)
+        (status, ex) = main.run_examples(args.path_examples)
     else:
         raise ValueError("invalid command")
 
