@@ -335,7 +335,6 @@ def run_script():
             folder=args.folder,
         )
     elif args.command in ["examples", "ex"]:
-        print(args)
         (status, ex) = main.run_examples(args.path_examples)
     else:
         raise ValueError("invalid command")

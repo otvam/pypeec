@@ -9,7 +9,7 @@ __license__ = "Mozilla Public License Version 2.0"
 import sys
 import os.path
 from pypeec import main
-from examples import examples_config
+import examples_config
 
 # get config
 PATH_ROOT = examples_config.PATH_ROOT
