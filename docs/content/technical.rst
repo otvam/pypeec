@@ -69,6 +69,7 @@ Packaging and Environment
 -------------------------
 
 * A Python package can be built from the ``pyproject.toml`` and ``setup.cfg`` files.
+* The shell script ``run_build.sh`` is used to build the Python package.
 * In order to create a minimal Python Virtual Environment, use ``requirements.txt``.
 * In order to create a minimal Conda Environment, use ``conda_base.yaml``.
 * In order to create a development environment, use ``conda_dev.yaml``.
@@ -84,5 +85,5 @@ Automated Tests
 Sphinx Documentation
 --------------------
 
-* The documentation is located in the ``docs`` folder (using the ``Sphinx`` generator).
+* The documentation is located in the ``docs`` folder (using the ``sphinx`` generator).
 * The shell script ``run_docs.sh`` is used to build the HTML documentation.
