@@ -75,6 +75,7 @@ Additionally, a command line tool is located in the ``pypeec.script`` module:
 * ``pypeec viewer`` for running the **viewer**
 * ``pypeec solver`` for running the **solver**
 * ``pypeec plotter`` for running the **plotter**
+* ``pypeec examples`` for installing the **examples**
 
 Input/Output File Description
 -----------------------------

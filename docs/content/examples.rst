@@ -6,24 +6,24 @@ Installing the Examples
 
 .. code-block:: bash
 
-    # create a new folder
+    # Create a new folder
     mkdir examples
 
-    # go to the created folder
+    # Go to the created folder
     cd examples
 
-    # create a Python Virtual Environment
-    #    - the Python executable can be "python" or "python3"
-    #    - alternatively, Conda can be used for the environment
+    # Create a Python Virtual Environment
+    #    - The Python executable can be "python" or "python3"
+    #    - Alternatively, Conda can be used for the environment
     python -m venv venv
 
-    # active the Python Virtual Environment
+    # Activate the Python Virtual Environment
     source venv/bin/activate
 
-    # install PyPEEC from Pypi
+    # Install PyPEEC from Pypi
     pip install pypeec
 
-    # extract the PyPEEC examples
+    # Extract the PyPEEC examples
     pypeec examples .
 
 Running the Examples
