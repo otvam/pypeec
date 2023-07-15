@@ -4,30 +4,48 @@ Included Examples
 Installing the Examples
 -----------------------
 
-* Create a Python Virtual Environment or a Conda Environment.
-* Install PyPEEC from PyPi: ``pip install pypeec``.
-* Copy the content of the ``examples`` folder.
+.. code-block:: bash
+
+    # create a new folder
+    mkdir examples
+
+    # go to the created folder
+    cd examples
+
+    # create a Python Virtual Environment
+    #    - the Python executable can be "python" or "python3"
+    #    - alternatively, Conda can be used for the environment
+    python -m venv venv
+
+    # active the Python Virtual Environment
+    source venv/bin/activate
+
+    # install PyPEEC from Pypi
+    pip install pypeec
+
+    # extract the PyPEEC examples
+    pypeec examples .
 
 Running the Examples
 --------------------
 
-* For running the examples from a **Jupyter notebook**, use ``examples/notebook.ipynb``.
+* For running the examples from a **Jupyter notebook**, use ``notebook.ipynb``.
 
 * For running the examples from **Python**:
 
-  * ``examples/examples_config.py`` is used to select the example
-  * ``examples/run_mesher.py`` runs the mesher
-  * ``examples/run_viewer.py`` runs the viewer
-  * ``examples/run_solver.py`` runs the solver
-  * ``examples/run_plotter.py`` runs the plotter
+  * ``examples_config.py`` is used to select the example
+  * ``run_mesher.py`` runs the mesher
+  * ``run_viewer.py`` runs the viewer
+  * ``run_solver.py`` runs the solver
+  * ``run_plotter.py`` runs the plotter
 
 * For running the examples from the **Shell**:
 
-  * ``examples/examples_config.sh`` is used to select the example
-  * ``examples/run_mesher.sh`` runs the mesher
-  * ``examples/run_viewer.sh`` runs the viewer
-  * ``examples/run_solver.sh`` runs the solver
-  * ``examples/run_plotter.sh`` runs the plotter
+  * ``examples_config.sh`` is used to select the example
+  * ``run_mesher.sh`` runs the mesher
+  * ``run_viewer.sh`` runs the viewer
+  * ``run_solver.sh`` runs the solver
+  * ``run_plotter.sh`` runs the plotter
 
 STL Mesher Examples
 -------------------
