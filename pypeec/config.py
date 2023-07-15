@@ -88,6 +88,10 @@ def _set_file_config(file_config):
         # assign config to a global variable
         global DATA_CONFIG
         DATA_CONFIG = data_config
+
+        # assign config to a global variable
+        global FILE_CONFIG
+        FILE_CONFIG = str(file_config)
     except (FileError, CheckError, RunError) as ex:
         print("==========================")
         print("INVALID CONFIGURATION FILE")
@@ -99,6 +103,7 @@ def _set_file_config(file_config):
 
 # init config data
 DATA_CONFIG = dict()
+FILE_CONFIG = None
 
 # load the default config files
 with importlib.resources.path("pypeec", "config.yaml") as file_config:
@@ -109,3 +114,21 @@ file_config = os.getenv("PYPEEC")
 if file_config is not None:
     file_config = pathlib.Path(file_config)
     _set_file_config(file_config)
+
+
+def get_config():
+    """
+    Return the loaded configuration.
+
+    Returns
+    -------
+    file_config : string
+        String with the loaded configuration file.
+    data_config : dict
+        Dict with the loaded configuration data.
+    """
+
+    global FILE_CONFIG
+    global DATA_CONFIG
+
+    return FILE_CONFIG, DATA_CONFIG
