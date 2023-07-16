@@ -159,10 +159,9 @@ class _DeltaTimeFormatter(logging.Formatter):
 
 class BlockTimer:
     """
-    Class for timing block of code:
-
-    Uses enter and exit magic methods.
-    Display the results with a logger.
+    Class for timing a block of code.
+        - Uses enter and exit magic methods.
+        - Display the results with a logger.
 
     Parameters
     ----------
@@ -212,12 +211,44 @@ class BlockTimer:
         self.logger.info(self.name + " : exit : " + duration)
 
 
+class BlockIndent:
+    """
+    Class for indenting a block of code:
+        - Uses enter and exit magic methods.
+        - Display the results with a logger.
+    """
+
+    def __init__(self):
+        """
+        Constructor.
+        """
+
+        pass
+
+    def __enter__(self):
+        """
+        Enter magic method.
+        Increase the indentation of the block.
+        """
+
+        global CURRENT_LEVEL
+        CURRENT_LEVEL += 1
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """
+        Exit magic method.
+        Restore the indentation to the previous state.
+        """
+
+        global CURRENT_LEVEL
+        CURRENT_LEVEL -= 1
+
+
 def log_exception(logger, ex):
     """
     Log an exception:
-
-    Log the exception type, message, and trace.
-    Remove the context from the exception before the logging.
+        - Log the exception type, message, and trace.
+        - Remove the context from the exception before the logging.
 
     Parameters
     ----------
