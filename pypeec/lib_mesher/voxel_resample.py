@@ -260,13 +260,15 @@ def get_remesh(n, d, c, domain_def, resampling):
     Remesh of a voxel structure (remove unused voxels and resampling).
     """
 
-    # display number of voxels
-    LOGGER.debug("voxel: original number = %d" % np.prod(n))
-
     # extract the data
     use_reduce = resampling["use_reduce"]
     use_resample = resampling["use_resample"]
     resampling_factor = resampling["resampling_factor"]
+
+    # display number of voxels
+    LOGGER.debug("original number = %d" % np.prod(n))
+    LOGGER.debug("use_reduce = %s" % use_reduce)
+    LOGGER.debug("use_resample = %s" % use_resample)
 
     # remove unused voxels
     if use_reduce:
@@ -280,6 +282,6 @@ def get_remesh(n, d, c, domain_def, resampling):
     s = tuple(x*y for x, y in zip(n, d))
 
     # display number of voxels
-    LOGGER.debug("voxel: final number = %d" % np.prod(n))
+    LOGGER.debug("final number = %d" % np.prod(n))
 
     return n, d, c, s, domain_def
