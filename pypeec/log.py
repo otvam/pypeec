@@ -213,7 +213,7 @@ class BlockTimer:
 
 class BlockIndent:
     """
-    Class for indenting a block of code:
+    Class for indenting a block of code.
         - Uses enter and exit magic methods.
         - Display the results with a logger.
     """
@@ -246,7 +246,7 @@ class BlockIndent:
 
 def log_exception(logger, ex):
     """
-    Log an exception:
+    Log an exception.
         - Log the exception type, message, and trace.
         - Remove the context from the exception before the logging.
 
@@ -322,7 +322,7 @@ def get_logger(name):
 
     Returns
     -------
-    logger: logger
+    logger : logger
         Logger object instance.
     """
 

@@ -22,7 +22,7 @@ from pypeec.error import FileError
 
 class _YamlLoader(yaml.Loader):
     """
-    This Python class offers extension to the YAML format:
+    This Python class offers extension to the YAML format.
         - include YAML file in YAML file
         - include relative filesystem paths
     """

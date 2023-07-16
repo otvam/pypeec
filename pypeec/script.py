@@ -278,10 +278,10 @@ def _get_arg_examples(subparsers):
 def run_script():
     """
     User script for running PyPEEC from the command line.
-
-    The script offer a CLI for the mesher, solver, viewer, and plotter.
-    The script is installed with the package.
-    The name of the command line script is "pypeec".
+        - The script offers a CLI for the mesher, solver, viewer, and plotter.
+        - The script can also be used to extract the examples.
+        - The script is installed with the package.
+        - The name of the command line script is "pypeec".
     """
 
     # get the parser

@@ -100,6 +100,8 @@ def run_examples(path_examples):
 def run_mesher_data(data_geometry, **kwargs):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
+        - Get the geometry data as an argument.
+        - Return the created voxel data.
 
     Parameters
     ----------
@@ -139,9 +141,8 @@ def run_mesher_data(data_geometry, **kwargs):
 def run_mesher_file(file_geometry, file_voxel, **kwargs):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
-
-    Load the geometry data from a file.
-    Write the created voxel data in a file.
+        - Load the geometry data from a file.
+        - Write the created voxel data in a file.
 
     Parameters
     ----------
@@ -191,6 +192,9 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
 def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
     """
     Main script for visualizing a 3D voxel structure.
+        - Get the voxel data as an argument.
+        - Get the point data as an argument.
+        - Get the viewer data as an argument.
 
     Parameters
     ----------
@@ -240,10 +244,9 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
 def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
     """
     Main script for visualizing a 3D voxel structure.
-
-    Load the voxel data from a file.
-    Load the point data from a file.
-    Load the viewer data from a file.
+        - Load the voxel data from a file.
+        - Load the point data from a file.
+        - Load the viewer data from a file.
 
     Parameters
     ----------
@@ -302,6 +305,10 @@ def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
 def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
     """
     Main script for solving a problem with the PEEC solver.
+        - Get the voxel data as an argument.
+        - Get the problem data as an argument.
+        - Get the tolerance data as an argument.
+        - Return the created solution data.
 
     Parameters
     ----------
@@ -345,11 +352,10 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
 def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **kwargs):
     """
     Main script for solving a problem with the PEEC solver.
-
-    Load the voxel data from a file.
-    Load the problem data from a file.
-    Load the tolerance data from a file.
-    Write the created solution data in a file.
+        - Load the voxel data from a file.
+        - Load the problem data from a file.
+        - Load the tolerance data from a file.
+        - Write the created solution data in a file.
 
     Parameters
     ----------
@@ -407,6 +413,9 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
 def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
     """
     Main script for plotting the solution of a PEEC problem.
+        - Get the solution data as an argument.
+        - Get the point data as an argument.
+        - Get the plotter data as an argument.
 
     Parameters
     ----------
@@ -459,7 +468,9 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
 def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
     """
     Main script for plotting the solution of a PEEC problem.
-    Load the input data from files.
+        - Load the solution data from a file.
+        - Load the point data from a file.
+        - Load the plotter data from a file.
 
     Parameters
     ----------
