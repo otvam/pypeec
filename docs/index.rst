@@ -9,8 +9,8 @@ PyPEEC - 3D PEEC Solver
    Home <self>
    content/about
    content/gallery
-   content/tutorial
    content/examples
+   content/workflow
 
 .. toctree::
    :caption: Technical Doc

@@ -93,11 +93,11 @@ def _set_file_config(file_config):
         global FILE_CONFIG
         FILE_CONFIG = str(file_config)
     except (FileError, CheckError, RunError) as ex:
-        print("==========================")
-        print("INVALID CONFIGURATION FILE")
-        print("==========================")
-        print(str(ex))
-        print("==========================")
+        print("==========================", file=sys.stderr)
+        print("INVALID CONFIGURATION FILE", file=sys.stderr)
+        print("==========================", file=sys.stderr)
+        print(str(ex), file=sys.stderr)
+        print("==========================", file=sys.stderr)
         sys.exit(1)
 
 

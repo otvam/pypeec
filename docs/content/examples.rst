@@ -1,5 +1,5 @@
-Included Examples
-=================
+Examples
+========
 
 Installing the Examples
 -----------------------
@@ -12,6 +12,11 @@ Installing the Examples
     # Go to the created folder
     cd examples
 
+    # install Python Virtual Environment
+    #    - The Python executable can be "python" or "python3"
+    #    - Alternatively, Conda can be used for the environment
+    python -m pip install virtualenv
+
     # Create a Python Virtual Environment
     #    - The Python executable can be "python" or "python3"
     #    - Alternatively, Conda can be used for the environment
@@ -21,7 +26,7 @@ Installing the Examples
     source venv/bin/activate
 
     # Install PyPEEC from Pypi
-    pip install pypeec
+    python -m pip install pypeec
 
     # Extract the PyPEEC examples
     pypeec examples .

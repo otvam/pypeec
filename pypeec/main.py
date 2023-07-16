@@ -11,6 +11,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import sys
 import shutil
 import importlib.resources
 from pypeec import config
@@ -41,7 +42,7 @@ def run_display_logo():
         try:
             with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file_logo:
                 data = file_logo.read()
-                print(data, flush=True)
+                print(data, flush=True, file=sys.stderr)
         except UnicodeError:
             pass
 
