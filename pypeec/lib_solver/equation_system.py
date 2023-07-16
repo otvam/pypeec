@@ -505,7 +505,7 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     (Y_mat_c, S_mat_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
     (Y_mat_m, S_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m)
 
-    # factorize the Schur complement
+    # factorize the Schur
     S_fact_c = matrix_factorization.get_factorize("electric", S_mat_c)
     S_fact_m = matrix_factorization.get_factorize("magnetic", S_mat_m)
 

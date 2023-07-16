@@ -301,9 +301,9 @@ def _get_compute_split(name, n_out, idx_in, idx_out, mat_fft, vec_in):
     return res
 
 
-def get_prepare(name, idx_out, idx_in, mat):
+def _get_prepare_sub(name, idx_out, idx_in, mat):
     """
-    Construct a circulant tensor from a 4D tensor.
+    Construct a circulant tensor from a 4D tensor (main function).
     The circulant tensor is constructed along the first 3D.
     The indices for mapping a vector into a tensor are computed.
 
@@ -320,10 +320,9 @@ def get_prepare(name, idx_out, idx_in, mat):
     footprint = (itemsize*nnz)/(1024**2)
 
     # display the tensor size
-    LOGGER.debug("enter FFT multiplication: %s" % name)
     LOGGER.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
     LOGGER.debug("tensor footprint: %.2f MB" % footprint)
-    LOGGER.debug("FFT library: %s / GPU: %s" % (FFT_LIBRARY, USE_FFT_GPU))
+    LOGGER.debug("library: %s / GPU: %s" % (FFT_LIBRARY, USE_FFT_GPU))
 
     # get the sign that will be applied to the different blocks of the tensor
     sign = _get_tensor_sign(name, nd_in)
@@ -368,10 +367,19 @@ def get_prepare(name, idx_out, idx_in, mat):
         idx_in_mat = _get_indices(nx, ny, nz, idx_in, nd_out, None)
         idx_out_mat = _get_indices(nx, ny, nz, idx_out, nd_out, None)
 
-    # exit
-    LOGGER.debug("exit FFT multiplication: %s" % name)
-
     return name, n_in, n_out, idx_in_mat, idx_out_mat, mat_fft
+
+
+def get_prepare(name, idx_out, idx_in, mat):
+    """
+    Construct a circulant tensor from a 4D tensor (log wrapper).
+    """
+
+    LOGGER.debug("multiplication: %s" % name)
+    with log.BlockIndent():
+        data = _get_prepare_sub(name, idx_out, idx_in, mat)
+
+    return data
 
 
 def get_multiply(data, vec_in, flip):

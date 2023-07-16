@@ -11,7 +11,7 @@ from pypeec import log
 from pypeec import config
 
 # get a logger
-LOGGER = log.get_logger("CONDITION")
+LOGGER = log.get_logger("COND")
 
 # get config
 NP_TYPES = config.NP_TYPES
@@ -53,7 +53,7 @@ def _get_inverse_operator(mat, decomposition):
     return op
 
 
-def get_condition_matrix(name, mat, norm_options):
+def _get_condition_matrix_sub(mat, norm_options):
     """
     Compute an estimate of the condition number (norm 1) of a sparse matrix.
     """
@@ -74,7 +74,6 @@ def get_condition_matrix(name, mat, norm_options):
     density = nnz/(nx*ny)
 
     # display
-    LOGGER.debug("enter matrix condition: %s" % name)
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
     LOGGER.debug("matrix elements: %d" % nnz)
     LOGGER.debug("matrix density: %.2e" % density)
@@ -92,18 +91,27 @@ def get_condition_matrix(name, mat, norm_options):
     op = _get_inverse_operator(mat, decomposition)
 
     # compute the norm of the matrix inverse (estimate)
-    LOGGER.debug("compute estimate norm of the inverse")
+    LOGGER.debug("estimate norm of the inverse")
     nrm_inv = sla.onenormest(op, t=t_accuracy, itmax=n_iter_max)
 
     # compute the norm of the matrix (estimate)
-    LOGGER.debug("compute estimate norm of the matrix")
+    LOGGER.debug("estimate norm of the matrix")
     nrm_ori = sla.onenormest(mat, t=t_accuracy, itmax=n_iter_max)
 
     # compute an estimate of the condition
     LOGGER.debug("compute condition estimate")
     cond = nrm_ori*nrm_inv
 
-    # exit
-    LOGGER.debug("exit matrix condition: %s" % name)
-
     return cond
+
+
+def get_condition_matrix(name, mat, norm_options):
+    """
+    Compute an estimate of the condition number (norm 1) of a sparse matrix.
+    """
+
+    LOGGER.debug("condition: %s" % name)
+    with log.BlockIndent():
+        data = _get_condition_matrix_sub(mat, norm_options)
+
+    return data

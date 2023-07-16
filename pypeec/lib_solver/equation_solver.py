@@ -66,29 +66,32 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
         status = True
 
     # display results
-    LOGGER.debug("matrix solver: n_dof = %d" % n_dof)
-    LOGGER.debug("matrix solver: n_iter = %d" % n_iter)
-    LOGGER.debug("matrix solver: n_sys_eval = %d" % n_sys_eval)
-    LOGGER.debug("matrix solver: n_pcd_eval = %d" % n_pcd_eval)
-    LOGGER.debug("matrix solver: res_rms = %.2e" % res_rms)
-    LOGGER.debug("matrix solver: check = %s" % check)
-    LOGGER.debug("matrix solver: status_pcd = %s" % status_pcd)
-    LOGGER.debug("matrix solver: status_solver = %s" % status_solver)
-    LOGGER.debug("matrix solver: status_res = %s" % status_res)
+    LOGGER.debug("condition")
+    with log.BlockIndent():
+        # display results
+        LOGGER.debug("n_dof = %d" % n_dof)
+        LOGGER.debug("n_iter = %d" % n_iter)
+        LOGGER.debug("n_sys_eval = %d" % n_sys_eval)
+        LOGGER.debug("n_pcd_eval = %d" % n_pcd_eval)
+        LOGGER.debug("res_rms = %.2e" % res_rms)
+        LOGGER.debug("check = %s" % check)
+        LOGGER.debug("status_pcd = %s" % status_pcd)
+        LOGGER.debug("status_solver = %s" % status_solver)
+        LOGGER.debug("status_res = %s" % status_res)
 
-    # display warnings
-    if not status_pcd:
-        LOGGER.warning("matrix solver: preconditioner issue")
-    if not status_solver:
-        LOGGER.warning("matrix solver: iterative solver issue")
-    if not status_res:
-        LOGGER.warning("matrix solver: residuum issue")
+        # display warnings
+        if not status_pcd:
+            LOGGER.warning("preconditioner issue")
+        if not status_solver:
+            LOGGER.warning("iterative solver issue")
+        if not status_res:
+            LOGGER.warning("residuum issue")
 
-    # display status
-    if status:
-        LOGGER.debug("matrix solver: convergence achieved")
-    else:
-        LOGGER.warning("matrix solver: convergence issues")
+        # display status
+        if status:
+            LOGGER.debug("convergence achieved")
+        else:
+            LOGGER.warning("convergence issues")
 
     return sol, res, conv, status, solver_status
 
@@ -123,16 +126,18 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
     }
 
     # display status
-    LOGGER.debug("matrix condition: check = %s" % check)
-    LOGGER.debug("matrix condition: status = %s" % status)
-    if check:
-        LOGGER.debug("matrix condition: value_electric = %.2e" % value_electric)
-        LOGGER.debug("matrix condition: value_magnetic = %.2e" % value_magnetic)
-        if status:
-            LOGGER.debug("matrix condition: matrix condition is good")
+    LOGGER.debug("condition")
+    with log.BlockIndent():
+        LOGGER.debug("check = %s" % check)
+        LOGGER.debug("status = %s" % status)
+        if check:
+            LOGGER.debug("value_electric = %.2e" % value_electric)
+            LOGGER.debug("value_magnetic = %.2e" % value_magnetic)
+            if status:
+                LOGGER.debug("matrix condition is good")
+            else:
+                LOGGER.warning("matrix condition is problematic")
         else:
-            LOGGER.warning("matrix condition: matrix condition is problematic")
-    else:
-        LOGGER.debug("matrix condition: matrix condition is not computed")
+            LOGGER.debug("matrix condition is not computed")
 
     return status, condition_status

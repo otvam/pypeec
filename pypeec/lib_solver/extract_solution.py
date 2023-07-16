@@ -183,13 +183,16 @@ def get_integral(P_fc, P_fm, W_fc, W_fm, S_tot):
     }
 
     # display
-    LOGGER.debug("integral: S_tot = %.2e + %.2ej VA" % (S_tot.real, S_tot.imag))
-    LOGGER.debug("integral: P_electric = %.2e W" % P_electric)
-    LOGGER.debug("integral: P_magnetic = %.2e W" % P_magnetic)
-    LOGGER.debug("integral: W_electric = %.2e J" % W_electric)
-    LOGGER.debug("integral: W_magnetic = %.2e J" % W_magnetic)
-    LOGGER.debug("integral: P_tot = %.2e W" % P_tot)
-    LOGGER.debug("integral: W_tot = %.2e J" % W_tot)
+    LOGGER.debug("integral")
+    with log.BlockIndent():
+        LOGGER.debug("S_tot_real = %.2e VA" % S_tot.real)
+        LOGGER.debug("S_tot_imag = %.2ej VA" % S_tot.real)
+        LOGGER.debug("P_electric = %.2e W" % P_electric)
+        LOGGER.debug("P_magnetic = %.2e W" % P_magnetic)
+        LOGGER.debug("W_electric = %.2e J" % W_electric)
+        LOGGER.debug("W_magnetic = %.2e J" % W_magnetic)
+        LOGGER.debug("P_tot = %.2e W" % P_tot)
+        LOGGER.debug("W_tot = %.2e J" % W_tot)
 
     return integral
 
@@ -222,9 +225,11 @@ def get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm):
         material[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_tot": P_tmp}
 
         # display
-        LOGGER.debug("domain: %s : P_electric = %.2e W" % (tag, P_vc_tmp))
-        LOGGER.debug("domain: %s : P_magnetic = %.2e W" % (tag, P_vm_tmp))
-        LOGGER.debug("domain: %s : P_tot = %.2e W" % (tag, P_tmp))
+        LOGGER.debug("domain: %s" % tag)
+        with log.BlockIndent():
+            LOGGER.debug("P_electric = %.2e W" % P_vc_tmp)
+            LOGGER.debug("P_magnetic = %.2e W" % P_vm_tmp)
+            LOGGER.debug("P_tot = %.2e W" % P_tmp)
 
     return material
 
@@ -277,8 +282,10 @@ def get_source(freq, source_pos, I_src, V_vc):
         S_tot += S_tmp
 
         # display
-        LOGGER.debug("terminal: %s : V = %+.2e + %+.2ej V" % (tag, V_tmp.real, V_tmp.imag))
-        LOGGER.debug("terminal: %s : I = %+.2e + %+.2ej A" % (tag, I_tmp.real, I_tmp.imag))
-        LOGGER.debug("terminal: %s : S = %+.2e + %+.2ej VA" % (tag, S_tmp.real, S_tmp.imag))
+        LOGGER.debug("terminal: %s" % tag)
+        with log.BlockIndent():
+            LOGGER.debug("V = %+.2e + %+.2ej V" % (V_tmp.real, V_tmp.imag))
+            LOGGER.debug("I = %+.2e + %+.2ej A" % (I_tmp.real, I_tmp.imag))
+            LOGGER.debug("S = %+.2e + %+.2ej VA" % (S_tmp.real, S_tmp.imag))
 
     return source, S_tot

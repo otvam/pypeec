@@ -52,7 +52,6 @@ def _get_prepare(name, idx_out, idx_in, mat):
     Prepare the matrix for the multiplication.
     """
 
-    # get the matrix
     if MATRIX_MULTIPLICATION == "FFT":
         data = multiply_fft.get_prepare(name, idx_out, idx_in, mat)
     elif MATRIX_MULTIPLICATION == "DIRECT":

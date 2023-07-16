@@ -123,9 +123,9 @@ def _get_fact_umfpack(mat):
     return factor
 
 
-def get_factorize(name, mat):
+def _get_factorize_sub(mat):
     """
-    Factorize a sparse matrix.
+    Factorize a sparse matrix (main function).
     """
 
     # check shape
@@ -144,14 +144,13 @@ def get_factorize(name, mat):
     density = nnz/(nx*ny)
 
     # display
-    LOGGER.debug("enter matrix factorization: %s" % name)
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
     LOGGER.debug("matrix elements: %d" % nnz)
     LOGGER.debug("matrix density: %.2e" % density)
-    LOGGER.debug("factorization library: %s" % FACTORIZATION_LIBRARY)
+    LOGGER.debug("library: %s" % FACTORIZATION_LIBRARY)
 
     # factorize the matrix
-    LOGGER.debug("compute factorization")
+    LOGGER.warning("compute factorization")
     if FACTORIZATION_LIBRARY == "SuperLU":
         factor = _get_fact_superlu(mat)
     elif FACTORIZATION_LIBRARY == "UMFPACK":
@@ -167,10 +166,19 @@ def get_factorize(name, mat):
     else:
         LOGGER.debug("factorization success")
 
-    # exit
-    LOGGER.debug("exit matrix factorization: %s" % name)
-
     return factor
+
+
+def get_factorize(name, mat):
+    """
+    Factorize a sparse matrix (log wrapper).
+    """
+
+    LOGGER.debug("factorization: %s" % name)
+    with log.BlockIndent():
+        data = _get_factorize_sub(mat)
+
+    return data
 
 
 def get_solve(factor, rhs):

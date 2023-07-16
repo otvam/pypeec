@@ -118,9 +118,9 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     return mat_dense
 
 
-def get_prepare(name, idx_out, idx_in, mat):
+def _get_prepare_sub(name, idx_out, idx_in, mat):
     """
-    Construct a dense matrix from a 4D tensor.
+    Construct a dense matrix from a 4D tensor (main function).
 
     The output index vector has the size: n_out.
     The input index vector has the size: n_in.
@@ -134,7 +134,6 @@ def get_prepare(name, idx_out, idx_in, mat):
     footprint = (itemsize*n_out*n_in)/(1024**2)
 
     # display the matrix size
-    LOGGER.debug("enter direct multiplication: %s" % name)
     LOGGER.debug("matrix size: (%d, %d)" % (n_out, n_in))
     LOGGER.debug("matrix footprint: %.2f MB" % footprint)
 
@@ -202,10 +201,19 @@ def get_prepare(name, idx_out, idx_in, mat):
     mat_dense = mat_dense[idx_rev_out, :]
     mat_dense = mat_dense[:, idx_rev_in]
 
-    # exit
-    LOGGER.debug("exit direct multiplication: %s" % name)
-
     return mat_dense
+
+
+def get_prepare(name, idx_out, idx_in, mat):
+    """
+    Construct a dense matrix from a 4D tensor (log wrapper).
+    """
+
+    LOGGER.debug("multiplication: %s" % name)
+    with log.BlockIndent():
+        data = _get_prepare_sub(name, idx_out, idx_in, mat)
+
+    return data
 
 
 def get_multiply(mat_dense, vec_in, flip):
