@@ -136,7 +136,7 @@ def get_prepare(name, idx_out, idx_in, mat):
     # display the matrix size
     LOGGER.debug("enter direct multiplication: %s" % name)
     LOGGER.debug("matrix size: (%d, %d)" % (n_out, n_in))
-    LOGGER.debug("matrix footprint: %.3f MB" % footprint)
+    LOGGER.debug("matrix footprint: %.2f MB" % footprint)
 
     # get the permutation for sorting
     idx_perm_out = np.argsort(idx_out).astype(NP_TYPES.INT)

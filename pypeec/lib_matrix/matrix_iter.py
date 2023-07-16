@@ -51,7 +51,7 @@ class _IterCounter:
         self.power_vec.append(power_tmp)
 
         # log the results
-        LOGGER.debug(f"matrix iter: iter = {iter_tmp:d} / S = {power_tmp:.3e} VA")
+        LOGGER.debug(f"matrix iter: iter = {iter_tmp:d} / S = {power_tmp:.2e} VA")
 
     def get_n_iter(self):
         """

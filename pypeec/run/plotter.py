@@ -138,11 +138,11 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_point, data_plotter, gui_o
     """
 
     # handle the data
-    LOGGER.info("parse the voxel geometry and the data")
+    LOGGER.info("parse data")
     (grid, voxel, point, res, conv) = _get_grid_voxel(data_init, data_sweep, data_point)
 
     # make the plots
-    with log.BlockTimer(LOGGER, "generate the different plots"):
+    with log.BlockTimer(LOGGER, "generate plots"):
         for i, (tag_plot, data_plotter_tmp) in enumerate(data_plotter.items()):
             LOGGER.info("plotting %d / %d / %s" % (i + 1, len(data_plotter), tag_plot))
             _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)

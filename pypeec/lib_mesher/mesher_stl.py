@@ -136,9 +136,9 @@ def _get_voxel_size(d, xyz_max, xyz_min):
     n = n.astype(NP_TYPES.INT)
 
     # disp geometry size
-    LOGGER.debug("voxel: min = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_min))
-    LOGGER.debug("voxel: max = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(xyz_max))
-    LOGGER.debug("voxel: center = (x, y, z) =  (%.3e, %.3e, %.3e)" % tuple(c))
+    LOGGER.debug("voxel: min = (x, y, z) =  (%.2e, %.2e, %.2e)" % tuple(xyz_min))
+    LOGGER.debug("voxel: max = (x, y, z) =  (%.2e, %.2e, %.2e)" % tuple(xyz_max))
+    LOGGER.debug("voxel: center = (x, y, z) =  (%.2e, %.2e, %.2e)" % tuple(c))
 
     # check voxel validity
     if not np.all(d > 0):

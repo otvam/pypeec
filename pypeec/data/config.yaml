@@ -16,11 +16,11 @@ LOGGING_OPTIONS:
     #   - process_id: process identification number
     #   - thread_id: thread identification number
     FORMAT:
-        LOGGER: '%(duration)s : %(name)-12s: %(levelname)-12s : %(message)s'  # logger format
+        LOGGER: '%(duration)s : %(name)-8s : %(levelname)-8s : %(message)s'  # logger format
         TIMESTAMP_FMT: '%m/%d/%Y : %H:%M:%S'  # timestamp format
         DURATION_FMT: '%H:%M:%S.%f' # duration format
         TIMESTAMP_TRC: 0  # timestamp truncation
-        DURATION_TRC: 3 # duration truncation
+        DURATION_TRC: 4 # duration truncation
 
     # logging level for the handlers
     LEVEL: "DEBUG"  # string with a valid Python logging level

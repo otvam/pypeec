@@ -198,7 +198,7 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     LOGGER.debug("problem size: n_voxel_electric = %d / n_voxel_magnetic = %d" % (n_voxel_electric, n_voxel_magnetic))
     LOGGER.debug("problem size: n_face_electric = %d / n_face_magnetic = %d" % (n_face_electric, n_face_magnetic))
     LOGGER.debug("problem size: n_src_current = %d / n_src_voltage = %d" % (n_src_current, n_src_voltage))
-    LOGGER.debug("problem size: ratio_voxel = %.3e" % ratio_voxel)
-    LOGGER.debug("problem size: ratio_face = %.3e" % ratio_face)
+    LOGGER.debug("problem size: ratio_voxel = %.2e" % ratio_voxel)
+    LOGGER.debug("problem size: ratio_face = %.2e" % ratio_face)
 
     return problem_status

@@ -147,7 +147,7 @@ def get_factorize(name, mat):
     LOGGER.debug("enter matrix factorization: %s" % name)
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
     LOGGER.debug("matrix elements: %d" % nnz)
-    LOGGER.debug("matrix density: %.3e" % density)
+    LOGGER.debug("matrix density: %.2e" % density)
     LOGGER.debug("factorization library: %s" % FACTORIZATION_LIBRARY)
 
     # factorize the matrix

@@ -322,7 +322,7 @@ def get_prepare(name, idx_out, idx_in, mat):
     # display the tensor size
     LOGGER.debug("enter FFT multiplication: %s" % name)
     LOGGER.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
-    LOGGER.debug("tensor footprint: %.3f MB" % footprint)
+    LOGGER.debug("tensor footprint: %.2f MB" % footprint)
     LOGGER.debug("FFT library: %s / GPU: %s" % (FFT_LIBRARY, USE_FFT_GPU))
 
     # get the sign that will be applied to the different blocks of the tensor

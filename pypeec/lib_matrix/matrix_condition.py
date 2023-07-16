@@ -77,7 +77,7 @@ def get_condition_matrix(name, mat, norm_options):
     LOGGER.debug("enter matrix condition: %s" % name)
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
     LOGGER.debug("matrix elements: %d" % nnz)
-    LOGGER.debug("matrix density: %.3e" % density)
+    LOGGER.debug("matrix density: %.2e" % density)
 
     # get LU decomposition
     LOGGER.debug("compute LU decomposition")

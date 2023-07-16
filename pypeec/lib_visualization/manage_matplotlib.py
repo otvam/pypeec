@@ -56,7 +56,7 @@ def _get_plot_residuum(fig, res, data_plot):
     plt.grid()
     plt.xlabel("residuum (a.u.)")
     plt.ylabel("counts (a.u.)")
-    plt.title("Residuum / n_dof = %d / res_rms = %.3e" % (n_dof, res_rms))
+    plt.title("Residuum / n_dof = %d / res_rms = %.2e" % (n_dof, res_rms))
 
 
 def _get_plot_convergence(fig, conv, data_plot):
@@ -99,7 +99,7 @@ def _get_plot_convergence(fig, conv, data_plot):
     plt.legend()
     plt.xlabel("iterations (#)")
     plt.ylabel("convergence (a.u.)")
-    plt.title(f"Convergence: iter = {iter_final:d} / S = {power_final:.3e} VA")
+    plt.title(f"Convergence: iter = {iter_final:d} / S = {power_final:.2e} VA")
 
 
 def get_plot_plotter(fig, res, conv, layout, data_plot, data_options):

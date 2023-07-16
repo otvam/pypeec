@@ -122,11 +122,11 @@ def run(
         gui_obj = manage_plotgui.PlotGui(plot_mode, folder)
 
         # handle the data
-        LOGGER.info("parse the voxel geometry and the data")
+        LOGGER.info("parse data")
         (grid, voxel, point, reference) = _get_grid_voxel(data_voxel, data_point)
 
         # make the plots
-        with log.BlockTimer(LOGGER, "generate the different plots"):
+        with log.BlockTimer(LOGGER, "generate plots"):
             for i, (tag_plot, data_viewer_tmp) in enumerate(data_viewer.items()):
                 LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_viewer), tag_plot))
                 _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)

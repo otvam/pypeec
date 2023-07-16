@@ -70,7 +70,7 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     LOGGER.debug("matrix solver: n_iter = %d" % n_iter)
     LOGGER.debug("matrix solver: n_sys_eval = %d" % n_sys_eval)
     LOGGER.debug("matrix solver: n_pcd_eval = %d" % n_pcd_eval)
-    LOGGER.debug("matrix solver: res_rms = %.3e" % res_rms)
+    LOGGER.debug("matrix solver: res_rms = %.2e" % res_rms)
     LOGGER.debug("matrix solver: check = %s" % check)
     LOGGER.debug("matrix solver: status_pcd = %s" % status_pcd)
     LOGGER.debug("matrix solver: status_solver = %s" % status_solver)
@@ -126,8 +126,8 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
     LOGGER.debug("matrix condition: check = %s" % check)
     LOGGER.debug("matrix condition: status = %s" % status)
     if check:
-        LOGGER.debug("matrix condition: value_electric = %.3e" % value_electric)
-        LOGGER.debug("matrix condition: value_magnetic = %.3e" % value_magnetic)
+        LOGGER.debug("matrix condition: value_electric = %.2e" % value_electric)
+        LOGGER.debug("matrix condition: value_magnetic = %.2e" % value_magnetic)
         if status:
             LOGGER.debug("matrix condition: matrix condition is good")
         else:
