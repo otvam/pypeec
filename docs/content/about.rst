@@ -4,40 +4,40 @@ About
 Project Links
 -------------
 
-* `Website <https://pypeec.otvam.ch>`_
-* `Repository <https://github.com/otvam/pypeec>`_
-* `Releases <https://github.com/otvam/pypeec/releases>`_
-* `Tags <https://github.com/otvam/pypeec/tags>`_
-* `Issues <https://github.com/otvam/pypeec/issues>`_
-* `PyPi <https://pypi.org/project/pypeec>`_
+:Website: https://pypeec.otvam.ch
+:Repository: https://github.com/otvam/pypeec
+:Releases: https://github.com/otvam/pypeec/releases
+:Tags: https://github.com/otvam/pypeec/tags
+:Issues: https://github.com/otvam/pypeec/issues
+:PyPi: https://pypi.org/project/pypeec
 
 Credits
 -------
 
 The FFT-accelerated PEEC method with voxels has been first described and implemented in:
 
-* R. Torchio, IEEE TPEL, 10.1109/TPEL.2021.3092431, 2022
-* R. Torchio, https://github.com/UniPD-DII-ETCOMP/FFT-PEEC
+* Torchio, R., IEEE TPEL, 10.1109/TPEL.2021.3092431, 2022
+* Torchio, R., https://github.com/UniPD-DII-ETCOMP/FFT-PEEC
 
 Other interesting papers and codes about similar methods:
 
-* A. Yucel, IEEE TMTT, 10.1109/TMTT.2017.2785842, 2018
-* P. Bettini, IOP, 10.1088/1361-6587/abce8f, 2020
-* N. Marconato, ICECCME, 10.1109/ICECCME52200.2021.9590864, 2021
-* A. Yucel, https://github.com/acyucel/VoxHenry
+* Yucel, A., IEEE TMTT, 10.1109/TMTT.2017.2785842, 2018
+* Bettini, P., IOP, 10.1088/1361-6587/abce8f, 2020
+* Marconato, N., ICECCME, 10.1109/ICECCME52200.2021.9590864, 2021
+* Yucel, A., https://github.com/acyucel/VoxHenry
 
 PyPEEC was created at **Dartmouth College** by the research group of **Prof. Sullivan**:
 
-* Dartmouth College, NH, USA: `dartmouth.edu <https://dartmouth.edu>`_
-* Dartmouth Engineering: `engineering.dartmouth.edu <https://engineering.dartmouth.edu>`_
-* PMIC: `pmic.engineering.dartmouth.edu <https://pmic.engineering.dartmouth.edu>`_
+* Dartmouth College, NH, USA: https://dartmouth.edu
+* Dartmouth Engineering: https://engineering.dartmouth.edu
+* PMIC: https://pmic.engineering.dartmouth.edu
 
 Author
 ------
 
 * **Thomas Guillod**, Dartmouth College, NH, USA
-* Email: `guillod@otvam.ch <mailto:guillod@otvam.ch>`_
-* Website: `otvam.ch <https://otvam.ch>`_
+* Email: guillod@otvam.ch
+* Website: https://otvam.ch>
 
 Copyright
 ---------
