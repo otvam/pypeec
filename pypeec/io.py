@@ -3,6 +3,10 @@ Module for serialization and deserialization.
     - load JSON/YAML configuration files
     - load and write Pickle files
 
+For YAML files, the following custom extensions are used:
+    - "!path" - allow the inclusion of relative paths
+    - "!include" - allow the inclusion of YAML sub-files
+
 Warning:
     - Pickling data is not secure.
     - Only load pickle files that you trust.
