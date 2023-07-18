@@ -66,7 +66,7 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
         status = True
 
     # display results
-    LOGGER.debug("condition")
+    LOGGER.debug("solver summary")
     with log.BlockIndent():
         # display results
         LOGGER.debug("n_dof = %d" % n_dof)
@@ -126,7 +126,7 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
     }
 
     # display status
-    LOGGER.debug("condition")
+    LOGGER.debug("condition summary")
     with log.BlockIndent():
         LOGGER.debug("check = %s" % check)
         LOGGER.debug("status = %s" % status)
