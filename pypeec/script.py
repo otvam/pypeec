@@ -57,7 +57,7 @@ def _get_arg_mesher(subparsers):
     parser = subparsers.add_parser(
         "mesher",
         aliases=["me"],
-        help="transform the provided data into a 3D voxel structure",
+        help="mesh a geometry into a 3D voxel structure",
     )
 
     # add the arguments
@@ -119,7 +119,7 @@ def _get_arg_viewer(subparsers):
     )
     parser.add_argument(
         "-tp", "--tag_plot",
-        help="list of plots to be shown (default: show the plots)",
+        help="list of plots to be shown (default: all the plots)",
         nargs='+',
         default=None,
         metavar="tag_plot",
@@ -234,7 +234,7 @@ def _get_arg_plotter(subparsers):
     )
     parser.add_argument(
         "-tp", "--tag_plot",
-        help="list of plots to be shown (default: show the plots)",
+        help="list of plots to be shown (default: all the plots)",
         nargs='+',
         default=None,
         metavar="tag_plot",

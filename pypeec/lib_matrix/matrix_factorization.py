@@ -150,7 +150,7 @@ def _get_factorize_sub(mat):
     LOGGER.debug("library: %s" % FACTORIZATION_LIBRARY)
 
     # factorize the matrix
-    LOGGER.warning("compute factorization")
+    LOGGER.debug("compute factorization")
     if FACTORIZATION_LIBRARY == "SuperLU":
         factor = _get_fact_superlu(mat)
     elif FACTORIZATION_LIBRARY == "UMFPACK":
