@@ -14,13 +14,13 @@ function build_docs {
 
   rm -rf html
   sphinx-build -b html docs html
-  status=$(( status || $? ))
+  ret=$(( ret || $? ))
 }
 
 # init status
-status=0
+ret=0
 
 # build the documentation
 build_docs
 
-exit $status
+exit $ret

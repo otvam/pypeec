@@ -15,12 +15,12 @@ function test_file {
   echo "======================================================================"
 
   python -m unittest -v "tests/$1.py"
-  status=$(( status || $? ))
+  ret=$(( ret || $? ))
 }
 
 function clean_test {
   echo "======================================================================"
-  if (( status == 0 ))
+  if (( ret == 0 ))
   then
     echo "TEST: SUCCESS"
   else
@@ -30,7 +30,7 @@ function clean_test {
 }
 
 # init status
-status=0
+ret=0
 
 # run test
 test_file run_test_voxel
@@ -41,4 +41,4 @@ test_file run_test_stl
 # collect results
 clean_test
 
-exit $status
+exit $ret

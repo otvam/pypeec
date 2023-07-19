@@ -18,13 +18,13 @@ function build_package {
   rm -rf pypeec/data/version.txt
   git archive -o pypeec/data/examples.zip HEAD:examples
   python -m build
-  status=$(( status || $? ))
+  ret=$(( ret || $? ))
 }
 
 # init status
-status=0
+ret=0
 
 # build the documentation
 build_package
 
-exit $status
+exit $ret
