@@ -1,233 +1,270 @@
-00:00:00.000 : MAIN        : INFO         : load the input data
-00:00:00.018 : MAIN        : INFO         : load the solver
-00:00:00.168 : MAIN        : INFO         : run the solver
-00:00:00.168 : SOLVER      : INFO         : check the input data
-00:00:00.168 : SOLVER      : INFO         : combine the input data
-00:00:00.169 : SOLVER      : INFO         : init : enter : timing
-00:00:00.169 : SOLVER      : INFO         :     voxel_geometry : enter : timing
-00:00:00.172 : SOLVER      : INFO         :     voxel_geometry : exit : 00:00:00.002
-00:00:00.172 : SOLVER      : INFO         :     system_tensor : enter : timing
-00:00:00.173 : GREEN       : DEBUG        :         analytical solution: 6D / 1
-00:00:00.173 : GREEN       : DEBUG        :         analytical solution: 6D / 175
-00:00:00.182 : GREEN       : DEBUG        :         analytical solution: 5D / 175
-00:00:00.188 : GREEN       : DEBUG        :         analytical solution: 5D / 175
-00:00:00.194 : GREEN       : DEBUG        :         analytical solution: 5D / 175
-00:00:00.199 : GREEN       : DEBUG        :         analytical solution: 5D / 175
-00:00:00.203 : GREEN       : DEBUG        :         analytical solution: 5D / 175
-00:00:00.208 : GREEN       : DEBUG        :         analytical solution: 5D / 175
-00:00:00.214 : SOLVER      : INFO         :     system_tensor : exit : 00:00:00.041
-00:00:00.214 : SOLVER      : INFO         :     problem_geometry : enter : timing
-00:00:00.219 : PROBLEM     : DEBUG        :         problem size: n_voxel_total = 175 / n_voxel_used = 55
-00:00:00.219 : PROBLEM     : DEBUG        :         problem size: n_face_total = 525 / n_face_used = 86
-00:00:00.219 : PROBLEM     : DEBUG        :         problem size: n_voxel_electric = 7 / n_voxel_magnetic = 48
-00:00:00.219 : PROBLEM     : DEBUG        :         problem size: n_face_electric = 6 / n_face_magnetic = 80
-00:00:00.219 : PROBLEM     : DEBUG        :         problem size: n_src_current = 1 / n_src_voltage = 1
-00:00:00.219 : PROBLEM     : DEBUG        :         problem size: ratio_voxel = 3.143e-01
-00:00:00.219 : PROBLEM     : DEBUG        :         problem size: ratio_face = 1.638e-01
-00:00:00.219 : SOLVER      : INFO         :     problem_geometry : exit : 00:00:00.005
-00:00:00.219 : SOLVER      : INFO         :     system_matrix : enter : timing
-00:00:00.220 : FFT         : DEBUG        :         enter FFT multiplication: inductance
-00:00:00.220 : FFT         : DEBUG        :         tensor size: (5, 5, 7)
-00:00:00.220 : FFT         : DEBUG        :         tensor footprint: 0.021 MB
-00:00:00.220 : FFT         : DEBUG        :         FFT library: SciPy / GPU: False
-00:00:00.223 : FFT         : DEBUG        :         exit FFT multiplication: inductance
-00:00:00.223 : FFT         : DEBUG        :         enter FFT multiplication: potential
-00:00:00.223 : FFT         : DEBUG        :         tensor size: (5, 5, 7)
-00:00:00.223 : FFT         : DEBUG        :         tensor footprint: 0.021 MB
-00:00:00.223 : FFT         : DEBUG        :         FFT library: SciPy / GPU: False
-00:00:00.224 : FFT         : DEBUG        :         exit FFT multiplication: potential
-00:00:00.227 : FFT         : DEBUG        :         enter FFT multiplication: coupling
-00:00:00.227 : FFT         : DEBUG        :         tensor size: (5, 5, 7)
-00:00:00.227 : FFT         : DEBUG        :         tensor footprint: 0.064 MB
-00:00:00.227 : FFT         : DEBUG        :         FFT library: SciPy / GPU: False
-00:00:00.228 : FFT         : DEBUG        :         exit FFT multiplication: coupling
-00:00:00.228 : SOLVER      : INFO         :     system_matrix : exit : 00:00:00.009
-00:00:00.229 : SOLVER      : INFO         : init : exit : 00:00:00.059
-00:00:00.229 : SOLVER      : INFO         : run sweep: sim_dc : enter : timing
-00:00:00.229 : SOLVER      : INFO         :     problem_value : enter : timing
-00:00:00.230 : SOLVER      : INFO         :     problem_value : exit : 00:00:00.001
-00:00:00.230 : SOLVER      : INFO         :     equation_system : enter : timing
-00:00:00.235 : FACTOR      : DEBUG        :         enter matrix factorization: electric
-00:00:00.235 : FACTOR      : DEBUG        :         matrix size: (9, 9)
-00:00:00.235 : FACTOR      : DEBUG        :         matrix elements: 25
-00:00:00.235 : FACTOR      : DEBUG        :         matrix density: 3.086e-01
-00:00:00.235 : FACTOR      : DEBUG        :         factorization library: SuperLU
-00:00:00.235 : FACTOR      : DEBUG        :         compute factorization
-00:00:00.237 : FACTOR      : DEBUG        :         factorization success
-00:00:00.237 : FACTOR      : DEBUG        :         exit matrix factorization: electric
-00:00:00.237 : FACTOR      : DEBUG        :         enter matrix factorization: magnetic
-00:00:00.237 : FACTOR      : DEBUG        :         matrix size: (48, 48)
-00:00:00.237 : FACTOR      : DEBUG        :         matrix elements: 208
-00:00:00.237 : FACTOR      : DEBUG        :         matrix density: 9.028e-02
-00:00:00.237 : FACTOR      : DEBUG        :         factorization library: SuperLU
-00:00:00.237 : FACTOR      : DEBUG        :         compute factorization
-00:00:00.238 : FACTOR      : DEBUG        :         factorization success
-00:00:00.238 : FACTOR      : DEBUG        :         exit matrix factorization: magnetic
-00:00:00.238 : SOLVER      : INFO         :     equation_system : exit : 00:00:00.007
-00:00:00.238 : SOLVER      : INFO         :     equation_solver : enter : timing
-00:00:00.238 : CONDITION   : DEBUG        :         enter matrix condition: electric
-00:00:00.238 : CONDITION   : DEBUG        :         matrix size: (9, 9)
-00:00:00.238 : CONDITION   : DEBUG        :         matrix elements: 25
-00:00:00.238 : CONDITION   : DEBUG        :         matrix density: 3.086e-01
-00:00:00.238 : CONDITION   : DEBUG        :         compute LU decomposition
-00:00:00.238 : CONDITION   : DEBUG        :         compute estimate norm of the inverse
-00:00:00.242 : CONDITION   : DEBUG        :         compute estimate norm of the matrix
-00:00:00.243 : CONDITION   : DEBUG        :         compute condition estimate
-00:00:00.243 : CONDITION   : DEBUG        :         exit matrix condition: electric
-00:00:00.243 : CONDITION   : DEBUG        :         enter matrix condition: magnetic
-00:00:00.243 : CONDITION   : DEBUG        :         matrix size: (48, 48)
-00:00:00.243 : CONDITION   : DEBUG        :         matrix elements: 208
-00:00:00.243 : CONDITION   : DEBUG        :         matrix density: 9.028e-02
-00:00:00.244 : CONDITION   : DEBUG        :         compute LU decomposition
-00:00:00.244 : CONDITION   : DEBUG        :         compute estimate norm of the inverse
-00:00:00.246 : CONDITION   : DEBUG        :         compute estimate norm of the matrix
-00:00:00.247 : CONDITION   : DEBUG        :         compute condition estimate
-00:00:00.247 : CONDITION   : DEBUG        :         exit matrix condition: magnetic
-00:00:00.247 : EQUATION    : DEBUG        :         matrix condition: check = True
-00:00:00.247 : EQUATION    : DEBUG        :         matrix condition: status = True
-00:00:00.247 : EQUATION    : DEBUG        :         matrix condition: value_electric = 3.200e+07
-00:00:00.247 : EQUATION    : DEBUG        :         matrix condition: value_magnetic = 1.362e+02
-00:00:00.247 : EQUATION    : DEBUG        :         matrix condition: matrix condition is good
-00:00:00.247 : GMRES       : DEBUG        :         enter matrix solver
-00:00:00.249 : GMRES       : DEBUG        :         matrix iter: iter = 1 / P_tot = 0.000e+00 / Q_tot = 0.000e+00
-00:00:00.264 : GMRES       : DEBUG        :         matrix iter: iter = 2 / P_tot = 1.500e-06 / Q_tot = -1.249e-12
-00:00:00.278 : GMRES       : DEBUG        :         matrix iter: iter = 3 / P_tot = 1.500e-06 / Q_tot = -8.394e-21
-00:00:00.278 : GMRES       : DEBUG        :         exit matrix solver
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: n_dof = 143
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: n_iter = 3
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: n_sys_eval = 8
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: n_pcd_eval = 9
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: res_rms = 1.018e-11
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: check = True
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: status_pcd = True
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: status_solver = True
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: status_res = True
-00:00:00.282 : EQUATION    : DEBUG        :         matrix solver: convergence achieved
-00:00:00.282 : SOLVER      : INFO         :     equation_solver : exit : 00:00:00.044
-00:00:00.283 : SOLVER      : INFO         :     extract_solution : enter : timing
-00:00:00.289 : SOLUTION    : DEBUG        :         domain: terminal : P_electric = 2.500e-07 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: terminal : P_magnetic = 0.000e+00 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: terminal : P_tot = 2.500e-07 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: cond : P_electric = 1.250e-06 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: cond : P_magnetic = 0.000e+00 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: cond : P_tot = 1.250e-06 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: core : P_electric = 0.000e+00 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: core : P_magnetic = 0.000e+00 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: core : P_tot = 0.000e+00 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: empty : P_electric = 0.000e+00 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: empty : P_magnetic = 0.000e+00 W
-00:00:00.290 : SOLUTION    : DEBUG        :         domain: empty : P_tot = 0.000e+00 W
-00:00:00.290 : SOLUTION    : DEBUG        :         terminal: src : V = +1.000e+00 + -2.437e-21j V
-00:00:00.290 : SOLUTION    : DEBUG        :         terminal: src : I = +5.000e-01 + +7.175e-21j A
-00:00:00.290 : SOLUTION    : DEBUG        :         terminal: src : S = +5.000e-01 + -8.394e-21j VA
-00:00:00.290 : SOLUTION    : DEBUG        :         terminal: sink : V = +1.000e+00 + -2.437e-21j V
-00:00:00.290 : SOLUTION    : DEBUG        :         terminal: sink : I = -5.000e-01 + +1.218e-21j A
-00:00:00.290 : SOLUTION    : DEBUG        :         terminal: sink : S = -5.000e-01 + +0.000e+00j VA
-00:00:00.291 : SOLUTION    : DEBUG        :         terminal: empty : V = +0.000e+00 + +0.000e+00j V
-00:00:00.291 : SOLUTION    : DEBUG        :         terminal: empty : I = +0.000e+00 + +0.000e+00j A
-00:00:00.291 : SOLUTION    : DEBUG        :         terminal: empty : S = +0.000e+00 + +0.000e+00j VA
-00:00:00.291 : SOLUTION    : DEBUG        :         integral: S_tot = 1.500e-06 + -8.394e-21j VA
-00:00:00.291 : SOLUTION    : DEBUG        :         integral: P_electric = 1.500e-06 W
-00:00:00.291 : SOLUTION    : DEBUG        :         integral: P_magnetic = 0.000e+00 W
-00:00:00.291 : SOLUTION    : DEBUG        :         integral: W_electric = 3.562e-09 J
-00:00:00.291 : SOLUTION    : DEBUG        :         integral: W_magnetic = 1.715e-08 J
-00:00:00.291 : SOLUTION    : DEBUG        :         integral: P_tot = 1.500e-06 W
-00:00:00.291 : SOLUTION    : DEBUG        :         integral: W_tot = 2.071e-08 J
-00:00:00.291 : SOLVER      : INFO         :     extract_solution : exit : 00:00:00.008
-00:00:00.291 : SOLVER      : INFO         : run sweep: sim_dc : exit : 00:00:00.062
-00:00:00.291 : SOLVER      : INFO         : run sweep: sim_ac : enter : timing
-00:00:00.291 : SOLVER      : INFO         :     problem_value : enter : timing
-00:00:00.292 : SOLVER      : INFO         :     problem_value : exit : 00:00:00.001
-00:00:00.292 : SOLVER      : INFO         :     equation_system : enter : timing
-00:00:00.296 : FACTOR      : DEBUG        :         enter matrix factorization: electric
-00:00:00.296 : FACTOR      : DEBUG        :         matrix size: (9, 9)
-00:00:00.296 : FACTOR      : DEBUG        :         matrix elements: 25
-00:00:00.296 : FACTOR      : DEBUG        :         matrix density: 3.086e-01
-00:00:00.296 : FACTOR      : DEBUG        :         factorization library: SuperLU
-00:00:00.297 : FACTOR      : DEBUG        :         compute factorization
-00:00:00.297 : FACTOR      : DEBUG        :         factorization success
-00:00:00.297 : FACTOR      : DEBUG        :         exit matrix factorization: electric
-00:00:00.297 : FACTOR      : DEBUG        :         enter matrix factorization: magnetic
-00:00:00.297 : FACTOR      : DEBUG        :         matrix size: (48, 48)
-00:00:00.297 : FACTOR      : DEBUG        :         matrix elements: 208
-00:00:00.297 : FACTOR      : DEBUG        :         matrix density: 9.028e-02
-00:00:00.297 : FACTOR      : DEBUG        :         factorization library: SuperLU
-00:00:00.297 : FACTOR      : DEBUG        :         compute factorization
-00:00:00.297 : FACTOR      : DEBUG        :         factorization success
-00:00:00.297 : FACTOR      : DEBUG        :         exit matrix factorization: magnetic
-00:00:00.297 : SOLVER      : INFO         :     equation_system : exit : 00:00:00.005
-00:00:00.297 : SOLVER      : INFO         :     equation_solver : enter : timing
-00:00:00.297 : CONDITION   : DEBUG        :         enter matrix condition: electric
-00:00:00.297 : CONDITION   : DEBUG        :         matrix size: (9, 9)
-00:00:00.298 : CONDITION   : DEBUG        :         matrix elements: 25
-00:00:00.298 : CONDITION   : DEBUG        :         matrix density: 3.086e-01
-00:00:00.298 : CONDITION   : DEBUG        :         compute LU decomposition
-00:00:00.298 : CONDITION   : DEBUG        :         compute estimate norm of the inverse
-00:00:00.298 : CONDITION   : DEBUG        :         compute estimate norm of the matrix
-00:00:00.299 : CONDITION   : DEBUG        :         compute condition estimate
-00:00:00.299 : CONDITION   : DEBUG        :         exit matrix condition: electric
-00:00:00.299 : CONDITION   : DEBUG        :         enter matrix condition: magnetic
-00:00:00.299 : CONDITION   : DEBUG        :         matrix size: (48, 48)
-00:00:00.299 : CONDITION   : DEBUG        :         matrix elements: 208
-00:00:00.299 : CONDITION   : DEBUG        :         matrix density: 9.028e-02
-00:00:00.299 : CONDITION   : DEBUG        :         compute LU decomposition
-00:00:00.299 : CONDITION   : DEBUG        :         compute estimate norm of the inverse
-00:00:00.300 : CONDITION   : DEBUG        :         compute estimate norm of the matrix
-00:00:00.300 : CONDITION   : DEBUG        :         compute condition estimate
-00:00:00.301 : CONDITION   : DEBUG        :         exit matrix condition: magnetic
-00:00:00.301 : EQUATION    : DEBUG        :         matrix condition: check = True
-00:00:00.301 : EQUATION    : DEBUG        :         matrix condition: status = True
-00:00:00.301 : EQUATION    : DEBUG        :         matrix condition: value_electric = 2.696e+06
-00:00:00.301 : EQUATION    : DEBUG        :         matrix condition: value_magnetic = 1.362e+02
-00:00:00.301 : EQUATION    : DEBUG        :         matrix condition: matrix condition is good
-00:00:00.301 : GMRES       : DEBUG        :         enter matrix solver
-00:00:00.308 : GMRES       : DEBUG        :         matrix iter: iter = 1 / P_tot = 7.500e-07 / Q_tot = -4.197e-21
-00:00:00.327 : GMRES       : DEBUG        :         matrix iter: iter = 2 / P_tot = 5.455e-05 / Q_tot = 1.301e-04
-00:00:00.360 : GMRES       : DEBUG        :         matrix iter: iter = 3 / P_tot = 5.455e-05 / Q_tot = 1.301e-04
-00:00:00.361 : GMRES       : DEBUG        :         exit matrix solver
-00:00:00.367 : EQUATION    : DEBUG        :         matrix solver: n_dof = 143
-00:00:00.367 : EQUATION    : DEBUG        :         matrix solver: n_iter = 3
-00:00:00.367 : EQUATION    : DEBUG        :         matrix solver: n_sys_eval = 10
-00:00:00.367 : EQUATION    : DEBUG        :         matrix solver: n_pcd_eval = 10
-00:00:00.367 : EQUATION    : DEBUG        :         matrix solver: res_rms = 5.281e-08
-00:00:00.367 : EQUATION    : DEBUG        :         matrix solver: check = True
-00:00:00.367 : EQUATION    : DEBUG        :         matrix solver: status_pcd = True
-00:00:00.367 : EQUATION    : DEBUG        :         matrix solver: status_solver = True
-00:00:00.368 : EQUATION    : DEBUG        :         matrix solver: status_res = True
-00:00:00.368 : EQUATION    : DEBUG        :         matrix solver: convergence achieved
-00:00:00.368 : SOLVER      : INFO         :     equation_solver : exit : 00:00:00.070
-00:00:00.368 : SOLVER      : INFO         :     extract_solution : enter : timing
-00:00:00.375 : SOLUTION    : DEBUG        :         domain: terminal : P_electric = 1.250e-07 W
-00:00:00.375 : SOLUTION    : DEBUG        :         domain: terminal : P_magnetic = 0.000e+00 W
-00:00:00.375 : SOLUTION    : DEBUG        :         domain: terminal : P_tot = 1.250e-07 W
-00:00:00.375 : SOLUTION    : DEBUG        :         domain: cond : P_electric = 6.249e-07 W
-00:00:00.375 : SOLUTION    : DEBUG        :         domain: cond : P_magnetic = 0.000e+00 W
-00:00:00.375 : SOLUTION    : DEBUG        :         domain: cond : P_tot = 6.249e-07 W
-00:00:00.375 : SOLUTION    : DEBUG        :         domain: core : P_electric = 0.000e+00 W
-00:00:00.376 : SOLUTION    : DEBUG        :         domain: core : P_magnetic = 5.380e-05 W
-00:00:00.376 : SOLUTION    : DEBUG        :         domain: core : P_tot = 5.380e-05 W
-00:00:00.376 : SOLUTION    : DEBUG        :         domain: empty : P_electric = 0.000e+00 W
-00:00:00.376 : SOLUTION    : DEBUG        :         domain: empty : P_magnetic = 0.000e+00 W
-00:00:00.376 : SOLUTION    : DEBUG        :         domain: empty : P_tot = 0.000e+00 W
-00:00:00.376 : SOLUTION    : DEBUG        :         terminal: src : V = +1.000e+00 + +2.602e-04j V
-00:00:00.376 : SOLUTION    : DEBUG        :         terminal: src : I = +4.999e-01 + -1.301e-04j A
-00:00:00.376 : SOLUTION    : DEBUG        :         terminal: src : S = +2.500e-01 + +1.301e-04j VA
-00:00:00.376 : SOLUTION    : DEBUG        :         terminal: sink : V = +9.999e-01 + -2.602e-04j V
-00:00:00.376 : SOLUTION    : DEBUG        :         terminal: sink : I = -4.999e-01 + +1.301e-04j A
-00:00:00.376 : SOLUTION    : DEBUG        :         terminal: sink : S = -2.499e-01 + +0.000e+00j VA
-00:00:00.376 : SOLUTION    : DEBUG        :         terminal: empty : V = +0.000e+00 + +0.000e+00j V
-00:00:00.376 : SOLUTION    : DEBUG        :         terminal: empty : I = +0.000e+00 + +0.000e+00j A
-00:00:00.376 : SOLUTION    : DEBUG        :         terminal: empty : S = +0.000e+00 + +0.000e+00j VA
-00:00:00.377 : SOLUTION    : DEBUG        :         integral: S_tot = 5.455e-05 + 1.301e-04j VA
-00:00:00.377 : SOLUTION    : DEBUG        :         integral: P_electric = 7.498e-07 W
-00:00:00.377 : SOLUTION    : DEBUG        :         integral: P_magnetic = 5.380e-05 W
-00:00:00.377 : SOLUTION    : DEBUG        :         integral: W_electric = 1.781e-09 J
-00:00:00.377 : SOLUTION    : DEBUG        :         integral: W_magnetic = 8.574e-09 J
-00:00:00.377 : SOLUTION    : DEBUG        :         integral: P_tot = 5.455e-05 W
-00:00:00.377 : SOLUTION    : DEBUG        :         integral: W_tot = 1.035e-08 J
-00:00:00.377 : SOLVER      : INFO         :     extract_solution : exit : 00:00:00.009
-00:00:00.377 : SOLVER      : INFO         : run sweep: sim_ac : exit : 00:00:00.086
-00:00:00.377 : SOLVER      : INFO         : duration: 00:00:00.208
-00:00:00.377 : SOLVER      : INFO         : successful termination
-00:00:00.377 : MAIN        : INFO         : save the results
 
+  ╔═══════════════════════════════════════════════════════╗
+  ║  ╔═══╗   ╔═══╦═══╦═══╦═══╗            3D PEEC Solver  ║
+  ║  ║╔═╗║   ║╔═╗║╔══╣╔══╣╔═╗║      Quasi-Magnetostatics  ║
+  ║  ║╚═╝╠╗ ╔╣╚═╝║╚══╣╚══╣║ ╚╝          Frequency Domain  ║
+  ║  ║╔══╣║ ║║╔══╣╔══╣╔══╣║ ╔╗          Voxel Geometries  ║
+  ║  ║║  ║╚═╝║║  ║╚══╣╚══╣╚═╝║       FFT/GPU Accelerated  ║
+  ║  ╚╝  ╚═╗ ╠╝  ╚═══╩═══╩═══╝    Python and Open Source  ║
+  ╚══════╦═╝ ╠════════════════════════════════════════════╝
+         ╚═══╝
+  ╔═══════════════════════════════════════════════════════╗
+  ║ Website - https://pypeec.otvam.ch                     ║
+  ║ Thomas Guillod - Dartmouth College                    ║
+  ║ Mozilla Public License Version 2.0                    ║
+  ╚═══════════════════════════════════════════════════════╝
+
+00:00:00.00 : MAIN     : INFO     : load the input data
+00:00:00.01 : MAIN     : INFO     : load the solver
+00:00:00.08 : MAIN     : INFO     : run the solver
+00:00:00.08 : SOLVER   : INFO     : check the input data
+00:00:00.08 : SOLVER   : INFO     : combine the input data
+00:00:00.08 : SOLVER   : INFO     : init : enter : timing
+00:00:00.08 : SOLVER   : INFO     :     voxel_geometry : enter : timing
+00:00:00.08 : SOLVER   : INFO     :     voxel_geometry : exit : 00:00:00.00
+00:00:00.08 : SOLVER   : INFO     :     system_tensor : enter : timing
+00:00:00.08 : GREEN    : DEBUG    :         analytical solution: 6D / 1
+00:00:00.09 : GREEN    : DEBUG    :         analytical solution: 6D / 175
+00:00:00.09 : GREEN    : DEBUG    :         analytical solution: 5D / 175
+00:00:00.10 : GREEN    : DEBUG    :         analytical solution: 5D / 175
+00:00:00.10 : GREEN    : DEBUG    :         analytical solution: 5D / 175
+00:00:00.11 : GREEN    : DEBUG    :         analytical solution: 5D / 175
+00:00:00.11 : GREEN    : DEBUG    :         analytical solution: 5D / 175
+00:00:00.12 : GREEN    : DEBUG    :         analytical solution: 5D / 175
+00:00:00.12 : SOLVER   : INFO     :     system_tensor : exit : 00:00:00.03
+00:00:00.12 : SOLVER   : INFO     :     problem_geometry : enter : timing
+00:00:00.13 : PROBLEM  : DEBUG    :         n_voxel_total = 175
+00:00:00.13 : PROBLEM  : DEBUG    :         n_voxel_used = 55
+00:00:00.13 : PROBLEM  : DEBUG    :         n_face_total = 525
+00:00:00.13 : PROBLEM  : DEBUG    :         n_face_used = 86
+00:00:00.13 : PROBLEM  : DEBUG    :         n_voxel_electric = 7
+00:00:00.13 : PROBLEM  : DEBUG    :         n_voxel_magnetic = 48
+00:00:00.13 : PROBLEM  : DEBUG    :         n_face_electric = 6
+00:00:00.13 : PROBLEM  : DEBUG    :         n_face_magnetic = 80
+00:00:00.13 : PROBLEM  : DEBUG    :         n_src_current = 1
+00:00:00.13 : PROBLEM  : DEBUG    :         n_src_voltage = 1
+00:00:00.13 : PROBLEM  : DEBUG    :         ratio_voxel = 3.14e-01
+00:00:00.13 : PROBLEM  : DEBUG    :         ratio_face = 1.64e-01
+00:00:00.13 : SOLVER   : INFO     :     problem_geometry : exit : 00:00:00.00
+00:00:00.13 : SOLVER   : INFO     :     system_matrix : enter : timing
+00:00:00.13 : FFT      : DEBUG    :         multiplication: inductance
+00:00:00.13 : FFT      : DEBUG    :             tensor size: (5, 5, 7)
+00:00:00.13 : FFT      : DEBUG    :             tensor footprint: 0.02 MB
+00:00:00.13 : FFT      : DEBUG    :             library: SciPy / GPU: False
+00:00:00.13 : FFT      : DEBUG    :         multiplication: potential
+00:00:00.13 : FFT      : DEBUG    :             tensor size: (5, 5, 7)
+00:00:00.13 : FFT      : DEBUG    :             tensor footprint: 0.02 MB
+00:00:00.13 : FFT      : DEBUG    :             library: SciPy / GPU: False
+00:00:00.13 : FFT      : DEBUG    :         multiplication: coupling
+00:00:00.13 : FFT      : DEBUG    :             tensor size: (5, 5, 7)
+00:00:00.13 : FFT      : DEBUG    :             tensor footprint: 0.06 MB
+00:00:00.13 : FFT      : DEBUG    :             library: SciPy / GPU: False
+00:00:00.14 : SOLVER   : INFO     :     system_matrix : exit : 00:00:00.00
+00:00:00.14 : SOLVER   : INFO     : init : exit : 00:00:00.05
+00:00:00.14 : SOLVER   : INFO     : run sweep: sim_dc : enter : timing
+00:00:00.14 : SOLVER   : INFO     :     problem_value : enter : timing
+00:00:00.14 : SOLVER   : INFO     :     problem_value : exit : 00:00:00.00
+00:00:00.14 : SOLVER   : INFO     :     equation_system : enter : timing
+00:00:00.14 : FACTOR   : DEBUG    :         factorization: electric
+00:00:00.14 : FACTOR   : DEBUG    :             matrix size: (9, 9)
+00:00:00.14 : FACTOR   : DEBUG    :             matrix elements: 25
+00:00:00.14 : FACTOR   : DEBUG    :             matrix density: 3.09e-01
+00:00:00.14 : FACTOR   : DEBUG    :             library: SuperLU
+00:00:00.14 : FACTOR   : DEBUG    :             compute factorization
+00:00:00.15 : FACTOR   : DEBUG    :             factorization success
+00:00:00.15 : FACTOR   : DEBUG    :         factorization: magnetic
+00:00:00.15 : FACTOR   : DEBUG    :             matrix size: (48, 48)
+00:00:00.15 : FACTOR   : DEBUG    :             matrix elements: 208
+00:00:00.15 : FACTOR   : DEBUG    :             matrix density: 9.03e-02
+00:00:00.15 : FACTOR   : DEBUG    :             library: SuperLU
+00:00:00.15 : FACTOR   : DEBUG    :             compute factorization
+00:00:00.15 : FACTOR   : DEBUG    :             factorization success
+00:00:00.15 : SOLVER   : INFO     :     equation_system : exit : 00:00:00.00
+00:00:00.15 : SOLVER   : INFO     :     equation_solver : enter : timing
+00:00:00.15 : COND     : DEBUG    :         condition: electric
+00:00:00.15 : COND     : DEBUG    :             matrix size: (9, 9)
+00:00:00.15 : COND     : DEBUG    :             matrix elements: 25
+00:00:00.15 : COND     : DEBUG    :             matrix density: 3.09e-01
+00:00:00.15 : COND     : DEBUG    :             compute LU decomposition
+00:00:00.15 : COND     : DEBUG    :             estimate norm of the inverse
+00:00:00.15 : COND     : DEBUG    :             estimate norm of the matrix
+00:00:00.15 : COND     : DEBUG    :             compute condition estimate
+00:00:00.15 : COND     : DEBUG    :         condition: magnetic
+00:00:00.15 : COND     : DEBUG    :             matrix size: (48, 48)
+00:00:00.15 : COND     : DEBUG    :             matrix elements: 208
+00:00:00.15 : COND     : DEBUG    :             matrix density: 9.03e-02
+00:00:00.15 : COND     : DEBUG    :             compute LU decomposition
+00:00:00.15 : COND     : DEBUG    :             estimate norm of the inverse
+00:00:00.15 : COND     : DEBUG    :             estimate norm of the matrix
+00:00:00.15 : COND     : DEBUG    :             compute condition estimate
+00:00:00.15 : EQUATION : DEBUG    :         condition summary
+00:00:00.15 : EQUATION : DEBUG    :             check = True
+00:00:00.15 : EQUATION : DEBUG    :             status = True
+00:00:00.15 : EQUATION : DEBUG    :             value_electric = 3.20e+07
+00:00:00.15 : EQUATION : DEBUG    :             value_magnetic = 1.36e+02
+00:00:00.15 : EQUATION : DEBUG    :             matrix condition is good
+00:00:00.15 : ITER     : DEBUG    :         matrix solver
+00:00:00.15 : ITER     : DEBUG    :             init solver
+00:00:00.15 : ITER     : DEBUG    :             solver: GMRES
+00:00:00.15 : ITER     : DEBUG    :             n_dof: 143
+00:00:00.15 : ITER     : DEBUG    :             call solver
+00:00:00.16 : ITER     : DEBUG    :             i = 1 / 0.00e+00+0.00e+00j VA
+00:00:00.17 : ITER     : DEBUG    :             i = 2 / 1.50e-06-1.25e-12j VA
+00:00:00.18 : ITER     : DEBUG    :             i = 3 / 1.50e-06-8.39e-21j VA
+00:00:00.18 : EQUATION : DEBUG    :         solver summary
+00:00:00.18 : EQUATION : DEBUG    :             n_dof = 143
+00:00:00.18 : EQUATION : DEBUG    :             n_iter = 3
+00:00:00.19 : EQUATION : DEBUG    :             n_sys_eval = 8
+00:00:00.19 : EQUATION : DEBUG    :             n_pcd_eval = 9
+00:00:00.19 : EQUATION : DEBUG    :             res_rms = 1.02e-11
+00:00:00.19 : EQUATION : DEBUG    :             check = True
+00:00:00.19 : EQUATION : DEBUG    :             status_pcd = True
+00:00:00.19 : EQUATION : DEBUG    :             status_solver = True
+00:00:00.19 : EQUATION : DEBUG    :             status_res = True
+00:00:00.19 : EQUATION : DEBUG    :             convergence achieved
+00:00:00.19 : SOLVER   : INFO     :     equation_solver : exit : 00:00:00.03
+00:00:00.19 : SOLVER   : INFO     :     extract_solution : enter : timing
+00:00:00.19 : SOLUTION : DEBUG    :         domain: terminal
+00:00:00.19 : SOLUTION : DEBUG    :             P_electric = 2.50e-07 W
+00:00:00.19 : SOLUTION : DEBUG    :             P_magnetic = 0.00e+00 W
+00:00:00.19 : SOLUTION : DEBUG    :             P_tot = 2.50e-07 W
+00:00:00.19 : SOLUTION : DEBUG    :         domain: cond
+00:00:00.19 : SOLUTION : DEBUG    :             P_electric = 1.25e-06 W
+00:00:00.19 : SOLUTION : DEBUG    :             P_magnetic = 0.00e+00 W
+00:00:00.19 : SOLUTION : DEBUG    :             P_tot = 1.25e-06 W
+00:00:00.19 : SOLUTION : DEBUG    :         domain: core
+00:00:00.19 : SOLUTION : DEBUG    :             P_electric = 0.00e+00 W
+00:00:00.19 : SOLUTION : DEBUG    :             P_magnetic = 0.00e+00 W
+00:00:00.19 : SOLUTION : DEBUG    :             P_tot = 0.00e+00 W
+00:00:00.19 : SOLUTION : DEBUG    :         domain: empty
+00:00:00.19 : SOLUTION : DEBUG    :             P_electric = 0.00e+00 W
+00:00:00.19 : SOLUTION : DEBUG    :             P_magnetic = 0.00e+00 W
+00:00:00.19 : SOLUTION : DEBUG    :             P_tot = 0.00e+00 W
+00:00:00.19 : SOLUTION : DEBUG    :         terminal: src
+00:00:00.19 : SOLUTION : DEBUG    :             V = +1.00e+00 + -2.44e-21j V
+00:00:00.19 : SOLUTION : DEBUG    :             I = +5.00e-01 + +7.18e-21j A
+00:00:00.19 : SOLUTION : DEBUG    :             S = +5.00e-01 + -8.39e-21j VA
+00:00:00.19 : SOLUTION : DEBUG    :         terminal: sink
+00:00:00.19 : SOLUTION : DEBUG    :             V = +1.00e+00 + -2.44e-21j V
+00:00:00.19 : SOLUTION : DEBUG    :             I = -5.00e-01 + +1.22e-21j A
+00:00:00.19 : SOLUTION : DEBUG    :             S = -5.00e-01 + +0.00e+00j VA
+00:00:00.19 : SOLUTION : DEBUG    :         terminal: empty
+00:00:00.19 : SOLUTION : DEBUG    :             V = +0.00e+00 + +0.00e+00j V
+00:00:00.19 : SOLUTION : DEBUG    :             I = +0.00e+00 + +0.00e+00j A
+00:00:00.19 : SOLUTION : DEBUG    :             S = +0.00e+00 + +0.00e+00j VA
+00:00:00.19 : SOLUTION : DEBUG    :         integral
+00:00:00.20 : SOLUTION : DEBUG    :             S_tot_real = 1.50e-06 VA
+00:00:00.20 : SOLUTION : DEBUG    :             S_tot_imag = 1.50e-06j VA
+00:00:00.20 : SOLUTION : DEBUG    :             P_electric = 1.50e-06 W
+00:00:00.20 : SOLUTION : DEBUG    :             P_magnetic = 0.00e+00 W
+00:00:00.20 : SOLUTION : DEBUG    :             W_electric = 3.56e-09 J
+00:00:00.20 : SOLUTION : DEBUG    :             W_magnetic = 1.72e-08 J
+00:00:00.20 : SOLUTION : DEBUG    :             P_tot = 1.50e-06 W
+00:00:00.20 : SOLUTION : DEBUG    :             W_tot = 2.07e-08 J
+00:00:00.20 : SOLVER   : INFO     :     extract_solution : exit : 00:00:00.00
+00:00:00.20 : SOLVER   : INFO     : run sweep: sim_dc : exit : 00:00:00.06
+00:00:00.20 : SOLVER   : INFO     : run sweep: sim_ac : enter : timing
+00:00:00.20 : SOLVER   : INFO     :     problem_value : enter : timing
+00:00:00.20 : SOLVER   : INFO     :     problem_value : exit : 00:00:00.00
+00:00:00.20 : SOLVER   : INFO     :     equation_system : enter : timing
+00:00:00.20 : FACTOR   : DEBUG    :         factorization: electric
+00:00:00.20 : FACTOR   : DEBUG    :             matrix size: (9, 9)
+00:00:00.20 : FACTOR   : DEBUG    :             matrix elements: 25
+00:00:00.20 : FACTOR   : DEBUG    :             matrix density: 3.09e-01
+00:00:00.20 : FACTOR   : DEBUG    :             library: SuperLU
+00:00:00.20 : FACTOR   : DEBUG    :             compute factorization
+00:00:00.20 : FACTOR   : DEBUG    :             factorization success
+00:00:00.20 : FACTOR   : DEBUG    :         factorization: magnetic
+00:00:00.20 : FACTOR   : DEBUG    :             matrix size: (48, 48)
+00:00:00.20 : FACTOR   : DEBUG    :             matrix elements: 208
+00:00:00.20 : FACTOR   : DEBUG    :             matrix density: 9.03e-02
+00:00:00.20 : FACTOR   : DEBUG    :             library: SuperLU
+00:00:00.20 : FACTOR   : DEBUG    :             compute factorization
+00:00:00.20 : FACTOR   : DEBUG    :             factorization success
+00:00:00.20 : SOLVER   : INFO     :     equation_system : exit : 00:00:00.00
+00:00:00.20 : SOLVER   : INFO     :     equation_solver : enter : timing
+00:00:00.20 : COND     : DEBUG    :         condition: electric
+00:00:00.20 : COND     : DEBUG    :             matrix size: (9, 9)
+00:00:00.20 : COND     : DEBUG    :             matrix elements: 25
+00:00:00.20 : COND     : DEBUG    :             matrix density: 3.09e-01
+00:00:00.20 : COND     : DEBUG    :             compute LU decomposition
+00:00:00.20 : COND     : DEBUG    :             estimate norm of the inverse
+00:00:00.21 : COND     : DEBUG    :             estimate norm of the matrix
+00:00:00.21 : COND     : DEBUG    :             compute condition estimate
+00:00:00.21 : COND     : DEBUG    :         condition: magnetic
+00:00:00.21 : COND     : DEBUG    :             matrix size: (48, 48)
+00:00:00.21 : COND     : DEBUG    :             matrix elements: 208
+00:00:00.21 : COND     : DEBUG    :             matrix density: 9.03e-02
+00:00:00.21 : COND     : DEBUG    :             compute LU decomposition
+00:00:00.21 : COND     : DEBUG    :             estimate norm of the inverse
+00:00:00.21 : COND     : DEBUG    :             estimate norm of the matrix
+00:00:00.21 : COND     : DEBUG    :             compute condition estimate
+00:00:00.21 : EQUATION : DEBUG    :         condition summary
+00:00:00.21 : EQUATION : DEBUG    :             check = True
+00:00:00.21 : EQUATION : DEBUG    :             status = True
+00:00:00.21 : EQUATION : DEBUG    :             value_electric = 2.70e+06
+00:00:00.21 : EQUATION : DEBUG    :             value_magnetic = 1.36e+02
+00:00:00.21 : EQUATION : DEBUG    :             matrix condition is good
+00:00:00.21 : ITER     : DEBUG    :         matrix solver
+00:00:00.21 : ITER     : DEBUG    :             init solver
+00:00:00.21 : ITER     : DEBUG    :             solver: GMRES
+00:00:00.21 : ITER     : DEBUG    :             n_dof: 143
+00:00:00.21 : ITER     : DEBUG    :             call solver
+00:00:00.22 : ITER     : DEBUG    :             i = 1 / 7.50e-07-4.20e-21j VA
+00:00:00.27 : ITER     : DEBUG    :             i = 2 / 5.45e-05+1.30e-04j VA
+00:00:00.33 : ITER     : DEBUG    :             i = 3 / 5.45e-05+1.30e-04j VA
+00:00:00.33 : EQUATION : DEBUG    :         solver summary
+00:00:00.33 : EQUATION : DEBUG    :             n_dof = 143
+00:00:00.33 : EQUATION : DEBUG    :             n_iter = 3
+00:00:00.33 : EQUATION : DEBUG    :             n_sys_eval = 10
+00:00:00.33 : EQUATION : DEBUG    :             n_pcd_eval = 10
+00:00:00.33 : EQUATION : DEBUG    :             res_rms = 5.28e-08
+00:00:00.33 : EQUATION : DEBUG    :             check = True
+00:00:00.33 : EQUATION : DEBUG    :             status_pcd = True
+00:00:00.33 : EQUATION : DEBUG    :             status_solver = True
+00:00:00.33 : EQUATION : DEBUG    :             status_res = True
+00:00:00.33 : EQUATION : DEBUG    :             convergence achieved
+00:00:00.33 : SOLVER   : INFO     :     equation_solver : exit : 00:00:00.13
+00:00:00.33 : SOLVER   : INFO     :     extract_solution : enter : timing
+00:00:00.34 : SOLUTION : DEBUG    :         domain: terminal
+00:00:00.34 : SOLUTION : DEBUG    :             P_electric = 1.25e-07 W
+00:00:00.34 : SOLUTION : DEBUG    :             P_magnetic = 0.00e+00 W
+00:00:00.34 : SOLUTION : DEBUG    :             P_tot = 1.25e-07 W
+00:00:00.34 : SOLUTION : DEBUG    :         domain: cond
+00:00:00.34 : SOLUTION : DEBUG    :             P_electric = 6.25e-07 W
+00:00:00.34 : SOLUTION : DEBUG    :             P_magnetic = 0.00e+00 W
+00:00:00.34 : SOLUTION : DEBUG    :             P_tot = 6.25e-07 W
+00:00:00.34 : SOLUTION : DEBUG    :         domain: core
+00:00:00.34 : SOLUTION : DEBUG    :             P_electric = 0.00e+00 W
+00:00:00.34 : SOLUTION : DEBUG    :             P_magnetic = 5.38e-05 W
+00:00:00.34 : SOLUTION : DEBUG    :             P_tot = 5.38e-05 W
+00:00:00.34 : SOLUTION : DEBUG    :         domain: empty
+00:00:00.34 : SOLUTION : DEBUG    :             P_electric = 0.00e+00 W
+00:00:00.34 : SOLUTION : DEBUG    :             P_magnetic = 0.00e+00 W
+00:00:00.34 : SOLUTION : DEBUG    :             P_tot = 0.00e+00 W
+00:00:00.34 : SOLUTION : DEBUG    :         terminal: src
+00:00:00.34 : SOLUTION : DEBUG    :             V = +1.00e+00 + +2.60e-04j V
+00:00:00.34 : SOLUTION : DEBUG    :             I = +5.00e-01 + -1.30e-04j A
+00:00:00.34 : SOLUTION : DEBUG    :             S = +2.50e-01 + +1.30e-04j VA
+00:00:00.34 : SOLUTION : DEBUG    :         terminal: sink
+00:00:00.34 : SOLUTION : DEBUG    :             V = +1.00e+00 + -2.60e-04j V
+00:00:00.34 : SOLUTION : DEBUG    :             I = -5.00e-01 + +1.30e-04j A
+00:00:00.34 : SOLUTION : DEBUG    :             S = -2.50e-01 + +0.00e+00j VA
+00:00:00.34 : SOLUTION : DEBUG    :         terminal: empty
+00:00:00.34 : SOLUTION : DEBUG    :             V = +0.00e+00 + +0.00e+00j V
+00:00:00.34 : SOLUTION : DEBUG    :             I = +0.00e+00 + +0.00e+00j A
+00:00:00.34 : SOLUTION : DEBUG    :             S = +0.00e+00 + +0.00e+00j VA
+00:00:00.34 : SOLUTION : DEBUG    :         integral
+00:00:00.34 : SOLUTION : DEBUG    :             S_tot_real = 5.45e-05 VA
+00:00:00.34 : SOLUTION : DEBUG    :             S_tot_imag = 5.45e-05j VA
+00:00:00.34 : SOLUTION : DEBUG    :             P_electric = 7.50e-07 W
+00:00:00.34 : SOLUTION : DEBUG    :             P_magnetic = 5.38e-05 W
+00:00:00.34 : SOLUTION : DEBUG    :             W_electric = 1.78e-09 J
+00:00:00.34 : SOLUTION : DEBUG    :             W_magnetic = 8.57e-09 J
+00:00:00.34 : SOLUTION : DEBUG    :             P_tot = 5.45e-05 W
+00:00:00.34 : SOLUTION : DEBUG    :             W_tot = 1.04e-08 J
+00:00:00.34 : SOLVER   : INFO     :     extract_solution : exit : 00:00:00.01
+00:00:00.34 : SOLVER   : INFO     : run sweep: sim_ac : exit : 00:00:00.14
+00:00:00.34 : SOLVER   : INFO     : duration: 00:00:00.26
+00:00:00.34 : SOLVER   : INFO     : successful termination
+00:00:00.34 : MAIN     : INFO     : save the results

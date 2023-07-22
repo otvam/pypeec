@@ -1,40 +1,62 @@
-00:00:00.000 : MAIN        : INFO         : load the input data
-00:00:00.006 : MAIN        : INFO         : load the mesher
-00:00:00.945 : MAIN        : INFO         : run the mesher
-00:00:00.945 : MESHER      : INFO         : check the input data
-00:00:00.946 : MESHER      : INFO         : mesher_voxel : enter : timing
-00:00:00.946 : VOXEL       : DEBUG        :     core: size = 48
-00:00:00.946 : VOXEL       : DEBUG        :     cond: size = 5
-00:00:00.946 : VOXEL       : DEBUG        :     src: size = 1
-00:00:00.946 : VOXEL       : DEBUG        :     sink: size = 1
-00:00:00.946 : VOXEL       : DEBUG        :     empty: size = 0
-00:00:00.946 : MESHER      : INFO         : mesher_voxel : exit : 00:00:00.000
-00:00:00.946 : MESHER      : INFO         : voxel_conflict : enter : timing
-00:00:00.947 : MESHER      : INFO         : voxel_conflict : exit : 00:00:00.000
-00:00:00.947 : MESHER      : INFO         : voxel_resample : enter : timing
-00:00:00.947 : SAMPLE      : DEBUG        :     voxel: original number = 175
-00:00:00.947 : SAMPLE      : DEBUG        :     voxel: final number = 175
-00:00:00.947 : MESHER      : INFO         : voxel_resample : exit : 00:00:00.000
-00:00:00.947 : MESHER      : INFO         : voxel_connection : enter : timing
-00:00:00.949 : MESHER      : INFO         : voxel_connection : exit : 00:00:00.002
-00:00:00.949 : MESHER      : INFO         : voxel_summary : enter : timing
-00:00:00.950 : SUMMARY     : DEBUG        :     voxel: number = (nx, ny, nz)) = (5, 5, 7)
-00:00:00.950 : SUMMARY     : DEBUG        :     voxel: size = (dx, dy, dz) =  (1.000e-02, 1.000e-02, 1.000e-02)
-00:00:00.950 : SUMMARY     : DEBUG        :     voxel: span = (sx, sy, sz) =  (5.000e-02, 5.000e-02, 7.000e-02)
-00:00:00.950 : SUMMARY     : DEBUG        :     voxel: center = (cx, cy, cz) =  (0.000e+00, 0.000e+00, 0.000e+00)
-00:00:00.950 : SUMMARY     : DEBUG        :     size: A_xy = 2.500e-03 / A_yz = 3.500e-03 / A_xz = 3.500e-03
-00:00:00.950 : SUMMARY     : DEBUG        :     size: V_total = 1.750e-04 / V_used = 5.500e-05
-00:00:00.950 : SUMMARY     : DEBUG        :     size: n_total = 175 / n_used = 55
-00:00:00.950 : SUMMARY     : DEBUG        :     size: ratio = 3.143e-01
-00:00:00.950 : SUMMARY     : DEBUG        :     size: n_domain = 5
-00:00:00.950 : SUMMARY     : DEBUG        :     size: n_graph = 2
-00:00:00.950 : SUMMARY     : DEBUG        :     domain: core = 48
-00:00:00.950 : SUMMARY     : DEBUG        :     domain: cond = 5
-00:00:00.950 : SUMMARY     : DEBUG        :     domain: src = 1
-00:00:00.950 : SUMMARY     : DEBUG        :     domain: sink = 1
-00:00:00.950 : SUMMARY     : DEBUG        :     domain: empty = 0
-00:00:00.950 : MESHER      : INFO         : voxel_summary : exit : 00:00:00.000
-00:00:00.950 : MESHER      : INFO         : duration: 00:00:00.004
-00:00:00.950 : MESHER      : INFO         : successful termination
-00:00:00.950 : MAIN        : INFO         : save the results
 
+  ╔═══════════════════════════════════════════════════════╗
+  ║  ╔═══╗   ╔═══╦═══╦═══╦═══╗            3D PEEC Solver  ║
+  ║  ║╔═╗║   ║╔═╗║╔══╣╔══╣╔═╗║      Quasi-Magnetostatics  ║
+  ║  ║╚═╝╠╗ ╔╣╚═╝║╚══╣╚══╣║ ╚╝          Frequency Domain  ║
+  ║  ║╔══╣║ ║║╔══╣╔══╣╔══╣║ ╔╗          Voxel Geometries  ║
+  ║  ║║  ║╚═╝║║  ║╚══╣╚══╣╚═╝║       FFT/GPU Accelerated  ║
+  ║  ╚╝  ╚═╗ ╠╝  ╚═══╩═══╩═══╝    Python and Open Source  ║
+  ╚══════╦═╝ ╠════════════════════════════════════════════╝
+         ╚═══╝
+  ╔═══════════════════════════════════════════════════════╗
+  ║ Website - https://pypeec.otvam.ch                     ║
+  ║ Thomas Guillod - Dartmouth College                    ║
+  ║ Mozilla Public License Version 2.0                    ║
+  ╚═══════════════════════════════════════════════════════╝
+
+00:00:00.00 : MAIN     : INFO     : load the input data
+00:00:00.00 : MAIN     : INFO     : load the mesher
+00:00:01.35 : MAIN     : INFO     : run the mesher
+00:00:01.35 : MESHER   : INFO     : check the input data
+00:00:01.35 : MESHER   : INFO     : mesher_voxel : enter : timing
+00:00:01.35 : VOXEL    : DEBUG    :     core: size = 48
+00:00:01.35 : VOXEL    : DEBUG    :     cond: size = 5
+00:00:01.35 : VOXEL    : DEBUG    :     src: size = 1
+00:00:01.35 : VOXEL    : DEBUG    :     sink: size = 1
+00:00:01.36 : VOXEL    : DEBUG    :     empty: size = 0
+00:00:01.36 : MESHER   : INFO     : mesher_voxel : exit : 00:00:00.00
+00:00:01.36 : MESHER   : INFO     : voxel_conflict : enter : timing
+00:00:01.36 : MESHER   : INFO     : voxel_conflict : exit : 00:00:00.00
+00:00:01.36 : MESHER   : INFO     : voxel_resample : enter : timing
+00:00:01.36 : SAMPLE   : DEBUG    :     original number = 175
+00:00:01.36 : SAMPLE   : DEBUG    :     use_reduce = False
+00:00:01.36 : SAMPLE   : DEBUG    :     use_resample = False
+00:00:01.36 : SAMPLE   : DEBUG    :     final number = 175
+00:00:01.36 : MESHER   : INFO     : voxel_resample : exit : 00:00:00.00
+00:00:01.36 : MESHER   : INFO     : voxel_connection : enter : timing
+00:00:01.36 : MESHER   : INFO     : voxel_connection : exit : 00:00:00.00
+00:00:01.36 : MESHER   : INFO     : voxel_summary : enter : timing
+00:00:01.36 : SUMMARY  : DEBUG    :     voxel size
+00:00:01.36 : SUMMARY  : DEBUG    :         n = (5, 5, 7)
+00:00:01.36 : SUMMARY  : DEBUG    :         d = (1.00e-02, 1.00e-02, 1.00e-02)
+00:00:01.36 : SUMMARY  : DEBUG    :         s = (5.00e-02, 5.00e-02, 7.00e-02)
+00:00:01.36 : SUMMARY  : DEBUG    :         c = (0.00e+00, 0.00e+00, 0.00e+00)
+00:00:01.36 : SUMMARY  : DEBUG    :         A = (2.50e-03, 3.50e-03, 3.50e-03)
+00:00:01.36 : SUMMARY  : DEBUG    :     voxel summary
+00:00:01.36 : SUMMARY  : DEBUG    :         V_total = 1.75e-04
+00:00:01.36 : SUMMARY  : DEBUG    :         V_used = 5.50e-05
+00:00:01.36 : SUMMARY  : DEBUG    :         n_total = 175
+00:00:01.36 : SUMMARY  : DEBUG    :         n_used = 55
+00:00:01.36 : SUMMARY  : DEBUG    :         ratio = 3.14e-01
+00:00:01.36 : SUMMARY  : DEBUG    :         n_domain = 5
+00:00:01.36 : SUMMARY  : DEBUG    :         n_graph = 2
+00:00:01.36 : SUMMARY  : DEBUG    :     voxel domain
+00:00:01.36 : SUMMARY  : DEBUG    :         core = 48
+00:00:01.36 : SUMMARY  : DEBUG    :         cond = 5
+00:00:01.36 : SUMMARY  : DEBUG    :         src = 1
+00:00:01.36 : SUMMARY  : DEBUG    :         sink = 1
+00:00:01.36 : SUMMARY  : DEBUG    :         empty = 0
+00:00:01.36 : MESHER   : INFO     : voxel_summary : exit : 00:00:00.00
+00:00:01.36 : MESHER   : INFO     : duration: 00:00:00.00
+00:00:01.36 : MESHER   : INFO     : successful termination
+00:00:01.36 : MAIN     : INFO     : save the results
