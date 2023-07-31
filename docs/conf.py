@@ -41,6 +41,7 @@ release = version
 
 # load extensions
 extensions = [
+    'sphinx.ext.githubpages',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
@@ -58,6 +59,7 @@ html_static_path = ['_static']
 html_theme_path = ['_static']
 
 # html options
+html_baseurl = 'https://pypeec.otvam.ch'
 html_theme = 'sphinx_rtd_theme'
 html_logo = "images/header.png"
 html_favicon = "images/icon.png"
