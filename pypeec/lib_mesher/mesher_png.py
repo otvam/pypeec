@@ -158,7 +158,7 @@ def _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list):
         domain_def[tag] = np.append(domain_def[tag], idx_voxel)
 
     # display the layer size
-    LOGGER.debug("layer: size = %d / n_voxels = %d" % (n_layer, n_voxel))
+    LOGGER.debug("size = %d / n_voxels = %d" % (n_layer, n_voxel))
 
     # update the layer stack
     nz += n_layer
