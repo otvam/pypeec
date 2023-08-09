@@ -16,12 +16,11 @@ def _get_value_terminal(source, src, sink):
 
     V = source[src]["V"]-source[sink]["V"]
     I = (source[src]["I"]-source[sink]["I"])/2
-    S = (source[src]["S"]-source[sink]["S"])/2
 
-    return V, I, S
+    return V, I
 
 
-def _get_load_terminal(freq, source, has_converged, winding_description):
+def _get_load_terminal(source, winding_description):
     """
     Get the terminal currents and voltages for a specific sweep.
     """
@@ -29,10 +28,6 @@ def _get_load_terminal(freq, source, has_converged, winding_description):
     # init list
     V_vec = []
     I_vec = []
-    S_vec = []
-
-    # get length
-    n_winding = len(winding_description)
 
     # get the solution
     for winding_description_tmp in winding_description:
@@ -41,31 +36,22 @@ def _get_load_terminal(freq, source, has_converged, winding_description):
         sink = winding_description_tmp["sink"]
 
         # extract the terminal quantities
-        (V, I, S) = _get_value_terminal(source, src, sink)
+        (V, I) = _get_value_terminal(source, src, sink)
 
         # add the quantities
         V_vec.append(V)
         I_vec.append(I)
-        S_vec.append(S)
 
     # assign the data
     V_vec = np.array(V_vec, dtype=np.complex_)
     I_vec = np.array(I_vec, dtype=np.complex_)
-    S_vec = np.array(S_vec, dtype=np.complex_)
 
-    # assign
-    terminal = {
-        "freq": freq, "has_converged": has_converged,
-        "V_vec": V_vec, "I_vec": I_vec, "S_vec": S_vec,
-    }
-
-    return n_winding, terminal
+    return V_vec, I_vec
 
 
-def get_extract(data_solution, sweep_description):
+def get_extract(data_solution, sweep_name, winding_description):
     """
     Get the terminal currents and voltages for given sweep and windings.
-    The winding description can be different for the sweeps.
     """
 
     # extract the data
@@ -78,67 +64,37 @@ def get_extract(data_solution, sweep_description):
     assert isinstance(data_init, dict), "invalid solution"
     assert isinstance(data_init, dict), "invalid solution"
 
-    # extract data
-    terminal = []
-    n_winding = []
-    for sweep_description_tmp in sweep_description:
-        # extract data
-        sweep_name = sweep_description_tmp["sweep_name"]
-        winding_description = sweep_description_tmp["winding_description"]
+    # init data
+    V_mat = []
+    I_mat = []
+    freq_vec = []
+    has_converged_vec = []
 
+    # extract data
+    for sweep_name_tmp in sweep_name:
         # extract the data
-        data_sweep_tmp = data_sweep[sweep_name]
+        data_sweep_tmp = data_sweep[sweep_name_tmp]
         freq = data_sweep_tmp["freq"]
         source = data_sweep_tmp["source"]
         has_converged = data_sweep_tmp["has_converged"]
 
         # compute
-        (n_winding_tmp, terminal_tmp) = _get_load_terminal(freq, source, has_converged, winding_description)
+        (V_vec, I_vec) = _get_load_terminal(source, winding_description)
 
         # assign
-        terminal.append(terminal_tmp)
-        n_winding.append(n_winding_tmp)
+        V_mat.append(V_vec)
+        I_mat.append(I_vec)
+        freq_vec.append(freq)
+        has_converged_vec.append(has_converged)
 
-    # check winding length
-    n_winding = np.unique(n_winding)
-    assert len(n_winding) == 1, "invalid winding number"
+    # create data
+    terminal = {
+        "n_solution": len(sweep_name),
+        "n_winding": len(winding_description),
+        "V_mat": np.array(V_mat, dtype=np.complex_).transpose(),
+        "I_mat": np.array(I_mat, dtype=np.complex_).transpose(),
+        "has_converged_vec": np.array(has_converged_vec, dtype=bool),
+        "freq_vec": np.array(freq_vec, dtype=np.float_),
+    }
 
-    # cast to scalar
-    n_winding = n_winding.item()
-
-    return n_winding, terminal
-
-
-def get_extract_complete(data_solution, sweep_name_list, winding_description):
-    """
-    Get the terminal currents and voltages for given sweep and windings.
-    The winding description is the same for all the sweeps.
-    """
-
-    # create the sweep and winding description
-    sweep_description = []
-    for sweep_name in sweep_name_list:
-        sweep_description.append({"sweep_name": sweep_name, "winding_description": winding_description})
-
-    # extract the data
-    (n_winding, terminal) = get_extract(data_solution, sweep_description)
-
-    return n_winding, terminal
-
-
-def get_extract_symmetric(data_solution, sweep_name, winding_description):
-    """
-    Get the terminal currents and voltages for a simulation with symmetric windings.
-    A single sweep is used and the winding description circularly shifted.
-    """
-
-    # create the sweep and winding description
-    sweep_description = []
-    for i in range(len(winding_description)):
-        winding_description_shift = np.roll(winding_description, i).tolist()
-        sweep_description.append({"sweep_name": sweep_name, "winding_description": winding_description_shift})
-
-    # extract the data
-    (n_winding, terminal) = get_extract(data_solution, sweep_description)
-
-    return n_winding, terminal
+    return terminal
