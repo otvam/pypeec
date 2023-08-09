@@ -62,7 +62,7 @@ def _get_eqn_matrix(n_winding, var_idx, I_vec):
     return eqn_mat
 
 
-def _get_solve_matrix(n_winding, terminal, extraction_tolerance):
+def _get_solve_matrix(terminal, extraction_tolerance):
     """
     Extract the impedance matrix of the component.
 
@@ -78,36 +78,40 @@ def _get_solve_matrix(n_winding, terminal, extraction_tolerance):
     tol_freq = extraction_tolerance["tol_freq"]
     check_convergence = extraction_tolerance["check_convergence"]
 
+    # extract the data
+    n_solution = terminal["n_solution"]
+    n_winding = terminal["n_winding"]
+    has_converged_vec = terminal["has_converged_vec"]
+    freq_vec = terminal["freq_vec"]
+    V_mat = terminal["V_mat"]
+    I_mat = terminal["I_mat"]
+
     # get the matrix size and indices of the coefficients
     var_idx = _get_idx_matrix(n_winding)
 
     # init the matrices
-    freq_vec = np.zeros(0, dtype=np.float_)
     rhs_vec = np.zeros(0, dtype=np.complex_)
     eqn_mat = np.zeros((0, len(var_idx)), dtype=np.complex_)
 
     # get the matrices
-    for terminal_tmp in terminal:
+    for i in range(n_solution):
         # extract the data
-        freq = terminal_tmp["freq"]
-        has_converged = terminal_tmp["has_converged"]
-        V_vec = terminal_tmp["V_vec"]
-        I_vec = terminal_tmp["I_vec"]
-
-        # check convergence
-        if check_convergence:
-            assert has_converged, "invalid solution: convergence issue"
+        V_vec = V_mat[:, i]
+        I_vec = I_mat[:, i]
 
         # get the equation matrix
         eqn_tmp = _get_eqn_matrix(n_winding, var_idx, I_vec)
 
         # append the data
-        freq_vec = np.append(freq_vec, freq)
         rhs_vec = np.concatenate((rhs_vec, V_vec), axis=0)
         eqn_mat = np.concatenate((eqn_mat, eqn_tmp), axis=0)
 
     # check that the frequency is constant
     assert np.ptp(freq_vec) < tol_freq, "invalid solution: invalid frequency"
+
+    # check convergence
+    if check_convergence:
+        assert np.all(has_converged_vec), "invalid solution: convergence issue"
 
     # compute the frequency
     freq = np.mean(freq_vec)
@@ -130,7 +134,7 @@ def _get_solve_matrix(n_winding, terminal, extraction_tolerance):
     # assign the coefficients to the full impedance matrix
     Z_mat = _get_assign_matrix(n_winding, var_idx, sol)
 
-    return freq, Z_mat
+    return n_winding, freq, Z_mat
 
 
 def _get_coupling_matrix(n_winding, RL_mat):
@@ -168,20 +172,21 @@ def _get_parse_matrix(n_winding, freq, Z_mat):
 
     # assign the results
     matrix = {
-        "freq": freq, "Z_mat": Z_mat, "R_mat": R_mat, "L_mat": L_mat,
+        "freq": freq, "n_winding": n_winding,
+        "Z_mat": Z_mat, "R_mat": R_mat, "L_mat": L_mat,
         "k_R_mat": k_R_mat, "k_L_mat": k_L_mat, "Q_mat": Q_mat,
     }
 
     return matrix
 
 
-def get_extract(n_winding, terminal, extraction_tolerance):
+def get_extract(terminal, extraction_tolerance):
     """
     Extract the equivalent circuit of a component.
     """
 
     # get the impedance matrix
-    (freq, res) = _get_solve_matrix(n_winding, terminal, extraction_tolerance)
+    (n_winding, freq, res) = _get_solve_matrix(terminal, extraction_tolerance)
 
     # get the complete circuit
     matrix = _get_parse_matrix(n_winding, freq, res)
