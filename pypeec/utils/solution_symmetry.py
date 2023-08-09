@@ -13,29 +13,29 @@ __license__ = "Mozilla Public License Version 2.0"
 import numpy as np
 
 
-def _get_excitation_compact(data, sym):
+def _get_excitation_compact(data, symmetry):
     """
     Reduce a matrix with respect to a particular symmetry.
     Only a single excitation per symmetry is kept.
     """
 
     # extract
-    perm = sym["perm"]
-    sim = sym["sim"]
+    perm = symmetry["perm"]
+    ref = symmetry["ref"]
 
     # cast and check
     perm = np.array(perm, dtype=int)
-    if sim >= len(perm):
+    if ref >= len(perm):
         raise ValueError("invalid index")
 
     # combine excitations with the symmetry
     for perm_tmp in perm:
-        data[:, perm_tmp] = data[:, perm[sim]]
+        data[:, perm_tmp] = data[:, perm[ref]]
 
     return data
 
 
-def _get_solution_expand(n_winding, data, sym):
+def _get_solution_expand(n_winding, data, symmetry):
     """
     Expand a matrix with respect to a particular symmetry.
     Different solutions are generated with permutations.
@@ -43,12 +43,12 @@ def _get_solution_expand(n_winding, data, sym):
     """
 
     # extract
-    perm = sym["perm"]
-    sim = sym["sim"]
+    perm = symmetry["perm"]
+    ref = symmetry["ref"]
 
     # cast and check
     perm = np.array(perm, dtype=int)
-    if sim >= len(perm):
+    if ref >= len(perm):
         raise ValueError("invalid index")
 
     # initialize the expanded matrix
@@ -73,7 +73,7 @@ def _get_solution_expand(n_winding, data, sym):
     return data_all
 
 
-def get_excitation_all(n_winding, sym):
+def get_excitation_all(n_winding, symmetry):
     """
     Determine which simulations are required to extract the full impedance matrix.
     The different symmetries are used to reduce the number of simulations.
@@ -83,8 +83,8 @@ def get_excitation_all(n_winding, sym):
     excitation = np.eye(n_winding, dtype=bool)
 
     # combine excitations with the symmetries
-    for sym_tmp in sym:
-        excitation = _get_excitation_compact(excitation, sym_tmp)
+    for symmetry_tmp in symmetry:
+        excitation = _get_excitation_compact(excitation, symmetry_tmp)
 
     # remove redundant excitations
     (excitation, idx) = np.unique(excitation, axis=1, return_index=True)
@@ -95,7 +95,7 @@ def get_excitation_all(n_winding, sym):
     return n_solution, excitation
 
 
-def get_solution_all(terminal, sym):
+def get_solution_all(terminal, symmetry):
     """
     Generate a full solution from a reduced solution.
     The different symmetries are used to expand the number of simulations.
@@ -113,7 +113,7 @@ def get_solution_all(terminal, sym):
     assert V_mat.shape == (n_winding, n_solution), "invalid solution: voltage matrix shape"
 
     # expand the solution with the symmetries
-    for sym_tmp in sym:
+    for sym_tmp in symmetry:
         I_mat = _get_solution_expand(n_winding, I_mat, sym_tmp)
         V_mat = _get_solution_expand(n_winding, V_mat, sym_tmp)
 
