@@ -52,7 +52,7 @@ def _get_solution_expand(n_winding, data, sym):
         raise ValueError("invalid index")
 
     # initialize the expanded matrix
-    data_all = np.zeros((n_winding, 0), dtype=bool)
+    data_all = np.zeros((n_winding, 0), dtype=data.dtype)
 
     # index for the permutation
     idx = np.arange(len(perm))
