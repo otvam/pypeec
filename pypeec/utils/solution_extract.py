@@ -20,7 +20,7 @@ def _get_value_terminal(source, src, sink):
     return V, I
 
 
-def _get_load_terminal(source, winding_description):
+def _get_load_terminal(source, terminal_list):
     """
     Get the terminal currents and voltages for a specific sweep.
     """
@@ -30,10 +30,10 @@ def _get_load_terminal(source, winding_description):
     I_vec = []
 
     # get the solution
-    for winding_description_tmp in winding_description:
+    for terminal in terminal_list:
         # extract the terminal name
-        src = winding_description_tmp["src"]
-        sink = winding_description_tmp["sink"]
+        src = terminal["src"]
+        sink = terminal["sink"]
 
         # extract the terminal quantities
         (V, I) = _get_value_terminal(source, src, sink)
@@ -49,7 +49,7 @@ def _get_load_terminal(source, winding_description):
     return V_vec, I_vec
 
 
-def get_extract(data_solution, sweep_name, winding_description, tol_freq):
+def get_extract(data_solution, sweep_list, terminal_list, tol_freq):
     """
     Get the terminal currents and voltages for given sweeps and windings.
     """
@@ -71,15 +71,15 @@ def get_extract(data_solution, sweep_name, winding_description, tol_freq):
     has_converged_vec = []
 
     # extract data
-    for sweep_name_tmp in sweep_name:
+    for sweep in sweep_list:
         # extract the data
-        data_sweep_tmp = data_sweep[sweep_name_tmp]
+        data_sweep_tmp = data_sweep[sweep]
         freq = data_sweep_tmp["freq"]
         source = data_sweep_tmp["source"]
         has_converged = data_sweep_tmp["has_converged"]
 
         # compute
-        (V_vec, I_vec) = _get_load_terminal(source, winding_description)
+        (V_vec, I_vec) = _get_load_terminal(source, terminal_list)
 
         # assign
         V_mat.append(V_vec)
@@ -97,8 +97,8 @@ def get_extract(data_solution, sweep_name, winding_description, tol_freq):
 
     # create data
     terminal = {
-        "n_solution": len(sweep_name),
-        "n_winding": len(winding_description),
+        "n_solution": len(sweep_list),
+        "n_winding": len(terminal_list),
         "V_mat": np.array(V_mat, dtype=np.complex_).transpose(),
         "I_mat": np.array(I_mat, dtype=np.complex_).transpose(),
         "freq": freq,
