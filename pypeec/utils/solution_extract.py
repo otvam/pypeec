@@ -49,7 +49,7 @@ def _get_load_terminal(source, winding_description):
     return V_vec, I_vec
 
 
-def get_extract(data_solution, sweep_name, winding_description):
+def get_extract(data_solution, sweep_name, winding_description, tol_freq):
     """
     Get the terminal currents and voltages for given sweep and windings.
     """
@@ -87,14 +87,28 @@ def get_extract(data_solution, sweep_name, winding_description):
         freq_vec.append(freq)
         has_converged_vec.append(has_converged)
 
+    # assemble convergence
+    has_converged = np.all(has_converged_vec)
+    has_converged = has_converged.item()
+
+    # assemble frequency
+    freq = np.mean(freq_vec)
+    freq = freq.item()
+
+    # check frequency
+    assert np.ptp(freq_vec) < tol_freq, "invalid solution: invalid frequency"
+    assert np.all(has_converged_vec), "invalid solution: convergence issue"
+
+    # compute the frequency
+    freq = np.mean(freq_vec)
+
     # create data
     terminal = {
         "n_solution": len(sweep_name),
         "n_winding": len(winding_description),
         "V_mat": np.array(V_mat, dtype=np.complex_).transpose(),
         "I_mat": np.array(I_mat, dtype=np.complex_).transpose(),
-        "has_converged_vec": np.array(has_converged_vec, dtype=bool),
-        "freq_vec": np.array(freq_vec, dtype=np.float_),
+        "freq": freq,
     }
 
     return terminal

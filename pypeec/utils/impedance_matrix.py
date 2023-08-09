@@ -62,7 +62,7 @@ def _get_eqn_matrix(n_winding, var_idx, I_vec):
     return eqn_mat
 
 
-def _get_solve_matrix(terminal, extraction_tolerance):
+def _get_solve_matrix(terminal, tol_res):
     """
     Extract the impedance matrix of the component.
 
@@ -74,17 +74,15 @@ def _get_solve_matrix(terminal, extraction_tolerance):
     """
 
     # extract the data
-    tol_res = extraction_tolerance["tol_res"]
-    tol_freq = extraction_tolerance["tol_freq"]
-    check_convergence = extraction_tolerance["check_convergence"]
-
-    # extract the data
     n_solution = terminal["n_solution"]
     n_winding = terminal["n_winding"]
-    has_converged_vec = terminal["has_converged_vec"]
-    freq_vec = terminal["freq_vec"]
+    freq = terminal["freq"]
     V_mat = terminal["V_mat"]
     I_mat = terminal["I_mat"]
+
+    # check size
+    assert I_mat.shape == (n_winding, n_solution), "invalid solution: current matrix shape"
+    assert V_mat.shape == (n_winding, n_solution), "invalid solution: voltage matrix shape"
 
     # get the matrix size and indices of the coefficients
     var_idx = _get_idx_matrix(n_winding)
@@ -105,19 +103,6 @@ def _get_solve_matrix(terminal, extraction_tolerance):
         # append the data
         rhs_vec = np.concatenate((rhs_vec, V_vec), axis=0)
         eqn_mat = np.concatenate((eqn_mat, eqn_tmp), axis=0)
-
-    # check that the frequency is constant
-    assert np.ptp(freq_vec) < tol_freq, "invalid solution: invalid frequency"
-
-    # check convergence
-    if check_convergence:
-        assert np.all(has_converged_vec), "invalid solution: convergence issue"
-
-    # compute the frequency
-    freq = np.mean(freq_vec)
-
-    # check that the frequency is positive
-    assert freq > 0, "invalid solution: invalid frequency"
 
     # check system size
     assert len(rhs_vec) >= len(var_idx), "invalid solution: number of equation is too low"
@@ -180,13 +165,13 @@ def _get_parse_matrix(n_winding, freq, Z_mat):
     return matrix
 
 
-def get_extract(terminal, extraction_tolerance):
+def get_extract(terminal, tol_res):
     """
     Extract the equivalent circuit of a component.
     """
 
     # get the impedance matrix
-    (n_winding, freq, res) = _get_solve_matrix(terminal, extraction_tolerance)
+    (n_winding, freq, res) = _get_solve_matrix(terminal, tol_res)
 
     # get the complete circuit
     matrix = _get_parse_matrix(n_winding, freq, res)
