@@ -111,9 +111,13 @@ def _get_solve_matrix(terminal, tol_res):
     assert lna.matrix_rank(eqn_mat) == len(var_idx),  "invalid solution: system rank is insufficient"
 
     # extraction impedance coefficients with a least-square solution
-    (sol, res, _, _) = lna.lstsq(eqn_mat, rhs_vec, rcond=None)
+    (sol, _, _, _) = lna.lstsq(eqn_mat, rhs_vec, rcond=None)
 
     # check residuum
+    res_vec = np.matmul(eqn_mat, sol)-rhs_vec
+    res_rms = np.sqrt(np.mean(np.abs(res_vec)**2))
+    rhs_rms = np.sqrt(np.mean(np.abs(rhs_vec)**2))
+    res = res_rms/rhs_rms
     assert np.all(res < tol_res), "invalid solution: residuum issue"
 
     # assign the coefficients to the full impedance matrix

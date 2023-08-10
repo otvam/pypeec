@@ -119,12 +119,8 @@ def get_solution_all(terminal, symmetry):
 
     # remove redundant solutions
     IV_mat = np.vstack((I_mat, V_mat))
-    (_, idx) = np.unique(IV_mat, axis=1, return_index=True)
-    I_mat = I_mat[:, idx]
-    V_mat = V_mat[:, idx]
-
-    # get the number of solutions for the full problem
-    n_solution = len(idx)
+    (n_terminal, n_solution) = IV_mat.shape
+    assert n_terminal == (2*n_winding), "invalid solution: terminal matrix shape"
 
     # update terminal
     terminal = {
