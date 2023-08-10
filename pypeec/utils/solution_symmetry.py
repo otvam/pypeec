@@ -30,7 +30,7 @@ def _get_excitation_compact(data, symmetry):
 
     # combine excitations with the symmetry
     for perm_tmp in perm:
-        data[:, perm_tmp] = data[:, perm[ref]]
+        data[perm_tmp] = data[perm[ref]]
 
     return data
 
@@ -80,14 +80,14 @@ def get_excitation_all(n_winding, symmetry):
     """
 
     # full excitations
-    excitation = np.eye(n_winding, dtype=bool)
+    excitation = np.arange(n_winding)
 
     # combine excitations with the symmetries
     for symmetry_tmp in symmetry:
         excitation = _get_excitation_compact(excitation, symmetry_tmp)
 
     # remove redundant excitations
-    (excitation, idx) = np.unique(excitation, axis=1, return_index=True)
+    (excitation, idx) = np.unique(excitation, return_index=True)
 
     # get the number of solutions for the reduced problem
     n_solution = len(idx)
