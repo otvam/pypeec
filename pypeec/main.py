@@ -42,7 +42,9 @@ def run_display_logo():
         try:
             with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file_logo:
                 data = file_logo.read()
+                print("", flush=True, file=sys.stderr)
                 print(data, flush=True, file=sys.stderr)
+                print("", flush=True, file=sys.stderr)
         except UnicodeError:
             pass
 
