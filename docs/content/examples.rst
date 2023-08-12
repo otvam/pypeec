@@ -31,6 +31,9 @@ Installing the Examples
     # Extract the PyPEEC examples
     pypeec examples .
 
+    # Make the Shell script executable
+    chmod +x *.sh
+
 Running the Examples
 --------------------
 

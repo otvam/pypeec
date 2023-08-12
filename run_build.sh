@@ -12,12 +12,20 @@ function build_package {
   echo "BUILD PACKAGE"
   echo "======================================================================"
 
+  # clean
   rm -rf dist
+  rm -rf build
   rm -rf pypeec.egg-info
   rm -rf pypeec/data/examples.zip
   rm -rf pypeec/data/version.txt
+
+  # pack examples
   git archive -o pypeec/data/examples.zip HEAD:examples
+
+  # build package
   python -m build
+
+  # update status
   ret=$(( ret || $? ))
 }
 

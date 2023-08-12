@@ -10,18 +10,6 @@ import os
 import sys
 import setuptools_scm
 
-# create the static folder
-try:
-    os.mkdir("_static")
-except FileExistsError:
-    pass
-
-# create the template folder
-try:
-    os.mkdir("_templates")
-except FileExistsError:
-    pass
-
 # define the package path
 sys.path.insert(0, os.path.abspath('..'))
 

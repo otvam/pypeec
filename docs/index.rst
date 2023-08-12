@@ -8,8 +8,8 @@ PyPEEC - 3D PEEC Solver
 
    Home <self>
    content/about
-   content/gallery
    content/examples
+   content/gallery
    content/workflow
 
 .. toctree::
