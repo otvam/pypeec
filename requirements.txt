@@ -3,8 +3,8 @@
 # WARNING: Only the required packages are in the environment.
 #          The following optional libraries are not installed:
 #              - FFTW, UMFPACK, and MKL/PARDISO
+#              - Jupyter, IPyWidgets, and Trame
 #              - CuPy and CUDA
-#              - Jupyter
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0

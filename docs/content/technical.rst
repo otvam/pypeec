@@ -49,7 +49,7 @@ The following **platforms** are passing the **automated tests**:
 * Apple / macOS Monterey 12 on x86/x64
 
 If you deploy PyPEEC on computing nodes, GUI libraries (Matplotlib, PyVistaQt, PyQt5) are not required.
-If you want to use PyPEEC with Jupyter, PyVista has to be installed with the optional Trame support.
+Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
 
 Configuration File
 ------------------

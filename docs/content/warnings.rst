@@ -26,7 +26,7 @@ Library Issues
 
 .. Warning::
     **Jupyter** is not included in the package dependencies.
-    For Jupyter, PyVista has to be installed with the optional Trame support.
+    Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
     Jupyter support is optional, PyPEEC is fully functional without Jupyter.
 
 .. Warning::

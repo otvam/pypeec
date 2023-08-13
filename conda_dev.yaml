@@ -3,7 +3,7 @@
 # WARNING: Install all the PyPEEC dependencies.
 #          The optional libraries are included.
 #          The packaging/development tools are included.
-#          Jupyter is not included.
+#          Jupyter, IPyWidgets, and Trame are not included.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
