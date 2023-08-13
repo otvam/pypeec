@@ -7,18 +7,47 @@
 set -o nounset
 set -o pipefail
 
+function clean_data {
+  echo "======================================================================"
+  echo "CLEAN DATA"
+  echo "======================================================================"
+
+  # clean package
+  rm -rf dist
+  rm -rf build
+  rm -rf pypeec.egg-info
+
+  # clean generated files
+  rm -rf pypeec/data/examples.zip
+  rm -rf pypeec/data/documentation.zip
+  rm -rf pypeec/data/version.txt
+
+  # clean documentation
+  rm -rf html
+  rm -rf docs/_static
+  rm -rf docs/_templates
+}
+
+function build_docs {
+  echo "======================================================================"
+  echo "BUILD DOCUMENTATION"
+  echo "======================================================================"
+
+  # create folders
+  mkdir docs/_static
+  mkdir docs/_templates
+
+  # build documentation
+  sphinx-build -b html docs html
+
+  # update status
+  ret=$(( ret || $? ))
+}
+
 function build_package {
   echo "======================================================================"
   echo "BUILD PACKAGE"
   echo "======================================================================"
-
-  # clean
-  rm -rf dist
-  rm -rf build
-  rm -rf pypeec.egg-info
-  rm -rf pypeec/data/examples.zip
-  rm -rf pypeec/data/documentation.zip
-  rm -rf pypeec/data/version.txt
 
   # pack examples
   (cd examples && git archive -o ../pypeec/data/examples.zip HEAD)
@@ -37,6 +66,8 @@ function build_package {
 ret=0
 
 # build the documentation
+clean_data
+build_docs
 build_package
 
 exit $ret
