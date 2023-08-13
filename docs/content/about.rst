@@ -1,8 +1,8 @@
 About
 =====
 
-Project Links
--------------
+Links
+-----
 
 :Website: https://pypeec.otvam.ch
 :Repository: https://github.com/otvam/pypeec

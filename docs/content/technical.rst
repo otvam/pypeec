@@ -24,8 +24,8 @@ The following **optional packages** can be used for speeding up the solver:
 * FFTW (available through pyFFTW)
 * CuPy (using GPUs through CUDA)
 
-Platforms
----------
+Supported Platforms
+-------------------
 
 The main **target platform** of PyPEEC is **Linux** on x86/x64:
 

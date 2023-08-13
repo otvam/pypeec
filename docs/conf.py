@@ -23,8 +23,8 @@ version = setuptools_scm.get_version(
 # project metadata
 project = 'PyPEEC'
 html_title = "PyPEEC"
-copyright = 'Thomas Guillod'
 author = 'Thomas Guillod'
+copyright = 'Thomas Guillod - Dartmouth College'
 release = version
 
 # load extensions

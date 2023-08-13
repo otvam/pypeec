@@ -1,8 +1,8 @@
 File Formats
 ============
 
-Workflow
---------
+PyPEEC Workflow
+---------------
 
 .. image:: ../images/workflow.png
   :alt: PyPEEC Workflow
