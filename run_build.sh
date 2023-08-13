@@ -17,10 +17,14 @@ function build_package {
   rm -rf build
   rm -rf pypeec.egg-info
   rm -rf pypeec/data/examples.zip
+  rm -rf pypeec/data/documentation.zip
   rm -rf pypeec/data/version.txt
 
   # pack examples
-  git archive -o pypeec/data/examples.zip HEAD:examples
+  (cd examples && git archive -o ../pypeec/data/examples.zip HEAD)
+
+  # pack documentation
+  (cd html && zip -qr ../pypeec/data/documentation.zip .)
 
   # build package
   python -m build

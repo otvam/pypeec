@@ -256,12 +256,12 @@ def _get_arg_plotter(subparsers):
     )
 
 
-def _get_arg_examples(subparsers):
+def _get_arg_extract(subparsers):
     """
-    Add the examples extraction arguments.
+    Add the data extraction arguments (examples and documentation).
     """
 
-    # add the subparser
+    # add the examples parser
     parser = subparsers.add_parser(
         "examples",
         aliases=["ex"],
@@ -271,7 +271,20 @@ def _get_arg_examples(subparsers):
         help="path where the examples should be extracted",
         type=str,
         metavar="path",
-        dest="path_examples",
+        dest="path_extract",
+    )
+
+    # add the documentation parser
+    parser = subparsers.add_parser(
+        "documentation",
+        aliases=["do"],
+        help="extract the documentation",
+    )
+    parser.add_argument(
+        help="path where the documentation should be extracted",
+        type=str,
+        metavar="path",
+        dest="path_extract",
     )
 
 
@@ -292,7 +305,7 @@ def run_script():
     _get_arg_viewer(subparsers)
     _get_arg_solver(subparsers)
     _get_arg_plotter(subparsers)
-    _get_arg_examples(subparsers)
+    _get_arg_extract(subparsers)
 
     # parse the config and get arguments
     args = parser.parse_args()
@@ -332,7 +345,9 @@ def run_script():
             folder=args.folder,
         )
     elif args.command in ["examples", "ex"]:
-        (status, ex) = main.run_examples(args.path_examples)
+        (status, ex) = main.run_extract("examples", args.path_extract)
+    elif args.command in ["documentation", "do"]:
+        (status, ex) = main.run_extract("documentation", args.path_extract)
     else:
         raise ValueError("invalid command")
 

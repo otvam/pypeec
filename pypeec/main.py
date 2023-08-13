@@ -64,14 +64,16 @@ def run_hide_logo():
     STATUS_LOGO = True
 
 
-def run_examples(path_examples):
+def run_extract(data_name, path_extract):
     """
-    Extract the examples.
+    Extract data (examples or documentation).
 
     Parameters
     ----------
-    path_examples : string
-        Path where the examples will be extracted.
+    data_name : string
+        Name of the archive containing the data.
+    path_extract : string
+        Path where the data will be extracted.
 
     Returns
     -------
@@ -87,13 +89,13 @@ def run_examples(path_examples):
     if DISPLAY_LOGO:
         run_display_logo()
 
-    LOGGER.info("examples extraction")
+    LOGGER.info("data extraction")
     try:
-        with importlib.resources.path("pypeec.data", "examples.zip") as file_examples:
-            shutil.unpack_archive(file_examples, path_examples)
+        with importlib.resources.path("pypeec.data", data_name + ".zip") as file_data:
+            shutil.unpack_archive(file_data, path_extract)
     except OSError as ex:
         log.log_exception(LOGGER, ex)
-        LOGGER.info("invalid termination")
+        LOGGER.error("invalid termination")
         return False, ex
     else:
         LOGGER.info("successful termination")
