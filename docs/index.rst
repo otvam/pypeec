@@ -8,6 +8,7 @@ PyPEEC - 3D PEEC Solver
 
    Home <self>
    content/about
+   content/install
    content/examples
    content/gallery
    content/workflow

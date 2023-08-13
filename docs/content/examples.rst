@@ -1,43 +1,10 @@
 Examples
 ========
 
-Installing the Code
--------------------
-
-.. code-block:: bash
-
-    # Create a new folder
-    mkdir pypeec
-
-    # Go to the created folder
-    cd pypeec
-
-    # install Python Virtual Environment
-    #    - The Python executable can be "python" or "python3"
-    #    - Alternatively, Conda can be used for the environment
-    python -m pip install virtualenv
-
-    # Create a Python Virtual Environment
-    #    - The Python executable can be "python" or "python3"
-    #    - Alternatively, Conda can be used for the environment
-    python -m venv venv
-
-    # Activate the Python Virtual Environment
-    source venv/bin/activate
-
-    # Install PyPEEC from Pypi
-    python -m pip install pypeec
-
-    # Extract the PyPEEC examples
-    pypeec examples examples
-
-    # Extract the PyPEEC documentation
-    pypeec documentation documentation
-
 Running the Examples
 --------------------
 
-* For running the examples from a **Jupyter notebook**, use ``notebook.ipynb``.
+* Extract the examples with the ``pypeec examples`` command.
 
 * For running the examples from **Python**:
 
@@ -54,6 +21,11 @@ Running the Examples
   * ``run_viewer.sh`` runs the viewer
   * ``run_solver.sh`` runs the solver
   * ``run_plotter.sh`` runs the plotter
+
+* For running the examples from a **Jupyter notebook**, use ``notebook.ipynb``:
+
+  * Jupyter should be installed (not included in the default environment).
+  * IPyWidgets and Trame are used for the rendering inside the notebook.
 
 STL Mesher Examples
 -------------------
