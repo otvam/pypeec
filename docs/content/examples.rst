@@ -1,16 +1,16 @@
 Examples
 ========
 
-Installing the Examples
------------------------
+Installing the Code
+-------------------
 
 .. code-block:: bash
 
     # Create a new folder
-    mkdir examples
+    mkdir pypeec
 
     # Go to the created folder
-    cd examples
+    cd pypeec
 
     # install Python Virtual Environment
     #    - The Python executable can be "python" or "python3"
@@ -29,10 +29,10 @@ Installing the Examples
     python -m pip install pypeec
 
     # Extract the PyPEEC examples
-    pypeec examples .
+    pypeec examples examples
 
-    # Make the Shell script executable
-    chmod +x *.sh
+    # Extract the PyPEEC documentation
+    pypeec documentation documentation
 
 Running the Examples
 --------------------
