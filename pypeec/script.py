@@ -264,7 +264,6 @@ def _get_arg_extract(subparsers):
     # add the examples parser
     parser = subparsers.add_parser(
         "examples",
-        aliases=["ex"],
         help="extract the examples",
     )
     parser.add_argument(
@@ -277,7 +276,6 @@ def _get_arg_extract(subparsers):
     # add the documentation parser
     parser = subparsers.add_parser(
         "documentation",
-        aliases=["do"],
         help="extract the documentation",
     )
     parser.add_argument(
@@ -344,9 +342,9 @@ def run_script():
             plot_mode=args.plot_mode,
             folder=args.folder,
         )
-    elif args.command in ["examples", "ex"]:
+    elif args.command == "examples":
         (status, ex) = main.run_extract("examples", args.path_extract)
-    elif args.command in ["documentation", "do"]:
+    elif args.command == "documentation":
         (status, ex) = main.run_extract("documentation", args.path_extract)
     else:
         raise ValueError("invalid command")

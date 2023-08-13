@@ -9,7 +9,7 @@
 set -o nounset
 set -o pipefail
 
-function test_file {
+function test_run {
   echo "======================================================================"
   echo "TEST: $1"
   echo "======================================================================"
@@ -18,7 +18,7 @@ function test_file {
   ret=$(( ret || $? ))
 }
 
-function clean_test {
+function test_collect {
   echo "======================================================================"
   if (( ret == 0 ))
   then
@@ -33,12 +33,12 @@ function clean_test {
 ret=0
 
 # run test
-test_file run_test_voxel
-test_file run_test_shape
-test_file run_test_png
-test_file run_test_stl
+test_run run_test_voxel
+test_run run_test_shape
+test_run run_test_png
+test_run run_test_stl
 
 # collect results
-clean_test
+test_collect
 
 exit $ret
