@@ -89,4 +89,4 @@ Sphinx Documentation
 --------------------
 
 * The documentation is located in the ``docs`` folder (using the ``sphinx`` generator).
-* The shell script ``run_docs.sh`` is used to build the HTML documentation.
+* The shell script ``run_build.sh`` is used to build the HTML documentation.

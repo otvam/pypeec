@@ -6,13 +6,7 @@ Installing the Code
 
 .. code-block:: bash
 
-    # Create a new folder
-    mkdir pypeec
-
-    # Go to the created folder
-    cd pypeec
-
-    # install Python Virtual Environment
+    # Install Python Virtual Environment
     #    - The Python executable can be "python" or "python3"
     #    - Alternatively, Conda can be used for the environment
     python -m pip install virtualenv
