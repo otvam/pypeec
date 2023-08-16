@@ -49,7 +49,7 @@ html_theme_path = ['_static']
 # html options
 html_baseurl = 'https://pypeec.otvam.ch'
 html_theme = 'sphinx_rtd_theme'
-html_logo = "images/header.png"
+html_logo = "images/sphinx.png"
 html_favicon = "images/icon.png"
 html_show_sphinx = False
 html_show_sourcelink = False
