@@ -23,63 +23,57 @@
     "geometry_shape":
         "copper":
             -
-                "layer_start": "front"
-                "layer_stop": "front"
-                "shape_add":
+                "shape_layer": ["front"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "trace"
                         "width": 1.0e-3
                         "coord": [[0.0e-3, 0.0e-3], [15.0e-3, 0.0e-3]]
-                "shape_sub": []
             -
-                "layer_start": "back"
-                "layer_stop": "back"
-                "shape_add":
+                "shape_layer": ["back"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "trace"
                         "width": 1.0e-3
                         "coord": [[0.0e-3, 0.0e-3], [15.0e-3, 0.0e-3]]
-                "shape_sub": []
         "src_front":
             -
-                "layer_start": "front"
-                "layer_stop": "front"
-                "shape_add":
+                "shape_layer": ["front"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "pad"
                         "diameter": 1.0e-3
                         "coord": [[0.0e-3, 0.0e-3]]
-                "shape_sub": []
         "sink_front":
             -
-                "layer_start": "front"
-                "layer_stop": "front"
-                "shape_add":
+                "shape_layer": ["front"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "pad"
                         "diameter": 1.0e-3
                         "coord": [[15.0e-3, 0.0e-3]]
-                "shape_sub": []
         "src_back":
             -
-                "layer_start": "back"
-                "layer_stop": "back"
-                "shape_add":
+                "shape_layer": ["back"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "pad"
                         "diameter": 1.0e-3
                         "coord": [[0.0e-3, 0.0e-3]]
-                "shape_sub": []
         "sink_back":
             -
-                "layer_start": "back"
-                "layer_stop": "back"
-                "shape_add":
+                "shape_layer": ["back"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "pad"
                         "diameter": 1.0e-3
                         "coord": [[15.0e-3, 0.0e-3]]
-                "shape_sub": []
 "resampling":
     "use_reduce": false
     "use_resample": false
