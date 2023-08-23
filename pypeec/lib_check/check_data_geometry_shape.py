@@ -9,18 +9,18 @@ __license__ = "Mozilla Public License Version 2.0"
 from pypeec.lib_check import datachecker
 
 
-def _check_shape_definition(shape):
+def _check_shape_data(shape_data):
     """
     Check the validity of a single shape definition.
     """
 
     # check type
     key_list = ["shape_type", "coord"]
-    datachecker.check_dict("shape", shape, key_list=key_list)
+    datachecker.check_dict("shape", shape_data, key_list=key_list)
 
     # extract the data
-    shape_type = shape["shape_type"]
-    coord = shape["coord"]
+    shape_type = shape_data["shape_type"]
+    coord = shape_data["coord"]
 
     # check data
     datachecker.check_choice("shape_type", shape_type, ["trace", "pad", "polygon"])
@@ -28,17 +28,17 @@ def _check_shape_definition(shape):
 
     # check coordinate length
     if shape_type == "pad":
-        datachecker.check_dict("shape", shape, key_list=["diameter"])
-        datachecker.check_float("diameter", shape["diameter"], is_positive=True, can_be_zero=True)
+        datachecker.check_dict("shape", shape_data, key_list=["diameter"])
+        datachecker.check_float("diameter", shape_data["diameter"], is_positive=True, can_be_zero=True)
         datachecker.check_assert("coord", len(coord) >= 1, "pad coordinate should have at least one element")
     elif shape_type == "trace":
-        datachecker.check_dict("shape", shape, key_list=["width"])
-        datachecker.check_float("width", shape["width"], is_positive=True, can_be_zero=True)
+        datachecker.check_dict("shape", shape_data, key_list=["width"])
+        datachecker.check_float("width", shape_data["width"], is_positive=True, can_be_zero=True)
         datachecker.check_assert("coord", len(coord) >= 2, "trace coordinate should have at least two elements")
     elif shape_type == "polygon":
-        datachecker.check_dict("shape", shape, key_list=["buffer"])
+        datachecker.check_dict("shape", shape_data, key_list=["buffer"])
+        datachecker.check_float("buffer", shape_data["buffer"], is_positive=True, can_be_zero=True, can_be_none=True)
         datachecker.check_assert("coord", len(coord) >= 3, "polygon coordinate should have at least three elements")
-        datachecker.check_float("buffer", shape["buffer"], is_positive=True, can_be_zero=True, can_be_none=True)
     else:
         raise ValueError("invalid shape type")
 
@@ -56,26 +56,26 @@ def _check_geometry_shape(layer_list, geometry_shape):
         datachecker.check_list("geometry_shape", geometry_shape_tmp, can_be_empty=False)
         for geometry_shape_tmp_tmp in geometry_shape_tmp:
             # check type
-            key_list = ["layer_start", "layer_stop", "shape_add", "shape_sub"]
+            key_list = ["shape_layer", "shape_type", "shape_data"]
             datachecker.check_dict("geometry_shape", geometry_shape_tmp_tmp, key_list=key_list)
 
             # extract the data
-            layer_start = geometry_shape_tmp_tmp["layer_start"]
-            layer_stop = geometry_shape_tmp_tmp["layer_stop"]
-            shape_add = geometry_shape_tmp_tmp["shape_add"]
-            shape_sub = geometry_shape_tmp_tmp["shape_sub"]
+            shape_layer = geometry_shape_tmp_tmp["shape_layer"]
+            shape_type = geometry_shape_tmp_tmp["shape_type"]
+            shape_data = geometry_shape_tmp_tmp["shape_data"]
 
             # check data
-            datachecker.check_choice("layer_start", layer_start, layer_list)
-            datachecker.check_choice("layer_stop", layer_stop, layer_list)
-            datachecker.check_list("shape_add", shape_add, can_be_empty=True)
-            datachecker.check_list("shape_sub", shape_sub, can_be_empty=True)
+            datachecker.check_choice("shape_type", shape_type, ["add", "sub"])
+            datachecker.check_list("shape_layer", shape_layer, can_be_empty=False)
+            datachecker.check_list("shape_data", shape_data, can_be_empty=False)
 
-            # check shapes
-            for shape_add_tmp in shape_add:
-                _check_shape_definition(shape_add_tmp)
-            for shape_sub_tmp in shape_sub:
-                _check_shape_definition(shape_sub_tmp)
+            # check layer
+            for shape_layer_tmp in shape_layer:
+                datachecker.check_choice("shape_layer", shape_layer_tmp, layer_list)
+
+            # check data
+            for shape_data_tmp in shape_data:
+                _check_shape_data(shape_data_tmp)
 
 
 def _check_layer_stack(layer_stack):
