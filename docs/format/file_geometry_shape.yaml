@@ -38,11 +38,9 @@
     #   - dict with the domain name and the shape definition
     #   - required information, the dict cannot be empty
     #   - domain definition
-    #       - list of the different shapes composing the domain
-    #       - layer_start: name of the layer where the shape starts
-    #       - layer_stop: name of the layer where the shape stops
-    #       - shape_add: list of shapes to be merged be added
-    #       - shape_sub: list of shapes to be merged be subtracted
+    #       - shape_layer: list of layer where the shape is located
+    #       - shape_type: composition operation for assembling the shape ("add" or "sub")
+    #       - shape_data: list of shapes to be merged together to form the resulting object
     #   - shape definition
     #       - shape_type: type of the shape ("pad" or "trace" or "polygon")
     #       - coord: array with the 2D coordinates composing the shape
@@ -52,45 +50,45 @@
     "geometry_shape":
         "dom_cond":
             -
-                "layer_start": "cond"
-                "layer_stop": "cond"
-                "shape_add":
+                "shape_layer": ["cond"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "trace"
                         "width": 0.5e-3
                         "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]]
-                "shape_sub": []
         "dom_mag":
             -
-                "layer_start": "mag"
-                "layer_stop": "mag"
-                "shape_add":
+                "shape_layer": ["mag"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "polygon"
                         "buffer": 0.0
                         "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3], [0.0e-3, 5.0e-3]]
-                "shape_sub":
+            -
+                "shape_layer": ["mag"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "polygon"
                         "buffer": 0.0
                         "coord": [[1.0e-3, 1.0e-3], [3.0e-3, 1.0e-3], [3.0e-3, 3.0e-3], [1.0e-3, 3.0e-3]]
         "dom_src":
             -
-                "layer_start": "insulation_terminal"
-                "layer_stop": "terminal"
-                "shape_add":
+                "shape_layer": ["insulation_terminal", "terminal"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "pad"
                         "diameter": 0.7e-3
                         "coord": [[0.0e-3, 0.0e-3]]
-                "shape_sub": []
         "dom_sink":
             -
-                "layer_start": "insulation_terminal"
-                "layer_stop": "terminal"
-                "shape_add":
+                "shape_layer": ["insulation_terminal", "terminal"]
+                "shape_type": "add"
+                "shape_data":
                     -
                         "shape_type": "pad"
                         "diameter": 0.7e-3
                         "coord": [[5.0e-3, 5.0e-3]]
-                "shape_sub": []
