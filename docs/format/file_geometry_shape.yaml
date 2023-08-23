@@ -39,10 +39,11 @@
     #   - required information, the dict cannot be empty
     #   - domain definition
     #       - shape_layer: list of layer where the shape is located
-    #       - shape_type: composition operation for assembling the shape ("add" or "sub")
+    #       - shape_operation: composition operation for assembling the shape ("add" or "sub")
     #       - shape_data: list of shapes to be merged together to form the resulting object
     #   - shape definition
     #       - shape_type: type of the shape ("pad" or "trace" or "polygon")
+    #       - shape_operation: composition operation for assembling the shape ("add" or "sub")
     #       - coord: array with the 2D coordinates composing the shape
     #       - buffer: thickness of the buffer around the polygons
     #       - diameter: diameter of the pads
@@ -51,44 +52,49 @@
         "dom_cond":
             -
                 "shape_layer": ["cond"]
-                "shape_type": "add"
+                "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "trace"
+                        "shape_operation": "add"
                         "width": 0.5e-3
                         "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]]
         "dom_mag":
             -
                 "shape_layer": ["mag"]
-                "shape_type": "add"
+                "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "polygon"
+                        "shape_operation": "add"
                         "buffer": 0.0
                         "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3], [0.0e-3, 5.0e-3]]
             -
                 "shape_layer": ["mag"]
-                "shape_type": "add"
+                "shape_operation": "sub"
                 "shape_data":
                     -
                         "shape_type": "polygon"
+                        "shape_operation": "add"
                         "buffer": 0.0
                         "coord": [[1.0e-3, 1.0e-3], [3.0e-3, 1.0e-3], [3.0e-3, 3.0e-3], [1.0e-3, 3.0e-3]]
         "dom_src":
             -
                 "shape_layer": ["insulation_terminal", "terminal"]
-                "shape_type": "add"
+                "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "pad"
+                        "shape_operation": "add"
                         "diameter": 0.7e-3
                         "coord": [[0.0e-3, 0.0e-3]]
         "dom_sink":
             -
                 "shape_layer": ["insulation_terminal", "terminal"]
-                "shape_type": "add"
+                "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "pad"
+                        "shape_operation": "add"
                         "diameter": 0.7e-3
                         "coord": [[5.0e-3, 5.0e-3]]
