@@ -15,14 +15,16 @@ def _check_shape_data(shape_data):
     """
 
     # check type
-    key_list = ["shape_type", "coord"]
+    key_list = ["shape_type", "shape_operation", "coord"]
     datachecker.check_dict("shape", shape_data, key_list=key_list)
 
     # extract the data
     shape_type = shape_data["shape_type"]
+    shape_operation = shape_data["shape_operation"]
     coord = shape_data["coord"]
 
     # check data
+    datachecker.check_choice("shape_operation", shape_operation, ["add", "sub"])
     datachecker.check_choice("shape_type", shape_type, ["trace", "pad", "polygon"])
     datachecker.check_float_pts("coord", coord, size=2, can_be_empty=False)
 
@@ -56,16 +58,16 @@ def _check_geometry_shape(layer_list, geometry_shape):
         datachecker.check_list("geometry_shape", geometry_shape_tmp, can_be_empty=False)
         for geometry_shape_tmp_tmp in geometry_shape_tmp:
             # check type
-            key_list = ["shape_layer", "shape_type", "shape_data"]
+            key_list = ["shape_layer", "shape_operation", "shape_data"]
             datachecker.check_dict("geometry_shape", geometry_shape_tmp_tmp, key_list=key_list)
 
             # extract the data
             shape_layer = geometry_shape_tmp_tmp["shape_layer"]
-            shape_type = geometry_shape_tmp_tmp["shape_type"]
+            shape_operation = geometry_shape_tmp_tmp["shape_operation"]
             shape_data = geometry_shape_tmp_tmp["shape_data"]
 
             # check data
-            datachecker.check_choice("shape_type", shape_type, ["add", "sub"])
+            datachecker.check_choice("shape_operation", shape_operation, ["add", "sub"])
             datachecker.check_list("shape_layer", shape_layer, can_be_empty=False)
             datachecker.check_list("shape_data", shape_data, can_be_empty=False)
 

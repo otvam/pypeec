@@ -102,7 +102,7 @@ def _get_shape_mesh(z_min, z_max, obj):
     return mesh
 
 
-def _get_shape_single(shape_data):
+def _get_shape_single(shape_type, shape_data):
     """
     Get a Shapely object for different shapes:
         - a trace (multi-segment line)
@@ -110,20 +110,16 @@ def _get_shape_single(shape_data):
         - a polygon
     """
 
-    # extract the data
-    shape_type = shape_data["shape_type"]
-    coord = shape_data["coord"]
-
     # get the shape
     if shape_type == "pad":
         buffer = 0.5*shape_data["diameter"]
-        obj = sha.geometry.MultiPoint(coord)
+        obj = sha.geometry.MultiPoint(shape_data["coord"])
     elif shape_type == "trace":
         buffer = 0.5*shape_data["width"]
-        obj = sha.geometry.LineString(coord)
+        obj = sha.geometry.LineString(shape_data["coord"])
     elif shape_type == "polygon":
         buffer = shape_data["buffer"]
-        obj = sha.geometry.Polygon(coord)
+        obj = sha.geometry.Polygon(shape_data["coord"])
     else:
         raise ValueError("invalid shape type")
 
@@ -143,13 +139,30 @@ def _get_shape_composite(shape_data):
     Get a Shapely composite shape consisting of the union of several shapes.
     """
 
-    # shape to be added
-    obj = []
-    for shape_data_tmp in shape_data:
-        obj.append(_get_shape_single(shape_data_tmp))
+    # init list
+    obj_add = []
+    obj_sub = []
 
-    # form the composite shape
-    obj = sha.unary_union(obj)
+    # compose the shape
+    for shape_data_tmp in shape_data:
+        shape_type = shape_data_tmp["shape_type"]
+        shape_operation = shape_data_tmp["shape_operation"]
+
+        # add the shape
+        obj = _get_shape_single(shape_type, shape_data_tmp)
+
+        # add to the list
+        if shape_operation == "add":
+            obj_add.append(obj)
+        elif shape_operation == "sub":
+            obj_sub.append(obj)
+        else:
+            raise ValueError("invalid shape type")
+
+    # assemble the shapes
+    obj_add = sha.unary_union(obj_add)
+    obj_sub = sha.unary_union(obj_sub)
+    obj = sha.difference(obj_add, obj_sub)
 
     return obj
 
@@ -209,14 +222,14 @@ def _get_shape_assemble(geometry_shape, tag):
     """
 
     # init the shape list
-    shape_add = []
-    shape_sub = []
+    obj_add = []
+    obj_sub = []
 
     # find the shapes
     for geometry_shape_tmp_tmp in geometry_shape:
         # extract the data
         shape_layer = geometry_shape_tmp_tmp["shape_layer"]
-        shape_type = geometry_shape_tmp_tmp["shape_type"]
+        shape_operation = geometry_shape_tmp_tmp["shape_operation"]
         shape_data = geometry_shape_tmp_tmp["shape_data"]
 
         # add the shape
@@ -225,16 +238,16 @@ def _get_shape_assemble(geometry_shape, tag):
             obj = _get_shape_composite(shape_data)
 
             # add to the list
-            if shape_type == "add":
-                shape_add.append(obj)
-            elif shape_type == "sub":
-                shape_sub.append(obj)
+            if shape_operation == "add":
+                obj_add.append(obj)
+            elif shape_operation == "sub":
+                obj_sub.append(obj)
             else:
                 raise ValueError("invalid shape type")
 
     # assemble the shapes
-    obj_add = sha.unary_union(shape_add)
-    obj_sub = sha.unary_union(shape_sub)
+    obj_add = sha.unary_union(obj_add)
+    obj_sub = sha.unary_union(obj_sub)
     obj = sha.difference(obj_add, obj_sub)
 
     return obj

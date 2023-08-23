@@ -24,28 +24,31 @@
         "wire":
             -
                 "shape_layer": ["wire"]
-                "shape_type": "add"
+                "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "pad"
+                        "shape_operation": "add"
                         "diameter": 2.5e-3
                         "coord": [[0.0e-3, 0.0e-3]]
         "src":
             -
                 "shape_layer": ["src"]
-                "shape_type": "add"
+                "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "pad"
+                        "shape_operation": "add"
                         "diameter": 2.5e-3
                         "coord": [[0.0e-3, 0.0e-3]]
         "sink":
             -
                 "shape_layer": ["sink"]
-                "shape_type": "add"
+                "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "pad"
+                        "shape_operation": "add"
                         "diameter": 2.5e-3
                         "coord": [[0.0e-3, 0.0e-3]]
 "resampling":
