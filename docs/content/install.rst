@@ -5,6 +5,7 @@ Installing the Code
 -------------------
 
 .. code-block:: bash
+
     # Installation of PyPEEC with pip
     #    - The Python executable can be "python" or "python3"
     #    - Alternatively, Conda can be used for the environment
