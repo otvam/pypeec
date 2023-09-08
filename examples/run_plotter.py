@@ -24,6 +24,21 @@ if __name__ == "__main__":
     file_point = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "point.yaml")
     file_plotter = os.path.join(PATH_ROOT, FOLDER_CONFIG, "plotter.yaml")
 
+    # plot type
+    tag_plot = [
+        "material",
+        "V_c_abs",
+        "J_c_norm_re",
+        "B_m_norm_abs",
+        "H_norm_abs",
+        "convergence",
+        "residuum",
+    ]
+
     # run
-    (status, ex) = main.run_plotter_file(file_solution, file_point, file_plotter, plot_mode="qt")
+    (status, ex) = main.run_plotter_file(
+        file_solution, file_point, file_plotter,
+        tag_plot=tag_plot,
+        plot_mode="qt",
+    )
     sys.exit(int(not status))

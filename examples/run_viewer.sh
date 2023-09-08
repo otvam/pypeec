@@ -20,4 +20,5 @@ pypeec viewer \
     --voxel $FILE_VOXEL \
     --point $FILE_POINT \
     --viewer $FILE_VIEWER \
+    --tag_plot domain connection \
     --plot_mode qt

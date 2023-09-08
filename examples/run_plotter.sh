@@ -20,4 +20,5 @@ pypeec plotter \
     --solution $FILE_SOLUTION \
     --point $FILE_POINT \
     --plotter $FILE_PLOTTER \
+    --tag_plot material V_c_abs J_c_norm_re B_m_norm_abs H_norm_abs convergence residuum \
     --plot_mode qt
