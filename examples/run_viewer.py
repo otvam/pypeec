@@ -24,7 +24,7 @@ if __name__ == "__main__":
     file_point = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "point.yaml")
     file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.yaml")
 
-    # plot type
+    # plot tag (from viewer.yaml)
     tag_plot = ["domain", "connection"]
 
     # run viewer

@@ -24,7 +24,7 @@ if __name__ == "__main__":
     file_point = os.path.join(PATH_ROOT, FOLDER_NAME, EXAMPLE_NAME, "point.yaml")
     file_plotter = os.path.join(PATH_ROOT, FOLDER_CONFIG, "plotter.yaml")
 
-    # plot type
+    # plot tag (from plotter.yaml)
     tag_plot = [
         "material",
         "V_c_abs",
