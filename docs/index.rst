@@ -32,6 +32,7 @@ PyPEEC - 3D PEEC Solver
 .. Important::
     * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
     * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`_
+    * **Package:** `pypi.org/project/pypeec <https://pypi.org/project/pypeec>`_
 
 ------------
 

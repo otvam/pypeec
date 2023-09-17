@@ -2,6 +2,7 @@
 
 > * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**
 > * **Repository: [github.com/otvam/pypeec](https://github.com/otvam/pypeec)**
+> * **Package: [pypi.org/project/pypeec](https://pypi.org/project/pypeec)**
 
 ## Summary
 
