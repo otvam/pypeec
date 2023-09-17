@@ -26,7 +26,7 @@ NP_TYPES = config.NP_TYPES
 vtk.vtkObject.GlobalWarningDisplayOff()
 
 
-def _get_load_stl(offset, filename):
+def _get_load_stl(scale, offset, filename):
     """
     Load several STL files and merge the meshes.
     """
@@ -42,6 +42,7 @@ def _get_load_stl(offset, filename):
         raise RunError("invalid stl: invalid file content: %s" % filename)
 
     # translate the meshes
+    mesh = mesh.scale(scale, inplace=True)
     mesh = mesh.translate(offset, inplace=True)
 
     return mesh
@@ -93,11 +94,12 @@ def _get_mesh_stl(domain_stl):
     for tag, domain_stl_tmp in domain_stl.items():
         for domain_stl_tmp_tmp in domain_stl_tmp:
             # extract the data
+            scale = domain_stl_tmp_tmp["scale"]
             offset = domain_stl_tmp_tmp["offset"]
             filename = domain_stl_tmp_tmp["filename"]
 
             # load the STL
-            mesh = _get_load_stl(offset, filename)
+            mesh = _get_load_stl(scale, offset, filename)
 
             # find the bounds
             (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds

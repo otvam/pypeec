@@ -22,14 +22,16 @@ def _check_domain_stl(domain_stl):
         datachecker.check_list("domain_stl", domain_stl_tmp, can_be_empty=False)
         for domain_stl_tmp_tmp in domain_stl_tmp:
             # check type
-            key_list = ["offset", "filename"]
+            key_list = ["scale", "offset", "filename"]
             datachecker.check_dict("domain_stl", domain_stl_tmp_tmp, key_list=key_list)
 
             # extract the data
+            scale = domain_stl_tmp_tmp["scale"]
             offset = domain_stl_tmp_tmp["offset"]
             filename = domain_stl_tmp_tmp["filename"]
 
             # check data
+            datachecker.check_float("scale", scale, is_positive=True, can_be_zero=False)
             datachecker.check_float_array("offset", offset, size=3)
             datachecker.check_filename("filename", filename)
 
