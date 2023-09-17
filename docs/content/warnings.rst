@@ -45,13 +45,11 @@ General Issues
 
 .. Warning::
     Python **Pickle files** are using to store the mesher and solver results.
-    Pickling data is not secure.
-    Only load Pickle files that you trust.
+    Pickling data is not secure. Only load Pickle files that you trust.
     Do not commit the Pickle files in the Git repository.
 
 .. Warning::
-    The **dependencies** are under **various licences** (including copyleft and proprietary).
+    The **dependencies** are under **various licences**.
     Make sure to respect these licenses if you package and/or distribute these libraries.
-    Qt is under a copyleft license (LGPL and GPL).
-    FFTW is under a copyleft license (GPL).
-    MKL/PARDISO is a proprietary library (ISSL).
+    Qt is under a copyleft license (LGPL and GPL). FFTW is also under a copyleft license (GPL).
+    MKL/PARDISO and CUDA are proprietary software (these libraries are optional).

@@ -51,7 +51,7 @@ The following **platforms** are passing the **automated tests**:
 * Microsoft / Windows Server 2022 on x86/x64
 * Apple / macOS Monterey 12 on x86/x64
 
-If you deploy PyPEEC on computing nodes, GUI libraries (Matplotlib, PyVistaQt, PyQt5) are not required.
+If you deploy PyPEEC on computing nodes, the GUI libraries (Matplotlib, PyVistaQt, PyQt5) are not required.
 Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
 
 Configuration File
