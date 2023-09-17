@@ -36,11 +36,18 @@ PyPEEC - 3D PEEC Solver
 
 ------------
 
-**PyPEEC** is a **3D quasi-magnetostatic field solver** with the following characteristics:
+**PyPEEC** is a **3D quasi-magnetostatic PEEC solver** developed at **Dartmouth College** within the Power Management Integration Center (PMIC).
+PyPEEC is a **fast solver** (FFT and GPU accelerated) that can simulate a large variety of **magnetic components** (inductors, transformers, chokes, IPT coils, busbars, etc.).
+The tool contains a **mesher** (STL, PNG, and GERBER formats), a **solver** (static and frequency domain), and **advanced plotting** capabilities.
+The code is written in **Python** and is fully **open source**!
+
+------------
+
+**PyPEEC** features the following **characteristics**:
 
 * **PEEC method** with **FFT acceleration**
 * Representation of the **geometry** with **3D voxels**
-* **Multithreading and GPU acceleration** are available
+* **Multithreading** and **GPU acceleration** are available
 * **Fast** with **moderate memory** requirements
 * Import the **geometry** from **STL**, **PNG**, and **GERBER** files
 * Draw the **geometry** with stacked 2D **vector shapes** or **voxel indices**
@@ -67,7 +74,7 @@ PyPEEC - 3D PEEC Solver
 * No model order reduction techniques
 * Limited to voxel geometries
 
-The **PyPEEC** package contains the following tools:
+The **PyPEEC** package contains the following **tools**:
 
 * **mesher**: create a 3D voxel structure from STL or PNG files
 * **viewer**: visualization of the 3D voxel structure
