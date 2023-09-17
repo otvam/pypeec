@@ -18,10 +18,11 @@
     #   - required information, the dict cannot be empty
     #   - domain definition
     #       - list of STL meshes composing the domain
+    #       - scale: scaling factor for specifying the unit of the STL meshes
     #       - offset: array with offsets for translating the STL meshes
     #       - filename: string with the STL filename
     "domain_stl":
-        "dom_src": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_src.stl"}]
-        "dom_cond": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_cond.stl"}]
-        "dom_sink": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_sink.stl"}]
-        "dom_mag": [{"offset": [0.0, 0.0, 0.0], "filename": "stl/dom_mag.stl"}]
+        "dom_src": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": "stl/dom_src.stl"}]
+        "dom_cond": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": "stl/dom_cond.stl"}]
+        "dom_sink": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": "stl/dom_sink.stl"}]
+        "dom_mag": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": "stl/dom_mag.stl"}]
