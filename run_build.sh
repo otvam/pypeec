@@ -1,5 +1,8 @@
 #!/bin/bash
-# Script for building the Python package.
+# Script for building the Python package:
+#   - clean the generated files
+#   - build the documentation
+#   - build the package
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0

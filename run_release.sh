@@ -1,5 +1,10 @@
 #!/bin/bash
-# Script for creating a release.
+# Script for creating a release:
+#   - create a tag
+#   - create a release
+#   - build the documentation and the package
+#   - upload the documentation
+#   - upload the package
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -13,10 +18,10 @@ function create_tag {
   echo "======================================================================"
 
   # create a tag
-  git tag --quiet -a $VER -m "$MSG"
+  git tag -a $VER -m "$MSG"
 
   # push the tags
-  git push origin --quiet --tags
+  git push origin --tags
 }
 
 function create_release {
@@ -48,10 +53,10 @@ function upload_documentation {
   git -C pypeecdocs add .
 
   # commit the new version
-  git -C pypeecdocs commit --quiet -m "$VER / $MSG"
+  git -C pypeecdocs commit -m "$VER / $MSG"
 
   # push the new version
-  git -C pypeecdocs push --quiet
+  git -C pypeecdocs push
 }
 
 function upload_package {
