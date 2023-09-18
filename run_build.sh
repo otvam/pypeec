@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script for building the Python package:
+# Script for building the Python package.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
