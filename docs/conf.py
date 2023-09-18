@@ -29,7 +29,6 @@ release = version
 
 # load extensions
 extensions = [
-    'sphinx.ext.githubpages',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
