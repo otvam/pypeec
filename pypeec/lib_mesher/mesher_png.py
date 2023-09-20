@@ -26,6 +26,10 @@ LOGGER = log.get_logger("STL")
 # get config
 NP_TYPES = config.NP_TYPES
 
+# get problem size limits
+VOXEL_TOTAL = config.PROBLEM_MAX_SIZE.VOXEL_TOTAL
+VOXEL_USED = config.PROBLEM_MAX_SIZE.VOXEL_USED
+
 
 def _get_load_image(filename_list):
     """
@@ -204,5 +208,15 @@ def get_mesh(param, domain_color, layer_stack):
 
     # assemble
     n = (nx, ny, nz)
+
+    # check total size
+    nv = np.prod(n)
+    if (VOXEL_TOTAL is not None) and (nv > VOXEL_TOTAL):
+        raise RunError("invalid size of the voxel structure: %d" % nv)
+
+    # check used size
+    nv = sum(len(idx) for idx in domain_def.values())
+    if (VOXEL_USED is not None) and (nv > VOXEL_USED):
+        raise RunError("invalid number of used voxels: %d" % nv)
 
     return n, d, c, domain_def, reference
