@@ -43,6 +43,11 @@ LOGGING_OPTIONS:
         CL_CRITICAL: '[38;5;196m' # terminal color code
         CL_RESET: '[0m' # terminal color code
 
+# maximum number of voxels
+PROBLEM_MAX_SIZE:
+    VOXEL_TOTAL: null  # maximum size of the voxel structure (null for unlimited)
+    VOXEL_USED: null  # maximum number of used voxels (null for unlimited)
+
 # options for the FFT computation
 FFT_OPTIONS:
     FFTS_WORKER: null  # number of workers for SciPy (null for number of CPUs)
