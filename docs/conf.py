@@ -60,7 +60,7 @@ html_domain_indices = False
 html_theme_options = {
     'logo_only': True,
     'display_version': True,
-    'style_nav_header_background': '#2980B9',
+    'style_nav_header_background': '#137e9c',
     'prev_next_buttons_location': None,
     'collapse_navigation': True,
     'sticky_navigation': True,

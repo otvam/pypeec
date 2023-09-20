@@ -61,8 +61,8 @@ The following optimizations are available for the computationally heavy operatio
 
 * Two different iterative solvers are available for the dense matrices.
 
-    * GMRES - Generalized Minimal RESidual algorithm
-    * GCROT - Flexible GCROT(m,k) algorithm
+  * GMRES - Generalized Minimal RESidual algorithm
+  * GCROT - Flexible GCROT(m,k) algorithm
 
 * The FFTs for computing matrix-vector product can be done with several algorithms.
 
