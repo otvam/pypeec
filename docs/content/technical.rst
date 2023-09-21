@@ -57,7 +57,7 @@ Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
 Configuration File
 ------------------
 
-* The default configuration file is ``pypeec/config.yaml``.
+* The default configuration file is ``pypeec/data/config.yaml``.
 
     * This file is always loaded first.
     * This file is included in the package.
