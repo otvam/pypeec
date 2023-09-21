@@ -213,7 +213,7 @@ def _check_data_plot_plotter(layout, data_plot):
     # check the material options
     if layout == "material":
         # check type
-        key_list = ["color_electric", "color_magnetic", "color_current_source", "color_voltage_source"]
+        key_list = ["title", "color_electric", "color_magnetic", "color_current_source", "color_voltage_source"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
@@ -226,7 +226,7 @@ def _check_data_plot_plotter(layout, data_plot):
     # check the options for scalar and arrow plots
     if layout in ["scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"]:
         # check type
-        key_list = ["scale", "log", "legend", "color_lim", "filter_lim"]
+        key_list = ["title", "scale", "log", "legend", "color_lim", "filter_lim"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
@@ -303,12 +303,12 @@ def _check_data_plot_viewer(layout, data_plot):
     # check the scalar options
     if layout in ["domain", "connection"]:
         # check type
-        key_list = ["colormap", "opacity"]
+        key_list = ["colormap", "title", "opacity"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
-        datachecker.check_string("title", data_plot["title"], can_be_empty=True)
         datachecker.check_string("colormap", data_plot["colormap"], can_be_empty=False)
+        datachecker.check_string("title", data_plot["title"], can_be_empty=True, can_be_none=True)
         datachecker.check_float("opacity", data_plot["opacity"], is_positive=True, can_be_zero=False)
 
 
