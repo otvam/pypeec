@@ -1,5 +1,5 @@
 """
-Module for rendering the PyPEEC logo.
+Script for rendering the PyPEEC logo.
 
 Three files are created:
     - logo.ply: 3D logo in PLY format
