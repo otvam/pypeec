@@ -1,0 +1,65 @@
+
+  ╔═══════════════════════════════════════════════════════╗
+  ║  ╔═══╗   ╔═══╦═══╦═══╦═══╗            3D PEEC Solver  ║
+  ║  ║╔═╗║   ║╔═╗║╔══╣╔══╣╔═╗║      Quasi-Magnetostatics  ║
+  ║  ║╚═╝╠╗ ╔╣╚═╝║╚══╣╚══╣║ ╚╝          Frequency Domain  ║
+  ║  ║╔══╣║ ║║╔══╣╔══╣╔══╣║ ╔╗          Voxel Geometries  ║
+  ║  ║║  ║╚═╝║║  ║╚══╣╚══╣╚═╝║       FFT/GPU Accelerated  ║
+  ║  ╚╝  ╚═╗ ╠╝  ╚═══╩═══╩═══╝    Python and Open Source  ║
+  ╚══════╦═╝ ╠════════════════════════════════════════════╝
+         ╚═══╝
+  ╔═══════════════════════════════════════════════════════╗
+  ║ Website - https://pypeec.otvam.ch                     ║
+  ║ Thomas Guillod - Dartmouth College                    ║
+  ║ Mozilla Public License Version 2.0                    ║
+  ╚═══════════════════════════════════════════════════════╝
+
+00:00:00.00 : MAIN     : INFO     : load the input data
+00:00:00.01 : MAIN     : INFO     : load the mesher
+00:00:00.82 : MAIN     : INFO     : run the mesher
+00:00:00.82 : MESHER   : INFO     : check the input data
+00:00:00.82 : MESHER   : INFO     : mesher_shape : enter : timing
+00:00:00.82 : SHAPE    : DEBUG    :     parse the layers
+00:00:00.82 : SHAPE    : DEBUG    :     create the shapes
+00:00:00.83 : SHAPE    : DEBUG    :     get the voxel size
+00:00:00.83 : SHAPE    : DEBUG    :     voxelize the shapes
+00:00:00.85 : SHAPE    : DEBUG    :     trace: n_voxel = 19728
+00:00:00.85 : SHAPE    : DEBUG    :     via: n_voxel = 1205
+00:00:00.85 : SHAPE    : DEBUG    :     src: n_voxel = 361
+00:00:00.85 : SHAPE    : DEBUG    :     sink: n_voxel = 361
+00:00:00.85 : SHAPE    : DEBUG    :     merge the shapes
+00:00:00.87 : MESHER   : INFO     : mesher_shape : exit : 00:00:00.04
+00:00:00.87 : MESHER   : INFO     : voxel_conflict : enter : timing
+00:00:00.88 : MESHER   : INFO     : voxel_conflict : exit : 00:00:00.00
+00:00:00.88 : MESHER   : INFO     : voxel_resample : enter : timing
+00:00:00.88 : SAMPLE   : DEBUG    :     original number = 331056
+00:00:00.88 : SAMPLE   : DEBUG    :     use_reduce = False
+00:00:00.88 : SAMPLE   : DEBUG    :     use_resample = False
+00:00:00.88 : SAMPLE   : DEBUG    :     final number = 331056
+00:00:00.88 : MESHER   : INFO     : voxel_resample : exit : 00:00:00.00
+00:00:00.88 : MESHER   : INFO     : voxel_connection : enter : timing
+00:00:00.97 : MESHER   : INFO     : voxel_connection : exit : 00:00:00.08
+00:00:00.97 : MESHER   : INFO     : voxel_summary : enter : timing
+00:00:00.97 : SUMMARY  : DEBUG    :     voxel size
+00:00:00.97 : SUMMARY  : DEBUG    :         n = (132, 132, 19)
+00:00:00.97 : SUMMARY  : DEBUG    :         d = (3.50e-05, 3.50e-05, 3.50e-05)
+00:00:00.97 : SUMMARY  : DEBUG    :         s = (4.63e-03, 4.63e-03, 6.65e-04)
+00:00:00.97 : SUMMARY  : DEBUG    :         c = (1.94e-03, 1.94e-03, 0.00e+00)
+00:00:00.97 : SUMMARY  : DEBUG    :         A = (2.14e-05, 3.08e-06, 3.08e-06)
+00:00:00.97 : SUMMARY  : DEBUG    :     voxel summary
+00:00:00.97 : SUMMARY  : DEBUG    :         V_total = 1.42e-08
+00:00:00.97 : SUMMARY  : DEBUG    :         V_used = 9.12e-10
+00:00:00.97 : SUMMARY  : DEBUG    :         n_total = 331056
+00:00:00.97 : SUMMARY  : DEBUG    :         n_used = 21225
+00:00:00.97 : SUMMARY  : DEBUG    :         ratio = 6.41e-02
+00:00:00.97 : SUMMARY  : DEBUG    :         n_domain = 4
+00:00:00.97 : SUMMARY  : DEBUG    :         n_graph = 1
+00:00:00.97 : SUMMARY  : DEBUG    :     voxel domain
+00:00:00.97 : SUMMARY  : DEBUG    :         trace = 19298
+00:00:00.97 : SUMMARY  : DEBUG    :         via = 1205
+00:00:00.97 : SUMMARY  : DEBUG    :         src = 361
+00:00:00.97 : SUMMARY  : DEBUG    :         sink = 361
+00:00:00.97 : MESHER   : INFO     : voxel_summary : exit : 00:00:00.00
+00:00:00.97 : MESHER   : INFO     : duration: 00:00:00.14
+00:00:00.97 : MESHER   : INFO     : successful termination
+00:00:00.97 : MAIN     : INFO     : save the results

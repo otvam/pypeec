@@ -44,8 +44,11 @@ PyPEEC Tools
 PyPEEC Workflow
 ---------------
 
-.. image:: ../images/workflow.png
-  :alt: PyPEEC Workflow
+.. figure:: ../images/workflow.png
+
+   Description of the PyPEEC workflow (mesher, viewer, solver, and plotter).
+   The input and output files of the different tools are shown.
+   Additionally, a global configuration file is used.
 
 Entry Points and Scripts
 ------------------------

@@ -22,15 +22,3 @@ Plotter (Solver Results)
 .. image:: ../gallery/plotter_8.png
 .. image:: ../gallery/plotter_9.png
 .. image:: ../gallery/plotter_10.png
-
-Mesher Log Output
------------------
-
-.. literalinclude:: ../gallery/log_mesher.txt
-   :language: text
-
-Solver Log Output
------------------
-
-.. literalinclude:: ../gallery/log_solver.txt
-   :language: text
