@@ -138,7 +138,7 @@ def _get_factorize_sub(mat):
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
-        return factor_empty, mat
+        return factor_empty
 
     # compute matrix density
     density = nnz/(nx*ny)
