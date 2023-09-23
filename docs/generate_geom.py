@@ -48,4 +48,4 @@ def run_image(folder_name, example_name):
 
 
 if __name__ == "__main__":
-    run_image("examples_voxel", "core")
+    run_image("examples_shape", "coplanar")

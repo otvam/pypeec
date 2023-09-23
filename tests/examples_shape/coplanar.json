@@ -2,18 +2,18 @@
     "metadata": {
         "folder": "examples_shape",
         "name": "coplanar",
-        "timestamp": "2023-09-23 14:11:13.078489"
+        "timestamp": "2023-09-23 15:27:28.971838"
     },
     "mesher": {
-        "n_total": 44800,
+        "n_total": 19200,
         "n_used": 12632
     },
     "solver": {
         "sim_default": {
             "freq": 1000000.0,
             "has_converged": true,
-            "P_tot": 28.084056692114864,
-            "W_tot": 4.86166259020166e-06
+            "P_tot": 4.590712803736026,
+            "W_tot": 2.0870287637257174e-06
         }
     }
 }
