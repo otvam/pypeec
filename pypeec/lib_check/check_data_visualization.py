@@ -172,16 +172,12 @@ def _check_data_plot_plotter(layout, data_plot):
         "V_m_re", "V_m_im", "V_m_abs",
         "S_c_re", "S_c_im", "S_c_abs",
         "Q_m_re", "Q_m_im", "Q_m_abs",
-        "J_c_norm_abs", "J_c_norm_re", "J_c_norm_im",
-        "B_m_norm_abs", "B_m_norm_re", "B_m_norm_im",
+        "J_c_norm", "B_m_norm",
         "P_c_abs", "P_m_abs",
     ]
-    vec_voxel_list = [
-        "J_c_vec_re", "J_c_vec_im",
-        "B_m_vec_re", "B_m_vec_im",
-    ]
-    var_point_list = ["H_norm_abs", "H_norm_re", "H_norm_im"]
-    vec_point_list = ["H_vec_re", "H_vec_im"]
+    var_point_list = ["H_norm"]
+    vec_point_list = ["H_vec"]
+    vec_voxel_list = ["J_c_vec", "B_m_vec"]
 
     # check plot type
     datachecker.check_choice("layout", layout, layout_list)
@@ -258,22 +254,20 @@ def _check_data_plot_plotter(layout, data_plot):
     # check the arrow options
     if layout in ["arrow_voxel", "arrow_point"]:
         # check type
-        key_list = ["var_scalar", "var_vector", "arrow_scale", "arrow_threshold"]
+        key_list = ["var", "phase", "arrow_scale", "arrow_threshold"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
-        datachecker.check_string("var_scalar", data_plot["var_scalar"], can_be_empty=False)
-        datachecker.check_string("var_vector", data_plot["var_vector"], can_be_empty=False)
+        datachecker.check_float("phase", data_plot["phase"])
+        datachecker.check_string("var", data_plot["var"], can_be_empty=False)
         datachecker.check_float("arrow_scale", data_plot["arrow_scale"], is_positive=True, can_be_zero=True)
         datachecker.check_float("arrow_threshold", data_plot["arrow_threshold"], is_positive=True, can_be_zero=True)
 
         # check compatibility
         if layout == "arrow_voxel":
-            datachecker.check_choice("var_scalar", data_plot["var_scalar"], var_voxel_list)
-            datachecker.check_choice("var_vector", data_plot["var_vector"], vec_voxel_list)
+            datachecker.check_choice("var", data_plot["var"], vec_voxel_list)
         elif layout == "arrow_point":
-            datachecker.check_choice("var_scalar", data_plot["var_scalar"], var_point_list)
-            datachecker.check_choice("var_vector", data_plot["var_vector"], vec_point_list)
+            datachecker.check_choice("var", data_plot["var"], vec_point_list)
         else:
             raise ValueError("plot_geom: the plot geometry option is incompatible with the plot type")
 
