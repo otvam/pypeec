@@ -138,7 +138,7 @@ def _get_factorize_sub(mat):
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
-        return factor_empty
+        return factor_empty, mat
 
     # compute matrix density
     density = nnz/(nx*ny)
@@ -176,9 +176,9 @@ def get_factorize(name, mat):
 
     LOGGER.debug("factorization: %s" % name)
     with log.BlockIndent():
-        data = _get_factorize_sub(mat)
+        factor = _get_factorize_sub(mat)
 
-    return data
+    return factor
 
 
 def get_solve(factor, rhs):

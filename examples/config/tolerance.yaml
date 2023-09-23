@@ -18,8 +18,8 @@
     "tolerance": 1.0e-6            # tolerance for checking the solution residuum
     "iter_options":                # options for the iterative solver
         "solver": "GMRES"          # name of the solver ("GMRES" or "GCROT")
-        "rel_tol": 1.0e-6          # relative preconditioned tolerance for GMRES stopping
-        "abs_tol": 1.0e-12         # absolute preconditioned tolerance for GMRES stopping
+        "rel_tol": 1.0e-6          # relative preconditioned tolerance for solver convergence
+        "abs_tol": 1.0e-12         # absolute preconditioned tolerance for solver convergence
         "n_inner": 20              # maximum number of solver inner iterations
         "n_outer": 20              # maximum number of solver outer iterations
 

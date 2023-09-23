@@ -179,6 +179,7 @@ def _get_solve_sub(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
 
     return status, alg, sol
 
+
 def get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
     """
     Solve a sparse equation system with GMRES or GCROT (log wrapper).
