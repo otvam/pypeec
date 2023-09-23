@@ -76,7 +76,7 @@
             "mat_electric": {"rho_re": 1.0e-8, "rho_im": 0.0"}
             "mat_magnetic": {"chi_re": 100.0, "chi_im": 10.0}
         "source_val":
-            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0}
+            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 2.0, "Y_im": 0.0}
             "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}
     "sim_ac":
         "freq": 1.0e+3
@@ -84,5 +84,5 @@
             "mat_electric": {"rho_re": 1.0e-8, "rho_im": 0.0"}
             "mat_magnetic": {"chi_re": 100.0, "chi_im": 10.0}
         "source_val":
-            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.5, "Y_im": 0.0}
+            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 2.0, "Y_im": 0.0}
             "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 2.0, "Z_im": 0.0}

@@ -27,10 +27,8 @@ if __name__ == "__main__":
     tag_plot = [
         "material",
         "V_c_abs",
-        "J_c_norm_re",
-        "B_m_norm_abs",
+        "J_c_norm_abs",
         "H_norm_abs",
-        "convergence",
         "residuum",
     ]
 

@@ -11,9 +11,9 @@
     "front": {"domain_list": ["src_front", "sink_front"], "material_type": "electric", "var_type": "lumped"}
     "back": {"domain_list": ["src_back", "sink_back"], "material_type": "electric", "var_type": "lumped"}
 "source_def":
-    "src_front": {"domain_list": ["src_front"], "source_type": "current", "var_type": "lumped"}
+    "src_front": {"domain_list": ["src_front"], "source_type": "voltage", "var_type": "lumped"}
     "sink_front": {"domain_list": ["sink_front"], "source_type": "voltage", "var_type": "lumped"}
-    "src_back": { "domain_list": [ "src_back" ], "source_type": "current", "var_type": "lumped" }
+    "src_back": { "domain_list": [ "src_back" ], "source_type": "voltage", "var_type": "lumped" }
     "sink_back": {"domain_list": ["sink_back"], "source_type": "voltage", "var_type": "lumped"}
 "sweep_config":
     "sim_default": null
@@ -25,7 +25,7 @@
             "front": {"rho_re": 1.75e-8, "rho_im": 0.0}
             "back": {"rho_re": 1.75e-8, "rho_im": 0.0}
         "source_val":
-            "src_front": {"I_re": +1.0, "I_im": 0.0, "Y_re": 10.0, "Y_im": 0.0}
+            "src_front": {"V_re": +1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
             "sink_front": {"V_re": 0.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
-            "src_back": {"I_re": -1.0, "I_im": 0.0, "Y_re": 10.0, "Y_im": 0.0}
+            "src_back": {"V_re": -1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
             "sink_back": {"V_re": 0.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}

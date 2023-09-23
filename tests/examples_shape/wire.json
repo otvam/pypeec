@@ -2,7 +2,7 @@
     "metadata": {
         "folder": "examples_shape",
         "name": "wire",
-        "timestamp": "2023-06-27 14:27:55.914845"
+        "timestamp": "2023-09-23 14:11:29.596919"
     },
     "mesher": {
         "n_total": 25000,
@@ -12,8 +12,8 @@
         "sim_default": {
             "freq": 100000.0,
             "has_converged": true,
-            "P_tot": 2.0284442072145184e-05,
-            "W_tot": 3.034767621819869e-10
+            "P_tot": 16.743266387000205,
+            "W_tot": 0.0002564114211583358
         }
     }
 }

@@ -9,7 +9,7 @@
 "material_def":
     "wire": {"domain_list": ["src", "sink", "wire"], "material_type": "electric", "var_type": "lumped"}
 "source_def":
-    "src": {"domain_list": ["src"], "source_type": "current", "var_type": "lumped"}
+    "src": {"domain_list": ["src"], "source_type": "voltage", "var_type": "lumped"}
     "sink": {"domain_list": ["sink"], "source_type": "voltage", "var_type": "lumped"}
 "sweep_config":
     "sim_default": null
@@ -19,5 +19,5 @@
         "material_val":
             "wire": {"rho_re": 1.75e-8, "rho_im": 0.0}
         "source_val":
-            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
-            "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
+            "src": {"V_re": +1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
+            "sink": {"V_re": -1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
