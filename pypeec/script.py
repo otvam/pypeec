@@ -135,7 +135,7 @@ def _get_arg_viewer(subparsers):
     parser.add_argument(
         "-f", "--folder",
         help="folder for saving the screenshots (default: cwd)",
-        default=None,
+        default=".",
         metavar="folder",
         dest="folder",
     )
@@ -250,7 +250,7 @@ def _get_arg_plotter(subparsers):
     parser.add_argument(
         "-f", "--folder",
         help="folder for saving the screenshots (default: cwd)",
-        default=None,
+        default=".",
         metavar="folder",
         dest="folder",
     )
