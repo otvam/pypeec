@@ -168,14 +168,10 @@ def set_plotter_voxel_vector(voxel, idx, idx_var, var, name):
     # sort the variable
     var_all = var_all[idx_s]
 
-    # assign the current density norm
-    voxel[name + "_norm_abs"] = lna.norm(var_all, axis=1)
-    voxel[name + "_norm_re"] = lna.norm(np.real(var_all), axis=1)
-    voxel[name + "_norm_im"] = lna.norm(np.imag(var_all), axis=1)
-
-    # assign the current density direction
+    # assign the vector and the norm
     voxel[name + "_vec_re"] = np.real(var_all)
     voxel[name + "_vec_im"] = np.imag(var_all)
+    voxel[name + "_norm"] = lna.norm(var_all, axis=1)
 
     return voxel
 
@@ -186,13 +182,9 @@ def set_plotter_magnetic_field(point, H_point):
     The norm (scalar field) and the direction (vector field) are added.
     """
 
-    # compute the norm
-    point["H_norm_abs"] = lna.norm(H_point, axis=1)
-    point["H_norm_re"] = lna.norm(np.real(H_point), axis=1)
-    point["H_norm_im"] = lna.norm(np.imag(H_point), axis=1)
-
-    # compute the direction
+    # assign the vector and the norm
     point["H_vec_re"] = np.real(H_point)
     point["H_vec_im"] = np.imag(H_point)
+    point["H_norm"] = lna.norm(H_point, axis=1)
 
     return point

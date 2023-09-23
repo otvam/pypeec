@@ -129,7 +129,36 @@ def _get_clip_mesh(pl, obj, arg, plot_clip):
         )
 
 
-def _get_filter_vector(obj, vec, arrow_threshold):
+def _get_phase_vector(obj, var, phase):
+    """
+    Get a vector for a specified phase shift.
+    The vector is constructed from the phasor.
+    """
+
+    # get var
+    data_re = obj[var + "_re"]
+    data_im = obj[var + "_im"]
+
+    # construct the vector
+    time = data_re+1j*data_im
+
+    # phase shift the vector
+    time *= np.exp(1j*phase)
+
+    # get the vector in the time domain
+    time = np.real(time)
+
+    # get the norm
+    norm = lna.norm(time, axis=1)
+
+    # assign the data
+    obj[var + "_time"] = time
+    obj[var + "_norm"] = norm
+
+    return obj
+
+
+def _get_filter_vector(obj, var, arrow_threshold):
     """
     Filter the voxel structure with a vector field.
     This function is used to remove arrows with extremely low lengths.
@@ -140,19 +169,16 @@ def _get_filter_vector(obj, vec, arrow_threshold):
         return obj
 
     # get var
-    data = obj[vec]
-
-    # get norm
-    nrm = lna.norm(data, axis=1)
+    data = obj[var]
 
     # threshold for arrow removal
-    if np.any(np.isfinite(nrm)):
-        thr = np.nanmax(nrm)*arrow_threshold
+    if np.any(np.isfinite(data)):
+        thr = np.nanmax(data)*arrow_threshold
     else:
         thr = np.nan
 
     # indices to be kept
-    idx = nrm > thr
+    idx = data > thr
 
     # filter out the arrows that are too small
     obj = obj.extract_cells(idx)
@@ -280,8 +306,8 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     """
 
     # extract
-    var_scalar = data_plot["var_scalar"]
-    var_vector = data_plot["var_vector"]
+    var = data_plot["var"]
+    phase = data_plot["phase"]
     scale = data_plot["scale"]
     log = data_plot["log"]
     filter_lim = data_plot["filter_lim"]
@@ -303,20 +329,25 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
         color=plot_theme["text_color"],
     )
 
+    # get variable name
+    var_time = var + "_time"
+    var_norm = var + "_norm"
+
     # scale and clamp the variable
     obj_tmp = obj.copy(deep=True)
-    obj_tmp = _get_filter_vector(obj_tmp, var_vector, arrow_threshold)
-    obj_tmp = _get_filter_scalar(obj_tmp, var_scalar, filter_lim)
-    obj_tmp = _get_clamp_scale_scalar(obj_tmp, var_scalar, color_lim, scale)
+    obj_tmp = _get_phase_vector(obj_tmp, var, phase)
+    obj_tmp = _get_filter_vector(obj_tmp, var_norm, arrow_threshold)
+    obj_tmp = _get_filter_scalar(obj_tmp, var_norm, filter_lim)
+    obj_tmp = _get_clamp_scale_scalar(obj_tmp, var_norm, color_lim, scale)
 
     # get arrow size
     d_char = min(grid.spacing)
     factor = d_char*arrow_scale
 
     # add the resulting plot to the plotter
-    arg = dict(scalars=var_scalar, log_scale=log, scalar_bar_args=scalar_bar_args)
+    arg = dict(scalars=var_norm, log_scale=log, scalar_bar_args=scalar_bar_args)
     if obj_tmp.n_cells > 0:
-        glyph_tmp = obj_tmp.glyph(orient=var_vector, scale=False, factor=factor)
+        glyph_tmp = obj_tmp.glyph(orient=var_time, scale=False, factor=factor)
         _get_clip_mesh(pl, glyph_tmp, arg, plot_clip)
 
 
