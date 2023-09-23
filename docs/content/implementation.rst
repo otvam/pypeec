@@ -32,6 +32,10 @@ matrix-vector multiplications is reduced from O(n^2) to 0(n*log(n)). Besides the
 computational cost and memory requirement, the FFTs allows for the usage of heavily 
 optimized libraries leveraging the parallel processing capabilities of CPUs or GPUs.
 
+PyPEEC is using voxels to describe the geometry and, therefore, can take advantage
+of the FFT acceleration. This implies that PEEC problems with several millions of
+voxels can be solved in a few minutes on a laptop computer.
+
 Here are some interesting papers about the PEEC method:
 
 * A. Ruehli IEEE TMTT, 10.1109/TMTT.1974.1128204, 1974

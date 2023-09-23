@@ -9,77 +9,107 @@
 "mesh_type": "shape"
 "data_voxelize":
     "param":
-        "dx": 50.0e-6
-        "dy": 50.0e-6
-        "dz": 50.0e-6
+        "dx": 35.0e-6
+        "dy": 35.0e-6
+        "dz": 35.0e-6
         "cz": 0.0e-6
         "tol": 1.0e-6
         "xy_min": null
         "xy_max": null
     "layer_stack":
-        - {"n_layer": 1, "tag_layer": "back"}
-        - {"n_layer": 5, "tag_layer": "insulation"}
-        - {"n_layer": 1, "tag_layer": "front"}
+        - {"n_layer": 1, "tag_layer": "copper_1"}
+        - {"n_layer": 5, "tag_layer": "insulation_1"}
+        - {"n_layer": 1, "tag_layer": "copper_2"}
+        - {"n_layer": 5, "tag_layer": "insulation_2"}
+        - {"n_layer": 1, "tag_layer": "copper_3"}
+        - {"n_layer": 5, "tag_layer": "insulation_3"}
+        - {"n_layer": 1, "tag_layer": "copper_4"}
     "geometry_shape":
-        "copper":
+        "trace":
             -
-                "shape_layer": ["front"]
+                "shape_layer": ["copper_1"]
                 "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "trace"
                         "shape_operation": "add"
-                        "width": 1.0e-3
-                        "coord": [[0.0e-3, 0.0e-3], [15.0e-3, 0.0e-3]]
+                        "width": 0.5e-3
+                        "coord": [[0.0e-3, 0.0e-3], [0.0e-3, 4.0e-3], [4.0e-3, 4.0e-3], [4.0e-3, 0.0e-3]]
             -
-                "shape_layer": ["back"]
+                "shape_layer": ["copper_2"]
                 "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "trace"
                         "shape_operation": "add"
-                        "width": 1.0e-3
-                        "coord": [[0.0e-3, 0.0e-3], [15.0e-3, 0.0e-3]]
-        "src_front":
+                        "width": 0.5e-3
+                        "coord": [[4.0e-3, 0.0e-3], [0.0e-3, 0.0e-3], [0.0e-3, 4.0e-3], [4.0e-3, 4.0e-3]]
             -
-                "shape_layer": ["front"]
+                "shape_layer": ["copper_3"]
+                "shape_operation": "add"
+                "shape_data":
+                    -
+                        "shape_type": "trace"
+                        "shape_operation": "add"
+                        "width": 0.5e-3
+                        "coord": [[4.0e-3, 4.0e-3], [4.0e-3, 0.0e-3], [0.0e-3, 0.0e-3], [0.0e-3, 4.0e-3]]
+            -
+                "shape_layer": ["copper_4"]
+                "shape_operation": "add"
+                "shape_data":
+                    -
+                        "shape_type": "trace"
+                        "shape_operation": "add"
+                        "width": 0.5e-3
+                        "coord": [[0.0e-3, 4.0e-3], [4.0e-3, 4.0e-3], [4.0e-3, 0.0e-3], [0.0e-3, 0.0e-3]]
+        "via":
+            -
+                "shape_layer": ["insulation_1"]
                 "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "pad"
                         "shape_operation": "add"
-                        "diameter": 1.0e-3
+                        "diameter": 0.35e-3
+                        "coord": [[4.0e-3, 0.0e-3]]
+            -
+                "shape_layer": ["insulation_2"]
+                "shape_operation": "add"
+                "shape_data":
+                    -
+                        "shape_type": "pad"
+                        "shape_operation": "add"
+                        "diameter": 0.35e-3
+                        "coord": [[4.0e-3, 4.0e-3]]
+            -
+                "shape_layer": ["insulation_3"]
+                "shape_operation": "add"
+                "shape_data":
+                    -
+                        "shape_type": "pad"
+                        "shape_operation": "add"
+                        "diameter": 0.35e-3
+                        "coord": [[0.0e-3, 4.0e-3]]
+        "src":
+            -
+                "shape_layer": ["copper_1"]
+                "shape_operation": "add"
+                "shape_data":
+                    -
+                        "shape_type": "pad"
+                        "shape_operation": "add"
+                        "diameter": 0.75e-3
                         "coord": [[0.0e-3, 0.0e-3]]
-        "sink_front":
+        "sink":
             -
-                "shape_layer": ["front"]
+                "shape_layer": ["copper_4"]
                 "shape_operation": "add"
                 "shape_data":
                     -
                         "shape_type": "pad"
                         "shape_operation": "add"
-                        "diameter": 1.0e-3
-                        "coord": [[15.0e-3, 0.0e-3]]
-        "src_back":
-            -
-                "shape_layer": ["back"]
-                "shape_operation": "add"
-                "shape_data":
-                    -
-                        "shape_type": "pad"
-                        "shape_operation": "add"
-                        "diameter": 1.0e-3
+                        "diameter": 0.75e-3
                         "coord": [[0.0e-3, 0.0e-3]]
-        "sink_back":
-            -
-                "shape_layer": ["back"]
-                "shape_operation": "add"
-                "shape_data":
-                    -
-                        "shape_type": "pad"
-                        "shape_operation": "add"
-                        "diameter": 1.0e-3
-                        "coord": [[15.0e-3, 0.0e-3]]
 "resampling":
     "use_reduce": false
     "use_resample": false
@@ -87,9 +117,7 @@
 "check_conflict": true
 "check_connection": true
 "domain_conflict":
-    - {"domain_resolve": ["copper"], "domain_keep": ["src_front", "sink_front"]}
-    - {"domain_resolve": ["copper"], "domain_keep": ["src_back", "sink_back"]}
+    - {"domain_resolve": ["trace"], "domain_keep": ["src"]}
+    - {"domain_resolve": ["trace"], "domain_keep": ["sink"]}
 "domain_connection":
-    "front": {"domain_group": [["src_front"], ["sink_front"]], "connected": true}
-    "back": {"domain_group": [["src_back"], ["sink_back"]], "connected": true}
-    "insulation": {"domain_group": [["src_front", "sink_front"], ["src_back", "sink_back"]], "connected": false}
+    "coil": {"domain_group": [["trace"], ["via"], ["src"], ["sink"]], "connected": true}
