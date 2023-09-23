@@ -12,25 +12,24 @@ FOLDER_CONFIG="config"
 
 # name of the different examples
 #   examples_voxel
-#       slab
-#       transformer
-#       core
-#       logo
+#       examples_voxel/slab
+#       examples_voxel/transformer
+#       examples_voxel/core
+#       examples_voxel/logo
 #   examples_shape
-#       busbar
-#       wire
-#       trace
-#       coplanar
+#       examples_shape/busbar
+#       examples_shape/wire
+#       examples_shape/trace
+#       examples_shape/coplanar
 #   examples_stl
-#       inductor_air
-#       inductor_core
-#       transformer
+#       examples_stl/inductor_air
+#       examples_stl/inductor_core
+#       examples_stl/transformer
 #   examples_png
-#       inductor_spiral
-#       inductor_gap
-#       shield
-#       gerber
+#       examples_png/inductor_spiral
+#       examples_png/inductor_gap
+#       examples_png/shield
+#       examples_png/gerber
 
 # name of the selected example
-FOLDER_NAME="examples_voxel"
-EXAMPLE_NAME="core"
+FOLDER_EXAMPLE="tutorial"

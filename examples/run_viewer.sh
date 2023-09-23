@@ -11,8 +11,8 @@ set -o pipefail
 source examples_config.sh
 
 # get the filenames
-FILE_VOXEL="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/voxel.pck"
-FILE_POINT="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/point.yaml"
+FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.pck"
+FILE_POINT="$PATH_ROOT/$FOLDER_EXAMPLE/point.yaml"
 FILE_VIEWER="$PATH_ROOT/$FOLDER_CONFIG/viewer.yaml"
 
 # plot tag (from viewer.yaml)

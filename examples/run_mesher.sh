@@ -11,8 +11,8 @@ set -o pipefail
 source examples_config.sh
 
 # get the filenames
-FILE_GEOMETRY="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/geometry.yaml"
-FILE_VOXEL="$PATH_ROOT/$FOLDER_NAME/$EXAMPLE_NAME/voxel.pck"
+FILE_GEOMETRY="$PATH_ROOT/$FOLDER_EXAMPLE/geometry.yaml"
+FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.pck"
 
 # run
 pypeec mesher \
