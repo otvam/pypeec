@@ -186,7 +186,7 @@ def get_integral(P_fc, P_fm, W_fc, W_fm, S_tot):
     LOGGER.debug("integral")
     with log.BlockIndent():
         LOGGER.debug("S_tot_real = %.2e VA" % S_tot.real)
-        LOGGER.debug("S_tot_imag = %.2ej VA" % S_tot.real)
+        LOGGER.debug("S_tot_imag = %.2ej VA" % S_tot.imag)
         LOGGER.debug("P_electric = %.2e W" % P_electric)
         LOGGER.debug("P_magnetic = %.2e W" % P_magnetic)
         LOGGER.debug("W_electric = %.2e J" % W_electric)
