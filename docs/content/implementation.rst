@@ -26,7 +26,7 @@ memory requirements of the problem is becoming problematic for large systems.
 This problem can be mitigated if the geometry is represented with a voxel structure. 
 In this case, the dense matrices are block-Toeplitz Toeplitz-block matrices. 
 Such matrices can be embedded into circulant tensors reducing the memory requirements
-from O(n^2) to 0(n). Additionally, the matrix-vector multiplications can be done
+from O(n^2) to O(n). Additionally, the matrix-vector multiplications can be done
 with Fourier transforms. With an FFT algorithm, the computational complexity of
 matrix-vector multiplications is reduced from O(n^2) to 0(n*log(n)). Besides the reduced
 computational cost and memory requirement, the FFTs allows for the usage of heavily 

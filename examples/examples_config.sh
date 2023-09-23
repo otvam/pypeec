@@ -10,7 +10,7 @@ PATH_ROOT="."
 # name of configuration folder
 FOLDER_CONFIG="config"
 
-# name of the considered example
+# name of the different examples
 #   examples_voxel
 #       slab
 #       transformer
@@ -30,5 +30,7 @@ FOLDER_CONFIG="config"
 #       inductor_gap
 #       shield
 #       gerber
+
+# name of the selected example
 FOLDER_NAME="examples_voxel"
 EXAMPLE_NAME="core"
