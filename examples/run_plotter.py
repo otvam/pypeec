@@ -25,10 +25,9 @@ if __name__ == "__main__":
 
     # plot tag (from plotter.yaml)
     tag_plot = [
-        "material",
         "V_c_abs",
-        "J_c_norm_abs",
-        "H_norm_abs",
+        "J_c_norm",
+        "H_norm",
         "residuum",
     ]
 

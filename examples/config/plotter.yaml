@@ -172,7 +172,7 @@
         "color_lim": null
         "filter_lim": null
         "point_size": 10.0
-"J_c_norm_phase":
+"J_c_vec":
     "framework": "pyvista"
     "layout": "arrow_voxel"
     "title": "Current"
@@ -204,7 +204,7 @@
         "color_lim": null
         "filter_lim": null
         "point_size": 10.0
-"B_m_norm_phase":
+"B_m_vec":
     "framework": "pyvista"
     "layout": "arrow_voxel"
     "title": "Flux Density"
@@ -236,7 +236,7 @@
         "color_lim": null
         "filter_lim": null
         "point_size": 10.0
-"H_norm_phase":
+"H_vec":
     "framework": "pyvista"
     "layout": "arrow_point"
     "title": "Mag. Field"
