@@ -64,14 +64,16 @@ def run_hide_logo():
     STATUS_LOGO = True
 
 
-def run_extract(data_name, path_extract):
+def run_extract(data_name, is_zip, path_extract):
     """
-    Extract data (examples or documentation).
+    Extract data (config, examples, or documentation).
 
     Parameters
     ----------
     data_name : string
-        Name of the archive containing the data.
+        Name of the file containing the data.
+    is_zip : boolean
+        Indicate if the data is a zip archive.
     path_extract : string
         Path where the data will be extracted.
 
@@ -91,8 +93,11 @@ def run_extract(data_name, path_extract):
 
     LOGGER.info("data extraction")
     try:
-        with importlib.resources.path("pypeec.data", data_name + ".zip") as file_data:
-            shutil.unpack_archive(file_data, path_extract)
+        with importlib.resources.path("pypeec.data", data_name) as file_data:
+            if is_zip:
+                shutil.unpack_archive(file_data, path_extract)
+            else:
+                shutil.copy(file_data, path_extract)
     except OSError as ex:
         log.log_exception(LOGGER, ex)
         LOGGER.error("invalid termination")

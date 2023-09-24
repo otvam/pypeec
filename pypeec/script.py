@@ -285,6 +285,18 @@ def _get_arg_extract(subparsers):
         dest="path_extract",
     )
 
+    # add the config parser
+    parser = subparsers.add_parser(
+        "config",
+        help="extract the default config file",
+    )
+    parser.add_argument(
+        help="path where the config file should be extracted",
+        type=str,
+        metavar="path",
+        dest="path_extract",
+    )
+
 
 def run_script():
     """
@@ -343,9 +355,11 @@ def run_script():
             folder=args.folder,
         )
     elif args.command == "examples":
-        (status, ex) = main.run_extract("examples", args.path_extract)
+        (status, ex) = main.run_extract("examples.zip", True, args.path_extract)
     elif args.command == "documentation":
-        (status, ex) = main.run_extract("documentation", args.path_extract)
+        (status, ex) = main.run_extract("documentation.zip", True, args.path_extract)
+    elif args.command == "config":
+        (status, ex) = main.run_extract("config.yaml", False, args.path_extract)
     else:
         raise ValueError("invalid command")
 

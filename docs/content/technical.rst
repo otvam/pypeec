@@ -62,6 +62,8 @@ Configuration File
     * This file is always loaded first.
     * This file is included in the package.
 
+* The default configuration file can be extracted with the ``pypeec config`` command.
+
 * The filename located the environment variable ``PYPEEC`` is loaded.
 
     * If the variable is not set, the default configuration is kept.
