@@ -51,11 +51,11 @@ def _get_total_power(freq, source_pos, I_src, V_vc):
 
         # get the current and voltage
         if (len(idx_vc) != 0) and (len(idx_src) != 0):
-            V_tmp = NP_TYPES.COMPLEX(np.mean(V_vc[idx_vc]))
-            I_tmp = NP_TYPES.COMPLEX(np.sum(I_src[idx_src]))
+            V_tmp = NP_TYPES.COMPLEX(V_vc[idx_vc])
+            I_tmp = NP_TYPES.COMPLEX(I_src[idx_src])
 
             # compute the apparent power
-            power_tmp = fact*V_tmp*np.conj(I_tmp)
+            power_tmp = np.sum(fact*V_tmp*np.conj(I_tmp))
 
             # add the power
             power += power_tmp

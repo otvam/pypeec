@@ -264,16 +264,18 @@ def get_source(freq, source_pos, I_src, V_vc):
         if len(idx_vc) == 0:
             V_tmp = NP_TYPES.COMPLEX(0)
         else:
-            V_tmp = NP_TYPES.COMPLEX(np.mean(V_vc[idx_vc]))
+            V_tmp = NP_TYPES.COMPLEX(V_vc[idx_vc])
 
         # current is the sum between all the voxels composing the terminal
         if len(idx_src) == 0:
             I_tmp = NP_TYPES.COMPLEX(0)
         else:
-            I_tmp = NP_TYPES.COMPLEX(np.sum(I_src[idx_src]))
+            I_tmp = NP_TYPES.COMPLEX(I_src[idx_src])
 
-        # compute the apparent power
-        S_tmp = fact*V_tmp*np.conj(I_tmp)
+        # compute the lumped quantities
+        S_tmp = np.sum(fact*V_tmp*np.conj(I_tmp))
+        V_tmp = np.mean(V_tmp)
+        I_tmp = np.sum(I_tmp)
 
         # assign the current and voltage
         source[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp}
