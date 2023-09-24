@@ -44,7 +44,7 @@ General Issues
 --------------
 
 .. Warning::
-    Python **Pickle files** are using to store the mesher and solver results.
+    Python **Pickle files** are used to store the mesher and solver results.
     Pickling data is not secure. Only load Pickle files that you trust.
     Do not commit the Pickle files in the Git repository.
 
