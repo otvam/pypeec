@@ -134,6 +134,8 @@ def _get_shape_single(shape_type, shape_data):
     # check if valid
     if obj.is_empty:
         raise RunError("invalid shape: shape is empty")
+    if not obj.is_valid:
+        raise RunError("invalid shape: geometry is ill-formed")
 
     return obj
 
@@ -240,6 +242,10 @@ def _get_shape_assemble(geometry_shape, tag):
         if tag in shape_layer:
             # get the shape
             obj = _get_shape_composite(shape_data)
+
+            # check the shape
+            if not obj.is_valid:
+                raise RunError("invalid shape: geometry is ill-formed")
 
             # add to the list
             if shape_operation == "add":
