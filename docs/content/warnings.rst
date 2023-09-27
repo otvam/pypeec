@@ -5,6 +5,10 @@ PyPEEC Issues
 -------------
 
 .. Warning::
+    The geometry is meshed with a **regular voxel structure** (uniform grid).
+    This implies that large geometries with small features cannot be meshed efficiently.
+
+.. Warning::
     For problems with **magnetic domains**, the **preconditioner** is not optimal.
     This might lead to a slow convergence of the iterative matrix solver.
 
