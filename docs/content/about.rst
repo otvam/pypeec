@@ -16,7 +16,7 @@ Author
 
 * **Thomas Guillod**, Dartmouth College, NH, USA
 * Email: guillod@otvam.ch
-* Website: https://otvam.ch>
+* Website: https://otvam.ch
 
 Credits
 -------
