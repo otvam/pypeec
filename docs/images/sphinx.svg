@@ -8,8 +8,8 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
-   sodipodi:docname="header.svg"
-   inkscape:export-filename="/home/tguillod/pypeec/docs/images/header.png"
+   sodipodi:docname="sphinx.svg"
+   inkscape:export-filename="/home/tguillod/pypeec/docs/images/sphinx.png"
    inkscape:export-xdpi="16.51"
    inkscape:export-ydpi="16.51"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -27,16 +27,44 @@
      inkscape:pagecheckerboard="true"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:zoom="0.32"
-     inkscape:cx="1382.8125"
-     inkscape:cy="451.5625"
-     inkscape:window-width="2486"
-     inkscape:window-height="1376"
-     inkscape:window-x="74"
-     inkscape:window-y="27"
-     inkscape:window-maximized="1"
+     inkscape:zoom="0.11313709"
+     inkscape:cx="203.2932"
+     inkscape:cy="2868.2019"
+     inkscape:window-width="1551"
+     inkscape:window-height="1082"
+     inkscape:window-x="114"
+     inkscape:window-y="214"
+     inkscape:window-maximized="0"
      inkscape:current-layer="layer1"
-     showguides="false" />
+     showguides="true"
+     inkscape:snap-midpoints="true"
+     inkscape:lockguides="true">
+    <sodipodi:guide
+       position="66.954082,950.58058"
+       orientation="750.87153,0"
+       id="guide10219"
+       inkscape:locked="true" />
+    <sodipodi:guide
+       position="1268.0127,963.07453"
+       orientation="0,557.20889"
+       id="guide10336"
+       inkscape:locked="true" />
+    <sodipodi:guide
+       position="2581.7361,849.19276"
+       orientation="86.15569,0"
+       inkscape:locked="true"
+       id="guide10489" />
+    <sodipodi:guide
+       position="914.16259,849.19276"
+       orientation="166.62918,0"
+       inkscape:locked="true"
+       id="guide10660" />
+    <sodipodi:guide
+       position="1268.0127,165.90124"
+       orientation="0,-215.14202"
+       inkscape:locked="true"
+       id="guide10911" />
+  </sodipodi:namedview>
   <defs
      id="defs2">
     <rect
@@ -116,82 +144,6 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <text
-       xml:space="preserve"
-       id="text8657"
-       style="font-style:normal;font-weight:normal;font-size:120px;line-height:0.9;font-family:sans-serif;white-space:pre;shape-inside:url(#rect8659);fill:#000000;fill-opacity:1;stroke:none"
-       transform="translate(-992.21369,-301.4167)"
-       inkscape:export-filename="/home/tguillod/pypeec/docs/images/text8657.png"
-       inkscape:export-xdpi="16.51"
-       inkscape:export-ydpi="16.51"><tspan
-         x="1029.7383"
-         y="286.19065"
-         id="tspan897"><tspan
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan895">
-</tspan></tspan><tspan
-         x="1029.7383"
-         y="399.94184"
-         id="tspan901"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184"
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan899">╔═════════════╦═══════════════════════════╗
-</tspan></tspan><tspan
-         x="1029.7383"
-         y="513.69303"
-         id="tspan905"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184"
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan903">║             ║ ╔═══╗   ╔═══╦═══╦═══╦═══╗ ║
-</tspan></tspan><tspan
-         x="1029.7383"
-         y="627.44425"
-         id="tspan909"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184"
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan907">║             ║ ║╔═╗║   ║╔═╗║╔══╣╔══╣╔═╗║ ║
-</tspan></tspan><tspan
-         x="1029.7383"
-         y="741.19548"
-         id="tspan913"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184"
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan911">║             ║ ║╚═╝╠╗ ╔╣╚═╝║╚══╣╚══╣║ ╚╝ ║
-</tspan></tspan><tspan
-         x="1029.7383"
-         y="854.9467"
-         id="tspan917"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184"
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan915">║             ║ ║╔══╣║ ║║╔══╣╔══╣╔══╣║ ╔╗ ║
-</tspan></tspan><tspan
-         x="1029.7383"
-         y="968.69792"
-         id="tspan921"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184"
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan919">║             ║ ║║  ║╚═╝║║  ║╚══╣╚══╣╚═╝║ ║
-</tspan></tspan><tspan
-         x="1029.7383"
-         y="1082.4491"
-         id="tspan925"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184"
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan923">║             ║ ╚╝  ╚═╗ ╠╝  ╚═══╩═══╩═══╝ ║
-</tspan></tspan><tspan
-         x="1029.7383"
-         y="1196.2003"
-         id="tspan929"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0.00010681152 0 0 0 0 0 0 0 0 0 0 0 0 0.00022888184"
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan927">╚═════════════╩═════╦═╝ ╠═════════════════╝
-</tspan></tspan><tspan
-         x="1029.7383"
-         y="1309.9515"
-         id="tspan933"><tspan
-           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.00010681152"
-           style="font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="tspan931">                    ╚═══╝</tspan></tspan></text>
     <image
        width="748.23035"
        height="748.23035"
@@ -200,5 +152,47 @@
        id="image4621"
        x="122.92807"
        y="88.704987" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:25;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 1507.9811,854.57256 1073.7551,-4e-5 V 57.399218 H 66.954083 V 854.57252 H 1268.0127"
+       id="path11000"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:25.00003199;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 914.16261,57.399218 V 854.57252"
+       id="path11035" />
+    <g
+       id="g8021"
+       transform="matrix(9.8321383,0,0,10.367,567.77653,205.49874)"
+       style="fill:#ffffff;stroke-width:2.47622455;stroke-miterlimit:4;stroke-dasharray:none;stroke:#000000;fill-opacity:0.25">
+      <path
+         style="fill:#ffffff;stroke:#000000;stroke-width:2.47622455;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:0.25"
+         d="M 71.219115,18.669492 V 51.624576 H 83.42237 V 62.609603 H 71.219115 V 73.59464 h 24.406521 c 0,0 0,-54.925148 0,-54.925148 H 89.524005 V 40.639549 H 77.320737 V 18.669492 Z"
+         id="path6515" />
+      <path
+         id="path6811"
+         style="fill:#ffffff;stroke:#000000;stroke-width:2.47622455;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:0.25"
+         d="m 101.72726,7.6844425 h 12.20327 V 18.669492 H 101.72726 V 7.6844425 M 95.625633,51.624576 h 6.101627 V 29.654519 h 18.30489 V -3.300641 H 95.625636 l -3e-6,54.925217" />
+      <path
+         id="path6811-2"
+         style="fill:#ffffff;fill-opacity:0.25;stroke:#000000;stroke-width:2.47622;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 52.914224,7.6844422 h 12.20327 V 18.669492 H 52.914224 V 7.6844422 M 46.812597,51.624576 h 6.101627 V 29.654519 h 18.30489 V -3.3006413 H 46.8126 l -3e-6,54.9252173" />
+      <path
+         style="fill:#ffffff;stroke:#000000;stroke-width:2.47622455;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:0.25"
+         d="m 120.03215,-3.300641 h 24.40652 V 7.6844425 H 126.13378 V 18.669492 h 18.30489 v 10.985027 h -18.30489 v 10.98503 h 18.30489 v 10.985027 h -24.40651 z"
+         id="path6945" />
+      <path
+         style="fill:#ffffff;stroke:#000000;stroke-width:2.47622455;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:0.25"
+         d="m 144.43867,-3.300641 v 54.925217 h 24.40652 V 40.639549 h -18.30488 v -10.98503 h 18.30488 V 18.669492 l -18.30488,10e-6 V 7.6844415 l 18.30488,1e-6 V -3.300641 Z"
+         id="path7097" />
+      <path
+         style="fill:#ffffff;stroke:#000000;stroke-width:2.47622455;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:0.25"
+         d="m 168.84519,-3.300641 v 54.925217 h 24.40653 V 29.654519 h -6.10163 v 10.98503 H 174.94683 V 7.6844425 h 12.20326 V 18.669492 h 6.10163 V -3.300641 Z"
+         id="path7404" />
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 914.16261,854.57252 H 1268.0127"
+       id="path12582" />
   </g>
 </svg>
