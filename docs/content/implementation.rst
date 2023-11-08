@@ -6,8 +6,8 @@ FFT-Accelerated PEEC Method
 
 There are two main categories of field simulation methods:
 
-* Differential equation based method (FEM, FVM, FD, etc.)
-* Integral equation based method (MoM, BEM, PEEC, etc.)
+* Differential equation based method (FEM, FD, etc.)
+* Integral equation based method (MoM, FVM, PEEC, etc.)
 
 The PEEC method is an integral equation method. The fundamental idea is to represent
 the field simulation problem with a very large distributed equivalent circuit consisting
