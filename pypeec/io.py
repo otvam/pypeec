@@ -172,9 +172,6 @@ def load_pickle(filename):
         Python data contained in the file content
     """
 
-    # check extension
-    (name, ext) = os.path.splitext(filename)
-
     # load the Pickle file
     try:
         with open(filename, "rb") as fid:
@@ -200,9 +197,6 @@ def write_pickle(filename, data):
     data : data
         Python data to be saved.
     """
-
-    # check extension
-    (name, ext) = os.path.splitext(filename)
 
     # save the Pickle file
     try:
