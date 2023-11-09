@@ -70,6 +70,7 @@ FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW" or "CuPy"
 #   - SuperLU is typically slower but is always available (integrated with SciPy)
 #   - UMFPACK is typically faster than SuperLU (available through SciKits)
 #   - PARDISO is typically faster than UMFPACK (available through Pydiso)
+#   - IDENTITY is using the identity matrix as a solution (for debug)
 FACTORIZATION_LIBRARY: "SuperLU"  # "SuperLU" or "UMFPACK" or "PARDISO"
 
 # method for dense matrix multiplication

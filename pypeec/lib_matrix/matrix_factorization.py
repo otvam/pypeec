@@ -5,6 +5,7 @@ This module is used as a common interface for different solvers:
     - SuperLU is typically slower but is always available (integrated with SciPy)
     - UMFPACK is typically faster than SuperLU (available through SciKits)
     - PARDISO is typically faster than UMFPACK (available through Pydiso)
+#   - IDENTITY is using the identity matrix as a solution (for debug)
 
 Todo
 ----
@@ -56,6 +57,8 @@ elif FACTORIZATION_LIBRARY == "PARDISO":
     # set number of threads
     mkl_solver.set_mkl_pardiso_threads(THREAD_PARDISO)
     mkl_solver.set_mkl_threads(THREAD_MKL)
+elif FACTORIZATION_LIBRARY == "IDENTITY":
+    pass
 else:
     raise ValueError("invalid factorization library")
 
@@ -157,6 +160,8 @@ def _get_factorize_sub(mat):
         factor = _get_fact_umfpack(mat)
     elif FACTORIZATION_LIBRARY == "PARDISO":
         factor = _get_fact_pardiso(mat)
+    elif FACTORIZATION_LIBRARY == "IDENTITY":
+        factor = factor_empty
     else:
         raise ValueError("invalid matrix factorization library")
 

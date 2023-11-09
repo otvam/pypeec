@@ -170,6 +170,7 @@ def _check_data(data_config):
         "SuperLU",
         "UMFPACK",
         "PARDISO",
+        "IDENTITY",
     ]
     datachecker.check_choice("FACTORIZATION_LIBRARY", data_config["FACTORIZATION_LIBRARY"], lib)
 
@@ -202,6 +203,8 @@ def _check_library(data_config):
     elif data_config["FACTORIZATION_LIBRARY"] == "PARDISO":
         lib = importlib.util.find_spec("pydiso")
         datachecker.check_assert("library", lib is not None, "PARDISO is not installed")
+    elif data_config["FACTORIZATION_LIBRARY"] == "IDENTITY":
+        pass
     else:
         raise ValueError("invalid matrix factorization library")
 
