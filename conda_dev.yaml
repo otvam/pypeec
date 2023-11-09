@@ -42,6 +42,7 @@ dependencies:
   - ipywidgets=8.1.0
   - trame=3.1.0
   # optional HPC libs
+  - pyamg=5.0.1
   - cupy=12.1.0
   - pyfftw=0.13.1
   - pydiso=0.0.3

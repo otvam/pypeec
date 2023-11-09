@@ -485,7 +485,7 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     return A_vc_src, A_src_vc, A_src_src
 
 
-def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
+def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, fact_options):
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
@@ -506,8 +506,8 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     (Y_mat_m, S_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m)
 
     # factorize the Schur
-    S_fact_c = matrix_factorization.get_factorize("electric", S_mat_c)
-    S_fact_m = matrix_factorization.get_factorize("magnetic", S_mat_m)
+    S_fact_c = matrix_factorization.get_factorize("electric", S_mat_c, fact_options)
+    S_fact_m = matrix_factorization.get_factorize("magnetic", S_mat_m, fact_options)
 
     # if the matrix is singular, there is not preconditioner
     if (S_fact_c is None) or (S_fact_m is None):

@@ -12,7 +12,13 @@
 "green_simplify": 20.0
 "coupling_simplify": 20.0
 
-# iterative solver options
+# factorization options (for AMG preconditioner)
+"fact_options":
+    "tol": 1.0e-6                  # tolerance for the AMG solver convergence
+    "solver": "root_sa"            # name of the AMG solver ("adapt_sa" or "root_sa")
+    "krylov": null                 # use acceleration method (null or "gmres" or "fgmres")
+
+# iterative solver options (for GMRES and GCROT solver)
 "solver_options":
     "check": true                  # check (or not) the solver tolerance
     "tolerance": 1.0e-6            # tolerance for checking the solution residuum

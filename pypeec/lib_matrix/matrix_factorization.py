@@ -57,6 +57,8 @@ elif FACTORIZATION_LIBRARY == "PARDISO":
     # set number of threads
     mkl_solver.set_mkl_pardiso_threads(THREAD_PARDISO)
     mkl_solver.set_mkl_threads(THREAD_MKL)
+elif FACTORIZATION_LIBRARY == "PyAMG":
+    from pyamg import aggregation
 elif FACTORIZATION_LIBRARY == "IDENTITY":
     pass
 else:
@@ -102,6 +104,36 @@ def _get_fact_pardiso(mat):
     return factor
 
 
+def _get_fact_pyamg(mat, fact_options):
+    """
+    Factorize a matrix with PyAMG.
+    """
+
+    # get options
+    tol = fact_options["tol"]
+    solver = fact_options["solver"]
+    krylov = fact_options["krylov"]
+
+    # factorize the matrix
+    try:
+        mat = mat.tocsr()
+        if solver == "root_sa":
+            solver = aggregation.rootnode_solver(mat)
+        elif solver == "adapt_sa":
+            (solver, work) = aggregation.adaptive_sa_solver(mat)
+        else:
+            raise ValueError("invalid AMF solver name")
+    except RuntimeError:
+        return None
+
+    # matrix solver
+    def factor(rhs):
+        sol = solver.solve(rhs, tol=tol, accel=krylov)
+        return sol
+
+    return factor
+
+
 def _get_fact_umfpack(mat):
     """
     Factorize a matrix with UMFPACK.
@@ -126,7 +158,7 @@ def _get_fact_umfpack(mat):
     return factor
 
 
-def _get_factorize_sub(mat):
+def _get_factorize_sub(mat, fact_options):
     """
     Factorize a sparse matrix (main function).
     """
@@ -160,6 +192,8 @@ def _get_factorize_sub(mat):
         factor = _get_fact_umfpack(mat)
     elif FACTORIZATION_LIBRARY == "PARDISO":
         factor = _get_fact_pardiso(mat)
+    elif FACTORIZATION_LIBRARY == "PyAMG":
+        factor = _get_fact_pyamg(mat, fact_options)
     elif FACTORIZATION_LIBRARY == "IDENTITY":
         factor = factor_empty
     else:
@@ -174,14 +208,14 @@ def _get_factorize_sub(mat):
     return factor
 
 
-def get_factorize(name, mat):
+def get_factorize(name, mat, fact_options):
     """
     Factorize a sparse matrix (log wrapper).
     """
 
     LOGGER.debug("factorization: %s" % name)
     with log.BlockIndent():
-        factor = _get_factorize_sub(mat)
+        factor = _get_factorize_sub(mat, fact_options)
 
     return factor
 

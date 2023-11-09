@@ -67,11 +67,12 @@ FACTORIZATION_OPTIONS:
 FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW" or "CuPy"
 
 # sparse matrix factorization options
+#   - IDENTITY is using the identity matrix as a solution (for debug)
 #   - SuperLU is typically slower but is always available (integrated with SciPy)
 #   - UMFPACK is typically faster than SuperLU (available through SciKits)
 #   - PARDISO is typically faster than UMFPACK (available through Pydiso)
-#   - IDENTITY is using the identity matrix as a solution (for debug)
-FACTORIZATION_LIBRARY: "SuperLU"  # "SuperLU" or "UMFPACK" or "PARDISO"
+#   - PyAMG is typically slow but uses less memory (risk of convergence issues)
+FACTORIZATION_LIBRARY: "SuperLU"  # "IDENTITY" or "SuperLU" or "UMFPACK" or "PARDISO" or "PyAMG"
 
 # method for dense matrix multiplication
 #   - FFT for doing the multiplication with circulant tensors and FFT

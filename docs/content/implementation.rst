@@ -62,6 +62,7 @@ The following optimizations are available for the computationally heavy operatio
   * SuperLU is typically slower but is always available (integrated with SciPy).
   * UMFPACK is typically faster than SuperLU (available through SciKits).
   * MKL/PARDISO is typically faster than UMFPACK (available through Pydiso).
+  * PyAMG is typically slow but uses less memory (risk of convergence issues).
 
 * Two different iterative solvers are available for the dense matrices.
 
