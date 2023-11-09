@@ -79,9 +79,11 @@ def _get_operator_zeros(idx_out):
     Get a linear operator returning zeros.
     """
 
+    # vector with zeros
+    var_out = np.zeros(len(idx_out), dtype=NP_TYPES.COMPLEX)
+
     # function returning zeros
     def op(_):
-        var_out = np.zeros(len(idx_out), dtype=NP_TYPES.COMPLEX)
         return var_out
 
     return op
