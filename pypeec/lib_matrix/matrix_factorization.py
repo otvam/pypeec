@@ -28,41 +28,11 @@ LOGGER = log.get_logger("FACTOR")
 # get config
 NP_TYPES = config.NP_TYPES
 
-# get factorization config
-FACTORIZATION_LIBRARY = config.FACTORIZATION_LIBRARY
-THREAD_PARDISO = config.FACTORIZATION_OPTIONS.THREAD_PARDISO
-THREAD_MKL = config.FACTORIZATION_OPTIONS.THREAD_MKL
-
-# find the number of threads
-if THREAD_PARDISO is None:
-    THREAD_PARDISO = os.cpu_count()
-if THREAD_MKL is None:
-    THREAD_MKL = os.cpu_count()
-
-# import the right library
-if FACTORIZATION_LIBRARY == "SuperLU":
-    from scipy.sparse import linalg
-elif FACTORIZATION_LIBRARY == "UMFPACK":
-    # import the UMFPACK binding
-    from scikits import umfpack
-
-    # prevent problematic matrices to trigger warnings
-    warnings.filterwarnings("error", module="scikits.umfpack")
-elif FACTORIZATION_LIBRARY == "PARDISO":
-    # import the PARDISO binding
-    from pydiso import mkl_solver
-    from pydiso.mkl_solver import MKLPardisoSolver
-    from pydiso.mkl_solver import PardisoError
-
-    # set number of threads
-    mkl_solver.set_mkl_pardiso_threads(THREAD_PARDISO)
-    mkl_solver.set_mkl_threads(THREAD_MKL)
-elif FACTORIZATION_LIBRARY == "PyAMG":
-    from pyamg import aggregation
-elif FACTORIZATION_LIBRARY == "IDENTITY":
-    pass
-else:
-    raise ValueError("invalid factorization library")
+# dummy options
+LIBRARY = None
+IMPORTLIB = None
+PYAMG_OPTIONS = None
+PARDISO_OPTIONS = None
 
 
 def _get_fact_superlu(mat):
@@ -72,8 +42,8 @@ def _get_fact_superlu(mat):
 
     # factorize the matrix
     try:
-        mat_factor = linalg.splu(mat)
-    except RuntimeError:
+        mat_factor = IMPORTLIB.splu(mat)
+    except Warning:
         return None
 
     # matrix solver
@@ -89,11 +59,25 @@ def _get_fact_pardiso(mat):
     Factorize a matrix with PARDISO.
     """
 
+    # get options
+    thread_pardiso = PARDISO_OPTIONS["thread_pardiso"]
+    thread_mkl = PARDISO_OPTIONS["thread_mkl"]
+
+    # find the number of threads
+    if thread_pardiso is None:
+        thread_pardiso = os.cpu_count()
+    if thread_mkl is None:
+        thread_mkl = os.cpu_count()
+
+    # set number of threads
+    IMPORTLIB.set_mkl_pardiso_threads(thread_pardiso)
+    IMPORTLIB.set_mkl_threads(thread_mkl)
+
     # factorize the matrix
     try:
         mat = mat.tocsr()
-        mat_factor = MKLPardisoSolver(mat, factor=True, verbose=False)
-    except PardisoError:
+        mat_factor = IMPORTLIB.MKLPardisoSolver(mat, factor=True, verbose=False)
+    except Warning:
         return None
 
     # matrix solver
@@ -104,26 +88,26 @@ def _get_fact_pardiso(mat):
     return factor
 
 
-def _get_fact_pyamg(mat, fact_options):
+def _get_fact_pyamg(mat):
     """
     Factorize a matrix with PyAMG.
     """
 
     # get options
-    tol = fact_options["tol"]
-    solver = fact_options["solver"]
-    krylov = fact_options["krylov"]
+    tol = PYAMG_OPTIONS["tol"]
+    solver = PYAMG_OPTIONS["solver"]
+    krylov = PYAMG_OPTIONS["krylov"]
 
     # factorize the matrix
     try:
         mat = mat.tocsr()
         if solver == "root_sa":
-            solver = aggregation.rootnode_solver(mat)
+            solver = IMPORTLIB.rootnode_solver(mat)
         elif solver == "adapt_sa":
-            (solver, work) = aggregation.adaptive_sa_solver(mat)
+            (solver, work) = IMPORTLIB.adaptive_sa_solver(mat)
         else:
             raise ValueError("invalid AMF solver name")
-    except RuntimeError:
+    except Warning:
         return None
 
     # matrix solver
@@ -144,7 +128,7 @@ def _get_fact_umfpack(mat):
 
     # factorize the matrix
     try:
-        mat_factor = umfpack.splu(mat)
+        mat_factor = IMPORTLIB.splu(mat)
     except Warning:
         return None
 
@@ -158,7 +142,7 @@ def _get_fact_umfpack(mat):
     return factor
 
 
-def _get_factorize_sub(mat, fact_options):
+def _get_factorize_sub(mat):
     """
     Factorize a sparse matrix (main function).
     """
@@ -182,19 +166,19 @@ def _get_factorize_sub(mat, fact_options):
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
     LOGGER.debug("matrix elements: %d" % nnz)
     LOGGER.debug("matrix density: %.2e" % density)
-    LOGGER.debug("library: %s" % FACTORIZATION_LIBRARY)
+    LOGGER.debug("library: %s" % LIBRARY)
 
     # factorize the matrix
     LOGGER.debug("compute factorization")
-    if FACTORIZATION_LIBRARY == "SuperLU":
+    if LIBRARY == "SuperLU":
         factor = _get_fact_superlu(mat)
-    elif FACTORIZATION_LIBRARY == "UMFPACK":
+    elif LIBRARY == "UMFPACK":
         factor = _get_fact_umfpack(mat)
-    elif FACTORIZATION_LIBRARY == "PARDISO":
+    elif LIBRARY == "PARDISO":
         factor = _get_fact_pardiso(mat)
-    elif FACTORIZATION_LIBRARY == "PyAMG":
-        factor = _get_fact_pyamg(mat, fact_options)
-    elif FACTORIZATION_LIBRARY == "IDENTITY":
+    elif LIBRARY == "PyAMG":
+        factor = _get_fact_pyamg(mat)
+    elif LIBRARY == "IDENTITY":
         factor = factor_empty
     else:
         raise ValueError("invalid matrix factorization library")
@@ -208,14 +192,50 @@ def _get_factorize_sub(mat, fact_options):
     return factor
 
 
-def get_factorize(name, mat, fact_options):
+def set_options(fact_options):
+    """
+    Assign the options and load the right libray.
+    """
+
+    # assign global variable
+    global LIBRARY
+    global PYAMG_OPTIONS
+    global PARDISO_OPTIONS
+    LIBRARY = fact_options["library"]
+    PYAMG_OPTIONS = fact_options["pyamg_options"]
+    PARDISO_OPTIONS = fact_options["pardiso_options"]
+
+    # import the right library
+    if LIBRARY == "SuperLU":
+        import scipy.sparse.linalg as lib_tmp
+    elif LIBRARY == "UMFPACK":
+        import scikits.umfpack as lib_tmp
+    elif LIBRARY == "PARDISO":
+        import pydiso.mkl_solver as lib_tmp
+    elif LIBRARY == "PyAMG":
+        import pyamg.aggregation as lib_tmp
+    elif LIBRARY == "IDENTITY":
+        lib_tmp = None
+    else:
+        raise ValueError("invalid factorization library")
+
+    # assign import library to global
+    global IMPORTLIB
+    IMPORTLIB = lib_tmp
+
+    # prevent problematic matrices to trigger warnings
+    warnings.filterwarnings("error", module="scikits.umfpack")
+    warnings.filterwarnings("error", module="pydiso.mkl_solver")
+
+
+def get_factorize(name, mat):
     """
     Factorize a sparse matrix (log wrapper).
     """
 
     LOGGER.debug("factorization: %s" % name)
     with log.BlockIndent():
-        factor = _get_factorize_sub(mat, fact_options)
+        factor = _get_factorize_sub(mat)
 
     return factor
 

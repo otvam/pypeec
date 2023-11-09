@@ -11,6 +11,10 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+from pypeec.lib_matrix import matrix_factorization
+from pypeec.lib_matrix import matrix_multiply
+from pypeec.lib_matrix import multiply_fft
+from pypeec.lib_matrix import fourier_transform
 from pypeec.lib_solver import sweep_solver
 from pypeec.lib_solver import voxel_geometry
 from pypeec.lib_solver import system_tensor
@@ -27,6 +31,7 @@ from pypeec.lib_check import check_data_solver
 from pypeec.lib_check import check_data_options
 from pypeec import log
 from pypeec.error import CheckError, RunError
+
 
 # get a logger
 LOGGER = log.get_logger("SOLVER")
@@ -48,6 +53,15 @@ def _run_solver_init(data_solver, is_truncated):
     has_magnetic = data_solver["has_magnetic"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
+    fact_options = data_solver["fact_options"]
+    fft_options = data_solver["fft_options"]
+    multiplication_options = data_solver["multiplication_options"]
+
+    # set options
+    matrix_factorization.set_options(fact_options)
+    matrix_multiply.set_options(multiplication_options)
+    multiply_fft.set_options(fft_options)
+    fourier_transform.set_options(fft_options)
 
     # get the voxel geometry and the incidence matrix
     with log.BlockTimer(LOGGER, "voxel_geometry"):
@@ -166,7 +180,6 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     source_idx = data_solver["source_idx"]
     condition_options = data_solver["condition_options"]
     solver_options = data_solver["solver_options"]
-    fact_options = data_solver["fact_options"]
 
     # extract the data
     idx_vc = data_internal["idx_vc"]
@@ -214,7 +227,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         A_src = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        (pcd_op, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, fact_options)
+        (pcd_op, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
         sys_op = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)

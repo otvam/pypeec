@@ -29,7 +29,7 @@ from pypeec.lib_matrix import multiply_direct
 from pypeec import config
 
 # get config
-MATRIX_MULTIPLICATION = config.MATRIX_MULTIPLICATION
+MULTIPLICATION_OPTIONS = config.MULTIPLICATION_OPTIONS
 
 
 def _get_multiply(data, vec_in, flip):
@@ -37,9 +37,9 @@ def _get_multiply(data, vec_in, flip):
     Make a matrix-vector multiplication.
     """
 
-    if MATRIX_MULTIPLICATION == "FFT":
+    if MULTIPLICATION_OPTIONS == "FFT":
         res_out = multiply_fft.get_multiply(data, vec_in, flip)
-    elif MATRIX_MULTIPLICATION == "DIRECT":
+    elif MULTIPLICATION_OPTIONS == "DIRECT":
         res_out = multiply_direct.get_multiply(data, vec_in, flip)
     else:
         raise ValueError("invalid multiplication library")
@@ -52,14 +52,24 @@ def _get_prepare(name, idx_out, idx_in, mat):
     Prepare the matrix for the multiplication.
     """
 
-    if MATRIX_MULTIPLICATION == "FFT":
+    if MULTIPLICATION_OPTIONS == "FFT":
         data = multiply_fft.get_prepare(name, idx_out, idx_in, mat)
-    elif MATRIX_MULTIPLICATION == "DIRECT":
+    elif MULTIPLICATION_OPTIONS == "DIRECT":
         data = multiply_direct.get_prepare(name, idx_out, idx_in, mat)
     else:
         raise ValueError("invalid multiplication library")
 
     return data
+
+
+def set_options(multiplication_options):
+    """
+    Assign the options and load the right libray.
+    """
+
+    # assign global variable
+    global MULTIPLICATION_OPTIONS
+    MULTIPLICATION_OPTIONS = multiplication_options
 
 
 def get_operator_potential(idx, mat):

@@ -48,46 +48,6 @@ PROBLEM_MAX_SIZE:
     VOXEL_TOTAL: null  # maximum size of the voxel structure (null for unlimited)
     VOXEL_USED: null  # maximum number of used voxels (null for unlimited)
 
-# options for the FFT computation
-FFT_OPTIONS:
-    FFTS_WORKER: null  # number of workers for SciPy (null for number of CPUs)
-    FFTW_THREAD: null  # number of threads for FFTW (null for number of CPUs)
-    FFTW_CACHE_TIMEOUT: 100.0  # cache timeout in seconds for FFTW (null for no caching)
-    FFTW_BYTE_ALIGN: 16  # size for byte alignment FFTW (null for default)
-
-# options for the sparse matrix factorization
-FACTORIZATION_OPTIONS:
-    THREAD_PARDISO: null  # number of threads for PARDISO (null for number of CPUs)
-    THREAD_MKL: null  # number of threads for MKL (null for number of CPUs)
-
-# FFT library
-#   - SciPy FFT library is always available (integrated with SciPy)
-#   - FFTW has to be installed separately (available through pyFFTW)
-#   - CuPy is extremely fast but require GPUs with the corresponding libraries (CUDA platform).
-FFT_LIBRARY: "SciPy"  # "SciPy" or "FFTW" or "CuPy"
-
-# sparse matrix factorization options
-#   - IDENTITY is using the identity matrix as a solution (for debug)
-#   - SuperLU is typically slower but is always available (integrated with SciPy)
-#   - UMFPACK is typically faster than SuperLU (available through SciKits)
-#   - PARDISO is typically faster than UMFPACK (available through Pydiso)
-#   - PyAMG is typically slow but uses less memory (risk of convergence issues)
-FACTORIZATION_LIBRARY: "SuperLU"  # "IDENTITY" or "SuperLU" or "UMFPACK" or "PARDISO" or "PyAMG"
-
-# method for dense matrix multiplication
-#   - FFT for doing the multiplication with circulant tensors and FFT
-#   - DIRECT for standard matrix multiplication
-#   - DIRECT is extremely slow and memory intensive
-#   - DIRECT is only useful for debugging and educational purposes
-MATRIX_MULTIPLICATION: "FFT"  # "FFT" or "DIRECT"
-
-# method for computing the tensor multiplication with FFT
-#   - if true, the computation is done with the 4D tensors
-#   - if false, the 4D tensors are sliced into several 3D tensors
-#   - splitting the tensors has a slightly increased computational cost
-#   - splitting the tensors reduces the memory footprint of the computation
-MATRIX_SPLIT: true
-
 # double precision
 #   - if false, use single precision numbers
 #   - if true, use double precision for numbers
