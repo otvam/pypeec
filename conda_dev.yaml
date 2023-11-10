@@ -50,5 +50,5 @@ dependencies:
   - cudatoolkit
   # optional HPC libs from PyPi
   - pip:
-    - matplotlib==0.13.1
+    - pyFFTW==0.13.1
     - pydiso==0.0.3
