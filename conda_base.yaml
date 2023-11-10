@@ -2,7 +2,7 @@
 #
 # WARNING: Only the required packages are in the environment.
 #          The following optional libraries are not installed:
-#              - FFTW, UMFPACK, and MKL/PARDISO
+#              - FFTW, UMFPACK, PyAMG, and MKL/PARDISO
 #              - Jupyter, IPyWidgets, and Trame
 #              - CuPy and CUDA
 #

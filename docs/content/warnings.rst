@@ -39,10 +39,10 @@ Library Issues
     GPU support is optional, PyPEEC is fully functional without GPU support.
 
 .. Warning::
-    **FFTW, UMFPACK, and MKL/PARDISO** are not included in the package dependencies.
+    **FFTW, UMFPACK, PyAMG, and MKL/PARDISO** are not included in the package dependencies.
     These libraries can be tricky to install, especially on MS Windows.
     Make sure that these libraries are compiled with multithreading support.
-    FFTW, UMFPACK, and MKL/PARDISO are optional, PyPEEC is fully functional without them.
+    FFTW, UMFPACK, PyAMG, and MKL/PARDISO are optional, PyPEEC is fully functional without them.
 
 General Issues
 --------------
