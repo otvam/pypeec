@@ -235,7 +235,7 @@ def _get_filter_scalar(obj, var, filter_lim):
     return obj
 
 
-def _get_clamp_scalar(obj, var, color_lim):
+def _get_clamp_scalar(obj, var, clamp_lim):
     """
     Clamp a scalar variable between a lower and upper bound.
     """
@@ -245,11 +245,11 @@ def _get_clamp_scalar(obj, var, color_lim):
         return obj
 
     # handle None
-    if color_lim is None:
+    if clamp_lim is None:
         c_min = -float("inf")
         c_max = +float("inf")
     else:
-        (c_min, c_max) = color_lim
+        (c_min, c_max) = clamp_lim
 
     # get var
     data = obj[var]
@@ -277,6 +277,7 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
     scale = data_plot["scale"]
     log = data_plot["log"]
     filter_lim = data_plot["filter_lim"]
+    clamp_lim = data_plot["clamp_lim"]
     color_lim = data_plot["color_lim"]
     point_size = data_plot["point_size"]
     legend = data_plot["legend"]
@@ -298,12 +299,13 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
     obj_tmp = obj.copy(deep=True)
     obj_tmp = _get_scale_scalar(obj_tmp, var, scale)
     obj_tmp = _get_filter_scalar(obj_tmp, var, filter_lim)
-    obj_tmp = _get_clamp_scalar(obj_tmp, var, color_lim)
+    obj_tmp = _get_clamp_scalar(obj_tmp, var, clamp_lim)
 
     # add the resulting plot to the plotter
     arg = dict(
         scalars=var,
         log_scale=log,
+        clim=color_lim,
         point_size=point_size,
         scalar_bar_args=scalar_bar_args,
         render_points_as_spheres=True,
@@ -329,6 +331,7 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     scale = data_plot["scale"]
     log = data_plot["log"]
     filter_lim = data_plot["filter_lim"]
+    clamp_lim = data_plot["clamp_lim"]
     color_lim = data_plot["color_lim"]
     arrow_scale = data_plot["arrow_scale"]
     arrow_threshold = data_plot["arrow_threshold"]
@@ -357,14 +360,19 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     obj_tmp = _get_filter_vector(obj_tmp, var_norm, arrow_threshold)
     obj_tmp = _get_scale_scalar(obj_tmp, var_norm, scale)
     obj_tmp = _get_filter_scalar(obj_tmp, var_norm, filter_lim)
-    obj_tmp = _get_clamp_scalar(obj_tmp, var_norm, color_lim)
+    obj_tmp = _get_clamp_scalar(obj_tmp, var_norm, clamp_lim)
 
     # get arrow size
     d_char = min(grid.spacing)
     factor = d_char*arrow_scale
 
     # add the resulting plot to the plotter
-    arg = dict(scalars=var_norm, log_scale=log, scalar_bar_args=scalar_bar_args)
+    arg = dict(
+        scalars=var_norm,
+        log_scale=log,
+        clim=color_lim,
+        scalar_bar_args=scalar_bar_args,
+    )
     if obj_tmp.n_cells > 0:
         glyph_tmp = obj_tmp.glyph(orient=var_time, scale=False, factor=factor)
         _get_clip_mesh(pl, glyph_tmp, arg, plot_clip)

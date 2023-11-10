@@ -222,7 +222,7 @@ def _check_data_plot_plotter(layout, data_plot):
     # check the options for scalar and arrow plots
     if layout in ["scalar_voxel", "scalar_point", "arrow_voxel", "arrow_point"]:
         # check type
-        key_list = ["title", "scale", "log", "legend", "color_lim", "filter_lim"]
+        key_list = ["title", "scale", "log", "legend", "color_lim", "clamp_lim", "filter_lim"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
@@ -231,6 +231,7 @@ def _check_data_plot_plotter(layout, data_plot):
         datachecker.check_string("legend", data_plot["legend"], can_be_empty=True)
         datachecker.check_float("scale", data_plot["scale"], is_positive=True, can_be_zero=True)
         datachecker.check_float_array("color_lim", data_plot["color_lim"], size=2, can_be_none=True)
+        datachecker.check_float_array("clamp_lim", data_plot["clamp_lim"], size=2, can_be_none=True)
         datachecker.check_float_array("filter_lim", data_plot["filter_lim"], size=2, can_be_none=True)
 
     # check the scalar options

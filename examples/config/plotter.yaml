@@ -24,7 +24,8 @@
 #       - var: name of the scalar variable to be plotted (color scale)
 #       - scale: scaling of the variable (scaling done just before plotting)
 #       - log: use (or not) a log scale for the color axis
-#       - color_lim: clamping range for the color axis (null for complete range)
+#       - color_lim: limit range for the color axis (null for complete range)
+#       - clamp_lim: clamping range for the color axis (null for complete range)
 #       - filter_lim: hide voxels/points with values outside this range (null for complete range)
 #       - point_size: size of the marker used for plotting on the point cloud
 #
@@ -36,7 +37,8 @@
 #       - var_vector: name of the vector variable to be plotted (arrow direction)
 #       - scale: scaling of the scalar variable (scaling done just before plotting)
 #       - log: use (or not) a log scale for the color axis
-#       - color_lim: clamping range for the color axis (null for complete range)
+#       - color_lim: limit range for the color axis (null for complete range)
+#       - clamp_lim: clamping range for the color axis (null for complete range)
 #       - filter_lim: hide arrows with scalar values outside this range (null for complete range)
 #       - arrow_threshold: relative threshold for hiding arrows with small scalar values
 #       - arrow_scale: relative arrow length (with respect to the voxel size)
@@ -80,6 +82,7 @@
         "scale": 1.0
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
 "V_m_abs":
@@ -95,6 +98,7 @@
         "scale": 1.0
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
 "S_c_abs":
@@ -110,6 +114,7 @@
         "scale": 1.0e-9
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
 "Q_m_abs":
@@ -125,6 +130,7 @@
         "scale": 1.0
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
 "P_c_abs":
@@ -140,6 +146,7 @@
         "scale": 1.0e-6
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
 "P_m_abs":
@@ -155,6 +162,7 @@
         "scale": 1.0e-6
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
 "J_c_norm":
@@ -170,6 +178,7 @@
         "scale": 1.0e-6
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
 "J_c_vec":
@@ -186,6 +195,7 @@
         "scale": 1.0e-6
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "arrow_threshold": 1.0e-3
         "arrow_scale": 0.75
@@ -202,6 +212,7 @@
         "scale": 1.0e+3
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
 "B_m_vec":
@@ -218,6 +229,7 @@
         "scale": 1.0e+3
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "arrow_threshold": 1.0e-3
         "arrow_scale": 0.75
@@ -234,6 +246,7 @@
         "scale": 1.0
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
 "H_vec":
@@ -250,6 +263,7 @@
         "scale": 1.0
         "log": false
         "color_lim": null
+        "clamp_lim": null
         "filter_lim": null
         "arrow_threshold": 1.0e-3
         "arrow_scale": 0.75
