@@ -148,14 +148,14 @@ def _get_solve_sub(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
 
     # call the solver
     LOGGER.debug("call solver")
-    if solver == "GMRES":
+    if solver == "gmres":
         (sol, flag) = sla.gmres(
             sys_op_tmp, rhs, M=pcd_op_tmp, x0=sol_init,
             tol=rel_tol, atol=abs_tol,
             restart=n_inner, maxiter=n_outer,
             callback=fct_callback, callback_type="x",
         )
-    elif solver == "GCROT":
+    elif solver == "gcrot":
         (sol, flag) = sla.gcrotmk(
             sys_op_tmp, rhs, M=pcd_op_tmp, x0=sol_init,
             tol=rel_tol, atol=abs_tol,

@@ -5,7 +5,6 @@ This module is used as a common interface for different solvers:
     - SuperLU is typically slower but is always available (integrated with SciPy)
     - UMFPACK is typically faster than SuperLU (available through SciKits)
     - PARDISO is typically faster than UMFPACK (available through Pydiso)
-#   - IDENTITY is using the identity matrix as a solution (for debug)
 
 Todo
 ----
@@ -101,9 +100,9 @@ def _get_fact_pyamg(mat):
     # factorize the matrix
     try:
         mat = mat.tocsr()
-        if solver == "root_sa":
+        if solver == "root":
             solver = IMPORTLIB.rootnode_solver(mat)
-        elif solver == "adapt_sa":
+        elif solver == "adapt":
             (solver, work) = IMPORTLIB.adaptive_sa_solver(mat)
         else:
             raise ValueError("invalid AMF solver name")
@@ -178,8 +177,6 @@ def _get_factorize_sub(mat):
         factor = _get_fact_pardiso(mat)
     elif LIBRARY == "PyAMG":
         factor = _get_fact_pyamg(mat)
-    elif LIBRARY == "IDENTITY":
-        factor = factor_empty
     else:
         raise ValueError("invalid matrix factorization library")
 
@@ -192,7 +189,7 @@ def _get_factorize_sub(mat):
     return factor
 
 
-def set_options(fact_options):
+def set_options(factorization_options):
     """
     Assign the options and load the right libray.
     """
@@ -201,9 +198,9 @@ def set_options(fact_options):
     global LIBRARY
     global PYAMG_OPTIONS
     global PARDISO_OPTIONS
-    LIBRARY = fact_options["library"]
-    PYAMG_OPTIONS = fact_options["pyamg_options"]
-    PARDISO_OPTIONS = fact_options["pardiso_options"]
+    LIBRARY = factorization_options["library"]
+    PYAMG_OPTIONS = factorization_options["pyamg_options"]
+    PARDISO_OPTIONS = factorization_options["pardiso_options"]
 
     # import the right library
     if LIBRARY == "SuperLU":
@@ -214,7 +211,7 @@ def set_options(fact_options):
         import pydiso.mkl_solver as lib_tmp
     elif LIBRARY == "PyAMG":
         import pyamg.aggregation as lib_tmp
-    elif LIBRARY == "IDENTITY":
+    elif LIBRARY == "none":
         lib_tmp = None
     else:
         raise ValueError("invalid factorization library")

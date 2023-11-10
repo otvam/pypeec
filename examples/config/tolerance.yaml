@@ -12,10 +12,34 @@
 "green_simplify": 20.0
 "coupling_simplify": 20.0
 
+# method for dense matrix multiplication
+#   - FFT for doing the multiplication with circulant tensors and FFT
+#   - DIRECT for standard matrix multiplication
+#   - DIRECT is extremely slow and memory intensive
+#   - DIRECT is only useful for debugging and educational purposes
+"mult_type": "FFT"
+
+# FFT algorithm options
+"fft_options":
+    # handling of the tensors for the FFT
+    #   - if true, the computation is done with the 4D tensors
+    #   - if false, the 4D tensors are sliced into several 3D tensors
+    #   - splitting the tensors has a slightly increased computational cost
+    #   - splitting the tensors reduces the memory footprint of the computation
+    "matrix_split": true
+    # FFT library
+    #   - SciPy FFT library is always available (integrated with SciPy)
+    #   - FFTW has to be installed separately (available through pyFFTW)
+    #   - CuPy is extremely fast but require GPUs with the corresponding libraries (CUDA platform).
+    "library": "SciPy"
+    "scipy_worker": null                 # number of workers for SciPy (null for number of CPUs)
+    "fftw_thread": null                   # number of threads for FFTW (null for number of CPUs)
+    "fftw_timeout": 100.0                 # cache timeout in seconds for FFTW (null for no caching)
+    "fftw_byte_align": 16                 # size for byte alignment FFTW (null for default)
+
 # sparse matrix factorization options
-"fact_options":
+"factorization_options":
     # sparse matrix factorization library
-    #   - IDENTITY is using the identity matrix as a solution (for debug)
     #   - SuperLU is typically slower but is always available (integrated with SciPy)
     #   - UMFPACK is typically faster than SuperLU (available through SciKits)
     #   - PARDISO is typically faster than UMFPACK (available through Pydiso)
@@ -23,44 +47,18 @@
     "library": "SuperLU"
     "pyamg_options":                   # for PyAMG
         "tol": 1.0e-6                  # tolerance for the AMG solver convergence
-        "solver": "root_sa"            # name of the AMG solver ("adapt_sa" or "root_sa")
+        "solver": "root"               # name of the AMG solver ("adapt" or "root")
         "krylov": null                 # use acceleration method (null or "gmres" or "fgmres")
     "pardiso_options":                 # for PARDISO
-        thread_pardiso: null           # number of threads for PARDISO (null for number of CPUs)
-        thread_mkl: null               # number of threads for MKL (null for number of CPUs)
+        "thread_pardiso": null         # number of threads for PARDISO (null for number of CPUs)
+        "thread_mkl": null             # number of threads for MKL (null for number of CPUs)
 
-# method for dense matrix multiplication
-#   - FFT for doing the multiplication with circulant tensors and FFT
-#   - DIRECT for standard matrix multiplication
-#   - DIRECT is extremely slow and memory intensive
-#   - DIRECT is only useful for debugging and educational purposes
-mult_type: "FFT"
-
-# FFT options
-"fft_options":
-    # handling of the tensors for the FFT
-    #   - if true, the computation is done with the 4D tensors
-    #   - if false, the 4D tensors are sliced into several 3D tensors
-    #   - splitting the tensors has a slightly increased computational cost
-    #   - splitting the tensors reduces the memory footprint of the computation
-    matrix_split: true
-    # FFT library
-    #   - SciPy FFT library is always available (integrated with SciPy)
-    #   - FFTW has to be installed separately (available through pyFFTW)
-    #   - CuPy is extremely fast but require GPUs with the corresponding libraries (CUDA platform).
-    "library": "SciPy"
-    scipy_worker: null                 # number of workers for SciPy (null for number of CPUs)
-    "fftw_options":                    # for SciPy
-        thread: null                   # number of threads for FFTW (null for number of CPUs)
-        timeout: 100.0                 # cache timeout in seconds for FFTW (null for no caching)
-        byte_align: 16                 # size for byte alignment FFTW (null for default)
-
-# iterative solver options (for GMRES and GCROT solver)
+# iterative solver options (for gmres and GCROT solver)
 "solver_options":
     "check": true                      # check (or not) the solver tolerance
     "tolerance": 1.0e-6                # tolerance for checking the solution residuum
     "iter_options":                    # options for the iterative solver
-        "solver": "GMRES"              # name of the solver ("GMRES" or "GCROT")
+        "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
         "rel_tol": 1.0e-6              # relative preconditioned tolerance for solver convergence
         "abs_tol": 1.0e-12             # absolute preconditioned tolerance for solver convergence
         "n_inner": 20                  # maximum number of solver inner iterations

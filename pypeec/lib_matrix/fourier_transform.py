@@ -24,23 +24,22 @@ def set_options(fft_options):
     """
 
     # assign global variable
-    global LIBRARY
-    global SCIPY_OPTIONS
-    global FFTW_OPTIONS
     library = fft_options["library"]
     scipy_worker = fft_options["scipy_worker"]
-    FFTW_OPTIONS = fft_options["fftw_options"]
+    fftw_thread = fft_options["fftw_thread"]
+    fftw_timeout = fft_options["fftw_timeout"]
+    fftw_byte_align = fft_options["fftw_byte_align"]
 
     # import the right library
     if library == "CuPy":
         import cupy.fft as fftc
 
         # find FFTN function
-        def fftn(mat, shape, axes, _):
+        def fct_fftn(mat, shape, axes, _):
             return fftc.fftn(mat, shape, axes=axes)
 
         # find iFFTN function
-        def ifftn(mat, shape, axes, _):
+        def fct_ifftn(mat, shape, axes, _):
             return fftc.ifftn(mat, shape, axes=axes)
     elif library == "SciPy":
         import scipy.fft as ffts
@@ -50,11 +49,11 @@ def set_options(fft_options):
             scipy_worker = os.cpu_count()
 
         # find FFTN function
-        def fftn(mat, shape, axes, replace):
+        def fct_fftn(mat, shape, axes, replace):
             return ffts.fftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
 
         # find iFFTN function
-        def ifftn(mat, shape, axes, replace):
+        def fct_ifftn(mat, shape, axes, replace):
             return ffts.ifftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
     elif library == "FFTW":
         import pyfftw
@@ -62,38 +61,38 @@ def set_options(fft_options):
         from pyfftw.interfaces import numpy_fft
 
         # get options
-        thread = FFTW_OPTIONS["thread"]
-        timeout = FFTW_OPTIONS["timeout"]
-        byte_align = FFTW_OPTIONS["byte_align"]
+        fftw_thread = fft_options["fftw_thread"]
+        fftw_timeout = fft_options["fftw_timeout"]
+        fftw_byte_align = fft_options["fftw_byte_align"]
 
         # find the number of threads
-        if thread is None:
-            thread = os.cpu_count()
+        if fftw_thread is None:
+            fftw_thread = os.cpu_count()
 
         # configure the FFT cache
-        if timeout is None:
+        if fftw_timeout is None:
             cache.disable()
         else:
             cache.enable()
-            cache.set_keepalive_time(timeout)
+            cache.set_keepalive_time(fftw_timeout)
 
         # find FFTN function
-        def fftn(mat, shape, axes, replace):
-            mat = pyfftw.byte_align(mat, n=byte_align)
-            return numpy_fft.fftn(mat, shape, axes=axes, overwrite_input=replace, threads=thread)
+        def fct_fftn(mat, shape, axes, replace):
+            mat = pyfftw.byte_align(mat, n=fftw_byte_align)
+            return numpy_fft.fftn(mat, shape, axes=axes, overwrite_input=replace, threads=fftw_thread)
 
         # find iFFTN function
-        def ifftn(mat, shape, axes, replace):
-            mat = pyfftw.byte_align(mat, n=byte_align)
-            return numpy_fft.ifftn(mat, shape, axes=axes, overwrite_input=replace, threads=thread)
+        def fct_ifftn(mat, shape, axes, replace):
+            mat = pyfftw.byte_align(mat, n=fftw_byte_align)
+            return numpy_fft.ifftn(mat, shape, axes=axes, overwrite_input=replace, threads=fftw_thread)
     else:
         raise ValueError("invalid FFT library")
 
     # assign transforms functions
     global FFTN
     global IFFTN
-    FFTN = fftn
-    IFFTN = ifftn
+    FFTN = fct_fftn
+    IFFTN = fct_ifftn
 
 
 def get_fft_tensor_keep(mat, replace):

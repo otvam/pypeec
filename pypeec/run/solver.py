@@ -42,11 +42,11 @@ def _run_solver_options(data_solver):
     """
 
     # extract the data
-    fact_options = data_solver["fact_options"]
+    factorization_options = data_solver["factorization_options"]
     fft_options = data_solver["fft_options"]
 
     # set options
-    matrix_factorization.set_options(fact_options)
+    matrix_factorization.set_options(factorization_options)
     fourier_transform.set_options(fft_options)
     multiply_fft.set_options(fft_options)
 
