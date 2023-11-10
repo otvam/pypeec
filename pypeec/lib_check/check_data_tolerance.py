@@ -156,7 +156,7 @@ def check_data_tolerance(data_tolerance):
     coupling_simplify = data_tolerance["coupling_simplify"]
 
     # check data
-    datachecker.check_choice("mult_type", mult_type, ["FFT", "DIRECT"])
+    datachecker.check_choice("mult_type", mult_type, ["fft", "direct"])
     datachecker.check_float("green_simplify", green_simplify, is_positive=True, can_be_zero=False)
     datachecker.check_float("coupling_simplify", coupling_simplify, is_positive=True, can_be_zero=False)
 

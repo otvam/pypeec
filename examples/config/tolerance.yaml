@@ -13,11 +13,11 @@
 "coupling_simplify": 20.0
 
 # method for dense matrix multiplication
-#   - FFT for doing the multiplication with circulant tensors and FFT
-#   - DIRECT for standard matrix multiplication
-#   - DIRECT is extremely slow and memory intensive
-#   - DIRECT is only useful for debugging and educational purposes
-"mult_type": "FFT"
+#   - "fft" for doing the multiplication with circulant tensors and FFT
+#   - "direct" for standard matrix multiplication
+#   - "direct" is extremely slow and memory intensive
+#   - "direct" is only useful for debugging and educational purposes
+"mult_type": "fft"
 
 # FFT algorithm options
 "fft_options":
@@ -28,9 +28,9 @@
     #   - splitting the tensors reduces the memory footprint of the computation
     "matrix_split": true               # handling of the tensors for the FFT
     # FFT library
-    #   - SciPy FFT library is always available (integrated with SciPy)
-    #   - FFTW has to be installed separately (available through pyFFTW)
-    #   - CuPy is extremely fast but require GPUs compatible with the CUDA toolkit.
+    #   - "SciPy" FFT library is always available (integrated with SciPy)
+    #   - "FFTW" has to be installed separately (available through pyFFTW)
+    #   - "CuPy" is extremely fast but require GPUs compatible with the CUDA toolkit.
     "library": "SciPy"                 # FFT library
     "scipy_worker": null               # number of workers for SciPy (null for number of CPUs)
     "fftw_thread": null                # number of threads for FFTW (null for number of CPUs)
@@ -40,10 +40,10 @@
 # sparse matrix factorization options
 "factorization_options":
     # matrix factorization library
-    #   - SuperLU is typically slower but is always available (integrated with SciPy)
-    #   - UMFPACK is typically faster than SuperLU (available through SciKits)
-    #   - PARDISO is typically faster than UMFPACK (available through Pydiso)
-    #   - PyAMG is typically slow but uses less memory (risk of convergence issues)
+    #   - "SuperLU" is typically slower but is always available (integrated with SciPy)
+    #   - "UMFPACK" is typically faster than SuperLU (available through SciKits)
+    #   - "PARDISO" is typically faster than UMFPACK (available through Pydiso)
+    #   - "PyAMG" is typically slow but uses less memory (risk of convergence issues)
     "library": "SuperLU"               # matrix factorization library
     "pyamg_options":                   # options for PyAMG
         "tol": 1.0e-6                  # tolerance for the AMG solver convergence

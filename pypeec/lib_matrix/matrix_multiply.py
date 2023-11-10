@@ -33,9 +33,9 @@ def _get_multiply(data, vec_in, mult_type, flip):
     Make a matrix-vector multiplication.
     """
 
-    if mult_type == "FFT":
+    if mult_type == "fft":
         res_out = multiply_fft.get_multiply(data, vec_in, flip)
-    elif mult_type == "DIRECT":
+    elif mult_type == "direct":
         res_out = multiply_direct.get_multiply(data, vec_in, flip)
     else:
         raise ValueError("invalid multiplication library")
@@ -48,9 +48,9 @@ def _get_prepare(name, idx_out, idx_in, mat, mult_type):
     Prepare the matrix for the multiplication.
     """
 
-    if mult_type == "FFT":
+    if mult_type == "fft":
         data = multiply_fft.get_prepare(name, idx_out, idx_in, mat)
-    elif mult_type == "DIRECT":
+    elif mult_type == "direct":
         data = multiply_direct.get_prepare(name, idx_out, idx_in, mat)
     else:
         raise ValueError("invalid multiplication library")
