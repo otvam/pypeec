@@ -186,6 +186,27 @@ def _get_filter_vector(obj, var, arrow_threshold):
     return obj
 
 
+def _get_scale_scalar(obj, var, scale):
+    """
+    Scale a scalar variable between a lower and upper bound.
+    """
+
+    # if the voxel structure is empty, nothing to do
+    if obj.n_cells == 0:
+        return obj
+
+    # get var
+    data = obj[var]
+
+    # add scaling
+    data = scale*data
+
+    # assign data
+    obj[var] = data
+
+    return obj
+
+
 def _get_filter_scalar(obj, var, filter_lim):
     """
     Filter the voxel structure with provided limits with respect to a scalar variable.
@@ -214,10 +235,9 @@ def _get_filter_scalar(obj, var, filter_lim):
     return obj
 
 
-def _get_clamp_scale_scalar(obj, var, color_lim, scale):
+def _get_clamp_scalar(obj, var, color_lim):
     """
     Clamp a scalar variable between a lower and upper bound.
-    Afterward, the clamped variable is scaled.
     """
 
     # if the voxel structure is empty, nothing to do
@@ -237,9 +257,6 @@ def _get_clamp_scale_scalar(obj, var, color_lim, scale):
     # clamp range
     data = np.maximum(data, c_min)
     data = np.minimum(data, c_max)
-
-    # add scaling
-    data = scale*data
 
     # assign data
     obj[var] = data
@@ -279,8 +296,9 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
 
     # scale and clamp the variable
     obj_tmp = obj.copy(deep=True)
+    obj_tmp = _get_scale_scalar(obj_tmp, var, scale)
     obj_tmp = _get_filter_scalar(obj_tmp, var, filter_lim)
-    obj_tmp = _get_clamp_scale_scalar(obj_tmp, var, color_lim, scale)
+    obj_tmp = _get_clamp_scalar(obj_tmp, var, color_lim)
 
     # add the resulting plot to the plotter
     arg = dict(
@@ -337,8 +355,9 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     obj_tmp = obj.copy(deep=True)
     obj_tmp = _get_phase_vector(obj_tmp, var, phase)
     obj_tmp = _get_filter_vector(obj_tmp, var_norm, arrow_threshold)
+    obj_tmp = _get_scale_scalar(obj_tmp, var_norm, scale)
     obj_tmp = _get_filter_scalar(obj_tmp, var_norm, filter_lim)
-    obj_tmp = _get_clamp_scale_scalar(obj_tmp, var_norm, color_lim, scale)
+    obj_tmp = _get_clamp_scalar(obj_tmp, var_norm, color_lim)
 
     # get arrow size
     d_char = min(grid.spacing)
