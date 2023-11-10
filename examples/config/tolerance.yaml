@@ -34,7 +34,7 @@
 #   - DIRECT for standard matrix multiplication
 #   - DIRECT is extremely slow and memory intensive
 #   - DIRECT is only useful for debugging and educational purposes
-multiplication_options: "FFT"
+mult_type: "FFT"
 
 # FFT options
 "fft_options":

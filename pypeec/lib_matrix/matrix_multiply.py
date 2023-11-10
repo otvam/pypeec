@@ -26,20 +26,16 @@ __license__ = "Mozilla Public License Version 2.0"
 
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import multiply_direct
-from pypeec import config
-
-# get config
-MULTIPLICATION_OPTIONS = config.MULTIPLICATION_OPTIONS
 
 
-def _get_multiply(data, vec_in, flip):
+def _get_multiply(data, vec_in, mult_type, flip):
     """
     Make a matrix-vector multiplication.
     """
 
-    if MULTIPLICATION_OPTIONS == "FFT":
+    if mult_type == "FFT":
         res_out = multiply_fft.get_multiply(data, vec_in, flip)
-    elif MULTIPLICATION_OPTIONS == "DIRECT":
+    elif mult_type == "DIRECT":
         res_out = multiply_direct.get_multiply(data, vec_in, flip)
     else:
         raise ValueError("invalid multiplication library")
@@ -47,14 +43,14 @@ def _get_multiply(data, vec_in, flip):
     return res_out
 
 
-def _get_prepare(name, idx_out, idx_in, mat):
+def _get_prepare(name, idx_out, idx_in, mat, mult_type):
     """
     Prepare the matrix for the multiplication.
     """
 
-    if MULTIPLICATION_OPTIONS == "FFT":
+    if mult_type == "FFT":
         data = multiply_fft.get_prepare(name, idx_out, idx_in, mat)
-    elif MULTIPLICATION_OPTIONS == "DIRECT":
+    elif mult_type == "DIRECT":
         data = multiply_direct.get_prepare(name, idx_out, idx_in, mat)
     else:
         raise ValueError("invalid multiplication library")
@@ -62,64 +58,54 @@ def _get_prepare(name, idx_out, idx_in, mat):
     return data
 
 
-def set_options(multiplication_options):
-    """
-    Assign the options and load the right libray.
-    """
-
-    # assign global variable
-    global MULTIPLICATION_OPTIONS
-    MULTIPLICATION_OPTIONS = multiplication_options
-
-
-def get_operator_potential(idx, mat):
+def get_operator_potential(idx, mat, mult_type):
     """
     Get the linear matrix-vector operator for a simple potential matrix.
     """
 
     # prepare the matrix
-    data = _get_prepare("potential", idx, idx, mat)
+    data = _get_prepare("potential", idx, idx, mat, mult_type)
 
     # function describing the matrix-vector multiplication
     def op(vec_in):
-        res_out = _get_multiply(data, vec_in, False)
+        res_out = _get_multiply(data, vec_in, mult_type, False)
         return res_out
 
     return op
 
 
-def get_operator_inductance(idx, mat):
+def get_operator_inductance(idx, mat, mult_type):
     """
     Get the linear matrix-vector operator for a block diagonal inductance matrix.
     """
 
     # prepare the matrix
-    data = _get_prepare("inductance", idx, idx, mat)
+    data = _get_prepare("inductance", idx, idx, mat, mult_type)
 
     # function describing the matrix-vector multiplication
     def op(vec_in):
-        res_out = _get_multiply(data, vec_in, False)
+        res_out = _get_multiply(data, vec_in, mult_type, False)
         return res_out
 
     return op
 
 
-def get_operator_coupling(idx_out, idx_in, mat):
+def get_operator_coupling(idx_out, idx_in, mat, mult_type):
     """
     Get the linear matrix-vector operator for a block off-diagonal coupling matrix.
     """
 
     # prepare the matrix
-    data = _get_prepare("coupling", idx_out, idx_in, mat)
+    data = _get_prepare("coupling", idx_out, idx_in, mat, mult_type)
 
     # function describing the matrix-vector multiplication
     def op_for(vec_in):
-        res_out = _get_multiply(data, vec_in, False)
+        res_out = _get_multiply(data, vec_in, mult_type, False)
         return res_out
 
     # function describing the matrix-vector multiplication
     def op_rev(vec_in):
-        res_out = _get_multiply(data, vec_in, True)
+        res_out = _get_multiply(data, vec_in, mult_type, True)
         return res_out
 
     return op_for, op_rev

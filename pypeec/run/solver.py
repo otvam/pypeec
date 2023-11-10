@@ -12,7 +12,6 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 from pypeec.lib_matrix import matrix_factorization
-from pypeec.lib_matrix import matrix_multiply
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import fourier_transform
 from pypeec.lib_solver import sweep_solver
@@ -37,6 +36,21 @@ from pypeec.error import CheckError, RunError
 LOGGER = log.get_logger("SOLVER")
 
 
+def _run_solver_options(data_solver):
+    """
+    Load and configure the optional libraries.
+    """
+
+    # extract the data
+    fact_options = data_solver["fact_options"]
+    fft_options = data_solver["fft_options"]
+
+    # set options
+    matrix_factorization.set_options(fact_options)
+    fourier_transform.set_options(fft_options)
+    multiply_fft.set_options(fft_options)
+
+
 def _run_solver_init(data_solver, is_truncated):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
@@ -48,20 +62,15 @@ def _run_solver_init(data_solver, is_truncated):
     c = data_solver["c"]
     green_simplify = data_solver["green_simplify"]
     coupling_simplify = data_solver["coupling_simplify"]
+    mult_type = data_solver["mult_type"]
     has_coupling = data_solver["has_coupling"]
     has_electric = data_solver["has_electric"]
     has_magnetic = data_solver["has_magnetic"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
-    fact_options = data_solver["fact_options"]
-    fft_options = data_solver["fft_options"]
-    multiplication_options = data_solver["multiplication_options"]
 
-    # set options
-    matrix_factorization.set_options(fact_options)
-    matrix_multiply.set_options(multiplication_options)
-    multiply_fft.set_options(fft_options)
-    fourier_transform.set_options(fft_options)
+    # load and configure the optional libraries
+    _run_solver_options(data_solver)
 
     # get the voxel geometry and the incidence matrix
     with log.BlockTimer(LOGGER, "voxel_geometry"):
@@ -108,17 +117,17 @@ def _run_solver_init(data_solver, is_truncated):
     # get the system operators
     with log.BlockTimer(LOGGER, "system_matrix"):
         # get the inductance tensor (preconditioner and full problem)
-        (L_c, L_op_c) = system_matrix.get_inductance_matrix(n, d, idx_fc, G_self, G_mutual, has_electric)
+        (L_c, L_op_c) = system_matrix.get_inductance_matrix(n, d, idx_fc, G_self, G_mutual, has_electric, mult_type)
 
         # get the potential tensor (preconditioner and full problem)
-        (P_m, P_op_m) = system_matrix.get_potential_matrix(d, idx_vm, G_self, G_mutual, has_magnetic)
+        (P_m, P_op_m) = system_matrix.get_potential_matrix(d, idx_vm, G_self, G_mutual, has_magnetic, mult_type)
 
         # free memory
         del G_self
         del G_mutual
 
         # get the coupling matrices
-        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling)
+        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling, mult_type)
 
         # free memory
         del K_tsr
@@ -203,6 +212,9 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     freq = sweep_param["freq"]
     material_val = sweep_param["material_val"]
     source_val = sweep_param["source_val"]
+
+    # load and configure the optional libraries
+    _run_solver_options(data_solver)
 
     # get the material and source values
     with log.BlockTimer(LOGGER, "problem_value"):
