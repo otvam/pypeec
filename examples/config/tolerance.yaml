@@ -26,34 +26,34 @@
     #   - if false, the 4D tensors are sliced into several 3D tensors
     #   - splitting the tensors has a slightly increased computational cost
     #   - splitting the tensors reduces the memory footprint of the computation
-    "matrix_split": true
+    "matrix_split": true               # handling of the tensors for the FFT
     # FFT library
     #   - SciPy FFT library is always available (integrated with SciPy)
     #   - FFTW has to be installed separately (available through pyFFTW)
     #   - CuPy is extremely fast but require GPUs compatible with the CUDA toolkit.
-    "library": "SciPy"
-    "scipy_worker": null                 # number of workers for SciPy (null for number of CPUs)
-    "fftw_thread": null                   # number of threads for FFTW (null for number of CPUs)
-    "fftw_timeout": 100.0                 # cache timeout in seconds for FFTW (null for no caching)
-    "fftw_byte_align": 16                 # size for byte alignment FFTW (null for default)
+    "library": "SciPy"                 # FFT library
+    "scipy_worker": null               # number of workers for SciPy (null for number of CPUs)
+    "fftw_thread": null                # number of threads for FFTW (null for number of CPUs)
+    "fftw_timeout": 100.0              # cache timeout in seconds for FFTW (null for no caching)
+    "fftw_byte_align": 16              # size for byte alignment FFTW (null for default)
 
 # sparse matrix factorization options
 "factorization_options":
-    # sparse matrix factorization library
+    # matrix factorization library
     #   - SuperLU is typically slower but is always available (integrated with SciPy)
     #   - UMFPACK is typically faster than SuperLU (available through SciKits)
     #   - PARDISO is typically faster than UMFPACK (available through Pydiso)
     #   - PyAMG is typically slow but uses less memory (risk of convergence issues)
-    "library": "SuperLU"
-    "pyamg_options":                   # for PyAMG
+    "library": "SuperLU"               # matrix factorization library
+    "pyamg_options":                   # options for PyAMG
         "tol": 1.0e-6                  # tolerance for the AMG solver convergence
         "solver": "root"               # name of the AMG solver ("adapt" or "root")
         "krylov": null                 # use acceleration method (null or "gmres" or "fgmres")
-    "pardiso_options":                 # for PARDISO
+    "pardiso_options":                 # options for PARDISO
         "thread_pardiso": null         # number of threads for PARDISO (null for number of CPUs)
         "thread_mkl": null             # number of threads for MKL (null for number of CPUs)
 
-# iterative solver options (for gmres and GCROT solver)
+# iterative solver options (for GMRES and GCROT solver)
 "solver_options":
     "check": true                      # check (or not) the solver tolerance
     "tolerance": 1.0e-6                # tolerance for checking the solution residuum
