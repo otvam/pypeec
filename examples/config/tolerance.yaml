@@ -1,7 +1,10 @@
 # PyPEEC tolerance data for the solver:
-#   - define the numerical options for discretization
-#   - define the numerical options for matrix condition check
-#   - define the numerical options for the matrix solver
+#   - define the numerical options for the discretization
+#   - define the numerical options for the matrix multiplication
+#   - define the numerical options for the FFT algorithm
+#   - define the numerical options for the sparse matrix factorization
+#   - define the numerical options for the iterative solver
+#   - define the numerical options for the matrix condition check
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
