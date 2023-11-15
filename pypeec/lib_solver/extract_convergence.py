@@ -23,10 +23,9 @@ def _get_sol_extract(sol, sol_idx):
     """
 
     V_vc = sol[sol_idx["V_vc"]]
-    I_fc = sol[sol_idx["I_fc"]]
     I_src = sol[sol_idx["I_src"]]
 
-    return V_vc, I_fc, I_src
+    return V_vc, I_src
 
 
 def _get_total_power(freq, source_pos, I_src, V_vc):
@@ -69,7 +68,7 @@ def _get_conv_eval(sol, freq, source_pos, sol_idx):
     """
 
     # extract the data
-    (V_vc, I_fc, I_src) = _get_sol_extract(sol, sol_idx)
+    (V_vc, I_src) = _get_sol_extract(sol, sol_idx)
 
     # get the sources
     power = _get_total_power(freq, source_pos, I_src, V_vc)
