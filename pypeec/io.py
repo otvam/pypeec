@@ -145,7 +145,6 @@ def load_config(filename):
         Python data contained in the file content
     """
 
-    # check extension
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
         data = _load_json(filename)
@@ -153,6 +152,29 @@ def load_config(filename):
         data = _load_yaml(filename)
     else:
         raise FileError("invalid file extension: %s" % filename)
+
+    return data
+
+
+def write_config(filename, data):
+    """
+    Write a config file (JSON).
+
+    Parameters
+    ----------
+    filename : string)
+        Name and path of the file to be created.
+    data : data
+        Python data to be saved.
+    """
+
+    try:
+        with open(filename, "w") as fid:
+            json.dump(data, fid, indent=4)
+    except json.JSONDecodeError as ex:
+        raise FileError("invalid data for JSON: %s" % filename) from ex
+    except OSError as ex:
+        raise FileError("cannot write the file: %s" % filename) from ex
 
     return data
 
