@@ -148,9 +148,14 @@ def _get_parse_matrix(n_winding, freq, res, Z_mat):
     # angular frequency
     w = 2*np.pi*freq
 
-    # get the inductance and resistance
+    # get the resistance
     R_mat = np.real(Z_mat)
-    L_mat = np.imag(Z_mat)/w
+
+    # get the inductance
+    if freq == 0:
+        L_mat = np.full(Z_mat.shape, np.nan)
+    else:
+        L_mat = np.imag(Z_mat)/w
 
     # # get the quality factor
     Q_mat = (w*L_mat)/R_mat
