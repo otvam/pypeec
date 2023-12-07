@@ -117,7 +117,7 @@ def _check_plot_theme(plot_theme):
     # check type
     key_list = [
         "text_color", "title_font",
-        "colorbar_font", "colorbar_size",
+        "colorbar_font", "colorbar_size", "colorbar_plot",
         "axis_add", "axis_size",
         "background_color",
     ]
@@ -125,6 +125,7 @@ def _check_plot_theme(plot_theme):
 
     # check data
     datachecker.check_boolean("axis_add", plot_theme["axis_add"])
+    datachecker.check_boolean("colorbar_plot", plot_theme["colorbar_plot"])
     datachecker.check_string("text_color", plot_theme["text_color"], can_be_empty=False)
     datachecker.check_string("background_color", plot_theme["background_color"], can_be_empty=False)
     datachecker.check_integer("title_font", plot_theme["title_font"], is_positive=True, can_be_zero=False)

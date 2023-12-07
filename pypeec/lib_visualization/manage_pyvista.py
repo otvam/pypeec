@@ -283,16 +283,22 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
     legend = data_plot["legend"]
     title = data_plot["title"]
 
+    # extract
+    colorbar_plot = plot_theme["colorbar_plot"]
+    colorbar_size = plot_theme["colorbar_size"]
+    colorbar_font = plot_theme["colorbar_font"]
+    text_color = plot_theme["text_color"]
+
     # set title
     _get_plot_title(pl, title, plot_theme)
 
     # color bar options
     scalar_bar_args = dict(
         title=legend,
-        n_labels=plot_theme["colorbar_size"],
-        label_font_size=plot_theme["colorbar_font"],
-        title_font_size=plot_theme["colorbar_font"],
-        color=plot_theme["text_color"],
+        n_labels=colorbar_size,
+        label_font_size=colorbar_font,
+        title_font_size=colorbar_font,
+        color=text_color,
     )
 
     # scale and clamp the variable
@@ -307,6 +313,7 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
         log_scale=log,
         clim=color_lim,
         point_size=point_size,
+        show_scalar_bar=colorbar_plot,
         scalar_bar_args=scalar_bar_args,
         render_points_as_spheres=True,
     )
@@ -338,16 +345,22 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     legend = data_plot["legend"]
     title = data_plot["title"]
 
+    # extract
+    colorbar_plot = plot_theme["colorbar_plot"]
+    colorbar_size = plot_theme["colorbar_size"]
+    colorbar_font = plot_theme["colorbar_font"]
+    text_color = plot_theme["text_color"]
+
     # set title
     _get_plot_title(pl, title, plot_theme)
 
     # color bar options
     scalar_bar_args = dict(
         title=legend,
-        n_labels=plot_theme["colorbar_size"],
-        label_font_size=plot_theme["colorbar_font"],
-        title_font_size=plot_theme["colorbar_font"],
-        color=plot_theme["text_color"],
+        n_labels=colorbar_size,
+        label_font_size=colorbar_font,
+        title_font_size=colorbar_font,
+        color=text_color,
     )
 
     # get variable name
@@ -371,6 +384,7 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
         scalars=var_norm,
         log_scale=log,
         clim=color_lim,
+        show_scalar_bar=colorbar_plot,
         scalar_bar_args=scalar_bar_args,
     )
     if obj_tmp.n_cells > 0:
