@@ -118,8 +118,9 @@ def run_mesher_data(data_geometry, **kwargs):
     data_geometry : data
         The dict describes the geometry, meshing and resampling process.
     is_truncated : boolean
+        If false, the complete results are returned (default).
         If true, the results are truncated to save space.
-        If false, the complete results are returned.
+        This argument is optional.
 
     Returns
     -------
@@ -163,8 +164,9 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
         The file content describes the voxel structure.
         This output file is written by this function (Pickle format).
     is_truncated : boolean
+        If false, the complete results are returned (default).
         If true, the results are truncated to save space.
-        If false, the complete results are returned.
+        This argument is optional.
 
     Returns
     -------
@@ -216,15 +218,21 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
         The dict describes the different plots to be created.
     tag_plot : list
         The list describes plots to be shown.
-        If None, all the plots are shown.
+        If None, all the plots are shown (default).
+        This argument is optional.
     plot_mode : string
         If "qt", the Qt framework is used for the rendering (default).
         If "nb", the plots are rendered within the Jupyter notebook.
         If "save", the plots are not shown but saved as screenshots.
         If "none", the plots are not shown (test mode).
+        This argument is optional.
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
+        This argument is optional.
+    name : string
+        Prepended at the beginning of the screenshot filenames.
+        This argument is optional.
 
     Returns
     -------
@@ -271,15 +279,21 @@ def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
         This input file is loaded by this function (JSON or YAML format).
     tag_plot : list
         The list describes plots to be shown.
-        If None, all the plots are shown.
+        If None, all the plots are shown (default).
+        This argument is optional.
     plot_mode : string
         If "qt", the Qt framework is used for the rendering (default).
         If "nb", the plots are rendered within the Jupyter notebook.
         If "save", the plots are not shown but saved as screenshots.
         If "none", the plots are not shown (test mode).
+        This argument is optional.
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
+        This argument is optional.
+    name : string
+        Prepended at the beginning of the screenshot filenames.
+        This argument is optional.
 
     Returns
     -------
@@ -329,8 +343,9 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
     data_tolerance: data
         The dict describes the numerical options.
     is_truncated : boolean
+        If false, the complete results are returned (default).
         If true, the results are truncated to save space.
-        If false, the complete results are returned.
+        This argument is optional.
 
     Returns
     -------
@@ -382,8 +397,9 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         The file content describes the problem solution.
         This output file is written by this function (Pickle format).
     is_truncated : boolean
+        If false, the complete results are returned (default).
         If true, the results are truncated to save space.
-        If false, the complete results are returned.
+        This argument is optional.
 
     Returns
     -------
@@ -437,18 +453,25 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
         The dict describes the different plots to be created.
     tag_sweep : list
         The list describes sweeps to be shown.
-        If None, all the sweeps are shown.
+        If None, all the sweeps are shown (default).
+        This argument is optional.
     tag_plot : list
         The list describes plots to be shown.
-        If None, all the plots are shown.
+        If None, all the plots are shown (default).
+        This argument is optional.
     plot_mode : string
         If "qt", the Qt framework is used for the rendering (default).
         If "nb", the plots are rendered within the Jupyter notebook.
         If "save", the plots are not shown but saved as screenshots.
         If "none", the plots are not shown (test mode).
+        This argument is optional.
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
+        This argument is optional.
+    name : string
+        Prepended at the beginning of the screenshot filenames.
+        This argument is optional.
 
     Returns
     -------
@@ -495,18 +518,25 @@ def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
         This input file is loaded by this function (JSON or YAML format).
     tag_sweep : list
         The list describes sweeps to be shown.
-        If None, all the sweeps are shown.
+        If None, all the sweeps are shown (default).
+        This argument is optional.
     tag_plot : list
         The list describes plots to be shown.
-        If None, all the plots are shown.
+        If None, all the plots are shown (default).
+        This argument is optional.
     plot_mode : string
         If "qt", the Qt framework is used for the rendering (default).
         If "nb", the plots are rendered within the Jupyter notebook.
         If "save", the plots are not shown but saved as screenshots.
         If "none", the plots are not shown (test mode).
+        This argument is optional.
     folder : string
         Folder name for saving the screenshots.
         The current directory is used as the default directory.
+        This argument is optional.
+    name : string
+        Prepended at the beginning of the screenshot filenames.
+        This argument is optional.
 
     Returns
     -------

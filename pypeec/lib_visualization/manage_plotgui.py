@@ -62,7 +62,7 @@ class PlotGui:
         - "none", the plots are not shown (test mode).
     """
 
-    def __init__(self, plot_mode, folder):
+    def __init__(self, plot_mode, folder, name):
         """
         Constructor.
         Init the plots.
@@ -71,6 +71,7 @@ class PlotGui:
         # assign variable
         self.plot_mode = plot_mode
         self.folder = folder
+        self.name = name
         self.pl_list = []
         self.fig_list = []
 
@@ -271,19 +272,32 @@ class PlotGui:
         # close the different Matplotlib plots
         matplotlib.pyplot.close("all")
 
+    def _get_filename(self, tag):
+        """
+        Get the plot filenames.
+        """
+
+        filename = "%s.png" % tag
+        if self.name:
+            filename = "%s_%s" % (self.name, filename)
+        if self.folder:
+            filename = os.path.join(self.folder, filename)
+
+        return filename
+
     def _save_screenshot(self):
         """
-        Save all the plots in images.
+        Save all the plots as images.
         """
 
         # save the PyVista plots
         for tag, pl in self.pl_list:
-            filename = os.path.join(self.folder, "%s.png" % tag)
+            filename = self._get_filename(tag)
             pl.screenshot(filename)
 
         # save the Matplotlib plots
         for tag, fig in self.fig_list:
-            filename = os.path.join(self.folder, "%s.png" % tag)
+            filename = self._get_filename(tag)
             fig.savefig(filename)
 
     def open_pyvista(self, tag, title, data_window):
