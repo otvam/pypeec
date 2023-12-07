@@ -214,7 +214,7 @@ def _check_data_plot_plotter(layout, data_plot):
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
-        datachecker.check_string("title", data_plot["title"], can_be_empty=True)
+        datachecker.check_string("title", data_plot["title"], can_be_empty=True, can_be_none=True)
         datachecker.check_string("color_electric", data_plot["color_electric"], can_be_empty=False)
         datachecker.check_string("color_magnetic", data_plot["color_magnetic"], can_be_empty=False)
         datachecker.check_string("color_current_source", data_plot["color_current_source"], can_be_empty=False)
@@ -228,8 +228,8 @@ def _check_data_plot_plotter(layout, data_plot):
 
         # check data
         datachecker.check_boolean("log", data_plot["log"])
-        datachecker.check_string("title", data_plot["title"], can_be_empty=True)
-        datachecker.check_string("legend", data_plot["legend"], can_be_empty=True)
+        datachecker.check_string("title", data_plot["title"], can_be_empty=True, can_be_none=True)
+        datachecker.check_string("legend", data_plot["legend"], can_be_empty=True, can_be_none=True)
         datachecker.check_float("scale", data_plot["scale"], is_positive=True, can_be_zero=True)
         datachecker.check_float_array("color_lim", data_plot["color_lim"], size=2, can_be_none=True)
         datachecker.check_float_array("clamp_lim", data_plot["clamp_lim"], size=2, can_be_none=True)
@@ -290,7 +290,7 @@ def _check_data_plot_viewer(layout, data_plot):
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)
 
         # check data
-        datachecker.check_string("title", data_plot["title"], can_be_empty=True)
+        datachecker.check_string("title", data_plot["title"], can_be_empty=True, can_be_none=True)
         datachecker.check_string("color_voxel", data_plot["color_voxel"], can_be_empty=False)
         datachecker.check_string("color_reference", data_plot["color_reference"], can_be_empty=False)
         datachecker.check_float("opacity_voxel", data_plot["opacity_voxel"], is_positive=True, can_be_zero=False)
