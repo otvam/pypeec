@@ -145,9 +145,9 @@ solved in 80 seconds.
 
 # Acknowledgments
   
-This work was supported by the Power Management Integration Center PMIC (NSF 
-IUCRC) at Dartmouth College under Grant No. PMIC-062. The authors would like to 
-thank Yue (Will) Wu for discovering and reporting several bugs.
+This work was supported by the Power Management Integration Center (NSF IUCRC) 
+at Dartmouth College under Grant No. PMIC-062. The authors would like to thank 
+Yue (Will) Wu for discovering and reporting several bugs.
 
 # References
 
