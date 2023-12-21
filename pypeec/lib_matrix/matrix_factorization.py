@@ -166,7 +166,6 @@ def _get_factorize_sub(mat):
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
     LOGGER.debug("matrix elements: %d" % nnz)
     LOGGER.debug("matrix density: %.2e" % density)
-    LOGGER.debug("library: %s" % LIBRARY)
 
     # factorize the matrix
     LOGGER.debug("compute factorization")

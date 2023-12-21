@@ -315,7 +315,6 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
     # display the tensor size
     LOGGER.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
     LOGGER.debug("tensor footprint: %.2f MB" % footprint)
-    LOGGER.debug("library: %s" % (LIBRARY))
 
     # get the sign that will be applied to the different blocks of the tensor
     sign = _get_tensor_sign(name, nd_in)
