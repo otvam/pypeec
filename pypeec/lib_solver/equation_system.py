@@ -591,17 +591,15 @@ def get_system_sol_idx(A_net_c, A_net_m, A_src):
     # init the index offset
     n_offset = 0
 
-    # get the variable
+    # get the electric variable
     sol_idx["I_fc"] = range(n_offset, n_offset+n_fc)
     n_offset += n_fc
     sol_idx["V_vc"] = range(n_offset, n_offset+n_vc)
     n_offset += n_vc
-
-    # get the variable
     sol_idx["I_src"] = range(n_offset, n_offset+n_src)
     n_offset += n_src
 
-    # get the variable
+    # get the magnetic variable
     sol_idx["I_fm"] = range(n_offset, n_offset+n_fm)
     n_offset += n_fm
     sol_idx["V_vm"] = range(n_offset, n_offset+n_vm)

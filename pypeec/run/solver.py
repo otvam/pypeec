@@ -247,9 +247,6 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         # get the source indices
         sol_idx = equation_system.get_system_sol_idx(A_net_c, A_net_m, A_src)
 
-    # get a function to evaluate the solver convergence
-    fct_conv = extract_convergence.get_fct_conv(freq, source_pos, sol_idx)
-
     # solve the equation system
     with log.BlockTimer(LOGGER, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
@@ -258,6 +255,9 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         # free memory
         del S_mat_c
         del S_mat_m
+
+        # get a function to evaluate the solver convergence
+        fct_conv = extract_convergence.get_fct_conv(freq, source_pos, sol_idx)
 
         # solve the equation system
         (sol, res, conv, solver_ok, solver_status) = equation_solver.get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options)

@@ -20,29 +20,20 @@ NP_TYPES = config.NP_TYPES
 LOGGER = log.get_logger("EQUATION")
 
 
-def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
+def _get_solver_coupled(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
     """
-    Solve a sparse equation system with gmres.
-    The equation system and the preconditioner are described with linear operator.
+    Solve the coupled magnetic-electric equation system with an iterative solver.
     """
-
-    # get the condition options
-    check = solver_options["check"]
-    tolerance = solver_options["tolerance"]
-    iter_options = solver_options["iter_options"]
 
     # extract
     (rhs_c, rhs_m) = rhs
     (sys_op_c, sys_op_m) = sys_op
     (pcd_op_c, pcd_op_m) = pcd_op
 
-    # assemble
-    rhs = np.concatenate((rhs_c, rhs_m))
-
     # get problem size
-    n_dof = len(rhs)
     n_dof_c = len(rhs_c)
     n_dof_m = len(rhs_m)
+    n_dof = n_dof_c+n_dof_m
 
     # function describing the preconditioner
     def fct_pcd(rhs):
@@ -82,13 +73,33 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     pcd_op = sla.LinearOperator((n_dof, n_dof), matvec=fct_pcd, dtype=NP_TYPES.COMPLEX)
     sys_op = sla.LinearOperator((n_dof, n_dof), matvec=fct_sys, dtype=NP_TYPES.COMPLEX)
 
+    # assemble rhs
+    rhs = np.concatenate((rhs_c, rhs_m))
+
     # call the solver
     (status_solver, alg, sol, res) = matrix_iter.get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)
+
+    return status_solver, alg, sol, res
+
+
+def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
+    """
+    Solve the equation system with an iterative solver.
+    The equation system and the preconditioner are described with linear operator.
+    """
+
+    # get the condition options
+    check = solver_options["check"]
+    tolerance = solver_options["tolerance"]
+    iter_options = solver_options["iter_options"]
+
+    # call the solver
+    (status_solver, alg, sol, res) = _get_solver_coupled(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)
 
     # compute and check the residuum
     res_rms = np.sqrt(np.mean(np.abs(res)**2))
 
-    # get status
+    # get residuum status
     status_res = res_rms < tolerance
 
     # extract alg results
@@ -97,10 +108,18 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     n_iter = alg["n_iter"]
     conv = alg["conv"]
 
+    # get system size
+    (rhs_c, rhs_m) = rhs
+    n_dof_electric = len(rhs_c)
+    n_dof_magnetic = len(rhs_m)
+    n_dof_total = n_dof_electric+n_dof_magnetic
+
     # assign the results
     solver_status = {
         "check": check,
-        "n_dof": n_dof,
+        "n_dof_electric": n_dof_electric,
+        "n_dof_magnetic": n_dof_magnetic,
+        "n_dof_total": n_dof_total,
         "n_iter": n_iter,
         "n_sys_eval": n_sys_eval,
         "n_pcd_eval": n_pcd_eval,
@@ -119,7 +138,9 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     LOGGER.debug("solver summary")
     with log.BlockIndent():
         # display results
-        LOGGER.debug("n_dof = %d" % n_dof)
+        LOGGER.debug("n_dof_total = %d" % n_dof_total)
+        LOGGER.debug("n_dof_electric = %d" % n_dof_electric)
+        LOGGER.debug("n_dof_magnetic = %d" % n_dof_magnetic)
         LOGGER.debug("n_iter = %d" % n_iter)
         LOGGER.debug("n_sys_eval = %d" % n_sys_eval)
         LOGGER.debug("n_pcd_eval = %d" % n_pcd_eval)
