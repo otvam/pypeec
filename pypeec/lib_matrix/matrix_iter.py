@@ -168,6 +168,9 @@ def _get_solve_sub(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
     # check for convergence
     status = flag == 0
 
+    # get residuum
+    res = sys_op(sol)-rhs
+
     # get the number of iterations
     n_sys_eval = sys_obj.get_n_eval()
     n_pcd_eval = pcd_obj.get_n_eval()
@@ -177,7 +180,7 @@ def _get_solve_sub(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):
     # assign results
     alg = {"n_sys_eval": n_sys_eval, "n_pcd_eval": n_pcd_eval, "n_iter": n_iter, "conv": conv}
 
-    return status, alg, sol
+    return status, alg, sol, res
 
 
 def get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options):

@@ -83,10 +83,9 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     sys_op = sla.LinearOperator((n_dof, n_dof), matvec=fct_sys, dtype=NP_TYPES.COMPLEX)
 
     # call the solver
-    (status_solver, alg, sol) = matrix_iter.get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)
+    (status_solver, alg, sol, res) = matrix_iter.get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)
 
     # compute and check the residuum
-    res = sys_op(sol)-rhs
     res_rms = np.sqrt(np.mean(np.abs(res)**2))
 
     # get status
