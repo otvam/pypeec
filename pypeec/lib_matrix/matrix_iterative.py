@@ -9,7 +9,7 @@ __license__ = "Mozilla Public License Version 2.0"
 import scipy.sparse.linalg as sla
 
 
-def get_solve(sol_init, sys_op, pcd_op, rhs, fct_callback, iter_options):
+def get_solve(sol_init, op_sys, op_pcd, rhs, fct_callback, iter_options):
     """
     Solve a sparse equation system with GMRES or GCROT (main function).
     The equation system and the preconditioner are described with linear operator.
@@ -25,14 +25,14 @@ def get_solve(sol_init, sys_op, pcd_op, rhs, fct_callback, iter_options):
     # call the solver
     if solver == "gmres":
         (sol, flag) = sla.gmres(
-            sys_op, rhs, M=pcd_op, x0=sol_init,
+            op_sys, rhs, M=op_pcd, x0=sol_init,
             tol=rel_tol, atol=abs_tol,
             restart=n_inner, maxiter=n_outer,
             callback=fct_callback, callback_type="x",
         )
     elif solver == "gcrot":
         (sol, flag) = sla.gcrotmk(
-            sys_op, rhs, M=pcd_op, x0=sol_init,
+            op_sys, rhs, M=op_pcd, x0=sol_init,
             tol=rel_tol, atol=abs_tol,
             m=n_inner, maxiter=n_outer,
             callback=fct_callback,
@@ -44,6 +44,6 @@ def get_solve(sol_init, sys_op, pcd_op, rhs, fct_callback, iter_options):
     status = flag == 0
 
     # get residuum
-    res = sys_op(sol)-rhs
+    res = op_sys(sol)-rhs
 
     return status, sol, res

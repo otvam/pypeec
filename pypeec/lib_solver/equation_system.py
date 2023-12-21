@@ -271,7 +271,7 @@ def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m):
     return Y_mat, S_mat, A_12_mat, A_21_mat
 
 
-def _get_cond_solve(rhs, cpl, Y_mat, S_fact, A_12_mat, A_21_mat):
+def _get_cond_solve(rhs, Y_mat, S_fact, A_12_mat, A_21_mat):
     """
     Solve the preconditioner equation system.
     The matrix factorization of the Schur complement is used.
@@ -280,17 +280,14 @@ def _get_cond_solve(rhs, cpl, Y_mat, S_fact, A_12_mat, A_21_mat):
     # split the system (Schur complement split)
     (n_schur, n_schur) = Y_mat.shape
 
-    # add the electric-magnetic couplings
-    rhs_cpl = rhs-cpl
-
     # split the rhs vector
-    rhs_cpl_a = rhs_cpl[:n_schur]
-    rhs_cpl_b = rhs_cpl[n_schur:]
+    rhs_a = rhs[:n_schur]
+    rhs_b = rhs[n_schur:]
 
     # solve the equation system (Schur complement and matrix factorization)
-    tmp = rhs_cpl_b-(A_21_mat*(Y_mat*rhs_cpl_a))
+    tmp = rhs_b-(A_21_mat*(Y_mat*rhs_a))
     sol_b = matrix_factorization.get_solve(S_fact, tmp)
-    sol_a = Y_mat*(rhs_cpl_a-(A_12_mat*sol_b))
+    sol_a = Y_mat*(rhs_a-(A_12_mat*sol_b))
 
     # assemble the solution
     sol = np.concatenate((sol_a, sol_b))
@@ -468,12 +465,10 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
 
 def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, K_op_c, K_op_m):
     """
-    Get a linear operator that solves the preconditioner equation system.
-    This operator is used as a preconditioner for the iterative method solving the full system.
+    Get linear operators that solves the preconditioner equation system.
+    These operators are used as a preconditioner for the iterative method solving the full system.
 
     The system is split between the electric and magnetic equations.
-    The coupling between the electric and magnetic system is simplified.
-
     The Schur complement matrices of the preconditioner are also returned.
     These matrices are used to assess the condition number of the system.
     """
@@ -491,12 +486,9 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, K_op_c,
     S_fact_m = matrix_factorization.get_factorize("magnetic", S_mat_m)
 
     # function describing the electric preconditioner
-    def fct_c(rhs_c, sol_m):
-        # compute the electric-magnetic coupling
-        cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
-
+    def fct_c(rhs_c):
         # solve the system (electric and magnetic)
-        sol_c = _get_cond_solve(rhs_c, cpl_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
+        sol_c = _get_cond_solve(rhs_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
 
         # scale and assemble the solution
         sol_c = sol_c/scaler_c
@@ -504,12 +496,9 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, K_op_c,
         return sol_c
 
     # function describing the magnetic preconditioner
-    def fct_m(rhs_m, sol_c):
-        # compute the electric-magnetic coupling
-        cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
-
+    def fct_m(rhs_m):
         # solve the system (electric and magnetic)
-        sol_m = _get_cond_solve(rhs_m, cpl_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
+        sol_m = _get_cond_solve(rhs_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
 
         # scale and assemble the solution
         sol_m = sol_m/scaler_m
@@ -517,17 +506,55 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, K_op_c,
         return sol_m
 
     # corresponding linear operator
-    op = (fct_c, fct_m)
+    fct = (fct_c, fct_m)
 
-    return op, S_mat_c, S_mat_m
+    return fct, S_mat_c, S_mat_m
+
+
+def get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m):
+    """
+    Get linear operators that represent the electric-magnetic couplings.
+
+    The system is split between the electric and magnetic equations.
+    These operators are coupling both systems.
+    """
+
+    # get the system size and the solution scaling
+    (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
+    (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
+
+    # function describing the electric couling
+    def fct_c(sol_m):
+        # scale equation
+        sol_m = sol_m*scaler_m
+
+        # compute the electric-magnetic coupling
+        cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
+
+        return cpl_c
+
+    # function describing the magnetic preconditioner
+    def fct_m(sol_c):
+        # scale equation
+        sol_c = sol_c*scaler_c
+
+        # compute the electric-magnetic coupling
+        cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
+
+        return cpl_m
+
+    # corresponding linear operator
+    fct = (fct_c, fct_m)
+
+    return fct
 
 
 def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m):
     """
-    Get a linear operator that produce the matrix-vector multiplication result for the full system.
-    This operator is used for the iterative solver.
+    Get linear operators that produce the matrix-vector multiplication result for the full system.
+    These operators are used for the iterative solver.
 
-    The system is split in three parts: electric, magnetic, and electric-magnetic coupling.
+    The system is split between the electric and magnetic equations.
     """
 
     # get the system size and the solution scaling
@@ -569,12 +596,12 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
         return rhs_m
 
     # corresponding linear operator
-    op = (
+    fct = (
         fct_c,
         fct_m,
     )
 
-    return op
+    return fct
 
 
 def get_system_sol_idx(A_net_c, A_net_m, A_src):
