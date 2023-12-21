@@ -152,12 +152,12 @@ def _get_factorize_sub(mat):
     (nx, ny) = mat.shape
 
     # factorization for empty matrices
-    def factor_empty(rhs):
+    def factor_dummy(rhs):
         return rhs
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
-        return factor_empty
+        return factor_dummy
 
     # compute matrix density
     density = nnz/(nx*ny)
@@ -184,10 +184,10 @@ def _get_factorize_sub(mat):
     # display the status
     if factor is None:
         LOGGER.warning("factorization failure")
+        return factor_dummy
     else:
         LOGGER.debug("factorization success")
-
-    return factor
+        return factor
 
 
 def set_options(factorization_options):

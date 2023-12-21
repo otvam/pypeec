@@ -90,7 +90,6 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     res_rms = np.sqrt(np.mean(np.abs(res)**2))
 
     # get status
-    status_pcd = pcd_op is not None
     status_res = res_rms < tolerance
 
     # extract alg results
@@ -107,14 +106,13 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
         "n_sys_eval": n_sys_eval,
         "n_pcd_eval": n_pcd_eval,
         "res_rms": res_rms,
-        "status_pcd": status_pcd,
         "status_solver": status_solver,
         "status_res": status_res,
     }
 
     # solver success
     if check:
-        status = status_solver and status_res and status_pcd
+        status = status_solver and status_res
     else:
         status = True
 
@@ -128,13 +126,10 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
         LOGGER.debug("n_pcd_eval = %d" % n_pcd_eval)
         LOGGER.debug("res_rms = %.2e" % res_rms)
         LOGGER.debug("check = %s" % check)
-        LOGGER.debug("status_pcd = %s" % status_pcd)
         LOGGER.debug("status_solver = %s" % status_solver)
         LOGGER.debug("status_res = %s" % status_res)
 
         # display warnings
-        if not status_pcd:
-            LOGGER.warning("preconditioner issue")
         if not status_solver:
             LOGGER.warning("iterative solver issue")
         if not status_res:
