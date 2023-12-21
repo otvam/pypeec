@@ -33,7 +33,7 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
 
     # extract
     (rhs_c, rhs_m) = rhs
-    (sys_op, sys_op_c, sys_op_m) = sys_op
+    (sys_op_c, sys_op_m) = sys_op
     (pcd_op_c, pcd_op_m) = pcd_op
 
     # assemble
@@ -54,7 +54,7 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
         sol_c_init = np.zeros(n_dof_c)
         sol_m_init = np.zeros(n_dof_m)
 
-        # solve preconditioner
+        # solve the preconditioner
         sol_c = pcd_op_c(rhs_c, sol_m_init)
         sol_m = pcd_op_m(rhs_m, sol_c_init)
 
@@ -63,8 +63,24 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
 
         return sol
 
+    # function describing the equation system
+    def fct_sys(sol):
+        # split vector
+        sol_c = sol[0:n_dof_c]
+        sol_m = sol[n_dof_c:n_dof_c+n_dof_m]
+
+        # solve the system
+        rhs_c = sys_op_c(sol_c, sol_m)
+        rhs_m = sys_op_m(sol_m, sol_c)
+
+        # assemble solution
+        rhs = np.concatenate((rhs_c, rhs_m))
+
+        return rhs
+
     # corresponding linear operator
     pcd_op = sla.LinearOperator((n_dof, n_dof), matvec=fct_pcd, dtype=NP_TYPES.COMPLEX)
+    sys_op = sla.LinearOperator((n_dof, n_dof), matvec=fct_sys, dtype=NP_TYPES.COMPLEX)
 
     # call the solver
     (status_solver, alg, sol) = matrix_iter.get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)

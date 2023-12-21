@@ -78,7 +78,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 import scipy.sparse as sps
-import scipy.sparse.linalg as sla
 from pypeec.lib_matrix import matrix_factorization
 from pypeec import config
 
@@ -132,21 +131,6 @@ def _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src):
         scaler_m = np.concatenate((scaler_fm, scaler_vm))
 
     return scaler_c, scaler_m
-
-
-def _get_split_vector(sol, n_vc, n_fc, n_vm, n_fm, n_src):
-    """
-    Split a vector into an electric vector and magnetic vector.
-
-    The input vector has the following size: n_fc+n_vc+n_src_c+n_src_v+n_fm+n_vm.
-    The electric vector has the following size: n_fc+n_vc+n_src_c+n_src_v.
-    The magnetic vector has the following size: n_fm+n_vm.
-    """
-
-    sol_c = sol[0:n_fc+n_vc+n_src]
-    sol_m = sol[n_fc+n_vc+n_src:n_fc+n_vc+n_src+n_fm+n_vm]
-
-    return sol_c, sol_m
 
 
 def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
@@ -554,33 +538,8 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
     (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
     (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
 
-    # system size
-    n_dof_m = n_vm+n_fm
-    n_dof_c = n_vc+n_fc+n_src
-    n_dof = n_vc+n_fc+n_src+n_vm+n_fm
-
-    # function describing the equation system
-    def fct(sol):
-        # split and scale the solution
-        (sol_c, sol_m) = _get_split_vector(sol, n_vc, n_fc, n_vm, n_fm, n_src)
-        sol_c = sol_c*scaler_c
-        sol_m = sol_m*scaler_m
-
-        # compute the electric-magnetic coupling
-        cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
-        cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
-
-        # compute the system multiplication
-        rhs_c = _get_system_multiply_electric(sol_c, freq, A_net_c, A_src, R_c, L_op_c)
-        rhs_m = _get_system_multiply_magnetic(sol_m, freq, A_net_m, R_m, P_op_m)
-
-        # assemble the rhs
-        rhs = np.concatenate((rhs_c+cpl_c, rhs_m+cpl_m))
-
-        return rhs
-
     # function describing the electric equation system
-    def fct_electric(sol_c, sol_m):
+    def fct_c(sol_c, sol_m):
         # scale the solution
         sol_c = sol_c*scaler_c
         sol_m = sol_m*scaler_m
@@ -597,7 +556,7 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
         return rhs_c
 
     # function describing the magnetic equation system
-    def fct_magnetic(sol_m, sol_c):
+    def fct_m(sol_m, sol_c):
         # scale the solution
         sol_c = sol_c*scaler_c
         sol_m = sol_m*scaler_m
@@ -615,9 +574,8 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
 
     # corresponding linear operator
     op = (
-        sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX),
-        sla.LinearOperator((n_dof_c, n_dof_c), matvec=fct_electric, dtype=NP_TYPES.COMPLEX),
-        sla.LinearOperator((n_dof_m, n_dof_m), matvec=fct_magnetic, dtype=NP_TYPES.COMPLEX),
+        fct_c,
+        fct_m,
     )
 
     return op
