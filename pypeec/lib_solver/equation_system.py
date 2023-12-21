@@ -103,10 +103,7 @@ def _get_system_size(A_net_c, A_net_m, A_src):
     (n_vm, n_fm) = A_net_m.shape
     (n_src, n_src) = A_src_src.shape
 
-    # get the system size
-    n_dof = n_vc+n_fc+n_src+n_vm+n_fm
-
-    return n_vc, n_fc, n_vm, n_fm, n_src, n_dof
+    return n_vc, n_fc, n_vm, n_fm, n_src
 
 
 def _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src):
@@ -424,9 +421,9 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     rhs_m = np.zeros(n_m, dtype=NP_TYPES.COMPLEX)
 
     # assemble
-    rhs = np.concatenate((rhs_c, I_src_c, V_src_v, rhs_m))
+    rhs_c = np.concatenate((rhs_c, I_src_c, V_src_v))
 
-    return rhs
+    return rhs_c, rhs_m
 
 
 def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
@@ -485,7 +482,7 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     return A_vc_src, A_src_vc, A_src_src
 
 
-def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
+def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, K_op_c, K_op_m):
     """
     Get a linear operator that solves the preconditioner equation system.
     This operator is used as a preconditioner for the iterative method solving the full system.
@@ -498,8 +495,13 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     """
 
     # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src, n_dof) = _get_system_size(A_net_c, A_net_m, A_src)
+    (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
     (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
+
+    # system size
+    n_dof_m = n_vm+n_fm
+    n_dof_c = n_vc+n_fc+n_src
+    n_dof = n_vc+n_fc+n_src+n_vm+n_fm
 
     # get the Schur complement
     (Y_mat_c, S_mat_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
@@ -533,8 +535,38 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
 
         return sol
 
+    # function describing the electric preconditioner
+    def fct_electric(rhs_c, sol_m):
+        # compute the electric-magnetic coupling
+        cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
+
+        # solve the system (electric and magnetic)
+        sol_c = _get_cond_solve(rhs_c, cpl_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
+
+        # scale and assemble the solution
+        sol_c = sol_c/scaler_c
+
+        return sol_c
+
+    # function describing the magnetic preconditioner
+    def fct_magnetic(rhs_m, sol_c):
+        # compute the electric-magnetic coupling
+        cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
+
+        # solve the system (electric and magnetic)
+        sol_m = _get_cond_solve(rhs_m, cpl_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
+
+        # scale and assemble the solution
+        sol_m = sol_m/scaler_m
+
+        return sol_m
+
     # corresponding linear operator
-    op = sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX)
+    op = (
+        sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX),
+        sla.LinearOperator((n_dof_c, n_dof_c), matvec=fct_electric, dtype=NP_TYPES.COMPLEX),
+        sla.LinearOperator((n_dof_m, n_dof_m), matvec=fct_magnetic, dtype=NP_TYPES.COMPLEX),
+    )
 
     return op, S_mat_c, S_mat_m
 
@@ -548,8 +580,13 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
     """
 
     # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src, n_dof) = _get_system_size(A_net_c, A_net_m, A_src)
+    (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
     (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
+
+    # system size
+    n_dof_m = n_vm+n_fm
+    n_dof_c = n_vc+n_fc+n_src
+    n_dof = n_vc+n_fc+n_src+n_vm+n_fm
 
     # function describing the equation system
     def fct(sol):
@@ -571,8 +608,46 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
 
         return rhs
 
+    # function describing the electric equation system
+    def fct_electric(sol_c, sol_m):
+        # scale the solution
+        sol_c = sol_c*scaler_c
+        sol_m = sol_m*scaler_m
+
+        # compute the electric-magnetic coupling
+        cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
+
+        # compute the system multiplication
+        rhs_c = _get_system_multiply_electric(sol_c, freq, A_net_c, A_src, R_c, L_op_c)
+
+        # assemble the rhs
+        rhs_c = rhs_c+cpl_c
+
+        return rhs_c
+
+    # function describing the magnetic equation system
+    def fct_magnetic(sol_m, sol_c):
+        # scale the solution
+        sol_c = sol_c*scaler_c
+        sol_m = sol_m*scaler_m
+
+        # compute the electric-magnetic coupling
+        cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
+
+        # compute the system multiplication
+        rhs_m = _get_system_multiply_magnetic(sol_m, freq, A_net_m, R_m, P_op_m)
+
+        # assemble the rhs
+        rhs_m = rhs_m+cpl_m
+
+        return rhs_m
+
     # corresponding linear operator
-    op = sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX)
+    op = (
+        sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX),
+        sla.LinearOperator((n_dof_c, n_dof_c), matvec=fct_electric, dtype=NP_TYPES.COMPLEX),
+        sla.LinearOperator((n_dof_m, n_dof_m), matvec=fct_magnetic, dtype=NP_TYPES.COMPLEX),
+    )
 
     return op
 
@@ -583,7 +658,7 @@ def get_system_sol_idx(A_net_c, A_net_m, A_src):
     """
 
     # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src, n_dof) = _get_system_size(A_net_c, A_net_m, A_src)
+    (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
 
     # init index dict
     sol_idx = {}

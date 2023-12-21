@@ -26,6 +26,14 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     tolerance = solver_options["tolerance"]
     iter_options = solver_options["iter_options"]
 
+    # extract
+    (rhs_c, rhs_m) = rhs
+    (sys_op, sys_op_c, sys_op_m) = sys_op
+    (pcd_op, pcd_op_c,pcd_op_m) = pcd_op
+
+    # assemble
+    rhs = np.concatenate((rhs_c, rhs_m))
+
     # call the solver
     (status_solver, alg, sol) = matrix_iter.get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)
 
