@@ -7,9 +7,14 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
+import scipy.sparse.linalg as sla
 from pypeec.lib_matrix import matrix_condition
 from pypeec.lib_matrix import matrix_iter
 from pypeec import log
+from pypeec import config
+
+# get config
+NP_TYPES = config.NP_TYPES
 
 # get a logger
 LOGGER = log.get_logger("EQUATION")
@@ -29,10 +34,37 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     # extract
     (rhs_c, rhs_m) = rhs
     (sys_op, sys_op_c, sys_op_m) = sys_op
-    (pcd_op, pcd_op_c,pcd_op_m) = pcd_op
+    (pcd_op_c, pcd_op_m) = pcd_op
 
     # assemble
     rhs = np.concatenate((rhs_c, rhs_m))
+
+    # get problem size
+    n_dof = len(rhs)
+    n_dof_c = len(rhs_c)
+    n_dof_m = len(rhs_m)
+
+    # function describing the preconditioner
+    def fct_pcd(rhs):
+        # split vector
+        rhs_c = rhs[0:n_dof_c]
+        rhs_m = rhs[n_dof_c:n_dof_c+n_dof_m]
+
+        # ignore coupling
+        sol_c_init = np.zeros(n_dof_c)
+        sol_m_init = np.zeros(n_dof_m)
+
+        # solve preconditioner
+        sol_c = pcd_op_c(rhs_c, sol_m_init)
+        sol_m = pcd_op_m(rhs_m, sol_c_init)
+
+        # assemble solution
+        sol = np.concatenate((sol_c, sol_m))
+
+        return sol
+
+    # corresponding linear operator
+    pcd_op = sla.LinearOperator((n_dof, n_dof), matvec=fct_pcd, dtype=NP_TYPES.COMPLEX)
 
     # call the solver
     (status_solver, alg, sol) = matrix_iter.get_solve(sol_init, sys_op, pcd_op, rhs, fct_conv, iter_options)
@@ -40,9 +72,6 @@ def get_solver(sol_init, sys_op, pcd_op, rhs, fct_conv, solver_options):
     # compute and check the residuum
     res = sys_op(sol)-rhs
     res_rms = np.sqrt(np.mean(np.abs(res)**2))
-
-    # get problem size
-    n_dof = len(rhs)
 
     # get status
     status_pcd = pcd_op is not None
