@@ -239,7 +239,10 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         A_src = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        (fct_pcd, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, K_op_c, K_op_m)
+        (fct_pcd, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m)
+
+        # get the linear operator for the electric-magnetic coupling
+        fct_cpl = equation_system.get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
         fct_sys = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
@@ -260,10 +263,11 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         fct_conv = extract_convergence.get_fct_conv(freq, source_pos, sol_idx)
 
         # solve the equation system
-        (sol, res, conv, solver_ok, solver_status) = equation_solver.get_solver(sol_init, fct_sys, fct_pcd, rhs, fct_conv, solver_options)
+        (sol, res, conv, solver_ok, solver_status) = equation_solver.get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_options)
 
         # free memory
         del fct_pcd
+        del fct_cpl
         del fct_sys
 
         # compute convergence

@@ -463,7 +463,7 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     return A_vc_src, A_src_vc, A_src_src
 
 
-def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m, K_op_c, K_op_m):
+def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     """
     Get linear operators that solves the preconditioner equation system.
     These operators are used as a preconditioner for the iterative method solving the full system.
@@ -562,36 +562,22 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m,
     (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
 
     # function describing the electric equation system
-    def fct_c(sol_c, sol_m):
+    def fct_c(sol_c):
         # scale the solution
         sol_c = sol_c*scaler_c
-        sol_m = sol_m*scaler_m
-
-        # compute the electric-magnetic coupling
-        cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
 
         # compute the system multiplication
         rhs_c = _get_system_multiply_electric(sol_c, freq, A_net_c, A_src, R_c, L_op_c)
 
-        # assemble the rhs
-        rhs_c = rhs_c+cpl_c
-
         return rhs_c
 
     # function describing the magnetic equation system
-    def fct_m(sol_m, sol_c):
+    def fct_m(sol_m):
         # scale the solution
-        sol_c = sol_c*scaler_c
         sol_m = sol_m*scaler_m
-
-        # compute the electric-magnetic coupling
-        cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
 
         # compute the system multiplication
         rhs_m = _get_system_multiply_magnetic(sol_m, freq, A_net_m, R_m, P_op_m)
-
-        # assemble the rhs
-        rhs_m = rhs_m+cpl_m
 
         return rhs_m
 

@@ -138,13 +138,14 @@ class _OpCounter:
         return self.n_sys_eval
 
 
-def _get_solver_coupled(sol_init, fct_sys, fct_pcd, rhs, iter_options, op_obj, iter_obj):
+def _get_solver_coupled(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, iter_options, op_obj, iter_obj):
     """
     Solve the coupled magnetic-electric equation system with an iterative solver.
     """
 
     # extract
     (rhs_c, rhs_m) = rhs
+    (fct_cpl_c, fct_cpl_m) = fct_cpl
     (fct_sys_c, fct_sys_m) = fct_sys
     (fct_pcd_c, fct_pcd_m) = fct_pcd
 
@@ -174,8 +175,8 @@ def _get_solver_coupled(sol_init, fct_sys, fct_pcd, rhs, iter_options, op_obj, i
         sol_m = sol[n_dof_c:n_dof_c+n_dof_m]
 
         # solve the system
-        rhs_c = fct_sys_c(sol_c, sol_m)
-        rhs_m = fct_sys_m(sol_m, sol_c)
+        rhs_c = fct_sys_c(sol_c)+fct_cpl_c(sol_m)
+        rhs_m = fct_sys_m(sol_m)+fct_cpl_m(sol_c)
 
         # assemble solution
         rhs = np.concatenate((rhs_c, rhs_m))
@@ -199,7 +200,7 @@ def _get_solver_coupled(sol_init, fct_sys, fct_pcd, rhs, iter_options, op_obj, i
     return status, sol, res
 
 
-def get_solver(sol_init, fct_sys, fct_pcd, rhs, fct_conv, solver_options):
+def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_options):
     """
     Solve the equation system with an iterative solver.
     The equation system and the preconditioner are described with linear operator.
@@ -227,7 +228,7 @@ def get_solver(sol_init, fct_sys, fct_pcd, rhs, fct_conv, solver_options):
     # call the solver
     LOGGER.debug("solver run")
     with log.BlockIndent():
-        (status, sol, res) = _get_solver_coupled(sol_init, fct_sys, fct_pcd, rhs, iter_options, op_obj, iter_obj)
+        (status, sol, res) = _get_solver_coupled(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, iter_options, op_obj, iter_obj)
 
     # final callback
     iter_obj.get_callback_run(sol)
