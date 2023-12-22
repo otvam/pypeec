@@ -58,8 +58,14 @@
 
 # iterative solver options (for GMRES and GCROT solver)
 "solver_options":
-    "check": true                      # check (or not) the solver tolerance
+    "check": true                      # check (or not) the solver convergence
     "tolerance": 1.0e-6                # tolerance for checking the solution residuum
+    "coupling": "direct"               # options for the electric-magnetic coupling ("direct" or "segregated")
+    "segregated_options":              # options for the segregated solver
+        "rel_tol": 1.0e-6              # relative preconditioned tolerance for solver convergence
+        "abs_tol": 1.0e-12             # absolute preconditioned tolerance for solver convergence
+        "n_min": 2                     # minimum number of iterations
+        "n_max": 5                     # maximum number of iterations
     "iter_options":                    # options for the iterative solver
         "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
         "rel_tol": 1.0e-6              # relative preconditioned tolerance for solver convergence

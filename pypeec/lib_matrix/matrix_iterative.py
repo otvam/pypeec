@@ -43,7 +43,4 @@ def get_solve(sol_init, op_sys, op_pcd, rhs, fct_callback, iter_options):
     # check for convergence
     status = flag == 0
 
-    # get residuum
-    res = op_sys(sol)-rhs
-
-    return status, sol, res
+    return status, sol

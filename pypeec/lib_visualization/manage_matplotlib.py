@@ -74,22 +74,25 @@ def _get_plot_convergence(fig, conv, data_plot):
     plt.figure(fig)
 
     # counts
-    iter_vec = conv["iter_vec"]
+    power_init = conv["power_init"]
+    power_final = conv["power_final"]
     power_vec = conv["power_vec"]
 
-    # get final iteration
-    iter_final = iter_vec[-1]
-    power_final = power_vec[-1]
-
     # get convergence
-    iter_vec = iter_vec[0:-1]
-    power_vec = (power_vec[0:-1]-power_final)/np.abs(power_final)
-    real_vec = np.abs(np.real(power_vec))
-    imag_vec = np.abs(np.imag(power_vec))
+    power_vec = np.concatenate(([power_init], power_vec))
+    error_vec = (power_vec-power_final)/np.abs(power_final)
+    real_vec = np.abs(np.real(error_vec))
+    imag_vec = np.abs(np.imag(error_vec))
+
+    # clamp small and large values
+    v_min = np.finfo(error_vec.dtype).eps
+    v_max = np.finfo(error_vec.dtype).max
+    real_vec = np.clip(real_vec, v_min, v_max)
+    imag_vec = np.clip(imag_vec, v_min, v_max)
 
     # plot the data
-    plt.plot(iter_vec, real_vec, "-o", color=color_active, markersize=marker, linewidth=width, label="P")
-    plt.plot(iter_vec, imag_vec, "-o", color=color_reactive, markersize=marker, linewidth=width, label="Q")
+    plt.plot(real_vec, "-o", color=color_active, markersize=marker, linewidth=width, label="P")
+    plt.plot(imag_vec, "-o", color=color_reactive, markersize=marker, linewidth=width, label="Q")
 
     # get log axis
     plt.yscale("log")
@@ -99,7 +102,7 @@ def _get_plot_convergence(fig, conv, data_plot):
     plt.legend()
     plt.xlabel("iterations (#)")
     plt.ylabel("convergence (a.u.)")
-    plt.title(f"Convergence: iter = {iter_final:d} / S = {power_final:.2e} VA")
+    plt.title(f"Convergence: S = {power_final:.2e} VA")
 
 
 def get_plot_plotter(fig, res, conv, layout, data_plot, data_options):

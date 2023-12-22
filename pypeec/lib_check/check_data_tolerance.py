@@ -79,17 +79,28 @@ def _check_solver_options(solver_options):
     """
 
     # check type
-    key_list = ["check", "tolerance", "iter_options"]
+    key_list = ["check", "tolerance", "coupling", "segregated_options", "iter_options"]
     datachecker.check_dict("solver_options", solver_options, key_list=key_list)
 
     # extract field
     check = solver_options["check"]
     tolerance = solver_options["tolerance"]
+    coupling = solver_options["coupling"]
+    segregated_options = solver_options["segregated_options"]
     iter_options = solver_options["iter_options"]
 
     # check the data
-    datachecker.check_boolean("tolerance", check)
+    datachecker.check_boolean("check", check)
     datachecker.check_float("tolerance", tolerance, is_positive=True, can_be_zero=False)
+    datachecker.check_choice("coupling", coupling, ["direct", "segregated"])
+
+    # check the data
+    key_list = ["rel_tol", "abs_tol", "n_min", "n_max"]
+    datachecker.check_dict("segregated_options", segregated_options, key_list=key_list)
+    datachecker.check_float("rel_tol", segregated_options["rel_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("abs_tol", segregated_options["abs_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_integer("n_min", segregated_options["n_min"], is_positive=True, can_be_zero=False)
+    datachecker.check_integer("n_max", segregated_options["n_max"], is_positive=True, can_be_zero=False)
 
     # check the data
     key_list = ["solver", "rel_tol", "abs_tol", "n_inner", "n_outer"]
