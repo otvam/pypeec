@@ -118,17 +118,19 @@ def _check_condition_options(condition_options):
     """
 
     # check type
-    key_list = ["check", "tolerance", "norm_options"]
+    key_list = ["check", "tolerance_electric", "tolerance_magnetic", "norm_options"]
     datachecker.check_dict("condition_options", condition_options, key_list=key_list)
 
     # extract field
     check = condition_options["check"]
-    tolerance = condition_options["tolerance"]
+    tolerance_electric = condition_options["tolerance_electric"]
+    tolerance_magnetic = condition_options["tolerance_magnetic"]
     norm_options = condition_options["norm_options"]
 
     # check the data
-    datachecker.check_boolean("tolerance", check)
-    datachecker.check_float("tolerance", tolerance, is_positive=True, can_be_zero=False)
+    datachecker.check_boolean("check", check)
+    datachecker.check_float("tolerance_electric", tolerance_electric, is_positive=True, can_be_zero=False)
+    datachecker.check_float("tolerance_magnetic", tolerance_magnetic, is_positive=True, can_be_zero=False)
 
     # check the data
     key_list = ["t_accuracy", "n_iter_max"]

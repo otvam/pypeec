@@ -442,14 +442,15 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
 
     # get the condition options
     check = conditions_options["check"]
-    tolerance = conditions_options["tolerance"]
+    tolerance_electric = conditions_options["tolerance_electric"]
+    tolerance_magnetic = conditions_options["tolerance_magnetic"]
     norm_options = conditions_options["norm_options"]
 
     # check the condition
     if check:
         cond_electric = matrix_condition.get_condition_matrix("electric", S_mat_c, norm_options)
         cond_magnetic = matrix_condition.get_condition_matrix("magnetic", S_mat_m, norm_options)
-        status = (cond_electric < tolerance) and (cond_magnetic < tolerance)
+        status = (cond_electric < tolerance_electric) and (cond_magnetic < tolerance_magnetic)
     else:
         cond_electric = float("nan")
         cond_magnetic = float("nan")
