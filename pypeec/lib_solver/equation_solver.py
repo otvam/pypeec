@@ -166,7 +166,7 @@ class _OpCounter:
         return self.n_sys_eval
 
 
-def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, iter_options, op_obj, iter_obj):
+def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, direct_options, op_obj, iter_obj):
     """
     Solve the coupled magnetic-electric equation system with an iterative solver.
     """
@@ -223,7 +223,7 @@ def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, iter_options, o
     rhs = np.concatenate((rhs_c, rhs_m))
 
     # call the solver
-    (status, sol) = matrix_iterative.get_solve(sol_init, op_sys, op_pcd, rhs, fct_callback, iter_options)
+    (status, sol) = matrix_iterative.get_solve(sol_init, op_sys, op_pcd, rhs, fct_callback, direct_options)
 
     # get residuum
     res = op_sys(sol)-rhs
@@ -263,7 +263,7 @@ def _get_solver_domain(sol_init, sol_other, fct_cpl, fct_sys, fct_pcd, rhs, iter
     return status, sol
 
 
-def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, iter_options, segregated_options, op_obj, iter_obj):
+def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_options, op_obj, iter_obj):
     """
     Solve the segregated magnetic-electric equation system with an iterative solver.
     """
@@ -271,10 +271,12 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, iter_option
     # extract
     rel_tol = segregated_options["rel_tol"]
     abs_tol = segregated_options["abs_tol"]
-    relax_electric = segregated_options["relax_electric"]
-    relax_magnetic = segregated_options["relax_magnetic"]
     n_min = segregated_options["n_min"]
     n_max = segregated_options["n_max"]
+    relax_electric = segregated_options["relax_electric"]
+    relax_magnetic = segregated_options["relax_magnetic"]
+    iter_electric_options = segregated_options["iter_electric_options"]
+    iter_magnetic_options = segregated_options["iter_magnetic_options"]
 
     # extract
     (rhs_c, rhs_m) = rhs
@@ -299,11 +301,11 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, iter_option
     # solve
     while not converged:
         # solve and relax the electric equation systems
-        (status_c, sol_c_new) = _get_solver_domain(sol_c, sol_m, fct_cpl_c, fct_sys_c, fct_pcd_c, rhs_c, iter_options, op_obj)
+        (status_c, sol_c_new) = _get_solver_domain(sol_c, sol_m, fct_cpl_c, fct_sys_c, fct_pcd_c, rhs_c, iter_electric_options, op_obj)
         sol_c = (1-relax_electric)*sol_c+relax_electric*sol_c_new
 
         # solve and relax the magnetic equation systems
-        (status_m, sol_m_new) = _get_solver_domain(sol_m, sol_c, fct_cpl_m, fct_sys_m, fct_pcd_m, rhs_m, iter_options, op_obj)
+        (status_m, sol_m_new) = _get_solver_domain(sol_m, sol_c, fct_cpl_m, fct_sys_m, fct_pcd_m, rhs_m, iter_magnetic_options, op_obj)
         sol_m = (1-relax_magnetic)*sol_m+relax_magnetic*sol_m_new
 
         # get residuum
@@ -341,7 +343,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
     tolerance = solver_options["tolerance"]
     coupling = solver_options["coupling"]
     segregated_options = solver_options["segregated_options"]
-    iter_options = solver_options["iter_options"]
+    direct_options = solver_options["direct_options"]
 
     # get system size
     (rhs_c, rhs_m) = rhs
@@ -369,7 +371,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
                 sol_init,
                 fct_cpl, fct_sys, fct_pcd,
                 rhs,
-                iter_options,
+                direct_options,
                 op_obj, iter_obj,
             )
         elif coupling == "segregated":
@@ -377,7 +379,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
                 sol_init,
                 fct_cpl, fct_sys, fct_pcd,
                 rhs,
-                iter_options, segregated_options,
+                segregated_options,
                 op_obj, iter_obj,
             )
         else:

@@ -73,13 +73,30 @@ def _check_factorization_options(factorization_options):
     datachecker.check_integer("thread_mkl",  pardiso_options["thread_mkl"], is_positive=True, can_be_zero=False, can_be_none=True)
 
 
-def _check_solver_options(solver_options):
+def _check_iter_options(iter_options):
     """
-    Check the matrix solver options.
+    Check the iterative solver options.
     """
 
     # check type
-    key_list = ["check", "tolerance", "coupling", "segregated_options", "iter_options"]
+    key_list = ["solver", "rel_tol", "abs_tol", "n_inner", "n_outer"]
+    datachecker.check_dict("iter_options", iter_options, key_list=key_list)
+
+    # check data
+    datachecker.check_choice("solver", iter_options["solver"], ["gmres", "gcrot"])
+    datachecker.check_float("rel_tol", iter_options["rel_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("abs_tol", iter_options["abs_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_integer("n_inner", iter_options["n_inner"], is_positive=True, can_be_zero=False)
+    datachecker.check_integer("n_outer", iter_options["n_outer"], is_positive=True, can_be_zero=False)
+
+
+def _check_solver_options(solver_options):
+    """
+    Check the equation system solver options.
+    """
+
+    # check type
+    key_list = ["check", "tolerance", "coupling", "segregated_options", "direct_options"]
     datachecker.check_dict("solver_options", solver_options, key_list=key_list)
 
     # extract field
@@ -87,31 +104,32 @@ def _check_solver_options(solver_options):
     tolerance = solver_options["tolerance"]
     coupling = solver_options["coupling"]
     segregated_options = solver_options["segregated_options"]
-    iter_options = solver_options["iter_options"]
+    direct_options = solver_options["direct_options"]
 
     # check the data
     datachecker.check_boolean("check", check)
     datachecker.check_float("tolerance", tolerance, is_positive=True, can_be_zero=False)
     datachecker.check_choice("coupling", coupling, ["direct", "segregated"])
 
-    # check the data
-    key_list = ["rel_tol", "abs_tol", "relax_electric", "relax_magnetic", "n_min", "n_max"]
+    # check the direct solver
+    _check_iter_options(direct_options)
+
+    # check the segregated solver
+    key_list = [
+        "rel_tol", "abs_tol",
+        "n_min", "n_max",
+        "relax_electric", "relax_magnetic",
+        "iter_electric_options", "iter_magnetic_options",
+    ]
     datachecker.check_dict("segregated_options", segregated_options, key_list=key_list)
     datachecker.check_float("rel_tol", segregated_options["rel_tol"], is_positive=True, can_be_zero=False)
     datachecker.check_float("abs_tol", segregated_options["abs_tol"], is_positive=True, can_be_zero=False)
-    datachecker.check_float("relax_electric", segregated_options["relax_electric"], is_positive=True, can_be_zero=False)
-    datachecker.check_float("relax_magnetic", segregated_options["relax_magnetic"], is_positive=True, can_be_zero=False)
     datachecker.check_integer("n_min", segregated_options["n_min"], is_positive=True, can_be_zero=False)
     datachecker.check_integer("n_max", segregated_options["n_max"], is_positive=True, can_be_zero=False)
-
-    # check the data
-    key_list = ["solver", "rel_tol", "abs_tol", "n_inner", "n_outer"]
-    datachecker.check_dict("iter_options", iter_options, key_list=key_list)
-    datachecker.check_choice("solver", iter_options["solver"], ["gmres", "gcrot"])
-    datachecker.check_float("rel_tol", iter_options["rel_tol"], is_positive=True, can_be_zero=False)
-    datachecker.check_float("abs_tol", iter_options["abs_tol"], is_positive=True, can_be_zero=False)
-    datachecker.check_integer("n_inner", iter_options["n_inner"], is_positive=True, can_be_zero=False)
-    datachecker.check_integer("n_outer", iter_options["n_outer"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("relax_electric", segregated_options["relax_electric"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("relax_magnetic", segregated_options["relax_magnetic"], is_positive=True, can_be_zero=False)
+    _check_iter_options(segregated_options["iter_electric_options"])
+    _check_iter_options(segregated_options["iter_magnetic_options"])
 
 
 def _check_condition_options(condition_options):

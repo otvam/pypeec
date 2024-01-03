@@ -66,7 +66,7 @@
         "thread_pardiso": null         # number of threads for PARDISO (null for number of CPUs)
         "thread_mkl": null             # number of threads for MKL (null for number of CPUs)
 
-# iterative solver options (for GMRES and GCROT solver)
+# equation system solver options (for GMRES and GCROT solver)
 "solver_options":
     # check (or not) the solver convergence
     #   - if true, the solver status and the residuum are checked
@@ -83,27 +83,42 @@
     #   - "segregated" is iterating between the electric and magnetic equations
     "coupling": "direct"
 
+    # options for the direct solver
+    #   - control the iterative matrix solver
+    #   - only used if the direct approach is selected
+    "direct_options":
+        "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
+        "rel_tol": 1.0e-6              # relative tolerance for solver convergence
+        "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
+        "n_inner": 20                  # maximum number of solver inner iterations
+        "n_outer": 20                  # maximum number of solver outer iterations
+
     # options for the segregated solver
-    #   - options for the segregated equation solver
     #   - control the iterations between the magnetic and electric problem
     #   - only used if the segregated approach is selected
     "segregated_options":
-        "rel_tol": 1.0e-6              # relative preconditioned tolerance for solver convergence
-        "abs_tol": 1.0e-12             # absolute preconditioned tolerance for solver convergence
+        "rel_tol": 1.0e-6              # relative tolerance for solver convergence
+        "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
         "relax_electric": 1.0          # relaxation parameter for the electric system (1.0 for no relaxation)
         "relax_magnetic": 1.0          # relaxation parameter for the magnetic system (1.0 for no relaxation)
         "n_min": 2                     # minimum number of iterations
-        "n_max": 10                    # maximum number of iterations
+        "n_max": 20                    # maximum number of iterations
 
-    # options for the matrix solver
-    #   - options for the iterative dense solver
-    #   - used both for the direct and segregated solver approaches
-    "iter_options":
-        "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
-        "rel_tol": 1.0e-6              # relative preconditioned tolerance for solver convergence
-        "abs_tol": 1.0e-12             # absolute preconditioned tolerance for solver convergence
-        "n_inner": 20                  # maximum number of solver inner iterations
-        "n_outer": 20                  # maximum number of solver outer iterations
+        # options for the electric segregated matrix solver
+        "iter_electric_options":
+            "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
+            "rel_tol": 1.0e-6              # relative tolerance for solver convergence
+            "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
+            "n_inner": 20                  # maximum number of solver inner iterations
+            "n_outer": 20                  # maximum number of solver outer iterations
+
+        # options for the electric magnetic matrix solver
+        "iter_magnetic_options":
+            "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
+            "rel_tol": 1.0e-6              # relative tolerance for solver convergence
+            "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
+            "n_inner": 20                  # maximum number of solver inner iterations
+            "n_outer": 20                  # maximum number of solver outer iterations
 
 # matrix condition check options
 "condition_options":
