@@ -25,59 +25,47 @@
             -
                 "shape_layer": ["back"]
                 "shape_operation": "add"
+                "shape_type": "polygon"
                 "shape_data":
-                    -
-                        "shape_type": "polygon"
-                        "shape_operation": "add"
-                        "buffer": null
-                        "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "buffer": null
+                    "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
             -
                 "shape_layer": ["front"]
                 "shape_operation": "add"
+                "shape_type": "polygon"
                 "shape_data":
-                    -
-                        "shape_type": "polygon"
-                        "shape_operation": "add"
-                        "buffer": null
-                        "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "buffer": null
+                    "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
             -
                 "shape_layer": ["front"]
                 "shape_operation": "sub"
+                "shape_type": "polygon"
                 "shape_data":
-                    -
-                        "shape_type": "polygon"
-                        "shape_operation": "add"
-                        "buffer": null
-                        "coord": [[0.0e-3, 0.0e-3], [2.0e-3, 0.0e-3], [2.0e-3, 2.0e-3], [0.0e-3, 2.0e-3]]
+                    "buffer": null
+                    "coord": [[0.0e-3, 0.0e-3], [2.0e-3, 0.0e-3], [2.0e-3, 2.0e-3], [0.0e-3, 2.0e-3]]
             -
                 "shape_layer": ["front", "back", "insulation"]
                 "shape_operation": "add"
+                "shape_type": "polygon"
                 "shape_data":
-                    -
-                        "shape_type": "polygon"
-                        "shape_operation": "add"
-                        "buffer": null
-                        "coord": [[2.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 0.2e-3], [2.0e-3, 0.2e-3]]
+                    "buffer": null
+                    "coord": [[2.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 0.2e-3], [2.0e-3, 0.2e-3]]
         "src":
             -
                 "shape_layer": ["front"]
                 "shape_operation": "add"
+                "shape_type": "polygon"
                 "shape_data":
-                    -
-                        "shape_type": "polygon"
-                        "shape_operation": "add"
-                        "buffer": null
-                        "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "buffer": null
+                    "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
         "sink":
             -
                 "shape_layer": ["back"]
                 "shape_operation": "add"
+                "shape_type": "polygon"
                 "shape_data":
-                    -
-                        "shape_type": "polygon"
-                        "shape_operation": "add"
-                        "buffer": null
-                        "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "buffer": null
+                    "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
 "resampling":
     "use_reduce": false
     "use_resample": false

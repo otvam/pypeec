@@ -29,87 +29,69 @@
             -
                 "shape_layer": ["copper_1"]
                 "shape_operation": "add"
+                "shape_type": "trace"
                 "shape_data":
-                    -
-                        "shape_type": "trace"
-                        "shape_operation": "add"
-                        "width": 0.5e-3
-                        "coord": [[0.0e-3, 0.0e-3], [0.0e-3, 4.0e-3], [4.0e-3, 4.0e-3], [4.0e-3, 0.0e-3]]
+                    "width": 0.5e-3
+                    "coord": [[0.0e-3, 0.0e-3], [0.0e-3, 4.0e-3], [4.0e-3, 4.0e-3], [4.0e-3, 0.0e-3]]
             -
                 "shape_layer": ["copper_2"]
                 "shape_operation": "add"
+                "shape_type": "trace"
                 "shape_data":
-                    -
-                        "shape_type": "trace"
-                        "shape_operation": "add"
-                        "width": 0.5e-3
-                        "coord": [[4.0e-3, 0.0e-3], [0.0e-3, 0.0e-3], [0.0e-3, 4.0e-3], [4.0e-3, 4.0e-3]]
+                    "width": 0.5e-3
+                    "coord": [[4.0e-3, 0.0e-3], [0.0e-3, 0.0e-3], [0.0e-3, 4.0e-3], [4.0e-3, 4.0e-3]]
             -
                 "shape_layer": ["copper_3"]
                 "shape_operation": "add"
+                "shape_type": "trace"
                 "shape_data":
-                    -
-                        "shape_type": "trace"
-                        "shape_operation": "add"
-                        "width": 0.5e-3
-                        "coord": [[4.0e-3, 4.0e-3], [4.0e-3, 0.0e-3], [0.0e-3, 0.0e-3], [0.0e-3, 4.0e-3]]
+                    "width": 0.5e-3
+                    "coord": [[4.0e-3, 4.0e-3], [4.0e-3, 0.0e-3], [0.0e-3, 0.0e-3], [0.0e-3, 4.0e-3]]
             -
                 "shape_layer": ["copper_4"]
                 "shape_operation": "add"
+                "shape_type": "trace"
                 "shape_data":
-                    -
-                        "shape_type": "trace"
-                        "shape_operation": "add"
-                        "width": 0.5e-3
-                        "coord": [[0.0e-3, 4.0e-3], [4.0e-3, 4.0e-3], [4.0e-3, 0.0e-3], [0.0e-3, 0.0e-3]]
+                    "width": 0.5e-3
+                    "coord": [[0.0e-3, 4.0e-3], [4.0e-3, 4.0e-3], [4.0e-3, 0.0e-3], [0.0e-3, 0.0e-3]]
         "via":
             -
                 "shape_layer": ["insulation_1"]
                 "shape_operation": "add"
+                "shape_type": "pad"
                 "shape_data":
-                    -
-                        "shape_type": "pad"
-                        "shape_operation": "add"
-                        "diameter": 0.35e-3
-                        "coord": [[4.0e-3, 0.0e-3]]
+                    "diameter": 0.35e-3
+                    "coord": [[4.0e-3, 0.0e-3]]
             -
                 "shape_layer": ["insulation_2"]
                 "shape_operation": "add"
+                "shape_type": "pad"
                 "shape_data":
-                    -
-                        "shape_type": "pad"
-                        "shape_operation": "add"
-                        "diameter": 0.35e-3
-                        "coord": [[4.0e-3, 4.0e-3]]
+                    "diameter": 0.35e-3
+                    "coord": [[4.0e-3, 4.0e-3]]
             -
                 "shape_layer": ["insulation_3"]
                 "shape_operation": "add"
+                "shape_type": "pad"
                 "shape_data":
-                    -
-                        "shape_type": "pad"
-                        "shape_operation": "add"
-                        "diameter": 0.35e-3
-                        "coord": [[0.0e-3, 4.0e-3]]
+                    "diameter": 0.35e-3
+                    "coord": [[0.0e-3, 4.0e-3]]
         "src":
             -
                 "shape_layer": ["copper_1"]
                 "shape_operation": "add"
+                "shape_type": "pad"
                 "shape_data":
-                    -
-                        "shape_type": "pad"
-                        "shape_operation": "add"
-                        "diameter": 0.75e-3
-                        "coord": [[0.0e-3, 0.0e-3]]
+                    "diameter": 0.75e-3
+                    "coord": [[0.0e-3, 0.0e-3]]
         "sink":
             -
                 "shape_layer": ["copper_4"]
                 "shape_operation": "add"
+                "shape_type": "pad"
                 "shape_data":
-                    -
-                        "shape_type": "pad"
-                        "shape_operation": "add"
-                        "diameter": 0.75e-3
-                        "coord": [[0.0e-3, 0.0e-3]]
+                    "diameter": 0.75e-3
+                    "coord": [[0.0e-3, 0.0e-3]]
 "resampling":
     "use_reduce": false
     "use_resample": false

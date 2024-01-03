@@ -9,38 +9,27 @@ __license__ = "Mozilla Public License Version 2.0"
 from pypeec.lib_check import datachecker
 
 
-def _check_shape_data(shape_data):
+def _check_shape_data(shape_type, shape_data):
     """
     Check the validity of a single shape definition.
     """
 
-    # check type
-    key_list = ["shape_type", "shape_operation", "coord"]
-    datachecker.check_dict("shape", shape_data, key_list=key_list)
-
-    # extract the data
-    shape_type = shape_data["shape_type"]
-    shape_operation = shape_data["shape_operation"]
-    coord = shape_data["coord"]
-
-    # check data
-    datachecker.check_choice("shape_operation", shape_operation, ["add", "sub"])
-    datachecker.check_choice("shape_type", shape_type, ["trace", "pad", "polygon"])
-    datachecker.check_float_pts("coord", coord, size=2, can_be_empty=False)
-
     # check coordinate length
     if shape_type == "pad":
-        datachecker.check_dict("shape", shape_data, key_list=["diameter"])
+        datachecker.check_dict("shape", shape_data, key_list=["coord", "diameter"])
+        datachecker.check_float_pts("coord", shape_data["coord"], size=2, can_be_empty=False)
         datachecker.check_float("diameter", shape_data["diameter"], is_positive=True, can_be_zero=True)
-        datachecker.check_assert("coord", len(coord) >= 1, "pad coordinate should have at least one element")
+        datachecker.check_assert("coord", len(shape_data["coord"]) >= 1, "pad coordinate should have at least one element")
     elif shape_type == "trace":
-        datachecker.check_dict("shape", shape_data, key_list=["width"])
+        datachecker.check_dict("shape", shape_data, key_list=["coord", "width"])
+        datachecker.check_float_pts("coord", shape_data["coord"], size=2, can_be_empty=False)
         datachecker.check_float("width", shape_data["width"], is_positive=True, can_be_zero=True)
-        datachecker.check_assert("coord", len(coord) >= 2, "trace coordinate should have at least two elements")
+        datachecker.check_assert("coord", len(shape_data["coord"]) >= 2, "trace coordinate should have at least two elements")
     elif shape_type == "polygon":
-        datachecker.check_dict("shape", shape_data, key_list=["buffer"])
+        datachecker.check_dict("shape", shape_data, key_list=["coord", "buffer"])
+        datachecker.check_float_pts("coord", shape_data["coord"], size=2, can_be_empty=False)
         datachecker.check_float("buffer", shape_data["buffer"], is_positive=True, can_be_zero=True, can_be_none=True)
-        datachecker.check_assert("coord", len(coord) >= 3, "polygon coordinate should have at least three elements")
+        datachecker.check_assert("coord", len(shape_data["coord"]) >= 3, "polygon coordinate should have at least three elements")
     else:
         raise ValueError("invalid shape type")
 
@@ -58,26 +47,27 @@ def _check_geometry_shape(layer_list, geometry_shape):
         datachecker.check_list("geometry_shape", geometry_shape_tmp, can_be_empty=False)
         for geometry_shape_tmp_tmp in geometry_shape_tmp:
             # check type
-            key_list = ["shape_layer", "shape_operation", "shape_data"]
+            key_list = ["shape_layer", "shape_operation", "shape_type", "shape_data"]
             datachecker.check_dict("geometry_shape", geometry_shape_tmp_tmp, key_list=key_list)
 
             # extract the data
             shape_layer = geometry_shape_tmp_tmp["shape_layer"]
             shape_operation = geometry_shape_tmp_tmp["shape_operation"]
+            shape_type = geometry_shape_tmp_tmp["shape_type"]
             shape_data = geometry_shape_tmp_tmp["shape_data"]
 
             # check data
             datachecker.check_choice("shape_operation", shape_operation, ["add", "sub"])
+            datachecker.check_choice("shape_type", shape_type, ["trace", "pad", "polygon"])
             datachecker.check_list("shape_layer", shape_layer, can_be_empty=False)
-            datachecker.check_list("shape_data", shape_data, can_be_empty=False)
+            datachecker.check_dict("shape_data", shape_data)
 
             # check layer
             for shape_layer_tmp in shape_layer:
                 datachecker.check_choice("shape_layer", shape_layer_tmp, layer_list)
 
             # check data
-            for shape_data_tmp in shape_data:
-                _check_shape_data(shape_data_tmp)
+            _check_shape_data(shape_type, shape_data)
 
 
 def _check_layer_stack(layer_stack):

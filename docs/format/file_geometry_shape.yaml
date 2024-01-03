@@ -35,66 +35,54 @@
         - { "n_layer": 1, "tag_layer": "terminal"}
 
     # definition of the shapes composing the different domains
-    #   - dict with the domain name and the shape definition
+    #   - dict with the domain name and a list of shape to be assembled
     #   - required information, the dict cannot be empty
     #   - domain definition
     #       - shape_layer: list of layer where the shape is located
     #       - shape_operation: composition operation for assembling the shape ("add" or "sub")
-    #       - shape_data: list of shapes to be merged together to form the resulting object
-    #   - shape definition
     #       - shape_type: type of the shape ("pad" or "trace" or "polygon")
-    #       - shape_operation: composition operation for assembling the shape ("add" or "sub")
-    #       - coord: array with the 2D coordinates composing the shape
-    #       - buffer: thickness of the buffer around the polygons
-    #       - diameter: diameter of the pads
-    #       - width: thickness of the traces
+    #       - shape_data: data containing the shape geometry
+    #           - coord: array with the 2D coordinates composing the shape
+    #           - buffer: thickness of the buffer around the polygons
+    #           - diameter: diameter of the pads
+    #           - width: thickness of the traces
     "geometry_shape":
         "dom_cond":
             -
                 "shape_layer": ["cond"]
                 "shape_operation": "add"
+                "shape_type": "trace"
                 "shape_data":
-                    -
-                        "shape_type": "trace"
-                        "shape_operation": "add"
-                        "width": 0.5e-3
-                        "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]]
+                    "width": 0.5e-3
+                    "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]]
         "dom_mag":
             -
                 "shape_layer": ["mag"]
                 "shape_operation": "add"
+                "shape_type": "polygon"
                 "shape_data":
-                    -
-                        "shape_type": "polygon"
-                        "shape_operation": "add"
-                        "buffer": 0.0
-                        "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3], [0.0e-3, 5.0e-3]]
+                    "buffer": 0.0
+                    "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3], [0.0e-3, 5.0e-3]]
             -
                 "shape_layer": ["mag"]
                 "shape_operation": "sub"
+                "shape_type": "polygon"
                 "shape_data":
-                    -
-                        "shape_type": "polygon"
-                        "shape_operation": "add"
-                        "buffer": 0.0
-                        "coord": [[1.0e-3, 1.0e-3], [3.0e-3, 1.0e-3], [3.0e-3, 3.0e-3], [1.0e-3, 3.0e-3]]
+                    "buffer": 0.0
+                    "coord": [[1.0e-3, 1.0e-3], [3.0e-3, 1.0e-3], [3.0e-3, 3.0e-3], [1.0e-3, 3.0e-3]]
         "dom_src":
             -
                 "shape_layer": ["insulation_terminal", "terminal"]
                 "shape_operation": "add"
+                "shape_type": "pad"
                 "shape_data":
-                    -
-                        "shape_type": "pad"
-                        "shape_operation": "add"
-                        "diameter": 0.7e-3
-                        "coord": [[0.0e-3, 0.0e-3]]
+                    "diameter": 0.7e-3
+                    "coord": [[0.0e-3, 0.0e-3]]
         "dom_sink":
             -
                 "shape_layer": ["insulation_terminal", "terminal"]
                 "shape_operation": "add"
+                "shape_type": "pad"
                 "shape_data":
-                    -
-                        "shape_type": "pad"
-                        "shape_operation": "add"
-                        "diameter": 0.7e-3
-                        "coord": [[5.0e-3, 5.0e-3]]
+                    "diameter": 0.7e-3
+                    "coord": [[5.0e-3, 5.0e-3]]
