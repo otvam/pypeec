@@ -48,10 +48,14 @@ def _get_solver(data_sweep):
     return solver
 
 
-def generate_results(data_geom, data_sweep):
+def generate_results(data_voxel, data_solution):
     """
     Get the results.
     """
+
+    # extract the data
+    data_geom = data_voxel["data_geom"]
+    data_sweep = data_solution["data_sweep"]
 
     # check the mesher
     mesher = _get_mesher(data_geom)
