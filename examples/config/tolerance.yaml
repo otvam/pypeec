@@ -90,8 +90,10 @@
     "segregated_options":
         "rel_tol": 1.0e-6              # relative preconditioned tolerance for solver convergence
         "abs_tol": 1.0e-12             # absolute preconditioned tolerance for solver convergence
+        "relax_electric": 1.0          # relaxation parameter for the electric system (1.0 for no relaxation)
+        "relax_magnetic": 1.0          # relaxation parameter for the magnetic system (1.0 for no relaxation)
         "n_min": 2                     # minimum number of iterations
-        "n_max": 5                     # maximum number of iterations
+        "n_max": 10                    # maximum number of iterations
 
     # options for the matrix solver
     #   - options for the iterative dense solver

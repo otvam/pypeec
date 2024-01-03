@@ -271,6 +271,8 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, iter_option
     # extract
     rel_tol = segregated_options["rel_tol"]
     abs_tol = segregated_options["abs_tol"]
+    relax_electric = segregated_options["relax_electric"]
+    relax_magnetic = segregated_options["relax_magnetic"]
     n_min = segregated_options["n_min"]
     n_max = segregated_options["n_max"]
 
@@ -296,9 +298,13 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, iter_option
 
     # solve
     while not converged:
-        # solve the equation systems
-        (status_c, sol_c) = _get_solver_domain(sol_c, sol_m, fct_cpl_c, fct_sys_c, fct_pcd_c, rhs_c, iter_options, op_obj)
-        (status_m, sol_m) = _get_solver_domain(sol_m, sol_c, fct_cpl_m, fct_sys_m, fct_pcd_m, rhs_m, iter_options, op_obj)
+        # solve and relax the electric equation systems
+        (status_c, sol_c_new) = _get_solver_domain(sol_c, sol_m, fct_cpl_c, fct_sys_c, fct_pcd_c, rhs_c, iter_options, op_obj)
+        sol_c = (1-relax_electric)*sol_c+relax_electric*sol_c_new
+
+        # solve and relax the magnetic equation systems
+        (status_m, sol_m_new) = _get_solver_domain(sol_m, sol_c, fct_cpl_m, fct_sys_m, fct_pcd_m, rhs_m, iter_options, op_obj)
+        sol_m = (1-relax_magnetic)*sol_m+relax_magnetic*sol_m_new
 
         # get residuum
         res_c = fct_sys_c(sol_c)+fct_cpl_c(sol_m)-rhs_c

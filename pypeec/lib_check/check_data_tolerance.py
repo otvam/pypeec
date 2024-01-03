@@ -95,10 +95,12 @@ def _check_solver_options(solver_options):
     datachecker.check_choice("coupling", coupling, ["direct", "segregated"])
 
     # check the data
-    key_list = ["rel_tol", "abs_tol", "n_min", "n_max"]
+    key_list = ["rel_tol", "abs_tol", "relax_electric", "relax_magnetic", "n_min", "n_max"]
     datachecker.check_dict("segregated_options", segregated_options, key_list=key_list)
     datachecker.check_float("rel_tol", segregated_options["rel_tol"], is_positive=True, can_be_zero=False)
     datachecker.check_float("abs_tol", segregated_options["abs_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("relax_electric", segregated_options["relax_electric"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("relax_magnetic", segregated_options["relax_magnetic"], is_positive=True, can_be_zero=False)
     datachecker.check_integer("n_min", segregated_options["n_min"], is_positive=True, can_be_zero=False)
     datachecker.check_integer("n_max", segregated_options["n_max"], is_positive=True, can_be_zero=False)
 
