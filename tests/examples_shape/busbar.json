@@ -2,18 +2,18 @@
     "metadata": {
         "folder": "examples_shape",
         "name": "busbar",
-        "timestamp": "2023-09-23 15:27:27.244685"
+        "timestamp": "2024-01-03 17:50:34.989973"
     },
     "mesher": {
         "n_total": 10000,
-        "n_used": 3480
+        "n_used": 3448
     },
     "solver": {
         "sim_default": {
             "freq": 1000000.0,
             "has_converged": true,
-            "P_tot": 124.88374168046906,
-            "W_tot": 1.1735957503150393e-05
+            "P_tot": 124.47882052499435,
+            "W_tot": 1.1688902428965343e-05
         }
     }
 }
