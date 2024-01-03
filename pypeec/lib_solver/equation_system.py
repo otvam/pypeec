@@ -549,7 +549,7 @@ def get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m):
     return fct
 
 
-def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m):
+def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m):
     """
     Get linear operators that produce the matrix-vector multiplication result for the full system.
     These operators are used for the iterative solver.

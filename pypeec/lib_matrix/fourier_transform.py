@@ -60,11 +60,6 @@ def set_options(fft_options):
         from pyfftw.interfaces import cache
         from pyfftw.interfaces import numpy_fft
 
-        # get options
-        fftw_thread = fft_options["fftw_thread"]
-        fftw_timeout = fft_options["fftw_timeout"]
-        fftw_byte_align = fft_options["fftw_byte_align"]
-
         # find the number of threads
         if fftw_thread is None:
             fftw_thread = os.cpu_count()

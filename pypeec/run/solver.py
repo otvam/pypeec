@@ -245,7 +245,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         fct_cpl = equation_system.get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m)
 
         # get the linear operator for the full system (matrix-vector multiplication)
-        fct_sys = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m, K_op_c, K_op_m)
+        fct_sys = equation_system.get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m)
 
         # get the source indices
         sol_idx = equation_system.get_system_sol_idx(A_net_c, A_net_m, A_src)

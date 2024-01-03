@@ -222,7 +222,7 @@ def _get_idx_voxel(n, idx_shape, stack_idx):
     return idx_voxel
 
 
-def _get_shape_assemble(geometry_shape, tag):
+def _get_shape_assemble(geometry_shape, tag, tol):
     """
     Assemble the shapes (for a specified layer).
     """
@@ -260,6 +260,9 @@ def _get_shape_assemble(geometry_shape, tag):
     obj_sub = sha.unary_union(obj_sub)
     obj = sha.difference(obj_add, obj_sub)
 
+    # simplify the shape
+    obj = sha.simplify(obj, tol)
+
     return obj
 
 
@@ -275,7 +278,7 @@ def _get_shape_layer(geometry_shape, stack_tag, tol):
     # get the shapes
     for tag in stack_tag:
         # get the assembled shape
-        obj = _get_shape_assemble(geometry_shape, tag)
+        obj = _get_shape_assemble(geometry_shape, tag, tol)
 
         # check that the shape is valid
         if not obj.is_valid:
