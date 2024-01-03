@@ -42,10 +42,16 @@
     #       - shape_operation: composition operation for assembling the shape ("add" or "sub")
     #       - shape_type: type of the shape ("pad" or "trace" or "polygon")
     #       - shape_data: data containing the shape geometry
-    #           - coord: array with the 2D coordinates composing the shape
-    #           - buffer: thickness of the buffer around the polygons
-    #           - diameter: diameter of the pads
-    #           - width: thickness of the traces
+    #           - "pad"
+    #               - coord: array with the 2D coordinates composing the shape
+    #               - diameter: diameter of the pads
+    #           - "trace"
+    #               - coord: array with the 2D coordinates composing the shape
+    #               - width: thickness of the traces
+    #           - "polygon"
+    #               - coord_shell: array with the 2D coordinates composing the shape
+    #               - coord_holes: list of arrays with the 2D coordinates of the holes
+    #               - buffer: thickness of the buffer around the polygons
     "geometry_shape":
         "dom_cond":
             -
@@ -62,14 +68,18 @@
                 "shape_type": "polygon"
                 "shape_data":
                     "buffer": 0.0
-                    "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3], [0.0e-3, 5.0e-3]]
+                    "coord_shell": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3], [0.0e-3, 5.0e-3]]
+                    "coord_holes":
+                        - [[1.0e-3, 1.0e-3], [2.0e-3, 1.0e-3], [2.0e-3, 2.0e-3], [1.0e-3, 2.0e-3]]
+                        - [[3.0e-3, 3.0e-3], [4.0e-3, 3.0e-3], [4.0e-3, 4.0e-3], [3.0e-3, 4.0e-3]]
             -
                 "shape_layer": ["mag"]
                 "shape_operation": "sub"
                 "shape_type": "polygon"
                 "shape_data":
                     "buffer": 0.0
-                    "coord": [[1.0e-3, 1.0e-3], [3.0e-3, 1.0e-3], [3.0e-3, 3.0e-3], [1.0e-3, 3.0e-3]]
+                    "coord_shell": [[1.0e-3, 1.0e-3], [3.0e-3, 1.0e-3], [3.0e-3, 3.0e-3], [1.0e-3, 3.0e-3]]
+                    "coord_holes": []
         "dom_src":
             -
                 "shape_layer": ["insulation_terminal", "terminal"]

@@ -14,22 +14,41 @@ def _check_shape_data(shape_type, shape_data):
     Check the validity of a single shape definition.
     """
 
-    # check coordinate length
     if shape_type == "pad":
+        # check type and extract
         datachecker.check_dict("shape", shape_data, key_list=["coord", "diameter"])
-        datachecker.check_float_pts("coord", shape_data["coord"], size=2, can_be_empty=False)
-        datachecker.check_float("diameter", shape_data["diameter"], is_positive=True, can_be_zero=True)
-        datachecker.check_assert("coord", len(shape_data["coord"]) >= 1, "pad coordinate should have at least one element")
+        diameter = shape_data["diameter"]
+        coord = shape_data["coord"]
+
+        # check data
+        datachecker.check_float("diameter", diameter, is_positive=True, can_be_zero=True)
+        datachecker.check_float_pts("coord", coord, size=2, can_be_empty=False)
+        datachecker.check_assert("coord", len(coord) >= 1, "pad coordinate should have at least one element")
     elif shape_type == "trace":
+        # check type and extract
         datachecker.check_dict("shape", shape_data, key_list=["coord", "width"])
+        width = shape_data["width"]
+        coord = shape_data["coord"]
+
+        # check data
+        datachecker.check_float("width", width, is_positive=True, can_be_zero=True)
         datachecker.check_float_pts("coord", shape_data["coord"], size=2, can_be_empty=False)
-        datachecker.check_float("width", shape_data["width"], is_positive=True, can_be_zero=True)
-        datachecker.check_assert("coord", len(shape_data["coord"]) >= 2, "trace coordinate should have at least two elements")
+        datachecker.check_assert("coord", len(coord) >= 2, "trace coordinate should have at least two elements")
     elif shape_type == "polygon":
-        datachecker.check_dict("shape", shape_data, key_list=["coord", "buffer"])
-        datachecker.check_float_pts("coord", shape_data["coord"], size=2, can_be_empty=False)
-        datachecker.check_float("buffer", shape_data["buffer"], is_positive=True, can_be_zero=True, can_be_none=True)
-        datachecker.check_assert("coord", len(shape_data["coord"]) >= 3, "polygon coordinate should have at least three elements")
+        # check type and extract
+        datachecker.check_dict("shape", shape_data, key_list=["coord_shell", "coord_holes", "buffer"])
+        buffer = shape_data["buffer"]
+        coord_shell = shape_data["coord_shell"]
+        coord_holes = shape_data["coord_holes"]
+
+        # check data
+        datachecker.check_float("buffer", buffer, is_positive=True, can_be_zero=True, can_be_none=True)
+        datachecker.check_float_pts("coord_shell", coord_shell, size=2, can_be_empty=False)
+        datachecker.check_assert("coord_shell", len(coord_shell) >= 3, "polygon coordinate should have at least three elements")
+        datachecker.check_list("coord_holes", coord_holes, can_be_empty=True)
+        for coord in coord_holes:
+            datachecker.check_float_pts("coord_holes", coord, size=2, can_be_empty=False)
+            datachecker.check_assert("coord_holes", len(coord) >= 3, "polygon coordinate should have at least three elements")
     else:
         raise ValueError("invalid shape type")
 

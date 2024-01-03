@@ -28,28 +28,34 @@
                 "shape_type": "polygon"
                 "shape_data":
                     "buffer": null
-                    "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "coord_shell": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "coord_holes":
+                        - [[0.2e-3, 0.2e-3], [0.4e-3, 0.2e-3], [0.4e-3, 0.4e-3], [0.2e-3, 0.4e-3]]
+                        - [[2.1e-3, 2.1e-3], [2.3e-3, 2.1e-3], [2.3e-3, 2.3e-3], [2.1e-3, 2.3e-3]]
             -
                 "shape_layer": ["front"]
                 "shape_operation": "add"
                 "shape_type": "polygon"
                 "shape_data":
                     "buffer": null
-                    "coord": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "coord_shell": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "coord_holes": []
             -
                 "shape_layer": ["front"]
                 "shape_operation": "sub"
                 "shape_type": "polygon"
                 "shape_data":
                     "buffer": null
-                    "coord": [[0.0e-3, 0.0e-3], [2.0e-3, 0.0e-3], [2.0e-3, 2.0e-3], [0.0e-3, 2.0e-3]]
+                    "coord_shell": [[0.0e-3, 0.0e-3], [2.0e-3, 0.0e-3], [2.0e-3, 2.0e-3], [0.0e-3, 2.0e-3]]
+                    "coord_holes": []
             -
                 "shape_layer": ["front", "back", "insulation"]
                 "shape_operation": "add"
                 "shape_type": "polygon"
                 "shape_data":
                     "buffer": null
-                    "coord": [[2.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 0.2e-3], [2.0e-3, 0.2e-3]]
+                    "coord_shell": [[2.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 0.2e-3], [2.0e-3, 0.2e-3]]
+                    "coord_holes": []
         "src":
             -
                 "shape_layer": ["front"]
@@ -57,7 +63,8 @@
                 "shape_type": "polygon"
                 "shape_data":
                     "buffer": null
-                    "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "coord_shell": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "coord_holes": []
         "sink":
             -
                 "shape_layer": ["back"]
@@ -65,7 +72,8 @@
                 "shape_type": "polygon"
                 "shape_data":
                     "buffer": null
-                    "coord": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "coord_shell": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
+                    "coord_holes": []
 "resampling":
     "use_reduce": false
     "use_resample": false

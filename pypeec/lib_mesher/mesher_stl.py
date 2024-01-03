@@ -38,8 +38,8 @@ def _get_load_stl(scale, offset, filename):
     # load the mesh
     try:
         mesh = pv.read(filename, force_ext=".stl")
-    except ValueError as ex:
-        raise RunError("invalid stl: invalid file type: %s" % filename) from ex
+    except ValueError:
+        raise RunError("invalid stl: invalid file type: %s" % filename)
 
     # check that the file is valid
     if mesh.n_cells == 0:
@@ -61,8 +61,8 @@ def _get_voxelize_stl(grid, mesh):
     # voxelize the mesh
     try:
         selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=True)
-    except RuntimeError as ex:
-        raise RunError("invalid mesh: mesh cannot be voxelized") from ex
+    except RuntimeError:
+        raise RunError("invalid mesh: mesh cannot be voxelized")
 
     # create a boolean mask
     mask = selection["SelectedPoints"].view(bool)

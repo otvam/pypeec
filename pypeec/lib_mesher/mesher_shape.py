@@ -123,7 +123,7 @@ def _get_shape_single(shape_type, shape_data):
         obj = sha.geometry.LineString(shape_data["coord"])
     elif shape_type == "polygon":
         buffer = shape_data["buffer"]
-        obj = sha.geometry.Polygon(shape_data["coord"])
+        obj = sha.geometry.Polygon(shape_data["coord_shell"], holes=shape_data["coord_holes"])
     else:
         raise ValueError("invalid shape type")
 
