@@ -33,6 +33,7 @@ function test_collect {
 ret=0
 
 # run test
+test_run run_test_tutorial
 test_run run_test_voxel
 test_run run_test_shape
 test_run run_test_png

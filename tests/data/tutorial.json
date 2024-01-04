@@ -1,0 +1,24 @@
+{
+    "metadata": {
+        "name": "tutorial",
+        "timestamp": "2024-01-04 17:56:43.221368"
+    },
+    "mesher": {
+        "n_total": 331056,
+        "n_used": 21215
+    },
+    "solver": {
+        "sim_dc": {
+            "freq": 0.0,
+            "has_converged": true,
+            "P_tot": 79.10437646163642,
+            "W_tot": 4.969396404224651e-05
+        },
+        "sim_ac": {
+            "freq": 1000000.0,
+            "has_converged": true,
+            "P_tot": 0.8126707288246873,
+            "W_tot": 4.299175637566978e-07
+        }
+    }
+}

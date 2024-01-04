@@ -1,5 +1,5 @@
 """
-Test the example with the PNG mesher.
+Test the tutorial example.
 """
 
 __author__ = "Thomas Guillod"
@@ -9,13 +9,8 @@ __license__ = "Mozilla Public License Version 2.0"
 from tests import test_workflow
 from pypeec import main
 
-# name of the examples
-name_list = [
-    "examples_png/inductor_spiral",
-    "examples_png/inductor_gap",
-    "examples_png/shield",
-    "examples_png/gerber",
-]
+# name of the tutorial
+name = "tutorial"
 
 # show the logo
 main.run_hide_logo()
@@ -24,5 +19,4 @@ main.run_hide_logo()
 obj = test_workflow.set_init()
 
 # add the tests
-for name in name_list:
-    test_workflow.set_test(obj, name)
+test_workflow.set_test(obj, name)

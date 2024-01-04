@@ -44,7 +44,7 @@ def _delete_temp_file(filename):
         pass
 
 
-def run_workflow(folder, name):
+def run_workflow(name):
     """
     Run the complete workflow:
         - run the mesher
@@ -56,9 +56,9 @@ def run_workflow(folder, name):
     """
 
     # get input file name
-    file_geometry = os.path.join(PATH_EXAMPLES, folder, name, "geometry.yaml")
-    file_point = os.path.join(PATH_EXAMPLES, folder, name, "point.yaml")
-    file_problem = os.path.join(PATH_EXAMPLES, folder, name, "problem.yaml")
+    file_geometry = os.path.join(PATH_EXAMPLES, name, "geometry.yaml")
+    file_point = os.path.join(PATH_EXAMPLES, name, "point.yaml")
+    file_problem = os.path.join(PATH_EXAMPLES, name, "problem.yaml")
 
     # get config file name
     file_plotter = os.path.join(FOLDER_CONFIG, "plotter.yaml")
