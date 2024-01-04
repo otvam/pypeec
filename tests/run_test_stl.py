@@ -6,7 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-from tests import test_workflow
+from tests.code import test_workflow
 from pypeec import main
 
 # name of the examples

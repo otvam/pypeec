@@ -10,9 +10,9 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import unittest
-from tests import test_pypeec
-from tests import test_read_write
-from tests import test_generate
+from tests.code import test_pypeec
+from tests.code import test_read_write
+from tests.code import test_generate
 
 
 class TestWorkflow(unittest.TestCase):
@@ -122,4 +122,4 @@ def set_test(obj, name):
         return obj.run_test(self, name)
 
     # dynamically add the method as an attribute
-    setattr(obj, "test_" + name, get)
+    setattr(obj, "test/" + name, get)

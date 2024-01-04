@@ -20,7 +20,7 @@ function test_run {
 
 function test_collect {
   echo "======================================================================"
-  if [[ ret == 0 ]]
+  if [[ $ret == 0 ]]
   then
     echo "TEST: SUCCESS"
   else

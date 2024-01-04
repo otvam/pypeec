@@ -17,6 +17,9 @@ import json
 # get the path the folder
 PATH_ROOT = os.path.dirname(__file__)
 
+# construct the test folder path
+FOLDER_TESTS = os.path.join(PATH_ROOT, "..", "data")
+
 
 def write_results(name, mesher, solver):
     """
@@ -36,7 +39,7 @@ def write_results(name, mesher, solver):
     data_test = {"metadata": metadata, "mesher": mesher, "solver": solver}
 
     # file containing the test results
-    file_test = os.path.join(PATH_ROOT, "data", name + ".json")
+    file_test = os.path.join(FOLDER_TESTS, name + ".json")
 
     with open(file_test, "w") as fid:
         json.dump(data_test, fid, indent=4)
@@ -48,7 +51,7 @@ def read_results(name):
     """
 
     # file containing the test results
-    file_test = os.path.join(PATH_ROOT, "data", name + ".json")
+    file_test = os.path.join(FOLDER_TESTS, name + ".json")
 
     # load the test results
     with open(file_test, "r") as fid:
@@ -67,7 +70,7 @@ def get_config():
     """
 
     # file containing the test results
-    file_test = os.path.join(PATH_ROOT, "data", "config.json")
+    file_test = os.path.join(FOLDER_TESTS, "config.json")
 
     # load the test results
     with open(file_test, "r") as fid:

@@ -19,8 +19,7 @@ logging.disable(logging.INFO)
 PATH_ROOT = os.path.dirname(__file__)
 
 # construct the config folder path
-FOLDER_CONFIG = os.path.join(PATH_ROOT, "..", "examples", "config")
-PATH_EXAMPLES = os.path.join(PATH_ROOT, "..", "examples")
+FOLDER_EXAMPLES = os.path.join(PATH_ROOT, "..", "..", "examples")
 
 
 def _create_temp_file():
@@ -56,14 +55,14 @@ def run_workflow(name):
     """
 
     # get input file name
-    file_geometry = os.path.join(PATH_EXAMPLES, name, "geometry.yaml")
-    file_point = os.path.join(PATH_EXAMPLES, name, "point.yaml")
-    file_problem = os.path.join(PATH_EXAMPLES, name, "problem.yaml")
+    file_geometry = os.path.join(FOLDER_EXAMPLES, name, "geometry.yaml")
+    file_point = os.path.join(FOLDER_EXAMPLES, name, "point.yaml")
+    file_problem = os.path.join(FOLDER_EXAMPLES, name, "problem.yaml")
 
     # get config file name
-    file_plotter = os.path.join(FOLDER_CONFIG, "plotter.yaml")
-    file_viewer = os.path.join(FOLDER_CONFIG, "viewer.yaml")
-    file_tolerance = os.path.join(FOLDER_CONFIG, "tolerance.yaml")
+    file_plotter = os.path.join(FOLDER_EXAMPLES, "config", "plotter.yaml")
+    file_viewer = os.path.join(FOLDER_EXAMPLES, "config", "viewer.yaml")
+    file_tolerance = os.path.join(FOLDER_EXAMPLES, "config", "tolerance.yaml")
 
     # get the temporary files
     file_voxel = _create_temp_file()
