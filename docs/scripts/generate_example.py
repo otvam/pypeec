@@ -10,24 +10,28 @@ import os.path
 from pypeec import main
 from pypeec import io
 
+# get the path of the root of the code
+PATH_ROOT = os.path.dirname(__file__)
 
-def run_image(folder_name, example_name):
+
+def run_image(folder_example):
     """
     Run the mesher for a specified example.
     Plot the geometry with an empty background.
     """
 
-    # get the filenames
-    file_geometry = os.path.join("examples", folder_name, example_name, "geometry.yaml")
-    file_voxel = os.path.join("examples", folder_name, example_name, "voxel.pck")
-    file_viewer = os.path.join("examples", "config", "viewer.yaml")
+    # example folder
+    folder_base = os.path.join(PATH_ROOT, "..", "..", "examples")
 
-    # run the mesher
-    main.run_mesher_file(file_geometry, file_voxel)
+    # get the geometry file
+    file_geometry = os.path.join(folder_base, folder_example, "geometry.yaml")
+
+    # get the viewer file
+    file_viewer = os.path.join(folder_base, "config", "viewer.yaml")
 
     # load data
     data_point = []
-    data_voxel = io.load_pickle(file_voxel)
+    data_geometry = io.load_config(file_geometry)
     data_viewer = io.load_config(file_viewer)
 
     # tweak the plot options
@@ -40,12 +44,17 @@ def run_image(folder_name, example_name):
     data_viewer["domain"]["data_options"]["plot_view"]["point_plot"] = False
     data_viewer["domain"]["data_plot"]["title"] = None
 
-    # run viewer
-    main.run_viewer_data(
+    # run the mesher
+    (status, ex, data_voxel) = main.run_mesher_data(data_geometry)
+    assert status, "invalid mesher results"
+
+    # run the viewer
+    (status, ex) = main.run_viewer_data(
         data_voxel, data_point, data_viewer,
         plot_mode="qt", tag_plot=["domain"],
     )
+    assert status, "invalid viewer results"
 
 
 if __name__ == "__main__":
-    run_image("examples_shape", "coplanar")
+    run_image("tutorial")

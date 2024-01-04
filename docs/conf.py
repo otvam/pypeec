@@ -14,7 +14,7 @@ import setuptools_scm
 sys.path.insert(0, os.path.abspath('..'))
 
 # get the version number
-version = setuptools_scm.get_version(
+release = setuptools_scm.get_version(
     root='..',
     relative_to=__file__,
     version_scheme="guess-next-dev",
@@ -25,7 +25,6 @@ project = 'PyPEEC'
 html_title = "PyPEEC"
 author = 'Thomas Guillod'
 copyright = 'Thomas Guillod - Dartmouth College'
-release = version
 
 # load extensions
 extensions = [
