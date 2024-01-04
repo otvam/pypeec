@@ -94,13 +94,29 @@ function run_build_test {
   fi
 }
 
-# get the version and commit message
+# get the version and release message
 if [ "$#" -eq 2 ]
 then
-  VER=$1
-  MSG=$2
+  VER=$(echo $1 | tr -d ' ')
+  MSG=$(echo $2 | tr -d ' ')
 else
   echo "error : usage : run_release.sh VER MSG"
+  exit 1
+fi
+
+# check the version number
+rx='^v([0-9]+)\.([0-9]+)\.([0-9]+)$'
+if ! [[ $VER =~ $rx ]]
+then
+  echo "error : invalid version number"
+  exit 1
+fi
+
+# check the release message
+rx='^ *$'
+if [[ $MSG =~ $rx ]]
+then
+  echo "error : invalid message"
   exit 1
 fi
 
