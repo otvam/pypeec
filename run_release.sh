@@ -80,7 +80,7 @@ function run_build_test {
   ./run_tests.sh
   ret=$(( ret || $? ))
 
-  if (( $ret != 0 ))
+  if [[ $ret != 0 ]]
   then
     echo "======================================================================"
     echo "RELEASE FAILURE"
@@ -95,7 +95,7 @@ function run_build_test {
 }
 
 # get the version and release message
-if [ "$#" -eq 2 ]
+if [[ "$#" -eq 2 ]]
 then
   VER=$(echo $1 | tr -d ' ')
   MSG=$(echo $2 | tr -d ' ')
@@ -108,7 +108,7 @@ fi
 rx='^v([0-9]+)\.([0-9]+)\.([0-9]+)$'
 if ! [[ $VER =~ $rx ]]
 then
-  echo "error : invalid version number"
+  echo "error : invalid version number format"
   exit 1
 fi
 
@@ -116,7 +116,28 @@ fi
 rx='^ *$'
 if [[ $MSG =~ $rx ]]
 then
-  echo "error : invalid message"
+  echo "error : invalid message format"
+  exit 1
+fi
+
+# check git branch name
+if [[ $(git rev-parse --abbrev-ref HEAD) != "main" ]]
+then
+  echo "error : release should be done from main"
+  exit 1
+fi
+
+# check git tag existence
+if [[ $(git tag -l $VER) ]]
+then
+  echo "error : version number already exists"
+  exit 1
+fi
+
+# check git repository status
+if ! [[ -z "$(git status --porcelain)" ]]
+then
+  echo "error : invalid git status"
   exit 1
 fi
 
