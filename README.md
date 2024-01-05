@@ -75,7 +75,7 @@ The FFT-accelerated PEEC method with voxels has been first described and impleme
 
 ## Copyright
 
-> (c) 2023 - Thomas Guillod - Dartmouth College
+> (c) 2023-2024 / Thomas Guillod / Dartmouth College
 > 
 >  This Source Code Form is subject to the terms of the Mozilla Public
 >  License, v. 2.0. If a copy of the MPL was not distributed with this
