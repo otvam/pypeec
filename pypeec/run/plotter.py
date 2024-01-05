@@ -30,7 +30,7 @@ from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
 from pypeec.lib_check import check_data_options
 from pypeec import log
-from pypeec.error import CheckError, RunError
+from pypeec.error import RunError
 
 # get a logger
 LOGGER = log.get_logger("PLOTTER")
@@ -159,17 +159,9 @@ def run(
 
     # run the code
     try:
-        # extract the data
-        status = data_solution["status"]
-        is_truncated = data_solution["is_truncated"]
-        data_init = data_solution["data_init"]
-        data_sweep = data_solution["data_sweep"]
-
-        # check data
-        if not status:
-            raise CheckError("invalid input data cannot be used")
-        if is_truncated:
-            raise CheckError("truncated input data cannot be used")
+        # check the solution data
+        LOGGER.info("check the solution data")
+        (data_init, data_sweep) = check_data_options.check_data_solution(data_solution)
 
         # check the input data
         LOGGER.info("check the input data")

@@ -25,26 +25,18 @@ from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
 from pypeec.lib_check import check_data_options
 from pypeec import log
-from pypeec.error import CheckError, RunError
+from pypeec.error import RunError
 
 # get a logger
 LOGGER = log.get_logger("VIEWER")
 
 
-def _get_grid_voxel(data_voxel, data_point):
+def _get_grid_voxel(data_geom, data_point):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
     Add the domain tags to the grid.
     """
-
-    # extract the data
-    is_truncated = data_voxel["is_truncated"]
-    data_geom = data_voxel["data_geom"]
-
-    # check data
-    if is_truncated:
-        raise CheckError("truncated input data cannot be used")
 
     # extract the data
     n = data_geom["n"]
@@ -103,6 +95,10 @@ def run(
 
     # run the code
     try:
+        # check the voxel data
+        LOGGER.info("check the voxel data")
+        data_geom = check_data_options.check_data_voxel(data_voxel)
+
         # check the input data
         LOGGER.info("check the input data")
         check_data_visualization.check_data_point(data_point)
@@ -120,7 +116,7 @@ def run(
 
         # handle the data
         LOGGER.info("parse data")
-        (grid, voxel, point, reference) = _get_grid_voxel(data_voxel, data_point)
+        (grid, voxel, point, reference) = _get_grid_voxel(data_geom, data_point)
 
         # make the plots
         with log.BlockTimer(LOGGER, "generate plots"):

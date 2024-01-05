@@ -365,7 +365,11 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
 
     # run the solver
     try:
-        # check the problem and tolerance data
+        # check the voxel data
+        LOGGER.info("check the voxel data")
+        data_geom = check_data_options.check_data_voxel(data_voxel)
+
+        # check the input data
         LOGGER.info("check the input data")
         check_data_problem.check_data_problem(data_problem)
         check_data_tolerance.check_data_tolerance(data_tolerance)
@@ -373,7 +377,7 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
 
         # combine the problem and voxel data
         LOGGER.info("combine the input data")
-        (data_solver, sweep_config, sweep_param) = check_data_solver.get_data_solver(data_voxel, data_problem, data_tolerance)
+        (data_solver, sweep_config, sweep_param) = check_data_solver.get_data_solver(data_geom, data_problem, data_tolerance)
 
         # create the problem
         with log.BlockTimer(LOGGER, "init"):

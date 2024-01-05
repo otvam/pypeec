@@ -212,7 +212,7 @@ def _get_sweep_param(sweep_param, material_idx, source_idx):
     return sweep_param
 
 
-def get_data_solver(data_voxel, data_problem, data_tolerance):
+def get_data_solver(data_geom, data_problem, data_tolerance):
     """
     Combine the voxel data, the problem data, and the tolerance data.
     The voxel data contains the mapping between domain names and indices.
@@ -226,13 +226,6 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     source_def = data_problem["source_def"]
     sweep_config = data_problem["sweep_config"]
     sweep_param = data_problem["sweep_param"]
-
-    # extract field
-    is_truncated = data_voxel["is_truncated"]
-    data_geom = data_voxel["data_geom"]
-
-    # check data
-    datachecker.check_assert("is_truncated", not is_truncated, "truncated input data cannot be used")
 
     # extract geometry
     n = data_geom["n"]

@@ -373,7 +373,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         raise ex
 
     # call the solver
-    (status, ex, data_solution) = run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs)
+    data_solution = run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs)
 
     # save results
     try:
@@ -382,8 +382,6 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
     except FileError as ex:
         log.log_exception(LOGGER, ex)
         raise ex
-
-    return status, ex
 
 
 def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
