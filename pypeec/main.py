@@ -101,10 +101,9 @@ def run_extract(data_name, is_zip, path_extract):
     except OSError as ex:
         log.log_exception(LOGGER, ex)
         LOGGER.error("invalid termination")
-        return False, ex
+        raise ex
     else:
         LOGGER.info("successful termination")
-        return True, None
 
 
 def run_mesher_data(data_geometry, **kwargs):
@@ -124,12 +123,6 @@ def run_mesher_data(data_geometry, **kwargs):
 
     Returns
     -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     data_voxel : data
         The dict describes the voxel structure.
     """
@@ -144,9 +137,9 @@ def run_mesher_data(data_geometry, **kwargs):
 
     # run the tool
     LOGGER.info("run the mesher")
-    (status, ex, data_voxel) = mesher.run(data_geometry, **kwargs)
+    data_voxel = mesher.run(data_geometry, **kwargs)
 
-    return status, ex, data_voxel
+    return data_voxel
 
 
 def run_mesher_file(file_geometry, file_voxel, **kwargs):
@@ -167,38 +160,30 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
         If false, the complete results are returned (default).
         If true, the results are truncated to save space.
         This argument is optional.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # display logo
     if DISPLAY_LOGO:
         run_display_logo()
 
-    # run the tool
+    # load data
     try:
-        # load data
         LOGGER.info("load the input data")
         data_geometry = io.load_config(file_geometry)
+    except FileError as ex:
+        log.log_exception(LOGGER, ex)
+        raise ex
 
-        # call the mesher
-        (status, ex, data_voxel) = run_mesher_data(data_geometry, **kwargs)
+    # call the mesher
+    data_voxel = run_mesher_data(data_geometry, **kwargs)
 
-        # save results
+    # save results
+    try:
         LOGGER.info("save the results")
         io.write_pickle(file_voxel, data_voxel)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
-        return False, ex
-
-    return status, ex
+        raise ex
 
 
 def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
@@ -233,15 +218,6 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
     name : string
         Prepended at the beginning of the screenshot filenames.
         This argument is optional.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # display logo
@@ -254,9 +230,7 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
 
     # run the tool
     LOGGER.info("run the viewer")
-    (status, ex) = viewer.run(data_voxel, data_point, data_viewer, **kwargs)
-
-    return status, ex
+    viewer.run(data_voxel, data_point, data_viewer, **kwargs)
 
 
 def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
@@ -294,36 +268,24 @@ def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
     name : string
         Prepended at the beginning of the screenshot filenames.
         This argument is optional.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # display logo
     if DISPLAY_LOGO:
         run_display_logo()
 
-    # run the tool
+    # load data
     try:
-        # load data
         LOGGER.info("load the input data")
         data_voxel = io.load_pickle(file_voxel)
         data_point = io.load_config(file_point)
         data_viewer = io.load_config(file_viewer)
-
-        # call the viewer
-        (status, ex) = run_viewer_data(data_voxel, data_point, data_viewer, **kwargs)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
-        return False, ex
+        raise ex
 
-    return status, ex
+    # call the viewer
+    run_viewer_data(data_voxel, data_point, data_viewer, **kwargs)
 
 
 def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
@@ -349,12 +311,6 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
 
     Returns
     -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     data_solution : data
         The dict describes the problem solution.
     """
@@ -369,9 +325,9 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
 
     # run the tool
     LOGGER.info("run the solver")
-    (status, ex, data_solution) = solver.run(data_voxel, data_problem, data_tolerance, **kwargs)
+    data_solution = solver.run(data_voxel, data_problem, data_tolerance, **kwargs)
 
-    return status, ex, data_solution
+    return data_solution
 
 
 def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **kwargs):
@@ -400,38 +356,32 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         If false, the complete results are returned (default).
         If true, the results are truncated to save space.
         This argument is optional.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # display logo
     if DISPLAY_LOGO:
         run_display_logo()
 
-    # run the tool
+    # load data
     try:
-        # load data
         LOGGER.info("load the input data")
         data_voxel = io.load_pickle(file_voxel)
         data_problem = io.load_config(file_problem)
         data_tolerance = io.load_config(file_tolerance)
+    except FileError as ex:
+        log.log_exception(LOGGER, ex)
+        raise ex
 
-        # call the solver
-        (status, ex, data_solution) = run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs)
+    # call the solver
+    (status, ex, data_solution) = run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs)
 
-        # save results
+    # save results
+    try:
         LOGGER.info("save the results")
         io.write_pickle(file_solution, data_solution)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
-        return False, ex
+        raise ex
 
     return status, ex
 
@@ -472,15 +422,6 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
     name : string
         Prepended at the beginning of the screenshot filenames.
         This argument is optional.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # display logo
@@ -493,9 +434,7 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
 
     # run the tool
     LOGGER.info("run the plotter")
-    (status, ex) = plotter.run(data_solution, data_point, data_plotter, **kwargs)
-
-    return status, ex
+    plotter.run(data_solution, data_point, data_plotter, **kwargs)
 
 
 def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
@@ -537,33 +476,22 @@ def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
     name : string
         Prepended at the beginning of the screenshot filenames.
         This argument is optional.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # display logo
     if DISPLAY_LOGO:
         run_display_logo()
 
-    # run the tool
+    # load data
     try:
         # load data
         LOGGER.info("load the input data")
         data_solution = io.load_pickle(file_solution)
         data_point = io.load_config(file_point)
         data_plotter = io.load_config(file_plotter)
-
-        # call the plotter
-        (status, ex) = run_plotter_data(data_solution, data_point, data_plotter, **kwargs)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
-        return False, ex
+        raise ex
 
-    return status, ex
+    # call the plotter
+    run_plotter_data(data_solution, data_point, data_plotter, **kwargs)

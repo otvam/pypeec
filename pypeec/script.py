@@ -321,50 +321,52 @@ def run_script():
     args = parser.parse_args()
 
     # run the code
-    if args.command in ["mesher", "me"]:
-        (status, ex) = main.run_mesher_file(
-            args.file_geometry,
-            args.file_voxel,
-            is_truncated=args.is_truncated,
-        )
-    elif args.command in ["viewer", "vi"]:
-        (status, ex) = main.run_viewer_file(
-            args.file_voxel,
-            args.file_point,
-            args.file_viewer,
-            tag_plot=args.tag_plot,
-            plot_mode=args.plot_mode,
-            folder=args.folder,
-        )
-    elif args.command in ["solver", "so"]:
-        (status, ex) = main.run_solver_file(
-            args.file_voxel,
-            args.file_problem,
-            args.file_tolerance,
-            args.file_solution,
-            is_truncated=args.is_truncated,
-        )
-    elif args.command in ["plotter", "pl"]:
-        (status, ex) = main.run_plotter_file(
-            args.file_solution,
-            args.file_point,
-            args.file_plotter,
-            tag_sweep=args.tag_sweep,
-            tag_plot=args.tag_plot,
-            plot_mode=args.plot_mode,
-            folder=args.folder,
-        )
-    elif args.command == "examples":
-        (status, ex) = main.run_extract("examples.zip", True, args.path_extract)
-    elif args.command == "documentation":
-        (status, ex) = main.run_extract("documentation.zip", True, args.path_extract)
-    elif args.command == "config":
-        (status, ex) = main.run_extract("config.yaml", False, args.path_extract)
+    try:
+        if args.command in ["mesher", "me"]:
+            main.run_mesher_file(
+                args.file_geometry,
+                args.file_voxel,
+                is_truncated=args.is_truncated,
+            )
+        elif args.command in ["viewer", "vi"]:
+            main.run_viewer_file(
+                args.file_voxel,
+                args.file_point,
+                args.file_viewer,
+                tag_plot=args.tag_plot,
+                plot_mode=args.plot_mode,
+                folder=args.folder,
+            )
+        elif args.command in ["solver", "so"]:
+            main.run_solver_file(
+                args.file_voxel,
+                args.file_problem,
+                args.file_tolerance,
+                args.file_solution,
+                is_truncated=args.is_truncated,
+            )
+        elif args.command in ["plotter", "pl"]:
+            main.run_plotter_file(
+                args.file_solution,
+                args.file_point,
+                args.file_plotter,
+                tag_sweep=args.tag_sweep,
+                tag_plot=args.tag_plot,
+                plot_mode=args.plot_mode,
+                folder=args.folder,
+            )
+        elif args.command == "examples":
+            main.run_extract("examples.zip", True, args.path_extract)
+        elif args.command == "documentation":
+            main.run_extract("documentation.zip", True, args.path_extract)
+        elif args.command == "config":
+            main.run_extract("config.yaml", False, args.path_extract)
+        else:
+            raise ValueError("invalid command")
+    except Exception:
+        sys.exit(1)
     else:
-        raise ValueError("invalid command")
-
-    # exit the program
-    sys.exit(int(not status))
+        sys.exit(0)
 
 
 if __name__ == "__main__":

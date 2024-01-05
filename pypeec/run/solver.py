@@ -340,28 +340,18 @@ def _get_data(ex, data_init, data_sweep, timestamp, is_truncated):
 
     # end message
     (duration, fmt) = log.get_duration(timestamp)
-
-    if ex is None:
-        status = True
-        LOGGER.info("duration: %s" % fmt)
-        LOGGER.info("successful termination")
-    else:
-        log.log_exception(LOGGER, ex)
-        LOGGER.error("duration: %s" % fmt)
-        LOGGER.error("invalid termination")
-        status = False
+    LOGGER.info("duration: %s" % fmt)
+    LOGGER.info("successful termination")
 
     # extract the solution
     data_solution = {
-        "ex": ex,
-        "status": status,
         "duration": duration,
         "is_truncated": is_truncated,
         "data_init": data_init,
         "data_sweep": data_sweep,
     }
 
-    return status, ex, data_solution
+    return data_solution
 
 
 def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
@@ -397,9 +387,13 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
 
         # compute the different sweeps
         data_sweep = sweep_solver.get_run_sweep(sweep_config, sweep_param, fct_compute)
-    except (CheckError, RunError) as ex_local:
-        (status, ex, data_solution) = _get_data(ex_local, None, None, timestamp, is_truncated)
+    except Exception as ex:
+        (duration, fmt) = log.get_duration(timestamp)
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("duration: %s" % fmt)
+        LOGGER.error("invalid termination")
+        raise ex
     else:
-        (status, ex, data_solution) = _get_data(None, data_init, data_sweep, timestamp, is_truncated)
+        data_solution = _get_data(None, data_init, data_sweep, timestamp, is_truncated)
 
-    return status, ex, data_solution
+    return data_solution

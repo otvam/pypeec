@@ -45,15 +45,13 @@ def run_image(folder_example):
     data_viewer["domain"]["data_plot"]["title"] = None
 
     # run the mesher
-    (status, ex, data_voxel) = main.run_mesher_data(data_geometry)
-    assert status, "invalid mesher results"
+    data_voxel = main.run_mesher_data(data_geometry)
 
     # run the viewer
-    (status, ex) = main.run_viewer_data(
+    main.run_viewer_data(
         data_voxel, data_point, data_viewer,
         plot_mode="qt", tag_plot=["domain"],
     )
-    assert status, "invalid viewer results"
 
 
 if __name__ == "__main__":

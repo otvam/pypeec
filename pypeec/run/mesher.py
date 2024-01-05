@@ -27,7 +27,7 @@ from pypeec.lib_mesher import voxel_summary
 from pypeec.lib_check import check_data_geometry
 from pypeec.lib_check import check_data_options
 from pypeec import log
-from pypeec.error import CheckError, RunError
+from pypeec.error import CheckError
 
 # get a logger
 LOGGER = log.get_logger("MESHER")
@@ -210,34 +210,24 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
     return data_geom
 
 
-def _get_data(ex, data_geom, timestamp, is_truncated):
+def _get_data(data_geom, timestamp, is_truncated):
     """
     Assemble the returned data.
     """
 
     # end message
     (duration, fmt) = log.get_duration(timestamp)
-
-    if ex is None:
-        status = True
-        LOGGER.info("duration: %s" % fmt)
-        LOGGER.info("successful termination")
-    else:
-        log.log_exception(LOGGER, ex)
-        LOGGER.error("duration: %s" % fmt)
-        LOGGER.error("invalid termination")
-        status = False
+    LOGGER.info("duration: %s" % fmt)
+    LOGGER.info("successful termination")
 
     # extract the solution
     data_voxel = {
-        "ex": ex,
-        "status": status,
         "duration": duration,
         "is_truncated": is_truncated,
         "data_geom": data_geom,
     }
 
-    return status, ex, data_voxel
+    return data_voxel
 
 
 def run(data_geometry, is_truncated=False):
@@ -261,9 +251,13 @@ def run(data_geometry, is_truncated=False):
 
         # resample and assemble
         data_geom = _run_resample_graph(reference, data_internal, data_geometry, is_truncated)
-    except (CheckError, RunError) as ex_local:
-        (status, ex, data_voxel) = _get_data(ex_local, None, timestamp, is_truncated)
+    except Exception as ex:
+        (duration, fmt) = log.get_duration(timestamp)
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("duration: %s" % fmt)
+        LOGGER.error("invalid termination")
+        raise ex
     else:
-        (status, ex, data_voxel) = _get_data(None, data_geom, timestamp, is_truncated)
+        data_voxel = _get_data(data_geom, timestamp, is_truncated)
 
-    return status, ex, data_voxel
+    return data_voxel

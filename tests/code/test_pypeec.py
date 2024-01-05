@@ -71,28 +71,20 @@ def run_workflow(name):
     # run the code
     try:
         # run the mesher
-        (status, ex) = main.run_mesher_file(file_geometry, file_voxel, is_truncated=False)
-        if not status:
-            raise ex
+        main.run_mesher_file(file_geometry, file_voxel, is_truncated=False)
+
+        # run the viewer
+        main.run_viewer_file(file_voxel, file_point, file_viewer, plot_mode="none")
+
+        # run the solver
+        main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_truncated=False)
+
+        # run the plotter
+        main.run_plotter_file(file_solution, file_point, file_plotter, plot_mode="none")
 
         # load the voxel file
         with open(file_voxel, "rb") as fid:
             data_voxel = pickle.load(fid)
-
-        # run the viewer
-        (status, ex) = main.run_viewer_file(file_voxel, file_point, file_viewer, plot_mode="none")
-        if not status:
-            raise ex
-
-        # run the solver
-        (status, ex) = main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_truncated=False)
-        if not status:
-            raise ex
-
-        # run the plotter
-        (status, ex) = main.run_plotter_file(file_solution, file_point, file_plotter, plot_mode="none")
-        if not status:
-            raise ex
 
         # load the solution file
         with open(file_solution, "rb") as fid:

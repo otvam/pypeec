@@ -228,12 +228,10 @@ def get_data_solver(data_voxel, data_problem, data_tolerance):
     sweep_param = data_problem["sweep_param"]
 
     # extract field
-    status = data_voxel["status"]
     is_truncated = data_voxel["is_truncated"]
     data_geom = data_voxel["data_geom"]
 
     # check data
-    datachecker.check_assert("status", status, "invalid input data cannot be used")
     datachecker.check_assert("is_truncated", not is_truncated, "truncated input data cannot be used")
 
     # extract geometry

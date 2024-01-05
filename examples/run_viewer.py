@@ -27,9 +27,13 @@ if __name__ == "__main__":
     tag_plot = ["domain", "connection"]
 
     # run viewer
-    (status, ex) = main.run_viewer_file(
-        file_voxel, file_point, file_viewer,
-        tag_plot=tag_plot,
-        plot_mode="qt",
-    )
-    sys.exit(int(not status))
+    try:
+        main.run_viewer_file(
+            file_voxel, file_point, file_viewer,
+            tag_plot=tag_plot,
+            plot_mode="qt",
+        )
+    except Exception:
+        sys.exit(1)
+    else:
+        sys.exit(0)

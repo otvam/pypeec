@@ -39,13 +39,10 @@ def _get_grid_voxel(data_voxel, data_point):
     """
 
     # extract the data
-    status = data_voxel["status"]
     is_truncated = data_voxel["is_truncated"]
     data_geom = data_voxel["data_geom"]
 
     # check data
-    if not status:
-        raise CheckError("invalid input data cannot be used")
     if is_truncated:
         raise CheckError("truncated input data cannot be used")
 
@@ -136,8 +133,6 @@ def run(
 
         # enter the event loop (should be at the end, blocking call)
         gui_obj.show()
-    except (CheckError, RunError) as ex:
+    except Exception as ex:
         log.log_exception(LOGGER, ex)
-        return False, ex
-
-    return True, None
+        raise ex
