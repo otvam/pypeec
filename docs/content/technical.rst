@@ -58,6 +58,7 @@ The following **Python version** are passing the **automated tests**:
 * CPython 3.9
 * CPython 3.10
 * CPython 3.11
+* CPython 3.12
 
 If you deploy PyPEEC on computing nodes, the GUI libraries (Matplotlib, PyVistaQt, PyQt5) are not required.
 Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
