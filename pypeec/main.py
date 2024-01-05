@@ -76,15 +76,6 @@ def run_extract(data_name, is_zip, path_extract):
         Indicate if the data is a zip archive.
     path_extract : string
         Path where the data will be extracted.
-
-    Returns
-    -------
-    status : boolean
-        True if the call is successful.
-        False if problems are encountered.
-    ex : exception
-        The encountered exception (if any).
-        None if the termination is successful.
     """
 
     # display logo
