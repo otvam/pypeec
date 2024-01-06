@@ -1,8 +1,9 @@
 #!/bin/bash
 # Script for creating a release:
 #   - create a tag
-#   - create a release
 #   - build the documentation and the package
+#   - run the tests and check the results
+#   - create a release
 #   - upload the documentation
 #   - upload the package
 #
@@ -12,13 +13,85 @@
 set -o nounset
 set -o pipefail
 
-function create_tag {
+function check_release {
   echo "======================================================================"
-  echo "CREATE TAG"
+  echo "CHECK RELEASE"
   echo "======================================================================"
 
+  # init status
+  ret=0
+
+  # check the version number
+  rx='^v([0-9]+)\.([0-9]+)\.([0-9]+)$'
+  if ! [[ $VER =~ $rx ]]
+  then
+    echo "error: invalid version number format"
+    ret=1
+  fi
+
+  # check the release message
+  rx='^ *$'
+  if [[ $MSG =~ $rx ]]
+  then
+    echo "error: invalid release message format"
+    ret=1
+  fi
+
+  # check git branch name
+  if [[ $(git rev-parse --abbrev-ref HEAD) != "main" ]]
+  then
+    echo "error: release should be done from main"
+    ret=1
+  fi
+
+  # check git tag existence
+  if [[ $(git tag -l $VER) ]]
+  then
+    echo "error: version number already exists"
+    ret=1
+  fi
+
+  # check git repository status
+  if ! [[ -z "$(git status --porcelain)" ]]
+  then
+    echo "error: git status is not clean"
+    ret=1
+  fi
+
+  # check status
+  if [[ $ret != 0 ]]
+  then
+    exit $ret
+  fi
+}
+
+function run_build_test {
   # create a tag
   git tag -a $VER -m "$MSG"
+
+  # init status
+  ret=0
+
+  # check build
+  ./run_build.sh
+  ret=$(( ret || $? ))
+
+  # check tests
+  ./run_tests.sh
+  ret=$(( ret || $? ))
+
+  if [[ $ret != 0 ]]
+  then
+    echo "======================================================================"
+    echo "RELEASE FAILURE"
+    echo "======================================================================"
+
+    # clean tags
+    git tag -d $VER
+
+    # force quit
+    exit $ret
+  fi
 }
 
 function create_release {
@@ -68,81 +141,20 @@ function upload_package {
   twine upload dist/*
 }
 
-function run_build_test {
-  # init status
-  ret=0
-
-  # check build
-  ./run_build.sh
-  ret=$(( ret || $? ))
-
-  # check tests
-  ./run_tests.sh
-  ret=$(( ret || $? ))
-
-  if [[ $ret != 0 ]]
-  then
-    echo "======================================================================"
-    echo "RELEASE FAILURE"
-    echo "======================================================================"
-
-    # clean tags
-    git tag -d $VER
-
-    # force quit
-    exit $ret
-  fi
-}
-
 # get the version and release message
 if [[ "$#" -eq 2 ]]
 then
   VER=$(echo $1 | tr -d ' ')
   MSG=$(echo $2 | tr -d ' ')
 else
-  echo "error : usage : run_release.sh VER MSG"
-  exit 1
-fi
-
-# check the version number
-rx='^v([0-9]+)\.([0-9]+)\.([0-9]+)$'
-if ! [[ $VER =~ $rx ]]
-then
-  echo "error : invalid version number format"
-  exit 1
-fi
-
-# check the release message
-rx='^ *$'
-if [[ $MSG =~ $rx ]]
-then
-  echo "error : invalid message format"
-  exit 1
-fi
-
-# check git branch name
-if [[ $(git rev-parse --abbrev-ref HEAD) != "main" ]]
-then
-  echo "error : release should be done from main"
-  exit 1
-fi
-
-# check git tag existence
-if [[ $(git tag -l $VER) ]]
-then
-  echo "error : version number already exists"
-  exit 1
-fi
-
-# check git repository status
-if ! [[ -z "$(git status --porcelain)" ]]
-then
-  echo "error : invalid git status"
+  echo "======================================================================"
+  echo "error: usage : run_release.sh VER MSG"
+  echo "======================================================================"
   exit 1
 fi
 
 # run the code
-create_tag
+check_release
 run_build_test
 create_release
 upload_documentation

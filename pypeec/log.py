@@ -266,9 +266,9 @@ def log_exception(logger, ex):
 
     # log the exception
     if EXCEPTION_TRACE:
-        logger.error("exception error : " + name, exc_info=ex)
+        logger.error("exception : " + name, exc_info=ex)
     else:
-        logger.error("exception error : " + name + "\n" + str(ex))
+        logger.error("exception : " + name + "\n" + str(ex))
 
 
 def get_timer():

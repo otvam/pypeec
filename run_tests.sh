@@ -20,13 +20,14 @@ function test_run {
 
 function test_collect {
   echo "======================================================================"
+  echo "TEST: SUMMARY"
+  echo "======================================================================"
   if [[ $ret == 0 ]]
   then
-    echo "TEST: SUCCESS"
+    echo "SUCCESS"
   else
-    echo "TEST: FAILURE"
+    echo "FAILURE"
   fi
-  echo "======================================================================"
 }
 
 # init status
