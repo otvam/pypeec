@@ -144,8 +144,8 @@ function upload_package {
 # get the version and release message
 if [[ "$#" -eq 2 ]]
 then
-  VER=$(echo $1 | tr -d ' ')
-  MSG=$(echo $2 | tr -d ' ')
+  VER=$(echo $1 | awk '{$1=$1;print}')
+  MSG=$(echo $2 | awk '{$1=$1;print}')
 else
   echo "======================================================================"
   echo "error: usage : run_release.sh VER MSG"
