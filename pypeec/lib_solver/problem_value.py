@@ -123,6 +123,7 @@ def get_source_all(source_val, source_pos, source_idx):
         source_all[tag] = {
             "source_type": source_type,
             "var_type": var_type,
+            "idx": idx,
             "idx_src": idx_src,
             "idx_vc": idx_vc,
             "value": value_all,

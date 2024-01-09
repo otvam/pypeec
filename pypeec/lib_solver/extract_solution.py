@@ -257,6 +257,7 @@ def get_source(freq, source_all, I_src, V_vc):
     # parse the source terminals
     for tag, source_all_tmp in source_all.items():
         # extract the data
+        idx = source_all_tmp["idx"]
         idx_vc = source_all_tmp["idx_vc"]
         idx_src = source_all_tmp["idx_src"]
         source_type = source_all_tmp["source_type"]
@@ -264,16 +265,14 @@ def get_source(freq, source_all, I_src, V_vc):
         value = source_all_tmp["value"]
         element = source_all_tmp["element"]
 
-        # voltage is the average between all the voxels composing the terminal
-        if len(idx_vc) == 0:
+        # get the distributed source
+        if len(idx) == 0:
             V_tmp = NP_TYPES.COMPLEX(0)
+            I_tmp = NP_TYPES.COMPLEX(0)
+            value = NP_TYPES.COMPLEX(0)
+            element = NP_TYPES.COMPLEX(0)
         else:
             V_tmp = NP_TYPES.COMPLEX(V_vc[idx_vc])
-
-        # current is the sum between all the voxels composing the terminal
-        if len(idx_src) == 0:
-            I_tmp = NP_TYPES.COMPLEX(0)
-        else:
             I_tmp = NP_TYPES.COMPLEX(I_src[idx_src])
 
         # get the drop across the source impedance
