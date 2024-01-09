@@ -88,10 +88,11 @@ def get_source_values(source_val, source_idx, source_type_ref):
 
             # compute the source for each voxel
             if var_type == "lumped":
-                value = value/len(idx)
-                element = element/len(idx)
+                value_all = value/len(idx)
+                element_all = element/len(idx)
             elif var_type == "distributed":
-                pass
+                value_all = value
+                element_all = element
             else:
                 raise ValueError("invalid variable type")
         elif source_type == "voltage":
@@ -105,10 +106,11 @@ def get_source_values(source_val, source_idx, source_type_ref):
 
             # compute the source for each voxel
             if var_type == "lumped":
-                value = value*1
-                element = element*len(idx)
+                value_all = value
+                element_all = element*len(idx)
             elif var_type == "distributed":
-                pass
+                value_all = value
+                element_all = element
             else:
                 raise ValueError("invalid variable type")
         else:
@@ -116,8 +118,8 @@ def get_source_values(source_val, source_idx, source_type_ref):
 
         # append the source values and admittances/impedances
         if source_type == source_type_ref:
-            value_src = np.append(value_src, value)
-            element_src = np.append(element_src, element)
+            value_src = np.append(value_src, value_all)
+            element_src = np.append(element_src, element_all)
 
     return value_src, element_src
 
