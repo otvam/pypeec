@@ -10,7 +10,12 @@ import os.path
 import pickle
 import tempfile
 import logging
+import warnings
 from pypeec import main
+
+# crash on warnings (except for deprecation warnings)
+warnings.filterwarnings("error")
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.INFO)
