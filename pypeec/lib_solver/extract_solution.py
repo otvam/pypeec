@@ -234,7 +234,7 @@ def get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm):
     return material
 
 
-def get_source(freq, source_pos, I_src, V_vc):
+def get_source(freq, source_all, I_src, V_vc):
     """
     Parse the terminal voltages and currents for the sources.
     The sources have internal resistances/admittances.
@@ -255,10 +255,14 @@ def get_source(freq, source_pos, I_src, V_vc):
         fact = 0.5
 
     # parse the source terminals
-    for tag, source_pos_tmp in source_pos.items():
+    for tag, source_all_tmp in source_all.items():
         # extract the data
-        idx_vc = source_pos_tmp["idx_vc"]
-        idx_src = source_pos_tmp["idx_src"]
+        idx_vc = source_all_tmp["idx_vc"]
+        idx_src = source_all_tmp["idx_src"]
+        source_type = source_all_tmp["source_type"]
+        var_type = source_all_tmp["var_type"]
+        value = source_all_tmp["value"]
+        element = source_all_tmp["element"]
 
         # voltage is the average between all the voxels composing the terminal
         if len(idx_vc) == 0:
@@ -272,13 +276,27 @@ def get_source(freq, source_pos, I_src, V_vc):
         else:
             I_tmp = NP_TYPES.COMPLEX(I_src[idx_src])
 
+        # get the drop across the source impedance
+        if source_type == "current":
+            drop_tmp = np.sum(V_tmp*element)
+            src_tmp = np.sum(value)
+        elif source_type == "voltage":
+            drop_tmp = np.mean(I_tmp*element)
+            src_tmp = np.mean(value)
+        else:
+            raise ValueError("invalid source type")
+
         # compute the lumped quantities
         S_tmp = np.sum(fact*V_tmp*np.conj(I_tmp))
         V_tmp = np.mean(V_tmp)
         I_tmp = np.sum(I_tmp)
 
         # assign the current and voltage
-        source[tag] = {"V": V_tmp, "I": I_tmp, "S": S_tmp}
+        source[tag] = {
+            "V": V_tmp, "I": I_tmp, "S": S_tmp,
+            "source_type": source_type, "var_type": var_type,
+            "src": src_tmp, "drop": drop_tmp,
+        }
 
         # add the power
         S_tot += S_tmp
@@ -286,6 +304,20 @@ def get_source(freq, source_pos, I_src, V_vc):
         # display
         LOGGER.debug("terminal: %s" % tag)
         with log.BlockIndent():
+            # source type
+            LOGGER.debug("type = %s / %s" % (source_type, var_type))
+
+            # source value
+            if source_type == "current":
+                LOGGER.debug("I_src = %+.2e + %+.2ej V" % (src_tmp.real, src_tmp.imag))
+                LOGGER.debug("I_drop = %+.2e + %+.2ej V" % (drop_tmp.real, drop_tmp.imag))
+            elif source_type == "voltage":
+                LOGGER.debug("V_src = %+.2e + %+.2ej V" % (src_tmp.real, src_tmp.imag))
+                LOGGER.debug("V_drop = %+.2e + %+.2ej V" % (drop_tmp.real, drop_tmp.imag))
+            else:
+                raise ValueError("invalid source type")
+
+            # terminal value
             LOGGER.debug("V = %+.2e + %+.2ej V" % (V_tmp.real, V_tmp.imag))
             LOGGER.debug("I = %+.2e + %+.2ej A" % (I_tmp.real, I_tmp.imag))
             LOGGER.debug("S = %+.2e + %+.2ej VA" % (S_tmp.real, S_tmp.imag))

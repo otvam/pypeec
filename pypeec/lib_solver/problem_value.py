@@ -19,7 +19,7 @@ LOGGER = log.get_logger("PROBLEM")
 NP_TYPES = config.NP_TYPES
 
 
-def get_material_values(material_val, material_idx, material_type_ref):
+def get_material_vector(material_val, material_idx, material_type_ref):
     """
     Get the material parameters for a given material type.
     """
@@ -60,21 +60,24 @@ def get_material_values(material_val, material_idx, material_type_ref):
     return rho_v
 
 
-def get_source_values(source_val, source_idx, source_type_ref):
+def get_source_all(source_val, source_pos, source_idx):
     """
-    Get the source parameters for a given source type.
+    Merge the different source structures.
     """
 
-    # array for the source indices
-    value_src = np.array([], dtype=NP_TYPES.COMPLEX)
-    element_src = np.array([], dtype=NP_TYPES.COMPLEX)
+    # init combined array
+    source_all = {}
 
     # populate the arrays with the current sources
-    for tag, source_idx_tmp in source_idx.items():
+    for tag in source_idx:
         # extract the data
-        source_type = source_idx_tmp["source_type"]
-        var_type = source_idx_tmp["var_type"]
-        idx = source_idx_tmp["idx"]
+        source_type = source_idx[tag]["source_type"]
+        var_type = source_idx[tag]["var_type"]
+        idx = source_idx[tag]["idx"]
+
+        # extract the data
+        idx_src = source_pos[tag]["idx_src"]
+        idx_vc = source_pos[tag]["idx_vc"]
 
         # get the values and admittances/impedances for the source
         if source_type == "current":
@@ -86,7 +89,7 @@ def get_source_values(source_val, source_idx, source_type_ref):
             value = I_re+1j*I_im
             element = Y_re+1j*Y_im
 
-            # compute the source for each voxel
+            # get the distributed parameters
             if var_type == "lumped":
                 value_all = value/len(idx)
                 element_all = element/len(idx)
@@ -104,7 +107,7 @@ def get_source_values(source_val, source_idx, source_type_ref):
             value = V_re+1j*V_im
             element = Z_re+1j*Z_im
 
-            # compute the source for each voxel
+            # get the distributed parameters
             if var_type == "lumped":
                 value_all = value
                 element_all = element*len(idx)
@@ -114,12 +117,41 @@ def get_source_values(source_val, source_idx, source_type_ref):
             else:
                 raise ValueError("invalid variable type")
         else:
-            raise ValueError("invalid material type")
+            raise ValueError("invalid source type")
+
+        # assign merged data
+        source_all[tag] = {
+            "source_type": source_type,
+            "var_type": var_type,
+            "idx_src": idx_src,
+            "idx_vc": idx_vc,
+            "value": value_all,
+            "element": element_all,
+        }
+
+    return source_all
+
+
+def get_source_vector(source_all, source_type_ref):
+    """
+    Get the source parameters for a given source type.
+    """
+
+    # array for the source indices
+    value_src = np.array([], dtype=NP_TYPES.COMPLEX)
+    element_src = np.array([], dtype=NP_TYPES.COMPLEX)
+
+    # populate the arrays with the current sources
+    for tag, source_idx_tmp in source_all.items():
+        # extract the data
+        source_type = source_idx_tmp["source_type"]
+        value = source_idx_tmp["value"]
+        element = source_idx_tmp["element"]
 
         # append the source values and admittances/impedances
         if source_type == source_type_ref:
-            value_src = np.append(value_src, value_all)
-            element_src = np.append(element_src, element_all)
+            value_src = np.append(value_src, value)
+            element_src = np.append(element_src, element)
 
     return value_src, element_src
 

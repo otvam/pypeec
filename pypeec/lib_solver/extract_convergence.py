@@ -28,7 +28,7 @@ def _get_sol_extract(sol, sol_idx):
     return V_vc, I_src
 
 
-def _get_total_power(freq, source_pos, I_src, V_vc):
+def _get_total_power(freq, source_all, I_src, V_vc):
     """
     Compute the total complex power is computed for all the terminals.
     """
@@ -43,10 +43,10 @@ def _get_total_power(freq, source_pos, I_src, V_vc):
     power = 0.0
 
     # parse the source terminals
-    for tag, source_pos_tmp in source_pos.items():
+    for tag, source_all_tmp in source_all.items():
         # extract the data
-        idx_vc = source_pos_tmp["idx_vc"]
-        idx_src = source_pos_tmp["idx_src"]
+        idx_vc = source_all_tmp["idx_vc"]
+        idx_src = source_all_tmp["idx_src"]
 
         # get the current and voltage
         if (len(idx_vc) != 0) and (len(idx_src) != 0):
@@ -62,7 +62,7 @@ def _get_total_power(freq, source_pos, I_src, V_vc):
     return power
 
 
-def _get_conv_eval(sol, freq, source_pos, sol_idx):
+def _get_conv_eval(sol, freq, source_all, sol_idx):
     """
     Extract the convergence metrics (active and reactive power) from a solution vector.
     """
@@ -71,18 +71,18 @@ def _get_conv_eval(sol, freq, source_pos, sol_idx):
     (V_vc, I_src) = _get_sol_extract(sol, sol_idx)
 
     # get the sources
-    power = _get_total_power(freq, source_pos, I_src, V_vc)
+    power = _get_total_power(freq, source_all, I_src, V_vc)
 
     return power
 
 
-def get_fct_conv(freq, source_pos, sol_idx):
+def get_fct_conv(freq, source_all, sol_idx):
     """
     Return a function that extract convergence metrics from the solution vector.
     """
 
     def fct_conv(sol):
-        power = _get_conv_eval(sol, freq, source_pos, sol_idx)
+        power = _get_conv_eval(sol, freq, source_all, sol_idx)
         return power
 
     return fct_conv

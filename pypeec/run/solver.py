@@ -219,12 +219,13 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     # get the material and source values
     with log.BlockTimer(LOGGER, "problem_value"):
         # parse the material parameters
-        rho_vc = problem_value.get_material_values(material_val, material_idx, "electric")
-        rho_vm = problem_value.get_material_values(material_val, material_idx, "magnetic")
+        rho_vc = problem_value.get_material_vector(material_val, material_idx, "electric")
+        rho_vm = problem_value.get_material_vector(material_val, material_idx, "magnetic")
 
         # parse the source parameters
-        (I_src_c, G_src_c) = problem_value.get_source_values(source_val, source_idx, "current")
-        (V_src_v, R_src_v) = problem_value.get_source_values(source_val, source_idx, "voltage")
+        source_all = problem_value.get_source_all(source_val, source_pos, source_idx)
+        (I_src_c, G_src_c) = problem_value.get_source_vector(source_all, "current")
+        (V_src_v, R_src_v) = problem_value.get_source_vector(source_all, "voltage")
 
         # get the resistance vector
         R_c = problem_value.get_resistance_vector(n, d, A_net_c, idx_fc, rho_vc)
@@ -260,7 +261,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         del S_mat_m
 
         # get a function to evaluate the solver convergence
-        fct_conv = extract_convergence.get_fct_conv(freq, source_pos, sol_idx)
+        fct_conv = extract_convergence.get_fct_conv(freq, source_all, sol_idx)
 
         # solve the equation system
         (sol, res, conv, solver_ok, solver_status) = equation_solver.get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_options)
@@ -298,7 +299,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         material = extract_solution.get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm)
 
         # get the terminal voltages and currents for the sources
-        (source, S_tot) = extract_solution.get_source(freq, source_pos, I_src, V_vc)
+        (source, S_tot) = extract_solution.get_source(freq, source_all, I_src, V_vc)
 
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm, S_tot)

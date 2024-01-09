@@ -151,7 +151,7 @@ def get_version():
 
 
 # init config data
-DATA_CONFIG = dict()
+DATA_CONFIG = {}
 FILE_CONFIG = None
 
 # load the default config files
