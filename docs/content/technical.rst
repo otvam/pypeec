@@ -25,6 +25,9 @@ The following **optional packages** can be used for speeding up the solver:
 * FFTW (available through pyFFTW)
 * CuPy (using GPUs through CUDA)
 
+If you deploy PyPEEC on computing nodes, the GUI libraries (Matplotlib, PyVistaQt, PyQt5) are not required.
+Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
+
 Supported Platforms
 -------------------
 
@@ -59,9 +62,6 @@ The following **Python version** are passing the **automated tests**:
 * CPython 3.10
 * CPython 3.11
 * CPython 3.12
-
-If you deploy PyPEEC on computing nodes, the GUI libraries (Matplotlib, PyVistaQt, PyQt5) are not required.
-Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
 
 Configuration File
 ------------------
