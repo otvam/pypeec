@@ -8,7 +8,10 @@
 
 name: Test Python Versions
 
-on: ["workflow_dispatch"]
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
 
 env:
   ALLOW_PLOTTING: "true"

@@ -8,7 +8,12 @@
 
 name: Automated Tests
 
-on: ["workflow_dispatch", "push", "pull_request"]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"
 
 env:
   ALLOW_PLOTTING: "true"
