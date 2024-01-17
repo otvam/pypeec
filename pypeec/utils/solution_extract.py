@@ -57,10 +57,8 @@ def get_extract(data_solution, sweep_list, terminal_list, tol_freq):
     # extract the data
     data_init = data_solution["data_init"]
     data_sweep = data_solution["data_sweep"]
-    status = data_solution["status"]
 
     # check status
-    assert status, "invalid solution"
     assert isinstance(data_init, dict), "invalid solution"
     assert isinstance(data_init, dict), "invalid solution"
 
