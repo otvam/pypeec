@@ -174,12 +174,12 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
     c = data_internal["c"]
     domain_def = data_internal["domain_def"]
 
+    with log.BlockTimer(LOGGER, "voxel_resample"):
+        (n, d, c, s, domain_def) = voxel_resample.get_remesh(n, d, c, domain_def, resampling)
+
     if check_conflict:
         with log.BlockTimer(LOGGER, "voxel_conflict"):
             domain_def = voxel_conflict.get_conflict(domain_def, domain_conflict)
-
-    with log.BlockTimer(LOGGER, "voxel_resample"):
-        (n, d, c, s, domain_def) = voxel_resample.get_remesh(n, d, c, domain_def, resampling)
 
     if check_connection:
         with log.BlockTimer(LOGGER, "voxel_connection"):
