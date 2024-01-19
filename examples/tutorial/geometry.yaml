@@ -106,6 +106,7 @@
     - [3.0e-3, 1.0e-3, 0.0e-3]
     - [3.0e-3, 2.0e-3, 0.0e-3]
     - [3.0e-3, 3.0e-3, 0.0e-3]
+"check_cloud": true
 "check_conflict": true
 "check_connection": true
 "domain_conflict":

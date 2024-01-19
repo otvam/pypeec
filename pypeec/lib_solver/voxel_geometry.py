@@ -18,7 +18,7 @@ NP_TYPES = config.NP_TYPES
 def get_voxel_coordinate(n, d, c):
     """
     Get the coordinate of the different voxels.
-    The first voxel center is at the specified origin coordinate.
+    The center voxel center is at the specified origin coordinate.
 
     The voxel structure has the following size: (nx, ny, nz).
     The array has the following dimension: (nx*ny*nz, 3).

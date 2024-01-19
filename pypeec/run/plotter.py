@@ -72,7 +72,7 @@ def _get_grid_voxel(data_init, data_sweep):
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
     voxel = manage_voxel.get_voxel(grid, idx)
-    point = manage_voxel.get_point(pts_cloud, voxel)
+    point = manage_voxel.get_point(pts_cloud)
 
     # add the problem solution to the grid
     voxel = manage_voxel.set_plotter_voxel_material(voxel, idx, material)

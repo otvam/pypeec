@@ -20,6 +20,7 @@ from pypeec.lib_mesher import mesher_voxel
 from pypeec.lib_mesher import mesher_shape
 from pypeec.lib_mesher import mesher_png
 from pypeec.lib_mesher import mesher_stl
+from pypeec.lib_mesher import voxel_cloud
 from pypeec.lib_mesher import voxel_conflict
 from pypeec.lib_mesher import voxel_resample
 from pypeec.lib_mesher import voxel_connection
@@ -162,6 +163,7 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
 
     # extract the data
     resampling = data_geometry["resampling"]
+    check_cloud = data_geometry["check_cloud"]
     check_conflict = data_geometry["check_conflict"]
     check_connection = data_geometry["check_connection"]
     domain_connection = data_geometry["domain_connection"]
@@ -176,6 +178,10 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
 
     with log.BlockTimer(LOGGER, "voxel_resample"):
         (n, d, c, s, domain_def) = voxel_resample.get_remesh(n, d, c, domain_def, resampling)
+
+    if check_cloud:
+        with log.BlockTimer(LOGGER, "voxel_cloud"):
+            pts_cloud = voxel_cloud.get_cloud(n, d, c, domain_def, pts_cloud)
 
     if check_conflict:
         with log.BlockTimer(LOGGER, "voxel_conflict"):

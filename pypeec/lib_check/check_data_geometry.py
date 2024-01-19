@@ -101,6 +101,7 @@ def check_data_geometry(data_geometry):
         "mesh_type",
         "data_voxelize",
         "resampling",
+        "check_cloud",
         "check_conflict",
         "check_connection",
         "domain_conflict",
@@ -113,6 +114,7 @@ def check_data_geometry(data_geometry):
     mesh_type = data_geometry["mesh_type"]
     data_voxelize = data_geometry["data_voxelize"]
     resampling = data_geometry["resampling"]
+    check_cloud = data_geometry["check_cloud"]
     check_conflict = data_geometry["check_conflict"]
     check_connection = data_geometry["check_connection"]
     domain_conflict = data_geometry["domain_conflict"]
@@ -121,6 +123,7 @@ def check_data_geometry(data_geometry):
 
     # check type
     datachecker.check_choice("mesh_type", mesh_type, ["stl", "png", "shape", "voxel"])
+    datachecker.check_boolean("check_cloud", check_cloud)
     datachecker.check_boolean("check_conflict", check_conflict)
     datachecker.check_boolean("check_connection", check_connection)
 

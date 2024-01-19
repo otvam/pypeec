@@ -25,6 +25,7 @@
     "use_resample": false
     "resampling_factor": [1, 1, 1]
 "pts_cloud": []
+"check_cloud": true
 "check_conflict": true
 "check_connection": true
 "domain_conflict":

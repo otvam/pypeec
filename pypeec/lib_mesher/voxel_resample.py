@@ -266,9 +266,9 @@ def get_remesh(n, d, c, domain_def, resampling):
     resampling_factor = resampling["resampling_factor"]
 
     # display number of voxels
-    LOGGER.debug("original number = %d" % np.prod(n))
     LOGGER.debug("use_reduce = %s" % use_reduce)
     LOGGER.debug("use_resample = %s" % use_resample)
+    LOGGER.debug("original number = %d" % np.prod(n))
 
     # remove unused voxels
     if use_reduce:

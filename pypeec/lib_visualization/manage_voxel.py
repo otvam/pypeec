@@ -65,7 +65,7 @@ def get_voxel(grid, idx_v):
     return voxel
 
 
-def get_point(pts_cloud, voxel):
+def get_point(pts_cloud):
     """
     Construct a PyVista point cloud (polydata) with the defined points.
     The points cannot be located inside the non-empty voxels.
@@ -76,13 +76,6 @@ def get_point(pts_cloud, voxel):
 
     # create the point cloud
     point = pv.PolyData(pts_cloud)
-
-    # check that the points are not inside the grid
-    surface = voxel.extract_surface()
-    selection = point.select_enclosed_points(surface, tolerance=0.0, check_surface=False)
-    mask = selection["SelectedPoints"].view(bool)
-    if np.any(mask):
-        raise RunError("invalid points: points should not be located inside the non-empty voxels.")
 
     return point
 
