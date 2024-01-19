@@ -65,12 +65,10 @@ Viewer: Plot the Geometry
 
     # Run the viewer
     #   - voxel.pck - contains the meshed voxel structure (input)
-    #   - point.yaml - contains the points used for field evaluation (input)
     #   - viewer.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in viewer.yaml)
     pypeec viewer \
         --voxel tutorial/voxel.pck \
-        --point tutorial/point.yaml \
         --viewer config/viewer.yaml \
         --tag_plot domain connection
 
@@ -108,12 +106,10 @@ Plotter: Plot the Solution
 
     # Run the plotter
     #   - solution.pck - contains the problem solution (input)
-    #   - point.yaml - contains the points used for field evaluation (input)
     #   - plotter.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in plotter.yaml)
     pypeec plotter \
         --solution tutorial/solution.pck \
-        --point tutorial/point.yaml \
         --plotter config/plotter.yaml \
         --tag_plot V_c_abs J_c_norm H_norm residuum
 

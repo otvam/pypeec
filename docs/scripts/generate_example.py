@@ -30,7 +30,6 @@ def run_image(folder_example):
     file_viewer = os.path.join(folder_base, "config", "viewer.yaml")
 
     # load data
-    data_point = []
     data_geometry = io.load_config(file_geometry)
     data_viewer = io.load_config(file_viewer)
 
@@ -49,7 +48,7 @@ def run_image(folder_example):
 
     # run the viewer
     main.run_viewer_data(
-        data_voxel, data_point, data_viewer,
+        data_voxel, data_viewer,
         plot_mode="qt", tag_plot=["domain"],
     )
 

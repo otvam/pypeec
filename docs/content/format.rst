@@ -52,15 +52,6 @@ This file contains the definition of the magnetic problem to be solved.
 .. literalinclude:: ../format/file_problem.yaml
    :language: yaml
 
-Point File Format
------------------
-
-The ``file_point`` file format is used by the viewer and plotter.
-This file contains the definition of the points used for magnetic field evaluation.
-
-.. literalinclude:: ../format/file_point.yaml
-   :language: yaml
-
 Other File Formats
 ------------------
 

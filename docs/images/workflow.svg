@@ -26,15 +26,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="1.096075"
-     inkscape:cx="345.32308"
-     inkscape:cy="240.40326"
-     inkscape:window-width="2486"
-     inkscape:window-height="1376"
-     inkscape:window-x="74"
-     inkscape:window-y="27"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="g24116">
+     inkscape:zoom="0.77504207"
+     inkscape:cx="334.82054"
+     inkscape:cy="379.97938"
+     inkscape:window-width="1551"
+     inkscape:window-height="1082"
+     inkscape:window-x="819"
+     inkscape:window-y="206"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
     <inkscape:grid
        type="xygrid"
        id="grid20924"
@@ -354,11 +354,7 @@
        id="path22505-5-0-6" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.601;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#DotS);marker-end:url(#Arrow2Mend)"
-       d="M 52.91667,79.37501 H 89.958339"
-       id="path22507" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:0.601;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#DotS);marker-end:url(#Arrow2Mend)"
-       d="M 52.91667,89.958343 H 89.958339"
+       d="M 52.91667,84.666673 H 89.958339"
        id="path22509" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.601;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend)"
@@ -366,11 +362,7 @@
        id="path22511" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.601;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#DotS);marker-end:url(#Arrow2Mend)"
-       d="m 137.58336,79.375009 h 37.04167"
-       id="path22626" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:0.601;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#DotS);marker-end:url(#Arrow2Mend)"
-       d="m 137.58336,89.958342 h 37.04167"
+       d="m 137.58336,84.666672 h 37.04167"
        id="path22628" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.601;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4.1;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend)"
@@ -524,47 +516,25 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:5.64444px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="52.812523"
-       y="77.055092"
-       id="text24082"><tspan
-         sodipodi:role="line"
-         id="tspan24080"
-         style="font-size:5.64444px;stroke-width:0.264583"
-         x="52.812523"
-         y="77.055092">file_point</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:5.64444px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="137.40715"
-       y="76.972435"
-       id="text24082-6"><tspan
-         sodipodi:role="line"
-         id="tspan24080-1"
-         style="font-size:5.64444px;stroke-width:0.264583"
-         x="137.40715"
-         y="76.972435">file_point</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:5.64444px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="52.843609"
-       y="87.572617"
+       y="82.280945"
        id="text24086"><tspan
          sodipodi:role="line"
          id="tspan24084"
          style="font-size:5.64444px;stroke-width:0.264583"
          x="52.843609"
-         y="87.572617">file_viewer</tspan></text>
+         y="82.280945">file_viewer</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:5.64444px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="137.43668"
-       y="87.582283"
+       y="82.290611"
        id="text24090"><tspan
          sodipodi:role="line"
          id="tspan24088"
          style="font-size:5.64444px;stroke-width:0.264583"
          x="137.43668"
-         y="87.582283">file_plotter</tspan></text>
+         y="82.290611">file_plotter</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 121.70837,42.333344 v 0"
