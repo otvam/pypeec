@@ -24,9 +24,9 @@
 #   - the array has the following size: (n_pts, 3)
 #   - the points should be located outside the active voxels
 "pts_cloud":
-    - [-1.0, +1.0, +1.0],
-    - [+1.0, -1.0, +1.0],
-    - [+1.0, +1.0, -1.0],
+    - [-1.0, +1.0, +1.0]
+    - [+1.0, -1.0, +1.0]
+    - [+1.0, +1.0, -1.0]
 
 # check (or not) the validity of the point cloud
 "check_cloud": true
