@@ -22,8 +22,8 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-from pypeec.lib_visualization import manage_compute
-from pypeec.lib_visualization import manage_voxel
+from pypeec.lib_visualization import data_plotter
+from pypeec.lib_visualization import data_voxel
 from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_matplotlib
 from pypeec.lib_visualization import manage_plotgui
@@ -66,31 +66,31 @@ def _get_grid_voxel(data_init, data_sweep):
     res = data_sweep["res"]
     conv = data_sweep["conv"]
 
-    # get the voxel indices and the material description
-    (idx, material) = manage_compute.get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v)
+    # get voxel indices
+    idx = data_plotter.get_voxel(idx_vc, idx_vm)
 
     # convert the voxel geometry into PyVista grids
-    grid = manage_voxel.get_grid(n, d, c)
-    voxel = manage_voxel.get_voxel(grid, idx)
-    point = manage_voxel.get_point(pts_cloud)
+    grid = data_voxel.get_grid(n, d, c)
+    voxel = data_voxel.get_voxel(grid, idx)
+    point = data_voxel.get_point(pts_cloud)
 
     # add the problem solution to the grid
-    voxel = manage_voxel.set_plotter_voxel_material(voxel, idx, material)
+    voxel = data_plotter.set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v)
 
     # set the electric variables
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, V_vc, "V_c")
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, S_vc, "S_c")
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vc, P_vc, "P_c")
-    voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx, idx_vc, J_vc, "J_c")
+    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, V_vc, "V_c")
+    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, S_vc, "S_c")
+    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, P_vc, "P_c")
+    voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vc, J_vc, "J_c")
 
     # set the magnetic variables
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vm, V_vm, "V_m")
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vm, Q_vm, "Q_m")
-    voxel = manage_voxel.set_plotter_voxel_scalar(voxel, idx, idx_vm, P_vm, "P_m")
-    voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx, idx_vm, B_vm, "B_m")
+    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vm, V_vm, "V_m")
+    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vm, Q_vm, "Q_m")
+    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vm, P_vm, "P_m")
+    voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vm, B_vm, "B_m")
 
     # add the magnetic field
-    point = manage_voxel.set_plotter_magnetic_field(point, H_pts)
+    point = data_plotter.set_magnetic_field(point, H_pts)
 
     return grid, voxel, point, res, conv
 

@@ -92,7 +92,7 @@ def _get_domain_indices(domain_list, domain_def):
     Get indices from a list of domain names.
     """
 
-    idx_all = np.array([], dtype=NP_TYPES.INT)
+    idx_all = np.empty(0, dtype=NP_TYPES.INT)
     for tag in domain_list:
         idx_tmp = np.array(domain_def[tag], dtype=NP_TYPES.INT)
         idx_all = np.append(idx_all, idx_tmp)
@@ -109,8 +109,8 @@ def _get_material_idx(material_def, domain_def):
 
     # init
     material_idx = {}
-    idx_c = np.array([], dtype=NP_TYPES.INT)
-    idx_m = np.array([], dtype=NP_TYPES.INT)
+    idx_c = np.empty(0, dtype=NP_TYPES.INT)
+    idx_m = np.empty(0, dtype=NP_TYPES.INT)
     domain_cm = []
 
     for tag, material_def_tmp in material_def.items():
@@ -147,7 +147,7 @@ def _get_source_idx(source_def, domain_def):
 
     # init
     source_idx = {}
-    idx_s = np.array([], dtype=NP_TYPES.INT)
+    idx_s = np.empty(0, dtype=NP_TYPES.INT)
     domain_s = []
 
     for tag, source_def_tmp in source_def.items():

@@ -75,7 +75,7 @@ def _get_voxelize_stl(grid, mesh):
         # get the indices of the extracted voxels
         idx_voxel = voxel["idx"]
     else:
-        idx_voxel = np.array([], dtype=NP_TYPES.INT)
+        idx_voxel = np.empty(0, dtype=NP_TYPES.INT)
 
     return idx_voxel
 
@@ -182,7 +182,7 @@ def _get_domain_def(grid, domain_stl, mesh_stl):
     # init the domain dict
     domain_def = {}
     for tag in domain_stl:
-        domain_def[tag] = np.array([], NP_TYPES.INT)
+        domain_def[tag] = np.empty(0, NP_TYPES.INT)
 
     # voxelize the meshes
     for mesh_stl_tmp in mesh_stl:

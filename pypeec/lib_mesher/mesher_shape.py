@@ -176,7 +176,7 @@ def _get_idx_voxel(n, idx_shape, stack_idx):
     (nx, ny, nz) = n
 
     # init voxel indices
-    idx_voxel = np.array([], dtype=NP_TYPES.INT)
+    idx_voxel = np.empty(0, dtype=NP_TYPES.INT)
 
     # convert image indices into voxel indices
     for idx in stack_idx:
@@ -345,7 +345,7 @@ def _get_domain_def(n, d, c, geometry_shape, stack_idx, shape_obj):
     # init the domain dict
     domain_def = {}
     for tag in geometry_shape:
-        domain_def[tag] = np.array([], NP_TYPES.INT)
+        domain_def[tag] = np.empty(0, NP_TYPES.INT)
 
     # voxelize the shapes
     for shape_obj_tmp in shape_obj:
@@ -495,7 +495,7 @@ def get_mesh(param, layer_stack, geometry_shape):
     # init domain definition dict
     domain_def = {}
     for tag in geometry_shape:
-        domain_def[tag] = np.array([], NP_TYPES.INT)
+        domain_def[tag] = np.empty(0, NP_TYPES.INT)
 
     # voxelize the shapes and get the indices
     LOGGER.debug("voxelize the shapes")

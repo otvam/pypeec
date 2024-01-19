@@ -1,7 +1,7 @@
 """
-Different functions for post-processing the solution before plotting.
-For the viewer, extract the domain description and the graph components.
-For the plotter, extract the material description.
+Add data to the PyVista objects for the viewer:
+    - domain description
+    - connected component
 """
 
 __author__ = "Thomas Guillod"
@@ -9,6 +9,8 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
+import numpy.linalg as lna
+import pyvista as pv
 from pypeec import config
 from pypeec.error import RunError
 
@@ -43,15 +45,13 @@ def _get_graph_component(idx, connection_def):
     return tag
 
 
-def get_geometry_tag(domain_def, connection_def):
+def _get_geometry_tag(domain_def, connection_def):
     """
-    Get the indices of the non-empty voxels.
     Assign a different integer for each domain.
     Assign a different integer for each connected component.
     """
 
     # init
-    idx = np.empty(0, dtype=NP_TYPES.INT)
     domain = np.empty(0, dtype=NP_TYPES.INT)
     connection = np.empty(0, dtype=NP_TYPES.INT)
 
@@ -65,39 +65,45 @@ def get_geometry_tag(domain_def, connection_def):
         connection_tmp = _get_graph_component(idx_tmp, connection_def)
 
         # append the indices and colors
-        idx = np.append(idx, idx_tmp)
         domain = np.append(domain, domain_tmp)
         connection = np.append(connection, connection_tmp)
 
         # update the domain counter
         counter += 1
 
-    return idx, domain, connection
+    return domain, connection
 
 
-def get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v):
+def set_data(voxel, idx, domain_def, connection_def):
     """
-    Assign a different integer for the material and source types.
+    Add the domain and connected component description to the unstructured grid.
+    Integers are used to encode the different tags.
     """
 
-    # get the indices
-    idx = np.concatenate((idx_vc, idx_vm))
+    # get the data
+    (domain, connection) = _get_geometry_tag(domain_def, connection_def)
 
-    # find position
-    idx_vc_local = np.in1d(idx, idx_vc)
-    idx_vm_local = np.in1d(idx, idx_vm)
-    idx_src_c_local = np.in1d(idx, idx_src_c)
-    idx_src_v_local = np.in1d(idx, idx_src_v)
+    # get sorted indices
+    idx = np.argsort(idx).astype(NP_TYPES.INT)
 
-    # init the material
-    material = np.empty(len(idx), dtype=NP_TYPES.INT)
+    # sort data
+    domain = domain[idx]
+    connection = connection[idx]
 
-    # assign the voltage and current sources
-    material[idx_vc_local] = 1
-    material[idx_vm_local] = 2
-    material[idx_src_c_local] = 3
-    material[idx_src_v_local] = 4
+    # assign the data to the geometry
+    voxel["domain"] = domain
+    voxel["connection"] = connection
 
-    return idx, material
+    return voxel
 
 
+def get_voxel(domain_def):
+    """
+    Get the indices of the non-empty voxels.
+    """
+
+    idx = np.empty(0, dtype=NP_TYPES.INT)
+    for idx_tmp in domain_def.values():
+        idx = np.append(idx, idx_tmp)
+
+    return idx

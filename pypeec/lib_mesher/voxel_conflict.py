@@ -44,7 +44,7 @@ def _get_resolution(domain_def):
     """
 
     # assemble all the indices
-    idx_all = np.array([], dtype=NP_TYPES.INT)
+    idx_all = np.empty(0, dtype=NP_TYPES.INT)
     for idx in domain_def.values():
         idx_all = np.append(idx_all, idx)
 

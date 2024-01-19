@@ -134,7 +134,7 @@ def _get_grid_bounds(idx_n, domain_def):
     """
 
     # init the array
-    idx_lin = np.array([], dtype=NP_TYPES.INT)
+    idx_lin = np.empty(0, dtype=NP_TYPES.INT)
 
     # find the indices
     for tag, idx in domain_def.items():

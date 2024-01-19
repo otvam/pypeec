@@ -25,7 +25,7 @@ def get_material_vector(material_val, material_idx, material_type_ref):
     """
 
     # array for the resistivities
-    rho_v = np.array([], dtype=NP_TYPES.COMPLEX)
+    rho_v = np.empty(0, dtype=NP_TYPES.COMPLEX)
 
     # populate the arrays
     for tag, material_idx_tmp in material_idx.items():
@@ -139,8 +139,8 @@ def get_source_vector(source_all, source_type_ref):
     """
 
     # array for the source indices
-    value_src = np.array([], dtype=NP_TYPES.COMPLEX)
-    element_src = np.array([], dtype=NP_TYPES.COMPLEX)
+    value_src = np.empty(0, dtype=NP_TYPES.COMPLEX)
+    element_src = np.empty(0, dtype=NP_TYPES.COMPLEX)
 
     # populate the arrays with the current sources
     for tag, source_idx_tmp in source_all.items():

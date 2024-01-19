@@ -217,7 +217,7 @@ def get_green_ana(d, idx, int_type):
 
     # check if empty
     if len(idx) == 0:
-        return np.array([], dtype=NP_TYPES.FLOAT)
+        return np.empty(0, dtype=NP_TYPES.FLOAT)
 
     # display
     LOGGER.debug("analytical solution: %s / %d" % (int_type, len(idx)))
@@ -265,7 +265,7 @@ def get_green_num(d, idx, int_type):
 
     # check if empty
     if len(idx) == 0:
-        return np.array([], dtype=NP_TYPES.FLOAT)
+        return np.empty(0, dtype=NP_TYPES.FLOAT)
 
     # display
     LOGGER.debug("numerical approximation: %s / %d" % (int_type, len(idx)))

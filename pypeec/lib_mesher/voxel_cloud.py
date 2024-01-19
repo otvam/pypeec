@@ -70,7 +70,7 @@ def get_cloud(n, d, c, domain_def, pts_cloud_in):
     n = np.array(n, dtype=NP_TYPES.INT)
 
     # assemble all the indices
-    idx_all = np.array([], dtype=NP_TYPES.INT)
+    idx_all = np.empty(0, dtype=NP_TYPES.INT)
     for idx in domain_def.values():
         idx_all = np.append(idx_all, idx)
 

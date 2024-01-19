@@ -24,7 +24,7 @@ def get_material_indices(material_idx, material_type_ref):
     """
 
     # array for the indices
-    idx_v = np.array([], dtype=NP_TYPES.INT)
+    idx_v = np.empty(0, dtype=NP_TYPES.INT)
 
     # populate the arrays
     for tag, material_idx_tmp in material_idx.items():
@@ -73,7 +73,7 @@ def get_source_indices(source_idx, source_type_ref):
     """
 
     # array for the source indices
-    idx_src = np.array([], dtype=NP_TYPES.INT)
+    idx_src = np.empty(0, dtype=NP_TYPES.INT)
 
     # populate the arrays with the current sources
     for tag, source_idx_tmp in source_idx.items():
