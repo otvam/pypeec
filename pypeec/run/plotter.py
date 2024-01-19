@@ -36,7 +36,7 @@ from pypeec.error import RunError
 LOGGER = log.get_logger("PLOTTER")
 
 
-def _get_grid_voxel(data_init, data_sweep, data_point):
+def _get_grid_voxel(data_init, data_sweep):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -47,12 +47,11 @@ def _get_grid_voxel(data_init, data_sweep, data_point):
     n = data_init["n"]
     d = data_init["d"]
     c = data_init["c"]
-    pts_net_c = data_init["pts_net_c"]
-    pts_net_m = data_init["pts_net_m"]
     idx_vc = data_init["idx_vc"]
     idx_vm = data_init["idx_vm"]
     idx_src_c = data_init["idx_src_c"]
     idx_src_v = data_init["idx_src_v"]
+    pts_cloud = data_init["pts_cloud"]
 
     # extract the data
     V_vc = data_sweep["V_vc"]
@@ -63,19 +62,17 @@ def _get_grid_voxel(data_init, data_sweep, data_point):
     Q_vm = data_sweep["Q_vm"]
     P_vc = data_sweep["P_vc"]
     P_vm = data_sweep["P_vm"]
+    H_pts = data_sweep["H_pts"]
     res = data_sweep["res"]
     conv = data_sweep["conv"]
 
     # get the voxel indices and the material description
     (idx, material) = manage_compute.get_material_tag(idx_vc, idx_vm, idx_src_c, idx_src_v)
 
-    # compute the magnetic field
-    H_point = manage_compute.get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, data_point)
-
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
     voxel = manage_voxel.get_voxel(grid, idx)
-    point = manage_voxel.get_point(data_point, voxel)
+    point = manage_voxel.get_point(pts_cloud, voxel)
 
     # add the problem solution to the grid
     voxel = manage_voxel.set_plotter_voxel_material(voxel, idx, material)
@@ -93,7 +90,7 @@ def _get_grid_voxel(data_init, data_sweep, data_point):
     voxel = manage_voxel.set_plotter_voxel_vector(voxel, idx, idx_vm, B_vm, "B_m")
 
     # add the magnetic field
-    point = manage_voxel.set_plotter_magnetic_field(point, H_point)
+    point = manage_voxel.set_plotter_magnetic_field(point, H_pts)
 
     return grid, voxel, point, res, conv
 
@@ -132,14 +129,14 @@ def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
         raise RunError("invalid plot framework")
 
 
-def _get_sweep(tag_sweep, data_sweep, data_init, data_point, data_plotter, gui_obj):
+def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
     """
     Parse the geometry and make the plots for a specified sweep.
     """
 
     # handle the data
     LOGGER.info("parse data")
-    (grid, voxel, point, res, conv) = _get_grid_voxel(data_init, data_sweep, data_point)
+    (grid, voxel, point, res, conv) = _get_grid_voxel(data_init, data_sweep)
 
     # make the plots
     with log.BlockTimer(LOGGER, "generate plots"):
@@ -149,7 +146,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_point, data_plotter, gui_o
 
 
 def run(
-        data_solution, data_point, data_plotter,
+        data_solution, data_plotter,
         tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".", name=None,
 ):
     """
@@ -165,7 +162,6 @@ def run(
 
         # check the input data
         LOGGER.info("check the input data")
-        check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_plotter(data_plotter)
         check_data_options.check_plot_options(plot_mode, folder, name)
         check_data_options.check_tag_list(data_sweep, tag_sweep)
@@ -184,7 +180,7 @@ def run(
         # plot the sweeps
         for tag_sweep, data_sweep_tmp in data_sweep.items():
             with log.BlockTimer(LOGGER, "plot sweep: " + tag_sweep):
-                _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_point, data_plotter, gui_obj)
+                _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_plotter, gui_obj)
 
         # end message
         LOGGER.info("successful termination")

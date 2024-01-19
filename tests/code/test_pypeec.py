@@ -61,7 +61,6 @@ def run_workflow(name):
 
     # get input file name
     file_geometry = os.path.join(FOLDER_EXAMPLES, name, "geometry.yaml")
-    file_point = os.path.join(FOLDER_EXAMPLES, name, "point.yaml")
     file_problem = os.path.join(FOLDER_EXAMPLES, name, "problem.yaml")
 
     # get config file name
@@ -79,13 +78,13 @@ def run_workflow(name):
         main.run_mesher_file(file_geometry, file_voxel, is_truncated=False)
 
         # run the viewer
-        main.run_viewer_file(file_voxel, file_point, file_viewer, plot_mode="none")
+        main.run_viewer_file(file_voxel, file_viewer, plot_mode="none")
 
         # run the solver
         main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_truncated=False)
 
         # run the plotter
-        main.run_plotter_file(file_solution, file_point, file_plotter, plot_mode="none")
+        main.run_plotter_file(file_solution, file_plotter, plot_mode="none")
 
         # load the voxel file
         with open(file_voxel, "rb") as fid:

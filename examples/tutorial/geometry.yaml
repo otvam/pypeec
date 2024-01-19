@@ -96,6 +96,16 @@
     "use_reduce": false
     "use_resample": false
     "resampling_factor": [1, 1, 1]
+"pts_cloud":
+    - [1.0e-3, 1.0e-3, 0.0e-3]
+    - [1.0e-3, 2.0e-3, 0.0e-3]
+    - [1.0e-3, 3.0e-3, 0.0e-3]
+    - [2.0e-3, 1.0e-3, 0.0e-3]
+    - [2.0e-3, 2.0e-3, 0.0e-3]
+    - [2.0e-3, 3.0e-3, 0.0e-3]
+    - [3.0e-3, 1.0e-3, 0.0e-3]
+    - [3.0e-3, 2.0e-3, 0.0e-3]
+    - [3.0e-3, 3.0e-3, 0.0e-3]
 "check_conflict": true
 "check_connection": true
 "domain_conflict":

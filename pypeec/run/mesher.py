@@ -166,6 +166,7 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
     check_connection = data_geometry["check_connection"]
     domain_connection = data_geometry["domain_connection"]
     domain_conflict = data_geometry["domain_conflict"]
+    pts_cloud = data_geometry["pts_cloud"]
 
     # extract the data
     n = data_internal["n"]
@@ -203,6 +204,7 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
         data_add = {
             "domain_def": domain_def,
             "connection_def": connection_def,
+            "pts_cloud": pts_cloud,
             "reference": reference,
         }
         data_geom = {**data_geom, **data_add}

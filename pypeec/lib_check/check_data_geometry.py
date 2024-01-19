@@ -105,6 +105,7 @@ def check_data_geometry(data_geometry):
         "check_connection",
         "domain_conflict",
         "domain_connection",
+        "pts_cloud",
     ]
     datachecker.check_dict("data_geometry", data_geometry, key_list=key_list)
 
@@ -116,6 +117,7 @@ def check_data_geometry(data_geometry):
     check_connection = data_geometry["check_connection"]
     domain_conflict = data_geometry["domain_conflict"]
     domain_connection = data_geometry["domain_connection"]
+    pts_cloud = data_geometry["pts_cloud"]
 
     # check type
     datachecker.check_choice("mesh_type", mesh_type, ["stl", "png", "shape", "voxel"])
@@ -142,3 +144,6 @@ def check_data_geometry(data_geometry):
 
     # check the connection data
     _check_domain_connection(domain_list, domain_connection)
+
+    # check the point cloud
+    datachecker.check_float_pts("pts_cloud", pts_cloud, size=3, can_be_empty=True)

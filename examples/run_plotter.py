@@ -20,7 +20,6 @@ FOLDER_EXAMPLE = examples_config.FOLDER_EXAMPLE
 if __name__ == "__main__":
     # get the filenames
     file_solution = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "solution.pck")
-    file_point = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "point.yaml")
     file_plotter = os.path.join(PATH_ROOT, FOLDER_CONFIG, "plotter.yaml")
 
     # plot tag (from plotter.yaml)
@@ -34,7 +33,7 @@ if __name__ == "__main__":
     # run
     try:
         main.run_plotter_file(
-            file_solution, file_point, file_plotter,
+            file_solution, file_plotter,
             tag_plot=tag_plot,
             plot_mode="qt",
         )

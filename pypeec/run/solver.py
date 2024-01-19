@@ -68,6 +68,7 @@ def _run_solver_init(data_solver, is_truncated):
     has_magnetic = data_solver["has_magnetic"]
     material_idx = data_solver["material_idx"]
     source_idx = data_solver["source_idx"]
+    pts_cloud = data_solver["pts_cloud"]
 
     # load and configure the optional libraries
     _run_solver_options(data_solver)
@@ -150,6 +151,8 @@ def _run_solver_init(data_solver, is_truncated):
         "K_op_m": K_op_m,
         "source_pos": source_pos,
         "material_pos": material_pos,
+        "pts_net_c": pts_net_c,
+        "pts_net_m": pts_net_m,
     }
 
     # assign the results (will be merged in the solver output)
@@ -169,8 +172,7 @@ def _run_solver_init(data_solver, is_truncated):
             "idx_fm": idx_fm,
             "idx_src_c": idx_src_c,
             "idx_src_v": idx_src_v,
-            "pts_net_c": pts_net_c,
-            "pts_net_m": pts_net_m,
+            "pts_cloud": pts_cloud,
         }
         data_init = {**data_init, **data_add}
 
@@ -189,6 +191,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     source_idx = data_solver["source_idx"]
     condition_options = data_solver["condition_options"]
     solver_options = data_solver["solver_options"]
+    pts_cloud = data_solver["pts_cloud"]
 
     # extract the data
     idx_vc = data_internal["idx_vc"]
@@ -207,6 +210,8 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     K_op_m = data_internal["K_op_m"]
     material_pos = data_internal["material_pos"]
     source_pos = data_internal["source_pos"]
+    pts_net_c = data_internal["pts_net_c"]
+    pts_net_m = data_internal["pts_net_m"]
 
     # extract the data
     freq = sweep_param["freq"]
@@ -304,6 +309,9 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm, S_tot)
 
+        # get the cloud point magnetic field
+        H_pts = extract_solution.get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, pts_cloud)
+
     # assign the results (will be merged in the solver output)
     data_sweep = {
         "freq": freq,
@@ -328,13 +336,14 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
             "P_vm": P_vm,
             "S_vc": S_vc,
             "Q_vm": Q_vm,
+            "H_pts": H_pts,
         }
         data_sweep = {**data_sweep, **data_add}
 
     return data_sweep, sol
 
 
-def _get_data(ex, data_init, data_sweep, timestamp, is_truncated):
+def _get_data(data_init, data_sweep, timestamp, is_truncated):
     """
     Assemble the returned data.
     """
@@ -399,6 +408,6 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
         LOGGER.error("invalid termination")
         raise ex
     else:
-        data_solution = _get_data(None, data_init, data_sweep, timestamp, is_truncated)
+        data_solution = _get_data(data_init, data_sweep, timestamp, is_truncated)
 
     return data_solution

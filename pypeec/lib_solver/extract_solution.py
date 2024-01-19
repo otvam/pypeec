@@ -5,6 +5,12 @@ Extract the different fields.
 Extract the losses and energy.
 Extract the integral quantities.
 Extract the source terminal currents and voltages.
+Compute the magnetic field for the point cloud.
+
+Warning
+-------
+    - The magnetic field computation is done with lumped variables.
+    - Therefore, the computation is only accurate far away from the voxel structure.
 """
 
 __author__ = "Thomas Guillod"
@@ -12,6 +18,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
+import numpy.linalg as lna
 from pypeec import log
 from pypeec import config
 
@@ -20,6 +27,74 @@ LOGGER = log.get_logger("SOLUTION")
 
 # get config
 NP_TYPES = config.NP_TYPES
+
+
+def _get_biot_savart(pts, pts_net, J_src, vol):
+    """
+    Compute the magnetic field at a specified point.
+    The field is created by many currents.
+    """
+
+    # get the distance between the points and the voxels
+    vec = pts-pts_net
+
+    # get the norm of the distance
+    nrm = lna.norm(vec, axis=1, keepdims=True)
+
+    # compute the Biot-Savart contributions
+    H_all = (vol/(4*np.pi))*(np.cross(J_src, vec, axis=1)/(nrm**3))
+
+    # sum the contributions
+    H_pts = np.sum(H_all, axis=0)
+
+    return H_pts
+
+
+def _get_magnetic_charge(pts, pts_src, Q_src, vol):
+    """
+    Compute the magnetic field at a specified point.
+    The field is created by many magnetic charge.
+    """
+
+    # vacuum permeability
+    mu = 4*np.pi*1e-7
+
+    # get the distance between the points and the voxels
+    vec = pts_src-pts
+
+    # get the norm of the distance
+    nrm = lna.norm(vec, axis=1, keepdims=True)
+
+    # transform the charge into a vector
+    Q_src = np.tile(Q_src, (3, 1)).transpose()
+
+    # compute the Biot-Savart contributions
+    H_all = (vol/(4*np.pi*mu))*((Q_src*vec)/(nrm**3))
+
+    # sum the contributions
+    H_pts = np.sum(H_all, axis=0)
+
+    return H_pts
+
+
+def get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, pts_cloud):
+    """
+    Compute the magnetic field for the provided points.
+    The Biot-Savart law is used for the electric material contribution.
+    The magnetic charge is used for the magnetic material contribution.
+    """
+
+    # extract the voxel volume
+    vol = np.prod(d)
+
+    # for each provided point, compute the magnetic field
+    H_pts = np.zeros((len(pts_cloud), 3), dtype=NP_TYPES.COMPLEX)
+    for i, pts_tmp in enumerate(pts_cloud):
+        H_c = _get_biot_savart(pts_tmp, pts_net_c, J_vc, vol)
+        H_m = _get_magnetic_charge(pts_tmp, pts_net_m, Q_vm, vol)
+        H_pts[i, :] = H_c+H_m
+
+    return H_pts
 
 
 def get_sol_extract(sol, sol_idx):

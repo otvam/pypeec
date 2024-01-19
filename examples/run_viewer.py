@@ -20,7 +20,6 @@ FOLDER_EXAMPLE = examples_config.FOLDER_EXAMPLE
 if __name__ == "__main__":
     # get the filenames
     file_voxel = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "voxel.pck")
-    file_point = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "point.yaml")
     file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.yaml")
 
     # plot tag (from viewer.yaml)
@@ -29,7 +28,7 @@ if __name__ == "__main__":
     # run viewer
     try:
         main.run_viewer_file(
-            file_voxel, file_point, file_viewer,
+            file_voxel, file_viewer,
             tag_plot=tag_plot,
             plot_mode="qt",
         )

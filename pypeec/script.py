@@ -104,13 +104,6 @@ def _get_arg_viewer(subparsers):
         dest="file_voxel",
     )
     parser.add_argument(
-        "-po", "--point",
-        help="point file (input / JSON or YAML)",
-        required=True,
-        metavar="file",
-        dest="file_point",
-    )
-    parser.add_argument(
         "-vi", "--viewer",
         help="viewer file (input / JSON or YAML)",
         required=True,
@@ -209,13 +202,6 @@ def _get_arg_plotter(subparsers):
         required=True,
         metavar="file",
         dest="file_solution",
-    )
-    parser.add_argument(
-        "-po", "--point",
-        help="point file (input / JSON or YAML)",
-        required=True,
-        metavar="file",
-        dest="file_point",
     )
     parser.add_argument(
         "-pl", "--plotter",
@@ -331,7 +317,6 @@ def run_script():
         elif args.command in ["viewer", "vi"]:
             main.run_viewer_file(
                 args.file_voxel,
-                args.file_point,
                 args.file_viewer,
                 tag_plot=args.tag_plot,
                 plot_mode=args.plot_mode,
@@ -348,7 +333,6 @@ def run_script():
         elif args.command in ["plotter", "pl"]:
             main.run_plotter_file(
                 args.file_solution,
-                args.file_point,
                 args.file_plotter,
                 tag_sweep=args.tag_sweep,
                 tag_plot=args.tag_plot,

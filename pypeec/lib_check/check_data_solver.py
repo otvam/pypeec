@@ -233,6 +233,7 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
     c = data_geom["c"]
     domain_def = data_geom["domain_def"]
     connection_def = data_geom["connection_def"]
+    pts_cloud = data_geom["pts_cloud"]
 
     # get material and source indices
     (domain_cm, idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
@@ -266,6 +267,7 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
         "has_electric": has_electric,
         "has_magnetic": has_magnetic,
         "has_coupling": has_coupling,
+        "pts_cloud": pts_cloud,
     }
 
     # add tolerance data

@@ -65,17 +65,17 @@ def get_voxel(grid, idx_v):
     return voxel
 
 
-def get_point(data_point, voxel):
+def get_point(pts_cloud, voxel):
     """
     Construct a PyVista point cloud (polydata) with the defined points.
     The points cannot be located inside the non-empty voxels.
     """
 
     # cast the array with the coordinates
-    data_point = np.array(data_point, dtype=NP_TYPES.FLOAT)
+    pts_cloud = np.array(pts_cloud, dtype=NP_TYPES.FLOAT)
 
     # create the point cloud
-    point = pv.PolyData(data_point)
+    point = pv.PolyData(pts_cloud)
 
     # check that the points are not inside the grid
     surface = voxel.extract_surface()
@@ -176,15 +176,15 @@ def set_plotter_voxel_vector(voxel, idx, idx_var, var, name):
     return voxel
 
 
-def set_plotter_magnetic_field(point, H_point):
+def set_plotter_magnetic_field(point, H_pts):
     """
     Add the magnetic field to the point cloud.
     The norm (scalar field) and the direction (vector field) are added.
     """
 
     # assign the vector and the norm
-    point["H_vec_re"] = np.real(H_point)
-    point["H_vec_im"] = np.imag(H_point)
-    point["H_norm"] = lna.norm(H_point, axis=1)
+    point["H_vec_re"] = np.real(H_pts)
+    point["H_vec_im"] = np.imag(H_pts)
+    point["H_norm"] = lna.norm(H_pts, axis=1)
 
     return point

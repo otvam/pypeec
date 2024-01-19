@@ -177,7 +177,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
         raise ex
 
 
-def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
+def run_viewer_data(data_voxel, data_viewer, **kwargs):
     """
     Main script for visualizing a 3D voxel structure.
         - Get the voxel data as an argument.
@@ -188,8 +188,6 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
     ----------
     data_voxel : data
         The dict describes the voxel structure.
-    data_point: data
-        The array describes the point cloud used for field evaluation.
     data_viewer: data
         The dict describes the different plots to be created.
     tag_plot : list
@@ -221,10 +219,10 @@ def run_viewer_data(data_voxel, data_point, data_viewer, **kwargs):
 
     # run the tool
     LOGGER.info("run the viewer")
-    viewer.run(data_voxel, data_point, data_viewer, **kwargs)
+    viewer.run(data_voxel, data_viewer, **kwargs)
 
 
-def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
+def run_viewer_file(file_voxel, file_viewer, **kwargs):
     """
     Main script for visualizing a 3D voxel structure.
         - Load the voxel data from a file.
@@ -236,9 +234,6 @@ def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
     file_voxel : filename
         The file content describes the voxel structure.
         This input file is loaded by this function (Pickle format).
-    file_point: filename
-        The file content describes the point cloud used for field evaluation.
-        This input file is loaded by this function (JSON or YAML format).
     file_viewer: filename
         The file content describes the different plots to be created.
         This input file is loaded by this function (JSON or YAML format).
@@ -269,14 +264,13 @@ def run_viewer_file(file_voxel, file_point, file_viewer, **kwargs):
     try:
         LOGGER.info("load the input data")
         data_voxel = io.load_pickle(file_voxel)
-        data_point = io.load_config(file_point)
         data_viewer = io.load_config(file_viewer)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
         raise ex
 
     # call the viewer
-    run_viewer_data(data_voxel, data_point, data_viewer, **kwargs)
+    run_viewer_data(data_voxel, data_viewer, **kwargs)
 
 
 def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
@@ -375,7 +369,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         raise ex
 
 
-def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
+def run_plotter_data(data_solution, data_plotter, **kwargs):
     """
     Main script for plotting the solution of a PEEC problem.
         - Get the solution data as an argument.
@@ -386,8 +380,6 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
     ----------
     data_solution : data
         The dict describes the problem solution.
-    data_point : data
-        The array describes the point cloud used for field evaluation.
     data_plotter : data
         The dict describes the different plots to be created.
     tag_sweep : list
@@ -423,10 +415,10 @@ def run_plotter_data(data_solution, data_point, data_plotter, **kwargs):
 
     # run the tool
     LOGGER.info("run the plotter")
-    plotter.run(data_solution, data_point, data_plotter, **kwargs)
+    plotter.run(data_solution, data_plotter, **kwargs)
 
 
-def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
+def run_plotter_file(file_solution, file_plotter, **kwargs):
     """
     Main script for plotting the solution of a PEEC problem.
         - Load the solution data from a file.
@@ -438,9 +430,6 @@ def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
     file_solution : filename
         The dict describes the problem solution.
         This input file is loaded by this function (Pickle format).
-    file_point : filename
-        The array describes the point cloud used for field evaluation.
-        This input file is loaded by this function (JSON or YAML format).
     file_plotter : filename
         The dict describes the different plots to be created.
         This input file is loaded by this function (JSON or YAML format).
@@ -476,11 +465,10 @@ def run_plotter_file(file_solution, file_point, file_plotter, **kwargs):
         # load data
         LOGGER.info("load the input data")
         data_solution = io.load_pickle(file_solution)
-        data_point = io.load_config(file_point)
         data_plotter = io.load_config(file_plotter)
     except FileError as ex:
         log.log_exception(LOGGER, ex)
         raise ex
 
     # call the plotter
-    run_plotter_data(data_solution, data_point, data_plotter, **kwargs)
+    run_plotter_data(data_solution, data_plotter, **kwargs)

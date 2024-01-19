@@ -351,16 +351,6 @@ def _check_data_item(data_item, handler):
         raise ValueError("invalid plot framework")
 
 
-def check_data_point(data_point):
-    """
-    Check the point structure (defining the point cloud).
-    The point cloud is used for magnetic field evaluation.
-    """
-
-    # check type
-    datachecker.check_float_pts("data_point", data_point, size=3, can_be_empty=True)
-
-
 def check_data_plotter(data_plotter):
     """
     Check the type of the data defining several plots.

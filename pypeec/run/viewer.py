@@ -31,7 +31,7 @@ from pypeec.error import RunError
 LOGGER = log.get_logger("VIEWER")
 
 
-def _get_grid_voxel(data_geom, data_point):
+def _get_grid_voxel(data_geom):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -44,6 +44,7 @@ def _get_grid_voxel(data_geom, data_point):
     c = data_geom["c"]
     domain_def = data_geom["domain_def"]
     connection_def = data_geom["connection_def"]
+    pts_cloud = data_geom["pts_cloud"]
     reference = data_geom["reference"]
 
     # get the indices of the non-empty voxels and the domain and connection description
@@ -52,7 +53,7 @@ def _get_grid_voxel(data_geom, data_point):
     # convert the voxel geometry into PyVista grids
     grid = manage_voxel.get_grid(n, d, c)
     voxel = manage_voxel.get_voxel(grid, idx)
-    point = manage_voxel.get_point(data_point, voxel)
+    point = manage_voxel.get_point(pts_cloud, voxel)
 
     # add the domain tag to the geometry
     voxel = manage_voxel.set_viewer_domain(voxel, idx, domain, connection)
@@ -85,7 +86,7 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
 
 
 def run(
-        data_voxel, data_point, data_viewer,
+        data_voxel, data_viewer,
         tag_plot=None, plot_mode="qt", folder=".", name=None,
 ):
     """
@@ -101,7 +102,6 @@ def run(
 
         # check the input data
         LOGGER.info("check the input data")
-        check_data_visualization.check_data_point(data_point)
         check_data_visualization.check_data_viewer(data_viewer)
         check_data_options.check_plot_options(plot_mode, folder, name)
         check_data_options.check_tag_list(data_viewer, tag_plot)
@@ -116,7 +116,7 @@ def run(
 
         # handle the data
         LOGGER.info("parse data")
-        (grid, voxel, point, reference) = _get_grid_voxel(data_geom, data_point)
+        (grid, voxel, point, reference) = _get_grid_voxel(data_geom)
 
         # make the plots
         with log.BlockTimer(LOGGER, "generate plots"):
