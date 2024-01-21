@@ -54,6 +54,7 @@ def _get_grid_voxel(data_geom):
     grid = data_voxel.get_grid(n, d, c)
     voxel = data_voxel.get_voxel(grid, idx)
     point = data_voxel.get_point(pts_cloud)
+    reference = data_voxel.get_reference(reference, voxel)
 
     # add the domain tag to the geometry
     voxel = data_viewer.set_data(voxel, idx, domain_def, connection_def)

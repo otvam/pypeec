@@ -257,4 +257,10 @@ def get_mesh(param, domain_stl):
     d = d.tolist()
     c = c.tolist()
 
+    # cast reference mesh
+    reference = {
+        "faces": np.array(reference.faces, dtype=NP_TYPES.INT),
+        "points": np.array(reference.points, dtype=NP_TYPES.FLOAT),
+    }
+
     return n, d, c, domain_def, reference

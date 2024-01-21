@@ -473,12 +473,7 @@ def _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme):
 
     # make a copy (for avoid cross coupling)
     voxel_tmp = voxel.copy(deep=True)
-
-    # if the reference is not provided, use the voxel structure
-    if reference is None:
-        reference_tmp = voxel.copy(deep=True)
-    else:
-        reference_tmp = reference.copy(deep=True)
+    reference_tmp = reference.copy(deep=True)
 
     # add the resulting plot to the plotter
     arg = dict(
