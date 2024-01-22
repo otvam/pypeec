@@ -228,6 +228,9 @@ def _get_data(data_geom, timestamp, is_truncated):
     LOGGER.info("duration: %s" % fmt)
     LOGGER.info("successful termination")
 
+    # cast to seconds
+    duration = duration.total_seconds()
+
     # extract the solution
     data_voxel = {
         "duration": duration,

@@ -353,6 +353,9 @@ def _get_data(data_init, data_sweep, timestamp, is_truncated):
     LOGGER.info("duration: %s" % fmt)
     LOGGER.info("successful termination")
 
+    # cast to seconds
+    duration = duration.total_seconds()
+
     # extract the solution
     data_solution = {
         "duration": duration,
