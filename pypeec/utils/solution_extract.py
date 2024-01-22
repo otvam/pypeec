@@ -87,7 +87,6 @@ def get_extract(data_solution, sweep_list, terminal_list, tol_freq):
 
     # assemble frequency
     freq = np.mean(freq_vec)
-    freq = freq.item()
 
     # check frequency
     assert np.ptp(freq_vec) < tol_freq, "invalid solution: invalid frequency"
