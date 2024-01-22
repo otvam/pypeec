@@ -89,7 +89,7 @@ def run_extract(data_name, is_zip, path_extract):
                 shutil.unpack_archive(file_data, path_extract)
             else:
                 shutil.copy(file_data, path_extract)
-    except OSError as ex:
+    except Exception as ex:
         log.log_exception(LOGGER, ex)
         LOGGER.error("invalid termination")
         raise ex
@@ -161,7 +161,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
     try:
         LOGGER.info("load the input data")
         data_geometry = io.load_config(file_geometry)
-    except FileError as ex:
+    except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
 
@@ -172,7 +172,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
     try:
         LOGGER.info("save the results")
         io.write_pickle(file_voxel, data_voxel)
-    except FileError as ex:
+    except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
 
@@ -265,7 +265,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         LOGGER.info("load the input data")
         data_voxel = io.load_pickle(file_voxel)
         data_viewer = io.load_config(file_viewer)
-    except FileError as ex:
+    except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
 
@@ -353,7 +353,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         data_voxel = io.load_pickle(file_voxel)
         data_problem = io.load_config(file_problem)
         data_tolerance = io.load_config(file_tolerance)
-    except FileError as ex:
+    except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
 
@@ -364,7 +364,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
     try:
         LOGGER.info("save the results")
         io.write_pickle(file_solution, data_solution)
-    except FileError as ex:
+    except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
 
@@ -466,7 +466,7 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         LOGGER.info("load the input data")
         data_solution = io.load_pickle(file_solution)
         data_plotter = io.load_config(file_plotter)
-    except FileError as ex:
+    except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
 

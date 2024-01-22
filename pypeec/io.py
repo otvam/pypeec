@@ -171,7 +171,7 @@ def write_config(filename, data):
     try:
         with open(filename, "w") as fid:
             json.dump(data, fid, indent=4)
-    except json.JSONDecodeError as ex:
+    except (json.JSONDecodeError, TypeError, ValueError) as ex:
         raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
     except OSError:
         raise FileError("cannot write the file: %s" % filename)
