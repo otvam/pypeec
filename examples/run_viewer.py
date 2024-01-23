@@ -19,7 +19,7 @@ FOLDER_EXAMPLE = examples_config.FOLDER_EXAMPLE
 
 if __name__ == "__main__":
     # get the filenames
-    file_voxel = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "voxel.pck")
+    file_voxel = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "voxel.gz")
     file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.yaml")
 
     # plot tag (from viewer.yaml)

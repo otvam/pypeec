@@ -50,10 +50,10 @@ Mesher: Meshing of the Geometry
 
     # Run the mesher
     #   - geometry.yaml - contains the geometry description (input)
-    #   - voxel.pck - contains the meshed voxel structure (output)
+    #   - voxel.gz - contains the meshed voxel structure (output)
     pypeec mesher \
         --geometry tutorial/geometry.yaml \
-        --voxel tutorial/voxel.pck
+        --voxel tutorial/voxel.gz
 
 .. literalinclude:: ../tutorial/log_mesher.txt
    :language: text
@@ -64,11 +64,11 @@ Viewer: Plot the Geometry
 .. code-block:: bash
 
     # Run the viewer
-    #   - voxel.pck - contains the meshed voxel structure (input)
+    #   - voxel.gz - contains the meshed voxel structure (input)
     #   - viewer.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in viewer.yaml)
     pypeec viewer \
-        --voxel tutorial/voxel.pck \
+        --voxel tutorial/voxel.gz \
         --viewer config/viewer.yaml \
         --tag_plot domain connection
 
@@ -86,15 +86,15 @@ Solver: Solve the Problem
 .. code-block:: bash
 
     # Run the solver
-    #   - voxel.pck - contains the meshed voxel structure (input)
+    #   - voxel.gz - contains the meshed voxel structure (input)
     #   - problem.yaml - contains the magnetic problem description (input)
     #   - tolerance.yaml - contains the solver numerical tolerances (input)
-    #   - solution.pck - contains the problem solution (output)
+    #   - solution.gz - contains the problem solution (output)
     pypeec solver \
-        --voxel tutorial/voxel.pck \
+        --voxel tutorial/voxel.gz \
         --problem tutorial/problem.yaml \
         --tolerance config/tolerance.yaml \
-        --solution tutorial/solution.pck
+        --solution tutorial/solution.gz
 
 .. literalinclude:: ../tutorial/log_solver.txt
    :language: text
@@ -105,11 +105,11 @@ Plotter: Plot the Solution
 .. code-block:: bash
 
     # Run the plotter
-    #   - solution.pck - contains the problem solution (input)
+    #   - solution.gz - contains the problem solution (input)
     #   - plotter.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in plotter.yaml)
     pypeec plotter \
-        --solution tutorial/solution.pck \
+        --solution tutorial/solution.gz \
         --plotter config/plotter.yaml \
         --tag_plot V_c_abs J_c_norm H_norm residuum
 

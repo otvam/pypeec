@@ -19,7 +19,7 @@ FOLDER_EXAMPLE = examples_config.FOLDER_EXAMPLE
 
 if __name__ == "__main__":
     # get the filenames
-    file_solution = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "solution.pck")
+    file_solution = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "solution.gz")
     file_plotter = os.path.join(PATH_ROOT, FOLDER_CONFIG, "plotter.yaml")
 
     # plot tag (from plotter.yaml)
