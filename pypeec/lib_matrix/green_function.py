@@ -20,13 +20,9 @@ __license__ = "Mozilla Public License Version 2.0"
 import numpy as np
 import numpy.linalg as lna
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("GREEN")
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_safe_inv(x):
@@ -179,15 +175,15 @@ def _get_green_preproc(int_type):
 
     # get the offset vector
     if int_type == "6D":
-        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=NP_TYPES.FLOAT)
-        offset_z = np.array([-1.0, 0.0, +1.0, 0.0], dtype=NP_TYPES.FLOAT)
-        idx_xy = np.arange(1, 5, dtype=NP_TYPES.INT)
-        idx_z = np.arange(1, 5, dtype=NP_TYPES.INT)
+        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float_)
+        offset_z = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float_)
+        idx_xy = np.arange(1, 5, dtype=np.int_)
+        idx_z = np.arange(1, 5, dtype=np.int_)
     elif int_type == "5D":
-        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=NP_TYPES.FLOAT)
-        offset_z = np.array([+0.5, -0.5], dtype=NP_TYPES.FLOAT)
-        idx_xy = np.arange(1, 5, dtype=NP_TYPES.INT)
-        idx_z = np.arange(1, 3, dtype=NP_TYPES.INT)
+        offset_xy = np.array([-1.0, 0.0, +1.0, 0.0], dtype=np.float_)
+        offset_z = np.array([+0.5, -0.5], dtype=np.float_)
+        idx_xy = np.arange(1, 5, dtype=np.int_)
+        idx_z = np.arange(1, 3, dtype=np.int_)
     else:
         raise ValueError("invalid integral type")
 
@@ -217,7 +213,7 @@ def get_green_ana(d, idx, int_type):
 
     # check if empty
     if len(idx) == 0:
-        return np.empty(0, dtype=NP_TYPES.FLOAT)
+        return np.empty(0, dtype=np.float_)
 
     # display
     LOGGER.debug("analytical solution: %s / %d" % (int_type, len(idx)))
@@ -265,7 +261,7 @@ def get_green_num(d, idx, int_type):
 
     # check if empty
     if len(idx) == 0:
-        return np.empty(0, dtype=NP_TYPES.FLOAT)
+        return np.empty(0, dtype=np.float_)
 
     # display
     LOGGER.debug("numerical approximation: %s / %d" % (int_type, len(idx)))

@@ -14,10 +14,6 @@ __license__ = "Mozilla Public License Version 2.0"
 import numpy as np
 import scipy.sparse as sps
 from pypeec.lib_matrix import matrix_multiply
-from pypeec import config
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
@@ -32,7 +28,7 @@ def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
     nv = nx*ny*nz
 
     # get the local indices (face indices of the incidence matrix)
-    idx_local = np.in1d(idx_f, np.arange(offset*nv, (offset+1)*nv, dtype=NP_TYPES.INT))
+    idx_local = np.in1d(idx_f, np.arange(offset*nv, (offset+1)*nv, dtype=np.int_))
 
     # slice matrix (columns)
     A_net = A_net[:, idx_local]
@@ -80,7 +76,7 @@ def _get_operator_zeros(idx_out):
     """
 
     # vector with zeros
-    var_out = np.zeros(len(idx_out), dtype=NP_TYPES.COMPLEX)
+    var_out = np.zeros(len(idx_out), dtype=np.complex_)
 
     # function returning zeros
     def op(_):
@@ -104,7 +100,7 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain, mult_type):
 
     # check if the matrix is required
     if not has_domain:
-        L = np.zeros(len(idx_f), dtype=NP_TYPES.FLOAT)
+        L = np.zeros(len(idx_f), dtype=np.float_)
         L_op = _get_operator_zeros(idx_f)
         return L, L_op
 
@@ -117,12 +113,12 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain, mult_type):
     nv = nx*ny*nz
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=NP_TYPES.INT))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=NP_TYPES.INT))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=NP_TYPES.INT))
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int_))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=np.int_))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int_))
 
     # scaling factor
-    scale = np.zeros(len(idx_f), dtype=NP_TYPES.COMPLEX)
+    scale = np.zeros(len(idx_f), dtype=np.complex_)
     scale[idx_fx] = mu/(dy**2*dz**2)
     scale[idx_fy] = mu/(dx**2*dz**2)
     scale[idx_fz] = mu/(dx**2*dy**2)

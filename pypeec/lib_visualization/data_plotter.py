@@ -10,12 +10,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 import numpy.linalg as lna
-import pyvista as pv
-from pypeec import config
-from pypeec.error import RunError
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v):
@@ -31,7 +25,7 @@ def set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v):
     idx_src_v_local = np.in1d(idx, idx_src_v)
 
     # init the material
-    material = np.empty(len(idx), dtype=NP_TYPES.INT)
+    material = np.empty(len(idx), dtype=np.int_)
 
     # assign the voltage and current sources
     material[idx_vc_local] = 1
@@ -40,7 +34,7 @@ def set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v):
     material[idx_src_v_local] = 4
 
     # get sorted indices
-    idx_sort = np.argsort(idx).astype(NP_TYPES.INT)
+    idx_sort = np.argsort(idx)
 
     # sort data
     material = material[idx_sort]
@@ -57,12 +51,12 @@ def set_voxel_scalar(voxel, idx, idx_var, var, name):
     """
 
     # find the variable indices
-    idx_s = np.argsort(idx).astype(NP_TYPES.INT)
-    idx_p = np.searchsorted(idx, idx_var, sorter=idx_s).astype(NP_TYPES.INT)
+    idx_s = np.argsort(idx)
+    idx_p = np.searchsorted(idx, idx_var, sorter=idx_s)
     idx_var_local = idx_s[idx_p]
 
     # assign scalar variable (nan for the voxels where the variable is not defined)
-    var_all = np.full(len(idx), np.nan+1j*np.nan, dtype=NP_TYPES.COMPLEX)
+    var_all = np.full(len(idx), np.nan+1j*np.nan, dtype=np.complex_)
     var_all[idx_var_local] = var
 
     # sort the variable
@@ -83,12 +77,12 @@ def set_voxel_vector(voxel, idx, idx_var, var, name):
     """
 
     # find the variable indices
-    idx_s = np.argsort(idx).astype(NP_TYPES.INT)
-    idx_p = np.searchsorted(idx, idx_var, sorter=idx_s).astype(NP_TYPES.INT)
+    idx_s = np.argsort(idx)
+    idx_p = np.searchsorted(idx, idx_var, sorter=idx_s)
     idx_var_local = idx_s[idx_p]
 
     # assign vector variable (nan for the voxels where the variable is not defined)
-    var_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=NP_TYPES.COMPLEX)
+    var_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=np.complex_)
     var_all[idx_var_local] = var
 
     # sort the variable

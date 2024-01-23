@@ -48,11 +48,6 @@ PROBLEM_MAX_SIZE:
     VOXEL_TOTAL: null  # maximum size of the voxel structure (null for unlimited)
     VOXEL_USED: null  # maximum number of used voxels (null for unlimited)
 
-# double precision
-#   - if false, use single precision numbers
-#   - if true, use double precision for numbers
-USE_DOUBLE: true
-
 # parallel pool for sweeps
 #   - number of parallel processes for computing the solver sweeps
 #   - if null, the parallel processing is disabled

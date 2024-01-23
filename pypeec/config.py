@@ -80,7 +80,7 @@ def _set_file_config(file_config):
         data_config = io.load_input(file_config)
 
         # check the data integrity and complete the config
-        data_config = check_data_config.check_data_config(data_config)
+        check_data_config.check_data_config(data_config)
 
         # make the dictionary accessible with attributes
         data_config = _parse_config(data_config)

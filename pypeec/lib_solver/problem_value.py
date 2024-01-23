@@ -10,13 +10,9 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("PROBLEM")
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def get_material_vector(material_val, material_idx, material_type_ref):
@@ -25,7 +21,7 @@ def get_material_vector(material_val, material_idx, material_type_ref):
     """
 
     # array for the resistivities
-    rho_v = np.empty(0, dtype=NP_TYPES.COMPLEX)
+    rho_v = np.empty(0, dtype=np.complex_)
 
     # populate the arrays
     for tag, material_idx_tmp in material_idx.items():
@@ -139,8 +135,8 @@ def get_source_vector(source_all, source_type_ref):
     """
 
     # array for the source indices
-    value_src = np.empty(0, dtype=NP_TYPES.COMPLEX)
-    element_src = np.empty(0, dtype=NP_TYPES.COMPLEX)
+    value_src = np.empty(0, dtype=np.complex_)
+    element_src = np.empty(0, dtype=np.complex_)
 
     # populate the arrays with the current sources
     for tag, source_idx_tmp in source_all.items():
@@ -174,12 +170,12 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
     rho = 0.5*rho_v*np.abs(A_net)
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=NP_TYPES.INT))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=NP_TYPES.INT))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=NP_TYPES.INT))
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int_))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=np.int_))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int_))
 
     # resistance vector (different directions)
-    R = np.zeros(len(idx_f), dtype=NP_TYPES.COMPLEX)
+    R = np.zeros(len(idx_f), dtype=np.complex_)
     R[idx_fx] = (dx/(dy*dz))*rho[idx_fx]
     R[idx_fy] = (dy/(dx*dz))*rho[idx_fy]
     R[idx_fz] = (dz/(dx*dy))*rho[idx_fz]

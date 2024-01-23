@@ -19,9 +19,6 @@ from pypeec.error import RunError
 # get a logger
 LOGGER = log.get_logger("STL")
 
-# get config
-NP_TYPES = config.NP_TYPES
-
 # get problem size limits
 VOXEL_TOTAL = config.PROBLEM_MAX_SIZE.VOXEL_TOTAL
 VOXEL_USED = config.PROBLEM_MAX_SIZE.VOXEL_USED
@@ -75,7 +72,7 @@ def _get_voxelize_stl(grid, mesh):
         # get the indices of the extracted voxels
         idx_voxel = voxel["idx"]
     else:
-        idx_voxel = np.empty(0, dtype=NP_TYPES.INT)
+        idx_voxel = np.empty(0, dtype=np.int_)
 
     return idx_voxel
 
@@ -91,8 +88,8 @@ def _get_mesh_stl(domain_stl):
     mesh_all = []
 
     # init the coordinate (minimum and maximum coordinates)
-    xyz_min = np.full(3, +np.inf, dtype=NP_TYPES.FLOAT)
-    xyz_max = np.full(3, -np.inf, dtype=NP_TYPES.FLOAT)
+    xyz_min = np.full(3, +np.inf, dtype=np.float_)
+    xyz_max = np.full(3, -np.inf, dtype=np.float_)
 
     # load the STL files and find the bounding box
     for tag, domain_stl_tmp in domain_stl.items():
@@ -107,8 +104,8 @@ def _get_mesh_stl(domain_stl):
 
             # find the bounds
             (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
-            tmp_min = np.array((x_min, y_min, z_min), dtype=NP_TYPES.FLOAT)
-            tmp_max = np.array((x_max, y_max, z_max), dtype=NP_TYPES.FLOAT)
+            tmp_min = np.array((x_min, y_min, z_min), dtype=np.float_)
+            tmp_max = np.array((x_max, y_max, z_max), dtype=np.float_)
 
             # update the bounds
             xyz_min = np.minimum(xyz_min, tmp_min)
@@ -138,8 +135,8 @@ def _get_voxel_size(d, xyz_max, xyz_min):
     d = (xyz_max-xyz_min)/n
 
     # cast data
-    d = d.astype(NP_TYPES.FLOAT)
-    n = n.astype(NP_TYPES.INT)
+    d = d.astype(np.float_)
+    n = n.astype(np.int_)
 
     # check voxel validity
     if not np.all(d > 0):
@@ -166,7 +163,7 @@ def _get_voxel_grid(n, d, c):
     grid.spacing = d
 
     # add indices for tracking the voxels after voxelization
-    grid["idx"] = np.arange(np.prod(n), dtype=NP_TYPES.INT)
+    grid["idx"] = np.arange(np.prod(n), dtype=np.int_)
 
     # cast is required for voxelization
     grid = grid.cast_to_unstructured_grid()
@@ -182,7 +179,7 @@ def _get_domain_def(grid, domain_stl, mesh_stl):
     # init the domain dict
     domain_def = {}
     for tag in domain_stl:
-        domain_def[tag] = np.empty(0, NP_TYPES.INT)
+        domain_def[tag] = np.empty(0, np.int_)
 
     # voxelize the meshes
     for mesh_stl_tmp in mesh_stl:
@@ -222,11 +219,11 @@ def get_mesh(param, domain_stl):
 
     # if provided, the specified bounds are used, otherwise the STL bounds are used
     if xyz_min is not None:
-        xyz_min = np.array(xyz_min, NP_TYPES.FLOAT)
+        xyz_min = np.array(xyz_min, np.float_)
     else:
         xyz_min = xyz_min_stl
     if xyz_max is not None:
-        xyz_max = np.array(xyz_max, NP_TYPES.FLOAT)
+        xyz_max = np.array(xyz_max, np.float_)
     else:
         xyz_max = xyz_max_stl
 
@@ -259,8 +256,8 @@ def get_mesh(param, domain_stl):
 
     # cast reference mesh
     reference = {
-        "faces": np.array(reference.faces, dtype=NP_TYPES.INT),
-        "points": np.array(reference.points, dtype=NP_TYPES.FLOAT),
+        "faces": np.array(reference.faces, dtype=np.int_),
+        "points": np.array(reference.points, dtype=np.float_),
     }
 
     return n, d, c, domain_def, reference

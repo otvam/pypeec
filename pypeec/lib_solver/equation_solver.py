@@ -12,10 +12,6 @@ import scipy.sparse.linalg as sla
 from pypeec.lib_matrix import matrix_condition
 from pypeec.lib_matrix import matrix_iterative
 from pypeec import log
-from pypeec import config
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 # get a logger
 LOGGER = log.get_logger("EQUATION")
@@ -133,7 +129,7 @@ class _OpCounter:
             y = op(x)
             return y
 
-        op_count = sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX)
+        op_count = sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=np.complex_)
 
         return op_count
 
@@ -147,7 +143,7 @@ class _OpCounter:
             y = op(x)
             return y
 
-        op_count = sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=NP_TYPES.COMPLEX)
+        op_count = sla.LinearOperator((n_dof, n_dof), matvec=fct, dtype=np.complex_)
 
         return op_count
 
@@ -353,7 +349,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
 
     # get initial solution
     if sol_init is None:
-        sol_init = np.zeros(n_dof_total, dtype=NP_TYPES.COMPLEX)
+        sol_init = np.zeros(n_dof_total, dtype=np.complex_)
 
     # create operator and iter counter object
     op_obj = _OpCounter()

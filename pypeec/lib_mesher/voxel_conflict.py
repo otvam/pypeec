@@ -8,11 +8,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
-from pypeec import config
 from pypeec.error import RunError
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
@@ -44,7 +40,7 @@ def _get_resolution(domain_def):
     """
 
     # assemble all the indices
-    idx_all = np.empty(0, dtype=NP_TYPES.INT)
+    idx_all = np.empty(0, dtype=np.int_)
     for idx in domain_def.values():
         idx_all = np.append(idx_all, idx)
 

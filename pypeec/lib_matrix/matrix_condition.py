@@ -6,15 +6,12 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import numpy as np
 import scipy.sparse.linalg as sla
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("COND")
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_decomposition(mat):
@@ -37,18 +34,16 @@ def _get_inverse_operator(mat, decomposition):
 
     # get the function for the linear operator (original matrix)
     def fct_matvec(rhs):
-        rhs = rhs.astype(NP_TYPES.COMPLEX)
         sol = decomposition.solve(rhs, trans="N")
         return sol
 
     # get the function for the linear operator (transposed matrix)
     def fct_rmatvec(rhs):
-        rhs = rhs.astype(NP_TYPES.COMPLEX)
         sol = decomposition.solve(rhs, trans="H")
         return sol
 
     # assign linear operator for inversion
-    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec, dtype=NP_TYPES.COMPLEX)
+    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec, dtype=np.complex_)
 
     return op
 

@@ -9,13 +9,9 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("SAMPLE")
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_idx_resample_tensor(resampling_factor, idx_n, idx_r, idx):
@@ -96,7 +92,7 @@ def _get_original_grid(n):
     nv = nx*ny*nz
 
     # get the indices of the original grid
-    idx_all = np.arange(nv, dtype=NP_TYPES.INT)
+    idx_all = np.arange(nv, dtype=np.int_)
     (idx_n_x, idx_n_y, idx_n_z) = np.unravel_index(idx_all, (nx, ny, nz), order="F")
 
     # assemble the coordinate array
@@ -118,7 +114,7 @@ def _get_resampled_grid(resampling_factor):
     rv = rx*ry*rz
 
     # get the indices of a single resampled voxel
-    idx_all = np.arange(rv, dtype=NP_TYPES.INT)
+    idx_all = np.arange(rv, dtype=np.int_)
     (idx_r_x, idx_r_y, idx_r_z) = np.unravel_index(idx_all, (rx, ry, rz), order="F")
 
     # assemble the coordinate array
@@ -134,7 +130,7 @@ def _get_grid_bounds(idx_n, domain_def):
     """
 
     # init the array
-    idx_lin = np.empty(0, dtype=NP_TYPES.INT)
+    idx_lin = np.empty(0, dtype=np.int_)
 
     # find the indices
     for tag, idx in domain_def.items():

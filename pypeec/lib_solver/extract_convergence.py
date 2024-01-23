@@ -11,10 +11,6 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
-from pypeec import config
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_sol_extract(sol, sol_idx):
@@ -50,8 +46,8 @@ def _get_total_power(freq, source_all, I_src, V_vc):
 
         # get the current and voltage
         if (len(idx_vc) != 0) and (len(idx_src) != 0):
-            V_tmp = NP_TYPES.COMPLEX(V_vc[idx_vc])
-            I_tmp = NP_TYPES.COMPLEX(I_src[idx_src])
+            V_tmp = V_vc[idx_vc]
+            I_tmp = I_src[idx_src]
 
             # compute the apparent power
             power_tmp = np.sum(fact*V_tmp*np.conj(I_tmp))

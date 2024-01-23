@@ -9,13 +9,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
-import numpy.linalg as lna
-import pyvista as pv
-from pypeec import config
 from pypeec.error import RunError
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_graph_component(idx, connection_def):
@@ -26,9 +20,9 @@ def _get_graph_component(idx, connection_def):
 
     # init the data with invalid data
     if len(connection_def) == 0:
-        tag = np.ones(len(idx), dtype=NP_TYPES.INT)
+        tag = np.ones(len(idx), dtype=np.int_)
     else:
-        tag = np.zeros(len(idx), dtype=NP_TYPES.INT)
+        tag = np.zeros(len(idx), dtype=np.int_)
 
     # find to corresponding connected components
     for i, idx_graph in enumerate(connection_def):
@@ -52,14 +46,14 @@ def _get_geometry_tag(domain_def, connection_def):
     """
 
     # init
-    domain = np.empty(0, dtype=NP_TYPES.INT)
-    connection = np.empty(0, dtype=NP_TYPES.INT)
+    domain = np.empty(0, dtype=np.int_)
+    connection = np.empty(0, dtype=np.int_)
 
     # get the indices and colors
     counter = 1
     for tag, idx_tmp in domain_def.items():
         # assign the color (n different integer for each domain)
-        domain_tmp = np.full(len(idx_tmp), counter, dtype=NP_TYPES.INT)
+        domain_tmp = np.full(len(idx_tmp), counter, dtype=np.int_)
 
         # find the connected components corresponding to the indices
         connection_tmp = _get_graph_component(idx_tmp, connection_def)
@@ -84,7 +78,7 @@ def set_data(voxel, idx, domain_def, connection_def):
     (domain, connection) = _get_geometry_tag(domain_def, connection_def)
 
     # get sorted indices
-    idx = np.argsort(idx).astype(NP_TYPES.INT)
+    idx = np.argsort(idx)
 
     # sort data
     domain = domain[idx]
@@ -102,7 +96,7 @@ def get_voxel(domain_def):
     Get the indices of the non-empty voxels.
     """
 
-    idx = np.empty(0, dtype=NP_TYPES.INT)
+    idx = np.empty(0, dtype=np.int_)
     for idx_tmp in domain_def.values():
         idx = np.append(idx, idx_tmp)
 

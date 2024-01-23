@@ -20,13 +20,9 @@ __license__ = "Mozilla Public License Version 2.0"
 import numpy as np
 import numpy.linalg as lna
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("SOLUTION")
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_biot_savart(pts, pts_net, J_src, vol):
@@ -88,7 +84,7 @@ def get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, pts_cloud):
     vol = np.prod(d)
 
     # for each provided point, compute the magnetic field
-    H_pts = np.zeros((len(pts_cloud), 3), dtype=NP_TYPES.COMPLEX)
+    H_pts = np.zeros((len(pts_cloud), 3), dtype=np.complex_)
     for i, pts_tmp in enumerate(pts_cloud):
         H_c = _get_biot_savart(pts_tmp, pts_net_c, J_vc, vol)
         H_m = _get_magnetic_charge(pts_tmp, pts_net_m, Q_vm, vol)
@@ -128,9 +124,9 @@ def get_vector_density(n, d, idx_f, A_net, var_f):
     (dx, dy, dz) = d
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=NP_TYPES.INT))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=NP_TYPES.INT))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=NP_TYPES.INT))
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int_))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=np.int_))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int_))
 
     # project the faces into the voxels
     var_v_x = 0.5*np.abs(A_net[:, idx_fx])*var_f[idx_fx]
@@ -292,8 +288,8 @@ def get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm):
         idx_vm = material_pos_tmp["idx_vm"]
 
         # get the domain losses
-        P_vc_tmp = NP_TYPES.FLOAT(np.sum(P_vc[idx_vc]))
-        P_vm_tmp = NP_TYPES.FLOAT(np.sum(P_vm[idx_vm]))
+        P_vc_tmp = np.sum(P_vc[idx_vc])
+        P_vm_tmp = np.sum(P_vm[idx_vm])
         P_tmp = P_vc_tmp+P_vm_tmp
 
         # assign the losses
@@ -342,13 +338,13 @@ def get_source(freq, source_all, I_src, V_vc):
 
         # get the distributed source
         if len(idx) == 0:
-            V_tmp = NP_TYPES.COMPLEX(0)
-            I_tmp = NP_TYPES.COMPLEX(0)
-            value = NP_TYPES.COMPLEX(0)
-            element = NP_TYPES.COMPLEX(0)
+            V_tmp = np.complex_(0)
+            I_tmp = np.complex_(0)
+            value = np.complex_(0)
+            element = np.complex_(0)
         else:
-            V_tmp = NP_TYPES.COMPLEX(V_vc[idx_vc])
-            I_tmp = NP_TYPES.COMPLEX(I_src[idx_src])
+            V_tmp = np.complex_(V_vc[idx_vc])
+            I_tmp = np.complex_(I_src[idx_src])
 
         # get the drop across the source impedance
         if source_type == "current":

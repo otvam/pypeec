@@ -10,13 +10,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
-import numpy.linalg as lna
 import pyvista as pv
-from pypeec import config
-from pypeec.error import RunError
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def get_grid(n, d, c):

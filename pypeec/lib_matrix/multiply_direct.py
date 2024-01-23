@@ -7,14 +7,10 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
-from pypeec import config
 from pypeec import log
 
 # get a logger
 LOGGER = log.get_logger("DIRECT")
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_voxel_indices(nx, ny, nz):
@@ -23,9 +19,9 @@ def _get_voxel_indices(nx, ny, nz):
     """
 
     # get the indices array
-    idx_x = np.arange(nx, dtype=NP_TYPES.INT)
-    idx_y = np.arange(ny, dtype=NP_TYPES.INT)
-    idx_z = np.arange(nz, dtype=NP_TYPES.INT)
+    idx_x = np.arange(nx, dtype=np.int_)
+    idx_y = np.arange(ny, dtype=np.int_)
+    idx_z = np.arange(nz, dtype=np.int_)
     [idx_x, idx_y, idx_z] = np.meshgrid(idx_x, idx_y, idx_z, indexing="ij")
 
     # flatten the indices into vectors
@@ -46,13 +42,13 @@ def _get_dense_zero(idx_out, idx_in, mat, idx_row, idx_col):
     nv = nx*ny*nz
 
     # get the matrix size
-    idx_row = np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=NP_TYPES.INT), idx_out)
-    idx_col = np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=NP_TYPES.INT), idx_in)
+    idx_row = np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=np.int_), idx_out)
+    idx_col = np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=np.int_), idx_in)
     n_row = np.count_nonzero(idx_row)
     n_col = np.count_nonzero(idx_col)
 
     # create an empty matrix
-    mat_dense = np.zeros((n_row, n_col), dtype=NP_TYPES.FLOAT)
+    mat_dense = np.zeros((n_row, n_col), dtype=np.float_)
 
     return mat_dense
 
@@ -73,8 +69,8 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     mat_tmp = mat.flatten(order="F")
 
     # get the indices of the non-empty face for the current dimension
-    idx_row = np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=NP_TYPES.INT), idx_out)
-    idx_col = np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=NP_TYPES.INT), idx_in)
+    idx_row = np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=np.int_), idx_out)
+    idx_col = np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=np.int_), idx_in)
     n_row = np.count_nonzero(idx_row)
     n_col = np.count_nonzero(idx_col)
 
@@ -100,7 +96,7 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
 
     # get the sign matrix
     idx_neg = np.logical_not(idx_pos)
-    sign = np.empty((n_row, n_col), dtype=NP_TYPES.INT)
+    sign = np.empty((n_row, n_col), dtype=np.int_)
     sign[idx_pos] = +1
     sign[idx_neg] = -1
 
@@ -130,7 +126,7 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
     # get the matrix size
     n_out = len(idx_out)
     n_in = len(idx_in)
-    itemsize = np.dtype(NP_TYPES.FLOAT).itemsize
+    itemsize = np.dtype(np.float_).itemsize
     footprint = (itemsize*n_out*n_in)/(1024**2)
 
     # display the matrix size
@@ -138,12 +134,12 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
     LOGGER.debug("matrix footprint: %.2f MB" % footprint)
 
     # get the permutation for sorting
-    idx_perm_out = np.argsort(idx_out).astype(NP_TYPES.INT)
-    idx_perm_in = np.argsort(idx_in).astype(NP_TYPES.INT)
-    idx_rev_out = np.empty(len(idx_perm_out), dtype=NP_TYPES.INT)
-    idx_rev_in = np.empty(len(idx_perm_in), dtype=NP_TYPES.INT)
-    idx_rev_out[idx_perm_out] = np.arange(len(idx_perm_out), dtype=NP_TYPES.INT)
-    idx_rev_in[idx_perm_in] = np.arange(len(idx_perm_in), dtype=NP_TYPES.INT)
+    idx_perm_out = np.argsort(idx_out)
+    idx_perm_in = np.argsort(idx_in)
+    idx_rev_out = np.empty(len(idx_perm_out), dtype=np.int_)
+    idx_rev_in = np.empty(len(idx_perm_in), dtype=np.int_)
+    idx_rev_out[idx_perm_out] = np.arange(len(idx_perm_out), dtype=np.int_)
+    idx_rev_in[idx_perm_in] = np.arange(len(idx_perm_in), dtype=np.int_)
 
     # sort the indices
     idx_out = idx_out[idx_perm_out]

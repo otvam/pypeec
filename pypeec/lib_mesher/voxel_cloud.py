@@ -9,13 +9,9 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("CLOUD")
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _get_voxel_coordinate(n, d, c, idx_all):
@@ -65,12 +61,12 @@ def get_cloud(n, d, c, domain_def, pts_cloud_in):
     LOGGER.debug("initial number = %d" % len(pts_cloud_in))
 
     # cast to array
-    c = np.array(c, dtype=NP_TYPES.FLOAT)
-    d = np.array(d, dtype=NP_TYPES.FLOAT)
-    n = np.array(n, dtype=NP_TYPES.INT)
+    c = np.array(c, dtype=np.float_)
+    d = np.array(d, dtype=np.float_)
+    n = np.array(n, dtype=np.int_)
 
     # assemble all the indices
-    idx_all = np.empty(0, dtype=NP_TYPES.INT)
+    idx_all = np.empty(0, dtype=np.int_)
     for idx in domain_def.values():
         idx_all = np.append(idx_all, idx)
 
@@ -85,7 +81,7 @@ def get_cloud(n, d, c, domain_def, pts_cloud_in):
             pts_cloud_out.append(pts_tmp)
 
     # cast
-    pts_cloud_out = np.array(pts_cloud_out, NP_TYPES.FLOAT)
+    pts_cloud_out = np.array(pts_cloud_out, np.float_)
 
     # display number of cloud points
     LOGGER.debug("final number = %d" % len(pts_cloud_out))

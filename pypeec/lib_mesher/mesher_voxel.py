@@ -16,9 +16,6 @@ from pypeec.error import RunError
 # get a logger
 LOGGER = log.get_logger("VOXEL")
 
-# get config
-NP_TYPES = config.NP_TYPES
-
 # get problem size limits
 VOXEL_TOTAL = config.PROBLEM_MAX_SIZE.VOXEL_TOTAL
 VOXEL_USED = config.PROBLEM_MAX_SIZE.VOXEL_USED
@@ -51,7 +48,7 @@ def get_mesh(param, domain_index):
         LOGGER.debug("%s: size = %d" % (tag, len(idx)))
 
         # parse the array
-        idx_tmp = np.array(idx, dtype=NP_TYPES.INT)
+        idx_tmp = np.array(idx, dtype=np.int_)
 
         # check the indices
         if not (len(np.unique(idx_tmp)) == len(idx_tmp)):

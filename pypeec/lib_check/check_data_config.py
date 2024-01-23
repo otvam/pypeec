@@ -10,27 +10,7 @@ import numpy as np
 from pypeec.lib_check import datachecker
 
 
-def _update_data(data_config):
-    """
-    Parse and complete the config.
-    """
-
-    # get the numerical data types
-    if data_config["USE_DOUBLE"]:
-        data_config["NP_TYPES"] = {
-            "INT": np.int_, "FLOAT": np.float_, "COMPLEX": np.complex_,
-            "DINT": np.int_, "DFLOAT": np.float_, "DCOMPLEX": np.complex_,
-        }
-    else:
-        data_config["NP_TYPES"] = {
-            "INT": np.intc, "FLOAT": np.single, "COMPLEX": np.csingle,
-            "DINT": np.int_, "DFLOAT": np.float_, "DCOMPLEX": np.complex_,
-        }
-
-    return data_config
-
-
-def _check_data(data_config):
+def check_data_config(data_config):
     """
     Check that the config is valid.
     """
@@ -40,7 +20,6 @@ def _check_data(data_config):
         "LOGGING_OPTIONS",
         "PROBLEM_MAX_SIZE",
         "DISPLAY_LOGO",
-        "USE_DOUBLE",
         "SWEEP_POOL",
         "PAUSE_GUI",
     ]
@@ -110,20 +89,5 @@ def _check_data(data_config):
 
     # check other switches
     datachecker.check_boolean("DISPLAY_LOGO", data_config["DISPLAY_LOGO"])
-    datachecker.check_boolean("USE_DOUBLE", data_config["USE_DOUBLE"])
     datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True, can_be_zero=True)
     datachecker.check_integer("SWEEP_POOL", data_config["SWEEP_POOL"], is_positive=True, can_be_zero=False, can_be_none=True)
-
-
-def check_data_config(data_config):
-    """
-    Check and update the config data.
-    """
-
-    # check the data integrity
-    _check_data(data_config)
-
-    # update the configuration
-    data_config = _update_data(data_config)
-
-    return data_config

@@ -23,9 +23,6 @@ from pypeec.error import RunError
 # get a logger
 LOGGER = log.get_logger("STL")
 
-# get config
-NP_TYPES = config.NP_TYPES
-
 # get problem size limits
 VOXEL_TOTAL = config.PROBLEM_MAX_SIZE.VOXEL_TOTAL
 VOXEL_USED = config.PROBLEM_MAX_SIZE.VOXEL_USED
@@ -85,7 +82,7 @@ def _get_idx_image(size, img, color):
 
     # find the 2D indices
     idx_img = idx_img.flatten(order="F")
-    idx_img = np.flatnonzero(idx_img).astype(NP_TYPES.INT)
+    idx_img = np.flatnonzero(idx_img)
 
     return idx_img
 
@@ -100,7 +97,7 @@ def _get_idx_voxel(size, nz, n_layer, idx_img):
     (nx, ny) = size
 
     # init voxel indices
-    idx_voxel = np.empty(0, dtype=NP_TYPES.INT)
+    idx_voxel = np.empty(0, dtype=np.int_)
 
     # convert image indices into voxel indices
     for iz in range(n_layer):
@@ -120,7 +117,7 @@ def _get_domain(size, nz, n_layer, color_list, img_list):
     """
 
     # init the index array
-    idx_img = np.empty(0, dtype=NP_TYPES.INT)
+    idx_img = np.empty(0, dtype=np.int_)
 
     # get image indices (2D indices)
     for color in color_list:
@@ -195,7 +192,7 @@ def get_mesh(param, domain_color, layer_stack):
     # init domain definition dict
     domain_def = {}
     for tag in domain_color:
-        domain_def[tag] = np.empty(0, NP_TYPES.INT)
+        domain_def[tag] = np.empty(0, np.int_)
 
     # add layers
     for layer_stack_tmp in layer_stack:

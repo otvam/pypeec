@@ -39,9 +39,6 @@ warnings.filterwarnings("ignore", module="rasterio.transform")
 # get a logger
 LOGGER = log.get_logger("SHAPE")
 
-# get config
-NP_TYPES = config.NP_TYPES
-
 # get problem size limits
 VOXEL_TOTAL = config.PROBLEM_MAX_SIZE.VOXEL_TOTAL
 VOXEL_USED = config.PROBLEM_MAX_SIZE.VOXEL_USED
@@ -57,11 +54,11 @@ def _get_boundary_polygon(bnd, z_min):
         raise RunError("invalid shape: boundary is ill-formed")
 
     # get the 2D boundary
-    xy = np.array(bnd.xy, dtype=NP_TYPES.FLOAT)
+    xy = np.array(bnd.xy, dtype=np.float_)
     xy = np.swapaxes(xy, 0, 1)
 
     # get the 3D boundary
-    z = np.full(len(xy), z_min, dtype=NP_TYPES.FLOAT)
+    z = np.full(len(xy), z_min, dtype=np.float_)
     z = np.expand_dims(z, axis=1)
     xyz = np.hstack((xy, z))
 
@@ -161,7 +158,7 @@ def _get_voxelize_shape(n, xyz_min, xyz_max, obj):
 
     # find the 2D indices
     idx_shape = idx_shape.flatten(order="F")
-    idx_shape = np.flatnonzero(idx_shape).astype(NP_TYPES.INT)
+    idx_shape = np.flatnonzero(idx_shape)
 
     return idx_shape
 
@@ -176,7 +173,7 @@ def _get_idx_voxel(n, idx_shape, stack_idx):
     (nx, ny, nz) = n
 
     # init voxel indices
-    idx_voxel = np.empty(0, dtype=NP_TYPES.INT)
+    idx_voxel = np.empty(0, dtype=np.int_)
 
     # convert image indices into voxel indices
     for idx in stack_idx:
@@ -270,8 +267,8 @@ def _get_shape_obj(geometry_shape, stack_tag, tol):
     shape_obj = []
 
     # init the coordinate (minimum and maximum coordinates)
-    xy_min = np.full(2, +np.inf, dtype=NP_TYPES.FLOAT)
-    xy_max = np.full(2, -np.inf, dtype=NP_TYPES.FLOAT)
+    xy_min = np.full(2, +np.inf, dtype=np.float_)
+    xy_max = np.full(2, -np.inf, dtype=np.float_)
 
     # create the shapes and find the bounding box
     for tag, geometry_shape_tmp in geometry_shape.items():
@@ -285,8 +282,8 @@ def _get_shape_obj(geometry_shape, stack_tag, tol):
 
             # find the bounds
             (x_min, y_min, x_max, y_max) = obj.bounds
-            tmp_min = np.array((x_min, y_min), dtype=NP_TYPES.FLOAT)
-            tmp_max = np.array((x_max, y_max), dtype=NP_TYPES.FLOAT)
+            tmp_min = np.array((x_min, y_min), dtype=np.float_)
+            tmp_max = np.array((x_max, y_max), dtype=np.float_)
 
             # update the bounds
             xy_min = np.minimum(xy_min, tmp_min)
@@ -316,7 +313,7 @@ def _get_layer_stack(layer_stack, dz, cz):
         tag_layer = layer_stack_tmp["tag_layer"]
 
         # find the layer indices
-        idx_layer = np.arange(np.sum(stack_n), np.sum(stack_n)+n_layer, dtype=NP_TYPES.INT)
+        idx_layer = np.arange(np.sum(stack_n), np.sum(stack_n)+n_layer, dtype=np.int_)
 
         # append the results
         stack_n.append(n_layer)
@@ -345,7 +342,7 @@ def _get_domain_def(n, d, c, geometry_shape, stack_idx, shape_obj):
     # init the domain dict
     domain_def = {}
     for tag in geometry_shape:
-        domain_def[tag] = np.empty(0, NP_TYPES.INT)
+        domain_def[tag] = np.empty(0, np.int_)
 
     # voxelize the shapes
     for shape_obj_tmp in shape_obj:
@@ -384,9 +381,9 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     z_max = np.max(stack_pos)
 
     # get the arrays
-    d = np.array([dx, dy, dz], dtype=NP_TYPES.FLOAT)
-    xyz_min = np.array([x_min, y_min, z_min], dtype=NP_TYPES.FLOAT)
-    xyz_max = np.array([x_max, y_max, z_max], dtype=NP_TYPES.FLOAT)
+    d = np.array([dx, dy, dz], dtype=np.float_)
+    xyz_min = np.array([x_min, y_min, z_min], dtype=np.float_)
+    xyz_max = np.array([x_max, y_max, z_max], dtype=np.float_)
 
     # geometry size
     c = (xyz_max+xyz_min)/2
@@ -396,8 +393,8 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     d = (xyz_max-xyz_min)/n
 
     # cast data
-    d = d.astype(NP_TYPES.FLOAT)
-    n = n.astype(NP_TYPES.INT)
+    d = d.astype(np.float_)
+    n = n.astype(np.int_)
 
     # check voxel validity
     if not np.all(d > 0):
@@ -475,11 +472,11 @@ def get_mesh(param, layer_stack, geometry_shape):
 
     # if provided, the user specified bounds are used, otherwise the STL bounds
     if xy_min is not None:
-        xy_min = np.array(xy_min, NP_TYPES.FLOAT)
+        xy_min = np.array(xy_min, np.float_)
     else:
         xy_min = xy_min_obj
     if xy_max is not None:
-        xy_max = np.array(xy_max, NP_TYPES.FLOAT)
+        xy_max = np.array(xy_max, np.float_)
     else:
         xy_max = xy_max_obj
 
@@ -495,7 +492,7 @@ def get_mesh(param, layer_stack, geometry_shape):
     # init domain definition dict
     domain_def = {}
     for tag in geometry_shape:
-        domain_def[tag] = np.empty(0, NP_TYPES.INT)
+        domain_def[tag] = np.empty(0, np.int_)
 
     # voxelize the shapes and get the indices
     LOGGER.debug("voxelize the shapes")
@@ -517,8 +514,8 @@ def get_mesh(param, layer_stack, geometry_shape):
 
     # cast reference mesh
     reference = {
-        "faces": np.array(reference.faces, dtype=NP_TYPES.INT),
-        "points": np.array(reference.points, dtype=NP_TYPES.FLOAT),
+        "faces": np.array(reference.faces, dtype=np.int_),
+        "points": np.array(reference.points, dtype=np.float_),
     }
 
     return n, d, c, domain_def, reference

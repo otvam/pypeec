@@ -9,13 +9,9 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("PROBLEM")
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def get_material_indices(material_idx, material_type_ref):
@@ -24,7 +20,7 @@ def get_material_indices(material_idx, material_type_ref):
     """
 
     # array for the indices
-    idx_v = np.empty(0, dtype=NP_TYPES.INT)
+    idx_v = np.empty(0, dtype=np.int_)
 
     # populate the arrays
     for tag, material_idx_tmp in material_idx.items():
@@ -73,7 +69,7 @@ def get_source_indices(source_idx, source_type_ref):
     """
 
     # array for the source indices
-    idx_src = np.empty(0, dtype=NP_TYPES.INT)
+    idx_src = np.empty(0, dtype=np.int_)
 
     # populate the arrays with the current sources
     for tag, source_idx_tmp in source_idx.items():
@@ -140,13 +136,10 @@ def get_reduce_matrix(pts_vox, A_vox, idx_v):
 
     # indices of the all the internal faces (global face indices, 0:3*n)
     idx_f = np.sum(np.abs(A_net), axis=0) == 2
-    idx_f = np.flatnonzero(idx_f).astype(NP_TYPES.INT)
+    idx_f = np.flatnonzero(idx_f)
 
     # reduce the size of the incidence matrix (only the internal faces)
     A_net = A_net[:, idx_f]
-
-    # cast to float
-    A_net = A_net.astype(NP_TYPES.FLOAT)
 
     return pts_net, A_net, idx_f
 

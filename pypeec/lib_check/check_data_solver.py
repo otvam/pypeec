@@ -8,10 +8,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 from pypeec.lib_check import datachecker
-from pypeec import config
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 
 def _check_indices(n, idx_c, idx_m, idx_s):
@@ -71,9 +67,9 @@ def _get_field(val_dict, var_type, idx):
     for tag, val in val_dict.items():
         # cast
         if var_type == "lumped":
-            val = np.full(len(idx), val, dtype=NP_TYPES.FLOAT)
+            val = np.full(len(idx), val, dtype=np.float_)
         elif var_type == "distributed":
-            val = np.array(val, dtype=NP_TYPES.FLOAT)
+            val = np.array(val, dtype=np.float_)
         else:
             raise ValueError("invalid material type")
 
@@ -92,9 +88,9 @@ def _get_domain_indices(domain_list, domain_def):
     Get indices from a list of domain names.
     """
 
-    idx_all = np.empty(0, dtype=NP_TYPES.INT)
+    idx_all = np.empty(0, dtype=np.int_)
     for tag in domain_list:
-        idx_tmp = np.array(domain_def[tag], dtype=NP_TYPES.INT)
+        idx_tmp = np.array(domain_def[tag], dtype=np.int_)
         idx_all = np.append(idx_all, idx_tmp)
 
     return idx_all
@@ -109,8 +105,8 @@ def _get_material_idx(material_def, domain_def):
 
     # init
     material_idx = {}
-    idx_c = np.empty(0, dtype=NP_TYPES.INT)
-    idx_m = np.empty(0, dtype=NP_TYPES.INT)
+    idx_c = np.empty(0, dtype=np.int_)
+    idx_m = np.empty(0, dtype=np.int_)
     domain_cm = []
 
     for tag, material_def_tmp in material_def.items():
@@ -147,7 +143,7 @@ def _get_source_idx(source_def, domain_def):
 
     # init
     source_idx = {}
-    idx_s = np.empty(0, dtype=NP_TYPES.INT)
+    idx_s = np.empty(0, dtype=np.int_)
     domain_s = []
 
     for tag, source_def_tmp in source_def.items():

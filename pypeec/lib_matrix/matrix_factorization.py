@@ -20,13 +20,9 @@ __license__ = "Mozilla Public License Version 2.0"
 import os
 import warnings
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("FACTOR")
-
-# get config
-NP_TYPES = config.NP_TYPES
 
 # dummy options
 LIBRARY = None
@@ -123,9 +119,6 @@ def _get_fact_umfpack(mat):
     Factorize a matrix with UMFPACK.
     """
 
-    # double precision is required for the solver
-    mat = mat.astype(NP_TYPES.DCOMPLEX)
-
     # factorize the matrix
     try:
         mat_factor = IMPORTLIB.splu(mat)
@@ -134,9 +127,7 @@ def _get_fact_umfpack(mat):
 
     # matrix solver
     def factor(rhs):
-        rhs = rhs.astype(NP_TYPES.DCOMPLEX)
         sol = mat_factor.solve(rhs)
-        sol = sol.astype(NP_TYPES.COMPLEX)
         return sol
 
     return factor
