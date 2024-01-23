@@ -7,11 +7,11 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import os.path
-import pickle
 import tempfile
 import logging
 import warnings
 from pypeec import main
+from pypeec import io
 
 # crash on warnings (except for deprecation warnings)
 warnings.filterwarnings("error")
@@ -32,7 +32,7 @@ def _create_temp_file():
     Get a temporary file.
     """
 
-    (_, filename) = tempfile.mkstemp(suffix=".pck")
+    (_, filename) = tempfile.mkstemp(suffix=".gz")
 
     return filename
 
@@ -86,13 +86,9 @@ def run_workflow(name):
         # run the plotter
         main.run_plotter_file(file_solution, file_plotter, plot_mode="none")
 
-        # load the voxel file
-        with open(file_voxel, "rb") as fid:
-            data_voxel = pickle.load(fid)
-
-        # load the solution file
-        with open(file_solution, "rb") as fid:
-            data_solution = pickle.load(fid)
+        # load the files
+        data_voxel = io.load_data(file_voxel)
+        data_solution = io.load_data(file_solution)
     finally:
         # close the temporary files
         _delete_temp_file(file_voxel)
