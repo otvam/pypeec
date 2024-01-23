@@ -19,7 +19,7 @@ Additionally, the following **libraries** are used for the **plotter** and **vie
 
 The following **optional packages** can be used for speeding up the solver:
 
-* PyAMG
+* PyAMG (pure Python solver)
 * UMFPACK (available through SciKits)
 * MKL/PARDISO (available through Pydiso)
 * FFTW (available through pyFFTW)
@@ -34,6 +34,7 @@ Supported Platforms
 The main **target platform** of PyPEEC is **Linux** on x86/x64:
 
 * Linux / RedHat 7.9 on x86/x64
+* Linux / Debian 12.2 on x86/x64
 * Linux / Ubuntu 20.04 on x86/x64
 * Linux / Ubuntu 22.04 on x86/x64
 

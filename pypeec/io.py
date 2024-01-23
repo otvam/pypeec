@@ -20,7 +20,6 @@ The JSON files can be serialized/deserialized as/from:
 Warning:
     - Pickling data is not secure.
     - Only load pickle files that you trust.
-    - Do not commit the Pickle files in the Git repository.
 """
 
 __author__ = "Thomas Guillod"

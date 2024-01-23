@@ -10,9 +10,6 @@ Installing the Code
     #    - The Python executable can be "python" or "python3"
     #    - Alternatively, Conda can be used for the environment
 
-    # Install Python Virtual Environment
-    python -m pip install virtualenv
-
     # Create a Python Virtual Environment
     python -m venv venv
 
