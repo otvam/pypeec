@@ -1,11 +1,15 @@
 """
 Module for serialization and deserialization.
-    - load JSON/YAML configuration files
-    - load and write Pickle files
+    - load JSON/YAML input files
+    - load and write JSON/Pickle data files
 
-For YAML files, the following custom extensions are used:
-    - "!path" - allow the inclusion of relative paths
-    - "!include" - allow the inclusion of YAML sub-files
+For YAML input files, the following custom extensions are used:
+    - "!path" - allows the inclusion of relative paths
+    - "!include" - allows the inclusion of YAML sub-files
+
+For JSON data files, the following custom extensions are used:
+    - "__complex__" - allows the serialization of complex numbers
+    - "__numpy__" - allows the serialization of NumPy arrays
 
 Warning:
     - Pickling data is not secure.

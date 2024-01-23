@@ -145,7 +145,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
         This input file is loaded by this function (JSON or YAML format).
     file_voxel :  filename
         The file content describes the voxel structure.
-        This output file is written by this function (Pickle format).
+        This output file is written by this function (JSON or Pickle format).
     is_truncated : boolean
         If false, the complete results are returned (default).
         If true, the results are truncated to save space.
@@ -232,7 +232,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
     ----------
     file_voxel : filename
         The file content describes the voxel structure.
-        This input file is loaded by this function (Pickle format).
+        This input file is loaded by this function (JSON or Pickle format).
     file_viewer: filename
         The file content describes the different plots to be created.
         This input file is loaded by this function (JSON or YAML format).
@@ -326,7 +326,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
     ----------
     file_voxel :  filename
         The file content describes the voxel structure.
-        This input file is loaded by this function (Pickle format).
+        This input file is loaded by this function (JSON or Pickle format).
     file_problem: filename
         The file content describes the problem to be solved.
         This input file is loaded by this function (JSON or YAML format).
@@ -335,7 +335,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         This input file is loaded by this function (JSON or YAML format).
     file_solution :  filename
         The file content describes the problem solution.
-        This output file is written by this function (Pickle format).
+        This output file is written by this function (JSON or Pickle format).
     is_truncated : boolean
         If false, the complete results are returned (default).
         If true, the results are truncated to save space.
@@ -428,7 +428,7 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     ----------
     file_solution : filename
         The dict describes the problem solution.
-        This input file is loaded by this function (Pickle format).
+        This input file is loaded by this function (JSON or Pickle format).
     file_plotter : filename
         The dict describes the different plots to be created.
         This input file is loaded by this function (JSON or YAML format).
