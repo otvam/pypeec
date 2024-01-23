@@ -83,12 +83,12 @@ Configuration File
 Packaging and Environment
 -------------------------
 
-* A Python package can be built from the ``pyproject.toml`` and ``setup.cfg`` files.
+* A Python package can be built from the ``pyproject.toml`` file.
 * The shell script ``run_build.sh`` is used to build the Python package.
 * The shell script ``run_release.sh`` is used to a create release.
 * In order to create a minimal Python Virtual Environment, use ``requirements.txt``.
 * In order to create a minimal Conda Environment, use ``conda_base.yaml``.
-* In order to create a development environment, use ``conda_dev.yaml``.
+* In order to create a full development environment, use ``conda_dev.yaml``.
 
 Automated Tests
 ---------------
