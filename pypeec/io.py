@@ -139,25 +139,32 @@ class _JsonNumPyEncoder(json.JSONEncoder):
                 return {
                     "__numpy__": None,
                     "dtype": "complex",
-                    "data": {"real": obj.real, "imag": obj.imag},
+                    "shape": obj.shape,
+                    "data": {
+                        "real": obj.real.flatten().tolist(),
+                        "imag": obj.imag.flatten().tolist(),
+                    },
                 }
             elif np.issubdtype(obj.dtype, np.floating):
                 return {
                     "__numpy__": None,
                     "dtype": "float",
-                    "data": obj.tolist(),
+                    "shape": obj.shape,
+                    "data": obj.flatten().tolist(),
                 }
             elif np.issubdtype(obj.dtype, np.integer):
                 return {
                     "__numpy__": None,
                     "dtype": "int",
-                    "data": obj.tolist(),
+                    "shape": obj.shape,
+                    "data": obj.flatten().tolist(),
                 }
             elif np.issubdtype(obj.dtype, bool):
                 return {
                     "__numpy__": None,
                     "dtype": "bool",
-                    "data": obj.tolist(),
+                    "shape": obj.shape,
+                    "data": obj.flatten().tolist(),
                 }
             else:
                 FileError("invalid numpy array for serialization")
@@ -199,19 +206,20 @@ class _JsonNumPyDecoder(json.JSONDecoder):
         elif "__numpy__" in obj:
             # handle numpy array
             dtype = obj["dtype"]
+            shape = obj["shape"]
             data = obj["data"]
 
             # parse the type
             if dtype == "complex":
-                real = np.array(data["real"], dtype=np.complex_)
-                imag = np.array(data["imag"], dtype=np.complex_)
+                real = np.array(data["real"], dtype=np.complex_).reshape(shape)
+                imag = np.array(data["imag"], dtype=np.complex_).reshape(shape)
                 return real+1j*imag
             elif dtype == "float":
-                return np.array(data, dtype=np.float_)
+                return np.array(data, dtype=np.float_).reshape(shape)
             elif dtype == "int":
-                return np.array(data, dtype=np.int_)
+                return np.array(data, dtype=np.int_).reshape(shape)
             elif dtype == "bool":
-                return np.array(data, dtype=bool)
+                return np.array(data, dtype=bool).reshape(shape)
         else:
             return obj
 
