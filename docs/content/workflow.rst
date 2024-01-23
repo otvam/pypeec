@@ -96,3 +96,9 @@ The following files (JSON or Pickle format) are generated:
 
 * ``file_voxel`` (JSON or Pickle, output file): file with the definition of the voxel structure
 * ``file_solution`` (JSON or Pickle, output file): file with the solution of the magnetic problem
+
+The file extensions are used:
+* ``yml`` and ``yaml`` for YAML files
+* ``js`` and ``json`` for JSON files
+* ``gz`` and ``gzip`` for GZIP/JSON files
+* ``pck`` and ``pkl`` for Pickle files

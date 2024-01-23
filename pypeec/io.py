@@ -11,6 +11,8 @@ For JSON files, the following custom extensions are used:
     - "__complex__" - allows the serialization of complex numbers
     - "__numpy__" - allows the serialization of NumPy arrays
 
+The JSON/YAML files with the custom extensions are still valid JSON/YAML files.
+
 The JSON files can be serialized/deserialized as/from:
     - text files
     - gzip files
@@ -247,12 +249,11 @@ def _load_json(filename, is_gzip):
 
     try:
         if is_gzip:
-            fid = gzip.open(filename, "rt", encoding="utf-8")
+            with gzip.open(filename, "rt", encoding="utf-8") as fid:
+                data = json.load(fid, cls=_JsonNumPyDecoder)
         else:
-            fid = open(filename, "r")
-
-        with fid:
-            data = json.load(fid, cls=_JsonNumPyDecoder)
+            with open(filename, "r") as fid:
+                data = json.load(fid, cls=_JsonNumPyDecoder)
     except (json.JSONDecodeError, TypeError, ValueError) as ex:
         raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
     except OSError:
@@ -268,12 +269,11 @@ def _write_json(filename, data, is_gzip):
 
     try:
         if is_gzip:
-            fid = gzip.open(filename, "wt", encoding="utf-8")
+            with gzip.open(filename, "wt", encoding="utf-8") as fid:
+                json.dump(data, fid, cls=_JsonNumPyEncoder)
         else:
-            fid = open(filename, "w")
-
-        with fid:
-            json.dump(data, fid, indent=4, cls=_JsonNumPyEncoder)
+            with open(filename, "w") as fid:
+                json.dump(data, fid, indent=4, cls=_JsonNumPyEncoder)
     except (json.JSONDecodeError, TypeError, ValueError) as ex:
         raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
     except OSError:
