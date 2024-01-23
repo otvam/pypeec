@@ -17,7 +17,6 @@ import importlib.resources
 from pypeec import config
 from pypeec import log
 from pypeec import io
-from pypeec.error import FileError
 
 # create the logger
 LOGGER = log.get_logger("MAIN")
@@ -160,7 +159,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
     # load data
     try:
         LOGGER.info("load the input data")
-        data_geometry = io.load_config(file_geometry)
+        data_geometry = io.load_input(file_geometry)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -171,7 +170,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
     # save results
     try:
         LOGGER.info("save the results")
-        io.write_pickle(file_voxel, data_voxel)
+        io.write_data(file_voxel, data_voxel)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -263,8 +262,8 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
     # load data
     try:
         LOGGER.info("load the input data")
-        data_voxel = io.load_pickle(file_voxel)
-        data_viewer = io.load_config(file_viewer)
+        data_voxel = io.load_data(file_voxel)
+        data_viewer = io.load_input(file_viewer)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -350,9 +349,9 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
     # load data
     try:
         LOGGER.info("load the input data")
-        data_voxel = io.load_pickle(file_voxel)
-        data_problem = io.load_config(file_problem)
-        data_tolerance = io.load_config(file_tolerance)
+        data_voxel = io.load_data(file_voxel)
+        data_problem = io.load_input(file_problem)
+        data_tolerance = io.load_input(file_tolerance)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -363,7 +362,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
     # save results
     try:
         LOGGER.info("save the results")
-        io.write_pickle(file_solution, data_solution)
+        io.write_data(file_solution, data_solution)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -464,8 +463,8 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     try:
         # load data
         LOGGER.info("load the input data")
-        data_solution = io.load_pickle(file_solution)
-        data_plotter = io.load_config(file_plotter)
+        data_solution = io.load_data(file_solution)
+        data_plotter = io.load_input(file_plotter)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex

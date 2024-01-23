@@ -30,8 +30,8 @@ def run_image(folder_example):
     file_viewer = os.path.join(folder_base, "config", "viewer.yaml")
 
     # load data
-    data_geometry = io.load_config(file_geometry)
-    data_viewer = io.load_config(file_viewer)
+    data_viewer = io.load_input(file_viewer)
+    data_geometry = io.load_data(file_geometry)
 
     # tweak the plot options
     data_viewer["domain"]["data_window"]["show_menu"] = True

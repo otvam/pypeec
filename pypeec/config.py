@@ -77,7 +77,7 @@ def _set_file_config(file_config):
     # load the config file
     try:
         # load the config file
-        data_config = io.load_config(file_config)
+        data_config = io.load_input(file_config)
 
         # check the data integrity and complete the config
         data_config = check_data_config.check_data_config(data_config)

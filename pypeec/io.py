@@ -21,6 +21,7 @@ import os.path
 import json
 import pickle
 import yaml
+import numpy as np
 from pypeec.error import FileError
 
 
@@ -95,9 +96,112 @@ class _YamlLoader(yaml.Loader):
             return content
 
 
+class _JsonNumPyEncoder(json.JSONEncoder):
+    """
+    This Python class offers extension to the JSON format (encoder).
+        - encode NumPy scalar types
+        - encode NumPy array types
+    """
+
+    def __init__(self, **kwargs):
+        """
+        Constructor
+        """
+
+        super().__init__(**kwargs)
+
+    def default(self, obj):
+        """
+        Function encoding NumPy types as dictionaries.
+        """
+
+        # if not numpy, default to the base encoder
+        if not hasattr(obj, "dtype") or not hasattr(obj, "ndim"):
+            return json.JSONEncoder.default(self, obj)
+
+        # handle numpy scalar
+        if np.isscalar(obj):
+            if np.iscomplexobj(obj):
+                return {
+                    "__np_scalar_complex__": None,
+                    "dtype": str(obj.dtype),
+                    "real": obj.real,
+                    "imag": obj.imag,
+                }
+            else:
+                return {
+                    "__np_scalar_direct__": None,
+                    "dtype": str(obj.dtype),
+                    "data": obj.item(),
+                }
+        else:
+            # handle numpy array
+            if np.iscomplexobj(obj):
+                return {
+                    "__np_array_complex__": None,
+                    "dtype": str(obj.dtype),
+                    "real": obj.real,
+                    "imag": obj.imag,
+                }
+            else:
+                return {
+                    "__np_array_direct__": None,
+                    "dtype": str(obj.dtype),
+                    "data": obj.tolist(),
+                }
+
+
+class _JsonNumPyDecoder(json.JSONDecoder):
+    """
+    This Python class offers extension to the JSON format (decoder).
+        - decode NumPy scalar types
+        - decode NumPy array types
+    """
+
+    def __init__(self, **kwargs):
+        """
+        Constructor
+        """
+
+        kwargs.setdefault("object_hook", self.encode)
+        super().__init__(**kwargs)
+
+    def encode(self, data):
+        """
+        Function decoding NumPy types from dictionaries.
+        """
+
+        # if not dict, do nothing
+        if not isinstance(data, dict):
+            return data
+
+        if "__np_scalar_complex__" in data:
+            dtype = np.dtype(data["dtype"])
+            real = dtype.type(data["real"])
+            imag = dtype.type(data["imag"])
+            val = real+1j*imag
+            return val
+        if "__np_scalar_direct__" in data:
+            dtype = np.dtype(data["dtype"])
+            val = dtype.type(data["data"])
+            return val
+        if "__np_array_complex__" in data:
+            dtype = np.dtype(data["dtype"])
+            real = np.array(data["real"], dtype=dtype)
+            imag = np.array(data["imag"], dtype=dtype)
+            val = real+1j*imag
+            return val
+        if "__np_array_direct__" in data:
+            dtype = np.dtype(data["dtype"])
+            val = np.array(data["data"], dtype=dtype)
+            return val
+
+        return data
+
+
 def _load_yaml(filename):
     """
-    Load a YAML file.
+    Load a YAML file (with extensions).
     """
 
     try:
@@ -111,15 +215,18 @@ def _load_yaml(filename):
     return data
 
 
-def _load_json(filename):
+def _load_json(filename, has_extensions):
     """
-    Load a JSON file.
+    Load a JSON file (with or without extensions).
     """
 
     try:
         with open(filename, "r") as fid:
-            data = json.load(fid)
-    except json.JSONDecodeError as ex:
+            if has_extensions:
+                data = json.load(fid, cls=_JsonNumPyDecoder)
+            else:
+                data = json.load(fid)
+    except (json.JSONDecodeError, TypeError, ValueError) as ex:
         raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
     except OSError:
         raise FileError("cannot open the file: %s" % filename)
@@ -127,9 +234,59 @@ def _load_json(filename):
     return data
 
 
-def load_config(filename):
+def _write_json(filename, data):
     """
-    Load a config file (JSON or YAML).
+    Write a JSON file (with extensions).
+    """
+
+    try:
+        with open(filename, "w") as fid:
+            json.dump(data, fid, indent=4, cls=_JsonNumPyEncoder)
+    except (json.JSONDecodeError, TypeError, ValueError) as ex:
+        raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
+    except OSError:
+        raise FileError("cannot write the file: %s" % filename)
+
+    return data
+
+
+def _load_pickle(filename):
+    """
+    Load a pickle file.
+    """
+
+    # load the Pickle file
+    try:
+        with open(filename, "rb") as fid:
+            data = pickle.load(fid)
+    except pickle.UnpicklingError:
+        raise FileError("invalid Pickle file: %s" % filename)
+    except EOFError:
+        raise FileError("file not found: %s" % filename)
+    except OSError:
+        raise FileError("invalid Pickle file: %s" % filename)
+
+    return data
+
+
+def _write_pickle(filename, data):
+    """
+    Write a pickle file.
+    """
+
+    # save the Pickle file
+    try:
+        with open(filename, "wb") as fid:
+            pickle.dump(data, fid)
+    except pickle.PicklingError:
+        raise FileError("invalid data for Pickle: %s" % filename)
+    except OSError:
+        raise FileError("cannot write the file: %s" % filename)
+
+
+def load_input(filename):
+    """
+    Load an input file (JSON or YAML).
 
     Parameters
     ----------
@@ -147,7 +304,7 @@ def load_config(filename):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        data = _load_json(filename)
+        data = _load_json(filename, False)
     elif ext in [".yaml", ".yml"]:
         data = _load_yaml(filename)
     else:
@@ -156,37 +313,17 @@ def load_config(filename):
     return data
 
 
-def write_config(filename, data):
+def load_data(filename):
     """
-    Write a config file (JSON).
+    Load a data file (JSON or Pickle).
 
     Parameters
     ----------
     filename : string)
-        Name and path of the file to be created.
-    data : data
-        Python data to be saved.
-    """
-
-    try:
-        with open(filename, "w") as fid:
-            json.dump(data, fid, indent=4)
-    except (json.JSONDecodeError, TypeError, ValueError) as ex:
-        raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
-    except OSError:
-        raise FileError("cannot write the file: %s" % filename)
-
-    return data
-
-
-def load_pickle(filename):
-    """
-    Load a pickle file.
-
-    Parameters
-    ----------
-    filename  : string
         Name and path of the file to be loaded.
+        The file type is determined by the extension.
+        For JSON files, the extension should be "json" or "js".
+        For Pickle files, the extension should be "pck".
 
     Returns
     -------
@@ -194,37 +331,36 @@ def load_pickle(filename):
         Python data contained in the file content
     """
 
-    # load the Pickle file
-    try:
-        with open(filename, "rb") as fid:
-            data = pickle.load(fid)
-    except pickle.UnpicklingError:
-        raise FileError("invalid Pickle file: %s" % filename)
-    except EOFError:
-        raise FileError("file not found: %s" % filename)
-    except OSError:
-        raise FileError("invalid Pickle file: %s" % filename)
+    (name, ext) = os.path.splitext(filename)
+    if ext in [".json", ".js"]:
+        data = _load_json(filename, False)
+    elif ext == ".pck":
+        data = _load_pickle(filename)
+    else:
+        raise FileError("invalid file extension: %s" % filename)
 
     return data
 
 
-def write_pickle(filename, data):
+def write_data(filename, data):
     """
-    Write a pickle file.
+    Write a data file (JSON or Pickle).
 
     Parameters
     ----------
-    filename : string
+    filename : string)
         Name and path of the file to be created.
+        The file type is determined by the extension.
+        For JSON files, the extension should be "json" or "js".
+        For Pickle files, the extension should be "pck".
     data : data
         Python data to be saved.
     """
 
-    # save the Pickle file
-    try:
-        with open(filename, "wb") as fid:
-            pickle.dump(data, fid)
-    except pickle.PicklingError:
-        raise FileError("invalid data for Pickle: %s" % filename)
-    except OSError:
-        raise FileError("cannot write the file: %s" % filename)
+    (name, ext) = os.path.splitext(filename)
+    if ext in [".json", ".js"]:
+        _write_json(filename, data)
+    elif ext == ".pck":
+        _write_pickle(filename, data)
+    else:
+        raise FileError("invalid file extension: %s" % filename)
