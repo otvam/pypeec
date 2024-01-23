@@ -9,7 +9,11 @@
 
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = ["setuptools", "wheel", "setuptools_scm"]
+requires = [
+    "setuptools>68.2",
+    "wheel>0.41",
+    "setuptools_scm>7.1",
+]
 
 [tool.setuptools_scm]
 write_to = "pypeec/data/version.txt"
