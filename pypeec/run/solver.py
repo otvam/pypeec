@@ -29,7 +29,6 @@ from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_solver
 from pypeec.lib_check import check_data_options
 from pypeec import log
-from pypeec.error import CheckError, RunError
 
 
 # get a logger
