@@ -9,6 +9,11 @@
 
 # exclude Pickle files
 *.pck
+*.pkl
+
+# exclude gzip files
+*.gzip
+*.gz
 
 # exclude cache directories
 **/__pycache__

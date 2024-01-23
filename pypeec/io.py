@@ -3,13 +3,17 @@ Module for serialization and deserialization.
     - load JSON/YAML input files
     - load and write JSON/Pickle data files
 
-For YAML input files, the following custom extensions are used:
+For YAML files, the following custom extensions are used:
     - "!path" - allows the inclusion of relative paths
     - "!include" - allows the inclusion of YAML sub-files
 
-For JSON data files, the following custom extensions are used:
+For JSON files, the following custom extensions are used:
     - "__complex__" - allows the serialization of complex numbers
     - "__numpy__" - allows the serialization of NumPy arrays
+
+The JSON files can be serialized/deserialized as/from:
+    - text files
+    - gzip files
 
 Warning:
     - Pickling data is not secure.
@@ -24,6 +28,7 @@ __license__ = "Mozilla Public License Version 2.0"
 import os.path
 import json
 import pickle
+import gzip
 import yaml
 import numpy as np
 from pypeec.error import FileError
@@ -227,17 +232,19 @@ def _load_yaml(filename):
     return data
 
 
-def _load_json(filename, has_extensions):
+def _load_json(filename, is_gzip):
     """
-    Load a JSON file (with or without extensions).
+    Load a JSON file (with extensions).
     """
 
     try:
-        with open(filename, "r") as fid:
-            if has_extensions:
-                data = json.load(fid, cls=_JsonNumPyDecoder)
-            else:
-                data = json.load(fid)
+        if is_gzip:
+            fid = gzip.open(filename, "rt", encoding="utf-8")
+        else:
+            fid = open(filename, "r")
+
+        with fid:
+            data = json.load(fid, cls=_JsonNumPyDecoder)
     except (json.JSONDecodeError, TypeError, ValueError) as ex:
         raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
     except OSError:
@@ -246,13 +253,18 @@ def _load_json(filename, has_extensions):
     return data
 
 
-def _write_json(filename, data):
+def _write_json(filename, data, is_gzip):
     """
     Write a JSON file (with extensions).
     """
 
     try:
-        with open(filename, "w") as fid:
+        if is_gzip:
+            fid = gzip.open(filename, "wt", encoding="utf-8")
+        else:
+            fid = open(filename, "w")
+
+        with fid:
             json.dump(data, fid, indent=4, cls=_JsonNumPyEncoder)
     except (json.JSONDecodeError, TypeError, ValueError) as ex:
         raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
@@ -317,6 +329,8 @@ def load_input(filename):
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
         data = _load_json(filename, False)
+    elif ext in [".gz", ".gzip"]:
+        data = _load_json(filename, True)
     elif ext in [".yaml", ".yml"]:
         data = _load_yaml(filename)
     else:
@@ -345,8 +359,10 @@ def load_data(filename):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
+        data = _load_json(filename, False)
+    elif ext in [".gz", ".gzip"]:
         data = _load_json(filename, True)
-    elif ext == ".pck":
+    elif ext in [".pck", ".pkl"]:
         data = _load_pickle(filename)
     else:
         raise FileError("invalid file extension: %s" % filename)
@@ -371,8 +387,10 @@ def write_data(filename, data):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        _write_json(filename, data)
-    elif ext == ".pck":
+        _write_json(filename, data, False)
+    elif ext in [".gz", ".gzip"]:
+        _write_json(filename, data, True)
+    elif ext in [".pck", ".pkl"]:
         _write_pickle(filename, data)
     else:
         raise FileError("invalid file extension: %s" % filename)
