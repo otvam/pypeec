@@ -463,6 +463,9 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
         cond_magnetic = float("nan")
         status = True
 
+    # cast to base type
+    status = bool(status)
+
     # assign the results
     condition_status = {
         "check": check,

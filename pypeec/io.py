@@ -123,24 +123,38 @@ class _JsonNumPyEncoder(json.JSONEncoder):
                 "imag": obj.imag,
             }
 
-        # if not numpy, default to the base encoder
-        if not hasattr(obj, "dtype") or not hasattr(obj, "ndim"):
-            return json.JSONEncoder.default(self, obj)
-
-        # handle numpy array
-        if np.iscomplexobj(obj):
-            return {
-                "__np_array_complex__": None,
-                "dtype": str(obj.dtype),
-                "real": obj.real,
-                "imag": obj.imag,
-            }
+        # encode numpy array
+        if isinstance(obj, np.ndarray):
+            # handle numpy array
+            if np.issubdtype(obj.dtype, np.complex_):
+                return {
+                    "__numpy__": None,
+                    "dtype": "complex",
+                    "data": {"real": obj.real, "imag": obj.imag},
+                }
+            elif np.issubdtype(obj.dtype, np.floating):
+                return {
+                    "__numpy__": None,
+                    "dtype": "float",
+                    "data": obj.tolist(),
+                }
+            elif np.issubdtype(obj.dtype, np.integer):
+                return {
+                    "__numpy__": None,
+                    "dtype": "int",
+                    "data": obj.tolist(),
+                }
+            elif np.issubdtype(obj.dtype, bool):
+                return {
+                    "__numpy__": None,
+                    "dtype": "bool",
+                    "data": obj.tolist(),
+                }
+            else:
+                FileError("invalid numpy array for serialization")
         else:
-            return {
-                "__np_array_direct__": None,
-                "dtype": str(obj.dtype),
-                "data": obj.tolist(),
-            }
+            # if not numpy, default to the base encoder
+            return json.JSONEncoder.default(self, obj)
 
 
 class _JsonNumPyDecoder(json.JSONDecoder):
@@ -158,32 +172,39 @@ class _JsonNumPyDecoder(json.JSONDecoder):
         kwargs.setdefault("object_hook", self.parse)
         super().__init__(**kwargs)
 
-    def parse(self, data):
+    def parse(self, obj):
         """
         Function decoding NumPy types from dictionaries.
         """
 
         # if not dict, do nothing
-        if not isinstance(data, dict):
-            return data
+        if not isinstance(obj, dict):
+            return obj
 
-        if "__complex__" in data:
-            real = data["real"]
-            imag = data["imag"]
-            val = complex(real, imag)
-            return val
-        if "__np_array_complex__" in data:
-            dtype = np.dtype(data["dtype"])
-            real = np.array(data["real"], dtype=dtype)
-            imag = np.array(data["imag"], dtype=dtype)
-            val = real+1j*imag
-            return val
-        if "__np_array_direct__" in data:
-            dtype = np.dtype(data["dtype"])
-            val = np.array(data["data"], dtype=dtype)
-            return val
+        # parse the extensions
+        elif "__complex__" in obj:
+            # handling complex scalar
+            real = obj["real"]
+            imag = obj["imag"]
+            return complex(real, imag)
+        elif "__numpy__" in obj:
+            # handle numpy array
+            dtype = obj["dtype"]
+            data = obj["data"]
 
-        return data
+            # parse the type
+            if dtype == "complex":
+                real = np.array(data["real"], dtype=np.complex_)
+                imag = np.array(data["imag"], dtype=np.complex_)
+                return real+1j*imag
+            elif dtype == "float":
+                return np.array(data, dtype=np.float_)
+            elif dtype == "int":
+                return np.array(data, dtype=np.int_)
+            elif dtype == "bool":
+                return np.array(data, dtype=bool)
+        else:
+            return obj
 
 
 def _load_yaml(filename):
