@@ -397,6 +397,9 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
     else:
         status = True
 
+    # cast to base type
+    status = bool(status)
+
     # extract alg results
     n_sys_eval = op_obj.get_n_sys_eval()
     n_pcd_eval = op_obj.get_n_pcd_eval()

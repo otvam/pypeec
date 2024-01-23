@@ -115,40 +115,32 @@ class _JsonNumPyEncoder(json.JSONEncoder):
         Function encoding NumPy types as dictionaries.
         """
 
+        # encode complex number
+        if np.isscalar(obj) and np.iscomplexobj(obj):
+            return {
+                "__complex__": None,
+                "real": obj.real,
+                "imag": obj.imag,
+            }
+
         # if not numpy, default to the base encoder
         if not hasattr(obj, "dtype") or not hasattr(obj, "ndim"):
             return json.JSONEncoder.default(self, obj)
 
-        # handle numpy scalar
-        if np.isscalar(obj):
-            if np.iscomplexobj(obj):
-                return {
-                    "__np_scalar_complex__": None,
-                    "dtype": str(obj.dtype),
-                    "real": obj.real,
-                    "imag": obj.imag,
-                }
-            else:
-                return {
-                    "__np_scalar_direct__": None,
-                    "dtype": str(obj.dtype),
-                    "data": obj.item(),
-                }
+        # handle numpy array
+        if np.iscomplexobj(obj):
+            return {
+                "__np_array_complex__": None,
+                "dtype": str(obj.dtype),
+                "real": obj.real,
+                "imag": obj.imag,
+            }
         else:
-            # handle numpy array
-            if np.iscomplexobj(obj):
-                return {
-                    "__np_array_complex__": None,
-                    "dtype": str(obj.dtype),
-                    "real": obj.real,
-                    "imag": obj.imag,
-                }
-            else:
-                return {
-                    "__np_array_direct__": None,
-                    "dtype": str(obj.dtype),
-                    "data": obj.tolist(),
-                }
+            return {
+                "__np_array_direct__": None,
+                "dtype": str(obj.dtype),
+                "data": obj.tolist(),
+            }
 
 
 class _JsonNumPyDecoder(json.JSONDecoder):
@@ -163,10 +155,10 @@ class _JsonNumPyDecoder(json.JSONDecoder):
         Constructor
         """
 
-        kwargs.setdefault("object_hook", self.encode)
+        kwargs.setdefault("object_hook", self.parse)
         super().__init__(**kwargs)
 
-    def encode(self, data):
+    def parse(self, data):
         """
         Function decoding NumPy types from dictionaries.
         """
@@ -175,15 +167,10 @@ class _JsonNumPyDecoder(json.JSONDecoder):
         if not isinstance(data, dict):
             return data
 
-        if "__np_scalar_complex__" in data:
-            dtype = np.dtype(data["dtype"])
-            real = dtype.type(data["real"])
-            imag = dtype.type(data["imag"])
-            val = real+1j*imag
-            return val
-        if "__np_scalar_direct__" in data:
-            dtype = np.dtype(data["dtype"])
-            val = dtype.type(data["data"])
+        if "__complex__" in data:
+            real = data["real"]
+            imag = data["imag"]
+            val = complex(real, imag)
             return val
         if "__np_array_complex__" in data:
             dtype = np.dtype(data["dtype"])
@@ -333,7 +320,7 @@ def load_data(filename):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        data = _load_json(filename, False)
+        data = _load_json(filename, True)
     elif ext == ".pck":
         data = _load_pickle(filename)
     else:

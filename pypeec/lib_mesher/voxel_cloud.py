@@ -84,6 +84,9 @@ def get_cloud(n, d, c, domain_def, pts_cloud_in):
         if valid:
             pts_cloud_out.append(pts_tmp)
 
+    # cast
+    pts_cloud_out = np.array(pts_cloud_out, NP_TYPES.FLOAT)
+
     # display number of cloud points
     LOGGER.debug("final number = %d" % len(pts_cloud_out))
 
