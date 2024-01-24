@@ -350,7 +350,6 @@ def _get_data(data_init, data_sweep, timestamp, is_truncated):
     # end message
     (duration, fmt) = log.get_duration(timestamp)
     LOGGER.info("duration: %s" % fmt)
-    LOGGER.info("successful termination")
 
     # cast to seconds
     duration = duration.total_seconds()
@@ -375,41 +374,34 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
     # get timestamp
     timestamp = log.get_timer()
 
-    # run the solver
-    try:
-        # check the voxel data
-        LOGGER.info("check the voxel data")
-        data_geom = check_data_options.check_data_voxel(data_voxel)
+    # check the voxel data
+    LOGGER.info("check the voxel data")
+    data_geom = check_data_options.check_data_voxel(data_voxel)
 
-        # check the input data
-        LOGGER.info("check the input data")
-        check_data_problem.check_data_problem(data_problem)
-        check_data_tolerance.check_data_tolerance(data_tolerance)
-        check_data_options.check_data_options(is_truncated)
+    # check the input data
+    LOGGER.info("check the input data")
+    check_data_problem.check_data_problem(data_problem)
+    check_data_tolerance.check_data_tolerance(data_tolerance)
+    check_data_options.check_data_options(is_truncated)
 
-        # combine the problem and voxel data
-        LOGGER.info("combine the input data")
-        (data_solver, sweep_config, sweep_param) = check_data_solver.get_data_solver(data_geom, data_problem, data_tolerance)
+    # combine the problem and voxel data
+    LOGGER.info("combine the input data")
+    (data_solver, sweep_config, sweep_param) = check_data_solver.get_data_solver(data_geom, data_problem, data_tolerance)
 
-        # create the problem
-        with log.BlockTimer(LOGGER, "init"):
-            (data_init, data_internal) = _run_solver_init(data_solver, is_truncated)
+    # create the problem
+    with log.BlockTimer(LOGGER, "init"):
+        (data_init, data_internal) = _run_solver_init(data_solver, is_truncated)
 
-        # function for solving a single sweep
-        def fct_compute(tag, param, init):
-            with log.BlockTimer(LOGGER, "run sweep: " + tag):
-                (output, init) = _run_solver_sweep(data_solver, data_internal, param, init, is_truncated)
-            return output, init
+    # function for solving a single sweep
+    def fct_compute(tag, param, init):
+        with log.BlockTimer(LOGGER, "run sweep: " + tag):
+            (output, init) = _run_solver_sweep(data_solver, data_internal, param, init, is_truncated)
+        return output, init
 
-        # compute the different sweeps
-        data_sweep = sweep_solver.get_run_sweep(sweep_config, sweep_param, fct_compute)
-    except Exception as ex:
-        (duration, fmt) = log.get_duration(timestamp)
-        log.log_exception(LOGGER, ex)
-        LOGGER.error("duration: %s" % fmt)
-        LOGGER.error("invalid termination")
-        raise ex
-    else:
-        data_solution = _get_data(data_init, data_sweep, timestamp, is_truncated)
+    # compute the different sweeps
+    data_sweep = sweep_solver.get_run_sweep(sweep_config, sweep_param, fct_compute)
+
+    # create output data
+    data_solution = _get_data(data_init, data_sweep, timestamp, is_truncated)
 
     return data_solution

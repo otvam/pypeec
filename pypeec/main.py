@@ -81,8 +81,9 @@ def run_extract(data_name, is_zip, path_extract):
     if DISPLAY_LOGO:
         run_display_logo()
 
-    LOGGER.info("data extraction")
+    # execute workflow
     try:
+        LOGGER.info("data extraction")
         with importlib.resources.path("pypeec.data", data_name) as file_data:
             if is_zip:
                 shutil.unpack_archive(file_data, path_extract)
@@ -121,13 +122,21 @@ def run_mesher_data(data_geometry, **kwargs):
     if DISPLAY_LOGO:
         run_display_logo()
 
-    # load the tool
-    LOGGER.info("load the mesher")
-    from pypeec.run import mesher
+    # execute workflow
+    try:
+        # load the tool
+        LOGGER.info("load the mesher")
+        from pypeec.run import mesher
 
-    # run the tool
-    LOGGER.info("run the mesher")
-    data_voxel = mesher.run(data_geometry, **kwargs)
+        # run the tool
+        LOGGER.info("run the mesher")
+        data_voxel = mesher.run(data_geometry, **kwargs)
+    except Exception as ex:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("invalid termination")
+        raise ex
+    else:
+        LOGGER.info("successful termination")
 
     return data_voxel
 
@@ -143,7 +152,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
     file_geometry : filename
         The file content describes the geometry, meshing and resampling process.
         This input file is loaded by this function (JSON or YAML format).
-    file_voxel :  filename
+    file_voxel : filename
         The file content describes the voxel structure.
         This output file is written by this function (JSON or Pickle format).
     is_truncated : boolean
@@ -164,7 +173,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
         log.log_exception(LOGGER, ex)
         raise ex
 
-    # call the mesher
+    # run the tool
     data_voxel = run_mesher_data(data_geometry, **kwargs)
 
     # save results
@@ -212,13 +221,21 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
     if DISPLAY_LOGO:
         run_display_logo()
 
-    # load the tool
-    LOGGER.info("load the viewer")
-    from pypeec.run import viewer
+    # execute workflow
+    try:
+        # load the tool
+        LOGGER.info("load the viewer")
+        from pypeec.run import viewer
 
-    # run the tool
-    LOGGER.info("run the viewer")
-    viewer.run(data_voxel, data_viewer, **kwargs)
+        # run the tool
+        LOGGER.info("run the viewer")
+        viewer.run(data_voxel, data_viewer, **kwargs)
+    except Exception as ex:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("invalid termination")
+        raise ex
+    else:
+        LOGGER.info("successful termination")
 
 
 def run_viewer_file(file_voxel, file_viewer, **kwargs):
@@ -268,7 +285,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         log.log_exception(LOGGER, ex)
         raise ex
 
-    # call the viewer
+    # run the tool
     run_viewer_data(data_voxel, data_viewer, **kwargs)
 
 
@@ -282,7 +299,7 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
 
     Parameters
     ----------
-    data_voxel :  data
+    data_voxel : data
         The dict describes the voxel structure.
     data_problem: data
         The dict describes the problem to be solved.
@@ -303,13 +320,21 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
     if DISPLAY_LOGO:
         run_display_logo()
 
-    # load the tool
-    LOGGER.info("load the solver")
-    from pypeec.run import solver
+    # execute workflow
+    try:
+        # load the tool
+        LOGGER.info("load the solver")
+        from pypeec.run import solver
 
-    # run the tool
-    LOGGER.info("run the solver")
-    data_solution = solver.run(data_voxel, data_problem, data_tolerance, **kwargs)
+        # run the tool
+        LOGGER.info("run the solver")
+        data_solution = solver.run(data_voxel, data_problem, data_tolerance, **kwargs)
+    except Exception as ex:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("invalid termination")
+        raise ex
+    else:
+        LOGGER.info("successful termination")
 
     return data_solution
 
@@ -324,7 +349,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
 
     Parameters
     ----------
-    file_voxel :  filename
+    file_voxel : filename
         The file content describes the voxel structure.
         This input file is loaded by this function (JSON or Pickle format).
     file_problem: filename
@@ -333,7 +358,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
     file_tolerance: filename
         The file content describes the numerical options.
         This input file is loaded by this function (JSON or YAML format).
-    file_solution :  filename
+    file_solution : filename
         The file content describes the problem solution.
         This output file is written by this function (JSON or Pickle format).
     is_truncated : boolean
@@ -356,7 +381,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         log.log_exception(LOGGER, ex)
         raise ex
 
-    # call the solver
+    # run the tool
     data_solution = run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs)
 
     # save results
@@ -408,13 +433,21 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
     if DISPLAY_LOGO:
         run_display_logo()
 
-    # load the tool
-    LOGGER.info("load the plotter")
-    from pypeec.run import plotter
+    # execute workflow
+    try:
+        # load the tool
+        LOGGER.info("load the plotter")
+        from pypeec.run import plotter
 
-    # run the tool
-    LOGGER.info("run the plotter")
-    plotter.run(data_solution, data_plotter, **kwargs)
+        # run the tool
+        LOGGER.info("run the plotter")
+        plotter.run(data_solution, data_plotter, **kwargs)
+    except Exception as ex:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("invalid termination")
+        raise ex
+    else:
+        LOGGER.info("successful termination")
 
 
 def run_plotter_file(file_solution, file_plotter, **kwargs):
@@ -469,5 +502,5 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         log.log_exception(LOGGER, ex)
         raise ex
 
-    # call the plotter
+    # run the tool
     run_plotter_data(data_solution, data_plotter, **kwargs)

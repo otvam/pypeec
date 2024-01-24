@@ -30,7 +30,6 @@ from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
 from pypeec.lib_check import check_data_options
 from pypeec import log
-from pypeec.error import RunError
 
 # get a logger
 LOGGER = log.get_logger("PLOTTER")
@@ -126,7 +125,7 @@ def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
         # make the plot
         manage_matplotlib.get_plot_plotter(fig, res, conv, layout, data_plot, data_options)
     else:
-        raise RunError("invalid plot framework")
+        raise ValueError("invalid plot framework")
 
 
 def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
@@ -147,46 +146,38 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
 
 def run(
         data_solution, data_plotter,
-        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".", name=None,
+        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".", name=None
 ):
     """
     Main script for plotting the solution of a PEEC problem.
     Handle invalid data with exceptions.
     """
 
-    # run the code
-    try:
-        # check the solution data
-        LOGGER.info("check the solution data")
-        (data_init, data_sweep) = check_data_options.check_data_solution(data_solution)
+    # check the solution data
+    LOGGER.info("check the solution data")
+    (data_init, data_sweep) = check_data_options.check_data_solution(data_solution)
 
-        # check the input data
-        LOGGER.info("check the input data")
-        check_data_visualization.check_data_plotter(data_plotter)
-        check_data_options.check_plot_options(plot_mode, folder, name)
-        check_data_options.check_tag_list(data_sweep, tag_sweep)
-        check_data_options.check_tag_list(data_plotter, tag_plot)
+    # check the input data
+    LOGGER.info("check the input data")
+    check_data_visualization.check_data_plotter(data_plotter)
+    check_data_options.check_plot_options(plot_mode, folder, name)
+    check_data_options.check_tag_list(data_sweep, tag_sweep)
+    check_data_options.check_tag_list(data_plotter, tag_plot)
 
-        # find the plots
-        if tag_sweep is not None:
-            data_sweep = {key: data_sweep[key] for key in tag_sweep}
-        if tag_plot is not None:
-            data_plotter = {key: data_plotter[key] for key in tag_plot}
+    # find the plots
+    if tag_sweep is not None:
+        data_sweep = {key: data_sweep[key] for key in tag_sweep}
+    if tag_plot is not None:
+        data_plotter = {key: data_plotter[key] for key in tag_plot}
 
-        # create the Qt app (should be at the beginning)
-        LOGGER.info("init the plot manager")
-        gui_obj = manage_plotgui.PlotGui(plot_mode, folder, name)
+    # create the Qt app (should be at the beginning)
+    LOGGER.info("init the plot manager")
+    gui_obj = manage_plotgui.PlotGui(plot_mode, folder, name)
 
-        # plot the sweeps
-        for tag_sweep, data_sweep_tmp in data_sweep.items():
-            with log.BlockTimer(LOGGER, "plot sweep: " + tag_sweep):
-                _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_plotter, gui_obj)
+    # plot the sweeps
+    for tag_sweep, data_sweep_tmp in data_sweep.items():
+        with log.BlockTimer(LOGGER, "plot sweep: " + tag_sweep):
+            _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_plotter, gui_obj)
 
-        # end message
-        LOGGER.info("successful termination")
-
-        # enter the event loop (should be at the end, blocking call)
-        gui_obj.show()
-    except Exception as ex:
-        log.log_exception(LOGGER, ex)
-        raise ex
+    # enter the event loop (should be at the end, blocking call)
+    gui_obj.show()

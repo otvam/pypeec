@@ -95,41 +95,33 @@ def run(
     Handle invalid data with exceptions.
     """
 
-    # run the code
-    try:
-        # check the voxel data
-        LOGGER.info("check the voxel data")
-        data_geom = check_data_options.check_data_voxel(data_voxel)
+    # check the voxel data
+    LOGGER.info("check the voxel data")
+    data_geom = check_data_options.check_data_voxel(data_voxel)
 
-        # check the input data
-        LOGGER.info("check the input data")
-        check_data_visualization.check_data_viewer(data_viewer)
-        check_data_options.check_plot_options(plot_mode, folder, name)
-        check_data_options.check_tag_list(data_viewer, tag_plot)
+    # check the input data
+    LOGGER.info("check the input data")
+    check_data_visualization.check_data_viewer(data_viewer)
+    check_data_options.check_plot_options(plot_mode, folder, name)
+    check_data_options.check_tag_list(data_viewer, tag_plot)
 
-        # find the plots
-        if tag_plot is not None:
-            data_viewer = {key: data_viewer[key] for key in tag_plot}
+    # find the plots
+    if tag_plot is not None:
+        data_viewer = {key: data_viewer[key] for key in tag_plot}
 
-        # create the Qt app (should be at the beginning)
-        LOGGER.info("init the plot manager")
-        gui_obj = manage_plotgui.PlotGui(plot_mode, folder, name)
+    # create the Qt app (should be at the beginning)
+    LOGGER.info("init the plot manager")
+    gui_obj = manage_plotgui.PlotGui(plot_mode, folder, name)
 
-        # handle the data
-        LOGGER.info("parse data")
-        (grid, voxel, point, reference) = _get_grid_voxel(data_geom)
+    # handle the data
+    LOGGER.info("parse data")
+    (grid, voxel, point, reference) = _get_grid_voxel(data_geom)
 
-        # make the plots
-        with log.BlockTimer(LOGGER, "generate plots"):
-            for i, (tag_plot, data_viewer_tmp) in enumerate(data_viewer.items()):
-                LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_viewer), tag_plot))
-                _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)
+    # make the plots
+    with log.BlockTimer(LOGGER, "generate plots"):
+        for i, (tag_plot, data_viewer_tmp) in enumerate(data_viewer.items()):
+            LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_viewer), tag_plot))
+            _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)
 
-        # end message
-        LOGGER.info("successful termination")
-
-        # enter the event loop (should be at the end, blocking call)
-        gui_obj.show()
-    except Exception as ex:
-        log.log_exception(LOGGER, ex)
-        raise ex
+    # enter the event loop (should be at the end, blocking call)
+    gui_obj.show()

@@ -28,7 +28,6 @@ from pypeec.lib_mesher import voxel_summary
 from pypeec.lib_check import check_data_geometry
 from pypeec.lib_check import check_data_options
 from pypeec import log
-from pypeec.error import CheckError
 
 # get a logger
 LOGGER = log.get_logger("MESHER")
@@ -53,7 +52,7 @@ def _run_mesher(data_geometry):
     elif mesh_type == "stl":
         (reference, data_internal) = _run_stl(data_voxelize)
     else:
-        raise CheckError("invalid mesh type")
+        raise ValueError("invalid mesh type")
 
     return reference, data_internal
 
@@ -226,7 +225,6 @@ def _get_data(data_geom, timestamp, is_truncated):
     # end message
     (duration, fmt) = log.get_duration(timestamp)
     LOGGER.info("duration: %s" % fmt)
-    LOGGER.info("successful termination")
 
     # cast to seconds
     duration = duration.total_seconds()
@@ -250,25 +248,18 @@ def run(data_geometry, is_truncated=False):
     # get timestamp
     timestamp = log.get_timer()
 
-    # run the code
-    try:
-        # check the input data
-        LOGGER.info("check the input data")
-        check_data_geometry.check_data_geometry(data_geometry)
-        check_data_options.check_data_options(is_truncated)
+    # check the input data
+    LOGGER.info("check the input data")
+    check_data_geometry.check_data_geometry(data_geometry)
+    check_data_options.check_data_options(is_truncated)
 
-        # run the mesher
-        (reference, data_internal) = _run_mesher(data_geometry)
+    # run the mesher
+    (reference, data_internal) = _run_mesher(data_geometry)
 
-        # resample and assemble
-        data_geom = _run_resample_graph(reference, data_internal, data_geometry, is_truncated)
-    except Exception as ex:
-        (duration, fmt) = log.get_duration(timestamp)
-        log.log_exception(LOGGER, ex)
-        LOGGER.error("duration: %s" % fmt)
-        LOGGER.error("invalid termination")
-        raise ex
-    else:
-        data_voxel = _get_data(data_geom, timestamp, is_truncated)
+    # resample and assemble
+    data_geom = _run_resample_graph(reference, data_internal, data_geometry, is_truncated)
+
+    # create output data
+    data_voxel = _get_data(data_geom, timestamp, is_truncated)
 
     return data_voxel

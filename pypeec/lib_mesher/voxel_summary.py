@@ -44,8 +44,6 @@ def get_status(n, d, s, c, domain_def, connection_def):
 
     # assign data
     voxel_status = {
-        "n": n,
-        "s": s,
         "n_total": n_total,
         "n_used": n_used,
         "A_xy": A_xy,
