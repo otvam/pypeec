@@ -16,6 +16,7 @@ PATH_ROOT = os.path.dirname(__file__)
 FOLDER_CONFIG = "config"
 
 # name of the different examples
+#   tutorial
 #   examples_voxel
 #       examples_voxel/slab
 #       examples_voxel/transformer
