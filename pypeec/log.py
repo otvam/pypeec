@@ -169,9 +169,11 @@ class BlockTimer:
         Logger object instance.
     name : string
         Name of the code block.
+    level : string
+        Logging level to be used.
     """
 
-    def __init__(self, logger, name):
+    def __init__(self, logger, name, level="INFO"):
         """
         Constructor.
         Set the logger.
@@ -179,6 +181,7 @@ class BlockTimer:
 
         self.logger = logger
         self.name = name
+        self.level = logging.getLevelName(level)
         self.timestamp = None
 
     def __enter__(self):
@@ -189,7 +192,7 @@ class BlockTimer:
 
         # start the timer and display
         self.timestamp = time.time()
-        self.logger.info(self.name + " : enter : timing")
+        self.logger.log(self.level, self.name + " : enter : timing")
 
         # increase the indentation of the block
         global CURRENT_LEVEL
@@ -208,7 +211,7 @@ class BlockTimer:
         # stop the timer and display
         duration = _get_compute_duration(self.timestamp)
         duration = _get_format_duration(duration)
-        self.logger.info(self.name + " : exit : " + duration)
+        self.logger.log(self.level, self.name + " : exit : " + duration)
 
 
 class BlockIndent:
@@ -244,7 +247,7 @@ class BlockIndent:
         CURRENT_LEVEL -= 1
 
 
-def log_exception(logger, ex):
+def log_exception(logger, ex, level="ERROR"):
     """
     Log an exception.
         - Log the exception type, message, and trace.
@@ -256,6 +259,8 @@ def log_exception(logger, ex):
         Logger object instance.
     ex : exception
         Exception to be logged.
+    level : string
+        Logging level to be used.
     """
 
     # remove the expression context
@@ -264,11 +269,14 @@ def log_exception(logger, ex):
     # get the exception data
     name = ex.__class__.__name__
 
+    # get level
+    level = logging.getLevelName(level)
+
     # log the exception
     if EXCEPTION_TRACE:
-        logger.error("exception : " + name, exc_info=ex)
+        logger.log(level, "exception : " + name, exc_info=ex)
     else:
-        logger.error("exception : " + name + "\n" + str(ex))
+        logger.log(level, "exception : " + name + "\n" + str(ex))
 
 
 def get_timer():
