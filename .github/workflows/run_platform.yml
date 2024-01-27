@@ -1,12 +1,15 @@
-# Run the tests after a manual trigger.
-# The tests are run with different platforms with a single Python version.
+# Run the tests with different platforms (default Python version).
+#
+# Run with the following conditions:
+#   - dispatch
+#   - weekly
 #
 # The environment variable "ALLOW_PLOTTING" is used to prevent warnings without display server.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-name: Test Different Platforms
+name: Test Platforms
 
 on:
   workflow_dispatch:

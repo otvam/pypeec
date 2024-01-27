@@ -1,12 +1,16 @@
-# Run the tests after each push/pull event.
-# The tests are run with a single Python version on Linux.
+# Run the standard tests (on Linux / default Python version).
+#
+# Run with the following conditions:
+#   - push/pull
+#   - dispatch
+#   - daily
 #
 # The environment variable "ALLOW_PLOTTING" is used to prevent warnings without display server.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-name: Automated Tests
+name: Standard Tests
 
 on:
   push:

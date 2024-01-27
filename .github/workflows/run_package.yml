@@ -1,17 +1,22 @@
-# Run the tests after each push/pull event.
-# The tests are run with a single Python version on Linux.
+# Run the tests with the Python package (on Linux / default Python version).
+#
+# Run with the following conditions:
+#   - dispatch
+#   - weekly
 #
 # The environment variable "ALLOW_PLOTTING" is used to prevent warnings without display server.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-name: Package Tests
+name: Test Package
 
 on:
   push:
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
 
 env:
   ALLOW_PLOTTING: "true"

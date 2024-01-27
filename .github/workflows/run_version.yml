@@ -1,5 +1,8 @@
-# Run the tests after a manual trigger.
-# The tests are run with different Python versions on Linux.
+# Run the tests with different Python versions (on Linux).
+#
+# Run with the following conditions:
+#   - dispatch
+#   - weekly
 #
 # The environment variable "ALLOW_PLOTTING" is used to prevent warnings without display server.
 #
