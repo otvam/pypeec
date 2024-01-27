@@ -9,6 +9,8 @@
 name: Package Tests
 
 on:
+  push:
+  pull_request:
   workflow_dispatch:
 
 env:
