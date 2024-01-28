@@ -9,7 +9,7 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-name: Test Platforms
+name: Test Software Platforms
 
 on:
   workflow_dispatch:
