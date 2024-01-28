@@ -5,8 +5,6 @@
 #   - dispatch
 #   - daily
 #
-# The environment variable "ALLOW_PLOTTING" is used to prevent warnings without display server.
-#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 

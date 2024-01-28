@@ -3,6 +3,9 @@
 #   - run the tests
 #   - check the test status
 #
+# The variable "ALLOW_PLOTTING" are allowing the tests to be run without a display server.
+# The variables "PYTHONIOENCODING" and "PYTHONUNBUFFERED" are setting up Python.
+#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 

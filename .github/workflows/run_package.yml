@@ -4,8 +4,6 @@
 #   - dispatch
 #   - weekly
 #
-# The environment variable "ALLOW_PLOTTING" is used to prevent warnings without display server.
-#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
@@ -15,14 +13,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
-
-env:
-  ALLOW_PLOTTING: "true"
-  PYTHONIOENCODING: "utf8"
-  PYTHONUNBUFFERED: "1"
-
-permissions:
-  contents: read
 
 jobs:
   build:
