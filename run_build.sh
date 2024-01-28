@@ -65,11 +65,6 @@ function build_package {
   ret=$(( ret || $? ))
 }
 
-# global variables
-export ALLOW_PLOTTING="true"
-export PYTHONIOENCODING="utf8"
-export PYTHONUNBUFFERED="1"
-
 # init status
 ret=0
 
