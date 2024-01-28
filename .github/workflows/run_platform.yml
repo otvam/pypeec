@@ -45,4 +45,5 @@ jobs:
       - name: Run the tests / ${{ matrix.os-type }}
         shell: bash
         run: |
+          export ALLOW_PLOTTING="true"
           source run_tests.sh
