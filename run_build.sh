@@ -39,6 +39,16 @@ function build_docs {
   # create folders
   mkdir docs/_static
   mkdir docs/_templates
+  mkdir html
+
+  # timestamp for sitemap
+  LASTMOD=$(date '+%Y-%m-%d')
+
+  # export timestamp
+  export LASTMOD
+
+  # substitute the timestamp
+  cat docs/sitemap.xml | envsubst > html/sitemap.xml
 
   # build documentation
   sphinx-build -b html docs html

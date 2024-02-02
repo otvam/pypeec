@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://pypeec.otvam.ch/</loc>
+    <priority>1.00</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+
+  <url>
+    <loc>https://pypeec.otvam.ch/content/about.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
+    <loc>https://pypeec.otvam.ch/content/tutorial.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
+    <loc>https://pypeec.otvam.ch/content/examples.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
+    <loc>https://pypeec.otvam.ch/content/gallery.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
+    <loc>https://pypeec.otvam.ch/content/workflow.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+
+  <url>
+    <loc>https://pypeec.otvam.ch/content/technical.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
+    <loc>https://pypeec.otvam.ch/content/implementation.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
+    <loc>https://pypeec.otvam.ch/content/warnings.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
+    <loc>https://pypeec.otvam.ch/content/format.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
+    <loc>https://pypeec.otvam.ch/content/index_api.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+
+</urlset>
