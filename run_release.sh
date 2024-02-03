@@ -117,6 +117,15 @@ function upload_documentation {
   # copy website
   cp -r html/* pypeecdocs
 
+  # timestamp for sitemap
+  LASTMOD=$(date '+%Y-%m-%d')
+
+  # export timestamp
+  export LASTMOD
+
+  # substitute the timestamp
+  cat docs/website/sitemap.xml | envsubst > pypeecdocs/sitemap.xml
+
   # copy metadata
   cp docs/website/CNAME pypeecdocs
   cp docs/website/README.md pypeecdocs
