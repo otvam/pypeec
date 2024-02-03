@@ -24,10 +24,8 @@ PyPEEC - 3D PEEC Solver
    content/format
    api/index_api
 
-.. image:: images/header.png
+.. image:: images/banner.png
   :alt: PyPEEC Banner
-
-------------
 
 .. Important::
     * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
@@ -83,5 +81,10 @@ The **PyPEEC** package contains the following **tools**:
 
 ------------
 
-.. image:: images/footer.png
-  :alt: Dartmouth PMIC
+.. image:: images/institution.png
+  :alt: Dartmouth and PMIC Logos
+
+.. Note::
+    * **Author:** `Thomas Guillod <https://otvam.ch>`_
+    * **Institution:** `Dartmouth College <https://dartmouth.edu>`_
+    * **Licence:** `MPL-2.0 <http://mozilla.org/MPL/2.0>`_
