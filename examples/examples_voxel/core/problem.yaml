@@ -7,20 +7,20 @@
 # Mozilla Public License Version 2.0
 
 "material_def":
-    "core":
-        "domain_list": [ "core" ]
-        "material_type": "magnetic"
-        "orientation_type": "anisotropic"
-        "var_type": "lumped"
     "terminal":
         "domain_list": ["src", "sink"]
         "material_type": "electric"
         "orientation_type": "isotropic"
-        "var_type": "distributed"
+        "var_type": "lumped"
     "cond":
         "domain_list": ["cond"]
         "material_type": "electric"
         "orientation_type": "isotropic"
+        "var_type": "distributed"
+    "core":
+        "domain_list": [ "core" ]
+        "material_type": "magnetic"
+        "orientation_type": "anisotropic"
         "var_type": "lumped"
     "empty":
         "domain_list": ["empty"]
@@ -47,9 +47,9 @@
     "sim_dc":
         "freq": 0.0
         "material_val":
-            "core": {"chi_re": [100.0, 100.0, 50.0], "chi_im": [50.0, 50.0, 25.0]}
-            "terminal": {"rho_re": [1.0e-8, 1.0e-8], "rho_im": [0.0, 0.0]}
-            "cond": {"rho_re": 1.0e-8, "rho_im": 0.0}
+            "terminal": {"rho_re": 1.0e-8, "rho_im": 0.0}
+            "cond": {"rho_re": [1.0e-8, 1.0e-8, 1.0e-8, 1.0e-8, 1.0e-8], "rho_im": [0.0, 0.0, 0.0, 0.0, 0.0]}
+            "core": { "chi_re": [ 100.0, 100.0, 50.0 ], "chi_im": [ 50.0, 50.0, 25.0 ] }
             "empty": {"rho_re": 1.0e-8, "rho_im": 0.0}
         "source_val":
             "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
@@ -58,9 +58,9 @@
     "sim_ac":
         "freq": 1.0e+3
         "material_val":
-            "core": {"chi_re": [100.0, 100.0, 50.0], "chi_im": [50.0, 50.0, 25.0]}
-            "terminal": {"rho_re": [1.0e-8, 1.0e-8], "rho_im": [0.0, 0.0]}
-            "cond": {"rho_re": 1.0e-8, "rho_im": 0.0}
+            "terminal": {"rho_re": 1.0e-8, "rho_im": 0.0}
+            "cond": {"rho_re": [1.0e-8, 1.0e-8, 1.0e-8, 1.0e-8, 1.0e-8], "rho_im": [0.0, 0.0, 0.0, 0.0, 0.0]}
+            "core": { "chi_re": [ 100.0, 100.0, 50.0 ], "chi_im": [ 50.0, 50.0, 25.0 ] }
             "empty": {"rho_re": 1.0e-8, "rho_im": 0.0}
         "source_val":
             "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
