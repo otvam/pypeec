@@ -30,7 +30,7 @@ def get_material_vector(material_val, material_idx, material_type_ref):
         idx = material_idx_tmp["idx"]
 
         # vacuum permeability
-        mu = 4 * np.pi * 1e-7
+        mu = 4*np.pi*1e-7
 
         # get the resistivities for the material
         if material_type == "electric":
@@ -85,7 +85,7 @@ def get_source_all(source_val, source_pos, source_idx):
             value = I_re+1j*I_im
             element = Y_re+1j*Y_im
 
-            # get the distributed parameters
+            # scale the lumped parameters
             if var_type == "lumped":
                 value_all = value/len(idx)
                 element_all = element/len(idx)
@@ -103,7 +103,7 @@ def get_source_all(source_val, source_pos, source_idx):
             value = V_re+1j*V_im
             element = Z_re+1j*Z_im
 
-            # get the distributed parameters
+            # scale the lumped parameters
             if var_type == "lumped":
                 value_all = value
                 element_all = element*len(idx)

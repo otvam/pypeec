@@ -5,17 +5,22 @@
 #   - material definition
 #       - domain_list: list of domains with the specified material
 #       - material_type: material type ("electric" or "magnetic")
+#       - orientation_type: material type ("isotropic" or "anisotropic")
+#           - "electric": the material parameters are anisotropic
+#           - "anisotropic": the material parameters anisotropic
 #       - var_type: type of material parameters ("lumped" or "distributed")
-#           - var_type" is equal to "lumped", the material parameters are homogeneous
-#           - var_type" is equal to "distributed", the material parameters are space-dependent
+#           - "lumped": the material parameters are homogeneous
+#           - "distributed": the material parameters are space-dependent
 "material_def":
     "mat_electric":
         "domain_list": ["dom_src", "dom_cond", "dom_sink"]
         "material_type": "electric"
+        "orientation_type": "isotropic"
         "var_type": "lumped"
     "mat_magnetic":
         "domain_list": ["dom_mag"]
         "material_type": "magnetic"
+        "orientation_type": "isotropic"
         "var_type": "lumped"
 
 # source definition
@@ -26,8 +31,8 @@
 #       - domain_list: list of domains with the specified source
 #       - source_type: source type ("current" or "voltage")
 #       - var_type: type of source parameters ("lumped" or "distributed")
-#           - var_type" is equal to "lumped", the source parameters are homogeneous
-#           - var_type" is equal to "distributed", the source parameters are space-dependent
+#           - "lumped": the source parameters are homogeneous
+#           - "distributed": the source parameters are space-dependent
 "source_def":
     "src":
         "domain_list": ["dom_src"]
@@ -49,11 +54,11 @@
     "sim_dc": null
     "sim_ac": "sim_dc"
 
-# material parameters and source values definition
-#   - dict of dicts with the material parameters and source values definition
+# material and source parameters
+#   - dict of dicts with the material and source parameters
 #   - required information, the dict cannot be empty
 #   - each dict represents a specific sweep configuration
-#   - material parameters and source values definition
+#   - material and source parameters
 #       - freq: operating frequency for the problem (DC or AC)
 #       - material_val: material parameters
 #           - dict of dicts with the material name and the material definition
@@ -63,9 +68,22 @@
 #           - magnetic material definition
 #               - chi_re: material real susceptibility (should be positive)
 #               - chi_im: material imaginary susceptibility (should be positive)
-#           - material parameters
-#               - scalar if "var_type" is equal to "lumped"
-#               - array if "var_type" is equal to "distributed"
+#           - material values
+#               - "lumped" and "isotropic": scalar
+#                   - the material parameters are isotropic
+#                   - the same parameters are used for all the voxels
+#               - "lumped" and "anisotropic": array
+#                   - the array contains the anisotropic parameters
+#                   - the same parameters are used for all the voxels
+#                   - the array has the following size: (3)
+#               - "distributed" and "isotropic": array
+#                   - the material parameters are isotropic
+#                   - different parameters are used for each voxel
+#                   - the array has the following size: (n_voxel)
+#               - "distributed" and "anisotropic": array
+#                   - the material parameters are anisotropic
+#                   - different parameters are used for each voxel
+#                   - the array has the following size: (n_voxel, 3)
 #       - source_val: source parameters
 #           - dict of dicts with the source name and the source definition
 #           - current source definition
@@ -79,8 +97,13 @@
 #               - Z_re: voltage internal impedance (real part)
 #               - Z_im: voltage internal impedance (imaginary part)
 #           - source values
-#               - scalar if "var_type" is equal to "lumped"
-#               - array if "var_type" is equal to "distributed"
+#               - "lumped": scalar
+#                   - the source is using lumped parameters
+#                   - the same parameters are used for all the voxels
+#               - "distributed": array
+#                   - the source is using distributed parameters
+#                   - different parameters are used for each voxel
+#                   - the array has the following size: (n_voxel)
 "sweep_param":
     "sim_dc":
         "freq": 0.0
