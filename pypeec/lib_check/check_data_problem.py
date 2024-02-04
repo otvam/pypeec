@@ -9,9 +9,9 @@ __license__ = "Mozilla Public License Version 2.0"
 from pypeec.lib_check import datachecker
 
 
-def _check_field(val_dict, var_type, key_list):
+def _check_field(val_dict, key_list, var_type, orientation_type):
     """
-    Check a value dict.
+    Check a value dict for a variable (lumped / distributed / isotropic / anisotropic).
     """
 
     # check type
@@ -19,12 +19,18 @@ def _check_field(val_dict, var_type, key_list):
 
     # check data
     for tag, val in val_dict.items():
-        if var_type == "lumped":
+        if var_type == "lumped" and orientation_type is None:
             datachecker.check_float(tag, val)
-        elif var_type == "distributed":
+        elif var_type == "lumped" and orientation_type == "isotropic":
+            datachecker.check_float(tag, val)
+        elif var_type == "lumped" and orientation_type == "anisotropic":
+            datachecker.check_float_array(tag, val, size=3)
+        elif var_type == "distributed" and orientation_type is None:
             datachecker.check_float_array(tag, val)
-        else:
-            raise ValueError("invalid material type")
+        elif var_type == "distributed" and orientation_type == "isotropic":
+            datachecker.check_float_array(tag, val)
+        elif var_type == "distributed" and orientation_type == "anisotropic":
+            datachecker.check_float_pts(tag, val, size=3)
 
 
 def _check_material_def(material_def):
@@ -38,17 +44,22 @@ def _check_material_def(material_def):
     # check value
     for material_def_tmp in material_def.values():
         # check type
-        key_list = ["material_type", "var_type", "domain_list"]
+        key_list = ["material_type", "orientation_type", "var_type", "domain_list"]
         datachecker.check_dict("material_def", material_def_tmp, key_list=key_list)
 
         # extract the data
         var_type = material_def_tmp["var_type"]
         material_type = material_def_tmp["material_type"]
+        orientation_type = material_def_tmp["orientation_type"]
         domain_list = material_def_tmp["domain_list"]
 
         # check data
-        datachecker.check_choice("var_type", var_type, ["lumped", "distributed"])
-        datachecker.check_choice("material_type", material_type, ["electric", "magnetic"])
+        material_type_list = ["electric", "magnetic"]
+        var_type_list = ["lumped", "distributed"]
+        orientation_type_list = ["isotropic", "anisotropic"]
+        datachecker.check_choice("var_type", var_type, var_type_list)
+        datachecker.check_choice("material_type", material_type, material_type_list)
+        datachecker.check_choice("orientation_type", orientation_type, orientation_type_list)
         datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
 
@@ -72,8 +83,10 @@ def _check_source_def(source_def):
         domain_list = source_def_tmp["domain_list"]
 
         # check data
-        datachecker.check_choice("var_type", var_type, ["lumped", "distributed"])
-        datachecker.check_choice("source_type", source_type, ["current", "voltage"])
+        source_type_list = ["current", "voltage"]
+        var_type_list = ["lumped", "distributed"]
+        datachecker.check_choice("var_type", var_type, var_type_list)
+        datachecker.check_choice("source_type", source_type, source_type_list)
         datachecker.check_list("domain_list", domain_list, can_be_empty=False, sub_type=str)
 
 
@@ -102,8 +115,9 @@ def _check_sweep_param(sweep_param, material_def, source_def):
     for tag, material_val_tmp in material_val.items():
         # extract the data
         datachecker.check_choice("tag", tag, material_def)
-        var_type = material_def[tag]["var_type"]
         material_type = material_def[tag]["material_type"]
+        orientation_type = material_def[tag]["orientation_type"]
+        var_type = material_def[tag]["var_type"]
 
         # get the source value
         if material_type == "electric":
@@ -113,27 +127,32 @@ def _check_sweep_param(sweep_param, material_def, source_def):
         else:
             raise ValueError("invalid material type")
 
-        # check type
-        _check_field(material_val_tmp, var_type, key_list)
+        # check variable
+        _check_field(material_val_tmp, key_list, var_type, orientation_type)
 
     # check value
     for tag, source_val_tmp in source_val.items():
         # extract the data
         datachecker.check_choice("tag", tag, source_def)
-        var_type = source_def[tag]["var_type"]
         source_type = source_def[tag]["source_type"]
+        var_type = source_def[tag]["var_type"]
 
         # get the source value
-        # get the source value
         if source_type == "current":
-            key_list = ["I_re", "I_im", "Y_re", "Y_im"]
+            key_list = [
+                "I_re", "I_im",
+                "Y_re", "Y_im",
+            ]
         elif source_type == "voltage":
-            key_list = ["V_re", "V_im", "Z_re", "Z_im"]
+            key_list = [
+                "V_re", "V_im",
+                "Z_re", "Z_im",
+            ]
         else:
             raise ValueError("invalid source type")
 
-        # check type
-        _check_field(source_val_tmp, var_type, key_list)
+        # check variable
+        _check_field(source_val_tmp, key_list, var_type, None)
 
 
 def check_data_problem(data_problem):

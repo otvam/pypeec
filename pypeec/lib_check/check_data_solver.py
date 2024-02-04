@@ -57,7 +57,7 @@ def _check_source_graph(idx_c, idx_m, idx_s, connection_def):
         datachecker.check_assert("index overlap", cond, "magnetic components should not include sources")
 
 
-def _get_field(val_dict, var_type, idx):
+def _get_field(val_dict, idx, var_type, orientation_type):
     """
     Cast and check the material and source vectors.
     If the variable is a scalar, cast to an array.
@@ -66,12 +66,21 @@ def _get_field(val_dict, var_type, idx):
 
     for tag, val in val_dict.items():
         # cast
-        if var_type == "lumped":
-            val = np.full(len(idx), val, dtype=np.float_)
-        elif var_type == "distributed":
+        if var_type == "lumped" and orientation_type is None:
+            val = np.full((len(idx), 3), val, dtype=np.float_)
+        elif var_type == "lumped" and orientation_type == "isotropic":
+            val = np.full((len(idx), 3), val, dtype=np.float_)
+        elif var_type == "lumped" and orientation_type == "anisotropic":
             val = np.array(val, dtype=np.float_)
-        else:
-            raise ValueError("invalid material type")
+            val = np.tile(val, (len(idx), 1))
+        elif var_type == "distributed" and orientation_type is None:
+            val = np.array(val, dtype=np.float_)
+            val = np.tile(val, (3, 1)).transpose()
+        elif var_type == "distributed" and orientation_type == "isotropic":
+            val = np.array(val, dtype=np.float_)
+            val = np.tile(val, (3, 1)).transpose()
+        elif var_type == "distributed" and orientation_type == "anisotropic":
+            val = np.array(val, dtype=np.float_)
 
         # check
         cond = len(val) == len(idx)
@@ -113,6 +122,7 @@ def _get_material_idx(material_def, domain_def):
         # extract the data
         var_type = material_def_tmp["var_type"]
         material_type = material_def_tmp["material_type"]
+        orientation_type = material_def_tmp["orientation_type"]
         domain_list = material_def_tmp["domain_list"]
 
         # get indices
@@ -130,7 +140,12 @@ def _get_material_idx(material_def, domain_def):
             raise ValueError("invalid material type")
 
         # assign the material
-        material_idx[tag] = {"idx": idx, "material_type": material_type, "var_type": var_type}
+        material_idx[tag] = {
+            "idx": idx,
+            "material_type": material_type,
+            "var_type": var_type,
+            "orientation_type": orientation_type,
+        }
 
     return domain_cm, idx_c, idx_m, material_idx
 
@@ -162,7 +177,11 @@ def _get_source_idx(source_def, domain_def):
         domain_s += domain_list
 
         # get the source value
-        source_idx[tag] = {"idx": idx, "source_type": source_type, "var_type": var_type}
+        source_idx[tag] = {
+            "idx": idx,
+            "source_type": source_type,
+            "var_type": var_type,
+        }
 
     return domain_s, idx_s, source_idx
 
@@ -187,11 +206,12 @@ def _get_sweep_param(sweep_param, material_idx, source_idx):
     # update values
     for tag, material_val_tmp in material_val.items():
         # extract the data
+        orientation_type = material_idx[tag]["orientation_type"]
         var_type = material_idx[tag]["var_type"]
         idx = material_idx[tag]["idx"]
 
         # check type
-        material_val[tag] = _get_field(material_val_tmp, var_type, idx)
+        material_val[tag] = _get_field(material_val_tmp, idx, var_type, orientation_type)
 
     # update values
     for tag, source_val_tmp in source_val.items():
@@ -200,7 +220,7 @@ def _get_sweep_param(sweep_param, material_idx, source_idx):
         idx = source_idx[tag]["idx"]
 
         # check type
-        source_val[tag] = _get_field(source_val_tmp, var_type, idx)
+        source_val[tag] = _get_field(source_val_tmp, idx, var_type, None)
 
     # assign results
     sweep_param = {"freq": freq, "material_val": material_val, "source_val": source_val}

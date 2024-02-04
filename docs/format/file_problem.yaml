@@ -47,7 +47,7 @@
 #           - dict of dicts with the material name and the material definition
 #           - electric material definition
 #               - rho_re: material real resistivity (should be positive)
-#               - rho_img: material imaginary resistivity (should be positive)
+#               - rho_im: material imaginary resistivity (should be positive)
 #           - magnetic material definition
 #               - chi_re: material real susceptibility (should be positive)
 #               - chi_im: material imaginary susceptibility (should be positive)
