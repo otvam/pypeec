@@ -58,6 +58,7 @@ The code is written in **Python** and is fully **open source**!
 
 * Frequency domain solution (DC and AC)
 * Conductive and magnetic domains (ideal or lossy)
+* Isotropic, anisotropic, lumped, and distributed materials
 * Connection of current and voltage sources
 * Extraction of the loss and energy densities
 * Extraction of the current density, flux density, and potential

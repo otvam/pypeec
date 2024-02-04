@@ -32,6 +32,7 @@ The code is written in **Python** and is fully **open source**!
 **PyPEEC** solves the following **3D quasi-magnetostatic problems**:
 * Frequency domain solution (DC and AC)
 * Conductive and magnetic domains (ideal or lossy)
+* Isotropic, anisotropic, lumped, and distributed materials
 * Connection of current and voltage sources
 * Extraction of the loss and energy densities
 * Extraction of the current density, flux density, and potential
@@ -79,11 +80,11 @@ The FFT-accelerated PEEC method with voxels has been first described and impleme
 
 ## Copyright
 
-> (c) 2023-2024 / Thomas Guillod / Dartmouth College
-> 
->  This Source Code Form is subject to the terms of the Mozilla Public
->  License, v. 2.0. If a copy of the MPL was not distributed with this
->  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+(c) 2023-2024 / Thomas Guillod / Dartmouth College
+
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 ---
 
