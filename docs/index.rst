@@ -82,7 +82,7 @@ The **PyPEEC** package contains the following **tools**:
 ------------
 
 .. image:: images/institution.png
-  :alt: Dartmouth and PMIC Logos
+  :alt: Dartmouth and PMIC
 
 .. Note::
     * **Author:** `Thomas Guillod <https://otvam.ch>`_

@@ -84,3 +84,7 @@ The FFT-accelerated PEEC method with voxels has been first described and impleme
 >  This Source Code Form is subject to the terms of the Mozilla Public
 >  License, v. 2.0. If a copy of the MPL was not distributed with this
 >  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+---
+
+![Dartmouth and PMIC](https://pypeec.otvam.ch/_images/institution.png)
