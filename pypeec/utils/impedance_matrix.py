@@ -101,8 +101,8 @@ def _get_solve_matrix(terminal, tol_res):
         eqn_tmp = _get_eqn_matrix(n_winding, var_idx, I_vec)
 
         # append the data
-        rhs_vec = np.concatenate((rhs_vec, V_vec), axis=0)
-        eqn_mat = np.concatenate((eqn_mat, eqn_tmp), axis=0)
+        rhs_vec = np.concatenate((rhs_vec, V_vec))
+        eqn_mat = np.concatenate((eqn_mat, eqn_tmp))
 
     # check system size
     assert len(rhs_vec) >= len(var_idx), "invalid solution: number of equation is too low"

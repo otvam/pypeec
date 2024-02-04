@@ -21,7 +21,7 @@ def get_material_vector(material_val, material_idx, material_type_ref):
     """
 
     # array for the resistivities
-    rho_v = np.empty(0, dtype=np.complex_)
+    rho_v = np.empty((0, 3), dtype=np.complex_)
 
     # populate the arrays
     for tag, material_idx_tmp in material_idx.items():
@@ -51,7 +51,7 @@ def get_material_vector(material_val, material_idx, material_type_ref):
 
         # append the resistivities
         if material_type == material_type_ref:
-            rho_v = np.append(rho_v, rho)
+            rho_v = np.concatenate((rho_v, rho))
 
     return rho_v
 
@@ -147,8 +147,8 @@ def get_source_vector(source_all, source_type_ref):
 
         # append the source values and admittances/impedances
         if source_type == source_type_ref:
-            value_src = np.append(value_src, value)
-            element_src = np.append(element_src, element)
+            value_src = np.concatenate((value_src, value))
+            element_src = np.concatenate((element_src, element))
 
     return value_src, element_src
 
@@ -167,7 +167,7 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
     nv = nx*ny*nz
 
     # get the resistivity of the faces (average between voxels)
-    rho = 0.5*rho_v*np.abs(A_net)
+    rho = 0.5 * rho_v.transpose()*np.abs(A_net)
 
     # get the direction of the faces (x, y, z)
     idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int_))
@@ -176,8 +176,8 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
 
     # resistance vector (different directions)
     R = np.zeros(len(idx_f), dtype=np.complex_)
-    R[idx_fx] = (dx/(dy*dz))*rho[idx_fx]
-    R[idx_fy] = (dy/(dx*dz))*rho[idx_fy]
-    R[idx_fz] = (dz/(dx*dy))*rho[idx_fz]
+    R[idx_fx] = (dx/(dy*dz))*rho[0, idx_fx]
+    R[idx_fy] = (dy/(dx*dz))*rho[1, idx_fy]
+    R[idx_fz] = (dz/(dx*dy))*rho[2, idx_fz]
 
     return R

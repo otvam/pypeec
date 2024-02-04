@@ -67,7 +67,7 @@ def _get_field(val_dict, idx, var_type, orientation_type):
     for tag, val in val_dict.items():
         # cast
         if var_type == "lumped" and orientation_type is None:
-            val = np.full((len(idx), 3), val, dtype=np.float_)
+            val = np.full(len(idx), val, dtype=np.float_)
         elif var_type == "lumped" and orientation_type == "isotropic":
             val = np.full((len(idx), 3), val, dtype=np.float_)
         elif var_type == "lumped" and orientation_type == "anisotropic":
@@ -75,7 +75,6 @@ def _get_field(val_dict, idx, var_type, orientation_type):
             val = np.tile(val, (len(idx), 1))
         elif var_type == "distributed" and orientation_type is None:
             val = np.array(val, dtype=np.float_)
-            val = np.tile(val, (3, 1)).transpose()
         elif var_type == "distributed" and orientation_type == "isotropic":
             val = np.array(val, dtype=np.float_)
             val = np.tile(val, (3, 1)).transpose()
