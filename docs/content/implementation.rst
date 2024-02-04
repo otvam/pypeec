@@ -13,7 +13,7 @@ The PEEC method is an integral equation method. The fundamental idea is to repre
 the field simulation problem with a very large distributed equivalent circuit consisting
 of resistances, self-inductances, mutual inductances, and capacitances.
 
-This PEEC method feature several advantanges:
+This PEEC method features several advantanges:
 
 * Only the active materials are discretized (no need to mesh the free-space).
 * Intuitive understanding of the equation discretization process.

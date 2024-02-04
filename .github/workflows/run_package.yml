@@ -7,7 +7,7 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-name: Test Package
+name: Test Python Package
 
 on:
   workflow_dispatch:
