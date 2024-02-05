@@ -22,7 +22,7 @@ PyPEEC - 3D PEEC Solver
    content/implementation
    content/warnings
    content/format
-   api/index_api
+   api/api
 
 .. image:: images/banner.png
   :alt: PyPEEC Banner

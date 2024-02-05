@@ -129,6 +129,7 @@ function upload_documentation {
   # copy metadata
   cp docs/website/CNAME pypeecdocs
   cp docs/website/README.md pypeecdocs
+  cp docs/website/robots.txt pypeecdocs
   cp docs/website/googlec2be449c43987dd0.html pypeecdocs
 
   # add file in git
