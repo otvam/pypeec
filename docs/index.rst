@@ -87,5 +87,7 @@ The **PyPEEC** package contains the following **tools**:
     * **Institution:** `Dartmouth College <https://dartmouth.edu>`_
     * **Licence:** `MPL-2.0 <http://mozilla.org/MPL/2.0>`_
 
+------------
+
 .. image:: images/institution.png
   :alt: Dartmouth and PMIC
