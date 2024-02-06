@@ -9,14 +9,17 @@ __license__ = "Mozilla Public License Version 2.0"
 from tests.code import test_workflow
 from pypeec import main
 
+
+# duplicate of the test class
+class TestTutorial(test_workflow.TestWorkflow):
+    pass
+
+
 # name of the tutorial
 name = "tutorial"
 
 # show the logo
 main.run_hide_logo()
 
-# get the test object
-obj = test_workflow.set_init()
-
 # add the tests
-test_workflow.set_test(obj, name)
+test_workflow.set_test(TestTutorial, name)

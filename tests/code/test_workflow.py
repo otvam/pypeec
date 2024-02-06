@@ -101,17 +101,6 @@ class TestWorkflow(unittest.TestCase):
             self._check_results(mesher, solver, mesher_ref, solver_ref, tol)
 
 
-def set_init():
-    """
-    Set the configuration file.
-    """
-
-    # return the test object
-    obj = TestWorkflow
-
-    return obj
-
-
 def set_test(obj, name):
     """
     Add a test case to the test class.

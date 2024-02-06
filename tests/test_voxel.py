@@ -9,6 +9,12 @@ __license__ = "Mozilla Public License Version 2.0"
 from tests.code import test_workflow
 from pypeec import main
 
+
+# duplicate of the test class
+class TestVoxel(test_workflow.TestWorkflow):
+    pass
+
+
 # name of the examples
 name_list = [
     "examples_voxel/slab",
@@ -20,9 +26,6 @@ name_list = [
 # show the logo
 main.run_hide_logo()
 
-# get the test object
-obj = test_workflow.set_init()
-
 # add the tests
 for name in name_list:
-    test_workflow.set_test(obj, name)
+    test_workflow.set_test(TestVoxel, name)
