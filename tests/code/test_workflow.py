@@ -75,7 +75,7 @@ class TestWorkflow(unittest.TestCase):
         for solver_tmp, solver_ref_tmp in zip(solver.values(), solver_ref.values()):
             self._check_solver(solver_tmp, solver_ref_tmp, tol)
 
-    def run_test(self, name):
+    def run_test(self, name, use_script):
         """
         Run the workflow and check the results.
         """
@@ -84,7 +84,7 @@ class TestWorkflow(unittest.TestCase):
         (tol, check_test, generate_test) = test_read_write.get_config()
 
         # generate the results
-        (data_voxel, data_solution) = test_pypeec.run_workflow(name)
+        (data_voxel, data_solution) = test_pypeec.run_workflow(name, use_script)
 
         # parse the obtained results
         (mesher, solver) = test_generate.generate_results(data_voxel, data_solution)
@@ -101,14 +101,14 @@ class TestWorkflow(unittest.TestCase):
             self._check_results(mesher, solver, mesher_ref, solver_ref, tol)
 
 
-def set_test(obj, name):
+def set_test(obj, tag, name, use_script):
     """
     Add a test case to the test class.
     """
 
     # function describing the test
     def get(self):
-        return obj.run_test(self, name)
+        return obj.run_test(self, name, use_script)
 
     # dynamically add the method as an attribute
-    setattr(obj, "test/" + name, get)
+    setattr(obj, "test/" + tag, get)

@@ -11,6 +11,7 @@ import tempfile
 import logging
 import warnings
 from pypeec import main
+from pypeec import script
 from pypeec import io
 
 # crash on warnings (except for deprecation warnings)
@@ -48,7 +49,17 @@ def _delete_temp_file(filename):
         pass
 
 
-def run_workflow(name):
+def _run_script(argv):
+    """
+    Run the command line script with arguments.
+    """
+
+    status = script.run_arguments(argv)
+    if status != 0:
+        raise RuntimeError("invalid return code for the script")
+
+
+def run_workflow(name, use_script):
     """
     Run the complete workflow:
         - run the mesher
@@ -57,6 +68,11 @@ def run_workflow(name):
         - run the plotter
 
     The intermediate file are stored with temporary files.
+    The temporary files are deleted at the end of the function.
+
+    The workflow can be run with two modes:
+        - with the command line script (pypeec.script)
+        - with the API (pypeec.main)
     """
 
     # get input file name
@@ -74,17 +90,24 @@ def run_workflow(name):
 
     # run the code
     try:
-        # run the mesher
-        main.run_mesher_file(file_geometry, file_voxel, is_truncated=False)
+        # run the workflow
+        if use_script:
+            # get the arguments
+            argv_me = ["me", "-ge", file_geometry, "-vo", file_voxel]
+            argv_vi = ["vi", "-vo", file_voxel,  "-vi", file_viewer, "-pm", "none"]
+            argv_so = ["so", "-vo", file_voxel,  "-pr", file_problem, "-to", file_tolerance, "-so", file_solution]
+            argv_pl = ["pl", "-so", file_solution,  "-pl", file_plotter, "-pm", "none"]
 
-        # run the viewer
-        main.run_viewer_file(file_voxel, file_viewer, plot_mode="none")
-
-        # run the solver
-        main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, is_truncated=False)
-
-        # run the plotter
-        main.run_plotter_file(file_solution, file_plotter, plot_mode="none")
+            # run the scripts
+            _run_script(argv_me)
+            _run_script(argv_vi)
+            _run_script(argv_so)
+            _run_script(argv_pl)
+        else:
+            main.run_mesher_file(file_geometry, file_voxel)
+            main.run_viewer_file(file_voxel, file_viewer, plot_mode="none")
+            main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
+            main.run_plotter_file(file_solution, file_plotter, plot_mode="none")
 
         # load the files
         data_voxel = io.load_data(file_voxel)

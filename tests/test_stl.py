@@ -27,4 +27,4 @@ main.run_hide_logo()
 
 # add the tests
 for name in name_list:
-    test_workflow.set_test(TestStl, name)
+    test_workflow.set_test(TestStl, name, name, False)
