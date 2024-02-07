@@ -84,25 +84,25 @@ Packaging and Environment
 -------------------------
 
 * A Python package can be built from the ``pyproject.toml`` file.
-* The shell script ``run_build.sh`` is used to build the Python package.
-* The shell script ``run_release.sh`` is used to a create release.
 * In order to create a minimal Python Virtual Environment, use ``requirements.txt``.
 * In order to create a minimal Conda Environment, use ``conda_base.yaml``.
 * In order to create a full development environment, use ``conda_dev.yaml``.
 
-Automated Tests
----------------
+Tests and Documentation
+-----------------------
 
+* The documentation is located in the ``docs`` folder (using the ``sphinx`` generator).
 * The tests are located in the ``tests`` folder (using the ``unittest`` framework).
-* The shell script ``run_tests.sh`` is used to run the tests.
 * The tests are checking that the examples are running correctly.
 * Only integration tests currently exist (no unit tests).
 
-Sphinx Documentation
---------------------
+Scripts
+-------
 
-* The documentation is located in the ``docs`` folder (using the ``sphinx`` generator).
-* The shell script ``run_build.sh`` is used to build the HTML documentation.
+* ``run_tests.sh``: run all the tests.
+* ``run_coverage.sh``: run a code coverage analysis.
+* ``run_build.sh``: build the Python package and build the HTML documentation.
+* ``run_release.sh``: create a release (tag, release, package, and documentation).
 
 Contributing
 ------------
