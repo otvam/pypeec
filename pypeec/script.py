@@ -284,13 +284,22 @@ def _get_arg_extract(subparsers):
     )
 
 
-def run_script():
+def run_arguments(argv):
     """
-    User script for running PyPEEC from the command line.
+    User script for running PyPEEC with given arguments.
         - The script offers a CLI for the mesher, solver, viewer, and plotter.
-        - The script can also be used to extract the examples.
-        - The script is installed with the package.
-        - The name of the command line script is "pypeec".
+        - The script can also be used to extract the examples, documentation and config.
+
+    Parameters
+    ----------
+    argv : list
+        List with the command line arguments.
+
+    Returns
+    -------
+    status : int
+        The status exit code of the script.
+
     """
 
     # get the parser
@@ -304,7 +313,10 @@ def run_script():
     _get_arg_extract(subparsers)
 
     # parse the config and get arguments
-    args = parser.parse_args()
+    try:
+        args = parser.parse_args(argv)
+    except SystemExit as status:
+        return status.code
 
     # run the code
     try:
@@ -348,9 +360,29 @@ def run_script():
         else:
             raise ValueError("invalid command")
     except Exception:
-        sys.exit(1)
+        return 1
     else:
-        sys.exit(0)
+        return 0
+
+
+def run_script():
+    """
+    User script for running PyPEEC with the command line arguments.
+        - The script offers a CLI for the mesher, solver, viewer, and plotter.
+        - The script can also be used to extract the examples, documentation and config.
+
+    The script is installed with the package.
+    The name of the command line script is "pypeec".
+    """
+
+    # get arguments
+    argv = sys.argv[1:]
+
+    # run the script
+    status = run_arguments(argv)
+
+    # exit code
+    sys.exit(status)
 
 
 if __name__ == "__main__":
