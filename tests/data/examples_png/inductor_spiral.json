@@ -1,8 +1,7 @@
 {
     "metadata": {
-        "folder": "examples_png",
-        "name": "inductor_spiral",
-        "timestamp": "2024-01-03 17:52:59.471180"
+        "name": "examples_png/inductor_spiral",
+        "timestamp": "2024-02-06 23:03:30.743449"
     },
     "mesher": {
         "n_total": 225280,

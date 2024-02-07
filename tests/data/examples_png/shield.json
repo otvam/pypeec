@@ -1,8 +1,7 @@
 {
     "metadata": {
-        "folder": "examples_png",
-        "name": "shield",
-        "timestamp": "2024-01-03 17:53:04.478630"
+        "name": "examples_png/shield",
+        "timestamp": "2024-02-06 23:03:34.283936"
     },
     "mesher": {
         "n_total": 20808,

@@ -1,8 +1,7 @@
 {
     "metadata": {
-        "folder": "examples_voxel",
-        "name": "slab",
-        "timestamp": "2024-01-03 17:50:31.647709"
+        "name": "examples_voxel/slab",
+        "timestamp": "2024-02-06 23:00:40.613569"
     },
     "mesher": {
         "n_total": 28,

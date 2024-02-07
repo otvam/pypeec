@@ -75,7 +75,7 @@ class TestWorkflow(unittest.TestCase):
         for solver_tmp, solver_ref_tmp in zip(solver.values(), solver_ref.values()):
             self._check_solver(solver_tmp, solver_ref_tmp, tol)
 
-    def run_test(self, name, use_script):
+    def run_test(self, tag, name, use_script):
         """
         Run the workflow and check the results.
         """
@@ -91,24 +91,22 @@ class TestWorkflow(unittest.TestCase):
 
         # write the reference results
         if generate_test:
-            test_read_write.write_results(name, mesher, solver)
+            test_read_write.write_results(tag, mesher, solver)
 
-        # load the stored reference results
-        (mesher_ref, solver_ref) = test_read_write.read_results(name)
-
-        # check the results
+        # load and check the results
         if check_test:
+            (mesher_ref, solver_ref) = test_read_write.read_results(tag)
             self._check_results(mesher, solver, mesher_ref, solver_ref, tol)
 
 
-def set_test(obj, tag, name, use_script):
+def set_test(test_class, tag, name, use_script):
     """
     Add a test case to the test class.
     """
 
     # function describing the test
     def get(self):
-        return obj.run_test(self, name, use_script)
+        return test_class.run_test(self, tag, name, use_script)
 
     # dynamically add the method as an attribute
-    setattr(obj, "test/" + tag, get)
+    setattr(test_class, "test/" + tag, get)

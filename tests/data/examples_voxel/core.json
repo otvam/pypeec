@@ -1,8 +1,7 @@
 {
     "metadata": {
-        "folder": "examples_voxel",
-        "name": "core",
-        "timestamp": "2024-01-03 17:50:30.521219"
+        "name": "examples_voxel/core",
+        "timestamp": "2024-02-06 23:00:39.240833"
     },
     "mesher": {
         "n_total": 175,
@@ -13,13 +12,13 @@
             "freq": 0.0,
             "has_converged": true,
             "P_tot": 5.999999999999999e-06,
-            "W_tot": 8.28570752833844e-08
+            "W_tot": 8.285681527791723e-08
         },
         "sim_ac": {
             "freq": 1000.0,
             "has_converged": true,
-            "P_tot": 0.00021823488357388955,
-            "W_tot": 4.1428537641629596e-08
+            "P_tot": 0.00021823446535559413,
+            "W_tot": 4.142840763892035e-08
         }
     }
 }

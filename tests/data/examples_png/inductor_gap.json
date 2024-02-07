@@ -1,8 +1,7 @@
 {
     "metadata": {
-        "folder": "examples_png",
-        "name": "inductor_gap",
-        "timestamp": "2024-01-03 17:52:53.658982"
+        "name": "examples_png/inductor_gap",
+        "timestamp": "2024-02-06 23:03:23.874105"
     },
     "mesher": {
         "n_total": 87480,
