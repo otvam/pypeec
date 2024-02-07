@@ -1,4 +1,4 @@
-# PyPEEC - 3D PEEC Solver
+# PyPEEC - 3D Quasi-Magnetostatic Solver
 
 ![PyPEEC Banner](https://pypeec.otvam.ch/_images/banner.png)
 

@@ -1,5 +1,5 @@
-PyPEEC - 3D PEEC Solver
-=======================
+PyPEEC - 3D Quasi-Magnetostatic Solver
+======================================
 
 .. toctree::
    :caption: General Doc
