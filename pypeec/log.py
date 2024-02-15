@@ -30,7 +30,7 @@ DEF_COLOR = config.LOGGING_OPTIONS.DEF_COLOR
 GLOBAL_TIMESTAMP = time.time()
 
 # logging indentation level (updated inside the blocks)
-CURRENT_LEVEL = 0
+GLOBAL_LEVEL = 0
 
 
 def _get_fmt(color, reset):
@@ -143,7 +143,7 @@ class _DeltaTimeFormatter(logging.Formatter):
         record.thread_id = threading.get_native_id()
 
         # get the message padding for the desired indentation
-        pad = " " * (CURRENT_LEVEL*INDENTATION)
+        pad = " " * (GLOBAL_LEVEL*INDENTATION)
 
         # add the padding to the message
         record.msg = pad + msg
@@ -195,8 +195,8 @@ class BlockTimer:
         self.logger.log(self.level, self.name + " : enter : timing")
 
         # increase the indentation of the block
-        global CURRENT_LEVEL
-        CURRENT_LEVEL += 1
+        global GLOBAL_LEVEL
+        GLOBAL_LEVEL += 1
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """
@@ -205,8 +205,8 @@ class BlockTimer:
         """
 
         # restore the indentation to the previous state
-        global CURRENT_LEVEL
-        CURRENT_LEVEL -= 1
+        global GLOBAL_LEVEL
+        GLOBAL_LEVEL -= 1
 
         # stop the timer and display
         duration = _get_compute_duration(self.timestamp)
@@ -234,8 +234,8 @@ class BlockIndent:
         Increase the indentation of the block.
         """
 
-        global CURRENT_LEVEL
-        CURRENT_LEVEL += 1
+        global GLOBAL_LEVEL
+        GLOBAL_LEVEL += 1
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """
@@ -243,8 +243,8 @@ class BlockIndent:
         Restore the indentation to the previous state.
         """
 
-        global CURRENT_LEVEL
-        CURRENT_LEVEL -= 1
+        global GLOBAL_LEVEL
+        GLOBAL_LEVEL -= 1
 
 
 def log_exception(logger, ex, level="ERROR"):
@@ -263,6 +263,8 @@ def log_exception(logger, ex, level="ERROR"):
         Logging level to be used.
     """
 
+    print("===================================")
+
     # remove the expression context
     ex.__context__ = None
 
@@ -277,6 +279,8 @@ def log_exception(logger, ex, level="ERROR"):
         logger.log(level, "exception : " + name, exc_info=ex)
     else:
         logger.log(level, "exception : " + name + "\n" + str(ex))
+
+    print("===================================")
 
 
 def get_timer():
@@ -315,6 +319,43 @@ def get_duration(timestamp):
     fmt = _get_format_duration(duration)
 
     return duration, fmt
+
+
+def set_global(timestamp, level):
+    """
+    Set the global variables.
+        - timestamp (for the elapsed time)
+        - indentation level (for log messages)
+
+    Parameters
+    ----------
+    timestamp : timestamp
+        Timestamp (for the elapsed time).
+    level : integer
+        Indentation level for the log messages.
+    """
+
+    global GLOBAL_TIMESTAMP
+    global GLOBAL_LEVEL
+    GLOBAL_TIMESTAMP = timestamp
+    GLOBAL_LEVEL = level
+
+
+def get_global():
+    """
+    Get the global variables.
+        - timestamp (for the elapsed time)
+        - indentation level (for log messages)
+
+    Returns
+    -------
+    timestamp : timestamp
+        Timestamp (for the elapsed time).
+    level : integer
+        Indentation level for the log messages.
+    """
+
+    return GLOBAL_TIMESTAMP, GLOBAL_LEVEL
 
 
 def get_logger(name):
