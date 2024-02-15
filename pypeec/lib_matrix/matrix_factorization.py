@@ -40,7 +40,7 @@ def _get_fact_superlu(mat):
     try:
         mat_factor = IMPORTLIB.splu(mat)
     except Warning:
-        return None
+        raise RuntimeError("invalid factorization: SuperLU")
 
     # matrix solver
     def factor(rhs):
@@ -74,7 +74,7 @@ def _get_fact_pardiso(mat):
         mat = mat.tocsr()
         mat_factor = IMPORTLIB.MKLPardisoSolver(mat, factor=True, verbose=False)
     except Warning:
-        return None
+        raise RuntimeError("invalid factorization: PARDISO")
 
     # matrix solver
     def factor(rhs):
@@ -104,7 +104,7 @@ def _get_fact_pyamg(mat):
         else:
             raise ValueError("invalid AMF solver name")
     except Warning:
-        return None
+        raise RuntimeError("invalid factorization: PyAMG")
 
     # matrix solver
     def factor(rhs):
@@ -123,7 +123,7 @@ def _get_fact_umfpack(mat):
     try:
         mat_factor = IMPORTLIB.splu(mat)
     except Warning:
-        return None
+        raise RuntimeError("invalid factorization: UMFPACK")
 
     # matrix solver
     def factor(rhs):
@@ -172,13 +172,9 @@ def _get_factorize_sub(mat):
         raise ValueError("invalid matrix factorization library")
 
     # display the status
-    if factor is None:
-        LOGGER.warning("factorization failure")
-        log.set_warning(True)
-        return factor_dummy
-    else:
-        LOGGER.debug("factorization success")
-        return factor
+    LOGGER.warning("factorization failure")
+
+    return factor
 
 
 def set_options(factorization_options):
