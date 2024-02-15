@@ -13,6 +13,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import joblib
 from pypeec import config
+from pypeec import log
 
 # get config
 SWEEP_POOL = config.SWEEP_POOL
@@ -69,6 +70,34 @@ def _get_tree_check(sweep_tree, tag_init, init_list):
     return init_list
 
 
+def _get_parallel_loop(fct_compute, arg_list):
+    """
+    Run a loop (serial or parallel).
+    """
+
+    if SWEEP_POOL is None:
+        out_list = []
+        for arg in arg_list:
+            out = fct_compute(*arg)
+            out_list.append(out)
+    else:
+        # get the log global parameters
+        (timestamp_tmp, level_tmp) = log.get_global()
+
+        # wrap the compute function for setting globals
+        def fct_joblib(*args):
+            log.set_global(timestamp_tmp, level_tmp)
+            out = fct_compute(*args)
+            return out
+
+        # run the parallel loop
+        out_list = joblib.Parallel(n_jobs=SWEEP_POOL, backend="loky")(
+            joblib.delayed(fct_joblib)(*arg) for arg in arg_list
+        )
+
+    return out_list
+
+
 def _get_tree_compute(sweep_tree, sweep_param, fct_compute, tag_init, output, init):
     """
     Compute the sweeps with the dependencies.
@@ -86,27 +115,17 @@ def _get_tree_compute(sweep_tree, sweep_param, fct_compute, tag_init, output, in
 
     # get the input
     sweep_param_sub = [sweep_param[tag_tmp] for tag_tmp in tag_sub]
+    init_sub = [init_tmp]*len(tag_sub)
 
     # run the serial or parallel loop
-    if SWEEP_POOL is None:
-        for tag_tmp, sweep_param_tmp in zip(tag_sub, sweep_param_sub):
-            (output_tmp, sol_tmp) = fct_compute(tag_tmp, sweep_param_tmp, init_tmp)
-            output[tag_tmp] = output_tmp
-            init[tag_tmp] = sol_tmp
-    else:
-        # run the parallel jobs
-        pool_res = joblib.Parallel(n_jobs=SWEEP_POOL, backend="loky")(
-            joblib.delayed(fct_compute)(
-                tag_tmp, sweep_param_tmp, init_tmp
-            )
-            for tag_tmp, sweep_param_tmp in zip(tag_sub, sweep_param_sub)
-        )
+    arg_list = zip(tag_sub, sweep_param_sub, init_sub)
+    out_list = _get_parallel_loop(fct_compute, arg_list)
 
-        # assemble the results
-        for tag_tmp, pool_res_tmp in zip(tag_sub, pool_res):
-            (output_tmp, sol_tmp) = pool_res_tmp
-            output[tag_tmp] = output_tmp
-            init[tag_tmp] = sol_tmp
+    # assemble the results
+    for tag_tmp, out_tmp in zip(tag_sub, out_list):
+        (output_tmp, sol_tmp) = out_tmp
+        output[tag_tmp] = output_tmp
+        init[tag_tmp] = sol_tmp
 
     # recursive call for the dependent sweeps
     for tag_tmp in tag_sub:

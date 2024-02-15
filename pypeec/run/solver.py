@@ -11,6 +11,8 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import time
+
 from pypeec.lib_matrix import matrix_factorization
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import fourier_transform
@@ -392,12 +394,8 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
     with log.BlockTimer(LOGGER, "init"):
         (data_init, data_internal) = _run_solver_init(data_solver, is_truncated)
 
-    # get the log global parameters
-    (timestamp_tmp, level_tmp) = log.get_global()
-
     # function for solving a single sweep
     def fct_compute(tag, param, init):
-        log.set_global(timestamp_tmp, level_tmp)
         with log.BlockTimer(LOGGER, "run sweep: " + tag):
             (output, init) = _run_solver_sweep(data_solver, data_internal, param, init, is_truncated)
         return output, init
