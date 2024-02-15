@@ -17,10 +17,10 @@ LOGGING_OPTIONS:
     #   - thread_id: thread identification number
     FORMAT:
         LOGGER: '%(duration)s : %(name)-8s : %(levelname)-8s : %(message)s'  # logger format
-        TIMESTAMP_FMT: '%m/%d/%Y : %H:%M:%S'  # timestamp format
-        DURATION_FMT: '%H:%M:%S.%f' # duration format
-        TIMESTAMP_TRC: 0  # timestamp truncation
-        DURATION_TRC: 4 # duration truncation
+        TIMESTAMP_FMT: '%m/%d/%Y : %H:%M:%S'  # strftime formatting instructions for the timestamp
+        DURATION_FMT: '%H:%M:%S.%f' # strftime formatting instructions for the duration
+        TIMESTAMP_TRC: 0  # truncate trailing characters for the timestamp string
+        DURATION_TRC: 4 # truncate trailing characters for the duration string
 
     # logging level for the handlers
     LEVEL: "DEBUG"  # string with a valid Python logging level
@@ -36,12 +36,12 @@ LOGGING_OPTIONS:
 
     # options color definition
     DEF_COLOR:
-        CL_DEBUG: '[38;5;247m' # terminal color code
-        CL_INFO: '[38;5;15m' # terminal color code
-        CL_WARNING: '[38;5;202m' # terminal color code
-        CL_ERROR: '[38;5;196m' # terminal color code
-        CL_CRITICAL: '[38;5;196m' # terminal color code
-        CL_RESET: '[0m' # terminal color code
+        CL_DEBUG: '[38;5;247m' # debug level color code
+        CL_INFO: '[38;5;15m' # info level color code
+        CL_WARNING: '[38;5;202m' # warning level color code
+        CL_ERROR: '[38;5;196m' # error level color code
+        CL_CRITICAL: '[38;5;196m' # critical level color code
+        CL_RESET: '[0m' # terminal reset color sequence
 
 # maximum number of voxels
 PROBLEM_MAX_SIZE:
@@ -54,11 +54,11 @@ PROBLEM_MAX_SIZE:
 SWEEP_POOL: null
 
 # delay (in seconds) between the Qt plots
-#   - this parameter should not be required
+#   - this parameter should not be required (null for disable)
 #   - however, it seems to mitigate a race condition in PyVista/PyVistaQt
-PAUSE_GUI: 0.2
+PAUSE_GUI: null
 
-# display the PyPEEC logo
+# display the PyPEEC logo at startup
 #   - if false, the logo is not shown
 #   - if true, the logo is shown
 DISPLAY_LOGO: true

@@ -88,5 +88,5 @@ def check_data_config(data_config):
 
     # check other switches
     datachecker.check_boolean("DISPLAY_LOGO", data_config["DISPLAY_LOGO"])
-    datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True, can_be_zero=True)
+    datachecker.check_float("PAUSE_GUI", data_config["PAUSE_GUI"], is_positive=True, can_be_zero=True, can_be_none=True)
     datachecker.check_integer("SWEEP_POOL", data_config["SWEEP_POOL"], is_positive=True, can_be_zero=False, can_be_none=True)

@@ -116,7 +116,8 @@ class PlotGui:
             pl.set_icon(str(file_icon))
 
         # pause to avoid race conditions
-        time.sleep(PAUSE_GUI)
+        if PAUSE_GUI is not None:
+            time.sleep(PAUSE_GUI)
 
         return pl
 
@@ -180,7 +181,8 @@ class PlotGui:
             man.window.resize(sx, sy)
 
         # pause to avoid race conditions
-        time.sleep(PAUSE_GUI)
+        if PAUSE_GUI is not None:
+            time.sleep(PAUSE_GUI)
 
         return fig
 
@@ -232,7 +234,8 @@ class PlotGui:
         signal.signal(signal.SIGINT, signal_handler)
 
         # pause to avoid race conditions
-        time.sleep(PAUSE_GUI)
+        if PAUSE_GUI is not None:
+            time.sleep(PAUSE_GUI)
 
         # show the different PyVista plots
         for tag, pl in self.pl_list:
