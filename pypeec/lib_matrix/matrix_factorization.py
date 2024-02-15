@@ -174,6 +174,7 @@ def _get_factorize_sub(mat):
     # display the status
     if factor is None:
         LOGGER.warning("factorization failure")
+        log.set_warning(True)
         return factor_dummy
     else:
         LOGGER.debug("factorization success")

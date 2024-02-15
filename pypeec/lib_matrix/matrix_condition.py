@@ -80,6 +80,7 @@ def _get_condition_matrix_sub(mat, norm_options):
     # abort if LU decomposition failed
     if decomposition is None:
         LOGGER.warning("condition estimate is infinite")
+        log.set_warning(True)
         return float("inf")
 
     # get the inverse operator

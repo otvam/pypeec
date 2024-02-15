@@ -435,6 +435,8 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
                 LOGGER.debug("convergence achieved")
             else:
                 LOGGER.warning("convergence issues")
+                log.set_warning(True)
+
         else:
             LOGGER.debug("convergence check is disabled")
 
@@ -486,6 +488,7 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
                 LOGGER.debug("matrix condition is good")
             else:
                 LOGGER.warning("matrix condition is problematic")
+                log.set_warning(True)
         else:
             LOGGER.debug("matrix condition check is disabled")
 

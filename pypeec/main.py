@@ -136,7 +136,10 @@ def run_mesher_data(data_geometry, **kwargs):
         LOGGER.error("invalid termination")
         raise ex
     else:
-        LOGGER.info("successful termination")
+        if log.get_warning():
+            LOGGER.warning("termination with warnings")
+        else:
+            LOGGER.info("successful termination")
 
     return data_voxel
 
@@ -235,7 +238,10 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
         LOGGER.error("invalid termination")
         raise ex
     else:
-        LOGGER.info("successful termination")
+        if log.get_warning():
+            LOGGER.warning("termination with warnings")
+        else:
+            LOGGER.info("successful termination")
 
 
 def run_viewer_file(file_voxel, file_viewer, **kwargs):
@@ -334,7 +340,10 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
         LOGGER.error("invalid termination")
         raise ex
     else:
-        LOGGER.info("successful termination")
+        if log.get_warning():
+            LOGGER.warning("termination with warnings")
+        else:
+            LOGGER.info("successful termination")
 
     return data_solution
 
@@ -447,7 +456,10 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         LOGGER.error("invalid termination")
         raise ex
     else:
-        LOGGER.info("successful termination")
+        if log.get_warning():
+            LOGGER.warning("termination with warnings")
+        else:
+            LOGGER.info("successful termination")
 
 
 def run_plotter_file(file_solution, file_plotter, **kwargs):
