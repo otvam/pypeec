@@ -11,8 +11,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-import time
-
 from pypeec.lib_matrix import matrix_factorization
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import fourier_transform

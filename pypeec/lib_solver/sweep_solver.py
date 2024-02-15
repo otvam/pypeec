@@ -24,12 +24,12 @@ def _get_tree_tag(sweep_config, tag):
     Find the run configurations for a defined init tag.
     """
 
-    sweep_list = []
+    tag_sub = []
     for tag_run, tag_init in sweep_config.items():
         if tag_init == tag:
-            sweep_list.append(tag_run)
+            tag_sub.append(tag_run)
 
-    return sweep_list
+    return tag_sub
 
 
 def _get_tree_create(sweep_config):
@@ -82,18 +82,28 @@ def _get_parallel_loop(fct_compute, arg_list):
             out_list.append(out)
     else:
         # get the log global parameters
-        (timestamp_tmp, level_tmp) = log.get_global()
+        global_warning = log.get_warning()
+        (global_timestamp, global_level) = log.get_global()
 
         # wrap the compute function for setting globals
         def fct_joblib(*args):
-            log.set_global(timestamp_tmp, level_tmp)
+            log.set_warning(global_warning)
+            log.set_global(global_timestamp, global_level)
             out = fct_compute(*args)
-            return out
+            warning = log.get_warning()
+            return out, warning
 
         # run the parallel loop
-        out_list = joblib.Parallel(n_jobs=SWEEP_POOL, backend="loky")(
+        pool_list = joblib.Parallel(n_jobs=SWEEP_POOL, backend="loky")(
             joblib.delayed(fct_joblib)(*arg) for arg in arg_list
         )
+
+        # unpack the warnings
+        (out_list, warning_list) = zip(*pool_list)
+
+        # set the warnings
+        global_warning = global_warning or all(warning_list)
+        log.set_warning(global_warning)
 
     return out_list
 
@@ -107,7 +117,7 @@ def _get_tree_compute(sweep_tree, sweep_param, fct_compute, tag_init, output, in
     # find the sweeps to be computed
     tag_sub = sweep_tree[tag_init]
 
-    # find the correct dependency for the sweeps
+    # find the dependency for the sweeps
     if tag_init is None:
         init_tmp = None
     else:
@@ -116,6 +126,10 @@ def _get_tree_compute(sweep_tree, sweep_param, fct_compute, tag_init, output, in
     # get the input
     sweep_param_sub = [sweep_param[tag_tmp] for tag_tmp in tag_sub]
     init_sub = [init_tmp]*len(tag_sub)
+
+    # return if there is nothing to compute
+    if not tag_sub:
+        return output, init
 
     # run the serial or parallel loop
     arg_list = zip(tag_sub, sweep_param_sub, init_sub)
