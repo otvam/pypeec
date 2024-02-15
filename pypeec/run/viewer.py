@@ -25,7 +25,6 @@ from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
 from pypeec.lib_check import check_data_options
 from pypeec import log
-from pypeec.error import RunError
 
 # get a logger
 LOGGER = log.get_logger("VIEWER")
@@ -77,7 +76,7 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
 
     # check framework
     if framework != "pyvista":
-        raise RunError("invalid plot framework")
+        raise ValueError("invalid plot framework")
 
     # get the plotter (with the Qt framework)
     pl = gui_obj.open_pyvista(tag, title, data_window)

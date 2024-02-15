@@ -18,7 +18,6 @@ import numpy as np
 import PIL.Image as pmg
 from pypeec import log
 from pypeec import config
-from pypeec.error import RunError
 
 # get a logger
 LOGGER = log.get_logger("STL")
@@ -43,7 +42,7 @@ def _get_load_image(filename_list):
         try:
             img = pmg.open(filename, formats=["png"])
         except OSError:
-            raise RunError("invalid png: invalid file content: %s" % filename)
+            raise RuntimeError("invalid png: invalid file content: %s" % filename)
 
         # cast to array
         img = img.convert("RGBA")
@@ -69,13 +68,13 @@ def _get_idx_image(size, img, color):
 
     # check image
     if not (img.shape == (nx, ny, 4)):
-        raise RunError("invalid image:  size is not compatible with the voxel structure")
+        raise RuntimeError("invalid image:  size is not compatible with the voxel structure")
 
     # get the color vector
     color_tmp = np.array(color, dtype=np.uint8)
     color_tmp = np.expand_dims(color_tmp, axis=(0, 1))
     if not (color_tmp.shape == (1, 1, 4)):
-        raise RunError("invalid color: colors should be a specified with for values")
+        raise RuntimeError("invalid color: colors should be a specified with for values")
 
     # find the color in the image
     idx_img = np.all(img == color_tmp, axis=2)
@@ -209,11 +208,11 @@ def get_mesh(param, domain_color, layer_stack):
     # check total size
     nv = np.prod(n)
     if (VOXEL_TOTAL is not None) and (nv > VOXEL_TOTAL):
-        raise RunError("invalid size of the voxel structure: %d" % nv)
+        raise RuntimeError("invalid size of the voxel structure: %d" % nv)
 
     # check used size
     nv = sum(len(idx) for idx in domain_def.values())
     if (VOXEL_USED is not None) and (nv > VOXEL_USED):
-        raise RunError("invalid number of used voxels: %d" % nv)
+        raise RuntimeError("invalid number of used voxels: %d" % nv)
 
     return n, d, c, domain_def, reference

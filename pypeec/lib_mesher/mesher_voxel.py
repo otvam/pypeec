@@ -11,7 +11,6 @@ __license__ = "Mozilla Public License Version 2.0"
 import numpy as np
 from pypeec import log
 from pypeec import config
-from pypeec.error import RunError
 
 # get a logger
 LOGGER = log.get_logger("VOXEL")
@@ -37,7 +36,7 @@ def get_mesh(param, domain_index):
     # check total size
     nv = np.prod(n)
     if (VOXEL_TOTAL is not None) and (nv > VOXEL_TOTAL):
-        raise RunError("invalid size of the voxel structure: %d" % nv)
+        raise RuntimeError("invalid size of the voxel structure: %d" % nv)
 
     # init new domain indices
     domain_def = {}
@@ -52,9 +51,9 @@ def get_mesh(param, domain_index):
 
         # check the indices
         if not (len(np.unique(idx_tmp)) == len(idx_tmp)):
-            raise RunError("invalid index: %s: indices should be unique" % tag)
+            raise RuntimeError("invalid index: %s: indices should be unique" % tag)
         if not (np.all(idx_tmp >= 0) and np.all(idx_tmp < nv)):
-            raise RunError("invalid index: %s: invalid index range" % tag)
+            raise RuntimeError("invalid index: %s: invalid index range" % tag)
 
         # add the new item
         domain_def[tag] = idx_tmp
@@ -62,6 +61,6 @@ def get_mesh(param, domain_index):
     # check used size
     nv = sum(len(idx) for idx in domain_def.values())
     if (VOXEL_USED is not None) and (nv > VOXEL_USED):
-        raise RunError("invalid number of used voxels: %d" % nv)
+        raise RuntimeError("invalid number of used voxels: %d" % nv)
 
     return n, d, c, domain_def, reference

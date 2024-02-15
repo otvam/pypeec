@@ -8,7 +8,6 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
-from pypeec.error import RunError
 
 
 def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
@@ -46,7 +45,7 @@ def _get_resolution(domain_def):
 
     # check that all the conflicts are resolved
     if not (len(np.unique(idx_all)) == len(idx_all)):
-        raise RunError("invalid domain: domain indices should be unique")
+        raise RuntimeError("invalid domain: domain indices should be unique")
 
 
 def get_conflict(domain_def, domain_conflict):

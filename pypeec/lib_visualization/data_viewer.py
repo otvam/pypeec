@@ -9,7 +9,6 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
-from pypeec.error import RunError
 
 
 def _get_graph_component(idx, connection_def):
@@ -34,7 +33,7 @@ def _get_graph_component(idx, connection_def):
 
     # check that everything was assigned
     if not np.all(tag):
-        raise RunError("invalid graph: some voxels are not part of the graph")
+        raise RuntimeError("invalid graph: some voxels are not part of the graph")
 
     return tag
 

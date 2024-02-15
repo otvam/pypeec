@@ -32,7 +32,6 @@ import pickle
 import gzip
 import yaml
 import numpy as np
-from pypeec.error import FileError
 
 
 class _YamlLoader(yaml.Loader):
@@ -168,7 +167,7 @@ class _JsonNumPyEncoder(json.JSONEncoder):
                     "data": obj.flatten().tolist(),
                 }
             else:
-                FileError("invalid numpy array for serialization")
+                TypeError("invalid numpy array for serialization")
         else:
             # if not numpy, default to the base encoder
             return json.JSONEncoder.default(self, obj)
@@ -234,9 +233,9 @@ def _load_yaml(filename):
         with open(filename, "r") as fid:
             data = yaml.load(fid, _YamlLoader)
     except yaml.YAMLError as ex:
-        raise FileError("invalid YAML file: %s\n%s" % (filename, str(ex)))
+        raise RuntimeError("invalid YAML file: %s\n%s" % (filename, str(ex)))
     except OSError:
-        raise FileError("cannot open the file: %s" % filename)
+        raise OSError("cannot open the file: %s" % filename)
 
     return data
 
@@ -254,9 +253,9 @@ def _load_json(filename, is_gzip):
             with open(filename, "r") as fid:
                 data = json.load(fid, cls=_JsonNumPyDecoder)
     except (json.JSONDecodeError, TypeError, ValueError) as ex:
-        raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
+        raise RuntimeError("invalid JSON file: %s\n%s" % (filename, str(ex)))
     except OSError:
-        raise FileError("cannot open the file: %s" % filename)
+        raise OSError("cannot open the file: %s" % filename)
 
     return data
 
@@ -274,9 +273,9 @@ def _write_json(filename, data, is_gzip):
             with open(filename, "w") as fid:
                 json.dump(data, fid, indent=4, cls=_JsonNumPyEncoder)
     except (json.JSONDecodeError, TypeError, ValueError) as ex:
-        raise FileError("invalid JSON file: %s\n%s" % (filename, str(ex)))
+        raise RuntimeError("invalid JSON file: %s\n%s" % (filename, str(ex)))
     except OSError:
-        raise FileError("cannot write the file: %s" % filename)
+        raise OSError("cannot write the file: %s" % filename)
 
     return data
 
@@ -291,11 +290,11 @@ def _load_pickle(filename):
         with open(filename, "rb") as fid:
             data = pickle.load(fid)
     except pickle.UnpicklingError:
-        raise FileError("invalid Pickle file: %s" % filename)
+        raise RuntimeError("invalid Pickle file: %s" % filename)
     except EOFError:
-        raise FileError("file not found: %s" % filename)
+        raise EOFError("file not found: %s" % filename)
     except OSError:
-        raise FileError("invalid Pickle file: %s" % filename)
+        raise OSError("invalid Pickle file: %s" % filename)
 
     return data
 
@@ -310,9 +309,9 @@ def _write_pickle(filename, data):
         with open(filename, "wb") as fid:
             pickle.dump(data, fid)
     except pickle.PicklingError:
-        raise FileError("invalid data for Pickle: %s" % filename)
+        raise RuntimeError("invalid data for Pickle: %s" % filename)
     except OSError:
-        raise FileError("cannot write the file: %s" % filename)
+        raise OSError("cannot write the file: %s" % filename)
 
 
 def load_input(filename):
@@ -341,7 +340,7 @@ def load_input(filename):
     elif ext in [".yaml", ".yml"]:
         data = _load_yaml(filename)
     else:
-        raise FileError("invalid file extension: %s" % filename)
+        raise ValueError("invalid file extension: %s" % filename)
 
     return data
 
@@ -372,7 +371,7 @@ def load_data(filename):
     elif ext in [".pck", ".pkl"]:
         data = _load_pickle(filename)
     else:
-        raise FileError("invalid file extension: %s" % filename)
+        raise ValueError("invalid file extension: %s" % filename)
 
     return data
 
@@ -400,4 +399,4 @@ def write_data(filename, data):
     elif ext in [".pck", ".pkl"]:
         _write_pickle(filename, data)
     else:
-        raise FileError("invalid file extension: %s" % filename)
+        raise ValueError("invalid file extension: %s" % filename)

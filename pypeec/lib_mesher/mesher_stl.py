@@ -14,7 +14,6 @@ import numpy as np
 import pyvista as pv
 from pypeec import log
 from pypeec import config
-from pypeec.error import RunError
 
 # get a logger
 LOGGER = log.get_logger("STL")
@@ -36,11 +35,11 @@ def _get_load_stl(scale, offset, filename):
     try:
         mesh = pv.read(filename, force_ext=".stl")
     except ValueError:
-        raise RunError("invalid stl: invalid file type: %s" % filename)
+        raise RuntimeError("invalid stl: invalid file type: %s" % filename)
 
     # check that the file is valid
     if mesh.n_cells == 0:
-        raise RunError("invalid stl: invalid file content: %s" % filename)
+        raise RuntimeError("invalid stl: invalid file content: %s" % filename)
 
     # translate the meshes
     mesh = mesh.scale(scale, inplace=True)
@@ -59,7 +58,7 @@ def _get_voxelize_stl(grid, mesh):
     try:
         selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=True)
     except RuntimeError:
-        raise RunError("invalid mesh: mesh cannot be voxelized")
+        raise RuntimeError("invalid mesh: mesh cannot be voxelized")
 
     # create a boolean mask
     mask = selection["SelectedPoints"].view(bool)
@@ -140,10 +139,10 @@ def _get_voxel_size(d, xyz_max, xyz_min):
 
     # check voxel validity
     if not np.all(d > 0):
-        RunError("invalid voxel dimension: should be positive")
+        RuntimeError("invalid voxel dimension: should be positive")
     # check voxel validity
     if not np.all(n > 0):
-        RunError("invalid voxel number: should be positive")
+        RuntimeError("invalid voxel number: should be positive")
 
     return n, d, c
 
@@ -234,7 +233,7 @@ def get_mesh(param, domain_stl):
     # check total size
     nv = np.prod(n)
     if (VOXEL_TOTAL is not None) and (nv > VOXEL_TOTAL):
-        raise RunError("invalid size of the voxel structure: %d" % nv)
+        raise RuntimeError("invalid size of the voxel structure: %d" % nv)
 
     # get the uniform grid
     LOGGER.debug("get the voxel grid")
@@ -247,7 +246,7 @@ def get_mesh(param, domain_stl):
     # check used size
     nv = sum(len(idx) for idx in domain_def.values())
     if (VOXEL_USED is not None) and (nv > VOXEL_USED):
-        raise RunError("invalid number of used voxels: %d" % nv)
+        raise RuntimeError("invalid number of used voxels: %d" % nv)
 
     # cast to lists
     n = n.tolist()

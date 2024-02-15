@@ -43,7 +43,6 @@ import PyQt5.QtWidgets
 import PyQt5.QtGui
 from pypeec import log
 from pypeec import config
-from pypeec.error import RunError
 
 # get a logger
 LOGGER = log.get_logger("PLOTGUI")
@@ -249,7 +248,7 @@ class PlotGui:
 
         # check status
         if exit_code != 0:
-            RunError("error during the Qt event loop / exit_code = %d" % exit_code)
+            RuntimeError("error during the Qt event loop / exit_code = %d" % exit_code)
 
     def _show_figure_nb(self):
         """

@@ -11,7 +11,6 @@ __license__ = "Mozilla Public License Version 2.0"
 import numpy as np
 import scipy.sparse as sps
 import scipy.sparse.csgraph as csg
-from pypeec.error import RunError
 
 
 def _get_all_indices(domain_def):
@@ -120,11 +119,11 @@ def _check_domain_connection(domain_def, connection_def, tag_connection, domain_
     if connected:
         idx_ok = vector == len(idx_group)
         if not np.any(idx_ok):
-            raise RunError("domain connection: domain connection is missing: %s" % tag_connection)
+            raise RuntimeError("domain connection: domain connection is missing: %s" % tag_connection)
     else:
         idx_ok = np.logical_or(vector == 0, vector == 1)
         if not np.all(idx_ok):
-            raise RunError("domain connection: domain connection is illegal: %s" % tag_connection)
+            raise RuntimeError("domain connection: domain connection is illegal: %s" % tag_connection)
 
 
 def get_connection(n, domain_def, domain_connection):

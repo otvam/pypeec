@@ -13,7 +13,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import joblib
 from pypeec import config
-from pypeec.error import RunError
 
 # get config
 SWEEP_POOL = config.SWEEP_POOL
@@ -129,7 +128,7 @@ def get_run_sweep(sweep_config, sweep_param, fct_compute):
     # ensure that the interdependencies are solvable
     init_list = _get_tree_check(sweep_tree, None, [])
     if len(init_list) != len(sweep_config):
-        raise RunError("invalid sweep: cannot solve the sweep dependencies")
+        raise RuntimeError("invalid sweep: cannot solve the sweep dependencies")
 
     # init the dict for the output data
     output = {}

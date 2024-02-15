@@ -29,7 +29,6 @@ import rasterio.features as raf
 import rasterio.transform as rat
 from pypeec import log
 from pypeec import config
-from pypeec.error import RunError
 
 # prevent problematic linear transform to trigger warnings
 warnings.filterwarnings("ignore", module="shapely")
@@ -51,7 +50,7 @@ def _get_boundary_polygon(bnd, z_min):
 
     # check that the boundary is closed
     if (not bnd.is_valid) or (not bnd.is_closed):
-        raise RunError("invalid shape: boundary is ill-formed")
+        raise RuntimeError("invalid shape: boundary is ill-formed")
 
     # get the 2D boundary
     xy = np.array(bnd.xy, dtype=np.float_)
@@ -130,9 +129,9 @@ def _get_shape_single(shape_type, shape_data):
 
     # check if valid
     if obj.is_empty:
-        raise RunError("invalid shape: shape is empty")
+        raise RuntimeError("invalid shape: shape is empty")
     if not obj.is_valid:
-        raise RunError("invalid shape: geometry is ill-formed")
+        raise RuntimeError("invalid shape: geometry is ill-formed")
 
     return obj
 
@@ -210,7 +209,7 @@ def _get_shape_assemble(geometry_shape, tag, tol):
 
             # check the shape
             if not obj.is_valid:
-                raise RunError("invalid shape: geometry is ill-formed")
+                raise RuntimeError("invalid shape: geometry is ill-formed")
 
             # add to the list
             if shape_operation == "add":
@@ -247,7 +246,7 @@ def _get_shape_layer(geometry_shape, stack_tag, tol):
 
         # check that the shape is valid
         if not obj.is_valid:
-            raise RunError("invalid shape: geometry is ill-formed")
+            raise RuntimeError("invalid shape: geometry is ill-formed")
 
         # add the object
         if not obj.is_empty:
@@ -398,10 +397,10 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
 
     # check voxel validity
     if not np.all(d > 0):
-        RunError("invalid voxel dimension: should be positive")
+        RuntimeError("invalid voxel dimension: should be positive")
     # check voxel validity
     if not np.all(n > 0):
-        RunError("invalid voxel number: should be positive")
+        RuntimeError("invalid voxel number: should be positive")
 
     return n, d, c
 
@@ -487,7 +486,7 @@ def get_mesh(param, layer_stack, geometry_shape):
     # check total size
     nv = np.prod(n)
     if (VOXEL_TOTAL is not None) and (nv > VOXEL_TOTAL):
-        raise RunError("invalid size of the voxel structure: %d" % nv)
+        raise RuntimeError("invalid size of the voxel structure: %d" % nv)
 
     # init domain definition dict
     domain_def = {}
@@ -501,7 +500,7 @@ def get_mesh(param, layer_stack, geometry_shape):
     # check used size
     nv = sum(len(idx) for idx in domain_def.values())
     if (VOXEL_USED is not None) and (nv > VOXEL_USED):
-        raise RunError("invalid number of used voxels: %d" % nv)
+        raise RuntimeError("invalid number of used voxels: %d" % nv)
 
     # merge the shapes representing the original geometry
     LOGGER.debug("merge the shapes")

@@ -20,7 +20,6 @@ import pathlib
 import importlib.resources
 from pypeec import io
 from pypeec.lib_check import check_data_config
-from pypeec.error import RunError, FileError, CheckError
 
 
 def __getattr__(name):
@@ -92,7 +91,7 @@ def _set_file_config(file_config):
         # assign config to a global variable
         global FILE_CONFIG
         FILE_CONFIG = str(file_config)
-    except (FileError, CheckError, RunError) as ex:
+    except Exception as ex:
         print("==========================", file=sys.stderr)
         print("INVALID CONFIGURATION FILE", file=sys.stderr)
         print("==========================", file=sys.stderr)
