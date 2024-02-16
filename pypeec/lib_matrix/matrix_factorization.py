@@ -172,7 +172,7 @@ def _get_factorize_sub(mat):
         raise ValueError("invalid matrix factorization library")
 
     # display the status
-    LOGGER.warning("factorization failure")
+    LOGGER.debug("factorization success")
 
     return factor
 
