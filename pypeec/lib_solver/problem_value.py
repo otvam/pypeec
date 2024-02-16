@@ -45,7 +45,7 @@ def get_material_vector(material_val, material_idx, material_type_ref):
         else:
             raise ValueError("invalid material type")
 
-        # compute
+        # check size
         if len(rho) != len(idx):
             raise RuntimeError("invalid source")
 

@@ -80,7 +80,7 @@ def _get_green_6D_fct(x, y, z):
 
     # compute function
     val = 1.0*(
-            +(x**4*nrm)/60 +
+            + (x**4*nrm)/60 +
             + (y**4*nrm)/60 +
             + (z**4*nrm)/60 +
             - (x*y**4*logx)/24 +
