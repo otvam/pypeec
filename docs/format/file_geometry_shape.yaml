@@ -28,11 +28,11 @@
     #       - n_layer: number of voxels in the z-direction for the layer
     #       - tag_layer: string with the name of the layer
     "layer_stack":
-        - { "n_layer": 1, "tag_layer": "mag"}
-        - { "n_layer": 5, "tag_layer": "insulation_mag"}
-        - { "n_layer": 1, "tag_layer": "cond"}
-        - { "n_layer": 5, "tag_layer": "insulation_terminal"}
-        - { "n_layer": 1, "tag_layer": "terminal"}
+        - {"n_layer": 1, "tag_layer": "mag"}
+        - {"n_layer": 5, "tag_layer": "insulation_mag"}
+        - {"n_layer": 1, "tag_layer": "cond"}
+        - {"n_layer": 5, "tag_layer": "insulation_terminal"}
+        - {"n_layer": 1, "tag_layer": "terminal"}
 
     # definition of the shapes composing the different domains
     #   - dict with the domain name and a list of shape to be assembled
