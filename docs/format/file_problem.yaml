@@ -4,7 +4,7 @@
 #   - electric and magnetic materials can be defined
 #   - material definition
 #       - domain_list: list of domains with the specified material
-#       - material_type: material type ("electric" or "magnetic")
+#       - material_type: material type ("electric" or "magnetic" or "electromagnetic")
 #       - orientation_type: material type ("isotropic" or "anisotropic")
 #           - "electric": the material parameters are anisotropic
 #           - "anisotropic": the material parameters anisotropic
@@ -66,6 +66,11 @@
 #               - rho_re: material real resistivity (should be positive)
 #               - rho_im: material imaginary resistivity (should be positive)
 #           - magnetic material definition
+#               - chi_re: material real susceptibility (should be positive)
+#               - chi_im: material imaginary susceptibility (should be positive)
+#           - electromagnetic material definition
+#               - rho_re: material real resistivity (should be positive)
+#               - rho_im: material imaginary resistivity (should be positive)
 #               - chi_re: material real susceptibility (should be positive)
 #               - chi_im: material imaginary susceptibility (should be positive)
 #           - material values
