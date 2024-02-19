@@ -1,0 +1,31 @@
+# Definition of a "file_geometry" data.
+#
+# This file is used by the mesher.
+# Definition of the voxel structure.
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+"mesh_type": "voxel"
+"data_voxelize":
+    "param":
+        "n": [5, 5, 7]
+        "d": [10.0e-3, 10.0e-3, 10.0e-3]
+        "c": [0.0, 0.0, 0.0]
+    "domain_index":
+        "core": [75, 76, 77, 78, 79, 80, 84, 85, 89, 90, 94, 95, 96, 97, 98, 99]
+        "cond": [37, 62, 87, 112, 137]
+        "src": [12]
+        "sink": [162]
+"resampling":
+    "use_reduce": true
+    "use_resample": true
+    "resampling_factor": [3, 3, 3]
+"pts_cloud": []
+"check_cloud": true
+"check_conflict": true
+"check_connection": true
+"domain_conflict": []
+"domain_connection":
+    "connect": {"domain_group": [["cond"], ["src"], ["sink"]], "connected": true}
+    "core": {"domain_group": [["cond"], ["core"]], "connected": false}

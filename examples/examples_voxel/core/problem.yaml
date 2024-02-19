@@ -18,7 +18,7 @@
         "orientation_type": "isotropic"
         "var_type": "lumped"
     "core":
-        "domain_list": [ "core" ]
+        "domain_list": ["core"]
         "material_type": "magnetic"
         "orientation_type": "isotropic"
         "var_type": "lumped"
