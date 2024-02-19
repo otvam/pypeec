@@ -7,8 +7,8 @@
 # Mozilla Public License Version 2.0
 
 "material_def":
-    "cond":
-        "domain_list": ["src", "cond", "sink"]
+    "coil":
+        "domain_list": ["src", "sink", "wire"]
         "material_type": "electric"
         "orientation_type": "isotropic"
         "var_type": "lumped"
@@ -20,7 +20,7 @@
 "source_def":
     "src":
         "domain_list": ["src"]
-        "source_type": "voltage"
+        "source_type": "current"
         "var_type": "lumped"
     "sink":
         "domain_list": ["sink"]
@@ -34,11 +34,11 @@
     "sim_default": null
 "sweep_param":
     "sim_default":
-        "freq": 10.0e+3
+        "freq": 1.0e+3
         "material_val":
-            "cond": {"rho_re": 1.0e-8, "rho_im": 0.0}
-            "core": {"rho_re": 1.0e-8, "rho_im": 0.0, "chi_re": 100.0, "chi_im": 0.0}
+            "coil": {"rho_re": 1.75e-8, "rho_im": 0.0}
+            "core": {"rho_re": 1.0e-6, "rho_im": 0.0, "chi_re": 100.0, "chi_im": 0.0}
         "source_val":
-            "src": {"V_re": +1.0, "V_im": 0.0, "Z_re": 0.1, "Z_im": 0.0}
-            "sink": {"V_re": -1.0, "V_im": 0.0, "Z_re": 0.1, "Z_im": 0.0}
-            "gnd": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.1, "Z_im": 0.0}
+            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
+            "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
+            "gnd": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
