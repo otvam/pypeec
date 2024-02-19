@@ -15,13 +15,14 @@ from pypeec import log
 LOGGER = log.get_logger("PROBLEM")
 
 
-def get_material_vector(material_val, material_idx, material_type_ref):
+def get_material_vector(material_val, material_idx):
     """
-    Get the material parameters for a given material type.
+    Get the material parameters for the different material types.
     """
 
     # array for the resistivities
-    rho_v = np.empty((0, 3), dtype=np.complex_)
+    rho_vc = np.empty((0, 3), dtype=np.complex_)
+    rho_vm = np.empty((0, 3), dtype=np.complex_)
 
     # populate the arrays
     for tag, material_idx_tmp in material_idx.items():
@@ -32,28 +33,36 @@ def get_material_vector(material_val, material_idx, material_type_ref):
         # vacuum permeability
         mu = 4*np.pi*1e-7
 
-        # get the resistivities for the material
-        if material_type == "electric":
+        # get the resistivities for the electric materials
+        if material_type in ["electric", "electromagnetic"]:
+            # assemble
             rho_re = material_val[tag]["rho_re"]
             rho_im = material_val[tag]["rho_im"]
             rho = rho_re+1j*rho_im
-        elif material_type == "magnetic":
+
+            # check size
+            if len(rho) != len(idx):
+                raise RuntimeError("invalid source")
+
+            # append the resistivities
+            rho_vc = np.concatenate((rho_vc, rho))
+
+        # get the resistivities for the magnetic materials
+        if material_type in ["magnetic", "electromagnetic"]:
+            # assemble
             chi_re = material_val[tag]["chi_re"]
             chi_im = material_val[tag]["chi_im"]
             chi = chi_re-1j*chi_im
             rho = 1/(mu*chi)
-        else:
-            raise ValueError("invalid material type")
 
-        # check size
-        if len(rho) != len(idx):
-            raise RuntimeError("invalid source")
+            # check size
+            if len(rho) != len(idx):
+                raise RuntimeError("invalid material parameters")
 
-        # append the resistivities
-        if material_type == material_type_ref:
-            rho_v = np.concatenate((rho_v, rho))
+            # append the resistivities
+            rho_vm = np.concatenate((rho_vm, rho))
 
-    return rho_v
+    return rho_vc, rho_vm
 
 
 def get_source_all(source_val, source_pos, source_idx):
@@ -144,6 +153,13 @@ def get_source_vector(source_all, source_type_ref):
         source_type = source_idx_tmp["source_type"]
         value = source_idx_tmp["value"]
         element = source_idx_tmp["element"]
+        idx = source_idx_tmp["idx"]
+
+        # check size
+        if len(value) != len(idx):
+            raise RuntimeError("invalid source parameters")
+        if len(element) != len(idx):
+            raise RuntimeError("invalid source parameters")
 
         # append the source values and admittances/impedances
         if source_type == source_type_ref:

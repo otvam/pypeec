@@ -94,13 +94,11 @@ def _run_solver_init(data_solver, is_truncated):
     # parse the problem geometry (materials and sources)
     with log.BlockTimer(LOGGER, "problem_geometry"):
         # parse the materials
-        idx_vc = problem_geometry.get_material_indices(material_idx, "electric")
-        idx_vm = problem_geometry.get_material_indices(material_idx, "magnetic")
+        (idx_vc, idx_vm) = problem_geometry.get_material_indices(material_idx)
         material_pos = problem_geometry.get_material_pos(material_idx, idx_vc, idx_vm)
 
         # parse the sources
-        idx_src_c = problem_geometry.get_source_indices(source_idx, "current")
-        idx_src_v = problem_geometry.get_source_indices(source_idx, "voltage")
+        (idx_src_c, idx_src_v) = problem_geometry.get_source_indices(source_idx)
         source_pos = problem_geometry.get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v)
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
@@ -223,8 +221,7 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     # get the material and source values
     with log.BlockTimer(LOGGER, "problem_value"):
         # parse the material parameters
-        rho_vc = problem_value.get_material_vector(material_val, material_idx, "electric")
-        rho_vm = problem_value.get_material_vector(material_val, material_idx, "magnetic")
+        (rho_vc, rho_vm) = problem_value.get_material_vector(material_val, material_idx)
 
         # parse the source parameters
         source_all = problem_value.get_source_all(source_val, source_pos, source_idx)

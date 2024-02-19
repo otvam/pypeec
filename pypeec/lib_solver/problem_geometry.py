@@ -14,13 +14,14 @@ from pypeec import log
 LOGGER = log.get_logger("PROBLEM")
 
 
-def get_material_indices(material_idx, material_type_ref):
+def get_material_indices(material_idx):
     """
-    Get the indices of the voxels for a given material type.
+    Get the indices of the voxels for the different material types.
     """
 
     # array for the indices
-    idx_v = np.empty(0, dtype=np.int_)
+    idx_vc = np.empty(0, dtype=np.int_)
+    idx_vm = np.empty(0, dtype=np.int_)
 
     # populate the arrays
     for tag, material_idx_tmp in material_idx.items():
@@ -28,11 +29,15 @@ def get_material_indices(material_idx, material_type_ref):
         material_type = material_idx_tmp["material_type"]
         idx = material_idx_tmp["idx"]
 
-        # assign the indices
-        if material_type == material_type_ref:
-            idx_v = np.append(idx_v, idx)
+        # get the electric materials
+        if material_type in ["electric", "electromagnetic"]:
+            idx_vc = np.append(idx_vc, idx)
 
-    return idx_v
+        # get the magnetic materials
+        if material_type in ["magnetic", "electromagnetic"]:
+            idx_vm = np.append(idx_vm, idx)
+
+    return idx_vc, idx_vm
 
 
 def get_material_pos(material_idx, idx_vc, idx_vm):
@@ -63,13 +68,14 @@ def get_material_pos(material_idx, idx_vc, idx_vm):
     return material_pos
 
 
-def get_source_indices(source_idx, source_type_ref):
+def get_source_indices(source_idx):
     """
-    Get the indices of the source voxels for a given source type.
+    Get the indices of the source voxels (current and voltage sources).
     """
 
     # array for the source indices
-    idx_src = np.empty(0, dtype=np.int_)
+    idx_src_c = np.empty(0, dtype=np.int_)
+    idx_src_v = np.empty(0, dtype=np.int_)
 
     # populate the arrays with the current sources
     for tag, source_idx_tmp in source_idx.items():
@@ -78,10 +84,12 @@ def get_source_indices(source_idx, source_type_ref):
         idx = source_idx_tmp["idx"]
 
         # assign the indices
-        if source_type == source_type_ref:
-            idx_src = np.append(idx_src, idx)
+        if source_type == "current":
+            idx_src_c = np.append(idx_src_c, idx)
+        if source_type == "voltage":
+            idx_src_v = np.append(idx_src_v, idx)
 
-    return idx_src
+    return idx_src_c, idx_src_v
 
 
 def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
