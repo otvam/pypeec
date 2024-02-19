@@ -108,6 +108,14 @@ examples_png/inductor_gap
 
 .. image:: ../examples/examples_png_inductor_gap.png
 
+examples_png/iron_core
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* **Iron magnetic core with resistivity**
+* Defined with **PNG files**
+
+.. image:: ../examples/examples_png_iron_core.png
+
 examples_png/shield
 ^^^^^^^^^^^^^^^^^^^
 
@@ -150,6 +158,22 @@ examples_voxel/transformer
 * Defined with **voxel indices**
 
 .. image:: ../examples/examples_voxel_transformer.png
+
+examples_voxel/anisotropic
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* **L-shaped conductor with anisotropic resistivity**
+* Defined with **voxel indices**
+
+.. image:: ../examples/examples_voxel_anisotropic.png
+
+examples_voxel/distributed
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* **Slab conductor with space dependent resistivity**
+* Defined with **voxel indices**
+
+.. image:: ../examples/examples_voxel_distributed.png
 
 examples_voxel/logo
 ^^^^^^^^^^^^^^^^^^^

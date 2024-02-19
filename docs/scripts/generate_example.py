@@ -31,7 +31,7 @@ def run_image(folder_example):
 
     # load data
     data_viewer = io.load_input(file_viewer)
-    data_geometry = io.load_data(file_geometry)
+    data_geometry = io.load_input(file_geometry)
 
     # tweak the plot options
     data_viewer["domain"]["data_window"]["show_menu"] = True
@@ -54,4 +54,4 @@ def run_image(folder_example):
 
 
 if __name__ == "__main__":
-    run_image("tutorial")
+    run_image("examples_png/iron_core")

@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_stl/inductor_core",
-        "timestamp": "2024-02-06 23:04:58.350401"
+        "timestamp": "2024-02-19 18:33:33.771948"
     },
     "mesher": {
         "n_total": 161280,
