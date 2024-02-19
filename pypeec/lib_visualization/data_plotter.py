@@ -23,15 +23,19 @@ def set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v):
     idx_vm_local = np.in1d(idx, idx_vm)
     idx_src_c_local = np.in1d(idx, idx_src_c)
     idx_src_v_local = np.in1d(idx, idx_src_v)
+    idx_vcm_local = np.logical_and(idx_vc_local, idx_vm_local)
 
     # init the material
     material = np.empty(len(idx), dtype=np.int_)
 
-    # assign the voltage and current sources
+    # assign the materials
     material[idx_vc_local] = 1
     material[idx_vm_local] = 2
-    material[idx_src_c_local] = 3
-    material[idx_src_v_local] = 4
+    material[idx_vcm_local] = 3
+
+    # assign the sources
+    material[idx_src_c_local] = 4
+    material[idx_src_v_local] = 5
 
     # get sorted indices
     idx_sort = np.argsort(idx)
@@ -116,5 +120,6 @@ def get_voxel(idx_vc, idx_vm):
     """
 
     idx_all = np.concatenate((idx_vc, idx_vm))
+    idx_all = np.unique(idx_all)
 
     return idx_all
