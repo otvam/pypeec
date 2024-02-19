@@ -10,8 +10,8 @@
     "cond":
         "domain_list": ["src", "cond", "sink"]
         "material_type": "electric"
-        "orientation_type": "anisotropic"
-        "var_type": "lumped"
+        "orientation_type": "isotropic"
+        "var_type": "distributed"
 "source_def":
     "src":
         "domain_list": ["src"]
@@ -27,7 +27,7 @@
     "sim_default":
         "freq": 0.0
         "material_val":
-            "cond": {"rho_re": [1.0e-8, 1.0e-7, 1.0e-6], "rho_im": [0.0, 0.0, 0.0]}
+            "cond": {"rho_re": [1.0e-8, 1.0e-8, 1.0e-8, 1.0e-6, 1.0e-8, 1.0e-8, 1.0e-8], "rho_im": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}
         "source_val":
             "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
             "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}

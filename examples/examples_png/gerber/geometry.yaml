@@ -22,7 +22,7 @@
         - {"n_layer": 2, "filename_list": !path ["png/front.png", "png/terminal.png"]}
 "resampling":
     "use_reduce": true
-    "use_resample": false
+    "use_resample": true
     "resampling_factor": [1, 1, 1]
 "pts_cloud": []
 "check_cloud": true
