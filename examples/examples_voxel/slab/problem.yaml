@@ -8,7 +8,7 @@
 
 "material_def":
     "cond":
-        "domain_list": ["cond", "src", "sink"]
+        "domain_list": ["src", "cond", "sink"]
         "material_type": "electric"
         "orientation_type": "isotropic"
         "var_type": "lumped"

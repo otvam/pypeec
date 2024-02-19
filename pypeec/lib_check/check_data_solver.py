@@ -15,6 +15,7 @@ def _check_indices(n, idx_c, idx_m, idx_s):
     Check that the material and source indices are valid.
     The indices should be unique and compatible with the voxel size.
     The source indices should be included in the electric indices.
+    Check that there is at least one source per connected electrical.
     """
 
     # extract the voxel data
@@ -26,35 +27,23 @@ def _check_indices(n, idx_c, idx_m, idx_s):
     datachecker.check_index_array("index magnetic", idx_m, bnd=nv, can_be_empty=True)
     datachecker.check_index_array("index source", idx_s, bnd=nv, can_be_empty=False)
 
-    # check for invalid material
-    cond = len(np.intersect1d(idx_c, idx_m)) == 0
-    datachecker.check_assert("index overlap", cond, "magnetic and electric indices should not overlap")
-
     # check that the terminal indices are electric indices
     cond = np.all(np.in1d(idx_s, idx_c))
-    datachecker.check_assert("index overlap", cond, "source indices should overlap with electric indices")
-
-    # check that the terminal indices are electric indices
-    cond = np.all(np.logical_not(np.in1d(idx_s, idx_m)))
-    datachecker.check_assert("index overlap", cond, "source indices should not overlap with magnetic indices")
+    datachecker.check_assert("index", cond, "source indices should overlap with electric indices")
 
 
-def _check_source_graph(idx_c, idx_m, idx_s, connection_def):
+def _check_source_graph(idx_c, idx_s, connection_def):
     """
     Check that there is at least one source per connected component.
     A connected components without a source would lead to a singular problem.
     """
 
     for idx_graph in connection_def:
-        has_magnetic = len(np.intersect1d(idx_graph, idx_m)) > 0
         has_electric = len(np.intersect1d(idx_graph, idx_c)) > 0
         has_source = len(np.intersect1d(idx_graph, idx_s)) > 0
 
         cond = (not has_electric) or has_source
-        datachecker.check_assert("index overlap", cond, "electric components should include at least one source")
-
-        cond = (not has_magnetic) or (not has_source)
-        datachecker.check_assert("index overlap", cond, "magnetic components should not include sources")
+        datachecker.check_assert("index", cond, "electric components should include at least one source")
 
 
 def _get_field(val_dict, idx, var_type, orientation_type):
@@ -134,6 +123,9 @@ def _get_material_idx(material_def, domain_def):
         if material_type == "electric":
             idx_c = np.append(idx_c, idx)
         elif material_type == "magnetic":
+            idx_m = np.append(idx_m, idx)
+        elif material_type == "electromagnetic":
+            idx_c = np.append(idx_c, idx)
             idx_m = np.append(idx_m, idx)
         else:
             raise ValueError("invalid material type")
@@ -264,8 +256,9 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
     for tag, sweep_param_tmp in sweep_param.items():
         sweep_param[tag] = _get_sweep_param(sweep_param_tmp, material_idx, source_idx)
 
-    # check graph
-    _check_source_graph(idx_c, idx_m, idx_s, connection_def)
+    # check voxel indices
+    _check_indices(n, idx_c, idx_m, idx_s)
+    _check_source_graph(idx_c, idx_s, connection_def)
 
     # check the existence of magnetic domains
     has_electric = len(idx_c) > 0

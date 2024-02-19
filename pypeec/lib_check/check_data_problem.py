@@ -54,9 +54,9 @@ def _check_material_def(material_def):
         domain_list = material_def_tmp["domain_list"]
 
         # check data
-        material_type_list = ["electric", "magnetic"]
         var_type_list = ["lumped", "distributed"]
         orientation_type_list = ["isotropic", "anisotropic"]
+        material_type_list = ["electric", "magnetic", "electromagnetic"]
         datachecker.check_choice("var_type", var_type, var_type_list)
         datachecker.check_choice("material_type", material_type, material_type_list)
         datachecker.check_choice("orientation_type", orientation_type, orientation_type_list)
@@ -124,6 +124,8 @@ def _check_sweep_param(sweep_param, material_def, source_def):
             key_list = ["rho_re", "rho_im"]
         elif material_type == "magnetic":
             key_list = ["chi_re", "chi_im"]
+        elif material_type == "electromagnetic":
+            key_list = ["rho_re", "rho_im", "chi_re", "chi_im"]
         else:
             raise ValueError("invalid material type")
 

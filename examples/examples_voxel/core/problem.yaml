@@ -7,13 +7,8 @@
 # Mozilla Public License Version 2.0
 
 "material_def":
-    "terminal":
-        "domain_list": ["src", "sink"]
-        "material_type": "electric"
-        "orientation_type": "isotropic"
-        "var_type": "lumped"
     "cond":
-        "domain_list": ["cond"]
+        "domain_list": ["src", "cond", "sink"]
         "material_type": "electric"
         "orientation_type": "isotropic"
         "var_type": "lumped"
@@ -47,7 +42,6 @@
     "sim_dc":
         "freq": 0.0
         "material_val":
-            "terminal": {"rho_re": 1.0e-8, "rho_im": 0.0}
             "cond": {"rho_re": 1.0e-8, "rho_im": 0.0}
             "core": {"chi_re": 100.0, "chi_im": 50.0}
             "empty": {"rho_re": 1.0e-8, "rho_im": 0.0}
@@ -58,7 +52,6 @@
     "sim_ac":
         "freq": 1.0e+3
         "material_val":
-            "terminal": {"rho_re": 1.0e-8, "rho_im": 0.0}
             "cond": {"rho_re": 1.0e-8, "rho_im": 0.0}
             "core": {"chi_re": 100.0, "chi_im": 50.0}
             "empty": {"rho_re": 1.0e-8, "rho_im": 0.0}
