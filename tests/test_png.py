@@ -19,6 +19,7 @@ class TestPng(test_workflow.TestWorkflow):
 name_list = [
     "examples_png/inductor_spiral",
     "examples_png/inductor_gap",
+    "examples_png/iron_core",
     "examples_png/shield",
     "examples_png/gerber",
 ]

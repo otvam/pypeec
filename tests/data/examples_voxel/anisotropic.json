@@ -1,0 +1,18 @@
+{
+    "metadata": {
+        "name": "examples_voxel/anisotropic",
+        "timestamp": "2024-02-19 18:29:26.382880"
+    },
+    "mesher": {
+        "n_total": 25,
+        "n_used": 9
+    },
+    "solver": {
+        "sim_default": {
+            "freq": 0.0,
+            "has_converged": true,
+            "P_tot": 4.4000000000000114e-05,
+            "W_tot": 1.6077552029418427e-08
+        }
+    }
+}

@@ -18,8 +18,10 @@ class TestVoxel(test_workflow.TestWorkflow):
 # name of the examples
 name_list = [
     "examples_voxel/slab",
-    "examples_voxel/transformer",
     "examples_voxel/core",
+    "examples_voxel/transformer",
+    "examples_voxel/anisotropic",
+    "examples_voxel/distributed",
     "examples_voxel/logo",
 ]
 

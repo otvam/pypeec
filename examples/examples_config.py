@@ -19,8 +19,10 @@ FOLDER_CONFIG = "config"
 #   tutorial
 #   examples_voxel
 #       examples_voxel/slab
-#       examples_voxel/transformer
 #       examples_voxel/core
+#       examples_voxel/transformer
+#       examples_voxel/anisotropic
+#       examples_voxel/distributed
 #       examples_voxel/logo
 #   examples_shape
 #       examples_shape/busbar
@@ -34,6 +36,7 @@ FOLDER_CONFIG = "config"
 #   examples_png
 #       examples_png/inductor_spiral
 #       examples_png/inductor_gap
+#       examples_png/iron_core
 #       examples_png/shield
 #       examples_png/gerber
 

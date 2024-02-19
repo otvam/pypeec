@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/coplanar",
-        "timestamp": "2024-02-06 23:00:49.047642"
+        "timestamp": "2024-02-19 18:29:36.463074"
     },
     "mesher": {
         "n_total": 19200,

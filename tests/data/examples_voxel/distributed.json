@@ -1,0 +1,18 @@
+{
+    "metadata": {
+        "name": "examples_voxel/distributed",
+        "timestamp": "2024-02-19 18:29:27.681526"
+    },
+    "mesher": {
+        "n_total": 7,
+        "n_used": 7
+    },
+    "solver": {
+        "sim_default": {
+            "freq": 0.0,
+            "has_converged": true,
+            "P_tot": 0.00010500000000000021,
+            "W_tot": 1.4247503919428086e-08
+        }
+    }
+}
