@@ -111,7 +111,7 @@ examples_png/inductor_gap
 examples_png/iron_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **Iron magnetic core with resistivity**
+* **Iron magnetic core with relative permeability and finite resistivity**
 * Defined with **PNG files**
 
 .. image:: ../examples/examples_png_iron_core.png

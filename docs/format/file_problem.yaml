@@ -65,14 +65,18 @@
 #           - electric material definition
 #               - rho_re: material real resistivity (should be positive)
 #               - rho_im: material imaginary resistivity (should be positive)
+#               - definition: rho = rho_re + 1j*rho_im
 #           - magnetic material definition
 #               - chi_re: material real susceptibility (should be positive)
 #               - chi_im: material imaginary susceptibility (should be positive)
+#               - definition: chi = chi_re - 1j*chi_im
 #           - electromagnetic material definition
 #               - rho_re: material real resistivity (should be positive)
 #               - rho_im: material imaginary resistivity (should be positive)
 #               - chi_re: material real susceptibility (should be positive)
 #               - chi_im: material imaginary susceptibility (should be positive)
+#               - definition: rho = rho_re + 1j*rho_im
+#               - definition: chi = chi_re - 1j*chi_im
 #           - material values
 #               - "lumped" and "isotropic": scalar
 #                   - the material parameters are isotropic
@@ -85,7 +89,7 @@
 #                   - the material parameters are isotropic
 #                   - different parameters are used for each voxel
 #                   - the array has the following size: (n_voxel)
-#               - "distributed" and "anisotropic": array
+#               - "distributed" and "anisotropic": 2D array
 #                   - the material parameters are anisotropic
 #                   - different parameters are used for each voxel
 #                   - the array has the following size: (n_voxel, 3)
@@ -96,11 +100,15 @@
 #               - I_im: current source value (imaginary part)
 #               - Y_re: current internal admittance (real part)
 #               - Y_im: current internal admittance (imaginary part)
+#               - definition: I = I_re + 1j*I_im
+#               - definition: Y = Y_re + 1j*Y_im
 #           - voltage source definition
 #               - V_re: voltage source value (real part)
 #               - V_im: voltage source value (imaginary part)
 #               - Z_re: voltage internal impedance (real part)
 #               - Z_im: voltage internal impedance (imaginary part)
+#               - definition: V = V_re + 1j*V_im
+#               - definition: Z = Z_re + 1j*Z_im
 #           - source values
 #               - "lumped": scalar
 #                   - the source is using lumped parameters
