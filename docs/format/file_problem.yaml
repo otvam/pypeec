@@ -5,8 +5,11 @@
 #   - material definition
 #       - domain_list: list of domains with the specified material
 #       - material_type: material type ("electric" or "magnetic" or "electromagnetic")
+#           - "electric": material with a finite conductivity (with a zero susceptibility)
+#           - "magnetic": material with a finite susceptibility (with a zero conductivity)
+#           - "electromagnetic": material with a finite susceptibility and permeability
 #       - orientation_type: material type ("isotropic" or "anisotropic")
-#           - "electric": the material parameters are anisotropic
+#           - "isotropic": the material parameters are anisotropic
 #           - "anisotropic": the material parameters anisotropic
 #       - var_type: type of material parameters ("lumped" or "distributed")
 #           - "lumped": the material parameters are homogeneous
