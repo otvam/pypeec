@@ -37,7 +37,7 @@
         "freq": 1.0e+3
         "material_val":
             "coil": {"rho_re": 1.75e-8, "rho_im": 0.0}
-            "core": {"rho_re": 1.0e-6, "rho_im": 0.0, "chi_re": 100.0, "chi_im": 0.0}
+            "core": {"rho_re": 1.0e-6, "rho_im": 0.0, "chi_re": 100.0, "chi_im": 10.0}
         "source_val":
             "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
             "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
