@@ -61,6 +61,10 @@ The **PyPEEC** package contains the following **tools**:
 * Issues: https://github.com/otvam/pypeec/issues
 * PyPi: https://pypi.org/project/pypeec
 
+* Tutorial: https://pypeec.otvam.ch/content/tutorial.html
+* Examples: https://pypeec.otvam.ch/content/examples.html
+* Gallery: https://pypeec.otvam.ch/content/gallery.html
+
 ## Author
 
 * **Thomas Guillod**
