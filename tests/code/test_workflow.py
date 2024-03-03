@@ -9,6 +9,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import os
 import unittest
 from tests.code import test_pypeec
 from tests.code import test_read_write
@@ -37,7 +38,7 @@ class TestWorkflow(unittest.TestCase):
         self.assertEqual(n_total, n_total_ref, msg="invalid number of voxels (complete grid)")
         self.assertEqual(n_used, n_used_ref, msg="invalid number of voxels (non-empty voxels)")
 
-    def _check_solver(self, solver, solver_ref, tol):
+    def _check_solver(self, solver, solver_ref, test_tol):
         """
         Check the results produced by the solver.
         """
@@ -56,11 +57,11 @@ class TestWorkflow(unittest.TestCase):
 
         # check solution
         self.assertEqual(has_converged, has_converged_ref, msg="invalid convergence")
-        self.assertAlmostEqual(freq, freq_ref, delta=tol*freq_ref, msg="invalid frequency")
-        self.assertAlmostEqual(P_tot, P_tot_ref, delta=tol*P_tot_ref, msg="invalid losses")
-        self.assertAlmostEqual(W_tot, W_tot_ref, delta=tol*W_tot_ref, msg="invalid energy")
+        self.assertAlmostEqual(freq, freq_ref, delta=test_tol*freq_ref, msg="invalid frequency")
+        self.assertAlmostEqual(P_tot, P_tot_ref, delta=test_tol*P_tot_ref, msg="invalid losses")
+        self.assertAlmostEqual(W_tot, W_tot_ref, delta=test_tol*W_tot_ref, msg="invalid energy")
 
-    def _check_results(self, mesher, solver, mesher_ref, solver_ref, tol):
+    def _check_results(self, mesher, solver, mesher_ref, solver_ref, test_tol):
         """
         Check the results.
         """
@@ -73,15 +74,27 @@ class TestWorkflow(unittest.TestCase):
 
         # check the solver results
         for solver_tmp, solver_ref_tmp in zip(solver.values(), solver_ref.values()):
-            self._check_solver(solver_tmp, solver_ref_tmp, tol)
+            self._check_solver(solver_tmp, solver_ref_tmp, test_tol)
 
     def run_test(self, tag, name, use_script):
         """
         Run the workflow and check the results.
         """
 
-        # get the test configuration
-        (tol, check_test, generate_test) = test_read_write.get_config()
+        # get env var
+        test_tol = os.getenv("TEST_TOL")
+        test_check = os.getenv("TEST_CHECK")
+        test_set = os.getenv("TEST_SET")
+
+        # check env variables
+        self.assertIsNotNone(test_tol, "invalid test env variables")
+        self.assertIsNotNone(test_check, "invalid test env variables")
+        self.assertIsNotNone(test_set, "invalid test env variables")
+
+        # cast env variables
+        test_tol = float(test_tol)
+        test_check = bool(int(test_check))
+        test_set = bool(int(test_set))
 
         # generate the results
         (data_voxel, data_solution) = test_pypeec.run_workflow(name, use_script)
@@ -90,13 +103,13 @@ class TestWorkflow(unittest.TestCase):
         (mesher, solver) = test_generate.generate_results(data_voxel, data_solution)
 
         # write the reference results
-        if generate_test:
+        if test_set:
             test_read_write.write_results(tag, mesher, solver)
 
         # load and check the results
-        if check_test:
+        if test_check:
             (mesher_ref, solver_ref) = test_read_write.read_results(tag)
-            self._check_results(mesher, solver, mesher_ref, solver_ref, tol)
+            self._check_results(mesher, solver, mesher_ref, solver_ref, test_tol)
 
 
 def set_test(test_class, tag, name, use_script):

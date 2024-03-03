@@ -1,7 +1,6 @@
 """
-Module for getting/reading/writing the test data.
+Module for reading and writing the test data.
 
-Load the test configuration file.
 Read the prescribed test results.
 Write the prescribed test results.
 """
@@ -62,23 +61,3 @@ def read_results(name):
     solver = data_test["solver"]
 
     return mesher, solver
-
-
-def get_config():
-    """
-    Load the test configuration file.
-    """
-
-    # file containing the test results
-    file_test = os.path.join(FOLDER_TESTS, "config.json")
-
-    # load the test results
-    with open(file_test, "r") as fid:
-        data_config = json.load(fid)
-
-    # extract results
-    tol = data_config["tol"]
-    check_test = data_config["check_test"]
-    generate_test = data_config["generate_test"]
-
-    return tol, check_test, generate_test

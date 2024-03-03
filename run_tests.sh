@@ -4,7 +4,12 @@
 #   - check the test status
 #
 # The variable "ALLOW_PLOTTING" are allowing the tests to be run without a display server.
-# The variables "PYTHONIOENCODING" and "PYTHONUNBUFFERED" are setting up Python.
+# The variables "PYTHONIOENCODING" and "PYTHONUNBUFFERED" are setting up the Python interpreter.
+#
+# The following variables control the tests:
+#   - TEST_TOL: relative tolerance for the test results
+#   - TEST_CHECK: check (or not) the test results
+#   - TEST_SET: generate (or not) the test results
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -33,10 +38,15 @@ function test_collect {
   fi
 }
 
-# global variables
+# global variables for the Python interpreter
 export ALLOW_PLOTTING="true"
 export PYTHONIOENCODING="utf8"
 export PYTHONUNBUFFERED="1"
+
+# global variables for enabling the tests
+export TEST_TOL="1e-6"
+export TEST_CHECK="1"
+export TEST_SET="0"
 
 # init status
 ret=0

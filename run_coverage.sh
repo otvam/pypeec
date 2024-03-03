@@ -4,7 +4,12 @@
 #   - generate an HTML report with the results
 #
 # The variable "ALLOW_PLOTTING" are allowing the tests to be run without a display server.
-# The variables "PYTHONIOENCODING" and "PYTHONUNBUFFERED" are setting up Python.
+# The variables "PYTHONIOENCODING" and "PYTHONUNBUFFERED" are setting up the Python interpreter.
+#
+# The following variables control the tests:
+#   - TEST_TOL: relative tolerance for the test results
+#   - TEST_CHECK: check (or not) the test results
+#   - TEST_SET: generate (or not) the test results
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -42,10 +47,15 @@ function coverage_html {
   ret=$(( ret || $? ))
 }
 
-# global variables
+# global variables for the Python interpreter
 export ALLOW_PLOTTING="true"
 export PYTHONIOENCODING="utf8"
 export PYTHONUNBUFFERED="1"
+
+# global variables for disabling the tests
+export TEST_TOL="nan"
+export TEST_CHECK="0"
+export TEST_SET="0"
 
 # init status
 ret=0
