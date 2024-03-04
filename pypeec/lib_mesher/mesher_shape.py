@@ -225,7 +225,8 @@ def _get_shape_assemble(geometry_shape, tag, tol):
     obj = sha.difference(obj_add, obj_sub)
 
     # simplify the shape
-    obj = sha.simplify(obj, tol)
+    if tol is not None:
+        obj = sha.simplify(obj, tol)
 
     return obj
 

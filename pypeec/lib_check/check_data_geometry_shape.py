@@ -133,8 +133,8 @@ def _check_param(param):
     datachecker.check_float("dx", param["dx"], is_positive=True, can_be_zero=False)
     datachecker.check_float("dy", param["dy"], is_positive=True, can_be_zero=False)
     datachecker.check_float("dz", param["dz"], is_positive=True, can_be_zero=False)
-    datachecker.check_float("tol", param["tol"], is_positive=True, can_be_zero=False)
     datachecker.check_float("cz", param["cz"], is_positive=False, can_be_zero=True)
+    datachecker.check_float("tol", param["tol"], is_positive=True, can_be_zero=False, can_be_none=True)
     datachecker.check_float_array("xy_min", param["xy_min"], size=2, is_positive=False, can_be_zero=True, can_be_none=True)
     datachecker.check_float_array("xy_max", param["xy_max"], size=2, is_positive=False, can_be_zero=True, can_be_none=True)
 
