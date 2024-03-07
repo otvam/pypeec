@@ -40,8 +40,8 @@ This tutorial demonstrates how PyPEEC can be used to simulate a four-layer PCB c
 The coil has two terminals and the simulation is done in the frequency domain.
 All the command are executed inside the virtual environment in the ``examples`` folder.
 
-Mesher: Meshing of the Geometry
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Mesher: Building and Meshing the Geometry
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
@@ -55,8 +55,8 @@ Mesher: Meshing of the Geometry
 .. literalinclude:: ../tutorial/log_mesher.txt
    :language: text
 
-Viewer: Plot the Geometry
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Viewer: Plot the Geometry and Mesh
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
@@ -77,8 +77,8 @@ Viewer: Plot the Geometry
 
    Plot showing which domains are interconnected.
 
-Solver: Solve the Problem
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Solver: Solve the PEEC Problem
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
