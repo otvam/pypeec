@@ -22,6 +22,7 @@ dependencies:
   - setuptools_scm=7.1.0
   - sphinx_rtd_theme=1.2.2
   - sphinx=6.2.1
+  - pkg-config==0.29.2
   # YAML parsing library
   - pyyaml=6.0
   # numerical libraries
@@ -47,9 +48,9 @@ dependencies:
   - cupy=12.1.0
   - scikit-umfpack=0.3.3
   # optional HPC toolkits
-  - mkl-devel
-  - cudatoolkit
+  - mkl-devel==2023.2.0
+  - cudatoolkit==11.8.0
   # optional HPC libs from PyPi
   - pip:
     - pyFFTW==0.13.1
-    - pydiso==0.0.3
+    - pydiso==0.0.4
