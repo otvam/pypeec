@@ -87,10 +87,10 @@ def get_excitation_all(n_winding, symmetry):
         excitation = _get_excitation_compact(excitation, symmetry_tmp)
 
     # remove redundant excitations
-    (excitation, idx) = np.unique(excitation, return_index=True)
+    excitation = np.unique(excitation)
 
     # get the number of solutions for the reduced problem
-    n_solution = len(idx)
+    n_solution = len(excitation)
 
     return n_solution, excitation
 
