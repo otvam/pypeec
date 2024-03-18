@@ -390,9 +390,9 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
         (data_init, data_internal) = _run_solver_init(data_solver, is_truncated)
 
     # function for solving a single sweep
-    def fct_compute(tag, param, init):
+    def fct_compute(tag, data, init):
         with log.BlockTimer(LOGGER, "run sweep: " + tag):
-            (output, init) = _run_solver_sweep(data_solver, data_internal, param, init, is_truncated)
+            (output, init) = _run_solver_sweep(data_solver, data_internal, data, init, is_truncated)
         return output, init
 
     # compute the different sweeps

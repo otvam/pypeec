@@ -124,7 +124,7 @@ def _get_tree_compute(sweep_tree, sweep_param, fct_compute, tag_init, output, in
         init_tmp = init[tag_init]
 
     # get the input
-    sweep_param_sub = [sweep_param[tag_tmp] for tag_tmp in tag_sub]
+    data_sub = [sweep_param[tag_tmp] for tag_tmp in tag_sub]
     init_sub = [init_tmp]*len(tag_sub)
 
     # return if there is nothing to compute
@@ -132,7 +132,7 @@ def _get_tree_compute(sweep_tree, sweep_param, fct_compute, tag_init, output, in
         return output, init
 
     # run the serial or parallel loop
-    arg_list = zip(tag_sub, sweep_param_sub, init_sub)
+    arg_list = zip(tag_sub, data_sub, init_sub)
     out_list = _get_parallel_loop(fct_compute, arg_list)
 
     # assemble the results
