@@ -81,7 +81,7 @@ class _YamlLoader(yaml.Loader):
             return result
         elif isinstance(node, yaml.MappingNode):
             result = {}
-            for k, v in self.construct_mapping(node).iteritems():
+            for k, v in self.construct_mapping(node).items():
                 result[k] = fct(v)
             return result
         else:
