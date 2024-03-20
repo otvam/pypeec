@@ -76,13 +76,13 @@ class _YamlLoader(yaml.Loader):
             return fct(self.construct_scalar(node))
         elif isinstance(node, yaml.SequenceNode):
             result = []
-            for filename in self.construct_sequence(node):
-                result.append(fct(filename))
+            for arg in self.construct_sequence(node):
+                result.append(fct(arg))
             return result
         elif isinstance(node, yaml.MappingNode):
             result = {}
-            for k, v in self.construct_mapping(node).items():
-                result[k] = fct(v)
+            for tag, arg in self.construct_mapping(node).items():
+                result[tag] = fct(arg)
             return result
         else:
             raise yaml.YAMLError("invalid node")
@@ -99,7 +99,7 @@ class _YamlLoader(yaml.Loader):
         Load an included YAML file.
         """
 
-        filepath = self.__extract_path(filename)
+        filepath = os.path.join(self.path_root, filename)
         with open(filepath, "r") as f:
             content = yaml.load(f, _YamlLoader)
             return content
