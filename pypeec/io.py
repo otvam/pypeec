@@ -4,7 +4,8 @@ Module for serialization and deserialization.
     - load and write JSON/Pickle data files
 
 For YAML files, the following custom extensions are used:
-    - "!path" - allows the inclusion of relative paths
+    - "!path" - parse relative paths
+    - "!include" - include other YAML files
     - "!merge_dict" - merge a list of dicts
     - "!merge_list" - merge a list of lists
 
@@ -358,6 +359,7 @@ def _load_yaml(filename):
 def _load_json(filename, is_gzip):
     """
     Load a JSON file (with extensions).
+    The JSON file can be a text file or a gzip file.
     """
 
     try:
@@ -378,6 +380,7 @@ def _load_json(filename, is_gzip):
 def _write_json(filename, data, is_gzip):
     """
     Write a JSON file (with extensions).
+    The JSON file can be a text file or a gzip file.
     """
 
     try:
@@ -440,6 +443,7 @@ def load_input(filename):
         The file type is determined by the extension.
         For YAML files, the extension should be "yaml" or "yml".
         For JSON files, the extension should be "json" or "js".
+        For GZIP/JSON files, the extension should be "gzip" or "gz".
 
     Returns
     -------
@@ -470,6 +474,7 @@ def load_data(filename):
         Name and path of the file to be loaded.
         The file type is determined by the extension.
         For JSON files, the extension should be "json" or "js".
+        For GZIP/JSON files, the extension should be "gzip" or "gz".
         For Pickle files, the extension should be "pck".
 
     Returns
@@ -501,6 +506,7 @@ def write_data(filename, data):
         Name and path of the file to be created.
         The file type is determined by the extension.
         For JSON files, the extension should be "json" or "js".
+        For GZIP/JSON files, the extension should be "gzip" or "gz".
         For Pickle files, the extension should be "pck".
     data : data
         Python data to be saved.
