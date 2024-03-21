@@ -5,7 +5,8 @@ Module for serialization and deserialization.
 
 For YAML files, the following custom extensions are used:
     - "!path" - allows the inclusion of relative paths
-    - "!include" - allows the inclusion of YAML sub-files
+    - "!merge_dict" - merge a list of dicts
+    - "!merge_list" - merge a list of lists
 
 For JSON files, the following custom extensions are used:
     - "__complex__" - allows the serialization of complex numbers
@@ -35,12 +36,32 @@ import numpy as np
 
 
 class _MergeData:
+    """
+    This Python class is used to merge YAML data.
+        - a custom merge command is used with a list of arguments
+        - the arguments (lists or dicts) are merged together
+        - the merge is performed recursively
+
+    The merge objects are created during the YAML parsing.
+    The merge objects are replaced by the merged data after the parsing.
+    """
+
     def __init__(self, data_list, data_type):
+        """
+        Constructor.
+        Assign the list of data to be merged and the data type.
+        """
+
         self.data_list = data_list
         self.data_type = data_type
 
     @staticmethod
     def merge(data):
+        """
+        Walk through the data recursively and merge it.
+        Find the merge objects and replace them with merged data.
+        """
+
         if type(data) is dict:
             for tag, val in data.items():
                 data[tag] = _MergeData.merge(val)
@@ -55,6 +76,11 @@ class _MergeData:
         return data
 
     def extract(self):
+        """
+        Merge a list of dicts or a list of lists.
+        The merge is performed recursively.
+        """
+
         if self.data_type == "dict":
             res = {}
             for data in self.data_list:
@@ -76,16 +102,21 @@ class _YamlLoader(yaml.Loader):
     This Python class offers extension to the YAML format.
         - include YAML file in YAML file
         - include relative filesystem paths
+        - merge list of dicts
+        - merge list of lists
     """
 
     def __init__(self, stream):
         """
-        Constructor of the Loader class.
+        Constructor.
+        Custom YAML loader subclassing the default loader.
         """
 
         # get the path of the YAML file for relative paths
         self.path_root = os.path.abspath(stream.name)
         self.path_root = os.path.dirname(self.path_root)
+
+        # flag indicating if any merge commands are used
         self.has_merge = False
 
         # call the constructor of the parent
@@ -101,13 +132,13 @@ class _YamlLoader(yaml.Loader):
             res = _YamlLoader.__yaml_handling(self, node, self.__extract_path)
             return res
 
-        # handling merge of several lists
+        # handling merge of a list of dicts
         def fct_handle_merge_dict(self, node):
             self.has_merge = True
             res = _MergeData(self.construct_sequence(node), "dict")
             return res
 
-        # handling of path inside YAML files
+        # handling merge of a list of lists
         def fct_handle_merge_list(self, node):
             self.has_merge = True
             res = _MergeData(self.construct_sequence(node), "list")
@@ -121,7 +152,7 @@ class _YamlLoader(yaml.Loader):
 
     def __yaml_handling(self, node, fct):
         """
-        Apply a function to a YAML for list, dict, scalar.
+        Apply a function to a YAML node for list, dict, scalar.
         """
 
         if isinstance(node, yaml.ScalarNode):
@@ -277,6 +308,11 @@ class _JsonNumPyDecoder(json.JSONDecoder):
 
 
 def _parse_yaml(stream):
+    """
+    Load a YAML stream (with custom extensions).
+    If required, merge the data (custom merge commands).
+    """
+
     loader = _YamlLoader(stream)
     try:
         data = loader.get_single_data()
@@ -290,13 +326,12 @@ def _parse_yaml(stream):
 
 def _load_yaml(filename):
     """
-    Load a YAML file (with extensions).
+    Load a YAML file (with custom extensions).
     """
 
     try:
         with open(filename, "r") as fid:
             data = _parse_yaml(fid)
-
     except yaml.YAMLError as ex:
         raise RuntimeError("invalid YAML file: %s\n%s" % (filename, str(ex)))
     except OSError:
