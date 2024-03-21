@@ -52,6 +52,9 @@ class _MergeData:
         Assign the list of data to be merged and the data type.
         """
 
+        if type(data_list) is not list:
+            raise yaml.YAMLError("arguments of the merge_dict / merge_list should be a list")
+
         self.data_list = data_list
         self.data_type = data_type
 
@@ -85,11 +88,15 @@ class _MergeData:
             res = {}
             for data in self.data_list:
                 data = _MergeData.merge(data)
+                if type(data) is not dict:
+                    raise yaml.YAMLError("merge_dict cannot only merge dictionaries")
                 res.update(data)
         elif self.data_type == "list":
             res = []
             for data in self.data_list:
                 data = _MergeData.merge(data)
+                if type(data) is not list:
+                    raise yaml.YAMLError("merge_list cannot only merge lists")
                 res += data
         else:
             raise yaml.YAMLError("invalid merge type")
@@ -168,19 +175,27 @@ class _YamlLoader(yaml.Loader):
                 result[tag] = fct(arg)
             return result
         else:
-            raise yaml.YAMLError("invalid node")
+            raise yaml.YAMLError("invalid YAML node type")
 
     def __extract_path(self, filename):
         """
         Find the path with respect to the YAML file path.
         """
 
-        return os.path.join(self.path_root, filename)
+        if type(filename) is not str:
+            raise yaml.YAMLError("path command arguments should be strings")
+
+        filepath = os.path.join(self.path_root, filename)
+
+        return filepath
 
     def __extract_yaml(self, filename):
         """
         Load an included YAML file.
         """
+
+        if type(filename) is not str:
+            raise yaml.YAMLError("include command arguments should be strings")
 
         filepath = os.path.join(self.path_root, filename)
         with open(filepath, "r") as fid:
