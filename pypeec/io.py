@@ -34,6 +34,43 @@ import yaml
 import numpy as np
 
 
+class _MergeData:
+    def __init__(self, data_list, data_type):
+        self.data_list = data_list
+        self.data_type = data_type
+
+    @staticmethod
+    def merge(data):
+        if type(data) is dict:
+            for tag, val in data.items():
+                data[tag] = _MergeData.merge(val)
+        elif type(data) is list:
+            for idx, val in enumerate(data):
+                data[idx] = _MergeData.merge(val)
+        elif type(data) is _MergeData:
+            data = data.extract()
+        else:
+            return data
+
+        return data
+
+    def extract(self):
+        if self.data_type == "dict":
+            res = {}
+            for data in self.data_list:
+                data = _MergeData.merge(data)
+                res.update(data)
+        elif self.data_type == "list":
+            res = []
+            for data in self.data_list:
+                data = _MergeData.merge(data)
+                res += data
+        else:
+            raise yaml.YAMLError("invalid merge type")
+
+        return res
+
+
 class _YamlLoader(yaml.Loader):
     """
     This Python class offers extension to the YAML format.
@@ -49,6 +86,7 @@ class _YamlLoader(yaml.Loader):
         # get the path of the YAML file for relative paths
         self.path_root = os.path.abspath(stream.name)
         self.path_root = os.path.dirname(self.path_root)
+        self.has_merge = False
 
         # call the constructor of the parent
         super().__init__(stream)
@@ -58,14 +96,28 @@ class _YamlLoader(yaml.Loader):
             res = _YamlLoader.__yaml_handling(self, node, self.__extract_yaml)
             return res
 
-        # handling of path inside YAML files
+        # handling merge of several dicts
         def fct_handle_path(self, node):
             res = _YamlLoader.__yaml_handling(self, node, self.__extract_path)
+            return res
+
+        # handling merge of several lists
+        def fct_handle_merge_dict(self, node):
+            self.has_merge = True
+            res = _MergeData(self.construct_sequence(node), "dict")
+            return res
+
+        # handling of path inside YAML files
+        def fct_handle_merge_list(self, node):
+            self.has_merge = True
+            res = _MergeData(self.construct_sequence(node), "list")
             return res
 
         # add the extension to the YAML format
         _YamlLoader.add_constructor("!include", fct_handle_include)
         _YamlLoader.add_constructor("!path", fct_handle_path)
+        _YamlLoader.add_constructor("!merge_dict", fct_handle_merge_dict)
+        _YamlLoader.add_constructor("!merge_list", fct_handle_merge_list)
 
     def __yaml_handling(self, node, fct):
         """
@@ -100,9 +152,9 @@ class _YamlLoader(yaml.Loader):
         """
 
         filepath = os.path.join(self.path_root, filename)
-        with open(filepath, "r") as f:
-            content = yaml.load(f, _YamlLoader)
-            return content
+        with open(filepath, "r") as fid:
+            data = _parse_yaml(fid)
+            return data
 
 
 class _JsonNumPyEncoder(json.JSONEncoder):
@@ -224,6 +276,18 @@ class _JsonNumPyDecoder(json.JSONDecoder):
             return obj
 
 
+def _parse_yaml(stream):
+    loader = _YamlLoader(stream)
+    try:
+        data = loader.get_single_data()
+        if loader.has_merge:
+            data = _MergeData.merge(data)
+    finally:
+        loader.dispose()
+
+    return data
+
+
 def _load_yaml(filename):
     """
     Load a YAML file (with extensions).
@@ -231,7 +295,8 @@ def _load_yaml(filename):
 
     try:
         with open(filename, "r") as fid:
-            data = yaml.load(fid, _YamlLoader)
+            data = _parse_yaml(fid)
+
     except yaml.YAMLError as ex:
         raise RuntimeError("invalid YAML file: %s\n%s" % (filename, str(ex)))
     except OSError:
