@@ -52,6 +52,12 @@ autodoc_member_order = 'bysource'
 # disable API file generation
 autosummary_generate = False
 
+# allowed redirect for the external links
+linkcheck_allowed_redirects = {
+    'http://mozilla.org/MPL/2.0': 'https://www.mozilla.org/en-US/MPL/2.0',
+    'https://dartmouth.edu': 'https://home.dartmouth.edu'
+}
+
 # define paths
 templates_path = ['_templates']
 html_static_path = ['_static']

@@ -46,6 +46,12 @@ function build_docs {
 
   # update status
   ret=$(( ret || $? ))
+
+  # check external links
+  sphinx-build -b linkcheck docs html
+
+  # update status
+  ret=$(( ret || $? ))
 }
 
 function build_package {
