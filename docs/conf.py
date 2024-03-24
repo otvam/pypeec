@@ -8,6 +8,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import os
 import sys
+import datetime
 import setuptools_scm
 
 # define the package path
@@ -22,11 +23,21 @@ ver = setuptools_scm.get_version(
 release = ver
 version = ver
 
+# get date
+date = datetime.datetime.today().strftime('%a, %b %d, %Y')
+
 # project metadata
 project = 'PyPEEC'
 html_title = "PyPEEC"
 author = 'Thomas Guillod'
 copyright = 'Thomas Guillod - Dartmouth College'
+
+# add prolog
+rst_epilog = """
+.. |ver| replace:: {ver}
+.. |date| replace:: {date}
+"""
+rst_epilog = rst_epilog.format(ver=ver, date=date)
 
 # load extensions
 extensions = [

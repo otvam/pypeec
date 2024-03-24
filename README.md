@@ -68,6 +68,7 @@ The **PyPEEC** package contains the following **tools**:
 ## Author
 
 * **Thomas Guillod**
+* Affiliation: Dartmouth College
 * Email: guillod@otvam.ch
 * Website: https://otvam.ch
 
