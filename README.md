@@ -52,6 +52,12 @@ The **PyPEEC** package contains the following **tools**:
 * **solver**: solver for the magnetic field problem
 * **plotter**: visualization of the problem solution
 
+## Warning
+
+The geometry is meshed with a **regular voxel structure** (uniform grid).
+Some geometries/problems are not suited for voxel structures (inefficient meshing).
+For such cases, PyPEEC can be very slow and consume a lot of memory.
+
 ## Project Links
 
 * Website: https://pypeec.otvam.ch
@@ -67,7 +73,7 @@ The **PyPEEC** package contains the following **tools**:
 
 ## Author
 
-* **Thomas Guillod**
+* Name: **Thomas Guillod**
 * Affiliation: Dartmouth College
 * Email: guillod@otvam.ch
 * Website: https://otvam.ch

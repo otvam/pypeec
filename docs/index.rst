@@ -82,6 +82,13 @@ The **PyPEEC** package contains the following **tools**:
 
 ------------
 
+.. Warning::
+    The geometry is meshed with a **regular voxel structure** (uniform grid).
+    Some geometries/problems are not suited for voxel structures (inefficient meshing).
+    For such cases, PyPEEC can be very slow and consume a lot of memory.
+
+------------
+
 .. Note::
     * **Author:** `Thomas Guillod <https://otvam.ch>`_
     * **Institution:** `Dartmouth College <https://dartmouth.edu>`_
