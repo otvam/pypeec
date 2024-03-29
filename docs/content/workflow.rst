@@ -72,6 +72,7 @@ The entry points of the different tools are located in the ``pypeec.main`` modul
 Additionally, a command line tool is located in the ``pypeec.script`` module:
 
 * ``pypeec --help`` for displaying the command line options
+* ``pypeec --version`` for displaying the version number
 * ``pypeec mesher`` for running the **mesher**
 * ``pypeec viewer`` for running the **viewer**
 * ``pypeec solver`` for running the **solver**
@@ -97,7 +98,8 @@ The following files (JSON or Pickle format) are generated:
 * ``file_voxel`` (JSON or Pickle, output file): file with the definition of the voxel structure
 * ``file_solution`` (JSON or Pickle, output file): file with the solution of the magnetic problem
 
-The file extensions are used:
+The following file extensions are used:
+
 * ``yml`` and ``yaml`` for YAML files
 * ``js`` and ``json`` for JSON files
 * ``gz`` and ``gzip`` for GZIP/JSON files
