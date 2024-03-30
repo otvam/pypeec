@@ -121,8 +121,10 @@ function upload_documentation {
   touch pypeecdocs/.gitignore
   touch pypeecdocs/.nojekyll
 
-  # substitute the timestamp for the sitemap
+  # get the timestamp for the sitemap
   export LASTMOD=$(date '+%Y-%m-%d')
+
+  # substitute the timestamp for the sitemap
   cat docs/website/sitemap.xml | envsubst > pypeecdocs/sitemap.xml
 
   # copy metadata
