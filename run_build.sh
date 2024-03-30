@@ -50,6 +50,12 @@ function build_docs {
   # check external links
   sphinx-build -b linkcheck docs html
 
+  # clean data
+  rm -rf html/.buildinfo
+  rm -rf html/.doctrees
+  rm -rf html/output.json
+  rm -rf html/output.txt
+
   # update status
   ret=$(( ret || $? ))
 }
