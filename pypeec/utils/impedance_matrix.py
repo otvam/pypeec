@@ -123,7 +123,7 @@ def _get_solve_matrix(terminal, tol_res):
     # assign the coefficients to the full impedance matrix
     Z_mat = _get_assign_matrix(n_winding, var_idx, sol)
 
-    return n_winding, freq, res, Z_mat
+    return n_winding, n_solution, freq, res, Z_mat
 
 
 def _get_coupling_matrix(n_winding, RL_mat):
@@ -140,7 +140,7 @@ def _get_coupling_matrix(n_winding, RL_mat):
     return k_mat
 
 
-def _get_parse_matrix(n_winding, freq, res, Z_mat):
+def _get_parse_matrix(n_winding, n_solution, freq, res, Z_mat):
     """
     Get the equivalent circuit of the component from the impedance matrix.
     """
@@ -166,7 +166,8 @@ def _get_parse_matrix(n_winding, freq, res, Z_mat):
 
     # assign the results
     matrix = {
-        "freq": freq, "n_winding": n_winding, "res": res,
+        "freq": freq, "res": res,
+        "n_winding": n_winding, "n_solution": n_solution,
         "Z_mat": Z_mat, "R_mat": R_mat, "L_mat": L_mat,
         "k_R_mat": k_R_mat, "k_L_mat": k_L_mat, "Q_mat": Q_mat,
     }
@@ -180,9 +181,9 @@ def get_extract(terminal, tol_res):
     """
 
     # get the impedance matrix
-    (n_winding, freq, res, Z_mat) = _get_solve_matrix(terminal, tol_res)
+    (n_winding, n_solution, freq, res, Z_mat) = _get_solve_matrix(terminal, tol_res)
 
     # get the complete circuit
-    matrix = _get_parse_matrix(n_winding, freq, res, Z_mat)
+    matrix = _get_parse_matrix(n_winding, n_solution, freq, res, Z_mat)
 
     return matrix
