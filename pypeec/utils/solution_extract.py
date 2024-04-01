@@ -49,7 +49,7 @@ def _get_load_terminal(source, terminal_list):
     return V_vec, I_vec
 
 
-def get_extract(data_solution, sweep_list, terminal_list, tol_freq):
+def get_extract(data_solution, sweep_list, terminal_list):
     """
     Get the terminal currents and voltages for given sweeps and windings.
     """
@@ -89,7 +89,7 @@ def get_extract(data_solution, sweep_list, terminal_list, tol_freq):
     freq = np.mean(freq_vec)
 
     # check frequency
-    assert np.ptp(freq_vec) < tol_freq, "invalid solution: invalid frequency"
+    assert np.allclose(freq_vec, freq), "invalid solution: invalid frequency"
     assert np.all(has_converged_vec), "invalid solution: convergence issue"
 
     # create data

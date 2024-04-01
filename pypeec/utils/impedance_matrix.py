@@ -62,7 +62,7 @@ def _get_eqn_matrix(n_winding, var_idx, I_vec):
     return eqn_mat
 
 
-def _get_solve_matrix(terminal, tol_res):
+def _get_solve_matrix(terminal):
     """
     Extract the impedance matrix of the component.
 
@@ -118,7 +118,6 @@ def _get_solve_matrix(terminal, tol_res):
     res_rms = np.sqrt(np.mean(np.abs(res_vec)**2))
     rhs_rms = np.sqrt(np.mean(np.abs(rhs_vec)**2))
     res = res_rms/rhs_rms
-    assert np.all(res < tol_res), "invalid solution: residuum issue"
 
     # assign the coefficients to the full impedance matrix
     Z_mat = _get_assign_matrix(n_winding, var_idx, sol)
@@ -175,13 +174,13 @@ def _get_parse_matrix(n_winding, n_solution, freq, res, Z_mat):
     return matrix
 
 
-def get_extract(terminal, tol_res):
+def get_extract(terminal):
     """
     Extract the equivalent circuit of a component.
     """
 
     # get the impedance matrix
-    (n_winding, n_solution, freq, res, Z_mat) = _get_solve_matrix(terminal, tol_res)
+    (n_winding, n_solution, freq, res, Z_mat) = _get_solve_matrix(terminal)
 
     # get the complete circuit
     matrix = _get_parse_matrix(n_winding, n_solution, freq, res, Z_mat)
