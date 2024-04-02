@@ -84,7 +84,7 @@
     "power_options":
         "n_min": 2                     # minimum number of iterations
         "rel_tol": 1.0e-4              # relative tolerance for the complex power
-        "abs_tol": 1.0e-6              # absolute tolerance for the complex power
+        "abs_tol": 1.0e-10             # absolute tolerance for the complex power
 
     # options for the direct solver
     #   - control the iterative matrix solver

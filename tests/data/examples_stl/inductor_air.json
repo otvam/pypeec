@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_stl/inductor_air",
-        "timestamp": "2024-02-19 18:32:40.294848"
+        "timestamp": "2024-04-02 11:34:24.610113"
     },
     "mesher": {
         "n_total": 94424,
