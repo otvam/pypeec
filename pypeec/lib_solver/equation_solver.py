@@ -409,6 +409,8 @@ def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, tolerance_options):
     """
 
     # extract
+    ignore_status = tolerance_options["ignore_status"]
+    ignore_res = tolerance_options["ignore_res"]
     rel_tol = tolerance_options["rel_tol"]
     abs_tol = tolerance_options["abs_tol"]
 
@@ -424,8 +426,20 @@ def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, tolerance_options):
     res_val = lna.norm(res_all)
     res_thr = np.maximum(rel_tol * lna.norm(rhs_all), abs_tol)
 
+    # consider the solver status
+    if ignore_status:
+        status_solver = True
+    else:
+        status_solver = status
+
+    # consider the residuum status
+    if ignore_res:
+        status_res = True
+    else:
+        status_res = res_val < res_thr
+
     # global status
-    status = status and bool(res_val < res_thr)
+    status = bool(status_res and status_solver)
 
     return status, res_all, res_val, res_thr
 

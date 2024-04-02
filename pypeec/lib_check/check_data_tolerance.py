@@ -117,10 +117,12 @@ def _check_solver_options(solver_options):
     datachecker.check_float("abs_tol", power_options["abs_tol"], is_positive=True, can_be_zero=False)
 
     # check the tolerance options
-    key_list = ["rel_tol", "abs_tol"]
+    key_list = ["ignore_status", "ignore_res", "rel_tol", "abs_tol"]
     datachecker.check_dict("tolerance_options", tolerance_options, key_list=key_list)
     datachecker.check_float("rel_tol", tolerance_options["rel_tol"], is_positive=True, can_be_zero=False)
     datachecker.check_float("abs_tol", tolerance_options["abs_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_boolean("ignore_status", tolerance_options["ignore_status"])
+    datachecker.check_boolean("ignore_res", tolerance_options["ignore_res"])
 
     # check the direct solver
     _check_iter_options(direct_options)

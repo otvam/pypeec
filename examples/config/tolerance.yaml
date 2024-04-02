@@ -75,8 +75,10 @@
 
     # tolerance for checking the solution residuum on the final solution
     "tolerance_options":
-        "rel_tol": 1.0e-6              # relative tolerance for solver convergence
-        "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
+        "ignore_status": false         # ignore the solver status
+        "ignore_res": true             # ignore the residuum convergence
+        "rel_tol": 1.0e-3              # relative tolerance for the residuum convergence
+        "abs_tol": 1.0e-9              # absolute tolerance for the residuum convergence
 
     # criteria for interrupting the solver if the complex power has converged
     "power_options":
