@@ -52,6 +52,7 @@ class _IterCounter:
         self.fct_conv = fct_conv
         self.stop = power_options["stop"]
         self.n_min = power_options["n_min"]
+        self.n_cmp = power_options["n_cmp"]
         self.rel_tol = power_options["rel_tol"]
         self.abs_tol = power_options["abs_tol"]
 
@@ -82,16 +83,21 @@ class _IterCounter:
         # log the results
         LOGGER.debug(f"i = {iter_tmp:d} / {power_tmp:.2e} VA")
 
+        # convergence iter condition
+        n_iter_min = np.max([2, self.n_cmp+1, self.n_min,])
+
         # check for convergence
-        if self.stop and (self.n_iter >= np.maximum(2, self.n_min)):
-            # get complex power
+        if self.stop and (self.n_iter >= n_iter_min):
+            # get best complex power
             power_ref = self.power_vec[-1]
-            power_cmp = self.power_vec[-2]
-            power_err = power_ref-power_cmp
+
+            # get previous iteration
+            power_cmp = self.power_vec[-(self.n_cmp+1):-1]
 
             # get convergence status
+            power_err = np.max(np.abs(power_ref-power_cmp))
             power_thr = np.maximum(self.rel_tol*np.abs(power_ref), self.abs_tol)
-            status = np.abs(power_err) <= power_thr
+            status = power_err <= power_thr
 
             # if convergence is achieved, stop the solver and save the solution
             if status:
