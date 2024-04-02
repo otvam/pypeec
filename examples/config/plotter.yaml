@@ -168,12 +168,12 @@
 "J_c_norm":
     "framework": "pyvista"
     "layout": "scalar_voxel"
-    "title": "Current"
+    "title": "Current Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "title": "Current"
-        "legend": "Current [A/mm2]"
+        "title": "Current Density"
+        "legend": "Current Density [A/mm2]"
         "var": "J_c_norm"
         "scale": 1.0e-6
         "log": false
@@ -184,12 +184,12 @@
 "J_c_vec":
     "framework": "pyvista"
     "layout": "arrow_voxel"
-    "title": "Current"
+    "title": "Current Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "title": "Current"
-        "legend": "Current [A/mm2]"
+        "title": "Current Density"
+        "legend": "Current Density [A/mm2]"
         "var": "J_c_vec"
         "phase": 0.0
         "scale": 1.0e-6
