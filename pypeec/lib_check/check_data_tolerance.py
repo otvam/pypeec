@@ -96,16 +96,31 @@ def _check_solver_options(solver_options):
     """
 
     # check type
-    key_list = ["coupling", "segregated_options", "direct_options"]
+    key_list = ["coupling", "power_options", "tolerance_options", "segregated_options", "direct_options"]
     datachecker.check_dict("solver_options", solver_options, key_list=key_list)
 
     # extract field
     coupling = solver_options["coupling"]
+    power_options = solver_options["power_options"]
+    tolerance_options = solver_options["tolerance_options"]
     segregated_options = solver_options["segregated_options"]
     direct_options = solver_options["direct_options"]
 
-    # check the data
+    # check the coupling
     datachecker.check_choice("coupling", coupling, ["direct", "segregated"])
+
+    # check the power options
+    key_list = ["n_min", "rel_tol", "abs_tol"]
+    datachecker.check_dict("power_options", power_options, key_list=key_list)
+    datachecker.check_integer("n_min", power_options["n_min"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("rel_tol", power_options["rel_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("abs_tol", power_options["abs_tol"], is_positive=True, can_be_zero=False)
+
+    # check the tolerance options
+    key_list = ["rel_tol", "abs_tol"]
+    datachecker.check_dict("tolerance_options", tolerance_options, key_list=key_list)
+    datachecker.check_float("rel_tol", tolerance_options["rel_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_float("abs_tol", tolerance_options["abs_tol"], is_positive=True, can_be_zero=False)
 
     # check the direct solver
     _check_iter_options(direct_options)
