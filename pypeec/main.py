@@ -124,6 +124,9 @@ def run_mesher_data(data_geometry, **kwargs):
 
     # execute workflow
     try:
+        # reset warning
+        log.reset_warning()
+
         # load the tool
         LOGGER.info("load the mesher")
         from pypeec.run import mesher
@@ -226,6 +229,9 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
 
     # execute workflow
     try:
+        # reset warning
+        log.reset_warning()
+
         # load the tool
         LOGGER.info("load the viewer")
         from pypeec.run import viewer
@@ -328,6 +334,9 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
 
     # execute workflow
     try:
+        # reset warning
+        log.reset_warning()
+
         # load the tool
         LOGGER.info("load the solver")
         from pypeec.run import solver
@@ -444,6 +453,9 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
 
     # execute workflow
     try:
+        # reset warning
+        log.reset_warning()
+
         # load the tool
         LOGGER.info("load the plotter")
         from pypeec.run import plotter

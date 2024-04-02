@@ -357,6 +357,15 @@ def get_global():
     return GLOBAL_TIMESTAMP, GLOBAL_LEVEL
 
 
+def reset_warning():
+    """
+    Reset the global warning flag (used to signal issues).
+    """
+
+    global GLOBAL_WARNING
+    GLOBAL_WARNING = False
+
+
 def set_warning(warning):
     """
     Set a global warning flag (used to signal issues).
