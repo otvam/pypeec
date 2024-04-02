@@ -50,6 +50,7 @@ class _IterCounter:
 
         # assign data
         self.fct_conv = fct_conv
+        self.stop = power_options["stop"]
         self.n_min = power_options["n_min"]
         self.rel_tol = power_options["rel_tol"]
         self.abs_tol = power_options["abs_tol"]
@@ -82,7 +83,7 @@ class _IterCounter:
         LOGGER.debug(f"i = {iter_tmp:d} / {power_tmp:.2e} VA")
 
         # check for convergence
-        if self.n_iter >= np.maximum(2, self.n_min):
+        if self.stop and (self.n_iter >= np.maximum(2, self.n_min)):
             # get complex power
             power_ref = self.power_vec[-1]
             power_cmp = self.power_vec[-2]

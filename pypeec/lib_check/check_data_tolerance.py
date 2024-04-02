@@ -110,11 +110,12 @@ def _check_solver_options(solver_options):
     datachecker.check_choice("coupling", coupling, ["direct", "segregated"])
 
     # check the power options
-    key_list = ["n_min", "rel_tol", "abs_tol"]
+    key_list = ["stop", "n_min", "rel_tol", "abs_tol"]
     datachecker.check_dict("power_options", power_options, key_list=key_list)
     datachecker.check_integer("n_min", power_options["n_min"], is_positive=True, can_be_zero=False)
     datachecker.check_float("rel_tol", power_options["rel_tol"], is_positive=True, can_be_zero=False)
     datachecker.check_float("abs_tol", power_options["abs_tol"], is_positive=True, can_be_zero=False)
+    datachecker.check_boolean("stop", power_options["stop"])
 
     # check the tolerance options
     key_list = ["ignore_status", "ignore_res", "rel_tol", "abs_tol"]
