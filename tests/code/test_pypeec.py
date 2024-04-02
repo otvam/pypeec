@@ -19,7 +19,7 @@ warnings.filterwarnings("error")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # disable logging to prevent clutter during test evaluation
-logging.disable(logging.INFO)
+# logging.disable(logging.INFO)
 
 # get the path the folder
 PATH_ROOT = os.path.dirname(__file__)
