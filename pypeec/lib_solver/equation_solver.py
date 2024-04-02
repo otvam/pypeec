@@ -17,12 +17,32 @@ from pypeec import log
 LOGGER = log.get_logger("EQUATION")
 
 
+class PowerConvergenceError(RuntimeError):
+    """
+    Simple exception for signaling the convergence of the complex power.
+    """
+
+    def __init__(self, status, sol):
+        """
+        Constructor.
+        Init the exception.
+        Save the solution.
+        """
+
+        # create the exception
+        super().__init__("complex power has converged")
+
+        # save the solution
+        self.status = status
+        self.sol = sol
+
+
 class _IterCounter:
     """
     Simple class used as a callback to monitor the solver iterations.
     """
 
-    def __init__(self, fct_conv):
+    def __init__(self, fct_conv, power_options):
         """
         Constructor.
         Init the counters.
@@ -30,16 +50,22 @@ class _IterCounter:
 
         # assign data
         self.fct_conv = fct_conv
+        self.n_min = power_options["n_min"]
+        self.rel_tol = power_options["rel_tol"]
+        self.abs_tol = power_options["abs_tol"]
 
         # init data
         self.n_iter = 0
         self.power_vec = []
         self.power_final = None
         self.power_init = None
+        self.sol = None
 
     def get_callback_run(self, sol):
         """
         Callback displaying and saving the iteration.
+        Check the convergence on the complex power.
+        If convergence is achieved, stop the solver and save the solution.
         """
 
         # update the iteration
@@ -54,6 +80,21 @@ class _IterCounter:
 
         # log the results
         LOGGER.debug(f"i = {iter_tmp:d} / {power_tmp:.2e} VA")
+
+        # check for convergence
+        if self.n_iter >= np.maximum(2, self.n_min):
+            # get complex power
+            power_ref = self.power_vec[-1]
+            power_cmp = self.power_vec[-2]
+            power_err = power_ref-power_cmp
+
+            # get convergence status
+            power_thr = np.maximum(self.rel_tol*np.abs(power_ref), self.abs_tol)
+            status = np.abs(power_err) <= power_thr
+
+            # if convergence is achieved, stop the solver and save the solution
+            if status:
+                raise PowerConvergenceError(status, sol)
 
     def get_callback_init(self, sol):
         """
@@ -82,6 +123,13 @@ class _IterCounter:
 
         # log the results
         LOGGER.debug(f"final / {power_tmp:.2e} VA")
+
+    def get_sol(self):
+        """
+        Get the temporary solution.
+        """
+
+        return self.sol
 
     def get_n_iter(self):
         """
@@ -162,6 +210,61 @@ class _OpCounter:
         return self.n_sys_eval
 
 
+def _fct_pcd_all(rhs_tmp, rhs, fct_pcd):
+    """
+    Function describing the preconditioner for the coupling system.
+    """
+
+    # extract
+    (rhs_c, rhs_m) = rhs
+    (fct_pcd_c, fct_pcd_m) = fct_pcd
+
+    # get problem size
+    n_dof_c = len(rhs_c)
+    n_dof_m = len(rhs_m)
+
+    # split vector
+    rhs_c = rhs_tmp[0:n_dof_c]
+    rhs_m = rhs_tmp[n_dof_c:n_dof_c+n_dof_m]
+
+    # solve the preconditioner
+    sol_c = fct_pcd_c(rhs_c)
+    sol_m = fct_pcd_m(rhs_m)
+
+    # assemble solution
+    sol_all = np.concatenate((sol_c, sol_m))
+
+    return sol_all
+
+
+def _fct_sys_all(sol_tmp, rhs, fct_cpl, fct_sys):
+    """
+    Function describing the equation system for the coupling system.
+    """
+
+    # extract
+    (rhs_c, rhs_m) = rhs
+    (fct_cpl_c, fct_cpl_m) = fct_cpl
+    (fct_sys_c, fct_sys_m) = fct_sys
+
+    # get problem size
+    n_dof_c = len(rhs_c)
+    n_dof_m = len(rhs_m)
+
+    # split vector
+    sol_c = sol_tmp[0:n_dof_c]
+    sol_m = sol_tmp[n_dof_c:n_dof_c+n_dof_m]
+
+    # solve the system
+    rhs_c = fct_sys_c(sol_c)+fct_cpl_c(sol_m)
+    rhs_m = fct_sys_m(sol_m)+fct_cpl_m(sol_c)
+
+    # assemble solution
+    rhs_all = np.concatenate((rhs_c, rhs_m))
+
+    return rhs_all
+
+
 def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, direct_options, op_obj, iter_obj):
     """
     Solve the coupled magnetic-electric equation system with an iterative solver.
@@ -169,43 +272,18 @@ def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, direct_options,
 
     # extract
     (rhs_c, rhs_m) = rhs
-    (fct_cpl_c, fct_cpl_m) = fct_cpl
-    (fct_sys_c, fct_sys_m) = fct_sys
-    (fct_pcd_c, fct_pcd_m) = fct_pcd
 
     # get problem size
     n_dof_c = len(rhs_c)
     n_dof_m = len(rhs_m)
 
     # function describing the preconditioner
-    def fct_pcd_all(rhs):
-        # split vector
-        rhs_c = rhs[0:n_dof_c]
-        rhs_m = rhs[n_dof_c:n_dof_c+n_dof_m]
-
-        # solve the preconditioner
-        sol_c = fct_pcd_c(rhs_c)
-        sol_m = fct_pcd_m(rhs_m)
-
-        # assemble solution
-        sol = np.concatenate((sol_c, sol_m))
-
-        return sol
+    def fct_pcd_all(rhs_tmp):
+        return _fct_pcd_all(rhs_tmp, rhs, fct_pcd)
 
     # function describing the equation system
-    def fct_sys_all(sol):
-        # split vector
-        sol_c = sol[0:n_dof_c]
-        sol_m = sol[n_dof_c:n_dof_c+n_dof_m]
-
-        # solve the system
-        rhs_c = fct_sys_c(sol_c)+fct_cpl_c(sol_m)
-        rhs_m = fct_sys_m(sol_m)+fct_cpl_m(sol_c)
-
-        # assemble solution
-        rhs = np.concatenate((rhs_c, rhs_m))
-
-        return rhs
+    def fct_sys_all(sol_tmp):
+        return _fct_sys_all(sol_tmp, rhs, fct_cpl, fct_sys)
 
     # get operator
     op_pcd = op_obj.get_fct_pcd(fct_pcd_all, n_dof_c+n_dof_m)
@@ -216,15 +294,12 @@ def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, direct_options,
         iter_obj.get_callback_run(sol)
 
     # assemble rhs
-    rhs = np.concatenate((rhs_c, rhs_m))
+    rhs_all = np.concatenate((rhs_c, rhs_m))
 
     # call the solver
-    (status, sol) = matrix_iterative.get_solve(sol_init, op_sys, op_pcd, rhs, fct_callback, direct_options)
+    (status, sol_all) = matrix_iterative.get_solve(sol_init, op_sys, op_pcd, rhs_all, fct_callback, direct_options)
 
-    # get residuum
-    res = op_sys(sol)-rhs
-
-    return status, sol, res
+    return status, sol_all
 
 
 def _get_solver_domain(sol_init, sol_other, fct_cpl, fct_sys, fct_pcd, rhs, iter_options, op_obj):
@@ -236,12 +311,12 @@ def _get_solver_domain(sol_init, sol_other, fct_cpl, fct_sys, fct_pcd, rhs, iter
     n_dof = len(rhs)
 
     # function describing the preconditioner
-    def fct_pcd_dom(rhs):
-        return fct_pcd(rhs)
+    def fct_pcd_dom(rhs_tmp):
+        return fct_pcd(rhs_tmp)
 
     # function describing the equation system
-    def fct_sys_dom(sol):
-        return fct_sys(sol)
+    def fct_sys_dom(sol_tmp):
+        return fct_sys(sol_tmp)
 
     # get operator
     op_pcd = op_obj.get_fct_pcd(fct_pcd_dom, n_dof)
@@ -291,8 +366,7 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_
     # init
     converged = False
     status = None
-    sol = None
-    res = None
+    sol_all = None
 
     # solve
     while not converged:
@@ -309,23 +383,51 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_
         res_m = fct_sys_m(sol_m)+fct_cpl_m(sol_c)-rhs_m
 
         # aggregate the results
-        sol = np.concatenate((sol_c, sol_m))
-        res = np.concatenate((res_c, res_m))
-        rhs = np.concatenate((rhs_c, rhs_m))
+        sol_all = np.concatenate((sol_c, sol_m))
+        res_all = np.concatenate((res_c, res_m))
+        rhs_all = np.concatenate((rhs_c, rhs_m))
 
         # run callback
-        iter_obj.get_callback_run(sol)
+        iter_obj.get_callback_run(sol_all)
         n_iter = iter_obj.get_n_iter()
 
         # check status
-        status_res = lna.norm(res) <= np.maximum(rel_tol*lna.norm(rhs), abs_tol)
+        res_thr = np.maximum(rel_tol*lna.norm(rhs_all), abs_tol)
+        status_res = lna.norm(res_all) <= res_thr
         status = status_c and status_m and status_res
 
         # check convergence
         if (n_iter > n_max) or (status and (n_iter >= n_min)):
             converged = True
 
-    return status, sol, res
+    return status, sol_all
+
+
+def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, tolerance_options):
+    """
+    Compute the residuum and the solver convergence status.
+    """
+
+    # extract
+    rel_tol = tolerance_options["rel_tol"]
+    abs_tol = tolerance_options["abs_tol"]
+
+    # extract
+    (rhs_c, rhs_m) = rhs
+
+    # get sol
+    rhs_all = np.concatenate((rhs_c, rhs_m))
+    out_all = _fct_sys_all(sol_all, rhs, fct_cpl, fct_sys)
+    res_all = out_all - rhs_all
+
+    # residuum threshold
+    res_val = lna.norm(res_all)
+    res_thr = np.maximum(rel_tol * lna.norm(rhs_all), abs_tol)
+
+    # global status
+    status = status and bool(res_val < res_thr)
+
+    return status, res_all, res_val, res_thr
 
 
 def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_options):
@@ -335,9 +437,9 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
     """
 
     # get the condition options
-    check = solver_options["check"]
-    tolerance = solver_options["tolerance"]
     coupling = solver_options["coupling"]
+    tolerance_options = solver_options["tolerance_options"]
+    power_options = solver_options["power_options"]
     segregated_options = solver_options["segregated_options"]
     direct_options = solver_options["direct_options"]
 
@@ -353,7 +455,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
 
     # create operator and iter counter object
     op_obj = _OpCounter()
-    iter_obj = _IterCounter(fct_conv)
+    iter_obj = _IterCounter(fct_conv, power_options)
 
     # call the solver
     LOGGER.debug("solver run")
@@ -361,40 +463,44 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
         # first callback with the solution
         iter_obj.get_callback_init(sol_init)
 
+        # start the solver
+        LOGGER.debug("solver: start")
+
         # solve the equation system
-        if coupling == "direct":
-            (status, sol, res) = _get_solver_direct(
-                sol_init,
-                fct_cpl, fct_sys, fct_pcd,
-                rhs,
-                direct_options,
-                op_obj, iter_obj,
-            )
-        elif coupling == "segregated":
-            (status, sol, res) = _get_solver_segregated(
-                sol_init,
-                fct_cpl, fct_sys, fct_pcd,
-                rhs,
-                segregated_options,
-                op_obj, iter_obj,
-            )
-        else:
-            raise ValueError("invalid coupling method")
+        try:
+            # run the solver
+            if coupling == "direct":
+                (status, sol) = _get_solver_direct(
+                    sol_init,
+                    fct_cpl, fct_sys, fct_pcd, rhs,
+                    direct_options,
+                    op_obj, iter_obj,
+                )
+            elif coupling == "segregated":
+                (status, sol) = _get_solver_segregated(
+                    sol_init,
+                    fct_cpl, fct_sys, fct_pcd, rhs,
+                    segregated_options,
+                    op_obj, iter_obj,
+                )
+            else:
+                raise ValueError("invalid coupling method")
+
+            # residuum solver convergence
+            LOGGER.debug("solver: residuum convergence")
+        except PowerConvergenceError as ex:
+            # power solver convergence
+            LOGGER.debug("solver: power convergence")
+
+            # get the solution
+            status = ex.status
+            sol = ex.sol
 
         # final callback with the solution
         iter_obj.get_callback_final(sol)
 
-    # compute and check the residuum
-    res_rms = np.sqrt(np.mean(np.abs(res)**2))
-
-    # solver success
-    if check:
-        status = status and (res_rms < tolerance)
-    else:
-        status = True
-
-    # cast to base type
-    status = bool(status)
+    # get convergence status
+    (status, res, res_val, res_thr) = _get_status(status, sol, rhs, fct_cpl, fct_sys, tolerance_options)
 
     # extract alg results
     n_sys_eval = op_obj.get_n_sys_eval()
@@ -404,14 +510,14 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
 
     # assign the results
     solver_status = {
-        "check": check,
         "n_dof_electric": n_dof_electric,
         "n_dof_magnetic": n_dof_magnetic,
         "n_dof_total": n_dof_total,
         "n_iter": n_iter,
         "n_sys_eval": n_sys_eval,
         "n_pcd_eval": n_pcd_eval,
-        "res_rms": res_rms,
+        "res_val": res_val,
+        "res_thr": res_thr,
         "status": status,
     }
 
@@ -419,7 +525,6 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
     LOGGER.debug("solver summary")
     with log.BlockIndent():
         # display results
-        LOGGER.debug("check = %s" % check)
         LOGGER.debug("status = %s" % status)
         LOGGER.debug("n_dof_total = %d" % n_dof_total)
         LOGGER.debug("n_dof_electric = %d" % n_dof_electric)
@@ -427,18 +532,15 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
         LOGGER.debug("n_iter = %d" % n_iter)
         LOGGER.debug("n_sys_eval = %d" % n_sys_eval)
         LOGGER.debug("n_pcd_eval = %d" % n_pcd_eval)
-        LOGGER.debug("res_rms = %.2e" % res_rms)
+        LOGGER.debug("res_val = %.2e" % res_val)
+        LOGGER.debug("res_thr = %.2e" % res_thr)
 
         # display status
-        if check:
-            if status:
-                LOGGER.debug("convergence achieved")
-            else:
-                LOGGER.warning("convergence issues")
-                log.set_warning(True)
-
+        if status:
+            LOGGER.debug("convergence achieved")
         else:
-            LOGGER.debug("convergence check is disabled")
+            LOGGER.warning("convergence issues")
+            log.set_warning(True)
 
     return sol, res, conv, status, solver_status
 

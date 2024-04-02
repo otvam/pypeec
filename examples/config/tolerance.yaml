@@ -68,20 +68,21 @@
 
 # equation system solver options (for GMRES and GCROT solver)
 "solver_options":
-    # check (or not) the solver convergence
-    #   - if true, the solver status and the residuum are checked
-    #   - if false, the solver status and the residuum are ignored
-    "check": true
-
-    # tolerance for checking the solution residuum
-    #   - the final equation system solution is considered
-    #   - the RMS value of the residuum is considered
-    "tolerance": 1.0e-6
-
     # method for solving the dense equation system
     #   - "direct" is solving the electric and magnetic equations together
     #   - "segregated" is iterating between the electric and magnetic equations
     "coupling": "direct"
+
+    # tolerance for checking the solution residuum on the final solution
+    "tolerance_options":
+        "rel_tol": 1.0e-6              # relative tolerance for solver convergence
+        "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
+
+    # criteria for interrupting the solver if the complex power has converged
+    "power_options":
+        "n_min": 2                     # minimum number of iterations
+        "rel_tol": 1.0e-4              # relative tolerance for the complex power
+        "abs_tol": 1.0e-6              # absolute tolerance for the complex power
 
     # options for the direct solver
     #   - control the iterative matrix solver

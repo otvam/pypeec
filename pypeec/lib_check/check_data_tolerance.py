@@ -96,19 +96,15 @@ def _check_solver_options(solver_options):
     """
 
     # check type
-    key_list = ["check", "tolerance", "coupling", "segregated_options", "direct_options"]
+    key_list = ["coupling", "segregated_options", "direct_options"]
     datachecker.check_dict("solver_options", solver_options, key_list=key_list)
 
     # extract field
-    check = solver_options["check"]
-    tolerance = solver_options["tolerance"]
     coupling = solver_options["coupling"]
     segregated_options = solver_options["segregated_options"]
     direct_options = solver_options["direct_options"]
 
     # check the data
-    datachecker.check_boolean("check", check)
-    datachecker.check_float("tolerance", tolerance, is_positive=True, can_be_zero=False)
     datachecker.check_choice("coupling", coupling, ["direct", "segregated"])
 
     # check the direct solver
