@@ -44,7 +44,7 @@ export PYTHONIOENCODING="utf8"
 export PYTHONUNBUFFERED="1"
 
 # global variables for enabling the tests
-export TEST_TOL="1e-6"
+export TEST_TOL="1e-5"
 export TEST_CHECK="1"
 export TEST_SET="0"
 

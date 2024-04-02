@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_voxel/distributed",
-        "timestamp": "2024-04-02 11:32:37.549734"
+        "timestamp": "2024-04-02 12:06:00.452617"
     },
     "mesher": {
         "n_total": 7,

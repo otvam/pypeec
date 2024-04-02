@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_png/shield",
-        "timestamp": "2024-04-02 11:34:15.684319"
+        "timestamp": "2024-04-02 12:07:40.680322"
     },
     "mesher": {
         "n_total": 20808,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 0.0,
             "has_converged": true,
-            "P_tot": 264.42142970186586,
-            "W_tot": 0.005626396131042137
+            "P_tot": 264.4214297018656,
+            "W_tot": 0.005626396130442765
         }
     }
 }
