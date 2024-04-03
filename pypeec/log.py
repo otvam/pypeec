@@ -12,7 +12,6 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import os
-import time
 import datetime
 import threading
 import logging
@@ -27,7 +26,7 @@ USE_COLOR = config.LOGGING_OPTIONS.USE_COLOR
 DEF_COLOR = config.LOGGING_OPTIONS.DEF_COLOR
 
 # global timestamp (constant over the complete run)
-GLOBAL_TIMESTAMP = time.time()
+GLOBAL_TIMESTAMP = datetime.datetime.today()
 
 # logging indentation level (updated inside the blocks)
 GLOBAL_LEVEL = 0
@@ -44,27 +43,6 @@ def _get_fmt(color, reset):
         fmt = logging.Formatter("\x1b" + color + FORMAT["LOGGER"] + "\x1b" + reset)
 
     return fmt
-
-
-def _get_compute_timestamp():
-    """
-    Get the current time.
-    """
-
-    timestamp = datetime.datetime.today()
-
-    return timestamp
-
-
-def _get_compute_duration(timestamp):
-    """
-    Compute the elapsed time.
-    """
-
-    duration = time.time()-timestamp
-    duration = datetime.timedelta(seconds=duration)
-
-    return duration
 
 
 def _get_format_timestamp(timestamp):
@@ -133,8 +111,8 @@ class _DeltaTimeFormatter(logging.Formatter):
         msg = record.msg
 
         # add the elapsed time to the log record
-        timestamp = _get_compute_timestamp()
-        duration = _get_compute_duration(GLOBAL_TIMESTAMP)
+        timestamp = datetime.datetime.today()
+        duration = timestamp-GLOBAL_TIMESTAMP
         record.timestamp = _get_format_timestamp(timestamp)
         record.duration = _get_format_duration(duration)
 
@@ -191,7 +169,7 @@ class BlockTimer:
         """
 
         # start the timer and display
-        self.timestamp = time.time()
+        self.timestamp = datetime.datetime.today()
         self.logger.log(self.level, self.name + " : enter : timing")
 
         # increase the indentation of the block
@@ -208,9 +186,11 @@ class BlockTimer:
         global GLOBAL_LEVEL
         GLOBAL_LEVEL -= 1
 
-        # stop the timer and display
-        duration = _get_compute_duration(self.timestamp)
+        # get timing
+        duration = datetime.datetime.today()-self.timestamp
         duration = _get_format_duration(duration)
+
+        # display exit message
         self.logger.log(self.level, self.name + " : exit : " + duration)
 
 
@@ -289,7 +269,7 @@ def get_timer():
         Timestamp with the current time.
     """
 
-    timestamp = time.time()
+    timestamp = datetime.datetime.today()
 
     return timestamp
 
@@ -305,16 +285,23 @@ def get_duration(timestamp):
 
     Returns
     -------
-    duration : duration
-        Duration object with the elapsed time.
-    fmt : string
+    seconds : float
+        Float with the elapsed time in seconds.
+    span : string
         String with the formatted elapsed time.
+    date : string
+        String with the timestamp.
     """
 
-    duration = _get_compute_duration(timestamp)
-    fmt = _get_format_duration(duration)
+    # get timing
+    span = datetime.datetime.today()-timestamp
 
-    return duration, fmt
+    # parse timing
+    seconds = span.total_seconds()
+    span = _get_format_duration(span)
+    date = _get_format_timestamp(timestamp)
+
+    return seconds, span, date
 
 
 def set_global(timestamp, level):

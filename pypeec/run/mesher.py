@@ -223,16 +223,18 @@ def _get_data(data_geom, timestamp, is_truncated):
     """
 
     # end message
-    (duration, fmt) = log.get_duration(timestamp)
-    LOGGER.info("duration: %s" % fmt)
+    (seconds, span, date) = log.get_duration(timestamp)
 
-    # cast to seconds
-    duration = duration.total_seconds()
+    # get status
+    is_successful = True
 
     # extract the solution
     data_voxel = {
-        "duration": duration,
+        "date": date,
+        "span": span,
+        "seconds": seconds,
         "is_truncated": is_truncated,
+        "is_successful": is_successful,
         "data_geom": data_geom,
     }
 

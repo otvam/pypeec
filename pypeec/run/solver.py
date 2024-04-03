@@ -345,16 +345,26 @@ def _get_data(data_init, data_sweep, timestamp, is_truncated):
     """
 
     # end message
-    (duration, fmt) = log.get_duration(timestamp)
-    LOGGER.info("duration: %s" % fmt)
+    (seconds, span, date) = log.get_duration(timestamp)
 
-    # cast to seconds
-    duration = duration.total_seconds()
+    # get status
+    is_successful = True
+    for data_sweep_tmp in data_sweep.values():
+        is_successful = is_successful and data_sweep_tmp["has_converged"]
+        is_successful = is_successful and data_sweep_tmp["solver_status"]
+        is_successful = is_successful and data_sweep_tmp["condition_status"]
+
+    # get warning
+    if not is_successful:
+        LOGGER.warning("problem detected for the solver")
 
     # extract the solution
     data_solution = {
-        "duration": duration,
+        "date": date,
+        "span": span,
+        "seconds": seconds,
         "is_truncated": is_truncated,
+        "is_successful": is_successful,
         "data_init": data_init,
         "data_sweep": data_sweep,
     }
