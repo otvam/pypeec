@@ -312,6 +312,8 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init, is_trunc
     data_sweep = {
         "freq": freq,
         "has_converged": has_converged,
+        "solver_ok": solver_ok,
+        "condition_ok": condition_ok,
         "solver_status": solver_status,
         "condition_status": condition_status,
         "material": material,
@@ -351,8 +353,8 @@ def _get_data(data_init, data_sweep, timestamp, is_truncated):
     is_successful = True
     for data_sweep_tmp in data_sweep.values():
         is_successful = is_successful and data_sweep_tmp["has_converged"]
-        is_successful = is_successful and data_sweep_tmp["solver_status"]
-        is_successful = is_successful and data_sweep_tmp["condition_status"]
+        is_successful = is_successful and data_sweep_tmp["solver_ok"]
+        is_successful = is_successful and data_sweep_tmp["condition_ok"]
 
     # get warning
     if not is_successful:
