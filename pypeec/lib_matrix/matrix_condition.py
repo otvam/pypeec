@@ -14,19 +14,6 @@ from pypeec import log
 LOGGER = log.get_logger("COND")
 
 
-def _get_decomposition(mat):
-    """
-    Get the LU decomposition of the provided matrix.
-    """
-
-    try:
-        decomposition = sla.splu(mat)
-    except RuntimeError:
-        decomposition = None
-
-    return decomposition
-
-
 def _get_inverse_operator(mat, decomposition):
     """
     Get an inverse operator (with LU decomposition) for the provided matrix and the Hermitian matrix.
@@ -75,13 +62,7 @@ def _get_condition_matrix_sub(mat, norm_options):
 
     # get LU decomposition
     LOGGER.debug("compute LU decomposition")
-    decomposition = _get_decomposition(mat)
-
-    # abort if LU decomposition failed
-    if decomposition is None:
-        LOGGER.warning("condition estimate is infinite")
-        log.set_warning(True)
-        return float("inf")
+    decomposition = sla.splu(mat)
 
     # get the inverse operator
     op = _get_inverse_operator(mat, decomposition)

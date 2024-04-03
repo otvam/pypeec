@@ -26,9 +26,6 @@ EXCEPTION_TRACE = config.LOGGING_OPTIONS.EXCEPTION_TRACE
 USE_COLOR = config.LOGGING_OPTIONS.USE_COLOR
 DEF_COLOR = config.LOGGING_OPTIONS.DEF_COLOR
 
-# flag used to signal a problem
-GLOBAL_WARNING = False
-
 # global timestamp (constant over the complete run)
 GLOBAL_TIMESTAMP = time.time()
 
@@ -355,42 +352,6 @@ def get_global():
     """
 
     return GLOBAL_TIMESTAMP, GLOBAL_LEVEL
-
-
-def reset_warning():
-    """
-    Reset the global warning flag (used to signal issues).
-    """
-
-    global GLOBAL_WARNING
-    GLOBAL_WARNING = False
-
-
-def set_warning(warning):
-    """
-    Set a global warning flag (used to signal issues).
-
-    Parameters
-    ----------
-    warning : boolean
-        Warning flag value to be set.
-    """
-
-    global GLOBAL_WARNING
-    GLOBAL_WARNING = warning
-
-
-def get_warning():
-    """
-    Get a global warning flag (used to signal issues).
-
-    Returns
-    -------
-    warning : boolean
-        Current value of the warning flag.
-    """
-
-    return GLOBAL_WARNING
 
 
 def get_logger(name):

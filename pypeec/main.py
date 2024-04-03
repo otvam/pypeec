@@ -124,9 +124,6 @@ def run_mesher_data(data_geometry, **kwargs):
 
     # execute workflow
     try:
-        # reset warning
-        log.reset_warning()
-
         # load the tool
         LOGGER.info("load the mesher")
         from pypeec.run import mesher
@@ -139,10 +136,7 @@ def run_mesher_data(data_geometry, **kwargs):
         LOGGER.error("invalid termination")
         raise ex
     else:
-        if log.get_warning():
-            LOGGER.warning("termination with warnings")
-        else:
-            LOGGER.info("successful termination")
+        LOGGER.info("successful termination")
 
     return data_voxel
 
@@ -229,9 +223,6 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
 
     # execute workflow
     try:
-        # reset warning
-        log.reset_warning()
-
         # load the tool
         LOGGER.info("load the viewer")
         from pypeec.run import viewer
@@ -244,10 +235,7 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
         LOGGER.error("invalid termination")
         raise ex
     else:
-        if log.get_warning():
-            LOGGER.warning("termination with warnings")
-        else:
-            LOGGER.info("successful termination")
+        LOGGER.info("successful termination")
 
 
 def run_viewer_file(file_voxel, file_viewer, **kwargs):
@@ -334,9 +322,6 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
 
     # execute workflow
     try:
-        # reset warning
-        log.reset_warning()
-
         # load the tool
         LOGGER.info("load the solver")
         from pypeec.run import solver
@@ -349,10 +334,7 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
         LOGGER.error("invalid termination")
         raise ex
     else:
-        if log.get_warning():
-            LOGGER.warning("termination with warnings")
-        else:
-            LOGGER.info("successful termination")
+        LOGGER.info("successful termination")
 
     return data_solution
 
@@ -453,9 +435,6 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
 
     # execute workflow
     try:
-        # reset warning
-        log.reset_warning()
-
         # load the tool
         LOGGER.info("load the plotter")
         from pypeec.run import plotter
@@ -468,10 +447,7 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         LOGGER.error("invalid termination")
         raise ex
     else:
-        if log.get_warning():
-            LOGGER.warning("termination with warnings")
-        else:
-            LOGGER.info("successful termination")
+        LOGGER.info("successful termination")
 
 
 def run_plotter_file(file_solution, file_plotter, **kwargs):

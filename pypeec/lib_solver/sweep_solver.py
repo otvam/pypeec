@@ -82,28 +82,18 @@ def _get_parallel_loop(fct_compute, arg_list):
             out_list.append(out)
     else:
         # get the log global parameters
-        global_warning = log.get_warning()
         (global_timestamp, global_level) = log.get_global()
 
         # wrap the compute function for setting globals
         def fct_joblib(*args):
-            log.set_warning(global_warning)
             log.set_global(global_timestamp, global_level)
             out = fct_compute(*args)
-            warning = log.get_warning()
-            return out, warning
+            return out
 
         # run the parallel loop
-        pool_list = joblib.Parallel(n_jobs=SWEEP_POOL, backend="loky")(
+        out_list = joblib.Parallel(n_jobs=SWEEP_POOL, backend="loky")(
             joblib.delayed(fct_joblib)(*arg) for arg in arg_list
         )
-
-        # unpack the warnings
-        (out_list, warning_list) = zip(*pool_list)
-
-        # set the warnings
-        global_warning = global_warning or all(warning_list)
-        log.set_warning(global_warning)
 
     return out_list
 
