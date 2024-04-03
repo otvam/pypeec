@@ -176,7 +176,7 @@ def _run_solver_init(data_solver, is_truncated):
     return data_init, data_internal
 
 
-def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_truncated):
+def _run_solver_sweep(data_solver, data_internal, data_param, sol_init, is_truncated):
     """
     Create the equation system, solve the system, and extract the solution.
     """
@@ -211,9 +211,9 @@ def _run_solver_sweep(data_solver, data_internal, sweep_param, sol_init, is_trun
     pts_net_m = data_internal["pts_net_m"]
 
     # extract the data
-    freq = sweep_param["freq"]
-    material_val = sweep_param["material_val"]
-    source_val = sweep_param["source_val"]
+    freq = data_param["freq"]
+    material_val = data_param["material_val"]
+    source_val = data_param["source_val"]
 
     # load and configure the optional libraries
     _run_solver_options(data_solver)

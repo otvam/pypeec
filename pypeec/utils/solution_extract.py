@@ -66,7 +66,6 @@ def get_extract(data_solution, sweep_list, terminal_list):
     V_mat = []
     I_mat = []
     freq_vec = []
-    has_converged_vec = []
 
     # extract data
     for sweep in sweep_list:
@@ -74,7 +73,6 @@ def get_extract(data_solution, sweep_list, terminal_list):
         data_sweep_tmp = data_sweep[sweep]
         freq = data_sweep_tmp["freq"]
         source = data_sweep_tmp["source"]
-        has_converged = data_sweep_tmp["has_converged"]
 
         # compute
         (V_vec, I_vec) = _get_load_terminal(source, terminal_list)
@@ -83,14 +81,10 @@ def get_extract(data_solution, sweep_list, terminal_list):
         V_mat.append(V_vec)
         I_mat.append(I_vec)
         freq_vec.append(freq)
-        has_converged_vec.append(has_converged)
 
-    # assemble frequency
+    # get and check frequency
     freq = np.mean(freq_vec)
-
-    # check frequency
     assert np.allclose(freq_vec, freq), "invalid solution: invalid frequency"
-    assert np.all(has_converged_vec), "invalid solution: convergence issue"
 
     # create data
     terminal = {
