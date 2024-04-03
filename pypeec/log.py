@@ -287,21 +287,21 @@ def get_duration(timestamp):
     -------
     seconds : float
         Float with the elapsed time in seconds.
-    span : string
+    duration : string
         String with the formatted elapsed time.
     date : string
-        String with the timestamp.
+        String with the formatted initial timestamp.
     """
 
     # get timing
-    span = datetime.datetime.today()-timestamp
+    duration = datetime.datetime.today()-timestamp
 
     # parse timing
-    seconds = span.total_seconds()
-    span = _get_format_duration(span)
+    seconds = duration.total_seconds()
+    duration = _get_format_duration(duration)
     date = _get_format_timestamp(timestamp)
 
-    return seconds, span, date
+    return seconds, duration, date
 
 
 def set_global(timestamp, level):

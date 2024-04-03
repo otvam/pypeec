@@ -44,10 +44,18 @@ def check_data_voxel(data_voxel):
     Check the voxel data.
     """
 
-    # extract field
-    key_list = ["duration", "is_truncated", "data_geom"]
+    # check fields
+    key_list = [
+        "date",
+        "duration",
+        "seconds",
+        "is_truncated",
+        "is_successful",
+        "data_geom",
+    ]
     datachecker.check_dict("data_voxel", data_voxel, key_list=key_list)
 
+    # extract fields
     is_truncated = data_voxel["is_truncated"]
     data_geom = data_voxel["data_geom"]
 
@@ -64,10 +72,19 @@ def check_data_solution(data_solution):
     Check the solution data.
     """
 
-    # extract field
-    key_list = ["duration", "is_truncated", "data_init", "data_sweep"]
+    # check fields
+    key_list = [
+        "date",
+        "duration",
+        "seconds",
+        "is_truncated",
+        "is_successful",
+        "data_init",
+        "data_sweep",
+    ]
     datachecker.check_dict("data_solution", data_solution, key_list=key_list)
 
+    # extract fields
     is_truncated = data_solution["is_truncated"]
     data_init = data_solution["data_init"]
     data_sweep = data_solution["data_sweep"]

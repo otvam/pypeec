@@ -345,7 +345,7 @@ def _get_data(data_init, data_sweep, timestamp, is_truncated):
     """
 
     # end message
-    (seconds, span, date) = log.get_duration(timestamp)
+    (seconds, duration, date) = log.get_duration(timestamp)
 
     # get status
     is_successful = True
@@ -361,7 +361,7 @@ def _get_data(data_init, data_sweep, timestamp, is_truncated):
     # extract the solution
     data_solution = {
         "date": date,
-        "span": span,
+        "duration": duration,
         "seconds": seconds,
         "is_truncated": is_truncated,
         "is_successful": is_successful,
