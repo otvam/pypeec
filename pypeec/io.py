@@ -75,7 +75,7 @@ class _MergeData:
         elif type(data) is _MergeData:
             data = data.extract()
         else:
-            return data
+            pass
 
         return data
 
@@ -132,12 +132,12 @@ class _YamlLoader(yaml.Loader):
 
         # handling of inclusion inside YAML files
         def fct_handle_include(self, node):
-            res = _YamlLoader.__yaml_handling(self, node, self.__extract_yaml)
+            res = _YamlLoader._yaml_handling(self, node, self._extract_yaml)
             return res
 
         # handling merge of several dicts
         def fct_handle_path(self, node):
-            res = _YamlLoader.__yaml_handling(self, node, self.__extract_path)
+            res = _YamlLoader._yaml_handling(self, node, self._extract_path)
             return res
 
         # handling merge of a list of dicts
@@ -158,7 +158,7 @@ class _YamlLoader(yaml.Loader):
         _YamlLoader.add_constructor("!merge_dict", fct_handle_merge_dict)
         _YamlLoader.add_constructor("!merge_list", fct_handle_merge_list)
 
-    def __yaml_handling(self, node, fct):
+    def _yaml_handling(self, node, fct):
         """
         Apply a function to a YAML node for list, dict, scalar.
         """
@@ -178,7 +178,7 @@ class _YamlLoader(yaml.Loader):
         else:
             raise yaml.YAMLError("invalid YAML node type")
 
-    def __extract_path(self, filename):
+    def _extract_path(self, filename):
         """
         Find the path with respect to the YAML file path.
         """
@@ -190,7 +190,7 @@ class _YamlLoader(yaml.Loader):
 
         return filepath
 
-    def __extract_yaml(self, filename):
+    def _extract_yaml(self, filename):
         """
         Load an included YAML file.
         """
