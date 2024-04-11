@@ -21,7 +21,7 @@ from pypeec import io
 LOGGER = log.get_logger("MAIN")
 
 # init the logo display status
-STATUS_LOGO = False
+SHOW_LOGO = True
 
 
 def run_display_logo():
@@ -30,7 +30,7 @@ def run_display_logo():
     """
 
     # display the logo
-    if not STATUS_LOGO:
+    if SHOW_LOGO:
         try:
             with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file_logo:
                 data = file_logo.read()
@@ -47,10 +47,10 @@ def run_hide_logo():
     """
 
     # variable with the logo status
-    global STATUS_LOGO
+    global SHOW_LOGO
 
     # logo should not be displayed
-    STATUS_LOGO = True
+    SHOW_LOGO = False
 
 
 def run_extract(data_name, is_zip, path_extract):
