@@ -13,14 +13,9 @@ import vtk
 import numpy as np
 import pyvista as pv
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("STL")
-
-# get problem size limits
-VOXEL_TOTAL = config.PROBLEM_MAX_SIZE.VOXEL_TOTAL
-VOXEL_USED = config.PROBLEM_MAX_SIZE.VOXEL_USED
 
 # prevent VTK to mess up the output
 vtk.vtkObject.GlobalWarningDisplayOff()
@@ -230,11 +225,6 @@ def get_mesh(param, domain_stl):
     LOGGER.debug("get the voxel size")
     (n, d, c) = _get_voxel_size(d, xyz_max, xyz_min)
 
-    # check total size
-    nv = np.prod(n)
-    if (VOXEL_TOTAL is not None) and (nv > VOXEL_TOTAL):
-        raise RuntimeError("invalid size of the voxel structure: %d" % nv)
-
     # get the uniform grid
     LOGGER.debug("get the voxel grid")
     grid = _get_voxel_grid(n, d, c)
@@ -242,11 +232,6 @@ def get_mesh(param, domain_stl):
     # voxelize the meshes and get the indices
     LOGGER.debug("voxelize STL files")
     domain_def = _get_domain_def(grid, domain_stl, mesh_stl)
-
-    # check used size
-    nv = sum(len(idx) for idx in domain_def.values())
-    if (VOXEL_USED is not None) and (nv > VOXEL_USED):
-        raise RuntimeError("invalid number of used voxels: %d" % nv)
 
     # cast to lists
     n = n.tolist()

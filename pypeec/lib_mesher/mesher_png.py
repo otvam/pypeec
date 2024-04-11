@@ -17,14 +17,9 @@ __license__ = "Mozilla Public License Version 2.0"
 import numpy as np
 import PIL.Image as pmg
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("STL")
-
-# get problem size limits
-VOXEL_TOTAL = config.PROBLEM_MAX_SIZE.VOXEL_TOTAL
-VOXEL_USED = config.PROBLEM_MAX_SIZE.VOXEL_USED
 
 
 def _get_load_image(filename_list):
@@ -204,15 +199,5 @@ def get_mesh(param, domain_color, layer_stack):
 
     # assemble
     n = (nx, ny, nz)
-
-    # check total size
-    nv = np.prod(n)
-    if (VOXEL_TOTAL is not None) and (nv > VOXEL_TOTAL):
-        raise RuntimeError("invalid size of the voxel structure: %d" % nv)
-
-    # check used size
-    nv = sum(len(idx) for idx in domain_def.values())
-    if (VOXEL_USED is not None) and (nv > VOXEL_USED):
-        raise RuntimeError("invalid number of used voxels: %d" % nv)
 
     return n, d, c, domain_def, reference

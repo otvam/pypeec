@@ -17,7 +17,6 @@ def check_data_config(data_config):
     # check type
     key_list = [
         "LOGGING_OPTIONS",
-        "PROBLEM_MAX_SIZE",
         "DISPLAY_LOGO",
         "PAUSE_GUI",
     ]
@@ -74,16 +73,6 @@ def check_data_config(data_config):
     datachecker.check_string("CL_ERROR", LOGGING_OPTIONS["DEF_COLOR"]["CL_ERROR"], can_be_empty=False)
     datachecker.check_string("CL_CRITICAL", LOGGING_OPTIONS["DEF_COLOR"]["CL_CRITICAL"], can_be_empty=False)
     datachecker.check_string("CL_RESET", LOGGING_OPTIONS["DEF_COLOR"]["CL_RESET"], can_be_empty=False)
-
-    # check problem size limit
-    PROBLEM_MAX_SIZE = data_config["PROBLEM_MAX_SIZE"]
-    key_list = [
-        "VOXEL_TOTAL",
-        "VOXEL_USED",
-    ]
-    datachecker.check_dict("PROBLEM_MAX_SIZE", PROBLEM_MAX_SIZE, key_list=key_list)
-    datachecker.check_integer("VOXEL_TOTAL", PROBLEM_MAX_SIZE["VOXEL_TOTAL"], is_positive=True, can_be_zero=False, can_be_none=True)
-    datachecker.check_integer("VOXEL_USED", PROBLEM_MAX_SIZE["VOXEL_USED"], is_positive=True, can_be_zero=False, can_be_none=True)
 
     # check other switches
     datachecker.check_boolean("DISPLAY_LOGO", data_config["DISPLAY_LOGO"])

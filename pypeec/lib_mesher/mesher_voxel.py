@@ -10,14 +10,9 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("VOXEL")
-
-# get problem size limits
-VOXEL_TOTAL = config.PROBLEM_MAX_SIZE.VOXEL_TOTAL
-VOXEL_USED = config.PROBLEM_MAX_SIZE.VOXEL_USED
 
 
 def get_mesh(param, domain_index):
@@ -33,10 +28,8 @@ def get_mesh(param, domain_index):
     # no reference geometry, direct voxelization
     reference = None
 
-    # check total size
+    # get total size
     nv = np.prod(n)
-    if (VOXEL_TOTAL is not None) and (nv > VOXEL_TOTAL):
-        raise RuntimeError("invalid size of the voxel structure: %d" % nv)
 
     # init new domain indices
     domain_def = {}
@@ -57,10 +50,5 @@ def get_mesh(param, domain_index):
 
         # add the new item
         domain_def[tag] = idx_tmp
-
-    # check used size
-    nv = sum(len(idx) for idx in domain_def.values())
-    if (VOXEL_USED is not None) and (nv > VOXEL_USED):
-        raise RuntimeError("invalid number of used voxels: %d" % nv)
 
     return n, d, c, domain_def, reference

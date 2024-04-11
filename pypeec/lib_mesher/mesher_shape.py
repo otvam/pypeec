@@ -28,7 +28,6 @@ import shapely as sha
 import rasterio.features as raf
 import rasterio.transform as rat
 from pypeec import log
-from pypeec import config
 
 # prevent problematic linear transform to trigger warnings
 warnings.filterwarnings("ignore", module="shapely")
@@ -37,10 +36,6 @@ warnings.filterwarnings("ignore", module="rasterio.transform")
 
 # get a logger
 LOGGER = log.get_logger("SHAPE")
-
-# get problem size limits
-VOXEL_TOTAL = config.PROBLEM_MAX_SIZE.VOXEL_TOTAL
-VOXEL_USED = config.PROBLEM_MAX_SIZE.VOXEL_USED
 
 
 def _get_boundary_polygon(bnd, z_min):
@@ -484,11 +479,6 @@ def get_mesh(param, layer_stack, geometry_shape):
     LOGGER.debug("get the voxel size")
     (n, d, c) = _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min)
 
-    # check total size
-    nv = np.prod(n)
-    if (VOXEL_TOTAL is not None) and (nv > VOXEL_TOTAL):
-        raise RuntimeError("invalid size of the voxel structure: %d" % nv)
-
     # init domain definition dict
     domain_def = {}
     for tag in geometry_shape:
@@ -497,11 +487,6 @@ def get_mesh(param, layer_stack, geometry_shape):
     # voxelize the shapes and get the indices
     LOGGER.debug("voxelize the shapes")
     domain_def = _get_domain_def(n, d, c, domain_def, stack_idx, shape_obj)
-
-    # check used size
-    nv = sum(len(idx) for idx in domain_def.values())
-    if (VOXEL_USED is not None) and (nv > VOXEL_USED):
-        raise RuntimeError("invalid number of used voxels: %d" % nv)
 
     # merge the shapes representing the original geometry
     LOGGER.debug("merge the shapes")
