@@ -9,6 +9,11 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
+# parallel pool for sweeps
+#   - number of parallel processes for computing the solver sweeps
+#   - if null, the parallel processing is disabled
+sweep_pool: null
+
 # control where numerical approximations are used for the Green and coupling functions
 #   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used
 #   - if the normalized voxel distance is larger than the threshold, numerical approximations are used

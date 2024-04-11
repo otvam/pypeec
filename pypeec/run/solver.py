@@ -59,6 +59,7 @@ def _run_solver_init(data_solver, is_truncated):
     n = data_solver["n"]
     d = data_solver["d"]
     c = data_solver["c"]
+    sweep_pool = data_solver["sweep_pool"]
     green_simplify = data_solver["green_simplify"]
     coupling_simplify = data_solver["coupling_simplify"]
     mult_type = data_solver["mult_type"]
@@ -173,7 +174,7 @@ def _run_solver_init(data_solver, is_truncated):
         }
         data_init = {**data_init, **data_add}
 
-    return data_init, data_internal
+    return data_init, data_internal, sweep_pool
 
 
 def _run_solver_sweep(data_solver, data_internal, data_param, sol_init, is_truncated):
@@ -399,7 +400,7 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
 
     # create the problem
     with log.BlockTimer(LOGGER, "init"):
-        (data_init, data_internal) = _run_solver_init(data_solver, is_truncated)
+        (data_init, data_internal, sweep_pool) = _run_solver_init(data_solver, is_truncated)
 
     # function for solving a single sweep
     def fct_compute(tag, data, init):
@@ -408,7 +409,7 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
         return output, init
 
     # compute the different sweeps
-    data_sweep = sweep_solver.get_run_sweep(sweep_config, sweep_param, fct_compute)
+    data_sweep = sweep_solver.get_run_sweep(sweep_pool, sweep_config, sweep_param, fct_compute)
 
     # create output data
     data_solution = _get_data(data_init, data_sweep, timestamp, is_truncated)

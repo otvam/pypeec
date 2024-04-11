@@ -188,6 +188,7 @@ def check_data_tolerance(data_tolerance):
 
     # check type
     key_list = [
+        "sweep_pool",
         "green_simplify",
         "coupling_simplify",
         "mult_type",
@@ -202,11 +203,13 @@ def check_data_tolerance(data_tolerance):
     mult_type = data_tolerance["mult_type"]
     green_simplify = data_tolerance["green_simplify"]
     coupling_simplify = data_tolerance["coupling_simplify"]
+    sweep_pool = data_tolerance["sweep_pool"]
 
     # check data
     datachecker.check_choice("mult_type", mult_type, ["fft", "direct"])
     datachecker.check_float("green_simplify", green_simplify, is_positive=True, can_be_zero=False)
     datachecker.check_float("coupling_simplify", coupling_simplify, is_positive=True, can_be_zero=False)
+    datachecker.check_integer("sweep_pool", sweep_pool, is_positive=True, can_be_zero=False, can_be_none=True)
 
     # extract field
     fft_options = data_tolerance["fft_options"]

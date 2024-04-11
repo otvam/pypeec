@@ -48,11 +48,6 @@ PROBLEM_MAX_SIZE:
     VOXEL_TOTAL: null  # maximum size of the voxel structure (null for unlimited)
     VOXEL_USED: null  # maximum number of used voxels (null for unlimited)
 
-# parallel pool for sweeps
-#   - number of parallel processes for computing the solver sweeps
-#   - if null, the parallel processing is disabled
-SWEEP_POOL: null
-
 # delay (in seconds) between the Qt plots
 #   - this parameter should not be required (null for disable)
 #   - however, it seems to mitigate a race condition in PyVista/PyVistaQt
