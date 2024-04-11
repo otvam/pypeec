@@ -26,15 +26,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="0.77504207"
-     inkscape:cx="334.82054"
-     inkscape:cy="379.97938"
+     inkscape:zoom="1.096075"
+     inkscape:cx="295.14403"
+     inkscape:cy="138.22047"
      inkscape:window-width="1551"
      inkscape:window-height="1082"
-     inkscape:window-x="819"
-     inkscape:window-y="206"
+     inkscape:window-x="662"
+     inkscape:window-y="214"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer1">
+     inkscape:current-layer="g24116">
     <inkscape:grid
        type="xygrid"
        id="grid20924"
@@ -477,8 +477,8 @@
          y="45.196579">file_geometry</tspan></text>
     <g
        id="g20150"
-       transform="translate(-170.81677,70.114504)"
-       style="stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;fill:#949494;fill-opacity:1">
+       transform="translate(-166.52694,70.114504)"
+       style="fill:#949494;fill-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none">
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:5.64444px;line-height:1.25;font-family:sans-serif;display:inline;fill:#949494;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
@@ -486,10 +486,10 @@
          y="-6.4175992"
          id="text24074-3"><tspan
            sodipodi:role="line"
-           style="font-size:5.64444px;text-align:center;text-anchor:middle;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;fill:#949494;fill-opacity:1"
+           style="font-size:5.64444px;text-align:center;text-anchor:middle;fill:#949494;fill-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
            x="187.71494"
            y="-6.4175992"
-           id="tspan3195">file_config</tspan></text>
+           id="tspan3195">logger_config</tspan></text>
     </g>
     <text
        xml:space="preserve"
