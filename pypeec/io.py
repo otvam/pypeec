@@ -229,7 +229,7 @@ class _YamlLoader(yaml.Loader):
         # get and check the variable
         value = os.getenv(name)
         if value is None:
-            raise yaml.YAMLError("env variable is not existing")
+            raise yaml.YAMLError("env variable is not existing: %s" % name)
 
         # load YAML string
         data = yaml.safe_load(value)
