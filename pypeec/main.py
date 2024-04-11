@@ -14,15 +14,11 @@ __license__ = "Mozilla Public License Version 2.0"
 import sys
 import shutil
 import importlib.resources
-from pypeec import config
 from pypeec import log
 from pypeec import io
 
 # create the logger
 LOGGER = log.get_logger("MAIN")
-
-# get the logo display status
-DISPLAY_LOGO = config.DISPLAY_LOGO
 
 # init the logo display status
 STATUS_LOGO = False
@@ -78,8 +74,7 @@ def run_extract(data_name, is_zip, path_extract):
     """
 
     # display logo
-    if DISPLAY_LOGO:
-        run_display_logo()
+    run_display_logo()
 
     # execute workflow
     try:
@@ -119,8 +114,7 @@ def run_mesher_data(data_geometry, **kwargs):
     """
 
     # display logo
-    if DISPLAY_LOGO:
-        run_display_logo()
+    run_display_logo()
 
     # execute workflow
     try:
@@ -162,8 +156,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
     """
 
     # display logo
-    if DISPLAY_LOGO:
-        run_display_logo()
+    run_display_logo()
 
     # load data
     try:
@@ -218,8 +211,7 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
     """
 
     # display logo
-    if DISPLAY_LOGO:
-        run_display_logo()
+    run_display_logo()
 
     # execute workflow
     try:
@@ -273,8 +265,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
     """
 
     # display logo
-    if DISPLAY_LOGO:
-        run_display_logo()
+    run_display_logo()
 
     # load data
     try:
@@ -317,8 +308,7 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
     """
 
     # display logo
-    if DISPLAY_LOGO:
-        run_display_logo()
+    run_display_logo()
 
     # execute workflow
     try:
@@ -368,8 +358,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
     """
 
     # display logo
-    if DISPLAY_LOGO:
-        run_display_logo()
+    run_display_logo()
 
     # load data
     try:
@@ -430,8 +419,7 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
     """
 
     # display logo
-    if DISPLAY_LOGO:
-        run_display_logo()
+    run_display_logo()
 
     # execute workflow
     try:
@@ -489,8 +477,7 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     """
 
     # display logo
-    if DISPLAY_LOGO:
-        run_display_logo()
+    run_display_logo()
 
     # load data
     try:

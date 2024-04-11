@@ -5,6 +5,9 @@ Module for handling the logging.
     - Measure duration with local timers.
     - Log exceptions.
 
+The log config is defined by the following files.
+    - First the default configuration is loaded ("pypeec/data/config.yaml").
+    - Afterward, a custom file can be loaded with an environment variable ("PYPEEC").
 """
 
 __author__ = "Thomas Guillod"
@@ -12,24 +15,123 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import os
+import sys
 import datetime
 import threading
 import logging
-from pypeec import config
-
-# get config
-FORMAT = config.LOGGING_OPTIONS.FORMAT
-LEVEL = config.LOGGING_OPTIONS.LEVEL
-INDENTATION = config.LOGGING_OPTIONS.INDENTATION
-EXCEPTION_TRACE = config.LOGGING_OPTIONS.EXCEPTION_TRACE
-USE_COLOR = config.LOGGING_OPTIONS.USE_COLOR
-DEF_COLOR = config.LOGGING_OPTIONS.DEF_COLOR
+import yaml
+import importlib.resources
 
 # global timestamp (constant over the complete run)
 GLOBAL_TIMESTAMP = datetime.datetime.today()
 
 # logging indentation level (updated inside the blocks)
 GLOBAL_LEVEL = 0
+
+
+def _check_boolean(name, data):
+    """
+    Check a boolean.
+    """
+
+    if not isinstance(data, bool):
+        raise AssertionError("%s: should be a boolean" % name)
+
+
+def _check_integer(name, data):
+    """
+    Check a integer.
+    """
+
+    # check type
+    if not isinstance(data, int):
+        raise AssertionError("%s: should be an integer" % name)
+
+    # check value
+    if data < 0:
+        raise AssertionError("%s: should be positive" % name)
+
+
+def _check_string(name, data,):
+    """
+    Check a string.
+    """
+
+    # check type
+    if not isinstance(data, str):
+        raise AssertionError("%s: should be a string" % name)
+    if len(data) == 0:
+        raise AssertionError("%s: cannot be empty" % name)
+
+
+def _check_dict(name, data, key_list):
+    """
+    Check a dict.
+    """
+
+    # check type
+    if not isinstance(data, dict):
+        raise AssertionError("%s: should be a dict" % name)
+
+    # check keys
+    for tag in key_list:
+        if tag not in data:
+            raise AssertionError("%s: dict is incomplete: %s" % (name, tag))
+
+
+def _check_config(data):
+    """
+    Check the integrity of the config file.
+    """
+
+    # check dict
+    key_list = [
+        "FORMAT",
+        "LEVEL",
+        "INDENTATION",
+        "EXCEPTION_TRACE",
+        "USE_COLOR",
+        "DEF_COLOR",
+    ]
+    _check_dict("data", data, key_list)
+    
+    # check data
+    _check_string("LEVEL", data["LEVEL"])
+    _check_integer("INDENTATION", data["INDENTATION"])
+    _check_boolean("EXCEPTION_TRACE", data["EXCEPTION_TRACE"])
+    _check_boolean("USE_COLOR", data["USE_COLOR"])
+
+    # check sub dict
+    key_list = [
+        "LOGGER",
+        "TIMESTAMP_FMT",
+        "DURATION_FMT",
+        "TIMESTAMP_TRC",
+        "DURATION_TRC",
+    ]
+    _check_dict("FORMAT", data["FORMAT"], key_list)
+    _check_string("LOGGER", data["FORMAT"]["LOGGER"])
+    _check_string("TIMESTAMP_FMT", data["FORMAT"]["TIMESTAMP_FMT"])
+    _check_string("DURATION_FMT", data["FORMAT"]["DURATION_FMT"])
+    _check_integer("TIMESTAMP_TRC", data["FORMAT"]["TIMESTAMP_TRC"])
+    _check_integer("DURATION_TRC", data["FORMAT"]["DURATION_TRC"])
+
+    # check sub dict
+    key_list = [
+        "CL_DEBUG",
+        "CL_INFO",
+        "CL_WARNING",
+        "CL_ERROR",
+        "CL_CRITICAL",
+        "CL_RESET",
+    ]
+    _check_dict("DEF_COLOR", data["DEF_COLOR"], key_list)
+    _check_string("CL_DEBUG", data["DEF_COLOR"]["CL_DEBUG"])
+    _check_string("CL_INFO", data["DEF_COLOR"]["CL_INFO"])
+    _check_string("CL_WARNING", data["DEF_COLOR"]["CL_WARNING"])
+    _check_string("CL_ERROR", data["DEF_COLOR"]["CL_ERROR"])
+    _check_string("CL_CRITICAL", data["DEF_COLOR"]["CL_CRITICAL"])
+    _check_string("CL_RESET", data["DEF_COLOR"]["CL_RESET"])
 
 
 def _get_fmt(color, reset):
@@ -380,3 +482,38 @@ def get_logger(name):
         logger.addHandler(handler)
 
     return logger
+
+
+# load the config file
+try:
+    # load the default file
+    with importlib.resources.path("pypeec.data", "config.yaml") as file:
+        with open(file, 'r') as fid:
+            data = yaml.safe_load(fid)
+
+    # get file custom file
+    file = os.getenv("PYPEEC")
+    if file is not None:
+        with open(file, 'r') as fid:
+            data = yaml.safe_load(fid)
+
+    # check file integrity
+    _check_config(data)
+
+    # set global variables
+    FORMAT = data["FORMAT"]
+    LEVEL = data["LEVEL"]
+    INDENTATION = data["INDENTATION"]
+    EXCEPTION_TRACE = data["EXCEPTION_TRACE"]
+    USE_COLOR = data["USE_COLOR"]
+    DEF_COLOR = data["DEF_COLOR"]
+except Exception as ex:
+    print("==========================", file=sys.stderr)
+    print("INVALID CONFIGURATION FILE", file=sys.stderr)
+    print("==========================", file=sys.stderr)
+    print(str(ex), file=sys.stderr)
+    print("==========================", file=sys.stderr)
+    sys.exit(1)
+
+
+

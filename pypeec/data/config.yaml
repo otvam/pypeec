@@ -1,54 +1,37 @@
-# PyPEEC default configuration file.
-#
-# This configuration does not require:
-#   - GPU support (CPU is used)
-#   - External FFT library (SciPy FFT is used)
-#   - External matrix solver (SciPy SuperLU is used)
+# PyPEEC default logger configuration file.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-# logging options
-LOGGING_OPTIONS:
-    # logging module logger format with the following custom attributes
-    #   - timestamp: current timestamp (formatted as a string)
-    #   - duration: elapsed time (formatted as a string)
-    #   - process_id: process identification number
-    #   - thread_id: thread identification number
-    FORMAT:
-        LOGGER: '%(duration)s : %(name)-8s : %(levelname)-8s : %(message)s'  # logger format
-        TIMESTAMP_FMT: '%m/%d/%Y : %H:%M:%S'  # strftime formatting instructions for the timestamp
-        DURATION_FMT: '%H:%M:%S.%f' # strftime formatting instructions for the duration
-        TIMESTAMP_TRC: 0  # truncate trailing characters for the timestamp string
-        DURATION_TRC: 4 # truncate trailing characters for the duration string
+# logging module logger format with the following custom attributes
+#   - timestamp: current timestamp (formatted as a string)
+#   - duration: elapsed time (formatted as a string)
+#   - process_id: process identification number
+#   - thread_id: thread identification number
+FORMAT:
+    LOGGER: '%(duration)s : %(name)-8s : %(levelname)-8s : %(message)s'  # logger format
+    TIMESTAMP_FMT: '%m/%d/%Y : %H:%M:%S'  # strftime formatting instructions for the timestamp
+    DURATION_FMT: '%H:%M:%S.%f' # strftime formatting instructions for the duration
+    TIMESTAMP_TRC: 0  # truncate trailing characters for the timestamp string
+    DURATION_TRC: 4 # truncate trailing characters for the duration string
 
-    # logging level for the handlers
-    LEVEL: "DEBUG"  # string with a valid Python logging level
+# logging level for the handlers
+LEVEL: "DEBUG"  # string with a valid Python logging level
 
-    # indentation level for the blocks
-    INDENTATION: 4  # integer with the number of spaces per indentation
+# indentation level for the blocks
+INDENTATION: 4  # integer with the number of spaces per indentation
 
-    # display (or) not exception traces
-    EXCEPTION_TRACE: true  # boolean switch
+# display (or) not exception traces
+EXCEPTION_TRACE: true  # boolean switch
 
-    # options for coloring the log output
-    USE_COLOR: false  # use (or not) colors for the logs
+# options for coloring the log output
+USE_COLOR: false  # use (or not) colors for the logs
 
-    # options color definition
-    DEF_COLOR:
-        CL_DEBUG: '[38;5;247m' # debug level color code
-        CL_INFO: '[38;5;15m' # info level color code
-        CL_WARNING: '[38;5;202m' # warning level color code
-        CL_ERROR: '[38;5;196m' # error level color code
-        CL_CRITICAL: '[38;5;196m' # critical level color code
-        CL_RESET: '[0m' # terminal reset color sequence
-
-# delay (in seconds) between the Qt plots
-#   - this parameter should not be required (null for disable)
-#   - however, it seems to mitigate a race condition in PyVista/PyVistaQt
-PAUSE_GUI: null
-
-# display the PyPEEC logo at startup
-#   - if false, the logo is not shown
-#   - if true, the logo is shown
-DISPLAY_LOGO: true
+# options color definition
+DEF_COLOR:
+    CL_DEBUG: '[38;5;247m' # debug level color code
+    CL_INFO: '[38;5;15m' # info level color code
+    CL_WARNING: '[38;5;202m' # warning level color code
+    CL_ERROR: '[38;5;196m' # error level color code
+    CL_CRITICAL: '[38;5;196m' # critical level color code
+    CL_RESET: '[0m' # terminal reset color sequence

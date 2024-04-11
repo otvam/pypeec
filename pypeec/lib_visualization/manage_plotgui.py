@@ -32,7 +32,6 @@ import os
 import sys
 import ctypes
 import signal
-import time
 import os.path
 import importlib.resources
 import pyvista
@@ -42,13 +41,9 @@ import matplotlib.pyplot
 import PyQt5.QtWidgets
 import PyQt5.QtGui
 from pypeec import log
-from pypeec import config
 
 # get a logger
 LOGGER = log.get_logger("PLOTGUI")
-
-# get config
-PAUSE_GUI = config.PAUSE_GUI
 
 
 class PlotGui:
@@ -114,10 +109,6 @@ class PlotGui:
         with importlib.resources.path("pypeec.data", "pypeec.png") as file_icon:
             pl.set_icon(str(file_icon))
 
-        # pause to avoid race conditions
-        if PAUSE_GUI is not None:
-            time.sleep(PAUSE_GUI)
-
         return pl
 
     @staticmethod
@@ -179,10 +170,6 @@ class PlotGui:
             (sx, sy) = window_size
             man.window.resize(sx, sy)
 
-        # pause to avoid race conditions
-        if PAUSE_GUI is not None:
-            time.sleep(PAUSE_GUI)
-
         return fig
 
     @staticmethod
@@ -231,10 +218,6 @@ class PlotGui:
 
         # signal for quitting the event loop with interrupt signal
         signal.signal(signal.SIGINT, signal_handler)
-
-        # pause to avoid race conditions
-        if PAUSE_GUI is not None:
-            time.sleep(PAUSE_GUI)
 
         # show the different PyVista plots
         for tag, pl in self.pl_list:

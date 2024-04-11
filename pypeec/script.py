@@ -11,8 +11,8 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import sys
 import argparse
+import importlib.resources
 from pypeec import main
-from pypeec import config
 
 
 def _get_parser():
@@ -29,7 +29,11 @@ def _get_parser():
     )
 
     # get version
-    version = config.get_version()
+    try:
+        with importlib.resources.open_text("pypeec.data", "version.txt") as file_version:
+            version = file_version.read()
+    except FileNotFoundError:
+        version = 'x.x.x'
 
     # display the version
     parser.add_argument(
