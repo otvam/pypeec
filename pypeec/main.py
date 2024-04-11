@@ -26,11 +26,8 @@ STATUS_LOGO = False
 
 def run_display_logo():
     """
-    Display the logo as a splash screen
+    Display the logo as a splash screen.
     """
-
-    # variable with the logo status
-    global STATUS_LOGO
 
     # display the logo
     if not STATUS_LOGO:
@@ -42,9 +39,6 @@ def run_display_logo():
                 print("", flush=True, file=sys.stderr)
         except UnicodeError:
             pass
-
-    # logo has been displayed
-    STATUS_LOGO = True
 
 
 def run_hide_logo():
