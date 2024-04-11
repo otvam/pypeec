@@ -190,9 +190,11 @@ class _YamlLoader(yaml.Loader):
         Find the path with respect to the YAML file path.
         """
 
+        # check type
         if type(filename) is not str:
             raise yaml.YAMLError("path command arguments should be strings")
 
+        # construct relative path
         filepath = os.path.join(self.path_root, filename)
 
         return filepath
@@ -202,10 +204,14 @@ class _YamlLoader(yaml.Loader):
         Load an included YAML file.
         """
 
+        # check type
         if type(filename) is not str:
             raise yaml.YAMLError("include command arguments should be strings")
 
+        # construct relative path
         filepath = os.path.join(self.path_root, filename)
+
+        # load YAML file
         with open(filepath, "r") as fid:
             data = _parse_yaml(fid)
 
@@ -213,13 +219,19 @@ class _YamlLoader(yaml.Loader):
 
     def _extract_env(self, name):
         """
-        Load an included YAML file.
+        Load a YAML file from an environment variable.
         """
 
+        # check type
         if type(name) is not str:
             raise yaml.YAMLError("env command arguments should be strings")
 
+        # get and check the variable
         value = os.getenv(name)
+        if value is None:
+            raise yaml.YAMLError("env variable is not existing")
+
+        # load YAML string
         data = yaml.safe_load(value)
 
         return data
