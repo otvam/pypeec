@@ -6,6 +6,7 @@ Module for serialization and deserialization.
 For YAML files, the following custom extensions are used:
     - "!path" - parse relative paths
     - "!include" - include other YAML files
+    - "!env" - include YAML from environment variables
     - "!merge_dict" - merge a list of dicts
     - "!merge_list" - merge a list of lists
 
@@ -130,14 +131,19 @@ class _YamlLoader(yaml.Loader):
         # call the constructor of the parent
         super().__init__(stream)
 
-        # handling of inclusion inside YAML files
+        # handling of YAML files inclusion
         def fct_handle_include(self, node):
             res = _YamlLoader._yaml_handling(self, node, self._extract_yaml)
             return res
 
-        # handling merge of several dicts
+        # handling of relative paths
         def fct_handle_path(self, node):
             res = _YamlLoader._yaml_handling(self, node, self._extract_path)
+            return res
+
+        # handling of environment variables inclusion
+        def fct_handle_env(self, node):
+            res = _YamlLoader._yaml_handling(self, node, self._extract_env)
             return res
 
         # handling merge of a list of dicts
@@ -155,6 +161,7 @@ class _YamlLoader(yaml.Loader):
         # add the extension to the YAML format
         _YamlLoader.add_constructor("!include", fct_handle_include)
         _YamlLoader.add_constructor("!path", fct_handle_path)
+        _YamlLoader.add_constructor("!env", fct_handle_env)
         _YamlLoader.add_constructor("!merge_dict", fct_handle_merge_dict)
         _YamlLoader.add_constructor("!merge_list", fct_handle_merge_list)
 
@@ -201,7 +208,21 @@ class _YamlLoader(yaml.Loader):
         filepath = os.path.join(self.path_root, filename)
         with open(filepath, "r") as fid:
             data = _parse_yaml(fid)
-            return data
+
+        return data
+
+    def _extract_env(self, name):
+        """
+        Load an included YAML file.
+        """
+
+        if type(name) is not str:
+            raise yaml.YAMLError("env command arguments should be strings")
+
+        value = os.getenv(name)
+        data = yaml.safe_load(value)
+
+        return data
 
 
 class _JsonNumPyEncoder(json.JSONEncoder):
