@@ -251,7 +251,7 @@ def _get_arg_extract(subparsers):
     Add the data extraction arguments (examples and documentation).
     """
 
-    # add the examples parser
+    # add the examples data parser
     parser = subparsers.add_parser(
         "examples",
         help="extract the examples",
@@ -263,7 +263,7 @@ def _get_arg_extract(subparsers):
         dest="path_extract",
     )
 
-    # add the documentation parser
+    # add the documentation data parser
     parser = subparsers.add_parser(
         "documentation",
         help="extract the documentation",
@@ -275,13 +275,13 @@ def _get_arg_extract(subparsers):
         dest="path_extract",
     )
 
-    # add the config parser
+    # add the logger config parser
     parser = subparsers.add_parser(
-        "config",
-        help="extract the default config file",
+        "logger",
+        help="extract the default logger config file",
     )
     parser.add_argument(
-        help="path where the config file should be extracted",
+        help="path where the logger config file should be extracted",
         type=str,
         metavar="path",
         dest="path_extract",
@@ -292,7 +292,7 @@ def run_arguments(argv):
     """
     User script for running PyPEEC with given arguments.
         - The script offers a CLI for the mesher, solver, viewer, and plotter.
-        - The script can also be used to extract the examples, documentation and config.
+        - The script can also be used to extract data (examples, documentation, and logger config).
 
     Parameters
     ----------
@@ -359,8 +359,8 @@ def run_arguments(argv):
             main.run_extract("examples.zip", True, args.path_extract)
         elif args.command == "documentation":
             main.run_extract("documentation.zip", True, args.path_extract)
-        elif args.command == "config":
-            main.run_extract("config.yaml", False, args.path_extract)
+        elif args.command == "logger":
+            main.run_extract("logger.yaml", False, args.path_extract)
         else:
             raise ValueError("invalid command")
     except Exception:
@@ -373,7 +373,7 @@ def run_script():
     """
     User script for running PyPEEC with the command line arguments.
         - The script offers a CLI for the mesher, solver, viewer, and plotter.
-        - The script can also be used to extract the examples, documentation and config.
+        - The script can also be used to extract data (examples, documentation, and logger config).
 
     The script is installed with the package.
     The name of the command line script is "pypeec".
