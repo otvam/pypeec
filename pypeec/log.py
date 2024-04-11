@@ -7,7 +7,7 @@ Module for handling the logging.
 
 The log config is defined by the following files.
     - First the default configuration is loaded ("pypeec/data/logger.yaml").
-    - Afterward, a custom file can be loaded with an environment variable ("PYPEEC").
+    - Afterward, a custom file can be loaded with an environment variable ("PYTHONLOGGER").
 """
 
 __author__ = "Thomas Guillod"
@@ -492,7 +492,7 @@ try:
             data = yaml.safe_load(fid)
 
     # get file custom file
-    file = os.getenv("PYPEEC")
+    file = os.getenv("PYTHONLOGGER")
     if file is not None:
         with open(file, 'r') as fid:
             data = yaml.safe_load(fid)

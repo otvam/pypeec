@@ -70,9 +70,9 @@ Logger Configuration File
 
 * The default logger configuration file is located in ``pypeec/data/logger.yaml``.
 * A custom logger configuration file can set with an environment variable.
-* If the ``PYPEEC`` variable is not set, the default configuration is kept.
-* If the ``PYPEEC`` variable is is set, the default configuration is replaced.
-* The ``PYPEEC`` variable should contain a path towards the YAML configuration.
+* If the ``PYTHONLOGGER`` variable is not set, the default configuration is kept.
+* If the ``PYTHONLOGGER`` variable is is set, the default configuration is replaced.
+* The ``PYTHONLOGGER`` variable should contain a path towards the YAML configuration.
 
 Packaging and Environment
 -------------------------

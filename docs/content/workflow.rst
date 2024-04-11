@@ -8,7 +8,7 @@ PyPEEC Workflow
 
    Description of the PyPEEC workflow (mesher, viewer, solver, and plotter).
    The input and output files of the different tools are shown.
-   Additionally, a global configuration file is used.
+   Additionally, a global configuration file is used for the logger.
 
 PyPEEC Tools
 ------------
