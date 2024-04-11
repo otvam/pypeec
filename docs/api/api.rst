@@ -9,7 +9,6 @@ Main Modules
 
     pypeec.main
     pypeec.script
-    pypeec.config
     pypeec.log
     pypeec.io
 

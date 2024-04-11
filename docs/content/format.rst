@@ -8,7 +8,7 @@ PyPEEC Workflow
 
    Description of the PyPEEC workflow (mesher, viewer, solver, and plotter).
    The input and output files of the different tools are shown.
-   Additionally, a global configuration file is used.
+   Additionally, a global configuration file is used for the logger.
 
 Geometry File Format
 --------------------
@@ -55,7 +55,7 @@ This file contains the definition of the magnetic problem to be solved.
 Other File Formats
 ------------------
 
-* The configuration file format is documented in ``pypeec/data/config.yaml``.
+* The logger configuration file format is documented in ``pypeec/data/logger.yaml``.
 * The ``file_tolerance`` format is documented in ``examples/config/tolerance.yaml``.
 * The ``file_viewer`` format is documented in ``examples/config/viewer.yaml``.
 * The ``file_plotter`` format is documented in ``examples/config/plotter.yaml``.

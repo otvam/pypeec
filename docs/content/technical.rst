@@ -65,21 +65,14 @@ The following **Python version** are passing the **automated tests**:
 * CPython 3.11
 * CPython 3.12
 
-Configuration File
-------------------
+Logger Configuration File
+-------------------------
 
-* The default configuration file is ``pypeec/data/config.yaml``.
-
-    * This file is always loaded first.
-    * This file is included in the package.
-
-* The default configuration file can be extracted with the ``pypeec config`` command.
-
-* The filename located the environment variable ``PYPEEC`` is loaded.
-
-    * If the variable is not set, the default configuration is kept.
-    * If the variable is is set, the default configuration is replaced.
-    * This file can be in JSON or YAML formats.
+* The default logger configuration file is located in ``pypeec/data/logger.yaml``.
+* A custom logger configuration file can set with an environment variable.
+* If the ``PYPEEC`` variable is not set, the default configuration is kept.
+* If the ``PYPEEC`` variable is is set, the default configuration is replaced.
+* The ``PYPEEC`` variable should contain a path towards the YAML configuration.
 
 Packaging and Environment
 -------------------------

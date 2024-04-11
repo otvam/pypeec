@@ -6,7 +6,7 @@ Module for handling the logging.
     - Log exceptions.
 
 The log config is defined by the following files.
-    - First the default configuration is loaded ("pypeec/data/config.yaml").
+    - First the default configuration is loaded ("pypeec/data/logger.yaml").
     - Afterward, a custom file can be loaded with an environment variable ("PYPEEC").
 """
 
@@ -487,7 +487,7 @@ def get_logger(name):
 # load the config file
 try:
     # load the default file
-    with importlib.resources.path("pypeec.data", "config.yaml") as file:
+    with importlib.resources.path("pypeec.data", "logger.yaml") as file:
         with open(file, 'r') as fid:
             data = yaml.safe_load(fid)
 
