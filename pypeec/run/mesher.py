@@ -72,9 +72,7 @@ def _run_voxel(data_voxelize):
 
     # assemble the data
     data_internal = {
-        "n": n,
-        "d": d,
-        "c": c,
+        "n": n, "d": d, "c": c,
         "domain_def": domain_def,
     }
 
@@ -97,9 +95,7 @@ def _run_shape(data_voxelize):
 
     # assemble the data
     data_internal = {
-        "n": n,
-        "d": d,
-        "c": c,
+        "n": n, "d": d, "c": c,
         "domain_def": domain_def,
     }
 
@@ -122,9 +118,7 @@ def _run_png(data_voxelize):
 
     # assemble the data
     data_internal = {
-        "n": n,
-        "d": d,
-        "c": c,
+        "n": n, "d": d, "c": c,
         "domain_def": domain_def,
     }
 
@@ -146,9 +140,7 @@ def _run_stl(data_voxelize):
 
     # assemble the data
     data_internal = {
-        "n": n,
-        "d": d,
-        "c": c,
+        "n": n, "d": d, "c": c,
         "domain_def": domain_def,
     }
 
@@ -197,10 +189,7 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
 
     # assemble the data
     data_geom = {
-        "n": n,
-        "d": d,
-        "s": s,
-        "c": c,
+        "n": n, "d": d, "s": s, "c": c,
         "voxel_status": voxel_status,
     }
 

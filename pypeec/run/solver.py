@@ -155,9 +155,7 @@ def _run_solver_init(data_solver, is_truncated):
 
     # assign the results (will be merged in the solver output)
     data_init = {
-        "n": n,
-        "d": d,
-        "c": c,
+        "n": n, "d": d, "c": c,
         "problem_status": problem_status,
     }
 
@@ -171,6 +169,8 @@ def _run_solver_init(data_solver, is_truncated):
             "idx_src_c": idx_src_c,
             "idx_src_v": idx_src_v,
             "pts_cloud": pts_cloud,
+            "pts_net_c": pts_net_c,
+            "pts_net_m": pts_net_m,
         }
         data_init = {**data_init, **data_add}
 
