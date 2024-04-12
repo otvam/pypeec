@@ -514,6 +514,3 @@ except Exception as ex:
     print(str(ex), file=sys.stderr)
     print("==========================", file=sys.stderr)
     sys.exit(1)
-
-
-
