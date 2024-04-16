@@ -123,8 +123,6 @@ def _get_shape_single(shape_type, shape_data):
         obj = obj.buffer(buffer, cap_style="round", join_style="round")
 
     # check if valid
-    if obj.is_empty:
-        raise RuntimeError("invalid shape: shape is empty")
     if not obj.is_valid:
         raise RuntimeError("invalid shape: geometry is ill-formed")
 
@@ -201,10 +199,6 @@ def _get_shape_assemble(geometry_shape, tag, tol):
         if tag in shape_layer:
             # get the shape
             obj = _get_shape_single(shape_type, shape_data)
-
-            # check the shape
-            if not obj.is_valid:
-                raise RuntimeError("invalid shape: geometry is ill-formed")
 
             # add to the list
             if shape_operation == "add":
