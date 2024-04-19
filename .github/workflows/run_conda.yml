@@ -31,5 +31,6 @@ jobs:
       - name: Run the tests
         shell: bash
         run: |
+          conda info
           chmod +x scripts/run_tests.sh
           ./scripts/run_tests.sh
