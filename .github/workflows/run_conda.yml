@@ -1,9 +1,14 @@
-# Run the standard tests (on Linux / default Python version).
-#
-# Run with the following conditions:
-#   - push/pull
+# Run the Conda tests with the following conditions.
 #   - dispatch
-#   - daily
+#   - weekly
+#
+# The test are run on:
+#   - Linux / Ubuntu
+#   - Python 3.10
+#
+# Two different kinds of tests are made:
+#   - using the "conda_base.yaml" file
+#   - using the "conda_dev.yaml" file
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -11,9 +16,9 @@
 name: Run Conda Tests
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
 
 jobs:
   build:
@@ -25,15 +30,18 @@ jobs:
             file: "conda_base.yaml"
           - name: "dev"
             file: "conda_dev.yaml"
+        system: ["ubuntu-latest"]
+        version: ["3.10"]
+
     name: Conda / ${{ matrix.conda.name }}
-    runs-on: "ubuntu-latest"
+    runs-on: ${{ matrix.system }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v3
         with:
-          python-version: "3.10"
+          python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
           environment-file: ${{ matrix.conda.file }}

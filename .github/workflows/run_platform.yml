@@ -1,13 +1,20 @@
-# Run the tests with different platforms (default Python version).
-#
-# Run with the following conditions:
+# Run the Platform tests with the following conditions.
 #   - dispatch
 #   - weekly
+#
+# The test are run on:
+#   - Linux / Ubuntu
+#   - Apple / macOS
+#   - Microsoft / Windows
+#   - Python 3.9
+#   - Python 3.10
+#   - Python 3.11
+#   - Python 3.12
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-name: Test Software Platforms
+name: Run Platform Tests
 
 on:
   workflow_dispatch:
@@ -36,7 +43,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run the tests
-        shell: bash
+        shell: bash -el {0}
         run:
           chmod +x scripts/run_tests.sh
           ./scripts/run_tests.sh
