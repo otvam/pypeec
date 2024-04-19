@@ -1,5 +1,6 @@
 # Run the Standard tests with the following conditions.
-#   - push/pull
+#   - push (all)
+#   - pull request
 #   - dispatch
 #
 # The test are run on:
