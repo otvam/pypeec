@@ -1,0 +1,34 @@
+# Run the standard tests (on Linux / default Python version).
+#
+# Run with the following conditions:
+#   - push/pull
+#   - dispatch
+#   - daily
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+name: Run Standard Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          python-version: "3.10"
+          activate-environment: pypeec
+          environment-file: conda_base.yml
+      - name: Run the tests
+        shell: bash
+        run: |
+          chmod +x scripts/run_tests.sh
+          ./scripts/run_tests.sh
