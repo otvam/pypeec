@@ -1,4 +1,4 @@
-**# PyPEEC - Installation
+# PyPEEC - Installation
 
 ## Dependencies Description
 
