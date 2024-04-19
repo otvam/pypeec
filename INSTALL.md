@@ -24,7 +24,7 @@ pypeec --version
 
 ```bash
 # Install a Python interpreter
-#   - Conda website: https://conda.io.
+#   - Conda website: https://conda.io
 #   - Miniconda is sufficient for PyPEEC
 
 # Create a Conda Environment with the packages
