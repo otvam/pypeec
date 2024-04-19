@@ -48,6 +48,9 @@ export TEST_TOL="1e-5"
 export TEST_CHECK="1"
 export TEST_SET="0"
 
+# change to root directory
+cd "$(dirname "$0")" && cd ..
+
 # init status
 ret=0
 

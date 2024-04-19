@@ -78,6 +78,9 @@ function build_package {
   ret=$(( ret || $? ))
 }
 
+# change to root directory
+cd "$(dirname "$0")" && cd ..
+
 # init status
 ret=0
 

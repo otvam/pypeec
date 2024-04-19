@@ -164,6 +164,9 @@ else
   exit 1
 fi
 
+# change to root directory
+cd "$(dirname "$0")" && cd ..
+
 # run the code
 check_release
 run_build_test
