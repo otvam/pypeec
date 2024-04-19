@@ -25,7 +25,7 @@ jobs:
             file: "conda_base.yaml"
           - name: "dev"
             file: "conda_dev.yaml"
-    name: OS ${{ matrix.conda.name }}
+    name: Conda / ${{ matrix.conda.name }}
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
     steps:
