@@ -35,4 +35,5 @@ jobs:
       - name: Run the tests / ${{ matrix.python-version }}
         shell: bash
         run: |
+          chmod +x scripts/run_tests.sh
           ./scripts/run_tests.sh

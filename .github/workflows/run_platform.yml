@@ -34,5 +34,6 @@ jobs:
           pip install -r requirements.txt
       - name: Run the tests / ${{ matrix.os-type }}
         shell: bash
-        run: |
+        run:
+          chmod +x scripts/run_tests.sh
           ./scripts/run_tests.sh
