@@ -17,6 +17,15 @@ on:
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        method:
+          - name: "requirements"
+            cmd: "pip install -r requirements.txt"
+          - name: "package"
+            cmd: "pip install ."
+    name: OS ${{ matrix.method.name }}
     runs-on: "ubuntu-latest"
     timeout-minutes: 10
     steps:
@@ -28,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          ${{ matrix.method.cmd }}
       - name: Run the tests
         shell: bash
         run: |
