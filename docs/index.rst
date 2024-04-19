@@ -8,6 +8,7 @@ PyPEEC - 3D Quasi-Magnetostatic Solver
 
    Home <self>
    content/about
+   content/install
    content/tutorial
    content/examples
    content/gallery

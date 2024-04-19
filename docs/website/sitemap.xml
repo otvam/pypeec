@@ -13,6 +13,11 @@
     <lastmod>$LASTMOD</lastmod>
   </url>
   <url>
+    <loc>https://pypeec.otvam.ch/content/install.html</loc>
+    <priority>0.80</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
     <loc>https://pypeec.otvam.ch/content/tutorial.html</loc>
     <priority>0.80</priority>
     <lastmod>$LASTMOD</lastmod>
