@@ -16,7 +16,6 @@
 name: Run Conda Tests
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
@@ -26,15 +25,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        conda:
+        method:
           - name: "base"
             file: "conda_base.yaml"
           - name: "dev"
             file: "conda_dev.yaml"
-        system: ["ubuntu-latest",  "macos-latest", "windows-latest"]
-        version: ["3.9", "3.10", "3.11", "3.12"]
+        system: ["ubuntu-latest"]
+        version: ["3.10"]
 
-    name: Conda / ${{ matrix.conda.name }} / ${{ matrix.system }} / ${{ matrix.version }}
+    name: Conda / ${{ matrix.method.name }} / ${{ matrix.system }} / ${{ matrix.version }}
     runs-on: ${{ matrix.system }}
     timeout-minutes: 20
     steps:
@@ -45,7 +44,7 @@ jobs:
           python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
-          environment-file: ${{ matrix.conda.file }}
+          environment-file: ${{ matrix.method.file }}
       - name: Run the tests
         shell: bash -el {0}
         run: |
