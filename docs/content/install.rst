@@ -1,6 +1,14 @@
 Installation
 ============
 
+Dependencies Description
+------------------------
+
+* ``requirements.txt`` - list of Python dependencies (pinned versions)
+* ``pyproject.toml`` - package definition with dependencies (minimum versions)
+* ``conda_base.yaml`` - Conda file with the minimum requirements for PyPEEC
+* ``conda_dev.yaml`` - Conda file including the optional and development packages
+
 Using a Python Environment
 --------------------------
 
@@ -9,6 +17,7 @@ Using a Python Environment
     # Install a Python interpreter
     #   - Python website: https://www.python.org
     #   - Supported versions: 3.9, 3.10, 3.11, and 3.12
+    #   - Python executable: "python" or "python3"
 
     # Create a Python Virtual Environment
     python -m venv venv
