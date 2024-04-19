@@ -93,10 +93,10 @@ Tests and Documentation
 Scripts
 -------
 
-* ``run_tests.sh``: run all the tests.
-* ``run_coverage.sh``: run a code coverage analysis.
-* ``run_build.sh``: build the Python package and build the HTML documentation.
-* ``run_release.sh``: create a release (tag, release, package, and documentation).
+* ``scripts/run_tests.sh``: run all the tests.
+* ``scripts/run_coverage.sh``: run a code coverage analysis.
+* ``scripts/run_build.sh``: build the Python package and build the HTML documentation.
+* ``scripts/run_release.sh``: create a release (tag, release, package, and documentation).
 
 Contributing
 ------------
