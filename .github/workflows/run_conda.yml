@@ -8,7 +8,7 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-name: Run Standard Tests
+name: Run Conda Tests
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
             file: "conda_base.yaml"
           - name: "dev"
             file: "conda_dev.yaml"
-    name: OS ${{ matrix.matrix.name }}
+    name: OS ${{ matrix.conda.name }}
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
     steps:
@@ -36,7 +36,7 @@ jobs:
           python-version: "3.10"
           auto-activate-base: false
           activate-environment: pypeec
-          environment-file: ${{ matrix.matrix.file }}
+          environment-file: ${{ matrix.conda.file }}
       - name: Run the tests
         shell: bash -el {0}
         run: |
