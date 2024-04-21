@@ -361,15 +361,19 @@ class PlotGui:
         if self.plot_mode == "qt":
             LOGGER.debug("entering the plot event loop")
             self._show_figure_qt()
+            LOGGER.debug("exiting the plot event loop")
         elif self.plot_mode == "nb":
             LOGGER.debug("display notebook plots")
             self._show_figure_nb()
+            LOGGER.debug("exit plotting routine")
         elif self.plot_mode == "save":
             LOGGER.debug("save and close all the plots")
             self._save_screenshot()
             self._show_figure_nop()
+            LOGGER.debug("exit plotting routine")
         elif self.plot_mode == "none":
             LOGGER.debug("close all the plots")
             self._show_figure_nop()
+            LOGGER.debug("exit plotting routine")
         else:
             raise ValueError("invalid plot mode")
