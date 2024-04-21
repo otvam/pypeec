@@ -1,6 +1,4 @@
 # Run the Platform tests with the following conditions.
-#   - push (main)
-#   - pull request
 #   - dispatch
 #   - weekly
 #
@@ -19,13 +17,9 @@
 name: Run Platform Tests
 
 on:
-  pull_request:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
-  push:
-    branches:
-      - 'main'
 
 jobs:
   build:
