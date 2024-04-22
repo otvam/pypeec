@@ -26,10 +26,9 @@ Release
 ==========  ========================================
 Package     **pypeec**
 Version     |ver| / |date|
-PyPi        https://pypi.org/project/pypeec
-Releases    https://github.com/otvam/pypeec/releases
-Conda       https://anaconda.org/conda-forge/pypeec
 GitHub      https://github.com/otvam/pypeec/releases
+Conda       https://anaconda.org/conda-forge/pypeec
+PyPi        https://pypi.org/project/pypeec
 ==========  ========================================
 Credits
 -------

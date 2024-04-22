@@ -61,18 +61,19 @@ For such cases, PyPEEC can be very slow and consume a lot of memory.
 
 ## Project Links
 
-* Website: https://pypeec.otvam.ch
-* Repository: https://github.com/otvam/pypeec
-* Issues: https://github.com/otvam/pypeec/issues
-
-* Releases: https://github.com/otvam/pypeec/releases
-* Conda: https://anaconda.org/conda-forge/pypeec
-* PyPi: https://pypi.org/project/pypeec
-
-* Installation: https://pypeec.otvam.ch/content/install.html
-* Tutorial: https://pypeec.otvam.ch/content/tutorial.html
-* Examples: https://pypeec.otvam.ch/content/examples.html
-* Gallery: https://pypeec.otvam.ch/content/gallery.html
+* **PyPEEC**
+  * [Website](https://pypeec.otvam.ch)
+  * [Repository](https://github.com/otvam/pypeec)
+  * [Issues](https://github.com/otvam/pypeec/issues)
+* **Releases**
+  * [GitHub](https://github.com/otvam/pypeec/releases)
+  * [Conda](https://anaconda.org/conda-forge/pypeec)
+  * [PyPi](https://pypi.org/project/pypeec)
+* **Documentation**
+  * [Installation](https://pypeec.otvam.ch/content/install.html)
+  * [Tutorial](https://pypeec.otvam.ch/content/tutorial.html)
+  * [Examples](https://pypeec.otvam.ch/content/examples.html)
+  * [Gallery](https://pypeec.otvam.ch/content/gallery.html)
 
 ## Author
 
