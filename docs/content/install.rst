@@ -17,7 +17,7 @@ Using a Python Environment
 .. code-block:: bash
 
     # Install a Python interpreter
-    #   - Website: https://www.python.org
+    #   - Website: https://www.python.org/downloads
     #   - Supported versions: 3.9, 3.10, 3.11, and 3.12
     #   - Python executable: "python" or "python3"
 
@@ -39,7 +39,7 @@ Using a Conda Environment
 .. code-block:: bash
 
     # Install a Conda distribution
-    #   - Website: https://github.com/conda-forge/miniforge
+    #   - Website: https://conda-forge.org/download
     #   - Miniforge is sufficient for installing PyPEEC
     #   - Using mamba as a dependency solver is faster
 
