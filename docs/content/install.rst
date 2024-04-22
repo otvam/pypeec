@@ -15,7 +15,7 @@ Using a Python Environment
 .. code-block:: bash
 
     # Install a Python interpreter
-    #   - Python website: https://www.python.org
+    #   - Website: https://www.python.org
     #   - Supported versions: 3.9, 3.10, 3.11, and 3.12
     #   - Python executable: "python" or "python3"
 
@@ -37,19 +37,18 @@ Using a Conda Environment
 .. code-block:: bash
 
     # Install a Conda distribution
-    #   - Conda website: https://conda.io
-    #   - Supported versions: 3.9, 3.10, 3.11, and 3.12
-    #   - Miniconda is sufficient for installing PyPEEC
+    #   - Website: https://github.com/conda-forge/miniforge
+    #   - Miniforge is sufficient for installing PyPEEC
     #   - Using mamba as a dependency solver is faster
 
     # Create a Conda Environment with a Python interpreter
-    conda create -n pypeec_venv python=3.10
+    mamba create -n pypeec_venv python=3.10
 
     # Activate the Conda Environment
-    conda activate pypeec_venv
+    mamba activate pypeec_venv
 
     # Install PyPEEC from conda-forge
-    conda install conda-forge::pypeec
+    mamba install conda-forge::pypeec
 
     # Check that PyPEEC is available
     pypeec --version
