@@ -41,10 +41,12 @@ jobs:
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-version: latest
           python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
           environment-file: ${{ matrix.method.file }}
+          use-mamba: true
       - name: Run the tests
         shell: bash -el {0}
         run: |
