@@ -16,7 +16,7 @@
 #   - Python executable: "python" or "python3"
 
 # Create a Python Virtual Environment
-python -m venv venv
+python -m venv pypeecenv
 
 # Activate the Python Virtual Environment
 source venv/bin/activate
@@ -31,22 +31,20 @@ pypeec --version
 ## Using a Conda Environment
 
 ```bash
-# Install a Python interpreter
+# Install a Conda distribution
 #   - Conda website: https://conda.io
-#   - Miniconda is sufficient for PyPEEC
+#   - Supported versions: 3.9, 3.10, 3.11, and 3.12
+#   - Miniconda is sufficient for installing PyPEEC
+#   - Using mamba as a dependency solver is faster
 
-# Create a Conda Environment with the packages
-#   - conda_base.yaml: minimum requirements for PyPEEC
-#   - conda_dev.yaml: optional and development packages 
-conda env create -f conda_base.yaml
-# OR
-conda env create -f conda_dev.yaml
+# Create a Conda Environment with a Python interpreter
+conda create -n pypeec_venv python=3.10
 
 # Activate the Conda Environment
-conda activate pypeec
+conda activate pypeec_venv
 
-# Install PyPEEC from PyPi
-pip install --no-deps pypeec
+# Install PyPEEC from conda-forge
+conda install conda-forge::pypeec
 
 # Check that PyPEEC is available
 pypeec --version
