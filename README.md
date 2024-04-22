@@ -5,7 +5,7 @@
 ---
 * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**
 * **Repository: [github.com/otvam/pypeec](https://github.com/otvam/pypeec)**
-* **Conda: [pypi.org/project/pypeec](https://anaconda.org/conda-forge/pypeec)**
+* **Conda: [anaconda.org/conda-forge/pypeec](https://anaconda.org/conda-forge/pypeec)**
 * **PyPi: [pypi.org/project/pypeec](https://pypi.org/project/pypeec)**
 ---
 
