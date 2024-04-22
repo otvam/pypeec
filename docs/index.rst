@@ -31,7 +31,8 @@ PyPEEC - 3D Quasi-Magnetostatic Solver
 .. Important::
     * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
     * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`_
-    * **Package:** `pypi.org/project/pypeec <https://pypi.org/project/pypeec>`_
+    * **Conda:** `anaconda.org/conda-forge/pypeec <https://anaconda.org/conda-forge/pypeec>`_
+    * **PyPi:** `pypi.org/project/pypeec <https://pypi.org/project/pypeec>`_
 
 ------------
 

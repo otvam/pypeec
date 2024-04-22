@@ -71,7 +71,6 @@ Homepage = "https://pypeec.otvam.ch"
 Repository = "https://github.com/otvam/pypeec"
 Releases = "https://github.com/otvam/pypeec/releases"
 Issues = "https://github.com/otvam/pypeec/issues"
-Tags = "https://github.com/otvam/pypeec/tags"
 
 [project.readme]
 file = "README.md"

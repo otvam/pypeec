@@ -5,7 +5,8 @@
 ---
 * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**
 * **Repository: [github.com/otvam/pypeec](https://github.com/otvam/pypeec)**
-* **Package: [pypi.org/project/pypeec](https://pypi.org/project/pypeec)**
+* **Conda: [pypi.org/project/pypeec](https://anaconda.org/conda-forge/pypeec)**
+* **PyPi: [pypi.org/project/pypeec](https://pypi.org/project/pypeec)**
 ---
 
 ## Summary
@@ -62,11 +63,13 @@ For such cases, PyPEEC can be very slow and consume a lot of memory.
 
 * Website: https://pypeec.otvam.ch
 * Repository: https://github.com/otvam/pypeec
-* Releases: https://github.com/otvam/pypeec/releases
-* Tags: https://github.com/otvam/pypeec/tags
 * Issues: https://github.com/otvam/pypeec/issues
+
+* Releases: https://github.com/otvam/pypeec/releases
+* Conda: https://anaconda.org/conda-forge/pypeec
 * PyPi: https://pypi.org/project/pypeec
 
+* Installation: https://pypeec.otvam.ch/content/install.html
 * Tutorial: https://pypeec.otvam.ch/content/tutorial.html
 * Examples: https://pypeec.otvam.ch/content/examples.html
 * Gallery: https://pypeec.otvam.ch/content/gallery.html
