@@ -77,10 +77,11 @@ Logger Configuration File
 Packaging and Environment
 -------------------------
 
-* A Python package can be built from the ``pyproject.toml`` file.
-* In order to create a minimal Python Virtual Environment, use ``requirements.txt``.
-* In order to create a minimal Conda Environment, use ``conda_base.yaml``.
-* In order to create a full development environment, use ``conda_dev.yaml``.
+* List of Python dependencies (pinned versions): ``requirements.txt``
+* Package definition with dependencies (minimum versions): ``pyproject.toml``
+* Conda file with the minimum requirements for PyPEEC: ``conda_base.yaml``
+* Conda file including the optional and development packages: ``conda_dev.yaml``
+* Conda feedstock recipe: https://github.com/conda-forge/pypeec-feedstock
 
 Tests and Documentation
 -----------------------

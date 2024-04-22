@@ -11,7 +11,7 @@ PyPEEC Issues
 .. Warning::
     For problems with **magnetic domains**, the **preconditioner** is not optimal.
     This might lead to a slow convergence of the iterative matrix solver.
-    For such cases, using a segregated solver might be useful.
+    For such cases, using the segregated solver approach might be useful.
 
 .. Warning::
     For **large problems**, the code might allocate huge amounts of **memory**.

@@ -1,11 +1,13 @@
 # PyPEEC - Installation
 
-## Dependencies Description
+## Available Packages
 
-* `requirements.txt` - list of Python dependencies (pinned versions)
-* `pyproject.toml` - package definition with dependencies (minimum versions)
-* `conda_base.yaml` - Conda file with the minimum requirements for PyPEEC
-* `conda_dev.yaml` - Conda file including the optional and development packages
+* **Python Package** - available through PyPI
+* **Conda Package** - available through conda-forge
+
+PyPEEC packages are generic (architecture and system independent packages).
+However, some dependencies are architecture and system dependent packages.
+The optional HPC libraries are usually easier to install though Conda.
 
 ## Using a Python Environment
 
