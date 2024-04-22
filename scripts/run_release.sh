@@ -73,11 +73,11 @@ function run_build_test {
   ret=0
 
   # check build
-  ./run_build.sh
+  ./scripts/run_build.sh
   ret=$(( ret || $? ))
 
   # check tests
-  ./run_tests.sh
+  ./scripts/run_tests.sh
   ret=$(( ret || $? ))
 
   if [[ $ret != 0 ]]
