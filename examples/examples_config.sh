@@ -31,6 +31,7 @@ FOLDER_CONFIG="config"
 #   examples_png
 #       examples_png/inductor_spiral
 #       examples_png/inductor_gap
+#       examples_png/inductor_pot
 #       examples_png/iron_core
 #       examples_png/shield
 #       examples_png/gerber

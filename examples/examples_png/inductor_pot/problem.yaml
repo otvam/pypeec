@@ -1,0 +1,39 @@
+# Definition of a "file_problem" data.
+#
+# This file is used by the solver.
+# Definition of the magnetic problem to be solved.
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+"material_def":
+    "coil":
+        "domain_list": ["src", "sink", "coil"]
+        "material_type": "electric"
+        "orientation_type": "isotropic"
+        "var_type": "lumped"
+    "core":
+        "domain_list": ["core"]
+        "material_type": "magnetic"
+        "orientation_type": "isotropic"
+        "var_type": "lumped"
+"source_def":
+    "src":
+        "domain_list": ["src"]
+        "source_type": "current"
+        "var_type": "lumped"
+    "sink":
+        "domain_list": ["sink"]
+        "source_type": "voltage"
+        "var_type": "lumped"
+"sweep_config":
+    "sim_default": null
+"sweep_param":
+    "sim_default":
+        "freq": 0.0
+        "material_val":
+            "coil": {"rho_re": 1.75e-8, "rho_im": 0.0}
+            "core": {"chi_re": 500.0, "chi_im": 0.0}
+        "source_val":
+            "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
+            "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
