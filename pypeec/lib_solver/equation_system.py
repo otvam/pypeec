@@ -403,7 +403,7 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     return rhs_c, rhs_m
 
 
-def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
+def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, R_src_v):
     """
     Construct the source matrices.
     The source matrices describes the sources (internal resistances/admittances).
@@ -447,7 +447,7 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, G_src_c, R_src_v):
     # matrix between the source equations and the potential variables
     idx_row = np.concatenate((idx_src_v_add, idx_src_c_add))
     idx_col = np.concatenate((idx_src_v_local, idx_src_c_local))
-    val = np.concatenate((cst_src_v, G_src_c))
+    val = np.concatenate((cst_src_v, Y_src_c))
     A_src_vc = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc), dtype=np.complex_)
 
     # matrix between the source equations and the source variables
