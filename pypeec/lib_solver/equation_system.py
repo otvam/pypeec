@@ -17,51 +17,51 @@ The equations are set in the following order:
         n_vm    : the magnetic KCL equations
     ]
 
-The complete solution vector is (for the AC system):
+The complete solution vector is:
     [
         I_fc    : n_fc    : electric face currents    : A
         V_vc    : n_vc    : electric voxel potentials : V
         I_src_c : n_src_c : current source currents   : A
         I_src_v : n_src_v : voltage source currents   : A
-        I_fm    : n_fm    : magnetic face fluxes      : V
+        I_fm    : n_fm    : magnetic face fluxes      : V*s
         V_vm    : n_vm    : magnetic voxel potentials : A
     ]
 
-The complete right-hand size vector is (for the AC system):
+The complete right-hand size vector is:
     [
         n_fc    : zero excitation            : V
         n_vc    : zero excitation            : A
         n_src_c : current source excitations : A
         n_src_v : voltage source excitations : V
         n_fm    : zero excitation            : A
-        n_vm    : zero excitation            : A/s
+        n_vm    : zero excitation            : A
     ]
 
-The complete equation matrix is (for the AC system):
+The complete equation matrix is:
     [
-        +R_c+s*L_c     -A_net_c'       +0                 +0                 +K_c             +0
+        +R_c+s*L_c     -A_net_c'       +0                 +0                 +s*K_c           +0
         +A_net_c       +0              +A_vc_src_c        +A_vc_src_v        +0               +0
         +0             +A_src_c_vc     +A_src_c_src_c     +0                 +0               +0
         +0             +A_src_v_vc     +0                 +A_src_v_src_v     +0               +0
-        -K_m           +0              +0                 +0                 +R_m/s           -A_net_m'
-        +0             +0              +0                 +0                 +P_m*A_net_m     +s*I
+        -K_m           +0              +0                 +0                 +R_m             -A_net_m'
+        +0             +0              +0                 +0                 +P_m*A_net_m     +I
     ]
 
-The units of the equation matrix is (for the AC system):
+The units of the equation matrix is:
     [
-        Ohm            1               0                  0                  1                0
+        Ohm            1               0                  0                  1/s              0
         1              0               1                  1                  0                0
         0              1/Ohm           1                  0                  0                0
         0              1               0                  Ohm                0                0
-        1              0               0                  0                  A/V              1
-        0              0               0                  0                  A/V/s            1/s
+        1              0               0                  0                  A/V/s            1
+        0              0               0                  0                  A/V/s            1
     ]
 
-The matrices have the following units (for the AC system):
+The matrices have the following units:
     - R_c => Ohm
     - L_c => Henry
-    - R_m => 1/Henry
-    - P_m => 1/Henry
+    - R_m => 1/Henry = A/V/s
+    - P_m => 1/Henry = A/V/s
 
 For the DC problem (zero frequency), multiplication per zero are occurring.
 Therefore, the problem is formulated slightly differently for this case.
