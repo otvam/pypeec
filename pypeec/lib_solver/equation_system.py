@@ -8,41 +8,60 @@ The problem contains n_fc internal electric faces and n_fm internal magnetic fac
 The problem contains n_src_c current source voxels and n_src_v voltage source voxels.
 
 The equations are set in the following order:
-    - n_fc: the electric KVL equations
-    - n_vc: the electric KCL equations
-    - n_src_c: the current source voxels equations (source equation with internal admittance)
-    - n_src_v: the voltage source voxels equations (source equation with internal impedance)
-    - n_fm: the magnetic KVL equations
-    - n_vm: the magnetic KCL equations
-
-The complete equation matrix is:
     [
-        +R_c+s*L_c,    -A_net_c',     0,            +K_c,             0 ;
-        +A_net_c,       0,           +A_vc_src,      0,               0 ;
-         0,            +A_src_vc,    +A_src_src,     0,               0 ;
-        -K_m,           0,            0,            +R_m,            -A_net_m' ;
-         0,             0,            0,            +P_m*A_net_m,    +s*I ;
+        n_fc    : the electric KVL equations
+        n_vc    : the electric KCL equations
+        n_src_c : the current source voxels equations (source equation with internal admittance)
+        n_src_v : the voltage source voxels equations (source equation with internal impedance)
+        n_fm    : the magnetic KVL equations
+        n_vm    : the magnetic KCL equations
     ]
 
-The complete solution vector is:
+The complete solution vector is (for the AC system):
     [
-        n_fc: electric face currents
-        n_vc: electric voxel potentials
-        n_src_c: current source currents
-        n_src_v: voltage source currents
-        n_fm: magnetic face fluxes
-        n_vm: magnetic voxel potentials
+        I_fc    : n_fc    : electric face currents    : A
+        V_vc    : n_vc    : electric voxel potentials : V
+        I_src_c : n_src_c : current source currents   : A
+        I_src_v : n_src_v : voltage source currents   : A
+        I_fm    : n_fm    : magnetic face fluxes      : V
+        V_vm    : n_vm    : magnetic voxel potentials : A
     ]
 
-The complete right-hand size vector is:
+The complete right-hand size vector is (for the AC system):
     [
-        n_fc: zero excitation
-        n_vc: zero excitation
-        n_src_c: current source excitations
-        n_src_v: voltage source excitations
-        n_fm: zero excitation
-        n_vm: zero excitation
+        n_fc    : zero excitation            : V
+        n_vc    : zero excitation            : A
+        n_src_c : current source excitations : A
+        n_src_v : voltage source excitations : V
+        n_fm    : zero excitation            : A
+        n_vm    : zero excitation            : A/s
     ]
+
+The complete equation matrix is (for the AC system):
+    [
+        +R_c+s*L_c     -A_net_c'       +0                 +0                 +K_c             +0
+        +A_net_c       +0              +A_vc_src_c        +A_vc_src_v        +0               +0
+        +0             +A_src_c_vc     +A_src_c_src_c     +0                 +0               +0
+        +0             +A_src_v_vc     +0                 +A_src_v_src_v     +0               +0
+        -K_m           +0              +0                 +0                 +R_m/s           -A_net_m'
+        +0             +0              +0                 +0                 +P_m*A_net_m     +s*I
+    ]
+
+The units of the equation matrix is (for the AC system):
+    [
+        Ohm            1               0                  0                  1                0
+        1              0               1                  1                  0                0
+        0              1/Ohm           1                  0                  0                0
+        0              1               0                  Ohm                0                0
+        1              0               0                  0                  A/V              1
+        0              0               0                  0                  A/V/s            1/s
+    ]
+
+The matrices have the following units (for the AC system):
+    - R_c => Ohm
+    - L_c => Henry
+    - R_m => 1/Henry
+    - P_m => 1/Henry
 
 For the DC problem (zero frequency), division per zero are occurring.
 Therefore, the problem is formulated slightly differently for this case.
