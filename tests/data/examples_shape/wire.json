@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/wire",
-        "timestamp": "2024-04-02 12:06:26.384618"
+        "timestamp": "2024-04-23 21:53:50.133694"
     },
     "mesher": {
         "n_total": 25000,
