@@ -54,4 +54,4 @@ def run_image(folder_example):
 
 
 if __name__ == "__main__":
-    run_image("examples_png/iron_core")
+    run_image("tutorial")

@@ -108,6 +108,14 @@ examples_png/inductor_gap
 
 .. image:: ../examples/examples_png_inductor_gap.png
 
+examples_png/inductor_pot
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* **Pot-core inductor with external gap**
+* Defined with **PNG files**
+
+.. image:: ../examples/examples_png_inductor_pot.png
+
 examples_png/iron_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
