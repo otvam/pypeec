@@ -63,7 +63,7 @@ The matrices have the following units (for the AC system):
     - R_m => 1/Henry
     - P_m => 1/Henry
 
-For the DC problem (zero frequency), division per zero are occurring.
+For the DC problem (zero frequency), multiplication per zero are occurring.
 Therefore, the problem is formulated slightly differently for this case.
 
 For the preconditioner, the diagonal of the inductance and potential matrix is used.
@@ -120,34 +120,6 @@ def _get_system_size(A_net_c, A_net_m, A_src):
     return n_vc, n_fc, n_vm, n_fm, n_src
 
 
-def _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src):
-    """
-    Get a scaling vector for the solution.
-
-    The scaling vector is required for the following reasons:
-        - for avoid division per zero, the DC and AC system are slightly different
-        - the DC system is using the magnetic flux as a variable
-        - the AC system is using the derivative of the magnetic flux as a variable
-        - the solution is using the magnetic flux as a variable
-        - the scaling vector is used to match this discrepancy
-    """
-
-    # get the angular frequency
-    s = 1j*2*np.pi*freq
-
-    # get the scaling vectors
-    if freq == 0:
-        scaler_c = np.ones(n_fc+n_vc+n_src, dtype=np.complex_)
-        scaler_m = np.ones(n_fm+n_vm, dtype=np.complex_)
-    else:
-        scaler_c = np.ones(n_fc+n_vc+n_src, dtype=np.complex_)
-        scaler_fm = s*np.ones(n_fm, dtype=np.complex_)
-        scaler_vm = np.ones(n_vm, dtype=np.complex_)
-        scaler_m = np.concatenate((scaler_fm, scaler_vm))
-
-    return scaler_c, scaler_m
-
-
 def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
     """
     Compute the magnetic to electric couplings.
@@ -160,11 +132,14 @@ def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
     # extract the face current
     I_fm = sol_m[0:n_fm]
 
+    # get the angular frequency
+    s = 1j*2*np.pi*freq
+
     # compute the couplings
     if freq == 0:
         cpl_fc = np.zeros(n_fc, dtype=np.complex_)
     else:
-        cpl_fc = K_op_c(I_fm)
+        cpl_fc = s*K_op_c(I_fm)
 
     cpl_vc = np.zeros(n_vc, dtype=np.complex_)
     cpl_src = np.zeros(n_src, dtype=np.complex_)
@@ -245,7 +220,7 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     return Y_mat, S_mat, A_12_mat, A_21_mat
 
 
-def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m):
+def _get_cond_fact_magnetic(A_net_m, R_m, P_m):
     """
     Compute the sparse matrices using for the magnetic preconditioner.
 
@@ -258,16 +233,9 @@ def _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m):
     # get the system size
     (n_vm, n_fm) = A_net_m.shape
 
-    # get the angular frequency
-    s = 1j*2*np.pi*freq
-
     # get the magnetic admittance (avoid singularity for DC solution)
-    if freq == 0:
-        Y_m = 1/R_m
-        I_m = np.ones(n_vm, dtype=np.complex_)
-    else:
-        Y_m = s/R_m
-        I_m = s*np.ones(n_vm, dtype=np.complex_)
+    Y_m = 1/R_m
+    I_m = np.ones(n_vm, dtype=np.complex_)
 
     # admittance matrix
     Y_mat = sps.diags(Y_m, format="csc")
@@ -360,7 +328,7 @@ def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
     return rhs
 
 
-def _get_system_multiply_magnetic(sol, freq, A_net_m, R_m, P_op_m):
+def _get_system_multiply_magnetic(sol, A_net_m, R_m, P_op_m):
     """
     Multiply the full magnetic equation matrix with a given solution test vector.
 
@@ -371,9 +339,6 @@ def _get_system_multiply_magnetic(sol, freq, A_net_m, R_m, P_op_m):
     # get the system size
     (n_vm, n_fm) = A_net_m.shape
 
-    # get the angular frequency
-    s = 1j*2*np.pi*freq
-
     # split the solution vector
     I_fm = sol[0:n_fm]
     V_vm = sol[n_fm:n_fm+n_vm]
@@ -382,12 +347,8 @@ def _get_system_multiply_magnetic(sol, freq, A_net_m, R_m, P_op_m):
     rhs_kcl_pot = P_op_m(A_net_m*I_fm)
 
     # get the term that are different for DC and AC cases
-    if freq == 0:
-        rhs_kvl_res = R_m*I_fm
-        rhs_kcl_net = V_vm
-    else:
-        rhs_kvl_res = R_m/s*I_fm
-        rhs_kcl_net = s*V_vm
+    rhs_kvl_res = R_m*I_fm
+    rhs_kcl_net = V_vm
 
     # magnetic KVL equations
     rhs_kvl_net = -A_net_m.transpose()*V_vm
@@ -488,13 +449,9 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     These matrices are used to assess the condition number of the system.
     """
 
-    # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
-    (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
-
     # get the Schur complement
     (Y_mat_c, S_mat_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
-    (Y_mat_m, S_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(freq, A_net_m, R_m, P_m)
+    (Y_mat_m, S_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(A_net_m, R_m, P_m)
 
     # factorize the Schur
     S_fact_c = matrix_factorization.get_factorize("electric", S_mat_c)
@@ -505,18 +462,12 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
         # solve the system (electric and magnetic)
         sol_c = _get_cond_solve(rhs_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
 
-        # scale and assemble the solution
-        sol_c = sol_c/scaler_c
-
         return sol_c
 
     # function describing the magnetic preconditioner
     def fct_m(rhs_m):
         # solve the system (electric and magnetic)
         sol_m = _get_cond_solve(rhs_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
-
-        # scale and assemble the solution
-        sol_m = sol_m/scaler_m
 
         return sol_m
 
@@ -536,13 +487,9 @@ def get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m):
 
     # get the system size and the solution scaling
     (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
-    (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
 
     # function describing the electric couling
     def fct_c(sol_m):
-        # scale equation
-        sol_m = sol_m*scaler_m
-
         # compute the electric-magnetic coupling
         cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
 
@@ -550,9 +497,6 @@ def get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m):
 
     # function describing the magnetic preconditioner
     def fct_m(sol_c):
-        # scale equation
-        sol_c = sol_c*scaler_c
-
         # compute the electric-magnetic coupling
         cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
 
@@ -572,15 +516,8 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m)
     The system is split between the electric and magnetic equations.
     """
 
-    # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
-    (scaler_c, scaler_m) = _get_system_scaler(freq, n_vc, n_fc, n_vm, n_fm, n_src)
-
     # function describing the electric equation system
     def fct_c(sol_c):
-        # scale the solution
-        sol_c = sol_c*scaler_c
-
         # compute the system multiplication
         rhs_c = _get_system_multiply_electric(sol_c, freq, A_net_c, A_src, R_c, L_op_c)
 
@@ -588,11 +525,8 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m)
 
     # function describing the magnetic equation system
     def fct_m(sol_m):
-        # scale the solution
-        sol_m = sol_m*scaler_m
-
         # compute the system multiplication
-        rhs_m = _get_system_multiply_magnetic(sol_m, freq, A_net_m, R_m, P_op_m)
+        rhs_m = _get_system_multiply_magnetic(sol_m, A_net_m, R_m, P_op_m)
 
         return rhs_m
 
