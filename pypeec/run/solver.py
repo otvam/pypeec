@@ -227,7 +227,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init, is_trunc
         # parse the source parameters
         source_all = problem_value.get_source_all(source_val, source_pos, source_idx)
         (I_src_c, Y_src_c) = problem_value.get_source_vector(source_all, "current")
-        (V_src_v, R_src_v) = problem_value.get_source_vector(source_all, "voltage")
+        (V_src_v, Z_src_v) = problem_value.get_source_vector(source_all, "voltage")
 
         # get the resistance vector
         R_c = problem_value.get_resistance_vector(n, d, A_net_c, idx_fc, rho_vc)
@@ -239,7 +239,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init, is_trunc
         rhs = equation_system.get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v)
 
         # get the source connection matrices
-        A_src = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, R_src_v)
+        A_src = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, Z_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
         (fct_pcd, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m)

@@ -9,32 +9,32 @@ The problem contains n_src_c current source voxels and n_src_v voltage source vo
 
 The equations are set in the following order:
     [
-        n_fc    : the electric KVL equations
-        n_vc    : the electric KCL equations
-        n_src_c : the current source voxels equations (source equation with internal admittance)
-        n_src_v : the voltage source voxels equations (source equation with internal impedance)
-        n_fm    : the magnetic KVL equations
-        n_vm    : the magnetic KCL equations
+        n_fc        the electric KVL equations
+        n_vc        the electric KCL equations
+        n_src_c     the current source voxels equations (source equation with internal admittance)
+        n_src_v     the voltage source voxels equations (source equation with internal impedance)
+        n_fm        the magnetic KVL equations
+        n_vm        the magnetic KCL equations
     ]
 
 The complete solution vector is:
     [
-        I_fc    : n_fc    : electric face currents    : A
-        V_vc    : n_vc    : electric voxel potentials : V
-        I_src_c : n_src_c : current source currents   : A
-        I_src_v : n_src_v : voltage source currents   : A
-        I_fm    : n_fm    : magnetic face fluxes      : V*s
-        V_vm    : n_vm    : magnetic voxel potentials : A
+        I_fc        n_fc        electric face currents        A
+        V_vc        n_vc        electric voxel potentials     V
+        I_src_c     n_src_c     current source currents       A
+        I_src_v     n_src_v     voltage source currents       A
+        I_fm        n_fm        magnetic face fluxes          V*s
+        V_vm        n_vm        magnetic voxel potentials     A
     ]
 
 The complete right-hand size vector is:
     [
-        n_fc    : zero excitation            : V
-        n_vc    : zero excitation            : A
-        n_src_c : current source excitations : A
-        n_src_v : voltage source excitations : V
-        n_fm    : zero excitation            : A
-        n_vm    : zero excitation            : A
+        n_fc        zero excitation                V
+        n_vc        zero excitation                A
+        n_src_c     current source excitations     A
+        n_src_v     voltage source excitations     V
+        n_fm        zero excitation                A
+        n_vm        zero excitation                A
     ]
 
 The complete equation matrix is:
@@ -57,11 +57,23 @@ The units of the equation matrix is:
         0              0               0                  0                  A/V/s            1
     ]
 
-The matrices have the following units:
-    - R_c => Ohm
-    - L_c => Henry
-    - R_m => 1/Henry = A/V/s
-    - P_m => 1/Henry = A/V/s
+The matrices have the following description and units:
+    [
+        R_c               resistance matrix                             Ohm
+        L_c               inductance matrix                             Henry
+        R_m               magnetic resistance matrix                    1/Henry
+        P_m               magnetic potential matrix                     1/Henry
+        A_net_c           electric voxel incidence matrix               1
+        A_net_m           magnetic voxel incidence matrix               1
+        K_c               magnetic to electric coupling matrix          1
+        K_m               electric to magnetic coupling matrix          1
+        A_vc_src_c        current source current coupling               1
+        A_vc_src_v        voltage source current coupling               1
+        A_src_c_vc        admittance matrix for the current sources     1/Ohm
+        A_src_v_vc        voltage source voltage coupling               1
+        A_src_c_src_c     current source current coupling               1
+        A_src_v_src_v     resistance matrix for the current sources     Ohm
+    ]
 
 For the DC problem (zero frequency), multiplication per zero are occurring.
 Therefore, the problem is formulated slightly differently for this case.
@@ -80,8 +92,8 @@ The preconditioner matrices (electric and magnetic) have the following form:
 The matrix impedance matrix (Z_mat) is diagonal.
 Therefore, the factorization is computed on the Schur complement.
 The Schur complement is computed as:
-        - Y_mat = 1/Z_mat
-        - S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
+    - Y_mat = 1/Z_mat
+    - S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
 
 Two different methods are available to factorize and solve the Schur complement.
 
@@ -383,7 +395,7 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     return rhs_c, rhs_m
 
 
-def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, R_src_v):
+def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, Z_src_v):
     """
     Construct the source matrices.
     The source matrices describes the sources (internal resistances/admittances).
@@ -433,7 +445,7 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, R_src_v):
     # matrix between the source equations and the source variables
     idx_row = np.concatenate((idx_src_c_add, idx_src_v_add))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
-    val = np.concatenate((cst_src_c, R_src_v))
+    val = np.concatenate((cst_src_c, Z_src_v))
     A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=np.complex_)
 
     return A_vc_src, A_src_vc, A_src_src

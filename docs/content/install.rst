@@ -9,7 +9,7 @@ Available Packages
 
 PyPEEC packages are generic (architecture and system independent packages).
 However, some dependencies are architecture and system dependent packages.
-The optional HPC libraries are usually easier to install though Conda.
+The optional HPC libraries are usually easier to install through Conda.
 
 Using a Python Environment
 --------------------------
