@@ -34,6 +34,7 @@ Supported Platforms
 The main **target platform** of PyPEEC is **Linux** on x86/x64:
 
 * Linux / RedHat 7.9 on x86/x64
+* Linux / RedHat 8.7 on x86/x64
 * Linux / Debian 12.4 on x86/x64
 * Linux / Ubuntu 20.04 on x86/x64
 * Linux / Ubuntu 22.04 on x86/x64
