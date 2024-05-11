@@ -68,7 +68,7 @@ examples_shape/busbar
 examples_shape/coplanar
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-* **PCB with coplanar traces** (defined with 2D shapes)
+* **PCB with coplanar traces**
 * Defined with **2D shapes**
 
 .. image:: ../examples/examples_shape_coplanar.png
