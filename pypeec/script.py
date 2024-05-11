@@ -322,6 +322,9 @@ def run_arguments(argv):
     except SystemExit as status:
         return status.code
 
+    # display logo
+    main.run_display_logo()
+
     # run the code
     try:
         if args.command in ["mesher", "me"]:

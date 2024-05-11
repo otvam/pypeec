@@ -20,129 +20,20 @@ from pypeec import io
 # create the logger
 LOGGER = log.get_logger("MAIN")
 
-# init the logo display status
-SHOW_LOGO = True
-
-
-def _run_mesher(data_geometry, **kwargs):
-    """
-    Load, run, and catch exceptions for the mesher.
-    """
-
-    # execute workflow
-    try:
-        # load the tool
-        LOGGER.info("load the mesher")
-        from pypeec.run import mesher
-
-        # run the tool
-        LOGGER.info("run the mesher")
-        data_voxel = mesher.run(data_geometry, **kwargs)
-    except Exception as ex:
-        log.log_exception(LOGGER, ex)
-        LOGGER.error("invalid termination")
-        raise ex
-    else:
-        LOGGER.info("successful termination")
-
-    return data_voxel
-
-
-def _run_viewer(data_voxel, data_viewer, **kwargs):
-    """
-    Load, run, and catch exceptions for the viewer.
-    """
-
-    # execute workflow
-    try:
-        # load the tool
-        LOGGER.info("load the viewer")
-        from pypeec.run import viewer
-
-        # run the tool
-        LOGGER.info("run the viewer")
-        viewer.run(data_voxel, data_viewer, **kwargs)
-    except Exception as ex:
-        log.log_exception(LOGGER, ex)
-        LOGGER.error("invalid termination")
-        raise ex
-    else:
-        LOGGER.info("successful termination")
-
-
-def _run_solver(data_voxel, data_problem, data_tolerance, **kwargs):
-    """
-    Load, run, and catch exceptions for the plotter.
-    """
-
-    # execute workflow
-    try:
-        # load the tool
-        LOGGER.info("load the solver")
-        from pypeec.run import solver
-
-        # run the tool
-        LOGGER.info("run the solver")
-        data_solution = solver.run(data_voxel, data_problem, data_tolerance, **kwargs)
-    except Exception as ex:
-        log.log_exception(LOGGER, ex)
-        LOGGER.error("invalid termination")
-        raise ex
-    else:
-        LOGGER.info("successful termination")
-
-    return data_solution
-
-
-def _run_plotter(data_solution, data_plotter, **kwargs):
-    """
-    Load, run, and catch exceptions for the mesher.
-    """
-
-    # execute workflow
-    try:
-        # load the tool
-        LOGGER.info("load the plotter")
-        from pypeec.run import plotter
-
-        # run the tool
-        LOGGER.info("run the plotter")
-        plotter.run(data_solution, data_plotter, **kwargs)
-    except Exception as ex:
-        log.log_exception(LOGGER, ex)
-        LOGGER.error("invalid termination")
-        raise ex
-    else:
-        LOGGER.info("successful termination")
-
 
 def run_display_logo():
     """
     Display the logo as a splash screen.
     """
 
-    # display the logo
-    if SHOW_LOGO:
-        try:
-            with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file_logo:
-                data = file_logo.read()
-                print("", flush=True, file=sys.stderr)
-                print(data, flush=True, file=sys.stderr)
-                print("", flush=True, file=sys.stderr)
-        except UnicodeError:
-            pass
-
-
-def run_hide_logo():
-    """
-    Prevent the display of the splash screen.
-    """
-
-    # variable with the logo status
-    global SHOW_LOGO
-
-    # logo should not be displayed
-    SHOW_LOGO = False
+    try:
+        with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file_logo:
+            data = file_logo.read()
+            print("", flush=True, file=sys.stderr)
+            print(data, flush=True, file=sys.stderr)
+            print("", flush=True, file=sys.stderr)
+    except UnicodeError:
+        pass
 
 
 def run_extract(data_name, is_zip, path_extract):
@@ -158,9 +49,6 @@ def run_extract(data_name, is_zip, path_extract):
     path_extract : string
         Path where the data will be extracted.
     """
-
-    # display logo
-    run_display_logo()
 
     # execute workflow
     try:
@@ -199,11 +87,21 @@ def run_mesher_data(data_geometry, **kwargs):
         The dict describes the voxel structure.
     """
 
-    # display logo
-    run_display_logo()
-
     # execute workflow
-    data_voxel = _run_mesher(data_geometry, **kwargs)
+    try:
+        # load the tool
+        LOGGER.info("load the mesher")
+        from pypeec.run import mesher
+
+        # run the tool
+        LOGGER.info("run the mesher")
+        data_voxel = mesher.run(data_geometry, **kwargs)
+    except Exception as ex:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("invalid termination")
+        raise ex
+    else:
+        LOGGER.info("successful termination")
 
     return data_voxel
 
@@ -228,9 +126,6 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
         This argument is optional.
     """
 
-    # display logo
-    run_display_logo()
-
     # load data
     try:
         LOGGER.info("load the input data")
@@ -240,7 +135,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
         raise ex
 
     # run the tool
-    data_voxel = _run_mesher(data_geometry, **kwargs)
+    data_voxel = run_mesher_data(data_geometry, **kwargs)
 
     # save results
     try:
@@ -283,11 +178,21 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
         This argument is optional.
     """
 
-    # display logo
-    run_display_logo()
-
     # execute workflow
-    _run_viewer(data_voxel, data_viewer, **kwargs)
+    try:
+        # load the tool
+        LOGGER.info("load the viewer")
+        from pypeec.run import viewer
+
+        # run the tool
+        LOGGER.info("run the viewer")
+        viewer.run(data_voxel, data_viewer, **kwargs)
+    except Exception as ex:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("invalid termination")
+        raise ex
+    else:
+        LOGGER.info("successful termination")
 
 
 def run_viewer_file(file_voxel, file_viewer, **kwargs):
@@ -324,9 +229,6 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         This argument is optional.
     """
 
-    # display logo
-    run_display_logo()
-
     # load data
     try:
         LOGGER.info("load the input data")
@@ -337,7 +239,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         raise ex
 
     # run the tool
-    _run_viewer(data_voxel, data_viewer, **kwargs)
+    run_viewer_data(data_voxel, data_viewer, **kwargs)
 
 
 def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
@@ -367,11 +269,21 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
         The dict describes the problem solution.
     """
 
-    # display logo
-    run_display_logo()
-
     # execute workflow
-    data_solution = _run_solver(data_voxel, data_problem, data_tolerance, **kwargs)
+    try:
+        # load the tool
+        LOGGER.info("load the solver")
+        from pypeec.run import solver
+
+        # run the tool
+        LOGGER.info("run the solver")
+        data_solution = solver.run(data_voxel, data_problem, data_tolerance, **kwargs)
+    except Exception as ex:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("invalid termination")
+        raise ex
+    else:
+        LOGGER.info("successful termination")
 
     return data_solution
 
@@ -404,9 +316,6 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         This argument is optional.
     """
 
-    # display logo
-    run_display_logo()
-
     # load data
     try:
         LOGGER.info("load the input data")
@@ -418,7 +327,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         raise ex
 
     # run the tool
-    data_solution = _run_solver(data_voxel, data_problem, data_tolerance, **kwargs)
+    data_solution = run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs)
 
     # save results
     try:
@@ -465,11 +374,21 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         This argument is optional.
     """
 
-    # display logo
-    run_display_logo()
-
     # execute workflow
-    _run_plotter(data_solution, data_plotter, **kwargs)
+    try:
+        # load the tool
+        LOGGER.info("load the plotter")
+        from pypeec.run import plotter
+
+        # run the tool
+        LOGGER.info("run the plotter")
+        plotter.run(data_solution, data_plotter, **kwargs)
+    except Exception as ex:
+        log.log_exception(LOGGER, ex)
+        LOGGER.error("invalid termination")
+        raise ex
+    else:
+        LOGGER.info("successful termination")
 
 
 def run_plotter_file(file_solution, file_plotter, **kwargs):
@@ -510,9 +429,6 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         This argument is optional.
     """
 
-    # display logo
-    run_display_logo()
-
     # load data
     try:
         # load data
@@ -524,4 +440,4 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         raise ex
 
     # run the tool
-    _run_plotter(data_solution, data_plotter, **kwargs)
+    run_plotter_data(data_solution, data_plotter, **kwargs)
