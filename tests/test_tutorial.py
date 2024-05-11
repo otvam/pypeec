@@ -15,9 +15,6 @@ class TestTutorial(test_workflow.TestWorkflow):
     pass
 
 
-# show the logo
-main.run_hide_logo()
-
 # add the tests
 test_workflow.set_test(TestTutorial, "tutorial_api", "tutorial", False)
 test_workflow.set_test(TestTutorial, "tutorial_script", "tutorial", True)

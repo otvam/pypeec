@@ -23,9 +23,6 @@ name_list = [
     "examples_shape/coplanar",
 ]
 
-# show the logo
-main.run_hide_logo()
-
 # add the tests
 for name in name_list:
     test_workflow.set_test(TestShape, name, name, False)
