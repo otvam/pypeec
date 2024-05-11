@@ -84,7 +84,7 @@ class _IterCounter:
         LOGGER.debug(f"i = {iter_tmp:d} / {power_tmp:.2e} VA")
 
         # convergence iter condition
-        n_iter_min = np.max([2, self.n_cmp+1, self.n_min,])
+        n_iter_min = np.max([2, self.n_cmp+1, self.n_min])
 
         # check for convergence
         if self.stop and (self.n_iter >= n_iter_min):
