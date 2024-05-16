@@ -18,7 +18,7 @@ from pypeec import log
 from pypeec import io
 
 # create the logger
-LOGGER = log.get_logger("pypeec")
+LOGGER = log.get_logger(__name__, "pypeec")
 
 
 def run_display_logo():

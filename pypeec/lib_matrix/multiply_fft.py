@@ -17,7 +17,7 @@ from pypeec.lib_matrix import fourier_transform
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("pypeec")
+LOGGER = log.get_logger(__name__, "pypeec")
 
 # dummy options
 LIBRARY = None

@@ -11,7 +11,7 @@ import scipy.sparse.linalg as sla
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("pypeec")
+LOGGER = log.get_logger(__name__, "pypeec")
 
 
 def _get_inverse_operator(mat, decomposition):

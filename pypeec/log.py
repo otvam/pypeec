@@ -181,7 +181,7 @@ class _DeltaTimeFormatter(logging.Formatter):
     Class for adding elapsed time to a logger.
     """
 
-    def __init__(self):
+    def __init__(self, name, tag):
         """
         Constructor.
         Create a timer.
@@ -189,6 +189,13 @@ class _DeltaTimeFormatter(logging.Formatter):
 
         # call parent constructor
         super().__init__()
+
+        # assign
+        self.name = name
+        if tag is None:
+            self.tag = name
+        else:
+            self.tag = tag
 
         # define the color formatters
         self.fmt_color = {
@@ -231,6 +238,10 @@ class _DeltaTimeFormatter(logging.Formatter):
         # cast to lower case
         record.name = record.name.lower()
         record.levelname = record.levelname.lower()
+
+        # add data
+        record.name = self.name
+        record.tag = self.tag
 
         # get the formatter
         if USE_COLOR:
@@ -447,7 +458,7 @@ def get_global():
     return GLOBAL_TIMESTAMP, GLOBAL_LEVEL
 
 
-def get_logger(name):
+def get_logger(name, tag=None):
     """
     Get a logger with a specified name.
 
@@ -470,7 +481,7 @@ def get_logger(name):
     # create the logger (if not already done)
     if len(logger.handlers) == 0:
         # get the formatter
-        fmt = _DeltaTimeFormatter()
+        fmt = _DeltaTimeFormatter(name, tag)
 
         # get the handle
         handler = logging.StreamHandler()

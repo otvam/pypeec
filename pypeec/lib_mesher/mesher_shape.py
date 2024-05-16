@@ -35,7 +35,7 @@ warnings.filterwarnings("ignore", module="rasterio.features")
 warnings.filterwarnings("ignore", module="rasterio.transform")
 
 # get a logger
-LOGGER = log.get_logger("pypeec")
+LOGGER = log.get_logger(__name__, "pypeec")
 
 
 def _get_boundary_polygon(bnd, z_min):

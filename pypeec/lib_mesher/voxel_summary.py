@@ -9,7 +9,7 @@ __license__ = "Mozilla Public License Version 2.0"
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("pypeec")
+LOGGER = log.get_logger(__name__, "pypeec")
 
 
 def get_status(n, d, s, c, domain_def, connection_def):

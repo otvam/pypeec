@@ -22,7 +22,7 @@ import numpy.linalg as lna
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("pypeec")
+LOGGER = log.get_logger(__name__, "pypeec")
 
 
 def _get_safe_inv(x):

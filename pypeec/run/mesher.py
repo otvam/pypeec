@@ -30,7 +30,7 @@ from pypeec.lib_check import check_data_options
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("pypeec")
+LOGGER = log.get_logger(__name__, "pypeec")
 
 
 def _run_mesher(data_geometry):

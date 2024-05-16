@@ -4,12 +4,14 @@
 # Mozilla Public License Version 2.0
 
 # logging module logger format with the following custom attributes
+#   - name: full name of the logger (formatted as a string)
+#   - tag: short name of the logger (formatted as a string)
 #   - timestamp: current timestamp (formatted as a string)
 #   - duration: elapsed time (formatted as a string)
 #   - process_id: process identification number
 #   - thread_id: thread identification number
 FORMAT:
-    LOGGER: '%(duration)s : %(name)-8s : %(levelname)-8s : %(message)s'  # logger format
+    LOGGER: '%(duration)s : %(tag)-8s : %(levelname)-8s : %(message)s'  # logger format
     TIMESTAMP_FMT: '%m/%d/%Y : %H:%M:%S'  # strftime formatting instructions for the timestamp
     DURATION_FMT: '%H:%M:%S.%f' # strftime formatting instructions for the duration
     TIMESTAMP_TRC: 0  # truncate trailing characters for the timestamp string
