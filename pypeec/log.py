@@ -8,6 +8,12 @@ Module for handling the logging.
 The log config is defined by the following files.
     - First the default configuration is loaded ("pypeec/data/logger.yaml").
     - Afterward, a custom file can be loaded with an environment variable ("PYTHONLOGGER").
+
+Warning
+-------
+    - This logging module is based on the Python logging module.
+    - The philosophy of this logging module is slightly different.
+    - Be careful if you are mixing both modules.
 """
 
 __author__ = "Thomas Guillod"

@@ -20,7 +20,8 @@ The JSON files can be serialized/deserialized as/from:
     - text files
     - gzip files
 
-Warning:
+Warning
+-------
     - Pickling data is not secure.
     - Only load pickle files that you trust.
 """
