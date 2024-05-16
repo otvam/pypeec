@@ -38,6 +38,6 @@ DEF_COLOR:
 # logging level for the handlers
 LEVEL:
     null: "WARNING"  # default level for all the handlers
-    "pypeec": "DEBUG"  # level for pypeec package
-    "pypeec.main": "DEBUG"  # default level for pypeec.main
-    "pypeec.script": "DEBUG"  # default level for pypeec.script
+    "pypeec": "DEBUG"  # default level for the pypeec package
+    "pypeec.main": "DEBUG"  # level for pypeec.main module
+    "pypeec.script": "DEBUG"  # level for pypeec.script module
