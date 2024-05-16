@@ -32,7 +32,7 @@ from pypeec import log
 
 
 # get a logger
-LOGGER = log.get_logger("SOLVER")
+LOGGER = log.get_logger("pypeec")
 
 
 def _run_solver_options(data_solver):

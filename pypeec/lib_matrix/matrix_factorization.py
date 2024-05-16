@@ -22,7 +22,7 @@ import warnings
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("FACTOR")
+LOGGER = log.get_logger("pypeec")
 
 # dummy options
 LIBRARY = None

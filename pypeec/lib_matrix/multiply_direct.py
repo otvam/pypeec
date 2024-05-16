@@ -10,7 +10,7 @@ import numpy as np
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("DIRECT")
+LOGGER = log.get_logger("pypeec")
 
 
 def _get_voxel_indices(nx, ny, nz):

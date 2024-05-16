@@ -32,7 +32,7 @@ from pypeec.lib_check import check_data_options
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("PLOTTER")
+LOGGER = log.get_logger("pypeec")
 
 
 def _get_grid_voxel(data_init, data_sweep):

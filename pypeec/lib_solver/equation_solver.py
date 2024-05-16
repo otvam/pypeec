@@ -14,7 +14,7 @@ from pypeec.lib_matrix import matrix_iterative
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("EQUATION")
+LOGGER = log.get_logger("pypeec")
 
 
 class PowerConvergenceError(RuntimeError):

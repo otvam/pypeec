@@ -11,7 +11,7 @@ import numpy as np
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("CLOUD")
+LOGGER = log.get_logger("pypeec")
 
 
 def _get_voxel_coordinate(n, d, c, idx_all):

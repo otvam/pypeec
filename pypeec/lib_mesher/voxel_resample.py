@@ -11,7 +11,7 @@ import numpy as np
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("SAMPLE")
+LOGGER = log.get_logger("pypeec")
 
 
 def _get_idx_resample_tensor(resampling_factor, idx_n, idx_r, idx):

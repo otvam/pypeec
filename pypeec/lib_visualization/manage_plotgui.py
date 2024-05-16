@@ -43,7 +43,7 @@ import PyQt5.QtGui
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("PLOTGUI")
+LOGGER = log.get_logger("pypeec")
 
 
 class PlotGui:

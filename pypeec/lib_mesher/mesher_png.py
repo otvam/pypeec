@@ -19,7 +19,7 @@ import PIL.Image as pmg
 from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger("STL")
+LOGGER = log.get_logger("pypeec")
 
 
 def _get_load_image(filename_list):

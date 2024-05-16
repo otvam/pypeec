@@ -228,6 +228,10 @@ class _DeltaTimeFormatter(logging.Formatter):
         # add the padding to the message
         record.msg = pad + msg
 
+        # cast to lower case
+        record.name = record.name.lower()
+        record.levelname = record.levelname.lower()
+
         # get the formatter
         if USE_COLOR:
             msg = self.fmt_color[lvl].format(record)
