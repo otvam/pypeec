@@ -11,20 +11,20 @@
 #   - process_id: process identification number
 #   - thread_id: thread identification number
 FORMAT:
-    LOGGER: '%(duration)s : %(tag)-8s : %(levelname)-8s : %(message)s'  # logger format
-    TIMESTAMP_FMT: '%m/%d/%Y : %H:%M:%S'  # strftime formatting instructions for the timestamp
+    LOGGER: '%(duration)s : %(tag)-8s : %(levelname)-8s : %(message)s' # logger format
+    TIMESTAMP_FMT: '%m/%d/%Y : %H:%M:%S' # strftime formatting instructions for the timestamp
     DURATION_FMT: '%H:%M:%S.%f' # strftime formatting instructions for the duration
-    TIMESTAMP_TRC: 0  # truncate trailing characters for the timestamp string
+    TIMESTAMP_TRC: 0 # truncate trailing characters for the timestamp string
     DURATION_TRC: 4 # truncate trailing characters for the duration string
 
 # indentation level for the blocks
-INDENTATION: 4  # integer with the number of spaces per indentation
+INDENTATION: 4 # integer with the number of spaces per indentation
 
 # display (or) not exception traces
-EXCEPTION_TRACE: true  # boolean switch
+EXCEPTION_TRACE: true # boolean switch
 
 # options for coloring the log output
-USE_COLOR: false  # use (or not) colors for the logs
+USE_COLOR: false # use (or not) colors for the logs
 
 # options color definition
 DEF_COLOR:
@@ -35,9 +35,11 @@ DEF_COLOR:
     CL_CRITICAL: '[38;5;196m' # critical level color code
     CL_RESET: '[0m' # terminal reset color sequence
 
-# logging level for the handlers
-LEVEL:
-    null: "WARNING"  # default level for all the handlers
-    "pypeec": "DEBUG"  # default level for the pypeec package
-    "pypeec.main": "DEBUG"  # level for pypeec.main module
-    "pypeec.script": "DEBUG"  # level for pypeec.script module
+# default level for all the handlers
+LEVEL_DEF: "WARNING"
+
+# custom level for the handlers
+LEVEL_NAME:
+    "pypeec": "DEBUG" # level for the pypeec package
+    "pypeec.main": "DEBUG" # level for pypeec.main module
+    "pypeec.script": "DEBUG" # level for pypeec.script module

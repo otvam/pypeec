@@ -41,13 +41,13 @@ def _get_level(name):
     """
 
     # check for exact match
-    if name in LEVEL:
-        return LEVEL[name]
+    if name in LEVEL_NAME:
+        return LEVEL_NAME[name]
 
     # check for parent level
     split = name.rsplit(".", 1)
     if len(split) == 1:
-        return LEVEL[None]
+        return LEVEL_DEF
     else:
         return _get_level(split[0])
 
@@ -110,15 +110,17 @@ def _check_config(data):
     # check dict
     key_list = [
         "FORMAT",
-        "LEVEL",
         "INDENTATION",
         "EXCEPTION_TRACE",
         "USE_COLOR",
         "DEF_COLOR",
+        "LEVEL_DEF",
+        "LEVEL_NAME",
     ]
     _check_dict("data", data, key_list)
     
     # check data
+    _check_string("LEVEL_DEF", data["LEVEL_DEF"])
     _check_integer("INDENTATION", data["INDENTATION"])
     _check_boolean("EXCEPTION_TRACE", data["EXCEPTION_TRACE"])
     _check_boolean("USE_COLOR", data["USE_COLOR"])
@@ -156,9 +158,10 @@ def _check_config(data):
     _check_string("CL_RESET", data["DEF_COLOR"]["CL_RESET"])
 
     # check the logging levels
-    _check_dict("LEVEL", data["LEVEL"], [None])
-    for level in data["LEVEL"].values():
-        _check_string("LEVEL", level)
+    _check_dict("LEVEL_NAME", data["LEVEL_NAME"], [])
+    for name, level in data["LEVEL_NAME"].items():
+        _check_string("LEVEL_NAME", name)
+        _check_string("LEVEL_NAME", level)
 
 
 def _get_fmt(color, reset):
@@ -547,11 +550,12 @@ try:
 
     # set global variables
     FORMAT = data["FORMAT"]
-    LEVEL = data["LEVEL"]
     INDENTATION = data["INDENTATION"]
     EXCEPTION_TRACE = data["EXCEPTION_TRACE"]
     USE_COLOR = data["USE_COLOR"]
     DEF_COLOR = data["DEF_COLOR"]
+    LEVEL_DEF = data["LEVEL_DEF"]
+    LEVEL_NAME = data["LEVEL_NAME"]
 except Exception as ex:
     print("==========================", file=sys.stderr)
     print("INVALID CONFIGURATION FILE", file=sys.stderr)
