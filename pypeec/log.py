@@ -491,6 +491,7 @@ def get_logger(name):
 def disable_logger(name):
     """
     Disable a logger with a specified name.
+    The operation is performed recursively.
 
     Parameters
     ----------
@@ -498,13 +499,21 @@ def disable_logger(name):
         Name of the logger to be disabled.
     """
 
+    # get the logger
     logger = logging.getLogger(name)
     logger.disabled = True
+
+    # handle the children
+    data = logger.manager.loggerDict
+    for item in data.values():
+        if isinstance(item, logging.Logger) and (item.parent == logger):
+            disable_logger(item.name)
 
 
 def enable_logger(name):
     """
     Enable a logger with a specified name.
+    The operation is performed recursively.
 
     Parameters
     ----------
@@ -512,8 +521,15 @@ def enable_logger(name):
         Name of the logger to be enabled.
     """
 
+    # get the logger
     logger = logging.getLogger(name)
     logger.disabled = False
+
+    # handle the children
+    data = logger.manager.loggerDict
+    for item in data.values():
+        if isinstance(item, logging.Logger) and (item.parent == logger):
+            enable_logger(item.name)
 
 
 # load the config file
