@@ -35,6 +35,23 @@ GLOBAL_TIMESTAMP = datetime.datetime.today()
 GLOBAL_LEVEL = 0
 
 
+def _get_level(name):
+    """
+    Get the corresponding logging level.
+    """
+
+    # check for exact match
+    if name in LEVEL:
+        return LEVEL[name]
+
+    # check for parent level
+    split = name.rsplit(".", 1)
+    if len(split) == 1:
+        return LEVEL[None]
+    else:
+        return _get_level(split[0])
+
+
 def _check_boolean(name, data):
     """
     Check a boolean.
@@ -58,7 +75,7 @@ def _check_integer(name, data):
         raise AssertionError("%s: should be positive" % name)
 
 
-def _check_string(name, data,):
+def _check_string(name, data):
     """
     Check a string.
     """
@@ -102,7 +119,6 @@ def _check_config(data):
     _check_dict("data", data, key_list)
     
     # check data
-    _check_string("LEVEL", data["LEVEL"])
     _check_integer("INDENTATION", data["INDENTATION"])
     _check_boolean("EXCEPTION_TRACE", data["EXCEPTION_TRACE"])
     _check_boolean("USE_COLOR", data["USE_COLOR"])
@@ -138,6 +154,11 @@ def _check_config(data):
     _check_string("CL_ERROR", data["DEF_COLOR"]["CL_ERROR"])
     _check_string("CL_CRITICAL", data["DEF_COLOR"]["CL_CRITICAL"])
     _check_string("CL_RESET", data["DEF_COLOR"]["CL_RESET"])
+
+    # check the logging levels
+    _check_dict("LEVEL", data["LEVEL"], [None])
+    for level in data["LEVEL"].values():
+        _check_string("LEVEL", level)
 
 
 def _get_fmt(color, reset):
@@ -496,57 +517,16 @@ def get_logger(name, tag=None):
         # prevent duplicated log messages
         logger.propagate = False
 
+        # get the logging level
+        level_tmp = _get_level(name)
+
         # set the level
-        logger.setLevel(LEVEL)
+        logger.setLevel(level_tmp)
 
         # get the logger
         logger.addHandler(handler)
 
     return logger
-
-
-def disable_logger(name):
-    """
-    Disable a logger with a specified name.
-    The operation is performed recursively.
-
-    Parameters
-    ----------
-    name : string
-        Name of the logger to be disabled.
-    """
-
-    # get the logger
-    logger = logging.getLogger(name)
-    logger.disabled = True
-
-    # handle the children
-    data = logger.manager.loggerDict
-    for item in data.values():
-        if isinstance(item, logging.Logger) and (item.parent == logger):
-            disable_logger(item.name)
-
-
-def enable_logger(name):
-    """
-    Enable a logger with a specified name.
-    The operation is performed recursively.
-
-    Parameters
-    ----------
-    name : string
-        Name of the logger to be enabled.
-    """
-
-    # get the logger
-    logger = logging.getLogger(name)
-    logger.disabled = False
-
-    # handle the children
-    data = logger.manager.loggerDict
-    for item in data.values():
-        if isinstance(item, logging.Logger) and (item.parent == logger):
-            enable_logger(item.name)
 
 
 # load the config file

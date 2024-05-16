@@ -17,9 +17,6 @@ FORMAT:
     TIMESTAMP_TRC: 0  # truncate trailing characters for the timestamp string
     DURATION_TRC: 4 # truncate trailing characters for the duration string
 
-# logging level for the handlers
-LEVEL: "DEBUG"  # string with a valid Python logging level
-
 # indentation level for the blocks
 INDENTATION: 4  # integer with the number of spaces per indentation
 
@@ -37,3 +34,10 @@ DEF_COLOR:
     CL_ERROR: '[38;5;196m' # error level color code
     CL_CRITICAL: '[38;5;196m' # critical level color code
     CL_RESET: '[0m' # terminal reset color sequence
+
+# logging level for the handlers
+LEVEL:
+    null: "WARNING"  # default level for all the handlers
+    "pypeec": "DEBUG"  # level for pypeec package
+    "pypeec.main": "DEBUG"  # default level for pypeec.main
+    "pypeec.script": "DEBUG"  # default level for pypeec.script
