@@ -488,6 +488,34 @@ def get_logger(name):
     return logger
 
 
+def disable_logger(name):
+    """
+    Disable a logger with a specified name.
+
+    Parameters
+    ----------
+    name : string
+        Name of the logger to be disabled.
+    """
+
+    logger = logging.getLogger(name)
+    logger.disabled = True
+
+
+def enable_logger(name):
+    """
+    Enable a logger with a specified name.
+
+    Parameters
+    ----------
+    name : string
+        Name of the logger to be enabled.
+    """
+
+    logger = logging.getLogger(name)
+    logger.disabled = False
+
+
 # load the config file
 try:
     # load the default file
