@@ -36,7 +36,7 @@ DEF_COLOR:
     CL_RESET: '[0m' # terminal reset color sequence
 
 # default level for all the handlers
-LEVEL_DEF: "WARNING"
+LEVEL_DEF: "DEBUG"
 
 # custom level for the handlers
 LEVEL_NAME:
