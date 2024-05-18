@@ -183,7 +183,7 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
     nv = nx*ny*nz
 
     # get the resistivity of the faces (average between voxels)
-    rho = 0.5 * rho_v.transpose()*np.abs(A_net)
+    rho = 0.5*rho_v.transpose()*np.abs(A_net)
 
     # get the direction of the faces (x, y, z)
     idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int_))

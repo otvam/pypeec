@@ -140,7 +140,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
     # make the plots
     with log.BlockTimer(LOGGER, "generate plots"):
         for i, (tag_plot, data_plotter_tmp) in enumerate(data_plotter.items()):
-            LOGGER.info("plotting %d / %d / %s" % (i + 1, len(data_plotter), tag_plot))
+            LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_plotter), tag_plot))
             _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)
 
 

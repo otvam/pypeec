@@ -38,8 +38,8 @@ def _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
     gerber_def = data_gerber["gerber_def"]
 
     # get base color
-    color_edge = tuple([257 * x for x in color_edge])
-    color_background = tuple([257 * x for x in color_background])
+    color_edge = tuple([257*x for x in color_edge])
+    color_background = tuple([257*x for x in color_background])
 
     # get GERBER edge file
     gerber_edge = os.path.join(folder_gerber, gerber_edge)

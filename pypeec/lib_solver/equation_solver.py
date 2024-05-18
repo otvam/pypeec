@@ -427,11 +427,11 @@ def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, tolerance_options):
     # get sol
     rhs_all = np.concatenate((rhs_c, rhs_m))
     out_all = _fct_sys_all(sol_all, rhs, fct_cpl, fct_sys)
-    res_all = out_all - rhs_all
+    res_all = out_all-rhs_all
 
     # residuum threshold
     res_val = lna.norm(res_all)
-    res_thr = np.maximum(rel_tol * lna.norm(rhs_all), abs_tol)
+    res_thr = np.maximum(rel_tol*lna.norm(rhs_all), abs_tol)
 
     # consider the solver status
     if ignore_status:
