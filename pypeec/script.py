@@ -42,6 +42,14 @@ def _get_parser():
         version="PyPEEC %s" % version,
     )
 
+    # hide logo
+    parser.add_argument(
+        "-q", "--quiet",
+        help="do not show the logo  (default: show)",
+        action="store_true",
+        dest="is_quiet",
+    )
+
     # add subparsers
     subparsers = parser.add_subparsers(
         required=True,
@@ -323,7 +331,8 @@ def run_arguments(argv):
         return status.code
 
     # display logo
-    main.run_display_logo()
+    if not args.is_quiet:
+        main.run_display_logo()
 
     # run the code
     try:
