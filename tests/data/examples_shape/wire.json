@@ -1,14 +1,20 @@
 {
     "metadata": {
         "name": "examples_shape/wire",
-        "timestamp": "2024-04-23 21:53:50.133694"
+        "timestamp": "2024-05-18 19:44:32.285518"
     },
     "mesher": {
         "n_total": 25000,
         "n_used": 19680
     },
     "solver": {
-        "sim_default": {
+        "sim_dc": {
+            "freq": 0.0,
+            "has_converged": true,
+            "P_tot": 15.752945422577469,
+            "W_tot": 0.0006446185417192989
+        },
+        "sim_ac": {
             "freq": 100000.0,
             "has_converged": true,
             "P_tot": 16.743266387000205,

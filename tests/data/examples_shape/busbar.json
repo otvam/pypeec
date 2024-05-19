@@ -1,18 +1,24 @@
 {
     "metadata": {
         "name": "examples_shape/busbar",
-        "timestamp": "2024-04-23 21:52:47.424202"
+        "timestamp": "2024-05-18 19:43:52.139814"
     },
     "mesher": {
         "n_total": 10000,
-        "n_used": 3448
+        "n_used": 3472
     },
     "solver": {
-        "sim_default": {
+        "sim_dc": {
+            "freq": 0.0,
+            "has_converged": true,
+            "P_tot": 453.6685516185066,
+            "W_tot": 8.831319645563662e-05
+        },
+        "sim_ac": {
             "freq": 1000000.0,
             "has_converged": true,
-            "P_tot": 124.47882052499435,
-            "W_tot": 1.1688902428965343e-05
+            "P_tot": 124.88424261440434,
+            "W_tot": 1.1735894232558755e-05
         }
     }
 }

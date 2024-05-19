@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_voxel/anisotropic",
-        "timestamp": "2024-04-23 21:52:39.113469"
+        "timestamp": "2024-05-18 19:43:44.853460"
     },
     "mesher": {
         "n_total": 25,

@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/trace",
-        "timestamp": "2024-04-23 21:52:53.463587"
+        "timestamp": "2024-05-18 19:43:56.956770"
     },
     "mesher": {
         "n_total": 90972,
