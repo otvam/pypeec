@@ -1,4 +1,4 @@
-# Run the Platform tests with the following conditions.
+# Run the "Platform tests" with the following conditions.
 #   - dispatch
 #   - weekly
 #
@@ -10,6 +10,10 @@
 #   - Python 3.10
 #   - Python 3.11
 #   - Python 3.12
+#
+# Two different kinds of tests are made:
+#   - using the "requirements.txt" file
+#   - using the package dependencies
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0

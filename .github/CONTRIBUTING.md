@@ -11,6 +11,7 @@ Ideally, provide a minimal working example for the bug.
 Additionally, please report the following parameters:
 * The version of PyPEEC.
 * The operating system/platform/hardware.
+* The package being used (PyPi or Conda or Git).
 * The version of Python and of the relevant dependencies.
 * For PyVista related bugs, please include the `pyvista.Report` output.
 * For NumPy related bugs, please include the `numpy.show_config` output.
