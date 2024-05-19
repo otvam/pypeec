@@ -111,13 +111,19 @@ function upload_documentation {
   echo "UPLOAD DOCUMENTATION"
   echo "======================================================================"
 
-  # init clean data
+  # remove the documentation repository
+  rm -rf pypeecdocs
+
+  # clone the documentation repository
+  git clone git@github.com:otvam/pypeecdocs.git
+
+  # remove the existing data
   rm -rf pypeecdocs/*
 
-  # copy website
+  # copy the last version
   cp -r html/* pypeecdocs
 
-  # create git data
+  # add the hidden files
   touch pypeecdocs/.gitignore
   touch pypeecdocs/.nojekyll
 
@@ -133,7 +139,7 @@ function upload_documentation {
   cp docs/website/robots.txt pypeecdocs
   cp docs/website/googlec2be449c43987dd0.html pypeecdocs
 
-  # add file in git
+  # add all the files to git
   git -C pypeecdocs add .
 
   # commit the new version
