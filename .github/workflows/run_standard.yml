@@ -18,6 +18,7 @@ on:
   workflow_dispatch:
 
 jobs:
+  build:
     name: Standard
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
