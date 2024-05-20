@@ -178,7 +178,7 @@ def _get_idx_voxel(n, idx_shape, stack_idx):
     return idx_voxel
 
 
-def _get_shape_assemble(geometry_shape, tag, tol):
+def _get_shape_assemble(geometry_shape, tag, simplify, construct):
     """
     Assemble the shapes (for a specified layer).
     """
@@ -209,18 +209,18 @@ def _get_shape_assemble(geometry_shape, tag, tol):
                 raise ValueError("invalid shape type")
 
     # assemble the shapes
-    obj_add = sha.unary_union(obj_add)
-    obj_sub = sha.unary_union(obj_sub)
-    obj = sha.difference(obj_add, obj_sub)
+    obj_add = sha.unary_union(obj_add, grid_size=construct)
+    obj_sub = sha.unary_union(obj_sub, grid_size=construct)
+    obj = sha.difference(obj_add, obj_sub, grid_size=construct)
 
     # simplify the shape
-    if tol is not None:
-        obj = sha.simplify(obj, tol, preserve_topology=False)
+    if simplify is not None:
+        obj = sha.simplify(obj, simplify, preserve_topology=False)
 
     return obj
 
 
-def _get_shape_layer(geometry_shape, stack_tag, tol):
+def _get_shape_layer(geometry_shape, stack_tag, simplify, construct):
     """
     Assemble the shapes (for all the layers).
     """
@@ -232,7 +232,7 @@ def _get_shape_layer(geometry_shape, stack_tag, tol):
     # get the shapes
     for tag in stack_tag:
         # get the assembled shape
-        obj = _get_shape_assemble(geometry_shape, tag, tol)
+        obj = _get_shape_assemble(geometry_shape, tag, simplify, construct)
 
         # check that the shape is valid
         if not obj.is_valid:
@@ -246,7 +246,7 @@ def _get_shape_layer(geometry_shape, stack_tag, tol):
     return layer_list, obj_list
 
 
-def _get_shape_obj(geometry_shape, stack_tag, tol):
+def _get_shape_obj(geometry_shape, stack_tag, simplify, construct):
     """
     Create the shapes and set the position in the layer stack.
     Find the bounding box for all the shapes (minimum and maximum coordinates).
@@ -262,7 +262,7 @@ def _get_shape_obj(geometry_shape, stack_tag, tol):
     # create the shapes and find the bounding box
     for tag, geometry_shape_tmp in geometry_shape.items():
         # get the shape (divided per layer)
-        (layer_list, obj_list) = _get_shape_layer(geometry_shape_tmp, stack_tag, tol)
+        (layer_list, obj_list) = _get_shape_layer(geometry_shape_tmp, stack_tag, simplify, construct)
 
         # find the layer position and add the objects
         for layer, obj in zip(layer_list, obj_list):
@@ -447,7 +447,8 @@ def get_mesh(param, layer_stack, geometry_shape):
     dy = param["dy"]
     dz = param["dz"]
     cz = param["cz"]
-    tol = param["tol"]
+    simplify = param["simplify"]
+    construct = param["construct"]
     xy_min = param["xy_min"]
     xy_max = param["xy_max"]
 
@@ -457,7 +458,7 @@ def get_mesh(param, layer_stack, geometry_shape):
 
     # create the shapes
     LOGGER.debug("create the shapes")
-    (shape_obj, xy_min_obj, xy_max_obj) = _get_shape_obj(geometry_shape, stack_tag, tol)
+    (shape_obj, xy_min_obj, xy_max_obj) = _get_shape_obj(geometry_shape, stack_tag, simplify, construct)
 
     # if provided, the user specified bounds are used, otherwise the STL bounds
     if xy_min is not None:

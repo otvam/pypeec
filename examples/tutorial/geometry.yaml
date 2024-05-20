@@ -13,7 +13,8 @@
         "dy": 35.0e-6
         "dz": 35.0e-6
         "cz": 0.0e-6
-        "tol": 1.0e-6
+        "simplify": 1.0e-6
+        "construct": null
         "xy_min": null
         "xy_max": null
     "layer_stack":
