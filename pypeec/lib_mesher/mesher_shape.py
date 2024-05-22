@@ -314,7 +314,11 @@ def _get_layer_stack(layer_stack, dz, cz):
     stack_pos = stack_pos-np.sum(stack_n)/2
 
     # scale the dimension
-    stack_pos = stack_pos*dz+cz
+    stack_pos *= dz
+
+    # add offset
+    if cz is not None:
+        stack_pos += cz
 
     return stack_pos, stack_idx, stack_tag
 
