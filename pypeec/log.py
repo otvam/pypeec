@@ -190,18 +190,11 @@ class _DeltaTimeFormatter(logging.Formatter):
         # assign
         self.tag = tag
 
-    def formatException(self, exc_info):
+    def _handle_record(self, record):
         """
-        Dummy function to prevent traceback formatting.
-        Traceback is handled in the format method.
-        """
-
-        return None
-
-    def format(self, record):
-        """
-        Format a record to a string.
-        Add the elapsed time
+        Add different information to a log record.
+        The timing data (timestamp and duration) are added.
+        The process and thread data are added.
         """
 
         # extract
@@ -209,9 +202,6 @@ class _DeltaTimeFormatter(logging.Formatter):
         name = record.name
         levelname = record.levelname
         exc_info = record.exc_info
-
-        # get the message padding for the desired indentation
-        pad = " " * (GLOBAL_LEVEL*INDENTATION)
 
         # add the elapsed time to the log record
         timestamp = datetime.datetime.today()
@@ -230,21 +220,54 @@ class _DeltaTimeFormatter(logging.Formatter):
         record.name = name.lower()
         record.levelname = levelname.lower()
 
+        return record, levelname, msg, exc_info
+
+    def _handle_lines(self, record, levelname, text, pad):
+        """
+        Format a multiline text with a given record.
+        """
+
+        # init
+        out = []
+
+        # format
+        for line in text.splitlines():
+            record.msg = pad + line
+            tmp = super(_DeltaTimeFormatter, self).format(record)
+            out.append(tmp)
+
+        return out
+
+    def formatException(self, exc_info):
+        """
+        Dummy function to prevent traceback formatting.
+        Traceback is handled in the format method.
+        """
+
+        return None
+
+    def format(self, record):
+        """
+        Format a record to a string.
+        """
+
+        # get the message padding for the desired indentation
+        pad = " " * (GLOBAL_LEVEL*INDENTATION)
+
+        # parse record
+        (record, levelname, msg, exc_info) = self._handle_record(record)
+
         # init
         out = []
 
         # format
         if msg is not None:
-            for line in msg.splitlines():
-                record.msg = pad + line
-                out.append(super(_DeltaTimeFormatter, self).format(record))
+            out += self._handle_lines(record, levelname, msg, pad)
 
         # add the exception
         if exc_info is not None:
             err = super(_DeltaTimeFormatter, self).formatException(exc_info)
-            for line in err.splitlines():
-                record.msg = pad + line
-                out.append(super(_DeltaTimeFormatter, self).format(record))
+            out += self._handle_lines(record, levelname, err, pad)
 
         # join
         out = "\n".join(out)
