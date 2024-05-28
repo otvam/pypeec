@@ -10,8 +10,11 @@
 #   - duration: elapsed time (formatted as a string)
 #   - process_id: process identification number
 #   - thread_id: thread identification number
-FORMAT:
-    LOGGER: '%(duration)s : %(tag)-8s : %(levelname)-8s : %(message)s' # logger format
+FORMAT: '%(duration)s : %(tag)-8s : %(levelname)-8s : %(message)s' # logger format
+
+
+# format instruction for the timestamps and durations
+TIMING:
     TIMESTAMP_FMT: '%m/%d/%Y : %H:%M:%S' # strftime formatting instructions for the timestamp
     DURATION_FMT: '%H:%M:%S.%f' # strftime formatting instructions for the duration
     TIMESTAMP_TRC: 0 # truncate trailing characters for the timestamp string
@@ -24,9 +27,9 @@ INDENTATION: 4 # integer with the number of spaces per indentation
 EXCEPTION_TRACE: true # boolean switch
 
 # default level for all the handlers
-LEVEL_DEF: "DEBUG"
+LEVEL_DEFAULT: "DEBUG"
 
-# custom level for the handlers
+# custom level for user-defined handlers
 LEVEL_NAME:
     "pypeec": "DEBUG" # level for the pypeec package
     "pypeec.main": "DEBUG" # level for pypeec.main module

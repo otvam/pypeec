@@ -47,7 +47,7 @@ def _get_level(name):
     # check for parent level
     split = name.rsplit(".", 1)
     if len(split) == 1:
-        return LEVEL_DEF
+        return LEVEL_DEFAULT
     else:
         return _get_level(split[0])
 
@@ -110,32 +110,32 @@ def _check_config(data):
     # check dict
     key_list = [
         "FORMAT",
+        "TIMING",
         "INDENTATION",
         "EXCEPTION_TRACE",
-        "LEVEL_DEF",
+        "LEVEL_DEFAULT",
         "LEVEL_NAME",
     ]
     _check_dict("data", data, key_list)
     
     # check data
-    _check_string("LEVEL_DEF", data["LEVEL_DEF"])
+    _check_string("FORMAT", data["FORMAT"])
+    _check_string("LEVEL_DEFAULT", data["LEVEL_DEFAULT"])
     _check_integer("INDENTATION", data["INDENTATION"])
     _check_boolean("EXCEPTION_TRACE", data["EXCEPTION_TRACE"])
 
     # check sub dict
     key_list = [
-        "LOGGER",
         "TIMESTAMP_FMT",
         "DURATION_FMT",
         "TIMESTAMP_TRC",
         "DURATION_TRC",
     ]
-    _check_dict("FORMAT", data["FORMAT"], key_list)
-    _check_string("LOGGER", data["FORMAT"]["LOGGER"])
-    _check_string("TIMESTAMP_FMT", data["FORMAT"]["TIMESTAMP_FMT"])
-    _check_string("DURATION_FMT", data["FORMAT"]["DURATION_FMT"])
-    _check_integer("TIMESTAMP_TRC", data["FORMAT"]["TIMESTAMP_TRC"])
-    _check_integer("DURATION_TRC", data["FORMAT"]["DURATION_TRC"])
+    _check_dict("TIMING", data["TIMING"], key_list)
+    _check_string("TIMESTAMP_FMT", data["TIMING"]["TIMESTAMP_FMT"])
+    _check_string("DURATION_FMT", data["TIMING"]["DURATION_FMT"])
+    _check_integer("TIMESTAMP_TRC", data["TIMING"]["TIMESTAMP_TRC"])
+    _check_integer("DURATION_TRC", data["TIMING"]["DURATION_TRC"])
 
     # check the logging levels
     _check_dict("LEVEL_NAME", data["LEVEL_NAME"], [])
@@ -149,8 +149,8 @@ def _get_format_timestamp(timestamp):
     Format a timestamp into a string.
     """
 
-    timestamp_str = timestamp.strftime(FORMAT["TIMESTAMP_FMT"])
-    timestamp_str = timestamp_str[0:len(timestamp_str)-FORMAT["TIMESTAMP_TRC"]]
+    timestamp_str = timestamp.strftime(TIMING["TIMESTAMP_FMT"])
+    timestamp_str = timestamp_str[0:len(timestamp_str)-TIMING["TIMESTAMP_TRC"]]
 
     return timestamp_str
 
@@ -167,8 +167,8 @@ def _get_format_duration(duration):
     timestamp = timestamp+duration
 
     # format timestamp
-    duration_str = timestamp.strftime(FORMAT["DURATION_FMT"])
-    duration_str = duration_str[0:len(duration_str)-FORMAT["DURATION_TRC"]]
+    duration_str = timestamp.strftime(TIMING["DURATION_FMT"])
+    duration_str = duration_str[0:len(duration_str)-TIMING["DURATION_TRC"]]
 
     return duration_str
 
@@ -185,7 +185,7 @@ class _DeltaTimeFormatter(logging.Formatter):
         """
 
         # call parent constructor
-        super().__init__(fmt=FORMAT["LOGGER"])
+        super().__init__(fmt=FORMAT)
 
         # assign
         self.tag = tag
@@ -530,9 +530,10 @@ try:
 
     # set global variables
     FORMAT = data["FORMAT"]
+    TIMING = data["TIMING"]
     INDENTATION = data["INDENTATION"]
     EXCEPTION_TRACE = data["EXCEPTION_TRACE"]
-    LEVEL_DEF = data["LEVEL_DEF"]
+    LEVEL_DEFAULT = data["LEVEL_DEFAULT"]
     LEVEL_NAME = data["LEVEL_NAME"]
 except Exception as ex:
     print("==========================", file=sys.stderr)
