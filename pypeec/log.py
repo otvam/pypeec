@@ -112,8 +112,6 @@ def _check_config(data):
         "FORMAT",
         "INDENTATION",
         "EXCEPTION_TRACE",
-        "USE_COLOR",
-        "DEF_COLOR",
         "LEVEL_DEF",
         "LEVEL_NAME",
     ]
@@ -123,7 +121,6 @@ def _check_config(data):
     _check_string("LEVEL_DEF", data["LEVEL_DEF"])
     _check_integer("INDENTATION", data["INDENTATION"])
     _check_boolean("EXCEPTION_TRACE", data["EXCEPTION_TRACE"])
-    _check_boolean("USE_COLOR", data["USE_COLOR"])
 
     # check sub dict
     key_list = [
@@ -140,41 +137,11 @@ def _check_config(data):
     _check_integer("TIMESTAMP_TRC", data["FORMAT"]["TIMESTAMP_TRC"])
     _check_integer("DURATION_TRC", data["FORMAT"]["DURATION_TRC"])
 
-    # check sub dict
-    key_list = [
-        "CL_DEBUG",
-        "CL_INFO",
-        "CL_WARNING",
-        "CL_ERROR",
-        "CL_CRITICAL",
-        "CL_RESET",
-    ]
-    _check_dict("DEF_COLOR", data["DEF_COLOR"], key_list)
-    _check_string("CL_DEBUG", data["DEF_COLOR"]["CL_DEBUG"])
-    _check_string("CL_INFO", data["DEF_COLOR"]["CL_INFO"])
-    _check_string("CL_WARNING", data["DEF_COLOR"]["CL_WARNING"])
-    _check_string("CL_ERROR", data["DEF_COLOR"]["CL_ERROR"])
-    _check_string("CL_CRITICAL", data["DEF_COLOR"]["CL_CRITICAL"])
-    _check_string("CL_RESET", data["DEF_COLOR"]["CL_RESET"])
-
     # check the logging levels
     _check_dict("LEVEL_NAME", data["LEVEL_NAME"], [])
     for name, level in data["LEVEL_NAME"].items():
         _check_string("LEVEL_NAME", name)
         _check_string("LEVEL_NAME", level)
-
-
-def _get_fmt(color, reset):
-    """
-    Get a logging formatter.
-    """
-
-    if (color is None) and (reset is None):
-        fmt = logging.Formatter(FORMAT["LOGGER"])
-    else:
-        fmt = logging.Formatter("\x1b" + color + FORMAT["LOGGER"] + "\x1b" + reset)
-
-    return fmt
 
 
 def _get_format_timestamp(timestamp):
@@ -211,43 +178,40 @@ class _DeltaTimeFormatter(logging.Formatter):
     Class for adding elapsed time to a logger.
     """
 
-    def __init__(self, name, tag):
+    def __init__(self, tag):
         """
         Constructor.
         Create a timer.
         """
 
         # call parent constructor
-        super().__init__()
+        super().__init__(fmt=FORMAT["LOGGER"])
 
         # assign
-        self.name = name
-        if tag is None:
-            self.tag = name
-        else:
-            self.tag = tag
+        self.tag = tag
 
-        # define the color formatters
-        self.fmt_color = {
-            logging.DEBUG: _get_fmt(DEF_COLOR["CL_DEBUG"], DEF_COLOR["CL_RESET"]),
-            logging.INFO: _get_fmt(DEF_COLOR["CL_INFO"], DEF_COLOR["CL_RESET"]),
-            logging.WARNING: _get_fmt(DEF_COLOR["CL_WARNING"], DEF_COLOR["CL_RESET"]),
-            logging.ERROR: _get_fmt(DEF_COLOR["CL_ERROR"], DEF_COLOR["CL_RESET"]),
-            logging.CRITICAL: _get_fmt(DEF_COLOR["CL_CRITICAL"], DEF_COLOR["CL_RESET"]),
-        }
+    def formatException(self, exc_info):
+        """
+        Dummy function to prevent traceback formatting.
+        Traceback is handled in the format method.
+        """
 
-        # define the black formatter
-        self.fmt_black = _get_fmt(None, None)
+        return None
 
     def format(self, record):
         """
         Format a record to a string.
-        Add the elapsed time.
+        Add the elapsed time
         """
 
-        # get log
-        lvl = record.levelno
+        # extract
         msg = record.msg
+        name = record.name
+        levelname = record.levelname
+        exc_info = record.exc_info
+
+        # get the message padding for the desired indentation
+        pad = " " * (GLOBAL_LEVEL*INDENTATION)
 
         # add the elapsed time to the log record
         timestamp = datetime.datetime.today()
@@ -256,30 +220,36 @@ class _DeltaTimeFormatter(logging.Formatter):
         record.duration = _get_format_duration(duration)
 
         # add the process and thread id to the log record
-        record.process_id = os.getpid()
         record.thread_id = threading.get_native_id()
+        record.process_id = os.getpid()
 
-        # get the message padding for the desired indentation
-        pad = " " * (GLOBAL_LEVEL*INDENTATION)
-
-        # add the padding to the message
-        record.msg = pad + msg
-
-        # cast to lower case
-        record.name = record.name.lower()
-        record.levelname = record.levelname.lower()
-
-        # add data
-        record.name = self.name
+        # add the custom tag
         record.tag = self.tag
 
-        # get the formatter
-        if USE_COLOR:
-            msg = self.fmt_color[lvl].format(record)
-        else:
-            msg = self.fmt_black.format(record)
+        # cast to lower case
+        record.name = name.lower()
+        record.levelname = levelname.lower()
 
-        return msg
+        # init
+        out = []
+
+        # format
+        if msg is not None:
+            for line in msg.splitlines():
+                record.msg = pad + line
+                out.append(super(_DeltaTimeFormatter, self).format(record))
+
+        # add the exception
+        if exc_info is not None:
+            err = super(_DeltaTimeFormatter, self).formatException(exc_info)
+            for line in err.splitlines():
+                record.msg = pad + line
+                out.append(super(_DeltaTimeFormatter, self).format(record))
+
+        # join
+        out = "\n".join(out)
+
+        return out
 
 
 class BlockTimer:
@@ -395,15 +365,19 @@ def log_exception(logger, ex, level="ERROR"):
 
     # get the exception data
     name = ex.__class__.__name__
+    module = ex.__class__.__module__
 
     # get level
     level = logging.getLevelName(level)
 
     # log the exception
-    if EXCEPTION_TRACE:
-        logger.log(level, "exception : " + name, exc_info=ex)
-    else:
-        logger.log(level, "exception : " + name + "\n" + str(ex))
+    logger.log(level, "exception : %s / %s" % (module, name))
+    with BlockIndent():
+        if EXCEPTION_TRACE:
+                logger.log(level, None, exc_info=ex)
+        else:
+            logger.log(level, str(ex))
+    logger.log(level, "exception : %s / %s" % (module, name))
 
 
 def get_timer():
@@ -477,6 +451,7 @@ def get_global():
         - timestamp (for the elapsed time)
         - indentation level (for log messages)
 
+
     Returns
     -------
     timestamp : timestamp
@@ -491,13 +466,15 @@ def get_global():
 def get_logger(name, tag=None):
     """
     Get a logger with a specified name.
+    If the logger does not exist, the logger is created.
+    If the logger does exist, the logger is returned.
 
     Parameters
     ----------
     name : string
         Name of the logger to be returned.
-        If the logger does not exist, the logger is created.
-        If the logger does exist, the logger is returned.
+    tag : string
+        Name of a non-unique tag assigned to the logger.
 
     Returns
     -------
@@ -505,13 +482,16 @@ def get_logger(name, tag=None):
         Logger object instance.
     """
 
+    # fix the tag if None
+    tag = tag or name
+
     # get the logger
     logger = logging.getLogger(name)
 
     # create the logger (if not already done)
     if len(logger.handlers) == 0:
         # get the formatter
-        fmt = _DeltaTimeFormatter(name, tag)
+        fmt = _DeltaTimeFormatter(tag)
 
         # get the handle
         handler = logging.StreamHandler()
@@ -552,8 +532,6 @@ try:
     FORMAT = data["FORMAT"]
     INDENTATION = data["INDENTATION"]
     EXCEPTION_TRACE = data["EXCEPTION_TRACE"]
-    USE_COLOR = data["USE_COLOR"]
-    DEF_COLOR = data["DEF_COLOR"]
     LEVEL_DEF = data["LEVEL_DEF"]
     LEVEL_NAME = data["LEVEL_NAME"]
 except Exception as ex:
