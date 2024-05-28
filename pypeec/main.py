@@ -27,8 +27,8 @@ def run_display_logo():
     """
 
     # load logo data
-    with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file_logo:
-        data = file_logo.read()
+    with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file:
+        data = file.read()
 
     # display logo
     try:
@@ -57,11 +57,11 @@ def run_extract(data_name, is_zip, path_extract):
     # execute workflow
     try:
         LOGGER.info("data extraction")
-        with importlib.resources.path("pypeec.data", data_name) as file_data:
+        with importlib.resources.path("pypeec.data", data_name) as file:
             if is_zip:
-                shutil.unpack_archive(file_data, path_extract)
+                shutil.unpack_archive(file, path_extract)
             else:
-                shutil.copy(file_data, path_extract)
+                shutil.copy(file, path_extract)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         LOGGER.error("invalid termination")

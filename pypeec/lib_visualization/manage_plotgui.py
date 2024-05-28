@@ -106,8 +106,8 @@ class PlotGui:
             window_size=window_size,
         )
         # set icon
-        with importlib.resources.path("pypeec.data", "pypeec.png") as file_icon:
-            pl.set_icon(str(file_icon))
+        with importlib.resources.path("pypeec.data", "pypeec.png") as file:
+            pl.set_icon(str(file))
 
         return pl
 
@@ -148,8 +148,8 @@ class PlotGui:
         """
 
         # get the icon
-        with importlib.resources.path("pypeec.data", "pypeec.png") as file_icon:
-            res_icon = PyQt5.QtGui.QIcon(str(file_icon))
+        with importlib.resources.path("pypeec.data", "pypeec.png") as file:
+            res_icon = PyQt5.QtGui.QIcon(str(file))
 
         # get the figure
         fig = matplotlib.pyplot.figure(tight_layout=True)

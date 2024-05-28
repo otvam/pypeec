@@ -30,8 +30,8 @@ def _get_parser():
 
     # get version
     try:
-        with importlib.resources.open_text("pypeec.data", "version.txt") as file_version:
-            version = file_version.read()
+        with importlib.resources.open_text("pypeec.data", "version.txt") as file:
+            version = file.read()
     except FileNotFoundError:
         version = 'x.x.x'
 

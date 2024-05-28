@@ -7,6 +7,7 @@ Module for handling the logging.
 
 The log config is defined by the following files.
     - First the default configuration is loaded ("pypeec/data/logger.ini").
+    - The logger configuration file is written as a Python ConfigParser INI file.
     - Afterward, a custom file can be loaded with an environment variable ("PYTHONLOGGER").
 
 Warning
@@ -508,7 +509,7 @@ def get_logger(name, tag=None):
     name : string
         Name of the logger to be returned.
     tag : string
-        Name of a non-unique tag assigned to the logger.
+        Non-unique tag assigned to the logger.
 
     Returns
     -------

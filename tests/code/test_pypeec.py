@@ -14,8 +14,10 @@ from pypeec import main
 from pypeec import script
 from pypeec import io
 
-# crash on warnings (except for deprecation warnings)
+# crash on warnings
 warnings.filterwarnings("error")
+
+# ignore deprecation warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # disable logging to prevent clutter during test evaluation

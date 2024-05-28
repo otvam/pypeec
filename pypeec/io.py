@@ -4,7 +4,7 @@ Module for serialization and deserialization.
     - load and write JSON/Pickle data files
 
 For YAML files, the following custom extensions are used:
-    - "!path" - parse relative paths (with respect to the main file path)
+    - "!path" - parse relative paths (with respect to the YAML file)
     - "!include" - include other YAML files (recursion possible)
     - "!env" - include YAML string from environment variables
     - "!merge_dict" - merge a list of dicts

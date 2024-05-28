@@ -11,7 +11,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 # get the version number
 try:
-    with importlib.resources.open_text("pypeec.data", "version.txt") as file_version:
-        __version__ = file_version.read()
+    with importlib.resources.open_text("pypeec.data", "version.txt") as file:
+        __version__ = file.read()
 except FileNotFoundError:
     __version__ = 'x.x.x'
