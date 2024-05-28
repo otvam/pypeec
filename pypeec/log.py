@@ -46,23 +46,6 @@ def _decode_escape(value):
     return value
 
 
-def _get_level(name):
-    """
-    Get the corresponding logging level.
-    """
-
-    # check for exact match
-    if name in MODULE_LEVEL:
-        return MODULE_LEVEL[name]
-
-    # check for parent level
-    split = name.rsplit(".", 1)
-    if len(split) == 1:
-        return LEVEL_DEFAULT
-    else:
-        return _get_level(split[0])
-
-
 def _check_boolean(name, data):
     """
     Check a boolean.
@@ -140,6 +123,23 @@ def _check_config():
 
     # check module level
     _check_dict("MODULE_LEVEL", MODULE_LEVEL)
+
+
+def _get_level(name):
+    """
+    Get the corresponding logging level.
+    """
+
+    # check for exact match
+    if name in MODULE_LEVEL:
+        return MODULE_LEVEL[name]
+
+    # check for parent level
+    split = name.rsplit(".", 1)
+    if len(split) == 1:
+        return LEVEL_DEFAULT
+    else:
+        return _get_level(split[0])
 
 
 def _get_format_timestamp(timestamp):
@@ -409,7 +409,7 @@ def log_exception(logger, ex, level="ERROR"):
     logger.log(level, "exception : %s / %s" % (module, name))
     with BlockIndent():
         if EXCEPTION_TRACE:
-                logger.log(level, None, exc_info=ex)
+            logger.log(level, None, exc_info=ex)
         else:
             logger.log(level, str(ex))
     logger.log(level, "exception : %s / %s" % (module, name))
