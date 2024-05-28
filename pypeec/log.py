@@ -6,7 +6,7 @@ Module for handling the logging.
     - Log exceptions.
 
 The log config is defined by the following files.
-    - First the default configuration is loaded ("pypeec/data/logger.yaml").
+    - First the default configuration is loaded ("pypeec/data/logger.ini").
     - Afterward, a custom file can be loaded with an environment variable ("PYTHONLOGGER").
 
 Warning
@@ -25,7 +25,7 @@ import sys
 import datetime
 import threading
 import logging
-import yaml
+import configparser
 import importlib.resources
 
 # global timestamp (constant over the complete run)
@@ -35,14 +35,25 @@ GLOBAL_TIMESTAMP = datetime.datetime.today()
 GLOBAL_LEVEL = 0
 
 
+def _decode_escape(value):
+    """
+    Decode the escape sequence in a string.
+    """
+
+    value = bytes(value, "utf-8")
+    value = value.decode("unicode_escape")
+
+    return value
+
+
 def _get_level(name):
     """
     Get the corresponding logging level.
     """
 
     # check for exact match
-    if name in LEVEL_NAME:
-        return LEVEL_NAME[name]
+    if name in MODULE_LEVEL:
+        return MODULE_LEVEL[name]
 
     # check for parent level
     split = name.rsplit(".", 1)
@@ -87,7 +98,7 @@ def _check_string(name, data):
         raise AssertionError("%s: cannot be empty" % name)
 
 
-def _check_dict(name, data, key_list):
+def _check_dict(name, data):
     """
     Check a dict.
     """
@@ -97,71 +108,38 @@ def _check_dict(name, data, key_list):
         raise AssertionError("%s: should be a dict" % name)
 
     # check keys
-    for tag in key_list:
-        if tag not in data:
-            raise AssertionError("%s: dict is incomplete: %s" % (name, tag))
+    for tag, value in data.items():
+        _check_string(name, tag)
+        _check_string(name, value)
 
 
-def _check_config(data):
+def _check_config():
     """
     Check the integrity of the config file.
     """
 
-    # check dict
-    key_list = [
-        "FORMAT",
-        "TIMING",
-        "INDENTATION",
-        "EXCEPTION_TRACE",
-        "USE_COLOR",
-        "LEVEL_COLOR",
-        "RESET_COLOR",
-        "LEVEL_DEFAULT",
-        "LEVEL_NAME",
-    ]
-    _check_dict("data", data, key_list)
+    # check format data
+    _check_string("FORMAT", FORMAT)
+    _check_string("LEVEL_DEFAULT", LEVEL_DEFAULT)
+    _check_boolean("EXCEPTION_TRACE", EXCEPTION_TRACE)
+    _check_integer("INDENTATION", INDENTATION)
 
-    # check data
-    _check_string("FORMAT", data["FORMAT"])
-    _check_string("LEVEL_DEFAULT", data["LEVEL_DEFAULT"])
-    _check_integer("INDENTATION", data["INDENTATION"])
-    _check_boolean("EXCEPTION_TRACE", data["EXCEPTION_TRACE"])
-    _check_string("RESET_COLOR", data["RESET_COLOR"])
-    _check_boolean("USE_COLOR", data["USE_COLOR"])
+    # check color data
+    _check_string("COLOR_RESET", COLOR_RESET)
+    _check_string("COLOR_DEFAULT", COLOR_DEFAULT)
+    _check_boolean("USE_COLOR", COLOR_USE)
 
-    # check sub dict
-    key_list = [
-        "DEBUG",
-        "INFO",
-        "WARNING",
-        "ERROR",
-        "CRITICAL",
-    ]
-    _check_dict("DEF_COLOR", data["LEVEL_COLOR"], key_list)
-    _check_string("DEBUG", data["LEVEL_COLOR"]["DEBUG"])
-    _check_string("INFO", data["LEVEL_COLOR"]["INFO"])
-    _check_string("WARNING", data["LEVEL_COLOR"]["WARNING"])
-    _check_string("ERROR", data["LEVEL_COLOR"]["ERROR"])
-    _check_string("CRITICAL", data["LEVEL_COLOR"]["CRITICAL"])
+    # check timing data
+    _check_string("TIMESTAMP_FMT", TIMESTAMP_FMT)
+    _check_string("DURATION_FMT", DURATION_FMT)
+    _check_integer("TIMESTAMP_TRC", TIMESTAMP_TRC)
+    _check_integer("DURATION_TRC", DURATION_TRC)
 
-    # check sub dict
-    key_list = [
-        "TIMESTAMP_FMT",
-        "DURATION_FMT",
-        "TIMESTAMP_TRC",
-        "DURATION_TRC",
-    ]
-    _check_dict("TIMING", data["TIMING"], key_list)
-    _check_string("TIMESTAMP_FMT", data["TIMING"]["TIMESTAMP_FMT"])
-    _check_string("DURATION_FMT", data["TIMING"]["DURATION_FMT"])
-    _check_integer("TIMESTAMP_TRC", data["TIMING"]["TIMESTAMP_TRC"])
-    _check_integer("DURATION_TRC", data["TIMING"]["DURATION_TRC"])
+    # check color level
+    _check_dict("COLOR_LEVEL", COLOR_LEVEL)
 
-    # check the logging levels
-    _check_dict("LEVEL_NAME", data["LEVEL_NAME"], [])
-    for name, level in data["LEVEL_NAME"].items():
-        _check_string("LEVEL_NAME", name)
-        _check_string("LEVEL_NAME", level)
+    # check module level
+    _check_dict("MODULE_LEVEL", MODULE_LEVEL)
 
 
 def _get_format_timestamp(timestamp):
@@ -169,8 +147,8 @@ def _get_format_timestamp(timestamp):
     Format a timestamp into a string.
     """
 
-    timestamp_str = timestamp.strftime(TIMING["TIMESTAMP_FMT"])
-    timestamp_str = timestamp_str[0:len(timestamp_str)-TIMING["TIMESTAMP_TRC"]]
+    timestamp_str = timestamp.strftime(TIMESTAMP_FMT)
+    timestamp_str = timestamp_str[0:len(timestamp_str)-TIMESTAMP_TRC]
 
     return timestamp_str
 
@@ -187,8 +165,8 @@ def _get_format_duration(duration):
     timestamp = timestamp+duration
 
     # format timestamp
-    duration_str = timestamp.strftime(TIMING["DURATION_FMT"])
-    duration_str = duration_str[0:len(duration_str)-TIMING["DURATION_TRC"]]
+    duration_str = timestamp.strftime(DURATION_FMT)
+    duration_str = duration_str[0:len(duration_str)-DURATION_TRC]
 
     return duration_str
 
@@ -255,17 +233,20 @@ class _DeltaTimeFormatter(logging.Formatter):
 
         # format the lines
         for line in text.splitlines():
-            # set the line
-            record.msg = line
+            # set the line with padding
+            record.msg = pad + line
 
             # format the line
             out_tmp = super(_DeltaTimeFormatter, self).format(record)
 
             # add color and padding
-            if USE_COLOR and (levelname in LEVEL_COLOR):
-                out_tmp = pad + LEVEL_COLOR[levelname] + out_tmp + RESET_COLOR
+            if COLOR_USE:
+                if levelname in COLOR_LEVEL:
+                    out_tmp = COLOR_LEVEL[levelname] + out_tmp + COLOR_RESET
+                else:
+                    out_tmp = COLOR_DEFAULT + out_tmp + COLOR_RESET
             else:
-                out_tmp = pad + out_tmp
+                pass
 
             # add the line
             out_list.append(out_tmp)
@@ -505,7 +486,6 @@ def get_global():
         - timestamp (for the elapsed time)
         - indentation level (for log messages)
 
-
     Returns
     -------
     timestamp : timestamp
@@ -568,30 +548,52 @@ def get_logger(name, tag=None):
 
 # load the config file
 try:
+    # init parser and set mode to case-sensitive
+    config = configparser.ConfigParser()
+    config.optionxform = str
+
     # load the default file
-    with importlib.resources.path("pypeec.data", "logger.yaml") as file:
-        with open(file, 'r') as fid:
-            data = yaml.safe_load(fid)
+    with importlib.resources.path("pypeec.data", "logger.ini") as file:
+        out = config.read(file)
+        if len(out) != 1:
+            raise RuntimeError("config file cannot be loaded: %s" % file)
 
     # get file custom file
     file = os.getenv("PYTHONLOGGER")
     if file is not None:
-        with open(file, 'r') as fid:
-            data = yaml.safe_load(fid)
+        out = config.read(file)
+        if len(out) != 1:
+            raise RuntimeError("config file cannot be loaded: %s" % file)
+
+    # load format data
+    FORMAT = config.get("GLOBAL", "FORMAT", raw=True)
+    LEVEL_DEFAULT = config.get("GLOBAL", "LEVEL_DEFAULT", raw=True)
+    EXCEPTION_TRACE = config.getboolean("GLOBAL", "EXCEPTION_TRACE")
+    INDENTATION = config.getint("GLOBAL", "INDENTATION")
+
+    # load color data
+    COLOR_RESET = _decode_escape(config.get("GLOBAL", "COLOR_RESET", raw=True))
+    COLOR_DEFAULT = _decode_escape(config.get("GLOBAL", "COLOR_DEFAULT", raw=True))
+    COLOR_USE = config.getboolean("GLOBAL", "COLOR_USE")
+
+    # load timing data
+    TIMESTAMP_FMT = config.get("GLOBAL", "TIMESTAMP_FMT", raw=True)
+    DURATION_FMT = config.get("GLOBAL", "DURATION_FMT", raw=True)
+    TIMESTAMP_TRC = config.getint("GLOBAL", "TIMESTAMP_TRC")
+    DURATION_TRC = config.getint("GLOBAL", "DURATION_TRC")
+
+    # load color level
+    COLOR_LEVEL = dict(config.items("COLOR_LEVEL", raw=True))
+    for tag, value in COLOR_LEVEL.items():
+        COLOR_LEVEL[tag] = _decode_escape(value)
+
+    # load module level
+    MODULE_LEVEL = dict(config.items("MODULE_LEVEL", raw=True))
+    for tag, value in MODULE_LEVEL.items():
+        MODULE_LEVEL[tag] = _decode_escape(value)
 
     # check file integrity
-    _check_config(data)
-
-    # set global variables
-    FORMAT = data["FORMAT"]
-    TIMING = data["TIMING"]
-    INDENTATION = data["INDENTATION"]
-    EXCEPTION_TRACE = data["EXCEPTION_TRACE"]
-    USE_COLOR = data["USE_COLOR"]
-    LEVEL_COLOR = data["LEVEL_COLOR"]
-    RESET_COLOR = data["RESET_COLOR"]
-    LEVEL_DEFAULT = data["LEVEL_DEFAULT"]
-    LEVEL_NAME = data["LEVEL_NAME"]
+    _check_config()
 except Exception as ex:
     print("==========================", file=sys.stderr)
     print("INVALID CONFIGURATION FILE", file=sys.stderr)

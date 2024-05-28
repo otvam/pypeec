@@ -372,7 +372,7 @@ def run_arguments(argv):
         elif args.command == "documentation":
             main.run_extract("documentation.zip", True, args.path_extract)
         elif args.command == "logger":
-            main.run_extract("logger.yaml", False, args.path_extract)
+            main.run_extract("logger.ini", False, args.path_extract)
         else:
             raise ValueError("invalid command")
     except Exception:

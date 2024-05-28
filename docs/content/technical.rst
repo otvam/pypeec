@@ -69,7 +69,7 @@ The following **Python version** are passing the **automated tests**:
 Logger Configuration File
 -------------------------
 
-* The default logger configuration file is located in ``pypeec/data/logger.yaml``.
+* The default logger configuration file is located in ``pypeec/data/logger.ini``.
 * A custom logger configuration file can set with an environment variable.
 * If the ``PYTHONLOGGER`` variable is not set, the default configuration is kept.
 * If the ``PYTHONLOGGER`` variable is is set, the default configuration is replaced.

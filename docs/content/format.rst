@@ -55,7 +55,7 @@ This file contains the definition of the magnetic problem to be solved.
 Other File Formats
 ------------------
 
-* The logger configuration file format is documented in ``pypeec/data/logger.yaml``.
+* The logger configuration file format is documented in ``pypeec/data/logger.ini``.
 * The logger configuration can be changed with the ``PYTHONLOGGER`` environment variable.
 * The ``file_tolerance`` format is documented in ``examples/config/tolerance.yaml``.
 * The ``file_viewer`` format is documented in ``examples/config/viewer.yaml``.
