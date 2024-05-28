@@ -113,16 +113,36 @@ def _check_config(data):
         "TIMING",
         "INDENTATION",
         "EXCEPTION_TRACE",
+        "USE_COLOR",
+        "LEVEL_COLOR",
+        "RESET_COLOR",
         "LEVEL_DEFAULT",
         "LEVEL_NAME",
     ]
     _check_dict("data", data, key_list)
-    
+
     # check data
     _check_string("FORMAT", data["FORMAT"])
     _check_string("LEVEL_DEFAULT", data["LEVEL_DEFAULT"])
     _check_integer("INDENTATION", data["INDENTATION"])
     _check_boolean("EXCEPTION_TRACE", data["EXCEPTION_TRACE"])
+    _check_string("RESET_COLOR", data["RESET_COLOR"])
+    _check_boolean("USE_COLOR", data["USE_COLOR"])
+
+    # check sub dict
+    key_list = [
+        "DEBUG",
+        "INFO",
+        "WARNING",
+        "ERROR",
+        "CRITICAL",
+    ]
+    _check_dict("DEF_COLOR", data["LEVEL_COLOR"], key_list)
+    _check_string("DEBUG", data["LEVEL_COLOR"]["DEBUG"])
+    _check_string("INFO", data["LEVEL_COLOR"]["INFO"])
+    _check_string("WARNING", data["LEVEL_COLOR"]["WARNING"])
+    _check_string("ERROR", data["LEVEL_COLOR"]["ERROR"])
+    _check_string("CRITICAL", data["LEVEL_COLOR"]["CRITICAL"])
 
     # check sub dict
     key_list = [
@@ -222,21 +242,35 @@ class _DeltaTimeFormatter(logging.Formatter):
 
         return record, levelname, msg, exc_info
 
-    def _handle_lines(self, record, levelname, text, pad):
+    def _handle_lines(self, record, levelname, text):
         """
         Format a multiline text with a given record.
         """
 
-        # init
-        out = []
+        # get the padding for the indentation
+        pad = " " * (GLOBAL_LEVEL*INDENTATION)
 
-        # format
+        # array for the lines
+        out_list = []
+
+        # format the lines
         for line in text.splitlines():
-            record.msg = pad + line
-            tmp = super(_DeltaTimeFormatter, self).format(record)
-            out.append(tmp)
+            # set the line
+            record.msg = line
 
-        return out
+            # format the line
+            out_tmp = super(_DeltaTimeFormatter, self).format(record)
+
+            # add color and padding
+            if USE_COLOR and (levelname in LEVEL_COLOR):
+                out_tmp = pad + LEVEL_COLOR[levelname] + out_tmp + RESET_COLOR
+            else:
+                out_tmp = pad + out_tmp
+
+            # add the line
+            out_list.append(out_tmp)
+
+        return out_list
 
     def formatException(self, exc_info):
         """
@@ -251,26 +285,23 @@ class _DeltaTimeFormatter(logging.Formatter):
         Format a record to a string.
         """
 
-        # get the message padding for the desired indentation
-        pad = " " * (GLOBAL_LEVEL*INDENTATION)
-
         # parse record
         (record, levelname, msg, exc_info) = self._handle_record(record)
 
-        # init
-        out = []
+        # array for the lines
+        out_list = []
 
-        # format
+        # format log message (if any)
         if msg is not None:
-            out += self._handle_lines(record, levelname, msg, pad)
+            out_list += self._handle_lines(record, levelname, msg)
 
-        # add the exception
+        # format the attached exception (if any)
         if exc_info is not None:
             err = super(_DeltaTimeFormatter, self).formatException(exc_info)
-            out += self._handle_lines(record, levelname, err, pad)
+            out_list += self._handle_lines(record, levelname, err)
 
-        # join
-        out = "\n".join(out)
+        # join the lines
+        out = "\n".join(out_list)
 
         return out
 
@@ -556,6 +587,9 @@ try:
     TIMING = data["TIMING"]
     INDENTATION = data["INDENTATION"]
     EXCEPTION_TRACE = data["EXCEPTION_TRACE"]
+    USE_COLOR = data["USE_COLOR"]
+    LEVEL_COLOR = data["LEVEL_COLOR"]
+    RESET_COLOR = data["RESET_COLOR"]
     LEVEL_DEFAULT = data["LEVEL_DEFAULT"]
     LEVEL_NAME = data["LEVEL_NAME"]
 except Exception as ex:
