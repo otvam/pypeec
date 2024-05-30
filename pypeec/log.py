@@ -396,9 +396,6 @@ def log_exception(logger, ex, level="ERROR"):
         Logging level to be used.
     """
 
-    # remove the expression context
-    ex.__context__ = None
-
     # get the exception data
     name = ex.__class__.__name__
     module = ex.__class__.__module__
