@@ -37,7 +37,7 @@ def _get_load_image(filename_list):
         try:
             img = pmg.open(filename, formats=["png"])
         except OSError:
-            raise RuntimeError("invalid png: invalid file content: %s" % filename)
+            raise RuntimeError("invalid png: invalid file: %s" % filename) from None
 
         # cast to array
         img = img.convert("RGBA")

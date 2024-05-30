@@ -381,9 +381,9 @@ def _load_yaml(filename):
         with open(filename, "r") as fid:
             data = _parse_yaml(fid)
     except yaml.YAMLError as ex:
-        raise RuntimeError("invalid YAML file: %s\n%s" % (filename, str(ex)))
+        raise RuntimeError("invalid YAML file: %s\n%s" % (filename, str(ex))) from None
     except OSError:
-        raise OSError("cannot open the file: %s" % filename)
+        raise OSError("cannot open the file: %s" % filename) from None
 
     return data
 
@@ -402,9 +402,9 @@ def _load_json(filename, is_gzip):
             with open(filename, "r") as fid:
                 data = json.load(fid, cls=_JsonNumPyDecoder)
     except (json.JSONDecodeError, TypeError, ValueError) as ex:
-        raise RuntimeError("invalid JSON file: %s\n%s" % (filename, str(ex)))
+        raise RuntimeError("invalid JSON file: %s\n%s" % (filename, str(ex))) from None
     except OSError:
-        raise OSError("cannot open the file: %s" % filename)
+        raise OSError("cannot open the file: %s" % filename) from None
 
     return data
 
@@ -423,9 +423,9 @@ def _write_json(filename, data, is_gzip):
             with open(filename, "w") as fid:
                 json.dump(data, fid, indent=4, cls=_JsonNumPyEncoder)
     except (json.JSONDecodeError, TypeError, ValueError) as ex:
-        raise RuntimeError("invalid JSON file: %s\n%s" % (filename, str(ex)))
+        raise RuntimeError("invalid JSON file: %s\n%s" % (filename, str(ex))) from None
     except OSError:
-        raise OSError("cannot write the file: %s" % filename)
+        raise OSError("cannot write the file: %s" % filename) from None
 
     return data
 
@@ -440,11 +440,11 @@ def _load_pickle(filename):
         with open(filename, "rb") as fid:
             data = pickle.load(fid)
     except pickle.UnpicklingError:
-        raise RuntimeError("invalid Pickle file: %s" % filename)
+        raise RuntimeError("invalid Pickle file: %s" % filename) from None
     except EOFError:
-        raise EOFError("file not found: %s" % filename)
+        raise EOFError("file not found: %s" % filename) from None
     except OSError:
-        raise OSError("invalid Pickle file: %s" % filename)
+        raise OSError("invalid Pickle file: %s" % filename) from None
 
     return data
 
@@ -459,9 +459,9 @@ def _write_pickle(filename, data):
         with open(filename, "wb") as fid:
             pickle.dump(data, fid)
     except pickle.PicklingError:
-        raise RuntimeError("invalid data for Pickle: %s" % filename)
+        raise RuntimeError("invalid data for Pickle: %s" % filename) from None
     except OSError:
-        raise OSError("cannot write the file: %s" % filename)
+        raise OSError("cannot write the file: %s" % filename) from None
 
 
 def load_input(filename):

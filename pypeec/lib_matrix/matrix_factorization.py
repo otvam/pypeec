@@ -40,7 +40,7 @@ def _get_fact_superlu(mat):
     try:
         mat_factor = IMPORTLIB.splu(mat)
     except Warning:
-        raise RuntimeError("invalid factorization: SuperLU")
+        raise RuntimeError("invalid factorization: SuperLU") from None
 
     # matrix solver
     def factor(rhs):
@@ -74,7 +74,7 @@ def _get_fact_pardiso(mat):
         mat = mat.tocsr()
         mat_factor = IMPORTLIB.MKLPardisoSolver(mat, factor=True, verbose=False)
     except Warning:
-        raise RuntimeError("invalid factorization: PARDISO")
+        raise RuntimeError("invalid factorization: PARDISO") from None
 
     # matrix solver
     def factor(rhs):
@@ -104,7 +104,7 @@ def _get_fact_pyamg(mat):
         else:
             raise ValueError("invalid AMF solver name")
     except Warning:
-        raise RuntimeError("invalid factorization: PyAMG")
+        raise RuntimeError("invalid factorization: PyAMG") from None
 
     # matrix solver
     def factor(rhs):
@@ -123,7 +123,7 @@ def _get_fact_umfpack(mat):
     try:
         mat_factor = IMPORTLIB.splu(mat)
     except Warning:
-        raise RuntimeError("invalid factorization: UMFPACK")
+        raise RuntimeError("invalid factorization: UMFPACK") from None
 
     # matrix solver
     def factor(rhs):
