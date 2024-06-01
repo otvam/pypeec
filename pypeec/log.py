@@ -288,11 +288,12 @@ class _DeltaTimeFormatter(logging.Formatter):
         return out
 
 
-class BlockTimer:
+class BlockIndent:
     """
     Class for timing a block of code.
         - Uses enter and exit magic methods.
-        - Display the results with a logger.
+        - Display the name of the block.
+        - Indent the results inside the block.
 
     Parameters
     ----------
@@ -304,15 +305,82 @@ class BlockTimer:
         Logging level to be used.
     """
 
-    def __init__(self, logger, name, level="INFO"):
+    def __init__(self, logger=None, name=None, level="INFO"):
         """
         Constructor.
         Set the logger.
         """
 
         # assign
-        self.logger = logger
         self.name = name
+
+        # assign logger if provided
+        if logger is None:
+            self.logger = LOGGER
+        else:
+            self.logger = logger
+
+        # parse level name
+        self.level = logging.getLevelName(level)
+
+    def __enter__(self):
+        """
+        Enter magic method.
+        Display the block name.
+        Increase the indentation.
+        """
+
+        # display log
+        if self.name is not None:
+            self.logger.log(self.level, self.name)
+
+        # increase the indentation of the block
+        global GLOBAL_LEVEL
+        GLOBAL_LEVEL += 1
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """
+        Exit magic method.
+        Restore the indentation.
+        """
+
+        # restore the indentation to the previous state
+        global GLOBAL_LEVEL
+        GLOBAL_LEVEL -= 1
+
+
+class BlockTimer:
+    """
+    Class for timing a block of code.
+        - Uses enter and exit magic methods.
+        - Display the name of the block.
+        - Display timing information.
+        - Indent the results inside the block.
+
+    Parameters
+    ----------
+    logger : logger
+        Logger object instance.
+    name : string
+        Name of the code block.
+    level : string
+        Logging level to be used.
+    """
+
+    def __init__(self, logger=None, name=None, level="INFO"):
+        """
+        Constructor.
+        Set the logger.
+        """
+
+        # assign
+        self.name = name
+
+        # assign logger if provided
+        if logger is None:
+            self.logger = LOGGER
+        else:
+            self.logger = logger
 
         # parse level name
         self.level = logging.getLevelName(level)
@@ -326,9 +394,18 @@ class BlockTimer:
         Reset the timer and log the results.
         """
 
-        # start the timer and display
+        # start the timer
         self.timestamp = datetime.datetime.today()
-        self.logger.log(self.level, self.name + " : enter : timing")
+
+        # get timing
+        duration = datetime.timedelta()
+        duration = _get_format_duration(duration)
+
+        # display log
+        if self.name is not None:
+            self.logger.log(self.level, self.name + " : enter : " + duration)
+        else:
+            self.logger.log(self.level, "enter : " + duration)
 
         # increase the indentation of the block
         global GLOBAL_LEVEL
@@ -348,41 +425,11 @@ class BlockTimer:
         duration = datetime.datetime.today()-self.timestamp
         duration = _get_format_duration(duration)
 
-        # display exit message
-        self.logger.log(self.level, self.name + " : exit : " + duration)
-
-
-class BlockIndent:
-    """
-    Class for indenting a block of code.
-        - Uses enter and exit magic methods.
-        - Display the results with a logger.
-    """
-
-    def __init__(self):
-        """
-        Constructor.
-        """
-
-        pass
-
-    def __enter__(self):
-        """
-        Enter magic method.
-        Increase the indentation of the block.
-        """
-
-        global GLOBAL_LEVEL
-        GLOBAL_LEVEL += 1
-
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        """
-        Exit magic method.
-        Restore the indentation to the previous state.
-        """
-
-        global GLOBAL_LEVEL
-        GLOBAL_LEVEL -= 1
+        # display log
+        if self.name is not None:
+            self.logger.log(self.level, self.name + " : exit : " + duration)
+        else:
+            self.logger.log(self.level, "exit : " + duration)
 
 
 def log_exception(logger, ex, level="ERROR"):
@@ -607,6 +654,9 @@ try:
 
     # check file integrity
     _check_config()
+
+    # init default logger
+    LOGGER = get_logger(__name__, "default")
 except Exception as ex:
     print("==========================", file=sys.stderr)
     print("INVALID CONFIGURATION FILE", file=sys.stderr)

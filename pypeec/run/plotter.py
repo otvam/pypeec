@@ -134,14 +134,12 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
     """
 
     # handle the data
-    LOGGER.info("parse data")
     (grid, voxel, point, res, conv) = _get_grid_voxel(data_init, data_sweep)
 
     # make the plots
-    with log.BlockTimer(LOGGER, "generate plots"):
-        for i, (tag_plot, data_plotter_tmp) in enumerate(data_plotter.items()):
-            LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_plotter), tag_plot))
-            _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)
+    for i, (tag_plot, data_plotter_tmp) in enumerate(data_plotter.items()):
+        LOGGER.info("plotting %d / %d / %s" % (i+1, len(data_plotter), tag_plot))
+        _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)
 
 
 def run(
@@ -176,7 +174,7 @@ def run(
 
     # plot the sweeps
     for tag_sweep, data_sweep_tmp in data_sweep.items():
-        with log.BlockTimer(LOGGER, "plot sweep: " + tag_sweep):
+        with log.BlockIndent(LOGGER, "plot sweep: " + tag_sweep):
             _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_plotter, gui_obj)
 
     # enter the event loop (should be at the end, blocking call)
