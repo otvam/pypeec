@@ -432,7 +432,7 @@ class BlockTimer:
             self.logger.log(self.level, "exit : " + duration)
 
 
-def log_exception(logger, ex, level="ERROR"):
+def log_exception(logger=None, ex=None, level="ERROR"):
     """
     Log an exception.
         - Log the exception type, message, and trace.
@@ -447,6 +447,14 @@ def log_exception(logger, ex, level="ERROR"):
     level : string
         Logging level to be used.
     """
+
+    # if logger is not provided, use default
+    if logger is None:
+        logger = LOGGER
+
+    # if exception is not provided, use default
+    if ex is None:
+        (_, ex, _) = sys.exc_info()
 
     # get the exception data
     name = ex.__class__.__name__
@@ -510,7 +518,27 @@ def get_duration(timestamp):
     return seconds, duration, date
 
 
-def set_global(timestamp=None, level=None):
+def reset_global():
+    """
+    Reset the global variables.
+        - timestamp (for the elapsed time)
+        - indentation level (for log messages)
+    """
+
+    # reset timestamp
+    timestamp = datetime.datetime.today()
+
+    # reset indentation
+    level = 0
+
+    # set global
+    global GLOBAL_TIMESTAMP
+    global GLOBAL_LEVEL
+    GLOBAL_TIMESTAMP = timestamp
+    GLOBAL_LEVEL = level
+
+
+def set_global(timestamp, level):
     """
     Set the global variables.
         - timestamp (for the elapsed time)
@@ -523,14 +551,6 @@ def set_global(timestamp=None, level=None):
     level : integer
         Indentation level for the log messages.
     """
-
-    # get default timestamp
-    if timestamp is None:
-        timestamp = datetime.datetime.today()
-
-    # get default identation
-    if level is None:
-        level = 0
 
     # set global
     global GLOBAL_TIMESTAMP
