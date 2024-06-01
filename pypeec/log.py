@@ -310,9 +310,14 @@ class BlockTimer:
         Set the logger.
         """
 
+        # assign
         self.logger = logger
         self.name = name
+
+        # parse level name
         self.level = logging.getLevelName(level)
+
+        # dummy timestamp
         self.timestamp = None
 
     def __enter__(self):
@@ -458,7 +463,7 @@ def get_duration(timestamp):
     return seconds, duration, date
 
 
-def set_global(timestamp, level):
+def set_global(timestamp=None, level=None):
     """
     Set the global variables.
         - timestamp (for the elapsed time)
@@ -472,6 +477,15 @@ def set_global(timestamp, level):
         Indentation level for the log messages.
     """
 
+    # get default timestamp
+    if timestamp is None:
+        timestamp = datetime.datetime.today()
+
+    # get default identation
+    if level is None:
+        level = 0
+
+    # set global
     global GLOBAL_TIMESTAMP
     global GLOBAL_LEVEL
     GLOBAL_TIMESTAMP = timestamp
@@ -514,8 +528,9 @@ def get_logger(name, tag=None):
         Logger object instance.
     """
 
-    # fix the tag if None
-    tag = tag or name
+    # fix the tag if not provided
+    if tag is None:
+        tag = name
 
     # get the logger
     logger = logging.getLogger(name)
