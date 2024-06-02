@@ -11,7 +11,7 @@ set -o pipefail
 source examples_config.sh
 
 # get the filenames
-FILE_SOLUTION="$PATH_ROOT/$FOLDER_EXAMPLE/solution.gz"
+FILE_SOLUTION="$PATH_ROOT/$FOLDER_EXAMPLE/solution.json.gz"
 FILE_PLOTTER="$PATH_ROOT/$FOLDER_CONFIG/plotter.yaml"
 
 # plot tag (from plotter.yaml)

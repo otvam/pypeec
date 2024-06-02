@@ -12,8 +12,8 @@ source examples_config.sh
 
 # get the filenames
 FILE_PROBLEM="$PATH_ROOT/$FOLDER_EXAMPLE/problem.yaml"
-FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.gz"
-FILE_SOLUTION="$PATH_ROOT/$FOLDER_EXAMPLE/solution.gz"
+FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.json.gz"
+FILE_SOLUTION="$PATH_ROOT/$FOLDER_EXAMPLE/solution.json.gz"
 FILE_TOLERANCE="$PATH_ROOT/$FOLDER_CONFIG/tolerance.yaml"
 
 # run

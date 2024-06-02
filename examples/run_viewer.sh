@@ -11,7 +11,7 @@ set -o pipefail
 source examples_config.sh
 
 # get the filenames
-FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.gz"
+FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.json.gz"
 FILE_VIEWER="$PATH_ROOT/$FOLDER_CONFIG/viewer.yaml"
 
 # plot tag (from viewer.yaml)

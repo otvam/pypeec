@@ -12,7 +12,7 @@ source examples_config.sh
 
 # get the filenames
 FILE_GEOMETRY="$PATH_ROOT/$FOLDER_EXAMPLE/geometry.yaml"
-FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.gz"
+FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.json.gz"
 
 # run
 pypeec mesher \
