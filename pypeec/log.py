@@ -116,8 +116,6 @@ def _check_config():
     # check timing data
     _check_string("TIMESTAMP_FMT", TIMESTAMP_FMT)
     _check_string("DURATION_FMT", DURATION_FMT)
-    _check_integer("TIMESTAMP_TRC", TIMESTAMP_TRC)
-    _check_integer("DURATION_TRC", DURATION_TRC)
 
     # check color level
     _check_dict("COLOR_LEVEL", COLOR_LEVEL)
@@ -149,7 +147,6 @@ def _get_format_timestamp(timestamp):
     """
 
     timestamp_str = timestamp.strftime(TIMESTAMP_FMT)
-    timestamp_str = timestamp_str[0:len(timestamp_str)-TIMESTAMP_TRC]
 
     return timestamp_str
 
@@ -159,15 +156,21 @@ def _get_format_duration(duration):
     Format the duration into a string.
     """
 
-    # get reference timestamp
-    timestamp = datetime.datetime.utcfromtimestamp(0)
+    # extract and parse
+    days = duration.days
+    seconds = duration.seconds
+    microseconds = duration.microseconds
+    hours, remainder = divmod(seconds, 3600)
+    minutes, remainder = divmod(remainder, 60)
+    seconds = remainder+microseconds/1e6
 
-    # convert timestamp to duration
-    timestamp = timestamp+duration
-
-    # format timestamp
-    duration_str = timestamp.strftime(DURATION_FMT)
-    duration_str = duration_str[0:len(duration_str)-DURATION_TRC]
+    # format duration
+    duration_str = DURATION_FMT.format(
+        days=days,
+        hours=hours,
+        minutes=minutes,
+        seconds=seconds,
+    )
 
     return duration_str
 
@@ -659,8 +662,6 @@ try:
     # load timing data
     TIMESTAMP_FMT = config.get("GLOBAL", "TIMESTAMP_FMT", raw=True)
     DURATION_FMT = config.get("GLOBAL", "DURATION_FMT", raw=True)
-    TIMESTAMP_TRC = config.getint("GLOBAL", "TIMESTAMP_TRC")
-    DURATION_TRC = config.getint("GLOBAL", "DURATION_TRC")
 
     # load color level
     COLOR_LEVEL = dict(config.items("COLOR_LEVEL", raw=True))
