@@ -237,7 +237,7 @@ def run(data_geometry, is_truncated=False):
     """
 
     # get timestamp
-    timestamp = log.get_timer()
+    timestamp = log.get_timestamp()
 
     # check the input data
     LOGGER.info("check the input data")

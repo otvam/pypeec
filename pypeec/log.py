@@ -29,12 +29,6 @@ import logging
 import configparser
 import importlib.resources
 
-# global timestamp (constant over the complete run)
-GLOBAL_TIMESTAMP = datetime.datetime.today()
-
-# logging indentation level (updated inside the blocks)
-GLOBAL_LEVEL = 0
-
 
 def _decode_escape(value):
     """
@@ -114,6 +108,7 @@ def _check_config():
     _check_boolean("USE_COLOR", COLOR_USE)
 
     # check timing data
+    _check_boolean("TIMESTAMP_UTC", TIMESTAMP_UTC)
     _check_string("TIMESTAMP_FMT", TIMESTAMP_FMT)
     _check_string("DURATION_FMT", DURATION_FMT)
 
@@ -206,7 +201,7 @@ class _DeltaTimeFormatter(logging.Formatter):
         exc_info = record.exc_info
 
         # add the elapsed time to the log record
-        timestamp = datetime.datetime.today()
+        timestamp = get_timestamp()
         duration = timestamp-GLOBAL_TIMESTAMP
         record.timestamp = _get_format_timestamp(timestamp)
         record.duration = _get_format_duration(duration)
@@ -398,10 +393,10 @@ class BlockTimer:
         """
 
         # start the timer
-        self.timestamp = datetime.datetime.today()
+        self.timestamp = get_timestamp()
 
         # get timing
-        duration = datetime.timedelta()
+        duration = datetime.timedelta(seconds=0)
         duration = _get_format_duration(duration)
 
         # display log
@@ -425,7 +420,7 @@ class BlockTimer:
         GLOBAL_LEVEL -= 1
 
         # get timing
-        duration = datetime.datetime.today()-self.timestamp
+        duration = get_timestamp()-self.timestamp
         duration = _get_format_duration(duration)
 
         # display log
@@ -473,10 +468,11 @@ def log_exception(logger=None, ex=None, level="ERROR"):
             logger.log(level, None, exc_info=ex)
         else:
             logger.log(level, str(ex))
+            logger.log(level, str(ex))
     logger.log(level, "exception : %s / %s" % (module, name))
 
 
-def get_timer():
+def get_timestamp():
     """
     Get a timestamp with the current time.
 
@@ -486,7 +482,10 @@ def get_timer():
         Timestamp with the current time.
     """
 
-    timestamp = datetime.datetime.today()
+    if TIMESTAMP_UTC:
+        timestamp = datetime.datetime.utcnow()
+    else:
+        timestamp = datetime.datetime.now()
 
     return timestamp
 
@@ -511,7 +510,7 @@ def get_duration(timestamp):
     """
 
     # get timing
-    duration = datetime.datetime.today()-timestamp
+    duration = get_timestamp()-timestamp
 
     # parse timing
     seconds = duration.total_seconds()
@@ -529,7 +528,7 @@ def reset_global():
     """
 
     # reset timestamp
-    timestamp = datetime.datetime.today()
+    timestamp = get_timestamp()
 
     # reset indentation
     level = 0
@@ -660,6 +659,7 @@ try:
     COLOR_USE = config.getboolean("GLOBAL", "COLOR_USE")
 
     # load timing data
+    TIMESTAMP_UTC = config.getboolean("GLOBAL", "TIMESTAMP_UTC")
     TIMESTAMP_FMT = config.get("GLOBAL", "TIMESTAMP_FMT", raw=True)
     DURATION_FMT = config.get("GLOBAL", "DURATION_FMT", raw=True)
 
@@ -678,6 +678,12 @@ try:
 
     # init default logger
     LOGGER = get_logger(__name__, "default")
+
+    # global timestamp (constant over the complete run)
+    GLOBAL_TIMESTAMP = get_timestamp()
+
+    # logging indentation level (updated inside the blocks)
+    GLOBAL_LEVEL = 0
 except Exception as ex:
     print("==========================", file=sys.stderr)
     print("INVALID CONFIGURATION FILE", file=sys.stderr)

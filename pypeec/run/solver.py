@@ -382,7 +382,7 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
     """
 
     # get timestamp
-    timestamp = log.get_timer()
+    timestamp = log.get_timestamp()
 
     # check the voxel data
     LOGGER.info("check the voxel data")
