@@ -4,6 +4,10 @@
 #          The optional libraries are included.
 #          The packaging/development tools are included.
 #
+# WARNING: Some listed packages are NOT open source.
+#          INTEL MKL is not open source.
+#          NVIDIA CUDA is not open source.
+#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 

@@ -10,8 +10,8 @@ Repository  https://github.com/otvam/pypeec
 Issues      https://github.com/otvam/pypeec/issues
 ==========  ========================================
 
-Author
-------
+Maintainer
+----------
 
 ===========  ==================
 Name         **Thomas Guillod**
@@ -31,7 +31,7 @@ Conda       https://anaconda.org/conda-forge/pypeec
 PyPi        https://pypi.org/project/pypeec
 ==========  ========================================
 
-Credits
+Authors
 -------
 
 PyPEEC was created at **Dartmouth College** by the research group of **Prof. Sullivan**:
@@ -40,7 +40,27 @@ PyPEEC was created at **Dartmouth College** by the research group of **Prof. Sul
 * Dartmouth Engineering: https://engineering.dartmouth.edu
 * PMIC: https://pmic.engineering.dartmouth.edu
 
-Special thanks to Yue (Will) Wu for discovering and reporting several bugs.
+Here is the list of the PyPEEC contributors:
+
+* **Thomas Guillod**
+    * maintainer
+    * programming
+    * tool architecture
+    * software architecture
+    * electromagnetic design
+    * numerical analysis
+    * documentation
+* **Charles R. Sullivan**
+    * tool architecture
+    * electromagnetic design
+    * documentation
+* **Yue (Will) Wu**
+    * feature feedback
+    * bug reporting
+    * testing
+
+Credits
+-------
 
 The FFT-accelerated PEEC method with voxels has been first described and implemented in:
 
