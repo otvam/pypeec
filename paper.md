@@ -47,7 +47,7 @@ optimization of electrical components (e.g., power electronics, packaging, IC
 design). Among the existing numerical methods (e.g., FEM, FDTD, PEEC, BEM), the 
 PEEC method features several advantages [@method_review; @ruehli; @volume_peec]:
 
-- Only the active materials are discretized (no need to mesh the free space).
+- Only the active materials are discretized (no need to mesh the vacuum/air).
 - Intuitive understanding of the equation discretization process.
 - Straightforward connection of external circuit elements.
 
@@ -100,7 +100,7 @@ magnetostatic and quasi-magnetostatic problems with voxel geometries. An
 arbitrary number of conductive domains, magnetic domains (ideal and/or lossy), 
 and sources (voltage and/or current) can be used. The current density, flux 
 density, potential, loss density, and energy density are computed. The 
-free-space magnetic field (near-field) can also be computed on a point cloud. 
+free space magnetic field (near-field) can also be computed on a point cloud. 
 Additionally, the voltage, current, complex power, and impedance of the 
 different terminals are extracted.
 
@@ -129,7 +129,7 @@ is considered. The inductor has a footprint of 4\ mm^2^ and is operated in the
 and DC current densities, the relative error on the extracted impedance, and 
 the computational cost. The number of degrees of freedom represents the number 
 of unknowns for the PEEC problem. The computational cost is evaluated with an 
-AMD\ EPYC\ 7543\ CPU.
+AMD\ EPYC\ 7543\ CPU (without GPUs).
 
 ![(a)\ Ratio between the AC and DC current densities. (b)\ Relative error on 
 the extract equivalent resistance and the inductance. (c)\ Wall clock time 
