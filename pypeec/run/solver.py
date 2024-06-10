@@ -50,7 +50,7 @@ def _run_solver_options(data_solver):
     multiply_fft.set_options(fft_options)
 
 
-def _run_solver_init(data_solver, is_truncated):
+def _run_solver_init(data_solver):
     """
     Compute the voxel geometry, Green functions, and the incidence matrix.
     """
@@ -155,29 +155,25 @@ def _run_solver_init(data_solver, is_truncated):
 
     # assign the results (will be merged in the solver output)
     data_init = {
-        "n": n, "d": d, "c": c,
+        "n": n,
+        "d": d,
+        "c": c,
         "problem_status": problem_status,
+        "idx_vc": idx_vc,
+        "idx_vm": idx_vm,
+        "idx_fc": idx_fc,
+        "idx_fm": idx_fm,
+        "idx_src_c": idx_src_c,
+        "idx_src_v": idx_src_v,
+        "pts_cloud": pts_cloud,
+        "pts_net_c": pts_net_c,
+        "pts_net_m": pts_net_m,
     }
-
-    # if required, add the complete data
-    if not is_truncated:
-        data_add = {
-            "idx_vc": idx_vc,
-            "idx_vm": idx_vm,
-            "idx_fc": idx_fc,
-            "idx_fm": idx_fm,
-            "idx_src_c": idx_src_c,
-            "idx_src_v": idx_src_v,
-            "pts_cloud": pts_cloud,
-            "pts_net_c": pts_net_c,
-            "pts_net_m": pts_net_m,
-        }
-        data_init = {**data_init, **data_add}
 
     return data_init, data_internal, sweep_pool
 
 
-def _run_solver_sweep(data_solver, data_internal, data_param, sol_init, is_truncated):
+def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     """
     Create the equation system, solve the system, and extract the solution.
     """
@@ -309,6 +305,19 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init, is_trunc
         # get the cloud point magnetic field
         H_pts = extract_solution.get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, pts_cloud)
 
+    # assemble solution
+    var = [
+        {"name": "V_vc", "val": V_vc, "cat": "scalar_electric"},
+        {"name": "P_vc", "val": P_vc, "cat": "scalar_electric"},
+        {"name": "S_vc", "val": S_vc, "cat": "scalar_electric"},
+        {"name": "J_vc", "val": J_vc, "cat": "vector_electric"},
+        {"name": "V_vm", "val": V_vm, "cat": "scalar_magnetic"},
+        {"name": "P_vm", "val": P_vm, "cat": "scalar_magnetic"},
+        {"name": "Q_vm", "val": Q_vm, "cat": "scalar_magnetic"},
+        {"name": "B_vm", "val": B_vm, "cat": "vector_magnetic"},
+        {"name": "H_pts", "val": H_pts, "cat": "cloud"},
+    ]
+
     # assign the results (will be merged in the solver output)
     data_sweep = {
         "freq": freq,
@@ -321,28 +330,14 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init, is_trunc
         "source": source,
         "integral": integral,
         "conv": conv,
+        "res": res,
+        "var": var,
     }
-
-    # if required, add the complete data
-    if not is_truncated:
-        data_add = {
-            "res": res,
-            "V_vc": V_vc,
-            "V_vm": V_vm,
-            "J_vc": J_vc,
-            "B_vm": B_vm,
-            "P_vc": P_vc,
-            "P_vm": P_vm,
-            "S_vc": S_vc,
-            "Q_vm": Q_vm,
-            "H_pts": H_pts,
-        }
-        data_sweep = {**data_sweep, **data_add}
 
     return data_sweep, sol
 
 
-def _get_data(data_init, data_sweep, timestamp, is_truncated):
+def _get_data(data_init, data_sweep, timestamp):
     """
     Assemble the returned data.
     """
@@ -351,14 +346,14 @@ def _get_data(data_init, data_sweep, timestamp, is_truncated):
     (seconds, duration, date) = log.get_duration(timestamp)
 
     # get status
-    is_successful = True
+    status = True
     for data_sweep_tmp in data_sweep.values():
-        is_successful = is_successful and data_sweep_tmp["has_converged"]
-        is_successful = is_successful and data_sweep_tmp["solver_ok"]
-        is_successful = is_successful and data_sweep_tmp["condition_ok"]
+        status = status and data_sweep_tmp["has_converged"]
+        status = status and data_sweep_tmp["solver_ok"]
+        status = status and data_sweep_tmp["condition_ok"]
 
     # get warning
-    if not is_successful:
+    if not status:
         LOGGER.warning("problem detected for the solver")
 
     # extract the solution
@@ -366,8 +361,7 @@ def _get_data(data_init, data_sweep, timestamp, is_truncated):
         "date": date,
         "duration": duration,
         "seconds": seconds,
-        "is_truncated": is_truncated,
-        "is_successful": is_successful,
+        "status": status,
         "data_init": data_init,
         "data_sweep": data_sweep,
     }
@@ -375,7 +369,7 @@ def _get_data(data_init, data_sweep, timestamp, is_truncated):
     return data_solution
 
 
-def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
+def run(data_voxel, data_problem, data_tolerance):
     """
     Main script for solving a problem with the PEEC solver.
     Handle invalid data with exceptions.
@@ -392,7 +386,6 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
     LOGGER.info("check the input data")
     check_data_problem.check_data_problem(data_problem)
     check_data_tolerance.check_data_tolerance(data_tolerance)
-    check_data_options.check_data_options(is_truncated)
 
     # combine the problem and voxel data
     LOGGER.info("combine the input data")
@@ -400,18 +393,18 @@ def run(data_voxel, data_problem, data_tolerance, is_truncated=False):
 
     # create the problem
     with log.BlockTimer(LOGGER, "init"):
-        (data_init, data_internal, sweep_pool) = _run_solver_init(data_solver, is_truncated)
+        (data_init, data_internal, sweep_pool) = _run_solver_init(data_solver)
 
     # function for solving a single sweep
     def fct_compute(tag, data, init):
         with log.BlockTimer(LOGGER, "run sweep: " + tag):
-            (output, init) = _run_solver_sweep(data_solver, data_internal, data, init, is_truncated)
+            (output, init) = _run_solver_sweep(data_solver, data_internal, data, init)
         return output, init
 
     # compute the different sweeps
     data_sweep = sweep_solver.get_run_sweep(sweep_pool, sweep_config, sweep_param, fct_compute)
 
     # create output data
-    data_solution = _get_data(data_init, data_sweep, timestamp, is_truncated)
+    data_solution = _get_data(data_init, data_sweep, timestamp)
 
     return data_solution

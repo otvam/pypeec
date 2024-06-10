@@ -80,10 +80,6 @@ def run_mesher_data(data_geometry, **kwargs):
     ----------
     data_geometry : data
         The dict describes the geometry, meshing and resampling process.
-    is_truncated : boolean
-        If false, the complete results are returned (default).
-        If true, the results are truncated to save space.
-        This argument is optional.
 
     Returns
     -------
@@ -124,10 +120,6 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
     file_voxel : filename
         The file content describes the voxel structure.
         This output file is written by this function (JSON or Pickle format).
-    is_truncated : boolean
-        If false, the complete results are returned (default).
-        If true, the results are truncated to save space.
-        This argument is optional.
     """
 
     # load data
@@ -262,10 +254,6 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
         The dict describes the problem to be solved.
     data_tolerance: data
         The dict describes the numerical options.
-    is_truncated : boolean
-        If false, the complete results are returned (default).
-        If true, the results are truncated to save space.
-        This argument is optional.
 
     Returns
     -------
@@ -314,10 +302,6 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
     file_solution : filename
         The file content describes the problem solution.
         This output file is written by this function (JSON or Pickle format).
-    is_truncated : boolean
-        If false, the complete results are returned (default).
-        If true, the results are truncated to save space.
-        This argument is optional.
     """
 
     # load data

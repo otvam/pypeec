@@ -147,7 +147,7 @@ def _run_stl(data_voxelize):
     return reference, data_internal
 
 
-def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
+def _run_resample_graph(reference, data_internal, data_geometry):
     """
     Resampling of a 3D voxel structure (increases the number of voxels).
     """
@@ -189,24 +189,21 @@ def _run_resample_graph(reference, data_internal, data_geometry, is_truncated):
 
     # assemble the data
     data_geom = {
-        "n": n, "d": d, "s": s, "c": c,
+        "n": n,
+        "d": d,
+        "s": s,
+        "c": c,
         "voxel_status": voxel_status,
+        "domain_def": domain_def,
+        "connection_def": connection_def,
+        "pts_cloud": pts_cloud,
+        "reference": reference,
     }
-
-    # if required, add the complete data
-    if not is_truncated:
-        data_add = {
-            "domain_def": domain_def,
-            "connection_def": connection_def,
-            "pts_cloud": pts_cloud,
-            "reference": reference,
-        }
-        data_geom = {**data_geom, **data_add}
 
     return data_geom
 
 
-def _get_data(data_geom, timestamp, is_truncated):
+def _get_data(data_geom, timestamp):
     """
     Assemble the returned data.
     """
@@ -215,22 +212,21 @@ def _get_data(data_geom, timestamp, is_truncated):
     (seconds, duration, date) = log.get_duration(timestamp)
 
     # get status
-    is_successful = True
+    status = True
 
     # extract the solution
     data_voxel = {
         "date": date,
         "duration": duration,
         "seconds": seconds,
-        "is_truncated": is_truncated,
-        "is_successful": is_successful,
+        "status": status,
         "data_geom": data_geom,
     }
 
     return data_voxel
 
 
-def run(data_geometry, is_truncated=False):
+def run(data_geometry):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
     Handle invalid data with exceptions.
@@ -242,15 +238,14 @@ def run(data_geometry, is_truncated=False):
     # check the input data
     LOGGER.info("check the input data")
     check_data_geometry.check_data_geometry(data_geometry)
-    check_data_options.check_data_options(is_truncated)
 
     # run the mesher
     (reference, data_internal) = _run_mesher(data_geometry)
 
     # resample and assemble
-    data_geom = _run_resample_graph(reference, data_internal, data_geometry, is_truncated)
+    data_geom = _run_resample_graph(reference, data_internal, data_geometry)
 
     # create output data
-    data_voxel = _get_data(data_geom, timestamp, is_truncated)
+    data_voxel = _get_data(data_geom, timestamp)
 
     return data_voxel

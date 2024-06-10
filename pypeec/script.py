@@ -87,12 +87,6 @@ def _get_arg_mesher(subparsers):
         metavar="file",
         dest="file_voxel",
     )
-    parser.add_argument(
-        "-t", "--truncated",
-        help="truncate the results (default: full results)",
-        action="store_true",
-        dest="is_truncated",
-    )
 
 
 def _get_arg_viewer(subparsers):
@@ -186,12 +180,6 @@ def _get_arg_solver(subparsers):
         required=True,
         metavar="file",
         dest="file_solution",
-    )
-    parser.add_argument(
-        "-t", "--truncated",
-        help="truncate the results (default: full results)",
-        action="store_true",
-        dest="is_truncated",
     )
 
 
@@ -340,7 +328,6 @@ def run_arguments(argv):
             main.run_mesher_file(
                 args.file_geometry,
                 args.file_voxel,
-                is_truncated=args.is_truncated,
             )
         elif args.command in ["viewer", "vi"]:
             main.run_viewer_file(
@@ -356,7 +343,6 @@ def run_arguments(argv):
                 args.file_problem,
                 args.file_tolerance,
                 args.file_solution,
-                is_truncated=args.is_truncated,
             )
         elif args.command in ["plotter", "pl"]:
             main.run_plotter_file(

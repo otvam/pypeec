@@ -31,14 +31,6 @@ def check_plot_options(plot_mode, folder, name):
     datachecker.check_folder("folder", folder, can_be_none=True)
 
 
-def check_data_options(is_truncated):
-    """
-    Check the plot mode (display or not the plots).
-    """
-
-    datachecker.check_boolean("is_truncated", is_truncated)
-
-
 def check_data_voxel(data_voxel):
     """
     Check the voxel data.
@@ -49,20 +41,14 @@ def check_data_voxel(data_voxel):
         "date",
         "duration",
         "seconds",
-        "is_truncated",
-        "is_successful",
+        "status",
         "data_geom",
     ]
     datachecker.check_dict("data_voxel", data_voxel, key_list=key_list)
 
     # extract fields
-    is_truncated = data_voxel["is_truncated"]
     data_geom = data_voxel["data_geom"]
-
-    # check data
     datachecker.check_dict("data_geom", data_geom)
-    datachecker.check_boolean("is_truncated", is_truncated)
-    datachecker.check_assert("is_truncated", not is_truncated, "truncated input data cannot be used")
 
     return data_geom
 
@@ -77,22 +63,16 @@ def check_data_solution(data_solution):
         "date",
         "duration",
         "seconds",
-        "is_truncated",
-        "is_successful",
+        "status",
         "data_init",
         "data_sweep",
     ]
     datachecker.check_dict("data_solution", data_solution, key_list=key_list)
 
     # extract fields
-    is_truncated = data_solution["is_truncated"]
     data_init = data_solution["data_init"]
     data_sweep = data_solution["data_sweep"]
-
-    # check data
     datachecker.check_dict("data_geom", data_init)
     datachecker.check_dict("data_geom", data_sweep)
-    datachecker.check_boolean("is_truncated", is_truncated)
-    datachecker.check_assert("is_truncated", not is_truncated, "truncated input data cannot be used")
 
     return data_init, data_sweep

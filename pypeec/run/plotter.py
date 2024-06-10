@@ -53,15 +53,9 @@ def _get_grid_voxel(data_init, data_sweep):
     pts_cloud = data_init["pts_cloud"]
 
     # extract the data
-    V_vc = data_sweep["V_vc"]
-    V_vm = data_sweep["V_vm"]
-    J_vc = data_sweep["J_vc"]
-    B_vm = data_sweep["B_vm"]
-    S_vc = data_sweep["S_vc"]
-    Q_vm = data_sweep["Q_vm"]
-    P_vc = data_sweep["P_vc"]
-    P_vm = data_sweep["P_vm"]
-    H_pts = data_sweep["H_pts"]
+    magnetic = data_sweep["magnetic"]
+    electric = data_sweep["electric"]
+    point = data_sweep["point"]
     res = data_sweep["res"]
     conv = data_sweep["conv"]
 
@@ -76,16 +70,16 @@ def _get_grid_voxel(data_init, data_sweep):
     # add the problem solution to the grid
     voxel = data_plotter.set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v)
 
-    # set the electric variables
-    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, V_vc, "V_c")
-    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, S_vc, "S_c")
-    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, P_vc, "P_c")
-    voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vc, J_vc, "J_c")
+    # set the scalar variables
+    for tag, val in scalar.items():
+        voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, val, tag)
 
-    # set the magnetic variables
-    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vm, V_vm, "V_m")
-    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vm, Q_vm, "Q_m")
-    voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vm, P_vm, "P_m")
+    # set the vector variables
+    for tag, val in scalar.items():
+        voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, val, tag)
+
+
+    voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vc, J_vc, "J_c")
     voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vm, B_vm, "B_m")
 
     # add the magnetic field
