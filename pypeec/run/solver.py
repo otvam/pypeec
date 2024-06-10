@@ -307,15 +307,15 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
 
     # assemble solution
     var = [
-        {"name": "V_vc", "val": V_vc, "cat": "scalar_electric"},
-        {"name": "P_vc", "val": P_vc, "cat": "scalar_electric"},
-        {"name": "S_vc", "val": S_vc, "cat": "scalar_electric"},
-        {"name": "J_vc", "val": J_vc, "cat": "vector_electric"},
-        {"name": "V_vm", "val": V_vm, "cat": "scalar_magnetic"},
-        {"name": "P_vm", "val": P_vm, "cat": "scalar_magnetic"},
-        {"name": "Q_vm", "val": Q_vm, "cat": "scalar_magnetic"},
-        {"name": "B_vm", "val": B_vm, "cat": "vector_magnetic"},
-        {"name": "H_pts", "val": H_pts, "cat": "cloud"},
+        {"name": "V_c", "value": V_vc, "cat": "scalar_electric"},
+        {"name": "P_c", "value": P_vc, "cat": "scalar_electric"},
+        {"name": "S_c", "value": S_vc, "cat": "scalar_electric"},
+        {"name": "J_c", "value": J_vc, "cat": "vector_electric"},
+        {"name": "V_m", "value": V_vm, "cat": "scalar_magnetic"},
+        {"name": "P_m", "value": P_vm, "cat": "scalar_magnetic"},
+        {"name": "Q_m", "value": Q_vm, "cat": "scalar_magnetic"},
+        {"name": "B_m", "value": B_vm, "cat": "vector_magnetic"},
+        {"name": "H", "value": H_pts, "cat": "cloud"},
     ]
 
     # assign the results (will be merged in the solver output)

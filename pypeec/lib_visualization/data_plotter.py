@@ -100,16 +100,16 @@ def set_voxel_vector(voxel, idx, idx_var, var, name):
     return voxel
 
 
-def set_magnetic_field(point, H_pts):
+def set_point_cloud(point, var, name):
     """
-    Add the magnetic field to the point cloud.
+    Add a vector variable defined on the point cloud.
     The norm (scalar field) and the direction (vector field) are added.
     """
 
     # assign the vector and the norm
-    point["H_vec_re"] = np.real(H_pts)
-    point["H_vec_im"] = np.imag(H_pts)
-    point["H_norm"] = lna.norm(H_pts, axis=1)
+    point[name + "_vec_re"] = np.real(var)
+    point[name + "_vec_im"] = np.imag(var)
+    point[name + "_norm"] = lna.norm(var, axis=1)
 
     return point
 
