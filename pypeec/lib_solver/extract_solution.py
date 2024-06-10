@@ -233,7 +233,7 @@ def get_energy(freq, I_fc, I_fm, L_op_c, K_op_c):
     return W_fc, W_fm
 
 
-def get_integral(P_fc, P_fm, W_fc, W_fm, S_tot):
+def get_integral(P_fc, P_fm, W_fc, W_fm, S_total):
     """
     Sum the loss/energy in order to obtain global quantities.
     """
@@ -243,27 +243,27 @@ def get_integral(P_fc, P_fm, W_fc, W_fm, S_tot):
     P_magnetic = np.sum(P_fm)
     W_electric = np.sum(W_fc)
     W_magnetic = np.sum(W_fm)
-    P_tot = P_electric+P_magnetic
-    W_tot = W_electric+W_magnetic
+    P_total = P_electric+P_magnetic
+    W_total = W_electric+W_magnetic
 
     # assign the integral quantities
     integral = {
         "P_electric": P_electric, "P_magnetic": P_magnetic,
         "W_electric": W_electric, "W_magnetic": W_magnetic,
-        "P_tot": P_tot, "W_tot": W_tot, "S_tot": S_tot,
+        "P_total": P_total, "W_total": W_total, "S_total": S_total,
     }
 
     # display
     LOGGER.debug("integral")
     with log.BlockIndent():
-        LOGGER.debug("S_tot_real = %.2e VA" % S_tot.real)
-        LOGGER.debug("S_tot_imag = %.2ej VA" % S_tot.imag)
+        LOGGER.debug("S_tot_real = %.2e VA" % S_total.real)
+        LOGGER.debug("S_tot_imag = %.2ej VA" % S_total.imag)
         LOGGER.debug("P_electric = %.2e W" % P_electric)
         LOGGER.debug("P_magnetic = %.2e W" % P_magnetic)
         LOGGER.debug("W_electric = %.2e J" % W_electric)
         LOGGER.debug("W_magnetic = %.2e J" % W_magnetic)
-        LOGGER.debug("P_tot = %.2e W" % P_tot)
-        LOGGER.debug("W_tot = %.2e J" % W_tot)
+        LOGGER.debug("P_total = %.2e W" % P_total)
+        LOGGER.debug("W_total = %.2e J" % W_total)
 
     return integral
 
@@ -293,14 +293,14 @@ def get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm):
         P_tmp = P_vc_tmp+P_vm_tmp
 
         # assign the losses
-        material[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_tot": P_tmp}
+        material[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_total": P_tmp}
 
         # display
         LOGGER.debug("domain: %s" % tag)
         with log.BlockIndent():
             LOGGER.debug("P_electric = %.2e W" % P_vc_tmp)
             LOGGER.debug("P_magnetic = %.2e W" % P_vm_tmp)
-            LOGGER.debug("P_tot = %.2e W" % P_tmp)
+            LOGGER.debug("P_total = %.2e W" % P_tmp)
 
     return material
 
@@ -317,7 +317,7 @@ def get_source(freq, source_all, I_src, V_vc):
     source = {}
 
     # total complex power
-    S_tot = 0.0
+    S_total = 0.0
 
     # get the factor for getting the power time-averaged values
     if freq == 0:
@@ -369,7 +369,7 @@ def get_source(freq, source_all, I_src, V_vc):
         }
 
         # add the power
-        S_tot += S_tmp
+        S_total += S_tmp
 
         # display
         LOGGER.debug("terminal: %s" % tag)
@@ -392,4 +392,4 @@ def get_source(freq, source_all, I_src, V_vc):
             LOGGER.debug("I = %+.2e + %+.2ej A" % (I_tmp.real, I_tmp.imag))
             LOGGER.debug("S = %+.2e + %+.2ej VA" % (S_tmp.real, S_tmp.imag))
 
-    return source, S_tot
+    return source, S_total

@@ -34,15 +34,15 @@ def _get_solver(data_sweep):
     # extract the data
     freq = data_sweep["freq"]
     has_converged = data_sweep["has_converged"]
-    P_tot = data_sweep["integral"]["P_tot"]
-    W_tot = data_sweep["integral"]["W_tot"]
+    P_total = data_sweep["integral"]["P_total"]
+    W_total = data_sweep["integral"]["W_total"]
 
     # assemble results
     solver = {
         "freq": float(freq),
         "has_converged": bool(has_converged),
-        "P_tot": float(P_tot),
-        "W_tot": float(W_tot),
+        "P_total": float(P_total),
+        "W_total": float(W_total),
     }
 
     return solver
