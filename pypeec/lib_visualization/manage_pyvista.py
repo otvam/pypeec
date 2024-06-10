@@ -372,7 +372,9 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     var_norm = var + "_norm"
 
     # check variable
-    if var not in obj.array_names:
+    if var + "_re" not in obj.array_names:
+        raise RuntimeError("variable is not in the dataset: %s" % var)
+    if var + "_im" not in obj.array_names:
         raise RuntimeError("variable is not in the dataset: %s" % var)
 
     # scale and clamp the variable

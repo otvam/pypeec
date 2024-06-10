@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_voxel/anisotropic",
-        "timestamp": "2024-05-18 19:43:44.853460"
+        "timestamp": "2024-06-10 16:10:18.095017"
     },
     "mesher": {
         "n_total": 25,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 0.0,
             "has_converged": true,
-            "P_tot": 4.4000000000000114e-05,
-            "W_tot": 1.6077552029418427e-08
+            "P_total": 4.4000000000000114e-05,
+            "W_total": 1.6077552029418427e-08
         }
     }
 }

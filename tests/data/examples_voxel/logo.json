@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_voxel/logo",
-        "timestamp": "2024-05-18 19:43:46.623904"
+        "timestamp": "2024-06-10 16:10:19.762342"
     },
     "mesher": {
         "n_total": 27,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 0.0,
             "has_converged": true,
-            "P_tot": 0.07142857142857145,
-            "W_tot": 8.823700255244457e-09
+            "P_total": 0.07142857142857145,
+            "W_total": 8.823700255244457e-09
         }
     }
 }
