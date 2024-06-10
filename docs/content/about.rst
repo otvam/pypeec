@@ -38,7 +38,7 @@ PyPEEC was created at **Dartmouth College** by the research group of **Prof. Sul
 
 * Dartmouth College, NH, USA: https://dartmouth.edu
 * Dartmouth Engineering: https://engineering.dartmouth.edu
-* PMIC: https://pmic.engineering.dartmouth.edu
+* NSF/PMIC: https://pmic.engineering.dartmouth.edu
 
 Here is the list of the PyPEEC contributors:
 

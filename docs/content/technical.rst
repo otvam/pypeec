@@ -79,27 +79,36 @@ Logger Configuration File
 Packaging and Environment
 -------------------------
 
+The following files are describing the package, documentation, and dependencies:
+
 * List of Python dependencies (pinned versions): ``requirements.txt``
 * Package definition with dependencies (minimum versions): ``pyproject.toml``
 * Conda file with the minimum requirements for PyPEEC: ``conda_base.yaml``
 * Conda file including the optional and development packages: ``conda_dev.yaml``
 * Conda feedstock recipe: https://github.com/conda-forge/pypeec-feedstock
+* The examples and the tutorial are located in the ``examples`` folder.
+* The Sphinx documentation is located in the ``docs`` folder.
 
-Tests and Documentation
------------------------
+The following scripts are used to build the package, documentation, and releases:
 
-* The documentation is located in the ``docs`` folder (using the ``sphinx`` generator).
-* The tests are located in the ``tests`` folder (using the ``unittest`` framework).
-* The tests are checking that the examples are running correctly.
-* Only integration tests currently exist (no unit tests).
-
-Scripts
--------
-
-* ``scripts/run_tests.sh``: run all the tests.
-* ``scripts/run_coverage.sh``: run a code coverage analysis.
 * ``scripts/run_build.sh``: build the Python package and build the HTML documentation.
 * ``scripts/run_release.sh``: create a release (tag, release, package, and documentation).
+
+Tests and Coverage
+------------------
+
+PyPEEC is using different tests to check for potential regressions:
+
+* The tests are located in the ``tests`` folder.
+* The tests are using the ``unittest`` framework.
+* The tests are covering all the main functionalities.
+* The tests are using the examples and the tutorial to check the code.
+* Only integration tests are currently implemented (no unit tests).
+
+These files are used to run the tests (locally and/or continuous integration):
+
+* ``scripts/run_tests.sh``: run all the integration tests.
+* ``scripts/run_coverage.sh``: run a code coverage analysis.
 
 Contributing
 ------------

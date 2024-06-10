@@ -7,8 +7,14 @@ Available Packages
 * **Python Package** - available through PyPI
 * **Conda Package** - available through conda-forge
 
-PyPEEC packages are generic (architecture and system independent packages).
-However, some dependencies are architecture and system dependent packages.
+The following **optional libraries are not included** is the package:
+
+* **HPC libraries** - FFTW, UMFPACK, PyAMG, and MKL/PARDISO
+* **Notebook support** - Jupyter, IPyWidgets, and Trame
+* **GPU libraries** - CuPy and CUDA
+
+PyPEEC packages are generic (architecture and system independent).
+However, some dependencies are architecture and system dependent.
 The optional HPC libraries are usually easier to install through Conda.
 
 Using a Python Environment

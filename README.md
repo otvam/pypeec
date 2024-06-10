@@ -48,10 +48,10 @@ The code is written in **Python** and is fully **open source**!
 * Limited to voxel geometries
 
 The **PyPEEC** package contains the following **tools**:
-* **mesher**: create a 3D voxel structure from STL or PNG files
-* **viewer**: visualization of the 3D voxel structure
-* **solver**: solver for the magnetic field problem
-* **plotter**: visualization of the problem solution
+* **mesher** - create a 3D voxel structure from STL or PNG files
+* **viewer** - visualization of the 3D voxel structure
+* **solver** - solver for the magnetic field problem
+* **plotter** - visualization of the problem solution
 
 ## Warning
 
@@ -87,7 +87,7 @@ For such cases, PyPEEC can be very slow and consume a lot of memory.
 PyPEEC was created at **Dartmouth College** by the research group of **Prof. Sullivan**:
 * Dartmouth College, NH, USA: https://dartmouth.edu
 * Dartmouth Engineering: https://engineering.dartmouth.edu
-* PMIC: https://pmic.engineering.dartmouth.edu
+* NSF/PMIC: https://pmic.engineering.dartmouth.edu
 
 The FFT-accelerated PEEC method with voxels has been first described and implemented in:
 * Torchio, R., IEEE TPEL, 10.1109/TPEL.2021.3092431, 2022

@@ -1,8 +1,9 @@
 """
 Test the complete workflow (mesher, viewer, solver, and plotter).
 
-True unit tests are not implemented.
-Only non-regression integration tests are implemented.
+The tests are covering all the main functionalities.
+The tests are using the examples and  the tutorial to check the code.
+Only integration tests are currently implemented (no unit tests).
 """
 
 __author__ = "Thomas Guillod"

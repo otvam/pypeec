@@ -46,7 +46,7 @@ Numerical Optimization
 ----------------------
 
 The code is reasonably optimized, leveraging NumPy and SciPy for the heavy operations.
-All the code is vectorized, no loops are used for the array operations.
+All the code is vectorized, no loops are used for the array/matrix/tensor operations.
 Sparse matrix algebra is used wherever appropriate to speed up the code and limit the memory consumption.
 Wherever possible, multithreading/multiprocessing is used for exploiting multicore CPUs.
 
@@ -74,3 +74,10 @@ The following optimizations are available for the computationally heavy operatio
   * SciPy FFT library is always available (integrated with SciPy)
   * FFTW has to be installed separately (available through pyFFTW)
   * CuPy is extremely fast but require GPUs compatible with the CUDA toolkit
+
+* The ``file_tolerance`` input file is setting up all the numerical parameters:
+
+  * Definition of the numerical options and tolerances.
+  * Selection of the library used for numerical operations.
+  * Definition of the multithreading/multiprocessing options.
+  * The complete file format is documented in ``examples/config/tolerance.yaml``.

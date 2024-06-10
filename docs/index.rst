@@ -77,10 +77,10 @@ The code is written in **Python** and is fully **open source**!
 
 The **PyPEEC** package contains the following **tools**:
 
-* **mesher**: create a 3D voxel structure from STL or PNG files
-* **viewer**: visualization of the 3D voxel structure
-* **solver**: solver for the magnetic field problem
-* **plotter**: visualization of the problem solution
+* **mesher** - create a 3D voxel structure from STL or PNG files
+* **viewer** - visualization of the 3D voxel structure
+* **solver** - solver for the magnetic field problem
+* **plotter** - visualization of the problem solution
 
 ------------
 
