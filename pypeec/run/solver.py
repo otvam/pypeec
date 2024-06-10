@@ -306,17 +306,17 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         H_pts = extract_solution.get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, pts_cloud)
 
     # assemble solution
-    var = [
-        {"name": "V_c", "value": V_vc, "cat": "scalar_electric"},
-        {"name": "P_c", "value": P_vc, "cat": "scalar_electric"},
-        {"name": "S_c", "value": S_vc, "cat": "scalar_electric"},
-        {"name": "J_c", "value": J_vc, "cat": "vector_electric"},
-        {"name": "V_m", "value": V_vm, "cat": "scalar_magnetic"},
-        {"name": "P_m", "value": P_vm, "cat": "scalar_magnetic"},
-        {"name": "Q_m", "value": Q_vm, "cat": "scalar_magnetic"},
-        {"name": "B_m", "value": B_vm, "cat": "vector_magnetic"},
-        {"name": "H", "value": H_pts, "cat": "cloud"},
-    ]
+    var = {
+        "V_c": (V_vc, "scalar_electric"),
+        "P_c": (P_vc, "scalar_electric"),
+        "S_c": (S_vc, "scalar_electric"),
+        "J_c": (J_vc, "vector_electric"),
+        "V_m": (V_vm, "scalar_magnetic"),
+        "P_m": (P_vm, "scalar_magnetic"),
+        "Q_m": (Q_vm, "scalar_magnetic"),
+        "B_m": (B_vm, "vector_magnetic"),
+        "H": (H_pts, "cloud"),
+    }
 
     # assign the results (will be merged in the solver output)
     data_sweep = {

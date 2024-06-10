@@ -69,23 +69,17 @@ def _get_grid_voxel(data_init, data_sweep):
     voxel = data_plotter.set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v)
 
     # set the scalar variables
-    for var_tmp in var:
-        # extract
-        name = var_tmp["name"]
-        value = var_tmp["value"]
-        cat = var_tmp["cat"]
-
-        # parse and add variable to the geometry
+    for name, (var, cat) in var.items():
         if cat == "scalar_electric":
-            voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, value, name)
+            voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, var, name)
         elif cat == "scalar_magnetic":
-            voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vm, value, name)
+            voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vm, var, name)
         elif cat == "vector_electric":
-            voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vc, value, name)
+            voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vc, var, name)
         elif cat == "vector_magnetic":
-            voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vm, value, name)
+            voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vm, var, name)
         elif cat == "cloud":
-            point = data_plotter.set_point_cloud(point, value, name)
+            point = data_plotter.set_point_cloud(point, var, name)
         else:
             raise ValueError("invalid variable type")
 
