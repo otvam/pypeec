@@ -167,19 +167,6 @@ def _check_data_plot_plotter(layout, data_plot):
         "arrow_point",
     ]
 
-    # list of allowed variable names
-    var_voxel_list = [
-        "V_c_re", "V_c_im", "V_c_abs",
-        "V_m_re", "V_m_im", "V_m_abs",
-        "S_c_re", "S_c_im", "S_c_abs",
-        "Q_m_re", "Q_m_im", "Q_m_abs",
-        "J_c_norm", "B_m_norm",
-        "P_c_abs", "P_m_abs",
-    ]
-    var_point_list = ["H_norm"]
-    vec_point_list = ["H_vec"]
-    vec_voxel_list = ["J_c_vec", "B_m_vec"]
-
     # check plot type
     datachecker.check_choice("layout", layout, layout_list)
 
@@ -245,14 +232,6 @@ def _check_data_plot_plotter(layout, data_plot):
         datachecker.check_string("var", data_plot["var"], can_be_empty=False)
         datachecker.check_float("point_size", data_plot["point_size"], is_positive=True, can_be_zero=True)
 
-        # check compatibility
-        if layout == "scalar_voxel":
-            datachecker.check_choice("var", data_plot["var"], var_voxel_list)
-        elif layout == "scalar_point":
-            datachecker.check_choice("var", data_plot["var"], var_point_list)
-        else:
-            raise ValueError("plot_geom: the plot geometry option is incompatible with the plot type")
-
     # check the arrow options
     if layout in ["arrow_voxel", "arrow_point"]:
         # check type
@@ -264,14 +243,6 @@ def _check_data_plot_plotter(layout, data_plot):
         datachecker.check_string("var", data_plot["var"], can_be_empty=False)
         datachecker.check_float("arrow_scale", data_plot["arrow_scale"], is_positive=True, can_be_zero=True)
         datachecker.check_float("arrow_threshold", data_plot["arrow_threshold"], is_positive=True, can_be_zero=True)
-
-        # check compatibility
-        if layout == "arrow_voxel":
-            datachecker.check_choice("var", data_plot["var"], vec_voxel_list)
-        elif layout == "arrow_point":
-            datachecker.check_choice("var", data_plot["var"], vec_point_list)
-        else:
-            raise ValueError("plot_geom: the plot geometry option is incompatible with the plot type")
 
 
 def _check_data_plot_viewer(layout, data_plot):

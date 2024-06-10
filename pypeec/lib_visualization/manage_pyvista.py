@@ -301,6 +301,10 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
         color=text_color,
     )
 
+    # check variable
+    if var not in obj.array_names:
+        raise RuntimeError("variable is not in the dataset: %s" % var)
+
     # scale and clamp the variable
     obj_tmp = obj.copy(deep=True)
     obj_tmp = _get_scale_scalar(obj_tmp, var, scale)
@@ -367,6 +371,10 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     var_time = var + "_time"
     var_norm = var + "_norm"
 
+    # check variable
+    if var not in obj.array_names:
+        raise RuntimeError("variable is not in the dataset: %s" % var)
+
     # scale and clamp the variable
     obj_tmp = obj.copy(deep=True)
     obj_tmp = _get_phase_vector(obj_tmp, var, phase)
@@ -429,7 +437,7 @@ def _plot_material(pl, voxel, data_plot, plot_clip, plot_theme):
         _get_clip_mesh(pl, voxel_tmp, arg, plot_clip)
 
 
-def _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, tag):
+def _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, var):
     """
     Plot an integer variable on the voxel structure (material or connection).
     """
@@ -448,7 +456,7 @@ def _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, tag):
     # add the resulting plot to the plotter
     arg = dict(
         show_scalar_bar=False,
-        scalars=tag,
+        scalars=var,
         cmap=colormap,
         opacity=opacity,
     )
