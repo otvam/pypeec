@@ -307,15 +307,15 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
 
     # assemble solution
     var = {
-        "V_c": (V_vc, "scalar_electric"),
-        "P_c": (P_vc, "scalar_electric"),
-        "S_c": (S_vc, "scalar_electric"),
-        "J_c": (J_vc, "vector_electric"),
-        "V_m": (V_vm, "scalar_magnetic"),
-        "P_m": (P_vm, "scalar_magnetic"),
-        "Q_m": (Q_vm, "scalar_magnetic"),
-        "B_m": (B_vm, "vector_magnetic"),
-        "H": (H_pts, "cloud"),
+        "V_c": {"var": V_vc, "cat": "scalar_electric"},
+        "P_c": {"var": P_vc, "cat": "scalar_electric"},
+        "S_c": {"var": S_vc, "cat": "scalar_electric"},
+        "J_c": {"var": J_vc, "cat": "vector_electric"},
+        "V_m": {"var": V_vm, "cat": "scalar_magnetic"},
+        "P_m": {"var": P_vm, "cat": "scalar_magnetic"},
+        "Q_m": {"var": Q_vm, "cat": "scalar_magnetic"},
+        "B_m": {"var": B_vm, "cat": "vector_magnetic"},
+        "H": {"var": H_pts, "cat": "cloud"},
     }
 
     # assign the results (will be merged in the solver output)

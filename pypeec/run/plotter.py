@@ -69,7 +69,12 @@ def _get_grid_voxel(data_init, data_sweep):
     voxel = data_plotter.set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v)
 
     # set the scalar variables
-    for name, (var, cat) in var.items():
+    for name, value in var.items():
+        # extract variable
+        var = value["var"]
+        cat = value["cat"]
+
+        # parse the variable and assign to the geometry
         if cat == "scalar_electric":
             voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, var, name)
         elif cat == "scalar_magnetic":
