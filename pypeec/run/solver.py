@@ -11,6 +11,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import copy
 from pypeec.lib_matrix import matrix_factorization
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import fourier_transform
@@ -377,6 +378,11 @@ def run(data_voxel, data_problem, data_tolerance):
 
     # get timestamp
     timestamp = log.get_timestamp()
+
+    # make copies of inputs
+    data_voxel = copy.deepcopy(data_voxel)
+    data_problem = copy.deepcopy(data_problem)
+    data_tolerance = copy.deepcopy(data_tolerance)
 
     # check the voxel data
     LOGGER.info("check the voxel data")

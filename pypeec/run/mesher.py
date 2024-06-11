@@ -16,6 +16,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import copy
 from pypeec.lib_mesher import mesher_voxel
 from pypeec.lib_mesher import mesher_shape
 from pypeec.lib_mesher import mesher_png
@@ -234,6 +235,9 @@ def run(data_geometry):
 
     # get timestamp
     timestamp = log.get_timestamp()
+
+    # make copies of input data
+    data_geometry = copy.deepcopy(data_geometry)
 
     # check the input data
     LOGGER.info("check the input data")
