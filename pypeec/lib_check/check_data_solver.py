@@ -133,8 +133,8 @@ def _get_material_idx(material_def, domain_def):
         # assign the material
         material_idx[tag] = {
             "idx": idx,
-            "material_type": material_type,
             "var_type": var_type,
+            "material_type": material_type,
             "orientation_type": orientation_type,
         }
 

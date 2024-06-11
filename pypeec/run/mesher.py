@@ -27,7 +27,6 @@ from pypeec.lib_mesher import voxel_resample
 from pypeec.lib_mesher import voxel_connection
 from pypeec.lib_mesher import voxel_summary
 from pypeec.lib_check import check_data_geometry
-from pypeec.lib_check import check_data_options
 from pypeec import log
 
 # get a logger
