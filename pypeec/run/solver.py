@@ -297,10 +297,10 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         material = extract_solution.get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm)
 
         # get the terminal voltages and currents for the sources
-        (source, S_tot) = extract_solution.get_source(freq, source_all, I_src, V_vc)
+        (source, S_total) = extract_solution.get_source(freq, source_all, I_src, V_vc)
 
         # get the global quantities (energy and losses)
-        integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm, S_tot)
+        integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm, S_total)
 
         # get the cloud point magnetic field
         H_pts = extract_solution.get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, pts_cloud)

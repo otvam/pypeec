@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_png/gerber",
-        "timestamp": "2024-05-18 19:44:50.881366"
+        "timestamp": "2024-06-11 11:24:54.989184"
     },
     "mesher": {
         "n_total": 479682,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 1000000.0,
             "has_converged": true,
-            "P_tot": 11.147312662627272,
-            "W_tot": 7.77665199277187e-07
+            "P_total": 11.147312662627272,
+            "W_total": 7.77665199277187e-07
         }
     }
 }

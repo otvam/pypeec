@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_voxel/transformer",
-        "timestamp": "2024-05-18 19:43:48.184747"
+        "timestamp": "2024-06-11 11:22:36.663561"
     },
     "mesher": {
         "n_total": 75,
@@ -11,14 +11,14 @@
         "sim_dc": {
             "freq": 0.0,
             "has_converged": true,
-            "P_tot": 0.0004899999999999999,
-            "W_tot": 2.424135694258037e-09
+            "P_total": 0.0004899999999999999,
+            "W_total": 2.424135694258037e-09
         },
         "sim_ac": {
             "freq": 10000000.0,
             "has_converged": true,
-            "P_tot": 0.00045967026046126076,
-            "W_tot": 9.914019032458386e-10
+            "P_total": 0.00045967026046126076,
+            "W_total": 9.914019032458386e-10
         }
     }
 }

@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/trace",
-        "timestamp": "2024-05-18 19:43:56.956770"
+        "timestamp": "2024-06-11 11:22:55.568170"
     },
     "mesher": {
         "n_total": 90972,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 0.0,
             "has_converged": true,
-            "P_tot": 142.0883548387071,
-            "W_tot": 8.121739162568952e-05
+            "P_total": 142.0883548387071,
+            "W_total": 8.121739162568952e-05
         }
     }
 }
