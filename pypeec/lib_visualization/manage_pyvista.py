@@ -129,39 +129,10 @@ def _get_clip_mesh(pl, obj, arg, plot_clip):
         )
 
 
-def _get_phase_vector(obj, var, phase):
+def _get_scale_norm(obj, scale):
     """
-    Get a vector for a specified phase shift.
-    The vector is constructed from the phasor.
-    """
-
-    # get var
-    data_re = obj[var + "_re"]
-    data_im = obj[var + "_im"]
-
-    # construct the vector
-    time = data_re+1j*data_im
-
-    # phase shift the vector
-    time *= np.exp(1j*phase)
-
-    # get the vector in the time domain
-    time = np.real(time)
-
-    # get the norm
-    norm = lna.norm(time, axis=1)
-
-    # assign the data
-    obj[var + "_time"] = time
-    obj[var + "_norm"] = norm
-
-    return obj
-
-
-def _get_filter_vector(obj, var, arrow_threshold):
-    """
-    Filter the voxel structure with a vector field.
-    This function is used to remove arrows with extremely low lengths.
+    Scale a variable between a lower and upper bound.
+    The operation is done with respect to the norm variable.
     """
 
     # if the voxel structure is empty, nothing to do
@@ -169,7 +140,30 @@ def _get_filter_vector(obj, var, arrow_threshold):
         return obj
 
     # get var
-    data = obj[var]
+    data = obj["norm"]
+
+    # add scaling
+    data = scale*data
+
+    # assign data
+    obj["norm"] = data
+
+    return obj
+
+
+def _get_filter_arrow(obj, arrow_threshold):
+    """
+    Filter the voxel structure with a variable.
+    This function is used to remove arrows with extremely low lengths.
+    The operation is done with respect to the norm variable.
+    """
+
+    # if the voxel structure is empty, nothing to do
+    if obj.n_cells == 0:
+        return obj
+
+    # get var
+    data = obj["norm"]
 
     # threshold for arrow removal
     if np.any(np.isfinite(data)):
@@ -186,30 +180,10 @@ def _get_filter_vector(obj, var, arrow_threshold):
     return obj
 
 
-def _get_scale_scalar(obj, var, scale):
+def _get_filter_norm(obj, filter_lim):
     """
-    Scale a scalar variable between a lower and upper bound.
-    """
-
-    # if the voxel structure is empty, nothing to do
-    if obj.n_cells == 0:
-        return obj
-
-    # get var
-    data = obj[var]
-
-    # add scaling
-    data = scale*data
-
-    # assign data
-    obj[var] = data
-
-    return obj
-
-
-def _get_filter_scalar(obj, var, filter_lim):
-    """
-    Filter the voxel structure with provided limits with respect to a scalar variable.
+    Filter the voxel structure with provided limits.
+    The operation is done with respect to the norm variable.
     """
 
     # if the voxel structure is empty, nothing to do
@@ -224,7 +198,7 @@ def _get_filter_scalar(obj, var, filter_lim):
         (f_min, f_max) = filter_lim
 
     # get var
-    data = obj[var]
+    data = obj["norm"]
 
     # indices to be kept
     idx = np.logical_and(data >= f_min, data <= f_max)
@@ -235,9 +209,10 @@ def _get_filter_scalar(obj, var, filter_lim):
     return obj
 
 
-def _get_clamp_scalar(obj, var, clamp_lim):
+def _get_clamp_norm(obj, clamp_lim):
     """
-    Clamp a scalar variable between a lower and upper bound.
+    Clamp a variable between a lower and upper bound.
+    The operation is done with respect to the norm variable.
     """
 
     # if the voxel structure is empty, nothing to do
@@ -252,16 +227,114 @@ def _get_clamp_scalar(obj, var, clamp_lim):
         (c_min, c_max) = clamp_lim
 
     # get var
-    data = obj[var]
+    data = obj["norm"]
 
     # clamp range
     data = np.maximum(data, c_min)
     data = np.minimum(data, c_max)
 
     # assign data
-    obj[var] = data
+    obj["norm"] = data
 
     return obj
+
+
+def _get_norm(obj, data_plot):
+    """
+    Get and prepare a scalar norm variable.
+    """
+
+    # extract
+    var = data_plot["var"]
+    scale = data_plot["scale"]
+    filter_lim = data_plot["filter_lim"]
+    clamp_lim = data_plot["clamp_lim"]
+
+    # check variable
+    if var + "_norm" not in obj.array_names:
+        raise RuntimeError("variable is not in the dataset: %s" % var)
+
+    # copy
+    obj_tmp = obj.copy(deep=True)
+    norm = obj_tmp[var + "_norm"]
+
+    # scale and clamp the variable
+    obj_tmp["norm"] = norm
+    obj_tmp = _get_scale_norm(obj_tmp, scale)
+    obj_tmp = _get_filter_norm(obj_tmp, filter_lim)
+    obj_tmp = _get_clamp_norm(obj_tmp, clamp_lim)
+
+    return obj_tmp
+
+
+def _get_phasor(obj, data_plot):
+    """
+    Get and prepare a scalar phasor variable.
+    """
+
+    # extract
+    var = data_plot["var"]
+    phase = data_plot["phase"]
+    scale = data_plot["scale"]
+    filter_lim = data_plot["filter_lim"]
+    clamp_lim = data_plot["clamp_lim"]
+
+    # check variable
+    if var + "_re" not in obj.array_names:
+        raise RuntimeError("variable is not in the dataset: %s" % var)
+    if var + "_im" not in obj.array_names:
+        raise RuntimeError("variable is not in the dataset: %s" % var)
+
+    # copy
+    obj_tmp = obj.copy(deep=True)
+    re = obj_tmp[var + "_re"]
+    im = obj_tmp[var + "_im"]
+    norm = np.real((re+1j*im)*np.exp(1j*phase))
+
+    # scale and clamp the variable
+    obj_tmp["norm"] = norm
+    obj_tmp = _get_scale_norm(obj_tmp, scale)
+    obj_tmp = _get_filter_norm(obj_tmp, filter_lim)
+    obj_tmp = _get_clamp_norm(obj_tmp, clamp_lim)
+
+    return obj_tmp
+
+
+def _get_arrow(obj, data_plot):
+    """
+    Get and prepare a vector phasor variable.
+    """
+
+    # extract
+    var = data_plot["var"]
+    phase = data_plot["phase"]
+    scale = data_plot["scale"]
+    filter_lim = data_plot["filter_lim"]
+    clamp_lim = data_plot["clamp_lim"]
+    arrow_threshold = data_plot["arrow_threshold"]
+
+    # check variable
+    if var + "_re" not in obj.array_names:
+        raise RuntimeError("variable is not in the dataset: %s" % var)
+    if var + "_im" not in obj.array_names:
+        raise RuntimeError("variable is not in the dataset: %s" % var)
+
+    # copy
+    obj_tmp = obj.copy(deep=True)
+    re = obj_tmp[var + "_re"]
+    im = obj_tmp[var + "_im"]
+    vector = np.real((re+1j*im)*np.exp(1j*phase))
+    norm = lna.norm(vector, axis=1)
+
+    # scale and clamp the variable
+    obj_tmp["norm"] = norm
+    obj_tmp["vector"] = vector
+    obj_tmp = _get_scale_norm(obj_tmp, scale)
+    obj_tmp = _get_filter_norm(obj_tmp, filter_lim)
+    obj_tmp = _get_filter_arrow(obj_tmp, arrow_threshold)
+    obj_tmp = _get_clamp_norm(obj_tmp, clamp_lim)
+
+    return obj_tmp
 
 
 def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
@@ -273,11 +346,7 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
     """
 
     # extract
-    var = data_plot["var"]
-    scale = data_plot["scale"]
     log = data_plot["log"]
-    filter_lim = data_plot["filter_lim"]
-    clamp_lim = data_plot["clamp_lim"]
     color_lim = data_plot["color_lim"]
     point_size = data_plot["point_size"]
     legend = data_plot["legend"]
@@ -301,19 +370,9 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
         color=text_color,
     )
 
-    # check variable
-    if var not in obj.array_names:
-        raise RuntimeError("variable is not in the dataset: %s" % var)
-
-    # scale and clamp the variable
-    obj_tmp = obj.copy(deep=True)
-    obj_tmp = _get_scale_scalar(obj_tmp, var, scale)
-    obj_tmp = _get_filter_scalar(obj_tmp, var, filter_lim)
-    obj_tmp = _get_clamp_scalar(obj_tmp, var, clamp_lim)
-
     # add the resulting plot to the plotter
     arg = dict(
-        scalars=var,
+        scalars="norm",
         log_scale=log,
         clim=color_lim,
         point_size=point_size,
@@ -321,8 +380,8 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
         scalar_bar_args=scalar_bar_args,
         render_points_as_spheres=True,
     )
-    if obj_tmp.n_cells > 0:
-        _get_clip_mesh(pl, obj_tmp, arg, plot_clip)
+    if obj.n_cells > 0:
+        _get_clip_mesh(pl, obj, arg, plot_clip)
 
 
 def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
@@ -337,15 +396,9 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     """
 
     # extract
-    var = data_plot["var"]
-    phase = data_plot["phase"]
-    scale = data_plot["scale"]
     log = data_plot["log"]
-    filter_lim = data_plot["filter_lim"]
-    clamp_lim = data_plot["clamp_lim"]
     color_lim = data_plot["color_lim"]
     arrow_scale = data_plot["arrow_scale"]
-    arrow_threshold = data_plot["arrow_threshold"]
     legend = data_plot["legend"]
     title = data_plot["title"]
 
@@ -367,36 +420,20 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
         color=text_color,
     )
 
-    # get variable name
-    var_time = var + "_time"
-    var_norm = var + "_norm"
-
-    # check variable
-    if var not in obj.array_names:
-        raise RuntimeError("variable is not in the dataset: %s" % var)
-
-    # scale and clamp the variable
-    obj_tmp = obj.copy(deep=True)
-    obj_tmp = _get_phase_vector(obj_tmp, var, phase)
-    obj_tmp = _get_filter_vector(obj_tmp, var_norm, arrow_threshold)
-    obj_tmp = _get_scale_scalar(obj_tmp, var_norm, scale)
-    obj_tmp = _get_filter_scalar(obj_tmp, var_norm, filter_lim)
-    obj_tmp = _get_clamp_scalar(obj_tmp, var_norm, clamp_lim)
-
     # get arrow size
     d_char = min(grid.spacing)
     factor = d_char*arrow_scale
 
     # add the resulting plot to the plotter
     arg = dict(
-        scalars=var_norm,
+        scalars="norm",
         log_scale=log,
         clim=color_lim,
         show_scalar_bar=colorbar_plot,
         scalar_bar_args=scalar_bar_args,
     )
-    if obj_tmp.n_cells > 0:
-        glyph_tmp = obj_tmp.glyph(orient=var_time, scale=False, factor=factor)
+    if obj.n_cells > 0:
+        glyph_tmp = obj.glyph(orient="vector", scale=False, factor=factor)
         _get_clip_mesh(pl, glyph_tmp, arg, plot_clip)
 
 
@@ -546,17 +583,28 @@ def get_plot_plotter(pl, grid, voxel, point, layout, data_plot, data_options):
     plot_view = data_options["plot_view"]
     plot_theme = data_options["plot_theme"]
 
-    # get the main plot
+    # get the plot dataset
+    if layout == "material":
+        obj = voxel
+    elif layout in ["norm_voxel", "phasor_voxel", "arrow_voxel"]:
+        obj = voxel
+    elif layout in ["norm_point", "phasor_point", "arrow_point"]:
+        obj = point
+    else:
+        raise ValueError("invalid plot type and plot feature")
+
+    # plot the geometry
     if layout == "material":
         _plot_material(pl, voxel, data_plot, plot_clip, plot_theme)
-    elif layout == "scalar_voxel":
-        _plot_scalar(pl, voxel, data_plot, plot_clip, plot_theme)
-    elif layout == "scalar_point":
-        _plot_scalar(pl, point, data_plot, plot_clip, plot_theme)
-    elif layout == "arrow_voxel":
-        _plot_arrow(pl, grid, voxel, data_plot, plot_clip, plot_theme)
-    elif layout == "arrow_point":
-        _plot_arrow(pl, grid, point, data_plot, plot_clip, plot_theme)
+    elif layout in ["norm_voxel", "norm_point"]:
+        obj = _get_norm(obj, data_plot)
+        _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme)
+    elif layout in ["phasor_voxel", "phasor_point"]:
+        obj = _get_phasor(obj, data_plot)
+        _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme)
+    elif layout in ["arrow_voxel", "arrow_point"]:
+        obj = _get_arrow(obj, data_plot)
+        _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme)
     else:
         raise ValueError("invalid plot type and plot feature")
 

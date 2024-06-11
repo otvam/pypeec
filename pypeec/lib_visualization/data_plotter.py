@@ -93,8 +93,8 @@ def set_voxel_vector(voxel, idx, idx_var, var, name):
     var_all = var_all[idx_s]
 
     # assign the vector and the norm
-    voxel[name + "_vec_re"] = np.real(var_all)
-    voxel[name + "_vec_im"] = np.imag(var_all)
+    voxel[name + "_re"] = np.real(var_all)
+    voxel[name + "_im"] = np.imag(var_all)
     voxel[name + "_norm"] = lna.norm(var_all, axis=1)
 
     return voxel
@@ -107,8 +107,8 @@ def set_point_cloud(point, var, name):
     """
 
     # assign the vector and the norm
-    point[name + "_vec_re"] = np.real(var)
-    point[name + "_vec_im"] = np.imag(var)
+    point[name + "_re"] = np.real(var)
+    point[name + "_im"] = np.imag(var)
     point[name + "_norm"] = lna.norm(var, axis=1)
 
     return point

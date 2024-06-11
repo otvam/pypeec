@@ -17,8 +17,8 @@
 #       - color_current_source: "color of the current source domains"
 #       - color_voltage_source: color of the voltage source domains
 #
-#   - "scalar_voxel": plot a scalar variable on the voxel structure
-#   - "scalar_point": plot a scalar variable on the point cloud
+#   - "norm_voxel": plot a scalar variable on the voxel structure
+#   - "norm_point": plot a scalar variable on the point cloud
 #       - title: title located at the corner of the plot
 #       - legend: legend of variable being shown with the color axis
 #       - var: name of the scalar variable to be plotted (color scale)
@@ -71,62 +71,31 @@
         "color_voltage_source": "royalblue"
 "V_c_norm":
     "framework": "pyvista"
-    "layout": "scalar_voxel"
+    "layout": "norm_voxel"
     "title": "El. Potential"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
         "title": "El. Potential"
         "legend": "El. Potential [V]"
-        "var": "V_c_norm"
+        "var": "V_c"
         "scale": 1.0
         "log": false
         "color_lim": null
         "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
-"V_m_norm":
+"V_c_phasor":
     "framework": "pyvista"
-    "layout": "scalar_voxel"
-    "title": "Mag. Potential"
+    "layout": "phasor_voxel"
+    "title": "El. Potential"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "title": "Mag. Potential"
-        "legend": "Mag. Potential [A]"
-        "var": "V_m_norm"
-        "scale": 1.0
-        "log": false
-        "color_lim": null
-        "clamp_lim": null
-        "filter_lim": null
-        "point_size": 10.0
-"S_c_norm":
-    "framework": "pyvista"
-    "layout": "scalar_voxel"
-    "title": "El. Source"
-    "data_window": !include cfg_data_window.yaml
-    "data_options": !include cfg_data_pyvista.yaml
-    "data_plot":
-        "title": "El. Source"
-        "legend": "El. Source [A/mm3]"
-        "var": "S_c_norm"
-        "scale": 1.0e-9
-        "log": false
-        "color_lim": null
-        "clamp_lim": null
-        "filter_lim": null
-        "point_size": 10.0
-"Q_m_norm":
-    "framework": "pyvista"
-    "layout": "scalar_voxel"
-    "title": "Mag. Source"
-    "data_window": !include cfg_data_window.yaml
-    "data_options": !include cfg_data_pyvista.yaml
-    "data_plot":
-        "title": "Mag. Source"
-        "legend": "Mag. Source [mT/mm]"
-        "var": "Q_m_norm"
+        "title": "El. Potential"
+        "legend": "El. Potential [V]"
+        "var": "V_c"
+        "phase": 0.0
         "scale": 1.0
         "log": false
         "color_lim": null
@@ -135,14 +104,14 @@
         "point_size": 10.0
 "P_c_norm":
     "framework": "pyvista"
-    "layout": "scalar_voxel"
+    "layout": "norm_voxel"
     "title": "El. Losses"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
         "title": "El. Losses"
         "legend": "El. Losses [W/cm3]"
-        "var": "P_c_norm"
+        "var": "P_c"
         "scale": 1.0e-6
         "log": false
         "color_lim": null
@@ -151,14 +120,14 @@
         "point_size": 10.0
 "P_m_norm":
     "framework": "pyvista"
-    "layout": "scalar_voxel"
+    "layout": "norm_voxel"
     "title": "Mag. Losses"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
         "title": "Mag. Losses"
         "legend": "Mag. Losses [W/cm3]"
-        "var": "P_m_norm"
+        "var": "P_m"
         "scale": 1.0e-6
         "log": false
         "color_lim": null
@@ -167,14 +136,14 @@
         "point_size": 10.0
 "J_c_norm":
     "framework": "pyvista"
-    "layout": "scalar_voxel"
+    "layout": "norm_voxel"
     "title": "Current Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
         "title": "Current Density"
         "legend": "Current Density [A/mm2]"
-        "var": "J_c_norm"
+        "var": "J_c"
         "scale": 1.0e-6
         "log": false
         "color_lim": null
@@ -190,7 +159,7 @@
     "data_plot":
         "title": "Current Density"
         "legend": "Current Density [A/mm2]"
-        "var": "J_c_vec"
+        "var": "J_c"
         "phase": 0.0
         "scale": 1.0e-6
         "log": false
@@ -201,14 +170,14 @@
         "arrow_scale": 0.75
 "B_m_norm":
     "framework": "pyvista"
-    "layout": "scalar_voxel"
+    "layout": "norm_voxel"
     "title": "Flux Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
         "title": "Flux Density"
         "legend": "Flux Density [mT]"
-        "var": "B_m_norm"
+        "var": "B_m"
         "scale": 1.0e+3
         "log": false
         "color_lim": null
@@ -224,7 +193,7 @@
     "data_plot":
         "title": "Flux Density"
         "legend": "Flux Density [mT]"
-        "var": "B_m_vec"
+        "var": "B_m"
         "phase": 0.0
         "scale": 1.0e+3
         "log": false
@@ -235,14 +204,14 @@
         "arrow_scale": 0.75
 "H_norm":
     "framework": "pyvista"
-    "layout": "scalar_point"
+    "layout": "norm_point"
     "title": "Mag. Field Norm"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
         "title": "Mag. Field Norm"
         "legend": "Mag. Field Norm [A/m]"
-        "var": "H_norm"
+        "var": "H"
         "scale": 1.0
         "log": false
         "color_lim": null
@@ -258,7 +227,7 @@
     "data_plot":
         "title": "Mag. Field"
         "legend": "Mag. Field [A/m]"
-        "var": "H_vec"
+        "var": "H"
         "phase": 0.0
         "scale": 1.0
         "log": false

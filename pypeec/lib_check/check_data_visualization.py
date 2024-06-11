@@ -161,8 +161,10 @@ def _check_data_plot_plotter(layout, data_plot):
         "convergence",
         "residuum",
         "material",
-        "scalar_voxel",
-        "scalar_point",
+        "norm_voxel",
+        "norm_point",
+        "phasor_voxel",
+        "phasor_point",
         "arrow_voxel",
         "arrow_point",
     ]
