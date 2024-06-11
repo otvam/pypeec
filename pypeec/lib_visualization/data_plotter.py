@@ -69,7 +69,7 @@ def set_voxel_scalar(voxel, idx, idx_var, var, name):
     # assign potential
     voxel[name + "_re"] = np.real(var_all)
     voxel[name + "_im"] = np.imag(var_all)
-    voxel[name + "_abs"] = np.abs(var_all)
+    voxel[name + "_norm"] = np.abs(var_all)
 
     return voxel
 

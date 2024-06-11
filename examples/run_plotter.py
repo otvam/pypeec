@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     # plot tag (from plotter.yaml)
     tag_plot = [
-        "V_c_abs",
+        "V_c_norm",
         "J_c_norm",
         "H_norm",
         "residuum",

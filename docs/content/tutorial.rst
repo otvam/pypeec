@@ -94,9 +94,9 @@ Plotter: Plot the Solution
     pypeec plotter \
         --solution tutorial/solution.json.gz \
         --plotter config/plotter.yaml \
-        --tag_plot V_c_abs J_c_norm H_norm residuum
+        --tag_plot V_c_norm J_c_norm H_norm residuum
 
-.. figure:: ../tutorial/plotter_V_c_abs.png
+.. figure:: ../tutorial/plotter_V_c_norm.png
 
    Plot showing the electric potential.
 

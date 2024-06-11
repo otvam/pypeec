@@ -69,7 +69,7 @@
         "color_magnetic": "gainsboro"
         "color_current_source": "forestgreen"
         "color_voltage_source": "royalblue"
-"V_c_abs":
+"V_c_norm":
     "framework": "pyvista"
     "layout": "scalar_voxel"
     "title": "El. Potential"
@@ -78,14 +78,14 @@
     "data_plot":
         "title": "El. Potential"
         "legend": "El. Potential [V]"
-        "var": "V_c_abs"
+        "var": "V_c_norm"
         "scale": 1.0
         "log": false
         "color_lim": null
         "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
-"V_m_abs":
+"V_m_norm":
     "framework": "pyvista"
     "layout": "scalar_voxel"
     "title": "Mag. Potential"
@@ -94,14 +94,14 @@
     "data_plot":
         "title": "Mag. Potential"
         "legend": "Mag. Potential [A]"
-        "var": "V_m_abs"
+        "var": "V_m_norm"
         "scale": 1.0
         "log": false
         "color_lim": null
         "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
-"S_c_abs":
+"S_c_norm":
     "framework": "pyvista"
     "layout": "scalar_voxel"
     "title": "El. Source"
@@ -110,14 +110,14 @@
     "data_plot":
         "title": "El. Source"
         "legend": "El. Source [A/mm3]"
-        "var": "S_c_abs"
+        "var": "S_c_norm"
         "scale": 1.0e-9
         "log": false
         "color_lim": null
         "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
-"Q_m_abs":
+"Q_m_norm":
     "framework": "pyvista"
     "layout": "scalar_voxel"
     "title": "Mag. Source"
@@ -126,14 +126,14 @@
     "data_plot":
         "title": "Mag. Source"
         "legend": "Mag. Source [mT/mm]"
-        "var": "Q_m_abs"
+        "var": "Q_m_norm"
         "scale": 1.0
         "log": false
         "color_lim": null
         "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
-"P_c_abs":
+"P_c_norm":
     "framework": "pyvista"
     "layout": "scalar_voxel"
     "title": "El. Losses"
@@ -142,14 +142,14 @@
     "data_plot":
         "title": "El. Losses"
         "legend": "El. Losses [W/cm3]"
-        "var": "P_c_abs"
+        "var": "P_c_norm"
         "scale": 1.0e-6
         "log": false
         "color_lim": null
         "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
-"P_m_abs":
+"P_m_norm":
     "framework": "pyvista"
     "layout": "scalar_voxel"
     "title": "Mag. Losses"
@@ -158,7 +158,7 @@
     "data_plot":
         "title": "Mag. Losses"
         "legend": "Mag. Losses [W/cm3]"
-        "var": "P_m_abs"
+        "var": "P_m_norm"
         "scale": 1.0e-6
         "log": false
         "color_lim": null
