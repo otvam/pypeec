@@ -12,6 +12,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import copy
+from pypeec.lib_matrix import matrix_multiply
 from pypeec.lib_matrix import matrix_factorization
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import fourier_transform
@@ -345,6 +346,10 @@ def _get_data(data_init, data_sweep, timestamp):
 
     # end message
     (seconds, duration, date) = log.get_duration(timestamp)
+
+    LOGGER.warning("---------------- FFT : %.3f" % matrix_multiply.TIMING)
+    LOGGER.warning("---------------- TOT : %.3f" % seconds)
+    LOGGER.warning("---------------- REL : %.3f" % (matrix_multiply.TIMING/seconds))
 
     # get status
     status = True

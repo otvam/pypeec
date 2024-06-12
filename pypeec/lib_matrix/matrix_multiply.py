@@ -24,8 +24,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import time
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import multiply_direct
+
+TIMING = 0.0
 
 
 def _get_multiply(data, vec_in, mult_type, flip):
@@ -33,12 +36,18 @@ def _get_multiply(data, vec_in, mult_type, flip):
     Make a matrix-vector multiplication.
     """
 
+    global TIMING
+    a = time.time()
+
     if mult_type == "fft":
         res_out = multiply_fft.get_multiply(data, vec_in, flip)
     elif mult_type == "direct":
         res_out = multiply_direct.get_multiply(data, vec_in, flip)
     else:
         raise ValueError("invalid multiplication library")
+
+    b = time.time()
+    TIMING += b-a
 
     return res_out
 
@@ -48,12 +57,18 @@ def _get_prepare(name, idx_out, idx_in, mat, mult_type):
     Prepare the matrix for the multiplication.
     """
 
+    global TIMING
+    a = time.time()
+
     if mult_type == "fft":
         data = multiply_fft.get_prepare(name, idx_out, idx_in, mat)
     elif mult_type == "direct":
         data = multiply_direct.get_prepare(name, idx_out, idx_in, mat)
     else:
         raise ValueError("invalid multiplication library")
+
+    b = time.time()
+    TIMING += b-a
 
     return data
 
