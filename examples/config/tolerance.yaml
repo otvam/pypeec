@@ -54,7 +54,7 @@ sweep_pool: null
     #   - "UMFPACK" is typically faster than SuperLU (available through SciKits)
     #   - "PARDISO" is typically faster than UMFPACK (available through Pydiso)
     #   - "PyAMG" is typically slow but uses less memory (risk of convergence issues)
-    "library": "SuperLU"
+    "library": "PARDISO"
 
     # options for PyAMG
     #   - options for the algebraic multigrid sparse solver
@@ -135,7 +135,7 @@ sweep_pool: null
     # check (or not) the condition number of the matrices
     #   - if true, the condition numbers are computed and checked
     #   - if false, the condition numbers are ignored
-    "check": true
+    "check": false
 
     # maximum allowable condition number for the electric and magnetic matrices
     #   - the condition numbers are computed with the sparse preconditioner
