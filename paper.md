@@ -95,7 +95,7 @@ arbitrary problems without having to modify the source code.
 
 # Capabilities and Workflow
 
-In this paper, the release 4.16 of PyPEEC is considered. PyPEEC solves 3D 
+In this paper, the release 4.17 of PyPEEC is considered. PyPEEC solves 3D 
 magnetostatic and quasi-magnetostatic problems with voxel geometries. An 
 arbitrary number of conductive domains, magnetic domains (ideal and/or lossy), 
 and sources (voltage and/or current) can be used. The current density, flux 
@@ -142,6 +142,15 @@ the resistance value is less accurate than the inductance value. With a
 tolerance of 4%, the quasi-static problem is solved in 4 seconds. The FFT 
 acceleration allows dense PEEC problems with 10^7^ degrees of freedom to be 
 solved in 80 seconds.
+
+The performances of PyPEEC are impacted by the following factors. For
+problems dominated by eddy-currents and/or containing magnetic materials,
+the majority of the computational effort (typically over 70%) is linked
+to the FFT accelerated multiplications. In such cases, the performances
+are directly driven by the FFT solver and benefits from the available
+parallel and GPU algorithms. Finally, it should be noted that PyPEEC is
+using a regular voxel structure to represent the geometry. This implies
+that large geometries with small features cannot be meshed efficiently.
 
 # Acknowledgments
   
