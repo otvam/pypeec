@@ -28,18 +28,14 @@ PyPEEC - 3D Quasi-Magnetostatic Solver
 .. image:: images/banner.png
   :alt: PyPEEC Banner
 
-.. Important::
-    * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
-    * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`_
-    * **Conda:** `anaconda.org/conda-forge/pypeec <https://anaconda.org/conda-forge/pypeec>`_
-    * **PyPi:** `pypi.org/project/pypeec <https://pypi.org/project/pypeec>`_
-
-------------
-
 **PyPEEC** is a **3D quasi-magnetostatic PEEC solver** developed at **Dartmouth College** within the Power Management Integration Center (PMIC).
 PyPEEC is a **fast solver** (FFT and GPU accelerated) that can simulate a large variety of **magnetic components** (inductors, transformers, chokes, IPT coils, busbars, etc.).
 The tool contains a **mesher** (STL, PNG, and GERBER formats), a **solver** (static and frequency domain), and **advanced plotting** capabilities.
 The code is written in **Python** and is fully **open source**!
+
+.. Important::
+    * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
+    * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`_
 
 ------------
 
@@ -89,14 +85,10 @@ The **PyPEEC** package contains the following **tools**:
     Some geometries/problems are not suited for voxel structures (inefficient meshing).
     For such cases, PyPEEC can be very slow and consume a lot of memory.
 
-------------
-
 .. Note::
     * **Author:** `Thomas Guillod <https://otvam.ch>`_
     * **Institution:** `Dartmouth College <https://dartmouth.edu>`_
     * **Licence:** `MPL-2.0 <http://mozilla.org/MPL/2.0>`_
-
-------------
 
 .. image:: images/institution.png
   :alt: Dartmouth and PMIC
