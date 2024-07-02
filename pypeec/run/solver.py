@@ -316,7 +316,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         "P_m": {"var": P_vm, "cat": "scalar_magnetic"},
         "Q_m": {"var": Q_vm, "cat": "scalar_magnetic"},
         "B_m": {"var": B_vm, "cat": "vector_magnetic"},
-        "H": {"var": H_pts, "cat": "cloud"},
+        "H_p": {"var": H_pts, "cat": "cloud"},
     }
 
     # assign the results (will be merged in the solver output)

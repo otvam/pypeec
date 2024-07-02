@@ -225,7 +225,7 @@
     "data_plot":
         "title": "Mag. Field Norm"
         "legend": "Mag. Field Norm [A/m]"
-        "var": "H"
+        "var": "H_p"
         "scale": 1.0
         "log": false
         "color_lim": null
@@ -241,7 +241,7 @@
     "data_plot":
         "title": "Mag. Field"
         "legend": "Mag. Field [A/m]"
-        "var": "H"
+        "var": "H_p"
         "phase": 0.0
         "scale": 1.0
         "log": false
