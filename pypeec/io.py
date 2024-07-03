@@ -38,75 +38,6 @@ import yaml
 import numpy as np
 
 
-class _MergeData:
-    """
-    This Python class is used to merge YAML data.
-        - a custom merge command is used with a list of arguments
-        - the arguments (lists or dicts) are merged together
-        - the merge is performed recursively
-
-    The merge objects are created during the YAML parsing.
-    The merge objects are replaced by the merged data after the parsing.
-    """
-
-    def __init__(self, data_list, data_type):
-        """
-        Constructor.
-        Assign the list of data to be merged and the data type.
-        """
-
-        if type(data_list) is not list:
-            raise yaml.YAMLError("arguments of the merge_dict / merge_list should be a list")
-
-        self.data_list = data_list
-        self.data_type = data_type
-
-    @staticmethod
-    def merge(data):
-        """
-        Walk through the data recursively and merge it.
-        Find the merge objects and replace them with merged data.
-        """
-
-        if type(data) is dict:
-            for tag, val in data.items():
-                data[tag] = _MergeData.merge(val)
-        elif type(data) is list:
-            for idx, val in enumerate(data):
-                data[idx] = _MergeData.merge(val)
-        elif type(data) is _MergeData:
-            data = data.extract()
-        else:
-            pass
-
-        return data
-
-    def extract(self):
-        """
-        Merge a list of dicts or a list of lists.
-        The merge is performed recursively.
-        """
-
-        if self.data_type == "dict":
-            res = {}
-            for data in self.data_list:
-                data = _MergeData.merge(data)
-                if type(data) is not dict:
-                    raise yaml.YAMLError("merge_dict cannot only merge dictionaries")
-                res.update(data)
-        elif self.data_type == "list":
-            res = []
-            for data in self.data_list:
-                data = _MergeData.merge(data)
-                if type(data) is not list:
-                    raise yaml.YAMLError("merge_list cannot only merge lists")
-                res += data
-        else:
-            raise yaml.YAMLError("invalid merge type")
-
-        return res
-
-
 class _YamlLoader(yaml.Loader):
     """
     This Python class offers extension to the YAML format.
@@ -150,13 +81,13 @@ class _YamlLoader(yaml.Loader):
         # handling merge of a list of dicts
         def fct_handle_merge_dict(self, node):
             self.has_merge = True
-            res = _MergeData(self.construct_sequence(node), "dict")
+            res = _MergeObj(self.construct_sequence(node), "dict")
             return res
 
         # handling merge of a list of lists
         def fct_handle_merge_list(self, node):
             self.has_merge = True
-            res = _MergeData(self.construct_sequence(node), "list")
+            res = _MergeObj(self.construct_sequence(node), "list")
             return res
 
         # add the extension to the YAML format
@@ -355,17 +286,90 @@ class _JsonNumPyDecoder(json.JSONDecoder):
             return obj
 
 
+class _MergeObj:
+    """
+    This Python class is used to merge YAML data.
+        - a custom merge command is used with a list of arguments
+        - the arguments (lists or dicts) are merged together
+        - the merge is performed recursively
+
+    The merge objects are created during the YAML parsing.
+    The merge objects are replaced by the merged data after the parsing.
+    """
+
+    def __init__(self, data_list, data_type):
+        """
+        Constructor.
+        Assign the list of data to be merged and the data type.
+        """
+
+        if type(data_list) is not list:
+            raise yaml.YAMLError("arguments of the merge_dict / merge_list should be a list")
+
+        self.data_list = data_list
+        self.data_type = data_type
+
+    def extract(self):
+        """
+        Merge a list of dicts or a list of lists.
+        The merge is performed recursively.
+        """
+
+        if self.data_type == "dict":
+            res = {}
+            for data in self.data_list:
+                data = _merge_data(data)
+                if type(data) is not dict:
+                    raise yaml.YAMLError("merge_dict cannot only merge dictionaries")
+                res.update(data)
+        elif self.data_type == "list":
+            res = []
+            for data in self.data_list:
+                data = _merge_data(data)
+                if type(data) is not list:
+                    raise yaml.YAMLError("merge_list cannot only merge lists")
+                res += data
+        else:
+            raise yaml.YAMLError("invalid merge type")
+
+        return res
+
+
+def _merge_data(data):
+    """
+    Walk through the data recursively and merge it.
+    Find the merge objects and replace them with merged data.
+    This function is used for the YAML merge extensions.
+    """
+
+    if type(data) is dict:
+        for tag, val in data.items():
+            data[tag] = _merge_data(val)
+    elif type(data) is list:
+        for idx, val in enumerate(data):
+            data[idx] = _merge_data(val)
+    elif type(data) is _MergeObj:
+        data = data.extract()
+    else:
+        pass
+
+    return data
+
+
 def _parse_yaml(stream):
     """
     Load a YAML stream (with custom extensions).
     If required, merge the data (custom merge commands).
     """
 
+    # create loader
     loader = _YamlLoader(stream)
+
+    # parse, merge, and clean
     try:
         data = loader.get_single_data()
         if loader.has_merge:
-            data = _MergeData.merge(data)
+            data = _merge_data(data)
     finally:
         loader.dispose()
 
