@@ -16,6 +16,7 @@
 name: Run Conda Tests
 
 on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
@@ -28,16 +29,16 @@ jobs:
         method:
           - name: "conda_base"
             cmd:  |
-              mambda env create -f conda_base.yaml
-              mamba activate pypeec
+              mamba env create -f conda_base.yaml
+              conda activate pypeec
           - name: "conda_dev"
             cmd:  |
-              mambda env create -f conda_dev.yaml
-              mamba activate pypeec
+              mamba env create -f conda_dev.yaml
+              conda activate pypeec
           - name: "conda_forge"
             cmd:  |
               mamba create -n pypeec python=3.10
-              mamba activate pypeec
+              conda activate pypeec
               mamba install conda-forge::pypeec
               mamba remove --force --yes --quiet pypeec
     name: ${{ matrix.method.name }}
@@ -49,7 +50,6 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
-          auto-activate-base: true
           use-mamba: true
       - name: Install dependencies
         shell: bash -el {0}
