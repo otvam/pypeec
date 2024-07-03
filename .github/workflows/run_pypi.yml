@@ -21,12 +21,12 @@
 name: Run PyPi Tests
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
 
 jobs:
-  build:
+  default:
     strategy:
       fail-fast: false
       matrix:
@@ -35,11 +35,11 @@ jobs:
             cmd:  |
               python -m pip install --upgrade pip
               pip install -r requirements.txt
-          - name: "local"
+          - name: "pkg_local"
             cmd:  |
               python -m pip install --upgrade pip
               pip install .
-          - name: "remote"
+          - name: "pkg_pypi"
             cmd:  |
               python -m pip install --upgrade pip
               pip install pypeec
@@ -54,6 +54,7 @@ jobs:
         with:
           python-version: "3.10"
       - name: Install dependencies
+        shell: bash
         run: ${{ matrix.method.cmd }}
       - name: Run the tests
         shell: bash

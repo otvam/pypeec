@@ -21,19 +21,27 @@ on:
     - cron: "0 2 * * 1"
 
 jobs:
-  conda:
+  default:
     strategy:
       fail-fast: false
       matrix:
         method:
-          - name: "base"
-            file: "base"
-          - name: "dev"
-            file: "dev"
-        system: ["ubuntu-latest"]
-        version: ["3.10"]
-    name: ${{ matrix.method.name }} / ${{ matrix.system }} / ${{ matrix.version }}
-    runs-on: ${{ matrix.system }}
+          - name: "conda_base"
+            cmd:  |
+              mambda env create -f conda_base.yaml
+              mamba activate pypeec
+          - name: "conda_dev"
+            cmd:  |
+              mambda env create -f conda_dev.yaml
+              mamba activate pypeec
+          - name: "conda_forge"
+            cmd:  |
+              mamba create -n pypeec python=3.10
+              mamba activate pypeec
+              mamba install conda-forge::pypeec
+              mamba remove --force --yes --quiet pypeec
+    name: ${{ matrix.method.name }}
+    runs-on: "ubuntu-latest"
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -41,11 +49,11 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
-          python-version: ${{ matrix.version }}
-          auto-activate-base: false
-          activate-environment: pypeec
-          environment-file: ${{ matrix.method.file }}
+          auto-activate-base: true
           use-mamba: true
+      - name: Install dependencies
+        shell: bash -el {0}
+        run: ${{ matrix.method.cmd }}
       - name: Run the tests
         shell: bash -el {0}
         run: |
