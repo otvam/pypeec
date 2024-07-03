@@ -28,7 +28,7 @@ Using a Python Environment
     #   - Python executable: "python" or "python3"
 
     # Create a Python Virtual Environment
-    python -m venv pypeecenv
+    python -m venv venv
 
     # Activate the Python Virtual Environment
     source venv/bin/activate
@@ -50,10 +50,10 @@ Using a Conda Environment
     #   - Using mamba as a dependency solver is faster
 
     # Create a Conda Environment with a Python interpreter
-    mamba create -n pypeec_venv python=3.10
+    mamba create -n pypeec python=3.10
 
     # Activate the Conda Environment
-    mamba activate pypeec_venv
+    mamba activate pypeec
 
     # Install PyPEEC from conda-forge
     mamba install conda-forge::pypeec
