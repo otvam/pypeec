@@ -33,7 +33,7 @@ jobs:
         system: ["ubuntu-latest"]
         version: ["3.10"]
 
-    name: Conda / ${{ matrix.method.name }} / ${{ matrix.system }} / ${{ matrix.version }}
+    name: ${{ matrix.method.name }} / ${{ matrix.system }} / ${{ matrix.version }}
     runs-on: ${{ matrix.system }}
     timeout-minutes: 20
     steps:

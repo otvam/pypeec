@@ -38,7 +38,7 @@ jobs:
         system: ["ubuntu-latest",  "macos-latest", "windows-latest"]
         version: ["3.9", "3.10", "3.11", "3.12"]
 
-    name: Platform / ${{ matrix.method.name }} / ${{ matrix.system }} / ${{ matrix.version }}
+    name: ${{ matrix.method.name }} / ${{ matrix.system }} / ${{ matrix.version }}
     runs-on: ${{ matrix.system }}
     timeout-minutes: 20
     steps:
