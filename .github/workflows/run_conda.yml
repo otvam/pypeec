@@ -29,18 +29,18 @@ jobs:
         method:
           - name: "conda_base"
             cmd:  |
-              mamba env create -f conda_base.yaml
+              conda env create --file conda_base.yaml
               conda activate pypeec
           - name: "conda_dev"
             cmd:  |
-              mamba env create -f conda_dev.yaml
+              conda env create --file conda_dev.yaml
               conda activate pypeec
           - name: "conda_forge"
             cmd:  |
-              mamba create -n pypeec python=3.10
+              conda create --name pypeec python=3.10
               conda activate pypeec
-              mamba install conda-forge::pypeec
-              mamba remove --force --yes --quiet pypeec
+              conda install conda-forge::pypeec
+              conda remove --force --yes --quiet pypeec
     name: ${{ matrix.method.name }}
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
@@ -57,5 +57,6 @@ jobs:
       - name: Run the tests
         shell: bash -el {0}
         run: |
+          conda activate pypeec
           chmod +x scripts/run_tests.sh
           ./scripts/run_tests.sh
