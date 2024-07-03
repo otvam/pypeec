@@ -70,7 +70,7 @@ def run_extract(data_name, is_zip, path_extract):
         LOGGER.info("successful termination")
 
 
-def run_mesher_data(data_geometry, **kwargs):
+def run_mesher_data(data_geometry):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
         - Get the geometry data as an argument.
@@ -95,7 +95,7 @@ def run_mesher_data(data_geometry, **kwargs):
 
         # run the tool
         LOGGER.info("run the mesher")
-        data_voxel = mesher.run(data_geometry, **kwargs)
+        data_voxel = mesher.run(data_geometry)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         LOGGER.error("invalid termination")
@@ -106,7 +106,7 @@ def run_mesher_data(data_geometry, **kwargs):
     return data_voxel
 
 
-def run_mesher_file(file_geometry, file_voxel, **kwargs):
+def run_mesher_file(file_geometry, file_voxel):
     """
     Main script for meshing the geometry and generating a 3D voxel structure.
         - Load the geometry data from a file.
@@ -131,7 +131,7 @@ def run_mesher_file(file_geometry, file_voxel, **kwargs):
         raise ex
 
     # run the tool
-    data_voxel = run_mesher_data(data_geometry, **kwargs)
+    data_voxel = run_mesher_data(data_geometry)
 
     # save results
     try:
@@ -238,7 +238,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
     run_viewer_data(data_voxel, data_viewer, **kwargs)
 
 
-def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
+def run_solver_data(data_voxel, data_problem, data_tolerance):
     """
     Main script for solving a problem with the PEEC solver.
         - Get the voxel data as an argument.
@@ -269,7 +269,7 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
 
         # run the tool
         LOGGER.info("run the solver")
-        data_solution = solver.run(data_voxel, data_problem, data_tolerance, **kwargs)
+        data_solution = solver.run(data_voxel, data_problem, data_tolerance)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         LOGGER.error("invalid termination")
@@ -280,7 +280,7 @@ def run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs):
     return data_solution
 
 
-def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **kwargs):
+def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     """
     Main script for solving a problem with the PEEC solver.
         - Load the voxel data from a file.
@@ -315,7 +315,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution, **k
         raise ex
 
     # run the tool
-    data_solution = run_solver_data(data_voxel, data_problem, data_tolerance, **kwargs)
+    data_solution = run_solver_data(data_voxel, data_problem, data_tolerance)
 
     # save results
     try:

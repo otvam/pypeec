@@ -18,8 +18,8 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-from pypeec.lib_visualization import data_viewer
-from pypeec.lib_visualization import data_voxel
+from pypeec.lib_visualization import parse_viewer
+from pypeec.lib_visualization import parse_voxel
 from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
@@ -47,16 +47,16 @@ def _get_grid_voxel(data_geom):
     reference = data_geom["reference"]
 
     # get voxel indices
-    idx = data_viewer.get_voxel(domain_def)
+    idx = parse_viewer.get_voxel(domain_def)
 
     # convert the voxel geometry into PyVista grids
-    grid = data_voxel.get_grid(n, d, c)
-    voxel = data_voxel.get_voxel(grid, idx)
-    point = data_voxel.get_point(pts_cloud)
-    reference = data_voxel.get_reference(reference, voxel)
+    grid = parse_voxel.get_grid(n, d, c)
+    voxel = parse_voxel.get_voxel(grid, idx)
+    point = parse_voxel.get_point(pts_cloud)
+    reference = parse_voxel.get_reference(reference, voxel)
 
     # add the domain tag to the geometry
-    voxel = data_viewer.set_data(voxel, idx, domain_def, connection_def)
+    voxel = parse_viewer.set_data(voxel, idx, domain_def, connection_def)
 
     return grid, voxel, point, reference
 

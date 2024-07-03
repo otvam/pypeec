@@ -22,8 +22,8 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-from pypeec.lib_visualization import data_plotter
-from pypeec.lib_visualization import data_voxel
+from pypeec.lib_visualization import parse_plotter
+from pypeec.lib_visualization import parse_voxel
 from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_matplotlib
 from pypeec.lib_visualization import manage_plotgui
@@ -58,15 +58,15 @@ def _get_grid_voxel(data_init, data_sweep):
     conv = data_sweep["conv"]
 
     # get voxel indices
-    idx = data_plotter.get_voxel(idx_vc, idx_vm)
+    idx = parse_plotter.get_voxel(idx_vc, idx_vm)
 
     # convert the voxel geometry into PyVista grids
-    grid = data_voxel.get_grid(n, d, c)
-    voxel = data_voxel.get_voxel(grid, idx)
-    point = data_voxel.get_point(pts_cloud)
+    grid = parse_voxel.get_grid(n, d, c)
+    voxel = parse_voxel.get_voxel(grid, idx)
+    point = parse_voxel.get_point(pts_cloud)
 
     # add the problem solution to the grid
-    voxel = data_plotter.set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v)
+    voxel = parse_plotter.set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v)
 
     # set the scalar variables
     for name, value in var.items():
@@ -76,15 +76,15 @@ def _get_grid_voxel(data_init, data_sweep):
 
         # parse the variable and assign to the geometry
         if cat == "scalar_electric":
-            voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vc, var, name)
+            voxel = parse_plotter.set_voxel_scalar(voxel, idx, idx_vc, var, name)
         elif cat == "scalar_magnetic":
-            voxel = data_plotter.set_voxel_scalar(voxel, idx, idx_vm, var, name)
+            voxel = parse_plotter.set_voxel_scalar(voxel, idx, idx_vm, var, name)
         elif cat == "vector_electric":
-            voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vc, var, name)
+            voxel = parse_plotter.set_voxel_vector(voxel, idx, idx_vc, var, name)
         elif cat == "vector_magnetic":
-            voxel = data_plotter.set_voxel_vector(voxel, idx, idx_vm, var, name)
+            voxel = parse_plotter.set_voxel_vector(voxel, idx, idx_vm, var, name)
         elif cat == "cloud":
-            point = data_plotter.set_point_cloud(point, var, name)
+            point = parse_plotter.set_point_cloud(point, var, name)
         else:
             raise ValueError("invalid variable type")
 
