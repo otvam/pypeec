@@ -27,12 +27,11 @@ jobs:
       matrix:
         method:
           - name: "base"
-            file: "conda_base.yaml"
+            file: "base"
           - name: "dev"
-            file: "conda_dev.yaml"
+            file: "dev"
         system: ["ubuntu-latest"]
         version: ["3.10"]
-
     name: ${{ matrix.method.name }} / ${{ matrix.system }} / ${{ matrix.version }}
     runs-on: ${{ matrix.system }}
     timeout-minutes: 20
