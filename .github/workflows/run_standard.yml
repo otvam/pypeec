@@ -32,7 +32,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run the tests
-        shell: bash -el {0}
+        shell: bash
         run: |
           chmod +x scripts/run_tests.sh
           ./scripts/run_tests.sh
