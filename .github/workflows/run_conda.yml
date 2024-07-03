@@ -21,7 +21,7 @@ on:
     - cron: "0 2 * * 1"
 
 jobs:
-  build:
+  conda:
     strategy:
       fail-fast: false
       matrix:
