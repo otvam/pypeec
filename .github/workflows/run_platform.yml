@@ -2,18 +2,16 @@
 #   - dispatch
 #   - weekly
 #
-# The test are run on:
+# The tests are run on the following platforms:
 #   - Linux / Ubuntu
 #   - Apple / macOS
 #   - Microsoft / Windows
+#
+# The tests are run on the following interpreter versions:
 #   - Python 3.9
 #   - Python 3.10
 #   - Python 3.11
 #   - Python 3.12
-#
-# Two different kinds of tests are made:
-#   - using the "requirements.txt" file
-#   - using the package dependencies
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0

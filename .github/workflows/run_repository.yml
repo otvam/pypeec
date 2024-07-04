@@ -1,14 +1,10 @@
-# Run the "Conda tests" with the following conditions.
+# Run the "Repository tests" with the following conditions.
 #   - dispatch
 #   - weekly
 #
-# The test are run on:
-#   - Linux / Ubuntu
-#   - Python 3.10
-#
 # Two different kinds of tests are made:
-#   - using the "conda_base.yaml" file
-#   - using the "conda_dev.yaml" file
+#   - installing the package from the PyPi repository
+#   - installing the package from the Conda repository
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -16,13 +12,13 @@
 name: Run Repository Tests
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
 
 env:
   extract: |
+    pypeec --version
     pypeec examples .
   mesher: |
     pypeec mesher \
@@ -62,12 +58,12 @@ jobs:
         shell: bash -el {0}
         run: |
           conda install --yes conda-forge::pypeec
-          conda info
       - name: Run the tests
         shell: bash -el {0}
         run: |
           ${{ env.extract }}
           ${{ env.mesher }}
+          ${{ env.solver }}
           ${{ env.viewer }}
           ${{ env.plotter }}
   pypi:
@@ -88,5 +84,6 @@ jobs:
         run: |
           ${{ env.extract }}
           ${{ env.mesher }}
+          ${{ env.solver }}
           ${{ env.viewer }}
           ${{ env.plotter }}

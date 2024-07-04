@@ -2,10 +2,6 @@
 #   - dispatch
 #   - weekly
 #
-# The test are run on:
-#   - Linux / Ubuntu
-#   - Python 3.10
-#
 # Two different kinds of tests are made:
 #   - using the "conda_base.yaml" file
 #   - using the "conda_dev.yaml" file
