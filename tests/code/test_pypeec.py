@@ -8,6 +8,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import os.path
 import tempfile
+import warnings
 import logging
 from pypeec import main
 from pypeec import script
@@ -69,6 +70,11 @@ def run_workflow(name, use_script):
         - with the command line script (pypeec.script)
         - with the API (pypeec.main)
     """
+
+    # crash on warnings and ignore deprecation
+    warnings.filterwarnings("error")
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+    warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
 
     # get input file name
     file_geometry = os.path.join(FOLDER_EXAMPLES, name, "geometry.yaml")

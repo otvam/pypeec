@@ -22,7 +22,7 @@ function test_run {
   echo "TEST: $1"
   echo "======================================================================"
 
-  python -W ignore:DeprecationWarning -m unittest "tests/$1.py" -v
+  python -m unittest "tests/$1.py" -v
   ret=$(( ret || $? ))
 }
 

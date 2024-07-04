@@ -22,9 +22,10 @@ function coverage_run {
   echo "COVERAGE: RUN"
   echo "======================================================================"
 
-  python -W ignore:DeprecationWarning \
-      -m coverage run --data-file="coverage/coverage.dat" \
-      -m unittest discover tests -v
+  python \
+      -m coverage run \
+      --data-file="coverage/coverage.dat" \
+      --module unittest discover tests -v
 
   ret=$(( ret || $? ))
 }
@@ -35,7 +36,6 @@ function coverage_html {
   echo "======================================================================"
 
   python \
-      -W ignore:DeprecationWarning \
       -m coverage html \
       --data-file="coverage/coverage.dat" \
       --title="PyPEEC Coverage Report" \
@@ -43,10 +43,7 @@ function coverage_html {
 
   ret=$(( ret || $? ))
 
-  python \
-      -W ignore:DeprecationWarning \
-      -m coverage report \
-      --data-file="coverage/coverage.dat"
+  python -m coverage report --data-file="coverage/coverage.dat"
 
   ret=$(( ret || $? ))
 }
