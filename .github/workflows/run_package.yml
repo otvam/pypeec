@@ -14,7 +14,6 @@
 name: Run Package Tests
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"

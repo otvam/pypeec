@@ -19,20 +19,50 @@
 name: Run Platform Tests
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
 
 jobs:
-  default:
+  # ===================== run the tests with different systems
+  system:
     strategy:
       fail-fast: false
       matrix:
-        system: ["ubuntu-latest",  "macos-latest", "windows-latest"]
-        version: ["3.9", "3.10", "3.11", "3.12"]
-    name: ${{ matrix.system }} / ${{ matrix.version }}
+        system:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+    name: ${{ matrix.system }}
     runs-on: ${{ matrix.system }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        shell: bash -el {0}
+        run: |
+          pip install --upgrade pip
+          pip install --requirement requirements.txt
+      - name: Run the tests
+        shell: bash -el {0}
+        run: |
+          ./scripts/run_tests.sh
+  # ===================== run the tests with different interpreters
+  interpreter:
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+    name: ${{ matrix.version }}
+    runs-on: "ubuntu-latest"
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
