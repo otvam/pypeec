@@ -34,15 +34,17 @@ function coverage_html {
   echo "COVERAGE: REPORT"
   echo "======================================================================"
 
-  python -W ignore:DeprecationWarning \
-      -m coverage html --data-file="coverage/coverage.dat" \
+  python \
+      -m coverage html \
+      --data-file="coverage/coverage.dat" \
       --title="PyPEEC Coverage Report" \
       --directory="coverage" --quiet
 
   ret=$(( ret || $? ))
 
-  python -W ignore:DeprecationWarning \
-      -m coverage report --data-file="coverage/coverage.dat"
+  python \
+      -m coverage report \
+      --data-file="coverage/coverage.dat"
 
   ret=$(( ret || $? ))
 }
