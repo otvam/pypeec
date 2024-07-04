@@ -39,13 +39,10 @@ pypeec --version
 #   - Using mamba as a dependency solver is faster
 
 # Create a Conda Environment with a Python interpreter
-mamba create -n pypeec python=3.10
+mamba create -n pypeec python=3.10 pypeec
 
 # Activate the Conda Environment
 mamba activate pypeec
-
-# Install PyPEEC from conda-forge
-mamba install conda-forge::pypeec
 
 # Check that PyPEEC is available
 pypeec --version

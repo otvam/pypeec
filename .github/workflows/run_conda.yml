@@ -28,19 +28,9 @@ jobs:
       matrix:
         method:
           - name: "conda_base"
-            cmd:  |
-              conda env create --file conda_base.yaml
-              conda activate pypeec
+            file:  "conda_base.yaml"
           - name: "conda_dev"
-            cmd:  |
-              conda env create --file conda_dev.yaml
-              conda activate pypeec
-          - name: "conda_forge"
-            cmd:  |
-              conda create --name pypeec python=3.10
-              conda activate pypeec
-              conda install conda-forge::pypeec
-              conda remove --force --yes --quiet pypeec
+            file:  "conda_dev.yaml"
     name: ${{ matrix.method.name }}
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
@@ -50,13 +40,13 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
+          python-version: "3.10"
+          auto-activate-base: false
+          activate-environment: pypeec
+          environment-file: ${{ matrix.method.file }}
           use-mamba: true
-      - name: Install dependencies
-        shell: bash -el {0}
-        run: ${{ matrix.method.cmd }}
       - name: Run the tests
         shell: bash -el {0}
         run: |
-          conda activate pypeec
           chmod +x scripts/run_tests.sh
           ./scripts/run_tests.sh

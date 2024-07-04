@@ -21,6 +21,7 @@
 name: Run PyPi Tests
 
 on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
@@ -35,15 +36,10 @@ jobs:
             cmd:  |
               python -m pip install --upgrade pip
               pip install -r requirements.txt
-          - name: "pkg_local"
+          - name: "package"
             cmd:  |
               python -m pip install --upgrade pip
               pip install .
-          - name: "pkg_pypi"
-            cmd:  |
-              python -m pip install --upgrade pip
-              pip install pypeec
-              python -m pip uninstall --yes pypeec
     name: ${{ matrix.method.name }}
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
