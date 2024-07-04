@@ -33,11 +33,11 @@ jobs:
         method:
           - name: "requirements"
             cmd:  |
-              python -m pip install --upgrade pip
-              pip install -r requirements.txt
+              pip install --upgrade pip
+              pip install --requirement requirements.txt
           - name: "package"
             cmd:  |
-              python -m pip install --upgrade pip
+              pip install --upgrade pip
               pip install .
     name: ${{ matrix.method.name }}
     runs-on: "ubuntu-latest"
