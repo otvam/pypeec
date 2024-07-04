@@ -2,7 +2,7 @@
 #   - dispatch
 #   - weekly
 #
-# Two different kinds of tests are made:
+# The tests are run on the following environments:
 #   - using the "conda_base.yaml" file
 #   - using the "conda_dev.yaml" file
 #   - using the "requirements.txt" file
@@ -58,7 +58,7 @@ jobs:
             cmd: |
               pip install --upgrade pip
               pip install --requirement requirements.txt
-          - name: "package"
+          - name: "pyproject"
             cmd: |
               pip install --upgrade pip
               pip install .
@@ -71,6 +71,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+          cache: 'pip'
       - name: Install dependencies
         shell: bash -el {0}
         run: |
