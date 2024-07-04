@@ -19,19 +19,6 @@ on:
   schedule:
     - cron: "0 2 * * 1"
 
-env:
-  conda_base: "conda_base.yaml"
-  conda_dev: "conda_dev.yaml"
-  pip_requirements: |
-    pip install --upgrade pip
-    pip install --requirement requirements.txt
-  pip_package: |
-    pip install --upgrade pip
-    pip install .
-  test_run: |
-    chmod +x scripts/run_tests.sh
-    ./scripts/run_tests.sh
-
 jobs:
   # ===================== run the tests with conda
   conda:
@@ -40,9 +27,9 @@ jobs:
       matrix:
         method:
           - name: "conda_base"
-            file:  ${{ env.conda_base }}
+            file: "conda_base.yaml"
           - name: "conda_dev"
-            file:  ${{ env.conda_dev }}
+            file: "conda_dev.yaml"
     name: ${{ matrix.method.name }}
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
@@ -60,7 +47,7 @@ jobs:
       - name: Run the tests
         shell: bash -el {0}
         run: |
-          ${{ env.test_run }}
+          ./scripts/run_tests.sh
   # ===================== run the tests with pip
   pip:
     strategy:
@@ -68,9 +55,13 @@ jobs:
       matrix:
         method:
           - name: "requirements"
-            cmd:  ${{ env.pip_requirements }}
+            cmd: |
+              pip install --upgrade pip
+              pip install --requirement requirements.txt
           - name: "package"
-            cmd:  ${{ env.pip_package }}
+            cmd: |
+              pip install --upgrade pip
+              pip install .
     name: ${{ matrix.method.name }}
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
@@ -87,4 +78,4 @@ jobs:
       - name: Run the tests
         shell: bash -el {0}
         run: |
-          ${{ env.test_run }}
+          ./scripts/run_tests.sh

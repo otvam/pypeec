@@ -31,5 +31,4 @@ jobs:
       - name: Run the tests
         shell: bash -el {0}
         run: |
-          chmod +x scripts/run_tests.sh
           ./scripts/run_tests.sh
