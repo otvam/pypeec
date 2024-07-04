@@ -35,6 +35,7 @@ function coverage_html {
   echo "======================================================================"
 
   python \
+      -W ignore:DeprecationWarning \
       -m coverage html \
       --data-file="coverage/coverage.dat" \
       --title="PyPEEC Coverage Report" \
@@ -43,6 +44,7 @@ function coverage_html {
   ret=$(( ret || $? ))
 
   python \
+      -W ignore:DeprecationWarning \
       -m coverage report \
       --data-file="coverage/coverage.dat"
 
