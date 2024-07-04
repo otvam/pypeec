@@ -17,6 +17,9 @@ on:
     - cron: "0 2 * * 1"
 
 env:
+  ALLOW_PLOTTING: "true"
+  PYTHONIOENCODING: "utf8"
+  PYTHONUNBUFFERED: "1"
   extract: |
     pypeec --version
     pypeec examples .
