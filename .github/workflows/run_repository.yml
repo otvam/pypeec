@@ -21,6 +21,21 @@ on:
   schedule:
     - cron: "0 2 * * 1"
 
+env:
+  extract: |
+    pypeec examples .
+  mesher: |
+    pypeec mesher \
+        --geometry tutorial/geometry.yaml \
+        --voxel tutorial/voxel.json.gz
+  solver: |
+    pypeec solver \
+        --voxel tutorial/voxel.json.gz \
+        --problem tutorial/problem.yaml \
+        --tolerance config/tolerance.yaml \
+        --solution tutorial/solution.json.gz
+
+
 jobs:
   default:
     runs-on: "ubuntu-latest"
@@ -38,10 +53,9 @@ jobs:
         shell: bash -el {0}
         run: |
           conda install --yes conda-forge::pypeec
-          pypeec examples examples
-          pypeec documentation documentation
       - name: Run the tests
         shell: bash -el {0}
         run: |
-          pypeec --version
-          ls -lsa
+          ${{ env.extract }}
+          ${{ env.mesher }}
+          ${{ env.solver }}
