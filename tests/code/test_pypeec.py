@@ -9,16 +9,9 @@ __license__ = "Mozilla Public License Version 2.0"
 import os.path
 import tempfile
 import logging
-import warnings
 from pypeec import main
 from pypeec import script
 from pypeec import io
-
-# ignore deprecation warnings
-#warnings.filterwarnings("ignore", category=DeprecationWarning)
-
-# crash on warnings
-#warnings.filterwarnings("error")
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.INFO)
