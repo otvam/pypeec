@@ -12,6 +12,7 @@
 name: Run Repository Tests
 
 on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
@@ -42,6 +43,7 @@ env:
         --plot_mode none
 
 jobs:
+  # ===================== run the tests with conda
   conda:
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
@@ -66,7 +68,8 @@ jobs:
           ${{ env.solver }}
           ${{ env.viewer }}
           ${{ env.plotter }}
-  pypi:
+  # ===================== run the tests with pip
+  pip:
     runs-on: "ubuntu-latest"
     timeout-minutes: 20
     steps:

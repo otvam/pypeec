@@ -1,0 +1,90 @@
+# Run the "Package tests" with the following conditions.
+#   - dispatch
+#   - weekly
+#
+# Two different kinds of tests are made:
+#   - using the "conda_base.yaml" file
+#   - using the "conda_dev.yaml" file
+#   - using the "requirements.txt" file
+#   - using the "pyproject.toml" file
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+name: Run Package Tests
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
+
+env:
+  conda_base: "conda_base.yaml"
+  conda_dev: "conda_dev.yaml"
+  pip_requirements: |
+    pip install --upgrade pip
+    pip install --requirement requirements.txt
+  pip_package: |
+    pip install --upgrade pip
+    pip install .
+  test_run: |
+    chmod +x scripts/run_tests.sh
+    ./scripts/run_tests.sh
+
+jobs:
+  # ===================== run the tests with conda
+  conda:
+    strategy:
+      fail-fast: false
+      matrix:
+        method:
+          - name: "conda_base"
+            file:  ${{ env.conda_base }}
+          - name: "conda_dev"
+            file:  ${{ env.conda_dev }}
+    name: ${{ matrix.method.name }}
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+          python-version: "3.10"
+          auto-activate-base: false
+          activate-environment: pypeec
+          environment-file: ${{ matrix.method.file }}
+          use-mamba: true
+      - name: Run the tests
+        shell: bash -el {0}
+        run: |
+          ${{ env.test_run }}
+  # ===================== run the tests with pip
+  pip:
+    strategy:
+      fail-fast: false
+      matrix:
+        method:
+          - name: "requirements"
+            cmd:  ${{ env.pip_requirements }}
+          - name: "package"
+            cmd:  ${{ env.pip_package }}
+    name: ${{ matrix.method.name }}
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        shell: bash -el {0}
+        run: |
+          ${{ matrix.method.cmd }}
+      - name: Run the tests
+        shell: bash -el {0}
+        run: |
+          ${{ env.test_run }}
