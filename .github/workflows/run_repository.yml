@@ -20,25 +20,23 @@ env:
   ALLOW_PLOTTING: "true"
   PYTHONIOENCODING: "utf8"
   PYTHONUNBUFFERED: "1"
-  extract: |
+  CMD_EXTRACT: |
     pypeec --version
     pypeec examples .
-  mesher: |
+  CMD_SOLVE: |
     pypeec mesher \
         --geometry tutorial/geometry.yaml \
         --voxel tutorial/voxel.json.gz
-  solver: |
     pypeec solver \
         --voxel tutorial/voxel.json.gz \
         --problem tutorial/problem.yaml \
         --tolerance config/tolerance.yaml \
         --solution tutorial/solution.json.gz
-  viewer: |
+  CMD_PLOT: |
     pypeec viewer \
         --voxel tutorial/voxel.json.gz \
         --viewer config/viewer.yaml \
         --plot_mode none
-  plotter: |
     pypeec plotter \
         --solution tutorial/solution.json.gz \
         --plotter config/plotter.yaml \
@@ -65,11 +63,9 @@ jobs:
       - name: Run the tests
         shell: bash -el {0}
         run: |
-          ${{ env.extract }}
-          ${{ env.mesher }}
-          ${{ env.solver }}
-          ${{ env.viewer }}
-          ${{ env.plotter }}
+          ${{ env.CMD_EXTRACT }}
+          ${{ env.CMD_SOLVE }}
+          ${{ env.CMD_PLOT }}
   # ===================== run the tests with pip
   pip:
     runs-on: "ubuntu-latest"
@@ -87,8 +83,6 @@ jobs:
       - name: Run the tests
         shell: bash -el {0}
         run: |
-          ${{ env.extract }}
-          ${{ env.mesher }}
-          ${{ env.solver }}
-          ${{ env.viewer }}
-          ${{ env.plotter }}
+          ${{ env.CMD_EXTRACT }}
+          ${{ env.CMD_SOLVE }}
+          ${{ env.CMD_PLOT }}
