@@ -26,8 +26,8 @@ jobs:
       - name: Install dependencies
         shell: bash -el {0}
         run: |
-          pip install --upgrade pip
-          pip install --requirement requirements.txt
+          python -m pip install --upgrade pip
+          python -m pip install --requirement requirements.txt
       - name: Run the tests
         shell: bash -el {0}
         run: |
