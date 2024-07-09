@@ -73,6 +73,14 @@ examples_shape/coplanar
 
 .. image:: ../examples/examples_shape_coplanar.png
 
+examples_shape/parallel
+^^^^^^^^^^^^^^^^^^^^^^^
+
+* **Parallel wires with opposing currents**
+* Defined with **2D shapes**
+
+.. image:: ../examples/examples_shape_parallel.png
+
 examples_shape/trace
 ^^^^^^^^^^^^^^^^^^^^
 

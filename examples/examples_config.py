@@ -29,6 +29,7 @@ FOLDER_CONFIG = "config"
 #       examples_shape/wire
 #       examples_shape/trace
 #       examples_shape/coplanar
+#       examples_shape/parallel
 #   examples_stl
 #       examples_stl/inductor_air
 #       examples_stl/inductor_core
