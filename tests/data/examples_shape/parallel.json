@@ -1,0 +1,18 @@
+{
+    "metadata": {
+        "name": "examples_shape/parallel",
+        "timestamp": "2024-07-09 18:40:34.680904"
+    },
+    "mesher": {
+        "n_total": 26000,
+        "n_used": 8320
+    },
+    "solver": {
+        "sim_default": {
+            "freq": 0.0,
+            "has_converged": true,
+            "P_total": 0.00446249999999877,
+            "W_total": 1.1460684672004102e-08
+        }
+    }
+}

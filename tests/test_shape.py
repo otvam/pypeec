@@ -20,6 +20,7 @@ name_list = [
     "examples_shape/wire",
     "examples_shape/trace",
     "examples_shape/coplanar",
+    "examples_shape/parallel",
 ]
 
 # add the tests
