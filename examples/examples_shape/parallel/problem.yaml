@@ -1,0 +1,43 @@
+# Definition of a "file_problem" data.
+#
+# This file is used by the solver.
+# Definition of the magnetic problem to be solved.
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+"material_def":
+    "wire":
+        "domain_list": ["src_1", "src_2", "sink_1", "sink_2", "wire"]
+        "material_type": "electric"
+        "orientation_type": "isotropic"
+        "var_type": "lumped"
+"source_def":
+    "src_1":
+        "domain_list": ["src_1"]
+        "source_type": "current"
+        "var_type": "lumped"
+    "src_2":
+        "domain_list": ["src_2"]
+        "source_type": "current"
+        "var_type": "lumped"
+    "sink_1":
+        "domain_list": ["sink_1"]
+        "source_type": "voltage"
+        "var_type": "lumped"
+    "sink_2":
+        "domain_list": ["sink_2"]
+        "source_type": "voltage"
+        "var_type": "lumped"
+"sweep_config":
+    "sim_default": null
+"sweep_param":
+    "sim_default":
+        "freq": 0.0
+        "material_val":
+            "wire": {"rho_re": 1.75e-8, "rho_im": 0.0}
+        "source_val":
+            "src_1": {"I_re": +1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
+            "src_2": { "I_re": -1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0 }
+            "sink_1": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
+            "sink_2": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
