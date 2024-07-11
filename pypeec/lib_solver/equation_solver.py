@@ -1,5 +1,5 @@
 """
-Module for checking the matrix condition number and solving a sparse equation system.
+Module for checking the matrix condition number and solving the equation system.
 """
 
 __author__ = "Thomas Guillod"
