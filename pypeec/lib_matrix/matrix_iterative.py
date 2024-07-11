@@ -1,5 +1,5 @@
 """
-Module for solving a sparse equation system with GMRES or GCROT.
+Module for solving a dense equation system with GMRES or GCROT.
 """
 
 __author__ = "Thomas Guillod"
