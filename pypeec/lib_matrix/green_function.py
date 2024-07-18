@@ -128,7 +128,7 @@ def _get_green_5D_fct(x, y, z):
 
     # compute function
     val = 1.0*(
-            +(z**3*nrm)/15 +
+            + (z**3*nrm)/15 +
             + (z**5*inv)/60 +
             - (x**4*logz)/24 +
             - (y**4*logz)/24 +
