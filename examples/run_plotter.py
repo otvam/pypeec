@@ -26,7 +26,7 @@ if __name__ == "__main__":
     tag_plot = [
         "V_c_norm",
         "J_c_norm",
-        "H_norm",
+        "H_p_norm",
         "residuum",
     ]
 

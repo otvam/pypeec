@@ -94,7 +94,7 @@ Plotter: Plot the Solution
     pypeec plotter \
         --solution tutorial/solution.json.gz \
         --plotter config/plotter.yaml \
-        --tag_plot V_c_norm J_c_norm H_norm residuum
+        --tag_plot V_c_norm J_c_norm H_p_norm residuum
 
 .. figure:: ../tutorial/plotter_V_c_norm.png
 
@@ -104,7 +104,7 @@ Plotter: Plot the Solution
 
    Plot showing the current density.
 
-.. figure:: ../tutorial/plotter_H_norm.png
+.. figure:: ../tutorial/plotter_H_p_norm.png
 
    Plot showing the generated magnetic field.
 

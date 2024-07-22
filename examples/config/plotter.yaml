@@ -216,7 +216,7 @@
         "filter_lim": null
         "arrow_threshold": 0.01
         "arrow_scale": 0.75
-"H_norm":
+"H_p_norm":
     "framework": "pyvista"
     "layout": "norm_point"
     "title": "Mag. Field Norm"
@@ -232,7 +232,7 @@
         "clamp_lim": null
         "filter_lim": null
         "point_size": 10.0
-"H_vec":
+"H_p_vec":
     "framework": "pyvista"
     "layout": "arrow_point"
     "title": "Mag. Field"
