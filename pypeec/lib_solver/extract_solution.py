@@ -19,6 +19,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 import numpy.linalg as lna
+import scipy.constants as cst
 from pypeec import log
 
 # get a logger
@@ -52,9 +53,6 @@ def _get_magnetic_charge(pts, pts_src, Q_src, vol):
     The field is created by many magnetic charge.
     """
 
-    # vacuum permeability
-    mu = 4*np.pi*1e-7
-
     # get the distance between the points and the voxels
     vec = pts_src-pts
 
@@ -65,7 +63,7 @@ def _get_magnetic_charge(pts, pts_src, Q_src, vol):
     Q_src = np.tile(Q_src, (3, 1)).transpose()
 
     # compute the Biot-Savart contributions
-    H_all = (vol/(4*np.pi*mu))*((Q_src*vec)/(nrm**3))
+    H_all = (vol/(4*np.pi*cst.mu_0))*((Q_src*vec)/(nrm**3))
 
     # sum the contributions
     H_pts = np.sum(H_all, axis=0)

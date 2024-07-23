@@ -9,6 +9,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
+import scipy.constants as cst
 from pypeec import log
 
 # get a logger
@@ -30,9 +31,6 @@ def get_material_vector(material_val, material_idx):
         material_type = material_idx_tmp["material_type"]
         idx = material_idx_tmp["idx"]
 
-        # vacuum permeability
-        mu = 4*np.pi*1e-7
-
         # get the resistivities for the electric materials
         if material_type in ["electric", "electromagnetic"]:
             # assemble
@@ -53,7 +51,7 @@ def get_material_vector(material_val, material_idx):
             chi_re = material_val[tag]["chi_re"]
             chi_im = material_val[tag]["chi_im"]
             chi = chi_re-1j*chi_im
-            rho = 1/(mu*chi)
+            rho = 1/(cst.mu_0*chi)
 
             # check size
             if len(rho) != len(idx):

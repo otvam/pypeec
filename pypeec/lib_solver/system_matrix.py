@@ -13,6 +13,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 import scipy.sparse as sps
+import scipy.constants as cst
 from pypeec.lib_matrix import matrix_multiply
 
 
@@ -104,9 +105,6 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain, mult_type):
         L_op = _get_operator_zeros(idx_f)
         return L, L_op
 
-    # vacuum permeability
-    mu = 4*np.pi*1e-7
-
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
@@ -119,9 +117,9 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain, mult_type):
 
     # scaling factor
     scale = np.zeros(len(idx_f), dtype=np.complex_)
-    scale[idx_fx] = mu/(dy**2*dz**2)
-    scale[idx_fy] = mu/(dx**2*dz**2)
-    scale[idx_fz] = mu/(dx**2*dy**2)
+    scale[idx_fx] = cst.mu_0/(dy**2*dz**2)
+    scale[idx_fy] = cst.mu_0/(dx**2*dz**2)
+    scale[idx_fz] = cst.mu_0/(dx**2*dy**2)
 
     # self-inductance for the preconditioner
     L = scale*G_self
@@ -156,14 +154,11 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, has_domain, mult_type):
         P_op = _get_operator_zeros(idx_v)
         return P, P_op
 
-    # vacuum permeability
-    mu = 4*np.pi*1e-7
-
     # extract the voxel data
     (dx, dy, dz) = d
 
     # scaling factor
-    scale = 1/(mu*dx**2*dy**2*dz**2)
+    scale = 1/(cst.mu_0*dx**2*dy**2*dz**2)
 
     # self-inductance for the preconditioner
     P = scale*G_self
