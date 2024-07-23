@@ -239,7 +239,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         A_src = equation_system.get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, Z_src_v)
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        (fct_pcd, S_mat_c, S_mat_m) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m)
+        (fct_pcd, S_mat) = equation_system.get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m)
 
         # get the linear operator for the electric-magnetic coupling
         fct_cpl = equation_system.get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m)
@@ -253,11 +253,10 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     # solve the equation system
     with log.BlockTimer(LOGGER, "equation_solver"):
         # estimate the condition number of the problem (to detect quasi-singular problem)
-        (condition_ok, condition_status) = equation_solver.get_condition(S_mat_c, S_mat_m, condition_options)
+        (condition_ok, condition_status) = equation_solver.get_condition(S_mat, condition_options)
 
         # free memory
-        del S_mat_c
-        del S_mat_m
+        del S_mat
 
         # get a function to evaluate the solver convergence
         fct_conv = extract_convergence.get_fct_conv(freq, source_all, sol_idx)
@@ -269,6 +268,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         del fct_pcd
         del fct_cpl
         del fct_sys
+        del fct_conv
 
         # compute convergence
         has_converged = solver_ok and condition_ok

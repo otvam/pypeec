@@ -485,8 +485,9 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
 
     # corresponding linear operator
     fct = (fct_c, fct_m)
+    S_mat = (S_mat_c, S_mat_m)
 
-    return fct, S_mat_c, S_mat_m
+    return fct, S_mat
 
 
 def get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m):
@@ -514,10 +515,7 @@ def get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m):
 
         return cpl_m
 
-    # corresponding linear operator
-    fct = (fct_c, fct_m)
-
-    return fct
+    return fct_c, fct_m
 
 
 def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m):
@@ -542,13 +540,7 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m)
 
         return rhs_m
 
-    # corresponding linear operator
-    fct = (
-        fct_c,
-        fct_m,
-    )
-
-    return fct
+    return fct_c, fct_m
 
 
 def get_system_sol_idx(A_net_c, A_net_m, A_src):

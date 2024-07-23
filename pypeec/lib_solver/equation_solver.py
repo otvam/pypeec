@@ -565,7 +565,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
     return sol, res, conv, status, solver_status
 
 
-def get_condition(S_mat_c, S_mat_m, conditions_options):
+def get_condition(S_mat, conditions_options):
     """
     Compute an estimate of the condition number (norm 1) of preconditioner Schur complements.
     The condition number is used to detect problematic (quasi-singular) systems.
@@ -576,6 +576,9 @@ def get_condition(S_mat_c, S_mat_m, conditions_options):
     tolerance_electric = conditions_options["tolerance_electric"]
     tolerance_magnetic = conditions_options["tolerance_magnetic"]
     norm_options = conditions_options["norm_options"]
+
+    # extract matrices
+    (S_mat_c, S_mat_m) = S_mat
 
     # check the condition
     if check:
