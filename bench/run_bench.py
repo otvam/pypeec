@@ -1,6 +1,4 @@
 import os
-os.environ["PYTHONLOGGER"] = "logger.ini"
-
 import time
 import joblib
 import multiprocessing
@@ -14,8 +12,8 @@ LOGGER = log.get_logger(__name__, "bench")
 (data_voxel, data_problem) = io.load_data("out.pck")
 data_tolerance = io.load_input("tolerance.yaml")
 
-n_par = 8
-n_des = n_par*16
+n_par = int(os.getenv("PARALLEL"))
+n_des = n_par*8
 
 idx = range(n_des)
 data_voxel = [data_voxel] * len(idx)

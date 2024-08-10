@@ -13,7 +13,7 @@
 ret=0
 
 # ############### environment variables
-export PYTHONLOGGER="config/logger.ini"
+export PYTHONLOGGER="logger.ini"
 export PYTHONUNBUFFERED="1"
 export PARALLEL="32"
 
