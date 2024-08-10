@@ -209,7 +209,7 @@ def check_data_tolerance(data_tolerance):
     datachecker.check_choice("mult_type", mult_type, ["fft", "direct"])
     datachecker.check_float("green_simplify", green_simplify, is_positive=True, can_be_zero=False)
     datachecker.check_float("coupling_simplify", coupling_simplify, is_positive=True, can_be_zero=False)
-    datachecker.check_integer("sweep_pool", sweep_pool, is_positive=True, can_be_zero=False, can_be_none=True)
+    datachecker.check_integer("sweep_pool", sweep_pool)
 
     # extract field
     fft_options = data_tolerance["fft_options"]

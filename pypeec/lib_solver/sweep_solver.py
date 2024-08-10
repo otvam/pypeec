@@ -11,6 +11,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import os
 import joblib
 from pypeec import log
 
@@ -71,7 +72,7 @@ def _get_parallel_loop(sweep_pool, fct_compute, arg_list):
     Run a loop (serial or parallel).
     """
 
-    if sweep_pool is None:
+    if sweep_pool == 0:
         out_list = []
         for arg in arg_list:
             out = fct_compute(*arg)
@@ -85,6 +86,10 @@ def _get_parallel_loop(sweep_pool, fct_compute, arg_list):
             log.set_global(global_timestamp, global_level)
             out = fct_compute(*args)
             return out
+
+        # check default
+        if sweep_pool < 0:
+            sweep_pool = os.cpu_count()
 
         # run the parallel loop
         out_list = joblib.Parallel(n_jobs=sweep_pool, backend="loky")(
