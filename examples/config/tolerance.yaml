@@ -9,17 +9,15 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-# parallel pool for sweeps
-#   - number of parallel processes for computing the solver sweeps
-#   - if zero, the parallel processing is disabled
-#   - if negative, the number of cores if used
-sweep_pool: 0
+# parallel pool/thread control for the sweeps
+parallel_sweep:
+    "n_jobs": 0                        # number of processes (0 for disabling, -1 for number of cores)
+    "n_threads": null                  # number of inner thread per process (None for optimal number)
 
 # control where numerical approximations are used for the Green and coupling functions
 #   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used
 #   - if the normalized voxel distance is larger than the threshold, numerical approximations are used
-"green_simplify": 20.0
-"coupling_simplify": 20.0
+"integral_simplify": 20.0
 
 # method for dense matrix multiplication
 #   - "fft" for doing the multiplication with circulant tensors and FFT
@@ -69,8 +67,8 @@ sweep_pool: 0
     #   - options for the PARDISO sparse solver
     #   - only used if this solver is selected
     "pardiso_options":
-        "thread_pardiso": -1         # number of threads for PARDISO (0 for disabling, -1 for number of cores)
-        "thread_mkl": -1             # number of threads for MKL (0 for disabling, -1 for number of cores)
+        "thread_pardiso": -1           # number of threads for PARDISO (0 for disabling, -1 for number of cores)
+        "thread_mkl": -1               # number of threads for MKL (0 for disabling, -1 for number of cores)
 
 # equation system solver options (for GMRES and GCROT solver)
 "solver_options":
@@ -117,19 +115,19 @@ sweep_pool: 0
 
         # options for the electric segregated matrix solver
         "iter_electric_options":
-            "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
-            "rel_tol": 1.0e-6              # relative tolerance for solver convergence
-            "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
-            "n_inner": 20                  # maximum number of solver inner iterations
-            "n_outer": 20                  # maximum number of solver outer iterations
+            "solver": "gmres"          # name of the solver ("gmres" or "gcrot")
+            "rel_tol": 1.0e-6          # relative tolerance for solver convergence
+            "abs_tol": 1.0e-12         # absolute tolerance for solver convergence
+            "n_inner": 20              # maximum number of solver inner iterations
+            "n_outer": 20              # maximum number of solver outer iterations
 
         # options for the electric magnetic matrix solver
         "iter_magnetic_options":
-            "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
-            "rel_tol": 1.0e-6              # relative tolerance for solver convergence
-            "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
-            "n_inner": 20                  # maximum number of solver inner iterations
-            "n_outer": 20                  # maximum number of solver outer iterations
+            "solver": "gmres"          # name of the solver ("gmres" or "gcrot")
+            "rel_tol": 1.0e-6          # relative tolerance for solver convergence
+            "abs_tol": 1.0e-12         # absolute tolerance for solver convergence
+            "n_inner": 20              # maximum number of solver inner iterations
+            "n_outer": 20              # maximum number of solver outer iterations
 
 # matrix condition check options
 "condition_options":

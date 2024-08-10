@@ -60,9 +60,8 @@ def _run_solver_init(data_solver):
     n = data_solver["n"]
     d = data_solver["d"]
     c = data_solver["c"]
-    sweep_pool = data_solver["sweep_pool"]
-    green_simplify = data_solver["green_simplify"]
-    coupling_simplify = data_solver["coupling_simplify"]
+    parallel_sweep = data_solver["parallel_sweep"]
+    integral_simplify = data_solver["integral_simplify"]
     mult_type = data_solver["mult_type"]
     has_coupling = data_solver["has_coupling"]
     has_electric = data_solver["has_electric"]
@@ -88,10 +87,10 @@ def _run_solver_init(data_solver):
         G_self = system_tensor.get_green_self(d)
 
         # Green function mutual coefficients
-        G_mutual = system_tensor.get_green_tensor(n, d, green_simplify)
+        G_mutual = system_tensor.get_green_tensor(n, d, integral_simplify)
 
         # Green function mutual coefficients
-        K_tsr = system_tensor.get_coupling_tensor(n, d, coupling_simplify, has_coupling)
+        K_tsr = system_tensor.get_coupling_tensor(n, d, integral_simplify, has_coupling)
 
     # parse the problem geometry (materials and sources)
     with log.BlockTimer(LOGGER, "problem_geometry"):
@@ -171,7 +170,7 @@ def _run_solver_init(data_solver):
         "pts_net_m": pts_net_m,
     }
 
-    return data_init, data_internal, sweep_pool
+    return data_init, data_internal, parallel_sweep
 
 
 def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
@@ -399,7 +398,7 @@ def run(data_voxel, data_problem, data_tolerance):
 
     # create the problem
     with log.BlockTimer(LOGGER, "init"):
-        (data_init, data_internal, sweep_pool) = _run_solver_init(data_solver)
+        (data_init, data_internal, parallel_sweep) = _run_solver_init(data_solver)
 
     # function for solving a single sweep
     def fct_compute(tag, data, init):
@@ -408,7 +407,7 @@ def run(data_voxel, data_problem, data_tolerance):
         return output, init
 
     # compute the different sweeps
-    data_sweep = sweep_solver.get_run_sweep(sweep_pool, sweep_config, sweep_param, fct_compute)
+    data_sweep = sweep_solver.get_run_sweep(parallel_sweep, sweep_config, sweep_param, fct_compute)
 
     # create output data
     data_solution = _get_data(data_init, data_sweep, timestamp)

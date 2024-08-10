@@ -61,9 +61,9 @@ def _get_fact_pardiso(mat):
 
     # find the number of threads
     if thread_pardiso < 0:
-        thread_pardiso = os.cpu_count()
+        thread_pardiso = os.cpu_count()+thread_pardiso+1
     if thread_mkl < 0:
-        thread_mkl = os.cpu_count()
+        thread_mkl = os.cpu_count()+thread_mkl+1
     if thread_pardiso == 0:
         thread_pardiso = 1
     if thread_mkl == 0:

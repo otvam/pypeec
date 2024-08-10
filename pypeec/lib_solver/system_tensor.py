@@ -130,7 +130,7 @@ def get_green_self(d):
     return G_self
 
 
-def get_green_tensor(n, d, green_simplify):
+def get_green_tensor(n, d, integral_simplify):
     """
     Compute the Green functions for the complete voxel structure.
     For the self-coefficient and the close mutual coefficients, an analytical solution is used.
@@ -153,7 +153,7 @@ def get_green_tensor(n, d, green_simplify):
     n_cell = _get_voxel_distances(d, idx)
 
     # check where the analytical solution should be used
-    idx_ana = n_cell <= green_simplify
+    idx_ana = n_cell <= integral_simplify
     idx_num = np.invert(idx_ana)
 
     # init the result vector
@@ -171,7 +171,7 @@ def get_green_tensor(n, d, green_simplify):
     return G_mutual
 
 
-def get_coupling_tensor(n, d, coupling_simplify, has_coupling):
+def get_coupling_tensor(n, d, integral_simplify, has_coupling):
     """
     Compute the coupling functions for the complete voxel structure.
     For the close coefficients, an analytical solution is used.
@@ -197,7 +197,7 @@ def get_coupling_tensor(n, d, coupling_simplify, has_coupling):
     n_cell = _get_voxel_distances(d, idx)
 
     # check where the analytical solution should be used
-    idx_ana = n_cell <= coupling_simplify
+    idx_ana = n_cell <= integral_simplify
     idx_num = np.invert(idx_ana)
 
     # init the result vector

@@ -46,7 +46,7 @@ def set_options(fft_options):
 
         # find the number of workers
         if scipy_worker < 0:
-            scipy_worker = os.cpu_count()
+            scipy_worker = os.cpu_count()+scipy_worker+1
         if scipy_worker == 0:
             scipy_worker = None
 
@@ -64,7 +64,7 @@ def set_options(fft_options):
 
         # find the number of threads
         if fftw_thread < 0:
-            fftw_thread = os.cpu_count()
+            fftw_thread = os.cpu_count()+fftw_thread+1
         if fftw_thread == 0:
             fftw_thread = 1
 

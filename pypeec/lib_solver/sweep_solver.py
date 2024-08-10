@@ -67,12 +67,16 @@ def _get_tree_check(sweep_tree, tag_init, init_list):
     return init_list
 
 
-def _get_parallel_loop(sweep_pool, fct_compute, arg_list):
+def _get_parallel_loop(parallel_sweep, fct_compute, arg_list):
     """
     Run a loop (serial or parallel).
     """
 
-    if sweep_pool == 0:
+    # extract
+    n_jobs = parallel_sweep["n_jobs"]
+    n_threads = parallel_sweep["n_threads"]
+
+    if n_jobs == 0:
         out_list = []
         for arg in arg_list:
             out = fct_compute(*arg)
@@ -87,19 +91,16 @@ def _get_parallel_loop(sweep_pool, fct_compute, arg_list):
             out = fct_compute(*args)
             return out
 
-        # check default
-        if sweep_pool < 0:
-            sweep_pool = os.cpu_count()
-
         # run the parallel loop
-        out_list = joblib.Parallel(n_jobs=sweep_pool, backend="loky")(
-            joblib.delayed(fct_joblib)(*arg) for arg in arg_list
-        )
+        with joblib.parallel_config(backend="loky", n_jobs=n_jobs, inner_max_num_threads=n_threads):
+            out_list = joblib.Parallel()(
+                joblib.delayed(fct_joblib)(*arg) for arg in arg_list
+            )
 
     return out_list
 
 
-def _get_tree_compute(sweep_pool, sweep_tree, sweep_param, fct_compute, tag_init, output, init):
+def _get_tree_compute(parallel_sweep, sweep_tree, sweep_param, fct_compute, tag_init, output, init):
     """
     Compute the sweeps with the dependencies.
     This is done by walking through the graph from the root.
@@ -124,7 +125,7 @@ def _get_tree_compute(sweep_pool, sweep_tree, sweep_param, fct_compute, tag_init
 
     # run the serial or parallel loop
     arg_list = zip(tag_sub, data_sub, init_sub)
-    out_list = _get_parallel_loop(sweep_pool, fct_compute, arg_list)
+    out_list = _get_parallel_loop(parallel_sweep, fct_compute, arg_list)
 
     # assemble the results
     for tag_tmp, out_tmp in zip(tag_sub, out_list):
@@ -134,12 +135,12 @@ def _get_tree_compute(sweep_pool, sweep_tree, sweep_param, fct_compute, tag_init
 
     # recursive call for the dependent sweeps
     for tag_tmp in tag_sub:
-        (output, init) = _get_tree_compute(sweep_pool, sweep_tree, sweep_param, fct_compute, tag_tmp, output, init)
+        (output, init) = _get_tree_compute(parallel_sweep, sweep_tree, sweep_param, fct_compute, tag_tmp, output, init)
 
     return output, init
 
 
-def get_run_sweep(sweep_pool, sweep_config, sweep_param, fct_compute):
+def get_run_sweep(parallel_sweep, sweep_config, sweep_param, fct_compute):
     """
     Build a tree representing the interdependencies between the sweeps.
     Check that the interdependencies are not impossible (no cyclical dependencies).
@@ -161,6 +162,6 @@ def get_run_sweep(sweep_pool, sweep_config, sweep_param, fct_compute):
     init = {}
 
     # compute the sweep in the correct order (starting from the tree root)
-    (output, init) = _get_tree_compute(sweep_pool, sweep_tree, sweep_param, fct_compute, None, output, init)
+    (output, init) = _get_tree_compute(parallel_sweep, sweep_tree, sweep_param, fct_compute, None, output, init)
 
     return output

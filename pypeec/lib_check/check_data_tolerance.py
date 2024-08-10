@@ -9,6 +9,27 @@ __license__ = "Mozilla Public License Version 2.0"
 from pypeec.lib_check import datachecker
 
 
+def _check_parallel_sweep(parallel_sweep):
+    """
+    Check the parallel sweep options.
+    """
+
+    # check type
+    key_list = [
+        "n_jobs",
+        "n_threads",
+    ]
+    datachecker.check_dict("parallel_sweep", parallel_sweep, key_list=key_list)
+
+    # extract field
+    n_jobs = parallel_sweep["n_jobs"]
+    n_threads = parallel_sweep["n_threads"]
+
+    # check the data
+    datachecker.check_integer("n_jobs", n_jobs, is_positive=False, can_be_zero=True, can_be_none=False)
+    datachecker.check_integer("n_threads", n_threads, is_positive=True, can_be_zero=False, can_be_none=True)
+
+
 def _check_fft_options(fft_options):
     """
     Check the FFT algorithm options.
@@ -188,9 +209,8 @@ def check_data_tolerance(data_tolerance):
 
     # check type
     key_list = [
-        "sweep_pool",
-        "green_simplify",
-        "coupling_simplify",
+        "parallel_sweep",
+        "integral_simplify",
         "mult_type",
         "factorization_options",
         "fft_options",
@@ -201,23 +221,22 @@ def check_data_tolerance(data_tolerance):
 
     # extract field
     mult_type = data_tolerance["mult_type"]
-    green_simplify = data_tolerance["green_simplify"]
-    coupling_simplify = data_tolerance["coupling_simplify"]
-    sweep_pool = data_tolerance["sweep_pool"]
+    integral_simplify = data_tolerance["integral_simplify"]
 
     # check data
     datachecker.check_choice("mult_type", mult_type, ["fft", "direct"])
-    datachecker.check_float("green_simplify", green_simplify, is_positive=True, can_be_zero=False)
-    datachecker.check_float("coupling_simplify", coupling_simplify, is_positive=True, can_be_zero=False)
-    datachecker.check_integer("sweep_pool", sweep_pool)
+    datachecker.check_float("integral_simplify", integral_simplify, is_positive=True, can_be_zero=False)
 
     # extract field
+    parallel_sweep = data_tolerance["parallel_sweep"]
     fft_options = data_tolerance["fft_options"]
     factorization_options = data_tolerance["factorization_options"]
     solver_options = data_tolerance["solver_options"]
     condition_options = data_tolerance["condition_options"]
 
     # check solver and condition check options
+    _check_parallel_sweep(parallel_sweep)
+    _check_fft_options(fft_options)
     _check_fft_options(fft_options)
     _check_factorization_options(factorization_options)
     _check_solver_options(solver_options)
