@@ -36,8 +36,8 @@ def _check_fft_options(fft_options):
     # check the data
     datachecker.check_boolean("matrix_split", matrix_split)
     datachecker.check_choice("library", library, ["SciPy", "FFTW", "CuPy"])
-    datachecker.check_integer("scipy_worker", scipy_worker, is_positive=True, can_be_zero=False, can_be_none=True)
-    datachecker.check_integer("fftw_thread", fftw_thread, is_positive=True, can_be_zero=False, can_be_none=True)
+    datachecker.check_integer("scipy_worker", scipy_worker)
+    datachecker.check_integer("fftw_thread", fftw_thread)
     datachecker.check_integer("fftw_byte_align", fftw_byte_align, is_positive=True, can_be_zero=False, can_be_none=True)
     datachecker.check_float("fftw_timeout", fftw_timeout, is_positive=True, can_be_zero=True, can_be_none=True)
 

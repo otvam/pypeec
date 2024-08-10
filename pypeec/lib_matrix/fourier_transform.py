@@ -45,8 +45,10 @@ def set_options(fft_options):
         import scipy.fft as ffts
 
         # find the number of workers
-        if scipy_worker is None:
+        if scipy_worker < 0:
             scipy_worker = os.cpu_count()
+        if scipy_worker == 0:
+            scipy_worker = None
 
         # find FFTN function
         def fct_fftn(mat, shape, axes, replace):
@@ -61,8 +63,10 @@ def set_options(fft_options):
         from pyfftw.interfaces import numpy_fft
 
         # find the number of threads
-        if fftw_thread is None:
+        if fftw_thread < 0:
             fftw_thread = os.cpu_count()
+        if fftw_thread == 0:
+            fftw_thread = 1
 
         # configure the FFT cache
         if fftw_timeout is None:
