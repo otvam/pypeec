@@ -76,6 +76,7 @@ def _get_parallel_loop(parallel_sweep, fct_compute, arg_list):
     n_jobs = parallel_sweep["n_jobs"]
     n_threads = parallel_sweep["n_threads"]
 
+    # execute the loop
     if n_jobs == 0:
         out_list = []
         for arg in arg_list:

@@ -70,8 +70,10 @@ def _get_fact_pardiso(mat):
         thread_mkl = 1
 
     # set number of threads
-    IMPORTLIB.set_mkl_pardiso_threads(thread_pardiso)
-    IMPORTLIB.set_mkl_threads(thread_mkl)
+    if thread_pardiso is not None:
+        IMPORTLIB.set_mkl_pardiso_threads(thread_pardiso)
+    if thread_mkl is not None:
+        IMPORTLIB.set_mkl_threads(thread_mkl)
 
     # factorize the matrix
     try:
