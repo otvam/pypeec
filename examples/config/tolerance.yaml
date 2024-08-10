@@ -68,8 +68,8 @@ sweep_pool: null
     #   - options for the PARDISO sparse solver
     #   - only used if this solver is selected
     "pardiso_options":
-        "thread_pardiso": null         # number of threads for PARDISO (null for number of CPUs)
-        "thread_mkl": null             # number of threads for MKL (null for number of CPUs)
+        "thread_pardiso": -1         # number of threads for PARDISO (0 for disabling, -1 for number of cores)
+        "thread_mkl": -1             # number of threads for MKL (0 for disabling, -1 for number of cores)
 
 # equation system solver options (for GMRES and GCROT solver)
 "solver_options":

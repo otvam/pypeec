@@ -60,10 +60,14 @@ def _get_fact_pardiso(mat):
     thread_mkl = PARDISO_OPTIONS["thread_mkl"]
 
     # find the number of threads
-    if thread_pardiso is None:
+    if thread_pardiso < 0:
         thread_pardiso = os.cpu_count()
-    if thread_mkl is None:
+    if thread_mkl < 0:
         thread_mkl = os.cpu_count()
+    if thread_pardiso == 0:
+        thread_pardiso = 1
+    if thread_mkl == 0:
+        thread_mkl = 1
 
     # set number of threads
     IMPORTLIB.set_mkl_pardiso_threads(thread_pardiso)

@@ -69,8 +69,8 @@ def _check_factorization_options(factorization_options):
     # check the data
     key_list = ["thread_pardiso", "thread_mkl"]
     datachecker.check_dict("pardiso_options", pardiso_options, key_list=key_list)
-    datachecker.check_integer("thread_pardiso", pardiso_options["thread_pardiso"], is_positive=True, can_be_zero=False, can_be_none=True)
-    datachecker.check_integer("thread_mkl",  pardiso_options["thread_mkl"], is_positive=True, can_be_zero=False, can_be_none=True)
+    datachecker.check_integer("thread_pardiso", pardiso_options["thread_pardiso"])
+    datachecker.check_integer("thread_mkl",  pardiso_options["thread_mkl"])
 
 
 def _check_iter_options(iter_options):
