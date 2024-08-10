@@ -1,0 +1,152 @@
+# PyPEEC tolerance data for the solver:
+#   - define the numerical options for the discretization
+#   - define the numerical options for the matrix multiplication
+#   - define the numerical options for the FFT algorithm
+#   - define the numerical options for the sparse matrix factorization
+#   - define the numerical options for the iterative solver
+#   - define the numerical options for the matrix condition check
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+# parallel pool for sweeps
+#   - number of parallel processes for computing the solver sweeps
+#   - if zero, the parallel processing is disabled
+#   - if negative, the number of cores if used
+sweep_pool: 0
+
+# control where numerical approximations are used for the Green and coupling functions
+#   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used
+#   - if the normalized voxel distance is larger than the threshold, numerical approximations are used
+"green_simplify": 20.0
+"coupling_simplify": 20.0
+
+# method for dense matrix multiplication
+#   - "fft" for doing the multiplication with circulant tensors and FFT
+#   - "direct" for standard matrix multiplication
+#   - "direct" is extremely slow and memory intensive
+#   - "direct" is only useful for debugging and educational purposes
+"mult_type": "fft"
+
+# FFT algorithm options
+"fft_options":
+    # handling of the tensors for the FFT
+    #   - if true, the computation is done with the 4D tensors
+    #   - if false, the 4D tensors are sliced into several 3D tensors
+    #   - splitting the tensors has a slightly increased computational cost
+    #   - splitting the tensors reduces the memory footprint of the computation
+    "matrix_split": true
+
+    # FFT library
+    #   - "SciPy" FFT library is always available (integrated with SciPy)
+    #   - "FFTW" has to be installed separately (available through pyFFTW)
+    #   - "CuPy" is extremely fast but require GPUs compatible with the CUDA toolkit.
+    "library": "SciPy"
+
+    "scipy_worker": -1                 # number of workers for SciPy (0 for disabling, -1 for number of cores)
+    "fftw_thread": -1                  # number of threads for FFTW (0 for disabling, -1 for number of cores)
+    "fftw_timeout": 100.0              # cache timeout in seconds for FFTW (null for no caching)
+    "fftw_byte_align": 16              # size for byte alignment FFTW (null for default)
+
+# sparse matrix factorization options
+"factorization_options":
+    # matrix factorization library
+    #   - "SuperLU" is typically slower but is always available (integrated with SciPy)
+    #   - "UMFPACK" is typically faster than SuperLU (available through SciKits)
+    #   - "PARDISO" is typically faster than UMFPACK (available through Pydiso)
+    #   - "PyAMG" is typically slow but uses less memory (risk of convergence issues)
+    "library": "PARDISO"
+
+    # options for PyAMG
+    #   - options for the algebraic multigrid sparse solver
+    #   - only used if this solver is selected
+    "pyamg_options":
+        "tol": 1.0e-6                  # tolerance for the AMG solver convergence
+        "solver": "root"               # name of the AMG solver ("adapt" or "root")
+        "krylov": null                 # use acceleration method (null or "gmres" or "fgmres")
+
+    # options for PARDISO
+    #   - options for the PARDISO sparse solver
+    #   - only used if this solver is selected
+    "pardiso_options":
+        "thread_pardiso": -1         # number of threads for PARDISO (0 for disabling, -1 for number of cores)
+        "thread_mkl": -1             # number of threads for MKL (0 for disabling, -1 for number of cores)
+
+# equation system solver options (for GMRES and GCROT solver)
+"solver_options":
+    # method for solving the dense equation system
+    #   - "direct" is solving the electric and magnetic equations together
+    #   - "segregated" is iterating between the electric and magnetic equations
+    "coupling": "direct"
+
+    # tolerance for checking the solution residuum on the final solution
+    "tolerance_options":
+        "ignore_status": false         # ignore the solver status
+        "ignore_res": true             # ignore the residuum convergence
+        "rel_tol": 1.0e-3              # relative tolerance for the residuum convergence
+        "abs_tol": 1.0e-9              # absolute tolerance for the residuum convergence
+
+    # criteria for interrupting the solver if the complex power has converged
+    "power_options":
+        "stop": true                   # use (or not) stop criteria on the complex power
+        "n_min": 4                     # minimum number of iterations of the iterative solver
+        "n_cmp": 3                     # number of iterations to consider for the convergence
+        "rel_tol": 1.0e-4              # relative tolerance for the complex power
+        "abs_tol": 1.0e-10             # absolute tolerance for the complex power
+
+    # options for the direct solver
+    #   - control the iterative matrix solver
+    #   - only used if the direct approach is selected
+    "direct_options":
+        "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
+        "rel_tol": 1.0e-6              # relative tolerance for solver convergence
+        "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
+        "n_inner": 20                  # maximum number of solver inner iterations
+        "n_outer": 20                  # maximum number of solver outer iterations
+
+    # options for the segregated solver
+    #   - control the iterations between the magnetic and electric problem
+    #   - only used if the segregated approach is selected
+    "segregated_options":
+        "rel_tol": 1.0e-6              # relative tolerance for solver convergence
+        "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
+        "relax_electric": 1.0          # relaxation parameter for the electric system (1.0 for no relaxation)
+        "relax_magnetic": 1.0          # relaxation parameter for the magnetic system (1.0 for no relaxation)
+        "n_min": 2                     # minimum number of iterations
+        "n_max": 20                    # maximum number of iterations
+
+        # options for the electric segregated matrix solver
+        "iter_electric_options":
+            "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
+            "rel_tol": 1.0e-6              # relative tolerance for solver convergence
+            "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
+            "n_inner": 20                  # maximum number of solver inner iterations
+            "n_outer": 20                  # maximum number of solver outer iterations
+
+        # options for the electric magnetic matrix solver
+        "iter_magnetic_options":
+            "solver": "gmres"              # name of the solver ("gmres" or "gcrot")
+            "rel_tol": 1.0e-6              # relative tolerance for solver convergence
+            "abs_tol": 1.0e-12             # absolute tolerance for solver convergence
+            "n_inner": 20                  # maximum number of solver inner iterations
+            "n_outer": 20                  # maximum number of solver outer iterations
+
+# matrix condition check options
+"condition_options":
+    # check (or not) the condition number of the matrices
+    #   - if true, the condition numbers are computed and checked
+    #   - if false, the condition numbers are ignored
+    "check": true
+
+    # maximum allowable condition number for the electric and magnetic matrices
+    #   - the condition numbers are computed with the sparse preconditioner
+    #   - the condition numbers are estimated and not computed
+    "tolerance_electric": 1.0e+15
+    "tolerance_magnetic": 1.0e+15
+
+    # options for computing the one-norm estimate
+    #   - the condition numbers are estimated and not computed
+    #   - the estimation is done with the one-norm estimate
+    "norm_options":
+        "t_accuracy": 2                # accuracy parameter for the one-norm estimate
+        "n_iter_max": 25               # maximum number of iterations for the one-norm estimate
