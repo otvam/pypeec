@@ -41,7 +41,7 @@ conda activate /dartfs-hpc/rc/home/8/f005fc8/.conda/envs/pypeec
 ret=$(( ret || $? ))
 
 echo "==================== RUN: run script"
-python run_single.py
+python run_bench.py
 ret=$(( ret || $? ))
 
 echo "================================== bench - `date -u +"%D %H:%M:%S"`"
