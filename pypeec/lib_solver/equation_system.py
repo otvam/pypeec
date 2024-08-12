@@ -78,6 +78,9 @@ The matrices have the following description and units:
 For the DC problem (zero frequency), multiplication per zero are occurring.
 Therefore, the problem is formulated slightly differently for this case.
 
+It should be noted that surface charges are not considered.
+Only volume charges are used, which is an approximation.
+
 For the preconditioner, the diagonal of the inductance and potential matrix is used.
 For the preconditioner, the electric-magnetic coupling matrices are simplified.
 The preconditioner is solved with the Schur complement and the matrix factorization.

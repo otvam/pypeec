@@ -14,6 +14,10 @@ PyPEEC Issues
     For such cases, using the segregated solver approach might be useful.
 
 .. Warning::
+    It should be noted that **surface charges** are not considered.
+    Only volume charges are used, which is an approximation.
+
+.. Warning::
     For **large problems**, the code might allocate huge amounts of **memory**.
     This might crash the program and/or your operating system.
 
