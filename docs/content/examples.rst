@@ -46,6 +46,14 @@ examples_stl/inductor_core
 
 .. image:: ../examples/examples_stl_inductor_core.png
 
+examples_stl/inductor_toroid
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* **3D inductor with a toroidal core**
+* Defined with **STL files**
+
+.. image:: ../examples/examples_stl_inductor_toroid.png
+
 examples_stl/transformer
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
