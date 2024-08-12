@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_png/iron_core",
-        "timestamp": "2024-07-09 18:43:07.788270"
+        "timestamp": "2024-08-11 23:19:46.759730"
     },
     "mesher": {
         "n_total": 4693,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 1000.0,
             "has_converged": true,
-            "P_total": 0.00017112648479868924,
-            "W_total": 1.4045390585068404e-08
+            "P_total": 0.0001711264824402415,
+            "W_total": 1.4045390757976346e-08
         }
     }
 }

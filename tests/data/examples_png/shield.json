@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_png/shield",
-        "timestamp": "2024-07-09 18:43:11.773238"
+        "timestamp": "2024-08-11 23:19:51.567827"
     },
     "mesher": {
         "n_total": 20808,
@@ -12,7 +12,7 @@
             "freq": 0.0,
             "has_converged": true,
             "P_total": 264.4214297018656,
-            "W_total": 0.005626396130442765
+            "W_total": 0.0056263961335056385
         }
     }
 }

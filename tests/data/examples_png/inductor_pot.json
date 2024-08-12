@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_png/inductor_pot",
-        "timestamp": "2024-07-09 18:42:40.643048"
+        "timestamp": "2024-08-11 23:19:22.930109"
     },
     "mesher": {
         "n_total": 17797,
@@ -12,7 +12,7 @@
             "freq": 0.0,
             "has_converged": true,
             "P_total": 1.809491219143606e-05,
-            "W_total": 2.5055289129574224e-08
+            "W_total": 2.505528914321794e-08
         }
     }
 }

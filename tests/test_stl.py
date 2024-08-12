@@ -18,6 +18,7 @@ class TestStl(test_workflow.TestWorkflow):
 name_list = [
     "examples_stl/inductor_air",
     "examples_stl/inductor_core",
+    "examples_stl/inductor_toroid",
     "examples_stl/transformer",
 ]
 

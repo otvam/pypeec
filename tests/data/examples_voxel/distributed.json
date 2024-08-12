@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_voxel/distributed",
-        "timestamp": "2024-07-09 18:40:22.749209"
+        "timestamp": "2024-08-11 23:17:05.431114"
     },
     "mesher": {
         "n_total": 7,
@@ -12,7 +12,7 @@
             "freq": 0.0,
             "has_converged": true,
             "P_total": 0.00010500000000000021,
-            "W_total": 1.4247503919428086e-08
+            "W_total": 1.4247503927184082e-08
         }
     }
 }
