@@ -8,6 +8,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
+import numpy.random as rnd
 
 
 def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
@@ -29,6 +30,34 @@ def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
 
             # update the domain indices
             domain_def[domain_resolve_tmp] = idx_resolve
+
+    return domain_def
+
+
+def _get_random(domain_def):
+    """
+    Random assignment of the duplicated voxel indices.
+    """
+
+    # assemble all the indices
+    idx_tag = np.empty(0, dtype=np.int_)
+    idx_vox = np.empty(0, dtype=np.int_)
+    for idx_tag_tmp, idx_vox_tmp in enumerate(domain_def.values()):
+        idx_tag = np.append(idx_tag, np.repeat(idx_tag_tmp, len(idx_vox_tmp)))
+        idx_vox = np.append(idx_vox, idx_vox_tmp)
+
+    # shuffle indices
+    idx_tmp = rnd.permutation(len(idx_tag))
+    idx_tag = idx_tag[idx_tmp]
+    idx_vox = idx_vox[idx_tmp]
+
+    # find the first occurrence for the indices
+    (idx_vox, idx_uni) = np.unique(idx_vox, return_index=True)
+    idx_tag = idx_tag[idx_uni]
+
+    # assign the unique indices
+    for idx_tag_tmp, tag in enumerate(domain_def.keys()):
+        domain_def[tag] = idx_vox[idx_tag == idx_tag_tmp]
 
     return domain_def
 
@@ -63,6 +92,9 @@ def get_conflict(domain_def, domain_conflict):
 
         # solve the conflict
         domain_def = _get_solve_overlap(domain_def, domain_resolve, domain_keep)
+
+    # random assignment of the duplicates
+    domain_def = _get_random(domain_def)
 
     # check that the conflicts are resolved
     _get_resolution(domain_def)
