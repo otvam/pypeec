@@ -104,6 +104,7 @@ def check_data_geometry(data_geometry):
         "check_cloud",
         "check_conflict",
         "check_connection",
+        "random_resolution",
         "domain_conflict",
         "domain_connection",
         "pts_cloud",
@@ -117,6 +118,7 @@ def check_data_geometry(data_geometry):
     check_cloud = data_geometry["check_cloud"]
     check_conflict = data_geometry["check_conflict"]
     check_connection = data_geometry["check_connection"]
+    random_resolution = data_geometry["random_resolution"]
     domain_conflict = data_geometry["domain_conflict"]
     domain_connection = data_geometry["domain_connection"]
     pts_cloud = data_geometry["pts_cloud"]
@@ -126,6 +128,7 @@ def check_data_geometry(data_geometry):
     datachecker.check_boolean("check_cloud", check_cloud)
     datachecker.check_boolean("check_conflict", check_conflict)
     datachecker.check_boolean("check_connection", check_connection)
+    datachecker.check_boolean("random_resolution", random_resolution)
 
     # check the mesher
     if mesh_type == "png":

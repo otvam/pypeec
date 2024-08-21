@@ -37,6 +37,11 @@
 # compute (or not) the connections between the domains
 "check_connection": true
 
+# random resolution of the conflicts between the domains
+#   - the duplicated voxels are randomly assigned to a unique domain
+#   - the random resolution is performed after the manual conflict resolution
+"random_resolution": false
+
 # definition of the conflict resolution between domains
 #   - during the voxelization, the same voxel can be assigned to several domains
 #   - the shared voxels are located at the boundaries between domain

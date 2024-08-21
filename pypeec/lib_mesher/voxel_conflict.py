@@ -77,11 +77,12 @@ def _get_resolution(domain_def):
         raise RuntimeError("invalid domain: domain indices should be unique")
 
 
-def get_conflict(domain_def, domain_conflict):
+def get_conflict(domain_def, domain_conflict, random_resolution):
     """
     Detect and remove shared indices (conflict) between domains.
     The direction of the conflict resolution (between two domains) is specified by the user.
-    At the end, check that all shared indices have been removed.
+    After the rule-based resolution, a random resolution can be performed (if desired)
+    At the end, the unicity of the voxel indices is checked.
     """
 
     # resolve the conflicts for all the specified domain pairs
@@ -94,7 +95,8 @@ def get_conflict(domain_def, domain_conflict):
         domain_def = _get_solve_overlap(domain_def, domain_resolve, domain_keep)
 
     # random assignment of the duplicates
-    domain_def = _get_random(domain_def)
+    if random_resolution:
+        domain_def = _get_random(domain_def)
 
     # check that the conflicts are resolved
     _get_resolution(domain_def)

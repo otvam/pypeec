@@ -77,6 +77,7 @@
 "check_cloud": true
 "check_conflict": true
 "check_connection": true
+"random_resolution": false
 "domain_conflict":
     - {"domain_resolve": ["wire"], "domain_keep": ["src_1", "src_2"]}
     - {"domain_resolve": ["wire"], "domain_keep": ["sink_1", "sink_2"]}

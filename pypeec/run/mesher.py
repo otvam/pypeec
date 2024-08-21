@@ -157,6 +157,7 @@ def _run_resample_graph(reference, data_internal, data_geometry):
     check_cloud = data_geometry["check_cloud"]
     check_conflict = data_geometry["check_conflict"]
     check_connection = data_geometry["check_connection"]
+    random_resolution = data_geometry["random_resolution"]
     domain_connection = data_geometry["domain_connection"]
     domain_conflict = data_geometry["domain_conflict"]
     pts_cloud = data_geometry["pts_cloud"]
@@ -176,7 +177,7 @@ def _run_resample_graph(reference, data_internal, data_geometry):
 
     if check_conflict:
         with log.BlockTimer(LOGGER, "voxel_conflict"):
-            domain_def = voxel_conflict.get_conflict(domain_def, domain_conflict)
+            domain_def = voxel_conflict.get_conflict(domain_def, domain_conflict, random_resolution)
 
     if check_connection:
         with log.BlockTimer(LOGGER, "voxel_connection"):

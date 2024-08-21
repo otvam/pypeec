@@ -79,6 +79,7 @@
 "check_cloud": true
 "check_conflict": true
 "check_connection": true
+"random_resolution": false
 "domain_conflict": []
 "domain_connection":
     "cond": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}
