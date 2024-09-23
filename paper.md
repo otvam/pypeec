@@ -110,7 +110,9 @@ Shapely, Pillow, Matplotlib, and PyVista. The solver is able to leverage
 multi-core CPUs and GPUs. Optional HPC libraries are available for accelerating 
 the sparse preconditioner factorization (MKL/PARDISO, UMFPACK, and PyAMG) and 
 the FFT operations (FFTW and CuPy/CUDA). PyPEEC can be used through an API, a 
-command-line tool, or Jupyter notebooks.
+command-line tool, or Jupyter notebooks. The package is available through the
+Python package index (PyPi) and the community-driven packaging for Conda
+(conda-forge).
 
 ![PyPEEC workflow consisting of the *mesher*, *solver*, *viewer*, and 
 *plotter*](workflow.pdf){#fig:workflow width="100%"}
