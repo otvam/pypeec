@@ -45,7 +45,8 @@ drastically reduces the computational costs and the memory footprint.
 Quasi-magnetostatic field simulations are widely used for the design and 
 optimization of electrical components (e.g., power electronics, packaging, IC 
 design). Among the existing numerical methods (e.g., FEM, FDTD, PEEC, BEM), the 
-PEEC method features several advantages [@method_review; @ruehli; @volume_peec]:
+PEEC method features several advantages [@method_review; @ruehli; @volume_peec;
+@peec_book]:
 
 - Only the active materials are discretized (no need to mesh the vacuum/air).
 - Intuitive understanding of the equation discretization process.
