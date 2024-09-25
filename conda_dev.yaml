@@ -57,4 +57,4 @@ dependencies:
   # optional optimized numerical libraries
   - pip:
     - pyFFTW==0.13.1
-    - pydiso==0.0.4
+    - pydiso==0.0.5
