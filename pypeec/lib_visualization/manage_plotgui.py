@@ -45,6 +45,9 @@ from pypeec import log
 # get a logger
 LOGGER = log.get_logger(__name__, "pypeec")
 
+# create a GUI app
+app = PyQt5.QtWidgets.QApplication([])
+
 
 class PlotGui:
     """
@@ -71,7 +74,7 @@ class PlotGui:
 
         # create the Qt App
         if self.plot_mode == "qt":
-            self.app = PyQt5.QtWidgets.QApplication([])
+            self.app = app
         else:
             self.app = None
 
@@ -227,7 +230,10 @@ class PlotGui:
         matplotlib.pyplot.show(block=False)
 
         # enter the event loop
-        exit_code = self.app.exec_()
+        exit_code = self.app.exec()
+
+        # quit app
+        self.app.quit()
 
         # check status
         if exit_code != 0:
