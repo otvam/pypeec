@@ -45,8 +45,29 @@ from pypeec import log
 # get a logger
 LOGGER = log.get_logger(__name__, "pypeec")
 
-# create a GUI app
-app = PyQt5.QtWidgets.QApplication([])
+
+class _QApplication(object):
+    """
+    Singleton class for creating a single instance of the Qt application.
+    """
+
+    def __new__(cls):
+        """
+        Create the singleton QT application instance.
+        """
+
+        if not hasattr(cls, 'app'):
+            cls.instance = super(_QApplication, cls).__new__(cls)
+            cls.app = PyQt5.QtWidgets.QApplication([])
+
+        return getattr(cls, "instance")
+
+    def get_app(self):
+        """
+        Get the singleton QT application instance.
+        """
+
+        return self.app
 
 
 class PlotGui:
@@ -74,7 +95,7 @@ class PlotGui:
 
         # create the Qt App
         if self.plot_mode == "qt":
-            self.app = app
+            self.app = _QApplication().get_app()
         else:
             self.app = None
 
