@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/busbar",
-        "timestamp": "2024-08-11 23:17:11.949665"
+        "timestamp": "2024-10-03 18:24:23.150923"
     },
     "mesher": {
         "n_total": 10000,
