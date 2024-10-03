@@ -15,7 +15,7 @@ from pypeec import script
 from pypeec import io
 
 # disable logging to prevent clutter during test evaluation
-logging.disable(logging.INFO)
+logging.disable(logging.CRITICAL)
 
 # get the path the folder
 PATH_ROOT = os.path.dirname(__file__)
