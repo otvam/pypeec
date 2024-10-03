@@ -40,11 +40,15 @@
     - [+00.00e-3, -50.00e-3, -30.00e-3]
     - [+00.00e-3, -50.00e-3, -10.00e-3]
     - [+00.00e-3, -50.00e-3, +10.00e-3]
-"check_cloud": true
-"check_conflict": true
-"check_connection": true
+"resolve_cloud": true
+"resolve_conflict": true
+"check_integrity": true
 "random_resolution": false
 "domain_conflict": []
 "domain_connection":
     "connect": {"domain_group": [["cond"], ["src"], ["sink"]], "connected": true}
+    "core": {"domain_group": [["cond"], ["core"]], "connected": false}
+"domain_adjacent":
+    "connect": {"domain_group": [["cond"], ["src"], ["sink"]], "connected": true}
+    "dfdf": {"domain_group": [["src"], ["sink"]], "connected": false}
     "core": {"domain_group": [["cond"], ["core"]], "connected": false}

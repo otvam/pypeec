@@ -501,7 +501,7 @@ def _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, var):
         _get_clip_mesh(pl, voxel_tmp, arg, plot_clip)
 
 
-def _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme):
+def _plot_mesh(pl, voxel, reference, data_plot, plot_clip, plot_theme):
     """
     Plot the reference and voxelized structures in order to assess the voxelization error.
     """
@@ -558,8 +558,8 @@ def get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_o
         _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "domain")
     elif layout == "graph":
         _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "graph")
-    elif layout == "voxelization":
-        _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme)
+    elif layout == "mesh":
+        _plot_mesh(pl, voxel, reference, data_plot, plot_clip, plot_theme)
     else:
         raise ValueError("invalid plot type and plot feature")
 

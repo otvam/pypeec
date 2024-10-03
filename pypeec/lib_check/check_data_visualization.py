@@ -254,10 +254,10 @@ def _check_data_plot_viewer(layout, data_plot):
     """
 
     # check plot type
-    datachecker.check_choice("layout", layout, ["domain", "graph", "voxelization"])
+    datachecker.check_choice("layout", layout, ["domain", "graph", "mesh"])
 
     # check the material options
-    if layout == "voxelization":
+    if layout == "mesh":
         # check type
         key_list = ["color_voxel", "color_reference", "opacity_voxel", "opacity_reference"]
         datachecker.check_dict("data_plot", data_plot, key_list=key_list)

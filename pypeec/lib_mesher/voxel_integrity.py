@@ -23,26 +23,29 @@ def _get_all_indices(domain_def):
 
     # get the indices and colors
     for tag in domain_def:
-        idx_tmp = domain_def[tag]
-        idx = np.append(idx, idx_tmp)
+        idx = np.append(idx, domain_def[tag])
 
     return idx
 
 
-def _get_tag_indices(domain_def, domain_list):
+def _get_group_indices(domain_def, domain_group):
     """
     Get the indices of the non-empty voxels for the given domains.
     """
 
-    # init
-    idx = np.empty(0, dtype=np.int_)
+    group_def = []
+    for domain_group_tmp in domain_group:
+        # init
+        idx_tmp = np.empty(0, dtype=np.int_)
 
-    # get the indices and colors
-    for tag in domain_list:
-        idx_tmp = domain_def[tag]
-        idx = np.append(idx, idx_tmp)
+        # get the indices and colors
+        for tag in domain_group_tmp:
+            idx_tmp = np.append(idx_tmp, domain_def[tag])
 
-    return idx
+        if len(idx_tmp) > 0:
+            group_def.append(idx_tmp)
+
+    return group_def
 
 
 def _get_connection_matrix(n):
@@ -65,37 +68,46 @@ def _get_connection_matrix(n):
     idx = idx_x+idx_y*nx+idx_z*nx*ny
 
     # create the sparse matrix
-    voxel_connection = sps.csc_matrix((nv, nv), dtype=np.int_)
+    voxel_matrix = sps.csc_matrix((nv, nv), dtype=np.int_)
+
+    # self connections
+    idx_col = np.arange(nv)
+    idx_row = np.arange(nv)
+    data = np.ones(nv, dtype=np.int_)
+    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
 
     # connections along x direction
-    idx_col = idx[0:-1, :, :].flatten()
-    idx_row = idx[1:, :, :].flatten()
+    idx_col = idx[:-1, :, :].flatten()
+    idx_row = idx[+1:, :, :].flatten()
     data = np.ones((nx-1)*ny*nz, dtype=np.int_)
-    voxel_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    voxel_matrix += sps.csc_matrix((data, (idx_col, idx_row)), shape=(nv, nv), dtype=np.int_)
 
     # connections along y direction
-    idx_col = idx[:, 0:-1, :].flatten()
-    idx_row = idx[:, 1:, :].flatten()
+    idx_col = idx[:, :-1, :].flatten()
+    idx_row = idx[:, +1:, :].flatten()
     data = np.ones(nx*(ny-1)*nz, dtype=np.int_)
-    voxel_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    voxel_matrix += sps.csc_matrix((data, (idx_col, idx_row)), shape=(nv, nv), dtype=np.int_)
 
     # connections along z direction
-    idx_col = idx[:, :, 0:-1].flatten()
-    idx_row = idx[:, :, 1:].flatten()
+    idx_col = idx[:, :, :-1].flatten()
+    idx_row = idx[:, :, +1:].flatten()
     data = np.ones(nx*ny*(nz-1), dtype=np.int_)
-    voxel_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    voxel_matrix += sps.csc_matrix((data, (idx_col, idx_row)), shape=(nv, nv), dtype=np.int_)
 
-    return voxel_connection
+    return voxel_matrix
 
 
-def _get_connected_components(graph_connection, idx):
+def _get_connected_components(graph_matrix, idx):
     """
     Get the connected components in the graph.
     """
 
     # find the connected components in the graph
     (n_comp, labels) = csg.connected_components(
-        csgraph=graph_connection,
+        csgraph=graph_matrix,
         directed=False,
         return_labels=True,
     )
@@ -110,7 +122,7 @@ def _get_connected_components(graph_connection, idx):
     return graph_def
 
 
-def _check_domain_connection(domain_def, graph, domain_connection, tag):
+def _check_domain_connection(domain_def, graph_def, domain_connection, tag):
     """
     Check that the given connections between the domain exists.
     """
@@ -120,19 +132,15 @@ def _check_domain_connection(domain_def, graph, domain_connection, tag):
     connected = domain_connection["connected"]
 
     # merge group and remove empty domains
-    idx_group = []
-    for domain_group_tmp in domain_group:
-        idx_tmp = _get_tag_indices(domain_def, domain_group_tmp)
-        if len(idx_tmp) > 0:
-            idx_group.append(idx_tmp)
+    group_def = _get_group_indices(domain_def, domain_group)
 
     # init the connection matrix
-    matrix = np.full((len(graph), len(idx_group)), True, dtype=bool)
+    matrix = np.full((len(graph_def), len(group_def)), True, dtype=bool)
 
     # fill the connection matrix
-    for i, idx_graph in enumerate(graph):
-        for j, idx_domain in enumerate(idx_group):
-            idx_shared = np.intersect1d(idx_graph, idx_domain)
+    for i, idx_graph in enumerate(graph_def):
+        for j, idx_group in enumerate(group_def):
+            idx_shared = np.intersect1d(idx_graph, idx_group)
             matrix[i, j] = len(idx_shared) > 0
 
     # count connection
@@ -140,7 +148,42 @@ def _check_domain_connection(domain_def, graph, domain_connection, tag):
 
     # check validity
     if connected:
-        idx_ok = vector == len(idx_group)
+        idx_ok = vector == len(group_def)
+        if not np.any(idx_ok):
+            raise RuntimeError("domain connection is missing: %s" % tag)
+    else:
+        idx_ok = np.logical_or(vector == 0, vector == 1)
+        if not np.all(idx_ok):
+            raise RuntimeError("domain connection is illegal: %s" % tag)
+
+
+def _check_domain_adjacent(domain_def, voxel_matrix, domain_connection, tag):
+    """
+    Check that the given connections between the domain exists.
+    """
+
+    # extract the data
+    domain_group = domain_connection["domain_group"]
+    connected = domain_connection["connected"]
+
+    # merge group and remove empty domains
+    group_def = _get_group_indices(domain_def, domain_group)
+
+    # init the connection matrix
+    matrix = np.full((len(group_def), len(group_def)), True, dtype=bool)
+
+    # fill the connection matrix
+    for i, idx_group_i in enumerate(group_def):
+        for j, idx_group_j in enumerate(group_def):
+            idx_shared = voxel_matrix[idx_group_i, :][:, idx_group_j]
+            matrix[i, j] = idx_shared.count_nonzero() > 0
+
+    # count connection
+    vector = np.count_nonzero(matrix, axis=1)
+
+    # check validity
+    if connected:
+        idx_ok = vector == len(group_def)
         if not np.any(idx_ok):
             raise RuntimeError("domain connection is missing: %s" % tag)
     else:
@@ -158,22 +201,22 @@ def get_integrity(n, domain_def, domain_connection, domain_adjacent):
     idx = _get_all_indices(domain_def)
 
     # get the connection matrix between the voxels
-    voxel_connection = _get_connection_matrix(n)
+    voxel_matrix = _get_connection_matrix(n)
 
     # get the graph matrix
-    graph_connection = voxel_connection
-    graph_connection = graph_connection[idx, :]
-    graph_connection = graph_connection[:, idx]
+    graph_matrix = voxel_matrix
+    graph_matrix = graph_matrix[idx, :]
+    graph_matrix = graph_matrix[:, idx]
 
     # find the connected components in the graph
-    graph_def = _get_connected_components(graph_connection, idx)
+    graph_def = _get_connected_components(graph_matrix, idx)
 
-    # check the connection between the domains
+    # check the connections between the adjacent domains
+    for tag, domain_adjacent_tmp in domain_adjacent.items():
+        _check_domain_adjacent(domain_def, voxel_matrix, domain_adjacent_tmp, tag)
+
+    # check the connection between the connected components
     for tag, domain_connection_tmp in domain_connection.items():
         _check_domain_connection(domain_def, graph_def, domain_connection_tmp, tag)
-
-    # check the connections between the domains
-    # for tag, domain_connection_tmp in domain_connection.items():
-    #     _check_domain_connection(domain_def, graph, domain_connection_tmp, tag)
 
     return graph_def

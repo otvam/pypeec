@@ -46,14 +46,14 @@
         "title": "Graph"
         "colormap": "Accent"
         "opacity": 1.0
-"voxelization":
+"mesh":
     "framework": "pyvista"
-    "layout": "voxelization"
-    "title": "Voxelization"
+    "layout": "mesh"
+    "title": "Mesh"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "title": "Voxelization"
+        "title": "Mesh"
         "color_voxel": "red"
         "color_reference": "blue"
         "opacity_voxel": 0.5
