@@ -88,6 +88,28 @@ def _get_connection_matrix(n):
     return A_connection
 
 
+def _get_connected_components(A_graph, idx):
+    """
+    Get the connected components in the graph.
+    """
+
+    # find the connected components in the graph
+    (n_comp, labels) = csg.connected_components(
+        csgraph=A_graph,
+        directed=False,
+        return_labels=True,
+    )
+
+    # get the indices of the connected components
+    connection_def = []
+    for i in range(n_comp):
+        idx_local = labels == i
+        idx_graph = idx[idx_local]
+        connection_def.append(idx_graph)
+
+    return connection_def
+
+
 def _check_domain_connection(domain_def, connection_def, tag_connection, domain_connection):
     """
     Check that the given connections between the domain exists.
@@ -144,18 +166,7 @@ def get_connection(n, domain_def, domain_connection):
     A_graph = A_graph[:, idx]
 
     # find the connected components in the graph
-    (n_comp, labels) = csg.connected_components(
-        csgraph=A_graph,
-        directed=False,
-        return_labels=True,
-    )
-
-    # get the indices of the connected components
-    connection_def = []
-    for i in range(n_comp):
-        idx_local = labels == i
-        idx_graph = idx[idx_local]
-        connection_def.append(idx_graph)
+    connection_def = _get_connected_components(A_graph, idx)
 
     # check the connections between the domains
     for tag, domain_connection_tmp in domain_connection.items():
