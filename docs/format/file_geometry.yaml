@@ -29,20 +29,27 @@
     - [+1.0, +1.0, -1.0]
 
 # check (or not) the validity of the point cloud
-"check_cloud": true
+#   - detect the points located inside active voxels
+#   - remove the problematic points
+"resolve_cloud": true
 
 # perform (or not) the conflict resolution between the voxels
-"check_conflict": true
+#   - using the provided resolution rules
+#   - using random conflict resolution
+"resolve_conflict": true
 
 # compute (or not) the connections between the domains
-"check_connection": true
+#   - compute the connected components between the voxels
+#   - check the connections between the adjacent domains
+#   - check the connections between the connected components
+"check_integrity": true
 
 # random resolution of the conflicts between the domains
 #   - the duplicated voxels are randomly assigned to a unique domain
 #   - the random resolution is performed after the manual conflict resolution
 "random_resolution": false
 
-# definition of the conflict resolution between domains
+# definition of the conflict resolution rules between domains
 #   - during the voxelization, the same voxel can be assigned to several domains
 #   - the shared voxels are located at the boundaries between domain
 #   - the shared voxels are conflicts and should be assigned to a single domain
@@ -55,14 +62,28 @@
     - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_src"]}
     - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_sink"]}
 
-# pledge the existence or absence of connections between domains
+# pledge the existence or absence of connections between the connected components
+#   - check if the specified domains are part of the same connected component
 #   - dict of dicts with the connection name and the connection definition
 #   - optional feature, the dict can be empty without having an impact on the results
 #   - connection definition
-#       - connected: boolean specified if the two domain lists should be connected
-#       - domain_group: list of list of domains where the connections are checks
+#       - connected: boolean specified if the specified domains should be connected
+#       - domain_group: list of list of domains where the connections are checked
 #           - the outer list domains are used for the connection checks
 #           - the inner list domains are merged together
-"domain_connection":
+"domain_connected":
+    "connected": {"connected": true, "domain_group": [["dom_cond"], ["dom_src"], ["dom_sink"]]}
+    "insulated": {"connected": false, "domain_group": [["dom_mag"], ["dom_src", "dom_cond", "dom_sink"]]}
+
+# pledge the existence or absence of connections between adjacent domains
+#   - check if the specified domains are adjacent to each other
+#   - dict of dicts with the connection name and the connection definition
+#   - optional feature, the dict can be empty without having an impact on the results
+#   - connection definition
+#       - connected: boolean specified if the specified domains should be connected
+#       - domain_group: list of list of domains where the connections are checked
+#           - the outer list domains are used for the connection checks
+#           - the inner list domains are merged together
+"domain_adjacent":
     "connected": {"connected": true, "domain_group": [["dom_cond"], ["dom_src"], ["dom_sink"]]}
     "insulated": {"connected": false, "domain_group": [["dom_mag"], ["dom_src", "dom_cond", "dom_sink"]]}

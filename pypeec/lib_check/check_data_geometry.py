@@ -71,14 +71,14 @@ def _check_domain_integrity(domain_list, domain_integrity):
     datachecker.check_dict("domain_integrity", domain_integrity)
 
     # check value
-    for domain_connection_tmp in domain_integrity.values():
+    for domain_tmp in domain_integrity.values():
         # check type
         key_list = ["connected", "domain_group"]
-        datachecker.check_dict("domain_integrity", domain_connection_tmp, key_list=key_list)
+        datachecker.check_dict("domain_integrity", domain_tmp, key_list=key_list)
 
         # extract field
-        domain_group = domain_connection_tmp["domain_group"]
-        connected = domain_connection_tmp["connected"]
+        domain_group = domain_tmp["domain_group"]
+        connected = domain_tmp["connected"]
 
         # check type
         datachecker.check_boolean("connected", connected)
@@ -106,7 +106,7 @@ def check_data_geometry(data_geometry):
         "check_integrity",
         "random_resolution",
         "domain_conflict",
-        "domain_connection",
+        "domain_connected",
         "domain_adjacent",
         "pts_cloud",
     ]
@@ -121,7 +121,7 @@ def check_data_geometry(data_geometry):
     check_integrity = data_geometry["check_integrity"]
     random_resolution = data_geometry["random_resolution"]
     domain_conflict = data_geometry["domain_conflict"]
-    domain_connection = data_geometry["domain_connection"]
+    domain_connected = data_geometry["domain_connected"]
     domain_adjacent = data_geometry["domain_adjacent"]
     pts_cloud = data_geometry["pts_cloud"]
 
@@ -151,7 +151,7 @@ def check_data_geometry(data_geometry):
     _check_domain_conflict(domain_list, domain_conflict)
 
     # check the connection data
-    _check_domain_integrity(domain_list, domain_connection)
+    _check_domain_integrity(domain_list, domain_connected)
     _check_domain_integrity(domain_list, domain_adjacent)
 
     # check the point cloud

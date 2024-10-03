@@ -122,14 +122,14 @@ def _get_connected_components(graph_matrix, idx):
     return graph_def
 
 
-def _check_domain_connection(domain_def, graph_def, domain_connection, tag):
+def _check_domain_connected(domain_def, graph_def, domain_connected, tag):
     """
     Check that the given connections between the domain exists.
     """
 
     # extract the data
-    domain_group = domain_connection["domain_group"]
-    connected = domain_connection["connected"]
+    domain_group = domain_connected["domain_group"]
+    connected = domain_connected["connected"]
 
     # merge group and remove empty domains
     group_def = _get_group_indices(domain_def, domain_group)
@@ -157,14 +157,14 @@ def _check_domain_connection(domain_def, graph_def, domain_connection, tag):
             raise RuntimeError("domain connection is illegal: %s" % tag)
 
 
-def _check_domain_adjacent(domain_def, voxel_matrix, domain_connection, tag):
+def _check_domain_adjacent(domain_def, voxel_matrix, domain_connected, tag):
     """
     Check that the given connections between the domain exists.
     """
 
     # extract the data
-    domain_group = domain_connection["domain_group"]
-    connected = domain_connection["connected"]
+    domain_group = domain_connected["domain_group"]
+    connected = domain_connected["connected"]
 
     # merge group and remove empty domains
     group_def = _get_group_indices(domain_def, domain_group)
@@ -192,7 +192,7 @@ def _check_domain_adjacent(domain_def, voxel_matrix, domain_connection, tag):
             raise RuntimeError("domain connection is illegal: %s" % tag)
 
 
-def get_integrity(n, domain_def, domain_connection, domain_adjacent):
+def get_integrity(n, domain_def, domain_connected, domain_adjacent):
     """
     Find the connected components of a voxel structure.
     """
@@ -212,11 +212,11 @@ def get_integrity(n, domain_def, domain_connection, domain_adjacent):
     graph_def = _get_connected_components(graph_matrix, idx)
 
     # check the connections between the adjacent domains
-    for tag, domain_adjacent_tmp in domain_adjacent.items():
-        _check_domain_adjacent(domain_def, voxel_matrix, domain_adjacent_tmp, tag)
+    for tag, domain_tmp in domain_adjacent.items():
+        _check_domain_adjacent(domain_def, voxel_matrix, domain_tmp, tag)
 
     # check the connection between the connected components
-    for tag, domain_connection_tmp in domain_connection.items():
-        _check_domain_connection(domain_def, graph_def, domain_connection_tmp, tag)
+    for tag, domain_tmp in domain_connected.items():
+        _check_domain_connected(domain_def, graph_def, domain_tmp, tag)
 
     return graph_def

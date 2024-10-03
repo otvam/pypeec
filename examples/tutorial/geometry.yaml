@@ -114,7 +114,7 @@
 "domain_conflict":
     - {"domain_resolve": ["trace"], "domain_keep": ["src"]}
     - {"domain_resolve": ["trace"], "domain_keep": ["sink"]}
-"domain_connection":
+"domain_connected":
     "coil": {"domain_group": [["trace", "via"], ["src", "sink"]], "connected": true}
 "domain_adjacent":
     "coil": {"domain_group": [["src"], ["sink"]], "connected": false}

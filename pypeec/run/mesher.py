@@ -158,7 +158,7 @@ def _run_resample_graph(reference, data_internal, data_geometry):
     resolve_conflict = data_geometry["resolve_conflict"]
     check_integrity = data_geometry["check_integrity"]
     random_resolution = data_geometry["random_resolution"]
-    domain_connection = data_geometry["domain_connection"]
+    domain_connected = data_geometry["domain_connected"]
     domain_adjacent = data_geometry["domain_adjacent"]
     domain_conflict = data_geometry["domain_conflict"]
     pts_cloud = data_geometry["pts_cloud"]
@@ -182,7 +182,7 @@ def _run_resample_graph(reference, data_internal, data_geometry):
 
     if check_integrity:
         with log.BlockTimer(LOGGER, "voxel_integrity"):
-            graph_def = voxel_integrity.get_integrity(n, domain_def, domain_connection, domain_adjacent)
+            graph_def = voxel_integrity.get_integrity(n, domain_def, domain_connected, domain_adjacent)
     else:
         graph_def = []
 
