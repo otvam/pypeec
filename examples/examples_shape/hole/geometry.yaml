@@ -18,63 +18,40 @@
         "xy_min": null
         "xy_max": null
     "layer_stack":
-        - {"n_layer": 1, "tag_layer": "top"}
-        - {"n_layer": 5, "tag_layer": "insulation"}
-        - {"n_layer": 1, "tag_layer": "bot"}
+        - {"n_layer": 1, "tag_layer": "layer"}
     "geometry_shape":
         "trace":
             -
-                "shape_layer": ["top"]
+                "shape_layer": ["layer"]
                 "shape_operation": "add"
-                "shape_type": "trace"
+                "shape_type": "polygon"
                 "shape_data":
-                    "width": 0.5e-3
-                    "coord": [[0.0e-3, 0.0e-3], [5.0e-3, 0.0e-3], [5.0e-3, 5.0e-3]]
+                    "buffer": 1.0e-3
+                    "coord_shell": [[0.0e-3, 0.0e-3], [+2.0e-3, 3.0e-3], [0.0e-3, 6.0e-3], [-2.0e-3, 3.0e-3]]
+                    "coord_holes": []
             -
-                "shape_layer": ["bot"]
-                "shape_operation": "add"
-                "shape_type": "trace"
-                "shape_data":
-                    "width": 0.5e-3
-                    "coord": [[0.0e-3, 0.0e-3], [0.0e-3, 5.0e-3], [5.0e-3, 5.0e-3]]
-            -
-                "shape_layer": ["top", "bot"]
+                "shape_layer": ["layer"]
                 "shape_operation": "sub"
                 "shape_type": "pad"
                 "shape_data":
-                    "diameter": 0.2e-3
-                    "coord": [[5.0e-3, 0.0e-3], [0.0e-3, 5.0e-3]]
-        "top_src":
+                    "diameter": 3.0e-3
+                    "coord": [[0.0e-3, 3.0e-3]]
+        "src":
             -
-                "shape_layer": ["top"]
+                "shape_layer": ["layer"]
                 "shape_operation": "add"
                 "shape_type": "pad"
                 "shape_data":
-                    "diameter": 0.7e-3
-                    "coord": [[0.0e-3, 0.0e-3]]
-        "bot_src":
-            -
-                "shape_layer": ["bot"]
-                "shape_operation": "add"
-                "shape_type": "pad"
-                "shape_data":
-                    "diameter": 0.7e-3
+                    "diameter": 1.0e-3
                     "coord": [[0.0e-3, 0.0e-3]]
         "sink":
             -
-                "shape_layer": ["front"]
+                "shape_layer": ["layer"]
                 "shape_operation": "add"
                 "shape_type": "pad"
                 "shape_data":
-                    "diameter": 0.7e-3
-                    "coord": [[5.0e-3, 5.0e-3]]
-            -
-                "shape_layer": ["back"]
-                "shape_operation": "add"
-                "shape_type": "pad"
-                "shape_data":
-                    "diameter": 0.7e-3
-                    "coord": [[5.0e-3, 5.0e-3]]
+                    "diameter": 1.0e-3
+                    "coord": [[0.0e-3, 6.0e-3]]
 "resampling":
     "use_reduce": false
     "use_resample": false
@@ -85,12 +62,9 @@
 "check_integrity": true
 "random_resolution": false
 "domain_conflict":
-    - {"domain_resolve": ["copper"], "domain_keep": ["src_front"]}
-    - {"domain_resolve": ["copper"], "domain_keep": ["src_back"]}
-    - {"domain_resolve": ["copper"], "domain_keep": ["sink"]}
+    - {"domain_resolve": ["trace"], "domain_keep": ["src"]}
+    - {"domain_resolve": ["trace"], "domain_keep": ["sink"]}
 "domain_connected":
-    "conductor_front": {"domain_group": [["top_src"], ["sink"]], "connected": true}
-    "conductor_back": {"domain_group": [["bot_src"], ["sink"]], "connected": true}
+    "conductor": {"domain_group": [["src"], ["sink"], ["trace"]], "connected": true}
 "domain_adjacent":
-    "terminal_front": {"domain_group": [["top_src"], ["sink"]], "connected": false}
-    "terminal_back": {"domain_group": [["bot_src"], ["sink"]], "connected": false}
+    "terminal_front": {"domain_group": [["src"], ["sink"]], "connected": false}

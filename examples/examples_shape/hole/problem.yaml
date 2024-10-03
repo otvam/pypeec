@@ -8,17 +8,13 @@
 
 "material_def":
     "copper":
-        "domain_list": ["src_front", "src_back", "sink", "trace"]
+        "domain_list": ["src", "sink", "trace"]
         "material_type": "electric"
         "orientation_type": "isotropic"
         "var_type": "lumped"
 "source_def":
-    "top_src":
-        "domain_list": ["top_src"]
-        "source_type": "voltage"
-        "var_type": "lumped"
-    "bot_src":
-        "domain_list": ["bot_src"]
+    "src":
+        "domain_list": ["src"]
         "source_type": "voltage"
         "var_type": "lumped"
     "sink":
@@ -33,6 +29,5 @@
         "material_val":
             "copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
         "source_val":
-            "top_src": {"V_re": 1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
-            "bot_src": {"V_re": 1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
+            "src": {"V_re": 1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
             "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}

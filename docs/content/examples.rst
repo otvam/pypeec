@@ -89,13 +89,13 @@ examples_shape/parallel
 
 .. image:: ../examples/examples_shape_parallel.png
 
-examples_shape/trace
-^^^^^^^^^^^^^^^^^^^^
+examples_shape/hole
+^^^^^^^^^^^^^^^^^^^
 
-* **PCB with two traces**
+* **Trace with a hole**
 * Defined with **2D shapes**
 
-.. image:: ../examples/examples_shape_trace.png
+.. image:: ../examples/examples_shape_hole.png
 
 examples_shape/wire
 ^^^^^^^^^^^^^^^^^^^
