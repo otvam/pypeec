@@ -238,7 +238,7 @@ def get_solve(factor, rhs):
 
     # check that the factorization is valid
     if factor is None:
-        raise RuntimeError("invalid factorization")
+        raise RuntimeError("invalid factorization: factorization failure")
 
     # solve the equation system
     sol = factor(rhs)

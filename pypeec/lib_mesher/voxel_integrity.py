@@ -110,7 +110,7 @@ def _get_connected_components(A_graph, idx):
     return connection_def
 
 
-def _check_domain_connection(domain_def, connection_def, tag_connection, domain_connection):
+def _check_domain_connection(domain_def, connection_def, domain_connection, tag):
     """
     Check that the given connections between the domain exists.
     """
@@ -142,14 +142,14 @@ def _check_domain_connection(domain_def, connection_def, tag_connection, domain_
     if connected:
         idx_ok = vector == len(idx_group)
         if not np.any(idx_ok):
-            raise RuntimeError("domain connection: domain connection is missing: %s" % tag_connection)
+            raise RuntimeError("domain connection is missing: %s" % tag)
     else:
         idx_ok = np.logical_or(vector == 0, vector == 1)
         if not np.all(idx_ok):
-            raise RuntimeError("domain connection: domain connection is illegal: %s" % tag_connection)
+            raise RuntimeError("domain connection is illegal: %s" % tag)
 
 
-def get_connection(n, domain_def, domain_connection):
+def get_integrity(n, domain_def, domain_connection, domain_adjacent):
     """
     Find the connected components of a voxel structure.
     """
@@ -170,6 +170,6 @@ def get_connection(n, domain_def, domain_connection):
 
     # check the connections between the domains
     for tag, domain_connection_tmp in domain_connection.items():
-        _check_domain_connection(domain_def, connection_def, tag, domain_connection_tmp)
+        _check_domain_connection(domain_def, connection_def, domain_connection_tmp, tag)
 
     return connection_def

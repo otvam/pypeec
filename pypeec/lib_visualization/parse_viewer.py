@@ -33,7 +33,7 @@ def _get_graph_component(idx, connection_def):
 
     # check that everything was assigned
     if not np.all(tag):
-        raise RuntimeError("invalid graph: some voxels are not part of the graph")
+        raise RuntimeError("some voxels are not part of the graph")
 
     return tag
 

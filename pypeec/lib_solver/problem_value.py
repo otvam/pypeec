@@ -40,7 +40,7 @@ def get_material_vector(material_val, material_idx):
 
             # check size
             if len(rho) != len(idx):
-                raise RuntimeError("invalid source")
+                raise RuntimeError("invalid source parameters")
 
             # append the resistivities
             rho_vc = np.concatenate((rho_vc, rho))

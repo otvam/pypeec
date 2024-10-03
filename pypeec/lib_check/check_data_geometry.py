@@ -61,17 +61,17 @@ def _check_domain_conflict(domain_list, domain_conflict):
             datachecker.check_choice("domain_resolve", tag, domain_list)
 
 
-def _check_domain_connection(domain_list, domain_connection):
+def _check_domain_integrity(domain_list, domain_integrity):
     """
     Check the domain connection data.
     This list is defining the required connection between the domain
     """
 
     # check type
-    datachecker.check_dict("domain_connection", domain_connection)
+    datachecker.check_dict("domain_connection", domain_integrity)
 
     # check value
-    for domain_connection_tmp in domain_connection.values():
+    for domain_connection_tmp in domain_integrity.values():
         # check type
         key_list = ["connected", "domain_group"]
         datachecker.check_dict("domain_connection", domain_connection_tmp, key_list=key_list)
@@ -101,12 +101,13 @@ def check_data_geometry(data_geometry):
         "mesh_type",
         "data_voxelize",
         "resampling",
-        "check_cloud",
-        "check_conflict",
-        "check_connection",
+        "resolve_cloud",
+        "resolve_conflict",
+        "check_integrity",
         "random_resolution",
         "domain_conflict",
         "domain_connection",
+        "domain_adjacent",
         "pts_cloud",
     ]
     datachecker.check_dict("data_geometry", data_geometry, key_list=key_list)
@@ -115,19 +116,20 @@ def check_data_geometry(data_geometry):
     mesh_type = data_geometry["mesh_type"]
     data_voxelize = data_geometry["data_voxelize"]
     resampling = data_geometry["resampling"]
-    check_cloud = data_geometry["check_cloud"]
-    check_conflict = data_geometry["check_conflict"]
-    check_connection = data_geometry["check_connection"]
+    resolve_cloud = data_geometry["resolve_cloud"]
+    resolve_conflict = data_geometry["resolve_conflict"]
+    check_integrity = data_geometry["check_integrity"]
     random_resolution = data_geometry["random_resolution"]
     domain_conflict = data_geometry["domain_conflict"]
     domain_connection = data_geometry["domain_connection"]
+    domain_adjacent = data_geometry["domain_adjacent"]
     pts_cloud = data_geometry["pts_cloud"]
 
     # check type
     datachecker.check_choice("mesh_type", mesh_type, ["stl", "png", "shape", "voxel"])
-    datachecker.check_boolean("check_cloud", check_cloud)
-    datachecker.check_boolean("check_conflict", check_conflict)
-    datachecker.check_boolean("check_connection", check_connection)
+    datachecker.check_boolean("resolve_cloud", resolve_cloud)
+    datachecker.check_boolean("resolve_conflict", resolve_conflict)
+    datachecker.check_boolean("check_integrity", check_integrity)
     datachecker.check_boolean("random_resolution", random_resolution)
 
     # check the mesher
@@ -149,7 +151,8 @@ def check_data_geometry(data_geometry):
     _check_domain_conflict(domain_list, domain_conflict)
 
     # check the connection data
-    _check_domain_connection(domain_list, domain_connection)
+    _check_domain_integrity(domain_list, domain_connection)
+    _check_domain_integrity(domain_list, domain_adjacent)
 
     # check the point cloud
     datachecker.check_float_pts("pts_cloud", pts_cloud, size=3, can_be_empty=True)

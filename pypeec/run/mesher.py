@@ -24,7 +24,7 @@ from pypeec.lib_mesher import mesher_stl
 from pypeec.lib_mesher import voxel_cloud
 from pypeec.lib_mesher import voxel_conflict
 from pypeec.lib_mesher import voxel_resample
-from pypeec.lib_mesher import voxel_connection
+from pypeec.lib_mesher import voxel_integrity
 from pypeec.lib_mesher import voxel_summary
 from pypeec.lib_check import check_data_geometry
 from pypeec import log
@@ -154,11 +154,12 @@ def _run_resample_graph(reference, data_internal, data_geometry):
 
     # extract the data
     resampling = data_geometry["resampling"]
-    check_cloud = data_geometry["check_cloud"]
-    check_conflict = data_geometry["check_conflict"]
-    check_connection = data_geometry["check_connection"]
+    resolve_cloud = data_geometry["resolve_cloud"]
+    resolve_conflict = data_geometry["resolve_conflict"]
+    check_integrity = data_geometry["check_integrity"]
     random_resolution = data_geometry["random_resolution"]
     domain_connection = data_geometry["domain_connection"]
+    domain_adjacent = data_geometry["domain_adjacent"]
     domain_conflict = data_geometry["domain_conflict"]
     pts_cloud = data_geometry["pts_cloud"]
 
@@ -171,17 +172,17 @@ def _run_resample_graph(reference, data_internal, data_geometry):
     with log.BlockTimer(LOGGER, "voxel_resample"):
         (n, d, c, s, domain_def) = voxel_resample.get_remesh(n, d, c, domain_def, resampling)
 
-    if check_cloud:
+    if resolve_cloud:
         with log.BlockTimer(LOGGER, "voxel_cloud"):
             pts_cloud = voxel_cloud.get_cloud(n, d, c, domain_def, pts_cloud)
 
-    if check_conflict:
+    if resolve_conflict:
         with log.BlockTimer(LOGGER, "voxel_conflict"):
             domain_def = voxel_conflict.get_conflict(domain_def, domain_conflict, random_resolution)
 
-    if check_connection:
-        with log.BlockTimer(LOGGER, "voxel_connection"):
-            connection_def = voxel_connection.get_connection(n, domain_def, domain_connection)
+    if check_integrity:
+        with log.BlockTimer(LOGGER, "voxel_integrity"):
+            connection_def = voxel_integrity.get_integrity(n, domain_def, domain_connection, domain_adjacent)
     else:
         connection_def = []
 

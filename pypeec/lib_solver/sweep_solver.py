@@ -154,7 +154,7 @@ def get_run_sweep(parallel_sweep, sweep_config, sweep_param, fct_compute):
     # ensure that the interdependencies are solvable
     init_list = _get_tree_check(sweep_tree, None, [])
     if len(init_list) != len(sweep_config):
-        raise RuntimeError("invalid sweep: cannot solve the sweep dependencies")
+        raise RuntimeError("cannot solve the sweep dependencies")
 
     # init the dict for the output data
     output = {}

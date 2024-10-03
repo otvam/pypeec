@@ -107,12 +107,14 @@
     - [+03.00e-3, +01.00e-3, +00.00e-3]
     - [+03.00e-3, +02.00e-3, +00.00e-3]
     - [+03.00e-3, +03.00e-3, +00.00e-3]
-"check_cloud": true
-"check_conflict": true
-"check_connection": true
+"resolve_cloud": true
+"resolve_conflict": true
+"check_integrity": true
 "random_resolution": false
 "domain_conflict":
     - {"domain_resolve": ["trace"], "domain_keep": ["src"]}
     - {"domain_resolve": ["trace"], "domain_keep": ["sink"]}
 "domain_connection":
-    "coil": {"domain_group": [["trace"], ["via"], ["src"], ["sink"]], "connected": true}
+    "coil": {"domain_group": [["trace", "via"], ["src", "sink"]], "connected": true}
+"domain_adjacent":
+    "coil": {"domain_group": [["src"], ["sink"]], "connected": false}
