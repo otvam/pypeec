@@ -8,25 +8,25 @@
 
 "material_def":
     "wire":
-        "domain_list": ["src_1", "src_2", "sink_1", "sink_2", "wire"]
+        "domain_list": ["src_a", "src_b", "sink_a", "sink_b", "wire"]
         "material_type": "electric"
         "orientation_type": "isotropic"
         "var_type": "lumped"
 "source_def":
-    "src_1":
-        "domain_list": ["src_1"]
+    "src_a":
+        "domain_list": ["src_a"]
         "source_type": "current"
         "var_type": "lumped"
-    "src_2":
-        "domain_list": ["src_2"]
+    "src_b":
+        "domain_list": ["src_b"]
         "source_type": "current"
         "var_type": "lumped"
-    "sink_1":
-        "domain_list": ["sink_1"]
+    "sink_a":
+        "domain_list": ["sink_a"]
         "source_type": "voltage"
         "var_type": "lumped"
-    "sink_2":
-        "domain_list": ["sink_2"]
+    "sink_b":
+        "domain_list": ["sink_b"]
         "source_type": "voltage"
         "var_type": "lumped"
 "sweep_config":
@@ -37,7 +37,7 @@
         "material_val":
             "wire": {"rho_re": 1.75e-8, "rho_im": 0.0}
         "source_val":
-            "src_1": {"I_re": +1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
-            "src_2": { "I_re": -1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0 }
-            "sink_1": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
-            "sink_2": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
+            "src_a": {"I_re": +1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
+            "src_b": { "I_re": -1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0 }
+            "sink_a": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
+            "sink_b": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}

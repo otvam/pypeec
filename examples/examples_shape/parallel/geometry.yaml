@@ -37,7 +37,7 @@
                 "shape_data":
                     "diameter": 0.5e-3
                     "coord": [[0.0e-3, -1.0e-3]]
-        "src_1":
+        "src_a":
             -
                 "shape_layer": ["src"]
                 "shape_operation": "add"
@@ -45,7 +45,7 @@
                 "shape_data":
                     "diameter": 0.5e-3
                     "coord": [[0.0e-3, +1.0e-3]]
-        "src_2":
+        "src_b":
             -
                 "shape_layer": ["src"]
                 "shape_operation": "add"
@@ -53,7 +53,7 @@
                 "shape_data":
                     "diameter": 0.5e-3
                     "coord": [[0.0e-3, -1.0e-3]]
-        "sink_1":
+        "sink_a":
             -
                 "shape_layer": ["sink"]
                 "shape_operation": "add"
@@ -61,7 +61,7 @@
                 "shape_data":
                     "diameter": 0.5e-3
                     "coord": [[0.0e-3, +1.0e-3]]
-        "sink_2":
+        "sink_b":
             -
                 "shape_layer": ["sink"]
                 "shape_operation": "add"
@@ -74,13 +74,17 @@
     "use_resample": false
     "resampling_factor": [1, 1, 1]
 "pts_cloud": []
-"check_cloud": true
-"check_conflict": true
-"check_connection": true
+"resolve_cloud": true
+"resolve_conflict": true
+"check_integrity": true
 "random_resolution": false
 "domain_conflict":
-    - {"domain_resolve": ["wire"], "domain_keep": ["src_1", "src_2"]}
-    - {"domain_resolve": ["wire"], "domain_keep": ["sink_1", "sink_2"]}
-"domain_connection":
-    "connect_1": {"domain_group": [["wire"], ["src_1"], ["sink_1"]], "connected": true}
-    "connect_2": {"domain_group": [["wire"], ["src_2"], ["sink_2"]], "connected": true}
+    - {"domain_resolve": ["wire"], "domain_keep": ["src_a", "src_b"]}
+    - {"domain_resolve": ["wire"], "domain_keep": ["sink_a", "sink_b"]}
+"domain_connected":
+    "conductor_a": {"domain_group": [["src_a"], ["sink_a"]], "connected": true}
+    "conductor_b": {"domain_group": [["src_b"], ["sink_b"]], "connected": true}
+    "insulation": {"domain_group": [["src_a", "sink_a"], ["src_b", "sink_b"]], "connected": false}
+"domain_adjacent":
+    "terminal_a": {"domain_group": [["src_a"], ["sink_a"]], "connected": false}
+    "terminal_b": {"domain_group": [["src_b"], ["sink_b"]], "connected": false}

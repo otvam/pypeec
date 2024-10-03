@@ -472,11 +472,13 @@
     - [+11.75e-3, +11.75e-3, +01.92e-3]
     - [+11.75e-3, +11.75e-3, +03.83e-3]
     - [+11.75e-3, +11.75e-3, +05.75e-3]
-"check_cloud": true
-"check_conflict": true
-"check_connection": true
+"resolve_cloud": true
+"resolve_conflict": true
+"check_integrity": true
 "random_resolution": false
 "domain_conflict": []
-"domain_connection":
-    "cond": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}
-    "core": {"domain_group": [["coil"], ["core"]], "connected": false}
+"domain_connected":
+    "conductor": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}
+    "core": {"domain_group": [["core"], ["coil", "src", "sink"]], "connected": false}
+"domain_adjacent":
+    "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}

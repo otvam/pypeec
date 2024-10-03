@@ -87,12 +87,15 @@
     - [+04.00e-3, +01.71e-3, +02.00e-3]
     - [+04.00e-3, +02.86e-3, +02.00e-3]
     - [+04.00e-3, +04.00e-3, +02.00e-3]
-"check_cloud": true
-"check_conflict": true
-"check_connection": true
+"resolve_cloud": true
+"resolve_conflict": false
+"check_integrity": true
 "random_resolution": false
 "domain_conflict": []
-"domain_connection":
+"domain_connected":
     "pri": {"domain_group": [["pri"], ["src"], ["sink"]], "connected": true}
     "sec": {"domain_group": [["sec"], ["short"]], "connected": true}
-    "pri_sec": {"domain_group": [["pri"], ["sec"]], "connected": false}
+    "pri_sec": {"domain_group": [["pri", "src", "sink"], ["sec", "short"]], "connected": false}
+"domain_adjacent":
+    "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}
+    "short": {"domain_group": [["sec"], ["short"]], "connected": true}

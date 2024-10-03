@@ -41,14 +41,12 @@
     - [+00.00e-3, -50.00e-3, -10.00e-3]
     - [+00.00e-3, -50.00e-3, +10.00e-3]
 "resolve_cloud": true
-"resolve_conflict": true
+"resolve_conflict": false
 "check_integrity": true
 "random_resolution": false
 "domain_conflict": []
-"domain_connection":
-    "connect": {"domain_group": [["cond"], ["src"], ["sink"]], "connected": true}
-    "core": {"domain_group": [["cond"], ["core"]], "connected": false}
+"domain_connected":
+    "conductor": {"domain_group": [["cond"], ["src"], ["sink"]], "connected": true}
+    "core": {"domain_group": [["cond", "src", "sink"], ["core"]], "connected": false}
 "domain_adjacent":
-    "connect": {"domain_group": [["cond"], ["src"], ["sink"]], "connected": true}
-    "dfdf": {"domain_group": [["src"], ["sink"]], "connected": false}
-    "core": {"domain_group": [["cond"], ["core"]], "connected": false}
+    "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}

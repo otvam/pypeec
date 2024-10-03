@@ -8,7 +8,7 @@
 
 "material_def":
     "copper":
-        "domain_list": ["coil", "src", "sink"]
+        "domain_list": ["cond", "src", "sink"]
         "material_type": "electric"
         "orientation_type": "isotropic"
         "var_type": "lumped"

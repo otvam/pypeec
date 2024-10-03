@@ -72,14 +72,17 @@
     "use_resample": false
     "resampling_factor": [1, 1, 1]
 "pts_cloud": []
-"check_cloud": true
-"check_conflict": true
-"check_connection": true
+"resolve_cloud": true
+"resolve_conflict": true
+"check_integrity": true
 "random_resolution": false
 "domain_conflict":
     - {"domain_resolve": ["copper"], "domain_keep": ["src_a", "sink_a"]}
     - {"domain_resolve": ["copper"], "domain_keep": ["src_b", "sink_b"]}
-"domain_connection":
-    "front": {"domain_group": [["src_a"], ["sink_a"]], "connected": true}
-    "back": {"domain_group": [["src_b"], ["sink_b"]], "connected": true}
+"domain_connected":
+    "conductor_a": {"domain_group": [["src_a"], ["sink_a"]], "connected": true}
+    "conductor_b": {"domain_group": [["src_b"], ["sink_b"]], "connected": true}
     "insulation": {"domain_group": [["src_a", "sink_a"], ["src_b", "sink_b"]], "connected": false}
+"domain_adjacent":
+    "terminal_a": {"domain_group": [["src_a"], ["sink_a"]], "connected": false}
+    "terminal_b": {"domain_group": [["src_b"], ["sink_b"]], "connected": false}
