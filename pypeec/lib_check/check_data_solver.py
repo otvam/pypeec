@@ -32,13 +32,13 @@ def _check_indices(n, idx_c, idx_m, idx_s):
     datachecker.check_assert("index", cond, "source indices should overlap with electric indices")
 
 
-def _check_source_graph(idx_c, idx_s, connection_def):
+def _check_source_graph(idx_c, idx_s, graph_def):
     """
     Check that there is at least one source per connected component.
     A connected components without a source would lead to a singular problem.
     """
 
-    for idx_graph in connection_def:
+    for idx_graph in graph_def:
         has_electric = len(np.intersect1d(idx_graph, idx_c)) > 0
         has_source = len(np.intersect1d(idx_graph, idx_s)) > 0
 
@@ -239,7 +239,7 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
     d = data_geom["d"]
     c = data_geom["c"]
     domain_def = data_geom["domain_def"]
-    connection_def = data_geom["connection_def"]
+    graph_def = data_geom["graph_def"]
     pts_cloud = data_geom["pts_cloud"]
 
     # get material and source indices
@@ -258,7 +258,7 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
 
     # check voxel indices
     _check_indices(n, idx_c, idx_m, idx_s)
-    _check_source_graph(idx_c, idx_s, connection_def)
+    _check_source_graph(idx_c, idx_s, graph_def)
 
     # check the existence of magnetic domains
     has_electric = len(idx_c) > 0

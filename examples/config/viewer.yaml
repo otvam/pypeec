@@ -36,14 +36,14 @@
         "title": "Domain"
         "colormap": "Accent"
         "opacity": 1.0
-"connection":
+"graph":
     "framework": "pyvista"
-    "layout": "connection"
-    "title": "Connection"
+    "layout": "graph"
+    "title": "Graph"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "title": "Connection"
+        "title": "Graph"
         "colormap": "Accent"
         "opacity": 1.0
 "voxelization":

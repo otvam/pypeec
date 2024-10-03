@@ -12,7 +12,7 @@ from pypeec import log
 LOGGER = log.get_logger(__name__, "pypeec")
 
 
-def get_status(n, d, s, c, domain_def, connection_def):
+def get_status(n, d, s, c, domain_def, graph_def):
     """
     Get a dict summarizing a 3D voxel structure.
     """
@@ -25,7 +25,7 @@ def get_status(n, d, s, c, domain_def, connection_def):
 
     # compute voxel numbers
     n_total = nx*ny*nz
-    n_graph = len(connection_def)
+    n_graph = len(graph_def)
     n_domain = len(domain_def)
 
     # get the used voxels

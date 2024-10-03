@@ -23,7 +23,7 @@ if __name__ == "__main__":
     file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.yaml")
 
     # plot tag (from viewer.yaml)
-    tag_plot = ["domain", "connection"]
+    tag_plot = ["domain", "graph"]
 
     # run viewer
     try:

@@ -65,52 +65,52 @@ def _get_connection_matrix(n):
     idx = idx_x+idx_y*nx+idx_z*nx*ny
 
     # create the sparse matrix
-    A_connection = sps.csc_matrix((nv, nv), dtype=np.int_)
+    voxel_connection = sps.csc_matrix((nv, nv), dtype=np.int_)
 
     # connections along x direction
     idx_col = idx[0:-1, :, :].flatten()
     idx_row = idx[1:, :, :].flatten()
     data = np.ones((nx-1)*ny*nz, dtype=np.int_)
-    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    voxel_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
 
     # connections along y direction
     idx_col = idx[:, 0:-1, :].flatten()
     idx_row = idx[:, 1:, :].flatten()
     data = np.ones(nx*(ny-1)*nz, dtype=np.int_)
-    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    voxel_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
 
     # connections along z direction
     idx_col = idx[:, :, 0:-1].flatten()
     idx_row = idx[:, :, 1:].flatten()
     data = np.ones(nx*ny*(nz-1), dtype=np.int_)
-    A_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    voxel_connection += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
 
-    return A_connection
+    return voxel_connection
 
 
-def _get_connected_components(A_graph, idx):
+def _get_connected_components(graph_connection, idx):
     """
     Get the connected components in the graph.
     """
 
     # find the connected components in the graph
     (n_comp, labels) = csg.connected_components(
-        csgraph=A_graph,
+        csgraph=graph_connection,
         directed=False,
         return_labels=True,
     )
 
     # get the indices of the connected components
-    connection_def = []
+    graph_def = []
     for i in range(n_comp):
         idx_local = labels == i
         idx_graph = idx[idx_local]
-        connection_def.append(idx_graph)
+        graph_def.append(idx_graph)
 
-    return connection_def
+    return graph_def
 
 
-def _check_domain_connection(domain_def, connection_def, domain_connection, tag):
+def _check_domain_connection(domain_def, graph, domain_connection, tag):
     """
     Check that the given connections between the domain exists.
     """
@@ -127,10 +127,10 @@ def _check_domain_connection(domain_def, connection_def, domain_connection, tag)
             idx_group.append(idx_tmp)
 
     # init the connection matrix
-    matrix = np.full((len(connection_def), len(idx_group)), True, dtype=bool)
+    matrix = np.full((len(graph), len(idx_group)), True, dtype=bool)
 
     # fill the connection matrix
-    for i, idx_graph in enumerate(connection_def):
+    for i, idx_graph in enumerate(graph):
         for j, idx_domain in enumerate(idx_group):
             idx_shared = np.intersect1d(idx_graph, idx_domain)
             matrix[i, j] = len(idx_shared) > 0
@@ -158,18 +158,22 @@ def get_integrity(n, domain_def, domain_connection, domain_adjacent):
     idx = _get_all_indices(domain_def)
 
     # get the connection matrix between the voxels
-    A_connection = _get_connection_matrix(n)
+    voxel_connection = _get_connection_matrix(n)
 
     # get the graph matrix
-    A_graph = A_connection
-    A_graph = A_graph[idx, :]
-    A_graph = A_graph[:, idx]
+    graph_connection = voxel_connection
+    graph_connection = graph_connection[idx, :]
+    graph_connection = graph_connection[:, idx]
 
     # find the connected components in the graph
-    connection_def = _get_connected_components(A_graph, idx)
+    graph_def = _get_connected_components(graph_connection, idx)
+
+    # check the connection between the domains
+    for tag, domain_connection_tmp in domain_connection.items():
+        _check_domain_connection(domain_def, graph_def, domain_connection_tmp, tag)
 
     # check the connections between the domains
-    for tag, domain_connection_tmp in domain_connection.items():
-        _check_domain_connection(domain_def, connection_def, domain_connection_tmp, tag)
+    # for tag, domain_connection_tmp in domain_connection.items():
+    #     _check_domain_connection(domain_def, graph, domain_connection_tmp, tag)
 
-    return connection_def
+    return graph_def

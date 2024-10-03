@@ -68,13 +68,13 @@ def _check_domain_integrity(domain_list, domain_integrity):
     """
 
     # check type
-    datachecker.check_dict("domain_connection", domain_integrity)
+    datachecker.check_dict("domain_integrity", domain_integrity)
 
     # check value
     for domain_connection_tmp in domain_integrity.values():
         # check type
         key_list = ["connected", "domain_group"]
-        datachecker.check_dict("domain_connection", domain_connection_tmp, key_list=key_list)
+        datachecker.check_dict("domain_integrity", domain_connection_tmp, key_list=key_list)
 
         # extract field
         domain_group = domain_connection_tmp["domain_group"]

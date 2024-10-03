@@ -556,8 +556,8 @@ def get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_o
     # get the main plot
     if layout == "domain":
         _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "domain")
-    elif layout == "connection":
-        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "connection")
+    elif layout == "graph":
+        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "graph")
     elif layout == "voxelization":
         _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme)
     else:

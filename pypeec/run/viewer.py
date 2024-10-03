@@ -42,7 +42,7 @@ def _get_grid_voxel(data_geom):
     d = data_geom["d"]
     c = data_geom["c"]
     domain_def = data_geom["domain_def"]
-    connection_def = data_geom["connection_def"]
+    graph_def = data_geom["graph_def"]
     pts_cloud = data_geom["pts_cloud"]
     reference = data_geom["reference"]
 
@@ -56,7 +56,7 @@ def _get_grid_voxel(data_geom):
     reference = parse_voxel.get_reference(reference, voxel)
 
     # add the domain tag to the geometry
-    voxel = parse_viewer.set_data(voxel, idx, domain_def, connection_def)
+    voxel = parse_viewer.set_data(voxel, idx, domain_def, graph_def)
 
     return grid, voxel, point, reference
 

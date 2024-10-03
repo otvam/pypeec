@@ -15,7 +15,7 @@ FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.json.gz"
 FILE_VIEWER="$PATH_ROOT/$FOLDER_CONFIG/viewer.yaml"
 
 # plot tag (from viewer.yaml)
-TAG_PLOT="domain connection"
+TAG_PLOT="domain graph"
 
 # run
 pypeec viewer \

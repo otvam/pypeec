@@ -182,12 +182,12 @@ def _run_resample_graph(reference, data_internal, data_geometry):
 
     if check_integrity:
         with log.BlockTimer(LOGGER, "voxel_integrity"):
-            connection_def = voxel_integrity.get_integrity(n, domain_def, domain_connection, domain_adjacent)
+            graph_def = voxel_integrity.get_integrity(n, domain_def, domain_connection, domain_adjacent)
     else:
-        connection_def = []
+        graph_def = []
 
     with log.BlockTimer(LOGGER, "voxel_summary"):
-        voxel_status = voxel_summary.get_status(n, d, s, c, domain_def, connection_def)
+        voxel_status = voxel_summary.get_status(n, d, s, c, domain_def, graph_def)
 
     # assemble the data
     data_geom = {
@@ -196,9 +196,9 @@ def _run_resample_graph(reference, data_internal, data_geometry):
         "s": s,
         "c": c,
         "voxel_status": voxel_status,
-        "domain_def": domain_def,
-        "connection_def": connection_def,
         "pts_cloud": pts_cloud,
+        "domain_def": domain_def,
+        "graph_def": graph_def,
         "reference": reference,
     }
 
