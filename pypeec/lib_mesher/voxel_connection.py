@@ -97,11 +97,12 @@ def _check_domain_connection(domain_def, connection_def, tag_connection, domain_
     domain_group = domain_connection["domain_group"]
     connected = domain_connection["connected"]
 
-    # remove empty domains
+    # merge group and remove empty domains
     idx_group = []
     for domain_group_tmp in domain_group:
         idx_tmp = _get_tag_indices(domain_def, domain_group_tmp)
-        idx_group.append(idx_tmp)
+        if len(idx_tmp) > 0:
+            idx_group.append(idx_tmp)
 
     # init the connection matrix
     matrix = np.full((len(connection_def), len(idx_group)), True, dtype=bool)
