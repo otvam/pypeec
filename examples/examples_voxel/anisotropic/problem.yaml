@@ -7,8 +7,8 @@
 # Mozilla Public License Version 2.0
 
 "material_def":
-    "cond":
-        "domain_list": ["src", "cond", "sink"]
+    "copper":
+        "domain_list": ["src", "wire", "sink"]
         "material_type": "electric"
         "orientation_type": "anisotropic"
         "var_type": "lumped"
@@ -27,7 +27,7 @@
     "sim_default":
         "freq": 0.0
         "material_val":
-            "cond": {"rho_re": [1.0e-8, 1.0e-7, 1.0e-6], "rho_im": [0.0, 0.0, 0.0]}
+            "copper": {"rho_re": [1.0e-8, 1.0e-7, 1.0e-6], "rho_im": [0.0, 0.0, 0.0]}
         "source_val":
             "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
             "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}

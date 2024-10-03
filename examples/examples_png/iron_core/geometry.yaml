@@ -14,7 +14,7 @@
         "size": [19, 19]
     "domain_color":
         "core": [[0, 0, 0, 255]]
-        "wire": [[255, 0, 0, 255]]
+        "coil": [[255, 0, 0, 255]]
         "gnd": [[0, 255, 0, 255]]
         "src": [[255, 255, 0, 255]]
         "sink": [[0, 255, 255, 255]]
@@ -37,7 +37,7 @@
 "random_resolution": false
 "domain_conflict": []
 "domain_connected":
-    "conductor": {"domain_group": [["wire"], ["src"], ["sink"]], "connected": true}
-    "core": {"domain_group": [["core"], ["wire", "src", "sink"]], "connected": false}
+    "conductor": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}
+    "core": {"domain_group": [["core"], ["coil", "src", "sink"]], "connected": false}
 "domain_adjacent":
     "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}

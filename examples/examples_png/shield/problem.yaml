@@ -7,7 +7,7 @@
 # Mozilla Public License Version 2.0
 
 "material_def":
-    "coil":
+    "copper":
         "domain_list": ["src", "sink", "coil"]
         "material_type": "electric"
         "orientation_type": "isotropic"
@@ -32,7 +32,7 @@
     "sim_default":
         "freq": 0.0
         "material_val":
-            "coil": {"rho_re": 1.75e-8, "rho_im": 0.0}
+            "copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
             "core": {"chi_re": 100.0, "chi_im": 0.0}
         "source_val":
             "src": {"V_re": +1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}

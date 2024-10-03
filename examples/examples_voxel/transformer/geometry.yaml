@@ -13,11 +13,11 @@
         "d": [1.0e-3, 1.0e-3, 0.5e-3]
         "c": [0.0, 0.0, 0.0]
     "domain_index":
-        "pri": [0, 5, 10, 15, 20, 21, 22, 23, 24, 19, 14, 9, 4]
-        "sec": [51, 53, 50, 55, 60, 65, 70, 71, 73, 74, 69, 64, 59, 54, 72]
-        "src": [1]
-        "sink": [3]
-        "short": [52]
+        "pri_coil": [0, 5, 10, 15, 20, 21, 22, 23, 24, 19, 14, 9, 4]
+        "sec_coil": [51, 53, 50, 55, 60, 65, 70, 71, 73, 74, 69, 64, 59, 54, 72]
+        "pri_src": [1]
+        "pri_sink": [3]
+        "sec_short": [52]
 "resampling":
     "use_reduce": false
     "use_resample": false
@@ -93,9 +93,9 @@
 "random_resolution": false
 "domain_conflict": []
 "domain_connected":
-    "pri": {"domain_group": [["pri"], ["src"], ["sink"]], "connected": true}
-    "sec": {"domain_group": [["sec"], ["short"]], "connected": true}
-    "pri_sec": {"domain_group": [["pri", "src", "sink"], ["sec", "short"]], "connected": false}
+    "pri_conductor": {"domain_group": [["pri_coil"], ["pri_src"], ["pri_sink"]], "connected": true}
+    "sec_conductor": {"domain_group": [["sec_coil"], ["sec_short"]], "connected": true}
+    "insulation": {"domain_group": [["pri_coil"], ["sec_coil"]], "connected": false}
 "domain_adjacent":
-    "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}
-    "short": {"domain_group": [["sec"], ["short"]], "connected": true}
+    "pri_terminal": {"domain_group": [["pri_src"], ["pri_sink"]], "connected": false}
+    "sec_terminal": {"domain_group": [["sec_coil"], ["sec_short"]], "connected": true}

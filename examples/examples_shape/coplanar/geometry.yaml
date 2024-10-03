@@ -20,7 +20,7 @@
     "layer_stack":
         - {"n_layer": 1, "tag_layer": "copper"}
     "geometry_shape":
-        "copper":
+        "trace":
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
@@ -35,7 +35,7 @@
                 "shape_data":
                     "width": 1.0e-3
                     "coord": [[0.0e-3, 2.0e-3], [15.0e-3, 2.0e-3]]
-        "src_a":
+        "pri_src":
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
@@ -43,7 +43,7 @@
                 "shape_data":
                     "diameter": 1.0e-3
                     "coord": [[0.0e-3, 0.0e-3]]
-        "sink_a":
+        "pri_sink":
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
@@ -51,7 +51,7 @@
                 "shape_data":
                     "diameter": 1.0e-3
                     "coord": [[15.0e-3, 0.0e-3]]
-        "src_b":
+        "sec_src":
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
@@ -59,7 +59,7 @@
                 "shape_data":
                     "diameter": 1.0e-3
                     "coord": [[0.0e-3, 2.0e-3]]
-        "sink_b":
+        "sec_sink":
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
@@ -77,12 +77,12 @@
 "check_integrity": true
 "random_resolution": false
 "domain_conflict":
-    - {"domain_resolve": ["copper"], "domain_keep": ["src_a", "sink_a"]}
-    - {"domain_resolve": ["copper"], "domain_keep": ["src_b", "sink_b"]}
+    - {"domain_resolve": ["trace"], "domain_keep": ["pri_src", "sec_src"]}
+    - {"domain_resolve": ["trace"], "domain_keep": ["pri_sink", "sec_sink"]}
 "domain_connected":
-    "conductor_a": {"domain_group": [["src_a"], ["sink_a"]], "connected": true}
-    "conductor_b": {"domain_group": [["src_b"], ["sink_b"]], "connected": true}
-    "insulation": {"domain_group": [["src_a", "sink_a"], ["src_b", "sink_b"]], "connected": false}
+    "pri_conductor": {"domain_group": [["pri_src"], ["pri_sink"]], "connected": true}
+    "sec_conductor": {"domain_group": [["sec_src"], ["sec_sink"]], "connected": true}
+    "insulation": {"domain_group": [["pri_src", "pri_sink"], ["sec_src", "sec_sink"]], "connected": false}
 "domain_adjacent":
-    "terminal_a": {"domain_group": [["src_a"], ["sink_a"]], "connected": false}
-    "terminal_b": {"domain_group": [["src_b"], ["sink_b"]], "connected": false}
+    "pri_terminal": {"domain_group": [["pri_src"], ["pri_sink"]], "connected": false}
+    "sec_terminal": {"domain_group": [["sec_src"], ["sec_sink"]], "connected": false}

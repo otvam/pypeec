@@ -13,7 +13,7 @@
         "d": [10.0e-3, 10.0e-3, 10.0e-3]
         "c": [0.0, 0.0, 0.0]
     "domain_index":
-        "cond": [1, 2, 3, 4, 5]
+        "wire": [1, 2, 3, 4, 5]
         "src": [0]
         "sink": [6]
 "resampling":
@@ -27,6 +27,6 @@
 "random_resolution": false
 "domain_conflict": []
 "domain_connected":
-    "conductor": {"domain_group": [["cond"], ["src"], ["sink"]], "connected": true}
+    "conductor": {"domain_group": [["wire"], ["src"], ["sink"]], "connected": true}
 "domain_adjacent":
     "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}

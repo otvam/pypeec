@@ -27,7 +27,7 @@ FOLDER_CONFIG = "config"
 #   examples_shape
 #       examples_shape/busbar
 #       examples_shape/wire
-#       examples_shape/trace
+#       examples_shape/hole
 #       examples_shape/coplanar
 #       examples_shape/parallel
 #   examples_stl

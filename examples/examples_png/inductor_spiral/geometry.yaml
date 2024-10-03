@@ -31,6 +31,6 @@
 "random_resolution": false
 "domain_conflict": []
 "domain_connected":
-    "connect": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}
+    "conductor": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}
 "domain_adjacent":
     "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}

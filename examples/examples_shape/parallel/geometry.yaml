@@ -37,7 +37,7 @@
                 "shape_data":
                     "diameter": 0.5e-3
                     "coord": [[0.0e-3, -1.0e-3]]
-        "src_a":
+        "pri_src":
             -
                 "shape_layer": ["src"]
                 "shape_operation": "add"
@@ -45,7 +45,7 @@
                 "shape_data":
                     "diameter": 0.5e-3
                     "coord": [[0.0e-3, +1.0e-3]]
-        "src_b":
+        "sec_src":
             -
                 "shape_layer": ["src"]
                 "shape_operation": "add"
@@ -53,7 +53,7 @@
                 "shape_data":
                     "diameter": 0.5e-3
                     "coord": [[0.0e-3, -1.0e-3]]
-        "sink_a":
+        "pri_sink":
             -
                 "shape_layer": ["sink"]
                 "shape_operation": "add"
@@ -61,7 +61,7 @@
                 "shape_data":
                     "diameter": 0.5e-3
                     "coord": [[0.0e-3, +1.0e-3]]
-        "sink_b":
+        "sec_sink":
             -
                 "shape_layer": ["sink"]
                 "shape_operation": "add"
@@ -79,12 +79,12 @@
 "check_integrity": true
 "random_resolution": false
 "domain_conflict":
-    - {"domain_resolve": ["wire"], "domain_keep": ["src_a", "src_b"]}
-    - {"domain_resolve": ["wire"], "domain_keep": ["sink_a", "sink_b"]}
+    - {"domain_resolve": ["wire"], "domain_keep": ["pri_src", "sec_src"]}
+    - {"domain_resolve": ["wire"], "domain_keep": ["pri_sink", "sec_sink"]}
 "domain_connected":
-    "conductor_a": {"domain_group": [["src_a"], ["sink_a"]], "connected": true}
-    "conductor_b": {"domain_group": [["src_b"], ["sink_b"]], "connected": true}
-    "insulation": {"domain_group": [["src_a", "sink_a"], ["src_b", "sink_b"]], "connected": false}
+    "pri_conductor": {"domain_group": [["pri_src"], ["pri_sink"]], "connected": true}
+    "sec_conductor": {"domain_group": [["sec_src"], ["sec_sink"]], "connected": true}
+    "insulation": {"domain_group": [["pri_src", "pri_sink"], ["sec_src", "sec_sink"]], "connected": false}
 "domain_adjacent":
-    "terminal_a": {"domain_group": [["src_a"], ["sink_a"]], "connected": false}
-    "terminal_b": {"domain_group": [["src_b"], ["sink_b"]], "connected": false}
+    "pri_terminal": {"domain_group": [["pri_src"], ["pri_sink"]], "connected": false}
+    "sec_terminal": {"domain_group": [["sec_src"], ["sec_sink"]], "connected": false}

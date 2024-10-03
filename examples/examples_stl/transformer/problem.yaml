@@ -7,12 +7,12 @@
 # Mozilla Public License Version 2.0
 
 "material_def":
-    "pri":
+    "pri_copper":
         "domain_list": ["pri_src", "pri_sink", "pri_coil"]
         "material_type": "electric"
         "orientation_type": "isotropic"
         "var_type": "lumped"
-    "sec":
+    "sec_copper":
         "domain_list": ["sec_src", "sec_sink", "sec_coil"]
         "material_type": "electric"
         "orientation_type": "isotropic"
@@ -40,8 +40,8 @@
     "sim_default":
         "freq": 100.0e+3
         "material_val":
-            "pri": {"rho_re": 1.75e-8, "rho_im": 0.0}
-            "sec": {"rho_re": 1.75e-8, "rho_im": 0.0}
+            "pri_copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
+            "sec_copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
         "source_val":
             "pri_src": {"V_re": -1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
             "pri_sink": {"V_re": +1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
