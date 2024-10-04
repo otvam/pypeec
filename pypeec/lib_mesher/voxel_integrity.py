@@ -192,10 +192,14 @@ def _check_domain_adjacent(domain_def, voxel_matrix, domain_connected, tag):
             raise RuntimeError("domain connection is illegal: %s" % tag)
 
 
-def get_integrity(n, domain_def, domain_connected, domain_adjacent):
+def get_integrity(n, domain_def, data_integrity):
     """
     Find the connected components of a voxel structure.
     """
+
+    # extract the data
+    domain_connected = data_integrity["domain_connected"]
+    domain_adjacent = data_integrity["domain_adjacent"]
 
     # get the indices of the non-empty voxels
     idx = _get_all_indices(domain_def)

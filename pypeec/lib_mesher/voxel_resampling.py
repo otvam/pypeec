@@ -251,15 +251,15 @@ def _get_resample(n, d, domain_def, resampling_factor):
     return n, d, domain_def
 
 
-def get_remesh(n, d, c, domain_def, resampling):
+def get_resampling(n, d, c, domain_def, data_resampling):
     """
     Remesh of a voxel structure (remove unused voxels and resampling).
     """
 
     # extract the data
-    use_reduce = resampling["use_reduce"]
-    use_resample = resampling["use_resample"]
-    resampling_factor = resampling["resampling_factor"]
+    use_reduce = data_resampling["use_reduce"]
+    use_resample = data_resampling["use_resample"]
+    resampling_factor = data_resampling["resampling_factor"]
 
     # display number of voxels
     LOGGER.debug("use_reduce = %s" % use_reduce)

@@ -13,7 +13,26 @@ from pypeec.lib_check import check_data_geometry_shape
 from pypeec.lib_check import check_data_geometry_voxel
 
 
-def _check_resampling(resampling):
+def _check_data_point(data_point):
+    """
+    Check the validity of cloud point parameters.
+    """
+
+    # check type
+    key_list = [
+        "check_cloud",
+        "full_cloud",
+        "pts_cloud",
+    ]
+    datachecker.check_dict("data_point", data_point, key_list=key_list)
+
+    # check data
+    datachecker.check_boolean("check_cloud", data_point["check_cloud"])
+    datachecker.check_boolean("full_cloud", data_point["full_cloud"])
+    datachecker.check_float_pts("pts_cloud", data_point["pts_cloud"], size=3, can_be_empty=True)
+
+
+def _check_data_resampling(data_resampling):
     """
     Check the validity of resampling parameters.
     """
@@ -24,31 +43,27 @@ def _check_resampling(resampling):
         "use_resample",
         "resampling_factor",
     ]
-    datachecker.check_dict("resampling", resampling, key_list=key_list)
+    datachecker.check_dict("data_resampling", data_resampling, key_list=key_list)
 
     # check data
-    datachecker.check_boolean("use_reduce", resampling["use_reduce"])
-    datachecker.check_boolean("use_resample", resampling["use_resample"])
-    datachecker.check_integer_array("resampling_factor", resampling["resampling_factor"], size=3, is_positive=True, can_be_zero=False)
+    datachecker.check_boolean("use_reduce", data_resampling["use_reduce"])
+    datachecker.check_boolean("use_resample", data_resampling["use_resample"])
+    datachecker.check_integer_array("resampling_factor", data_resampling["resampling_factor"], size=3, is_positive=True, can_be_zero=False)
 
 
-def _check_domain_conflict(domain_list, domain_conflict):
+def _check_conflict_rules(domain_list, conflict_rules):
     """
-    Check the validity of the rules to solve conflict between domains (STL mesher).
+    Check the conflict resolution rules.
     """
 
-    # check type
-    datachecker.check_list("domain_conflict", domain_conflict, can_be_empty=True)
-
-    # check value
-    for domain_conflict_tmp in domain_conflict:
+    for conflict_rules_tmp in conflict_rules:
         # check type
         key_list = ["domain_keep", "domain_resolve"]
-        datachecker.check_dict("domain_conflict", domain_conflict_tmp, key_list=key_list)
+        datachecker.check_dict("conflict_rules", conflict_rules_tmp, key_list=key_list)
 
         # extract the data
-        domain_keep = domain_conflict_tmp["domain_keep"]
-        domain_resolve = domain_conflict_tmp["domain_resolve"]
+        domain_keep = conflict_rules_tmp["domain_keep"]
+        domain_resolve = conflict_rules_tmp["domain_resolve"]
 
         # check type
         datachecker.check_list("domain_keep", domain_keep, sub_type=str, can_be_empty=False)
@@ -61,10 +76,29 @@ def _check_domain_conflict(domain_list, domain_conflict):
             datachecker.check_choice("domain_resolve", tag, domain_list)
 
 
+def _check_data_conflict(domain_list, data_conflict):
+    """
+    Check the validity of the rules to solve conflict between domains.
+    """
+
+    # check type
+    key_list = [
+        "resolve_rules",
+        "resolve_random",
+        "conflict_rules",
+    ]
+    datachecker.check_dict("data_conflict", data_conflict, key_list=key_list)
+
+    # check type
+    datachecker.check_boolean("resolve_rules", data_conflict["resolve_rules"])
+    datachecker.check_boolean("resolve_random", data_conflict["resolve_random"])
+    datachecker.check_list("conflict_rules", data_conflict["conflict_rules"], can_be_empty=True)
+    _check_conflict_rules(domain_list, data_conflict["conflict_rules"])
+
+
 def _check_domain_integrity(domain_list, domain_integrity):
     """
-    Check the domain connection data.
-    This list is defining the required connection between the domain
+    Check the domain integrity rules.
     """
 
     # check type
@@ -91,6 +125,25 @@ def _check_domain_integrity(domain_list, domain_integrity):
                 datachecker.check_choice("domain_group", tag, domain_list)
 
 
+def _check_data_integrity(domain_list, data_integrity):
+    """
+    Check the validity of the rules to check the mesh integrity.
+    """
+
+    # check type
+    key_list = [
+        "domain_connected",
+        "domain_adjacent",
+    ]
+    datachecker.check_dict("data_integrity", data_integrity, key_list=key_list)
+
+    # check type
+    datachecker.check_dict("domain_connected", data_integrity["domain_connected"], can_be_empty=True)
+    datachecker.check_dict("domain_adjacent", data_integrity["domain_adjacent"], can_be_empty=True)
+    _check_domain_integrity(domain_list, data_integrity["domain_connected"])
+    _check_domain_integrity(domain_list, data_integrity["domain_adjacent"])
+
+
 def check_data_geometry(data_geometry):
     """
     Check the mesher data type and extract the data.
@@ -100,37 +153,23 @@ def check_data_geometry(data_geometry):
     key_list = [
         "mesh_type",
         "data_voxelize",
-        "resampling",
-        "resolve_cloud",
-        "resolve_conflict",
-        "check_integrity",
-        "random_resolution",
-        "domain_conflict",
-        "domain_connected",
-        "domain_adjacent",
-        "pts_cloud",
+        "data_point",
+        "data_resampling",
+        "data_conflict",
+        "data_integrity",
     ]
     datachecker.check_dict("data_geometry", data_geometry, key_list=key_list)
 
     # extract field
     mesh_type = data_geometry["mesh_type"]
     data_voxelize = data_geometry["data_voxelize"]
-    resampling = data_geometry["resampling"]
-    resolve_cloud = data_geometry["resolve_cloud"]
-    resolve_conflict = data_geometry["resolve_conflict"]
-    check_integrity = data_geometry["check_integrity"]
-    random_resolution = data_geometry["random_resolution"]
-    domain_conflict = data_geometry["domain_conflict"]
-    domain_connected = data_geometry["domain_connected"]
-    domain_adjacent = data_geometry["domain_adjacent"]
-    pts_cloud = data_geometry["pts_cloud"]
+    data_point = data_geometry["data_point"]
+    data_resampling = data_geometry["data_resampling"]
+    data_conflict = data_geometry["data_conflict"]
+    data_integrity = data_geometry["data_integrity"]
 
     # check type
     datachecker.check_choice("mesh_type", mesh_type, ["stl", "png", "shape", "voxel"])
-    datachecker.check_boolean("resolve_cloud", resolve_cloud)
-    datachecker.check_boolean("resolve_conflict", resolve_conflict)
-    datachecker.check_boolean("check_integrity", check_integrity)
-    datachecker.check_boolean("random_resolution", random_resolution)
 
     # check the mesher
     if mesh_type == "png":
@@ -145,14 +184,13 @@ def check_data_geometry(data_geometry):
         raise ValueError("invalid mesh type")
 
     # check the resampling data
-    _check_resampling(resampling)
+    _check_data_resampling(data_resampling)
+
+    # check the resampling data
+    _check_data_point(data_point)
 
     # check the conflict data
-    _check_domain_conflict(domain_list, domain_conflict)
+    _check_data_conflict(domain_list, data_conflict)
 
-    # check the connection data
-    _check_domain_integrity(domain_list, domain_connected)
-    _check_domain_integrity(domain_list, domain_adjacent)
-
-    # check the point cloud
-    datachecker.check_float_pts("pts_cloud", pts_cloud, size=3, can_be_empty=True)
+    # check the integrity data
+    _check_data_integrity(domain_list, data_integrity)

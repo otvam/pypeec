@@ -18,10 +18,7 @@ def _get_graph_component(idx, graph_def):
     """
 
     # init the data with invalid data
-    if len(graph_def) == 0:
-        graph = np.ones(len(idx), dtype=np.int_)
-    else:
-        graph = np.zeros(len(idx), dtype=np.int_)
+    graph = np.zeros(len(idx), dtype=np.int_)
 
     # find to corresponding connected components
     for i, idx_graph in enumerate(graph_def):

@@ -11,7 +11,7 @@ import numpy as np
 import numpy.random as rnd
 
 
-def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
+def _get_solve_overlap(domain_def, conflict_rules):
     """
     Detect and remove shared indices (conflict) between two domains.
     The conflict is solved in the following way:
@@ -19,6 +19,11 @@ def _get_solve_overlap(domain_def, domain_resolve, domain_keep):
         - the shared indices are removed from the domain to be fixed
     """
 
+    # extract the data
+    domain_keep = conflict_rules["domain_keep"]
+    domain_resolve = conflict_rules["domain_resolve"]
+
+    # apply the conflict resolution rule
     for domain_keep_tmp in domain_keep:
         for domain_resolve_tmp in domain_resolve:
             # get the indices
@@ -77,7 +82,7 @@ def _get_resolution(domain_def):
         raise RuntimeError("invalid domain: domain indices should be unique")
 
 
-def get_conflict(domain_def, domain_conflict, random_resolution):
+def get_conflict(domain_def, data_conflict):
     """
     Detect and remove shared indices (conflict) between domains.
     The direction of the conflict resolution (between two domains) is specified by the user.
@@ -85,17 +90,18 @@ def get_conflict(domain_def, domain_conflict, random_resolution):
     At the end, the unicity of the voxel indices is checked.
     """
 
-    # resolve the conflicts for all the specified domain pairs
-    for domain_conflict_tmp in domain_conflict:
-        # extract the data
-        domain_resolve = domain_conflict_tmp["domain_resolve"]
-        domain_keep = domain_conflict_tmp["domain_keep"]
+    # extract the data
+    resolve_rules = data_conflict["resolve_rules"]
+    resolve_random = data_conflict["resolve_random"]
+    conflict_rules = data_conflict["conflict_rules"]
 
-        # solve the conflict
-        domain_def = _get_solve_overlap(domain_def, domain_resolve, domain_keep)
+    # resolve the conflicts for all the specified domain pairs
+    if resolve_rules:
+        for conflict_rules_tmp in conflict_rules:
+            domain_def = _get_solve_overlap(domain_def, conflict_rules_tmp)
 
     # random assignment of the duplicates
-    if random_resolution:
+    if resolve_random:
         domain_def = _get_random(domain_def)
 
     # check that the conflicts are resolved

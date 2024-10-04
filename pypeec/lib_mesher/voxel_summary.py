@@ -12,7 +12,7 @@ from pypeec import log
 LOGGER = log.get_logger(__name__, "pypeec")
 
 
-def get_status(n, d, s, c, domain_def, graph_def):
+def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
     """
     Get a dict summarizing a 3D voxel structure.
     """
@@ -27,6 +27,7 @@ def get_status(n, d, s, c, domain_def, graph_def):
     n_total = nx*ny*nz
     n_graph = len(graph_def)
     n_domain = len(domain_def)
+    n_cloud = len(pts_cloud)
 
     # get the used voxels
     n_used = sum(len(idx) for idx in domain_def.values())
@@ -54,6 +55,7 @@ def get_status(n, d, s, c, domain_def, graph_def):
         "ratio": ratio,
         "n_domain": n_domain,
         "n_graph": n_graph,
+        "n_cloud": n_cloud,
     }
 
     # display status
@@ -75,6 +77,7 @@ def get_status(n, d, s, c, domain_def, graph_def):
         LOGGER.debug("ratio = %.2e" % ratio)
         LOGGER.debug("n_domain = %d" % n_domain)
         LOGGER.debug("n_graph = %d" % n_graph)
+        LOGGER.debug("n_cloud = %d" % n_cloud)
 
     # plot the domain size
     LOGGER.debug("voxel domain")

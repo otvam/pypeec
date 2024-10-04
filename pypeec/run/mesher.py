@@ -21,9 +21,9 @@ from pypeec.lib_mesher import mesher_voxel
 from pypeec.lib_mesher import mesher_shape
 from pypeec.lib_mesher import mesher_png
 from pypeec.lib_mesher import mesher_stl
-from pypeec.lib_mesher import voxel_cloud
+from pypeec.lib_mesher import voxel_point
 from pypeec.lib_mesher import voxel_conflict
-from pypeec.lib_mesher import voxel_resample
+from pypeec.lib_mesher import voxel_resampling
 from pypeec.lib_mesher import voxel_integrity
 from pypeec.lib_mesher import voxel_summary
 from pypeec.lib_check import check_data_geometry
@@ -153,15 +153,10 @@ def _run_resample_graph(reference, data_internal, data_geometry):
     """
 
     # extract the data
-    resampling = data_geometry["resampling"]
-    resolve_cloud = data_geometry["resolve_cloud"]
-    resolve_conflict = data_geometry["resolve_conflict"]
-    check_integrity = data_geometry["check_integrity"]
-    random_resolution = data_geometry["random_resolution"]
-    domain_connected = data_geometry["domain_connected"]
-    domain_adjacent = data_geometry["domain_adjacent"]
-    domain_conflict = data_geometry["domain_conflict"]
-    pts_cloud = data_geometry["pts_cloud"]
+    data_point = data_geometry["data_point"]
+    data_resampling = data_geometry["data_resampling"]
+    data_conflict = data_geometry["data_conflict"]
+    data_integrity = data_geometry["data_integrity"]
 
     # extract the data
     n = data_internal["n"]
@@ -169,25 +164,20 @@ def _run_resample_graph(reference, data_internal, data_geometry):
     c = data_internal["c"]
     domain_def = data_internal["domain_def"]
 
-    with log.BlockTimer(LOGGER, "voxel_resample"):
-        (n, d, c, s, domain_def) = voxel_resample.get_remesh(n, d, c, domain_def, resampling)
+    with log.BlockTimer(LOGGER, "voxel_point"):
+        pts_cloud = voxel_point.get_point(n, d, c, domain_def, data_point)
 
-    if resolve_cloud:
-        with log.BlockTimer(LOGGER, "voxel_cloud"):
-            pts_cloud = voxel_cloud.get_cloud(n, d, c, domain_def, pts_cloud)
+    with log.BlockTimer(LOGGER, "voxel_resampling"):
+        (n, d, c, s, domain_def) = voxel_resampling.get_resampling(n, d, c, domain_def, data_resampling)
 
-    if resolve_conflict:
-        with log.BlockTimer(LOGGER, "voxel_conflict"):
-            domain_def = voxel_conflict.get_conflict(domain_def, domain_conflict, random_resolution)
+    with log.BlockTimer(LOGGER, "voxel_conflict"):
+        domain_def = voxel_conflict.get_conflict(domain_def, data_conflict)
 
-    if check_integrity:
-        with log.BlockTimer(LOGGER, "voxel_integrity"):
-            graph_def = voxel_integrity.get_integrity(n, domain_def, domain_connected, domain_adjacent)
-    else:
-        graph_def = []
+    with log.BlockTimer(LOGGER, "voxel_integrity"):
+        graph_def = voxel_integrity.get_integrity(n, domain_def, data_integrity)
 
     with log.BlockTimer(LOGGER, "voxel_summary"):
-        voxel_status = voxel_summary.get_status(n, d, s, c, domain_def, graph_def)
+        voxel_status = voxel_summary.get_summary(n, d, s, c, pts_cloud, domain_def, graph_def)
 
     # assemble the data
     data_geom = {

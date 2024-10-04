@@ -37,7 +37,7 @@ def _get_voxel_coordinate(n, d, c, idx_all):
 
 def _get_point_valid(d, pts_vox, pts_tmp):
     """
-    Check of a cloud point is not intersecting with the non-empty voxels.
+    Check if a cloud point is not intersecting with the non-empty voxels.
     """
 
     # compute distance for each dimension
@@ -46,19 +46,17 @@ def _get_point_valid(d, pts_vox, pts_tmp):
 
     # check if distance are respected
     pts_valid = np.any(pts_valid == True, axis=1)
+
+    # valid if all the voxel are valid
     valid = np.all(pts_valid == True, axis=0)
 
     return valid
 
 
-def get_cloud(n, d, c, domain_def, pts_cloud_in):
+def _get_cloud_valid(c, d, n, domain_def, pts_cloud):
     """
-    Check of the cloud points are not intersecting with the non-empty voxels.
-    Keep the valid points, discard the other points.
+    Check which cloud points are not intersecting with the non-empty voxels.
     """
-
-    # display number of cloud points
-    LOGGER.debug("initial number = %d" % len(pts_cloud_in))
 
     # cast to array
     c = np.array(c, dtype=np.float_)
@@ -74,16 +72,45 @@ def get_cloud(n, d, c, domain_def, pts_cloud_in):
     pts_vox = _get_voxel_coordinate(n, d, c, idx_all)
 
     # check the points
-    pts_cloud_out = []
-    for pts_tmp in pts_cloud_in:
-        valid = _get_point_valid(d, pts_vox, pts_tmp)
-        if valid:
-            pts_cloud_out.append(pts_tmp)
+    valid_cloud = np.empty(0, dtype=np.bool_)
+    for pts_tmp in pts_cloud:
+        valid_tmp = _get_point_valid(d, pts_vox, pts_tmp)
+        valid_cloud = np.append(valid_cloud, valid_tmp)
 
-    # cast
-    pts_cloud_out = np.array(pts_cloud_out, np.float_)
+    return valid_cloud
+
+
+def get_point(n, d, c, domain_def, data_point):
+    """
+    Check that the cloud points are not intersecting with the non-empty voxels.
+    """
+
+    # extract the data
+    check_cloud = data_point["check_cloud"]
+    full_cloud = data_point["full_cloud"]
+    pts_cloud = data_point["pts_cloud"]
 
     # display number of cloud points
-    LOGGER.debug("final number = %d" % len(pts_cloud_out))
+    LOGGER.debug("check_cloud = %s" % check_cloud)
+    LOGGER.debug("full_cloud = %s" % full_cloud)
+    LOGGER.debug("original number = %d" % len(pts_cloud))
 
-    return pts_cloud_out
+    # cast to array
+    pts_cloud = np.array(pts_cloud, np.float_)
+
+    # check valid points
+    if check_cloud:
+        # get the valid points
+        valid_cloud = _get_cloud_valid(c, d, n, domain_def, pts_cloud)
+
+        # check that everything is valid
+        if full_cloud and np.any(valid_cloud == False):
+            raise RuntimeError("invalid cloud points")
+
+        # remove the invalid points
+        pts_cloud = pts_cloud[valid_cloud]
+
+    # display number of cloud points
+    LOGGER.debug("final number = %d" % len(pts_cloud))
+
+    return pts_cloud
