@@ -16,33 +16,36 @@
         "wire": [13, 22, 31, 40, 49]
         "src": [4]
         "sink": [58]
-"resampling":
+"data_point":
+    "check_cloud": true
+    "full_cloud": true
+    "pts_cloud":
+        - [+30.00e-3, +00.00e-3, -30.00e-3]
+        - [+30.00e-3, +00.00e-3, -10.00e-3]
+        - [+30.00e-3, +00.00e-3, +10.00e-3]
+        - [+30.00e-3, +00.00e-3, +30.00e-3]
+        - [-30.00e-3, +00.00e-3, -30.00e-3]
+        - [-30.00e-3, +00.00e-3, -10.00e-3]
+        - [-30.00e-3, +00.00e-3, +10.00e-3]
+        - [-30.00e-3, +00.00e-3, +30.00e-3]
+        - [+00.00e-3, +30.00e-3, -30.00e-3]
+        - [+00.00e-3, +30.00e-3, -10.00e-3]
+        - [+00.00e-3, +30.00e-3, +10.00e-3]
+        - [+00.00e-3, +30.00e-3, +30.00e-3]
+        - [+00.00e-3, -30.00e-3, -30.00e-3]
+        - [+00.00e-3, -30.00e-3, -10.00e-3]
+        - [+00.00e-3, -30.00e-3, +10.00e-3]
+        - [+00.00e-3, -30.00e-3, +30.00e-3]
+"data_resampling":
     "use_reduce": true
     "use_resample": true
     "resampling_factor": [2, 2, 1]
-"pts_cloud":
-    - [+30.00e-3, +00.00e-3, -30.00e-3]
-    - [+30.00e-3, +00.00e-3, -10.00e-3]
-    - [+30.00e-3, +00.00e-3, +10.00e-3]
-    - [+30.00e-3, +00.00e-3, +30.00e-3]
-    - [-30.00e-3, +00.00e-3, -30.00e-3]
-    - [-30.00e-3, +00.00e-3, -10.00e-3]
-    - [-30.00e-3, +00.00e-3, +10.00e-3]
-    - [-30.00e-3, +00.00e-3, +30.00e-3]
-    - [+00.00e-3, +30.00e-3, -30.00e-3]
-    - [+00.00e-3, +30.00e-3, -10.00e-3]
-    - [+00.00e-3, +30.00e-3, +10.00e-3]
-    - [+00.00e-3, +30.00e-3, +30.00e-3]
-    - [+00.00e-3, -30.00e-3, -30.00e-3]
-    - [+00.00e-3, -30.00e-3, -10.00e-3]
-    - [+00.00e-3, -30.00e-3, +10.00e-3]
-    - [+00.00e-3, -30.00e-3, +30.00e-3]
-"resolve_cloud": true
-"resolve_conflict": false
-"check_integrity": true
-"random_resolution": false
-"domain_conflict": []
-"domain_connected":
-    "conductor": {"domain_group": [["wire"], ["src"], ["sink"]], "connected": true}
-"domain_adjacent":
-    "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}
+"data_conflict":
+    "resolve_rules": true
+    "resolve_random": false
+    "conflict_rules": []
+"data_integrity":
+    "domain_connected":
+        "conductor": {"domain_group": [["wire"], ["src"], ["sink"]], "connected": true}
+    "domain_adjacent":
+        "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}

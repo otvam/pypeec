@@ -17,37 +17,40 @@
             50, 51, 52, 53, 54, 55, 59, 60, 64, 65, 69, 70, 71, 72, 73, 74, 75,
             76, 77, 78, 79, 80, 84, 85, 89, 90, 94, 95, 96, 97, 98, 99, 100, 101,
             102, 103, 104, 105, 109, 110, 114, 115, 119, 120, 121, 122, 123, 124,
-        ]
+       ]
         "wire": [37, 62, 87, 112, 137]
         "src": [12]
         "sink": [162]
-"resampling":
+"data_point":
+    "check_cloud": true
+    "full_cloud": true
+    "pts_cloud":
+        - [+50.00e-3, +00.00e-3, -30.00e-3]
+        - [+50.00e-3, +00.00e-3, -10.00e-3]
+        - [+50.00e-3, +00.00e-3, +10.00e-3]
+        - [+50.00e-3, +00.00e-3, +30.00e-3]
+        - [-50.00e-3, +00.00e-3, -30.00e-3]
+        - [-50.00e-3, +00.00e-3, -10.00e-3]
+        - [-50.00e-3, +00.00e-3, +10.00e-3]
+        - [-50.00e-3, +00.00e-3, +30.00e-3]
+        - [+00.00e-3, +50.00e-3, -30.00e-3]
+        - [+00.00e-3, +50.00e-3, -10.00e-3]
+        - [+00.00e-3, +50.00e-3, +10.00e-3]
+        - [+00.00e-3, +50.00e-3, +30.00e-3]
+        - [+00.00e-3, -50.00e-3, -30.00e-3]
+        - [+00.00e-3, -50.00e-3, -10.00e-3]
+        - [+00.00e-3, -50.00e-3, +10.00e-3]
+"data_resampling":
     "use_reduce": false
     "use_resample": false
     "resampling_factor": [1, 1, 1]
-"pts_cloud":
-    - [+50.00e-3, +00.00e-3, -30.00e-3]
-    - [+50.00e-3, +00.00e-3, -10.00e-3]
-    - [+50.00e-3, +00.00e-3, +10.00e-3]
-    - [+50.00e-3, +00.00e-3, +30.00e-3]
-    - [-50.00e-3, +00.00e-3, -30.00e-3]
-    - [-50.00e-3, +00.00e-3, -10.00e-3]
-    - [-50.00e-3, +00.00e-3, +10.00e-3]
-    - [-50.00e-3, +00.00e-3, +30.00e-3]
-    - [+00.00e-3, +50.00e-3, -30.00e-3]
-    - [+00.00e-3, +50.00e-3, -10.00e-3]
-    - [+00.00e-3, +50.00e-3, +10.00e-3]
-    - [+00.00e-3, +50.00e-3, +30.00e-3]
-    - [+00.00e-3, -50.00e-3, -30.00e-3]
-    - [+00.00e-3, -50.00e-3, -10.00e-3]
-    - [+00.00e-3, -50.00e-3, +10.00e-3]
-"resolve_cloud": true
-"resolve_conflict": false
-"check_integrity": true
-"random_resolution": false
-"domain_conflict": []
-"domain_connected":
-    "conductor": {"domain_group": [["wire"], ["src"], ["sink"]], "connected": true}
-    "core": {"domain_group": [["wire", "src", "sink"], ["core"]], "connected": false}
-"domain_adjacent":
-    "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}
+"data_conflict":
+    "resolve_rules": true
+    "resolve_random": false
+    "conflict_rules": []
+"data_integrity":
+    "domain_connected":
+        "conductor": {"domain_group": [["wire"], ["src"], ["sink"]], "connected": true}
+        "core": {"domain_group": [["wire", "src", "sink"], ["core"]], "connected": false}
+    "domain_adjacent":
+        "terminal": {"domain_group": [["src"], ["sink"]], "connected": false}

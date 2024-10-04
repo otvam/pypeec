@@ -114,8 +114,8 @@
     "resolve_rules": true
     "resolve_random": false
     "conflict_rules":
-        - { "domain_resolve": [ "trace" ], "domain_keep": [ "src" ] }
-        - { "domain_resolve": [ "trace" ], "domain_keep": [ "sink" ] }
+        - {"domain_resolve": ["trace"], "domain_keep": ["src"]}
+        - {"domain_resolve": ["trace"], "domain_keep": ["sink"]}
 "data_integrity":
     "domain_connected":
         "conductor": {"domain_group": [["trace", "via"], ["src", "sink"]], "connected": true}

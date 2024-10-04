@@ -26,14 +26,16 @@
         "domain_list": ["sink"]
         "source_type": "voltage"
         "var_type": "lumped"
+"material_val": &material_val
+    "copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
+    "core": {"chi_re": 50.0, "chi_im": 0.0}
+"source_val": &source_val
+    "src": {"V_re": +1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
+    "sink": {"V_re": -1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
 "sweep_config":
     "sim_default": null
 "sweep_param":
     "sim_default":
         "freq": 0.0
-        "material_val":
-            "copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
-            "core": {"chi_re": 50.0, "chi_im": 0.0}
-        "source_val":
-            "src": {"V_re": +1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
-            "sink": {"V_re": -1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
+        "material_val": *material_val
+        "source_val": *source_val
