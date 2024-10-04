@@ -95,7 +95,7 @@ def get_conflict(domain_def, data_conflict):
     resolve_random = data_conflict["resolve_random"]
     conflict_rules = data_conflict["conflict_rules"]
 
-    # resolve the conflicts for all the specified domain pairs
+    # resolve the conflicts for all the specified domains
     if resolve_rules:
         for conflict_rules_tmp in conflict_rules:
             domain_def = _get_solve_overlap(domain_def, conflict_rules_tmp)

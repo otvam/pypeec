@@ -1,7 +1,7 @@
 """
-Different functions for finding the connected components of a voxel structure.
+Different functions for checking the integrity of the voxel structure.
 First, a sparse undirected graph is constructed from the voxel structure.
-Afterward, the connected components of the graph are extracted.
+The graph is used to check for connected and adjacent domains.
 """
 
 __author__ = "Thomas Guillod"

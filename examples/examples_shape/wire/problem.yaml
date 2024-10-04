@@ -28,13 +28,13 @@
     "sink": {"V_re": -1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
 "sweep_config":
     "sim_dc": null
-    "sim_ac": null
+    "sim_ac": "sim_dc"
 "sweep_param":
     "sim_dc":
         "freq": 0.0
         "material_val": *material_val
         "source_val": *source_val
-"sim_ac":
+    "sim_ac":
         "freq": 100.0e+3
         "material_val": *material_val
         "source_val": *source_val

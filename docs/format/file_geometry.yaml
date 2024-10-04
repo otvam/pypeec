@@ -7,36 +7,61 @@
 
 # definition of the voxel structure
 #   - specific for the different mesher types
-#   - format definition is located in the next subsections
+#   - format definition is located in separate files
 "data_voxelize": {}
 
-# resampling of the voxel structure
-#   - use_reduce: reduce (or not) the voxel structure by removing unused voxels
-#   - use_resample: resample (or not) the voxel structure by subdividing voxels
-#   - resampling_factor: array with resampling factors (x, y, and z directions)
-"resampling":
+# parameters for checking the validity of the point cloud
+"data_point":
+    # check (or not) the validity of the point cloud
+    "check_cloud": true
+
+    # enforce (or not) the validity of all the provided points
+    "full_cloud": true
+
+    # 2D array containing the points used for magnetic field evaluation
+    #   - the number of points (n_pts) can be zero.
+    #   - the array has the following size: (n_pts, 3)
+    #   - the points should be located outside the active voxels
+    "pts_cloud":
+        - [-1.0, +1.0, +1.0]
+        - [+1.0, -1.0, +1.0]
+        - [+1.0, +1.0, -1.0]
+        -
+# control the resampling of the voxel structure
+"data_resampling":
+    # reduce (or not) the voxel structure by removing unused voxels
     "use_reduce": true
+
+    # resample (or not) the voxel structure by subdividing voxels
     "use_resample": true
-    "resampling_factor": [2, 2, 1]
 
-# 2D array containing the points used for magnetic field evaluation
-#   - the number of points (n_pts) can be zero.
-#   - the array has the following size: (n_pts, 3)
-#   - the points should be located outside the active voxels
-"pts_cloud":
-    - [-1.0, +1.0, +1.0]
-    - [+1.0, -1.0, +1.0]
-    - [+1.0, +1.0, -1.0]
+    # array with resampling factors (x, y, and z directions)
+    "resampling_factor": [ 2, 2, 1 ]
 
-# check (or not) the validity of the point cloud
-#   - detect the points located inside active voxels
-#   - remove the problematic points
-"resolve_cloud": true
+# parameters for resolving conflict between domains
+"data_conflict":
+    # perform (or not) the rule-based conflict resolution
+    #   - using the provided resolution rules to remove duplicated voxels
+    #   - the resolution rules are applied before the random resolution
+    "resolve_rules": true
 
-# perform (or not) the conflict resolution between the voxels
-#   - using the provided resolution rules
-#   - using random conflict resolution
-"resolve_conflict": true
+    # perform (or not) the random conflict resolution
+    #   - the duplicated voxels are randomly assigned to a unique domain
+    #   - the random resolution is performed after the application of the resolution rules
+    "resolve_random": false
+
+    # definition of the conflict resolution rules between domains
+    #   - during the voxelization, the same voxel can be assigned to several domains
+    #   - the shared voxels are located at the boundaries between domain
+    #   - the shared voxels are conflicts and should be assigned to a single domain
+    #   - list of dicts with the conflict resolution rules
+    #   - optional feature, the list can be empty if no conflict resolution is required
+    #   - conflict definition
+    #       - domain_resolve: list of domain names where the shared voxels should be removed
+    #       - domain_keep: list of domain names where the shared voxels should be kept
+    "conflict_rules":
+        - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_src"]}
+        - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_sink"]}
 
 # compute (or not) the connections between the domains
 #   - compute the connected components between the voxels
@@ -44,46 +69,28 @@
 #   - check the connections between the connected components
 "check_integrity": true
 
-# random resolution of the conflicts between the domains
-#   - the duplicated voxels are randomly assigned to a unique domain
-#   - the random resolution is performed after the manual conflict resolution
-"random_resolution": false
+# parameters for checking the integrity of the voxel structure
+"data_integrity":
+    # check if specified domains are connected to each other
+    #   - dict of dicts with the connection name and the connection definition
+    #   - optional feature, the dict can be empty without having an impact on the results
+    #   - check definition
+    #       - connected: boolean specified if the specified domains should be connected
+    #       - domain_group: list of list of domains where the connections are checked
+    #           - the outer list domains are used for the connection checks
+    #           - the inner list domains are merged together
+    "domain_connected":
+        "connected": {"connected": true, "domain_group": [["dom_cond"], ["dom_src"], ["dom_sink"]]}
+        "insulated": {"connected": false, "domain_group": [["dom_mag"], ["dom_src", "dom_cond", "dom_sink"]]}
 
-# definition of the conflict resolution rules between domains
-#   - during the voxelization, the same voxel can be assigned to several domains
-#   - the shared voxels are located at the boundaries between domain
-#   - the shared voxels are conflicts and should be assigned to a single domain
-#   - list of dicts with the conflict resolution rules
-#   - optional feature, the list can be empty if no conflict resolution is required
-#   - conflict definition
-#       - domain_resolve: list of domain names where the shared voxels should be removed
-#       - domain_keep: list of domain names where the shared voxels should be kept
-"domain_conflict":
-    - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_src"]}
-    - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_sink"]}
-
-# pledge the existence or absence of connections between the connected components
-#   - check if the specified domains are part of the same connected component
-#   - dict of dicts with the connection name and the connection definition
-#   - optional feature, the dict can be empty without having an impact on the results
-#   - connection definition
-#       - connected: boolean specified if the specified domains should be connected
-#       - domain_group: list of list of domains where the connections are checked
-#           - the outer list domains are used for the connection checks
-#           - the inner list domains are merged together
-"domain_connected":
-    "connected": {"connected": true, "domain_group": [["dom_cond"], ["dom_src"], ["dom_sink"]]}
-    "insulated": {"connected": false, "domain_group": [["dom_mag"], ["dom_src", "dom_cond", "dom_sink"]]}
-
-# pledge the existence or absence of connections between adjacent domains
-#   - check if the specified domains are adjacent to each other
-#   - dict of dicts with the connection name and the connection definition
-#   - optional feature, the dict can be empty without having an impact on the results
-#   - connection definition
-#       - connected: boolean specified if the specified domains should be connected
-#       - domain_group: list of list of domains where the connections are checked
-#           - the outer list domains are used for the connection checks
-#           - the inner list domains are merged together
-"domain_adjacent":
-    "connected": {"connected": true, "domain_group": [["dom_cond"], ["dom_src"], ["dom_sink"]]}
-    "insulated": {"connected": false, "domain_group": [["dom_mag"], ["dom_src", "dom_cond", "dom_sink"]]}
+    # check if specified domains are adjacent to each other
+    #   - dict of dicts with the connection name and the connection definition
+    #   - optional feature, the dict can be empty without having an impact on the results
+    #   - check definition
+    #       - connected: boolean specified if the specified domains should be connected
+    #       - domain_group: list of list of domains where the connections are checked
+    #           - the outer list domains are used for the connection checks
+    #           - the inner list domains are merged together
+    "domain_adjacent":
+        "connected": {"connected": true, "domain_group": [["dom_cond"], ["dom_src"], ["dom_sink"]]}
+        "insulated": {"connected": false, "domain_group": [["dom_mag"], ["dom_src", "dom_cond", "dom_sink"]]}
