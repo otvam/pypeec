@@ -446,9 +446,9 @@ def _load_pickle(filename):
     except pickle.UnpicklingError:
         raise RuntimeError("invalid Pickle file: %s" % filename) from None
     except EOFError:
-        raise EOFError("file not found: %s" % filename) from None
+        raise OSError("invalid end of file: %s" % filename) from None
     except OSError:
-        raise OSError("invalid Pickle file: %s" % filename) from None
+        raise OSError("cannot open the file: %s" % filename) from None
 
     return data
 
