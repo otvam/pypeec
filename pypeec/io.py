@@ -188,16 +188,22 @@ class _JsonNumPyEncoder(json.JSONEncoder):
         Function encoding NumPy types as dictionaries.
         """
 
-        # encode complex number and numpy array
+        # encode numpy scalars and arrays
         if np.isscalar(obj) and np.iscomplexobj(obj):
             return {
                 "__complex__": None,
                 "real": obj.real,
                 "imag": obj.imag,
             }
+        elif np.isscalar(obj) and np.issubdtype(obj.dtype, np.integer):
+            return int(obj)
+        elif np.isscalar(obj) and np.issubdtype(obj.dtype, np.floating):
+            return float(obj)
+        elif np.isscalar(obj) and np.issubdtype(obj.dtype, bool):
+            return bool(obj)
         elif isinstance(obj, np.ndarray):
             # handle numpy array
-            if np.issubdtype(obj.dtype, np.complex_):
+            if np.iscomplexobj(obj):
                 return {
                     "__numpy__": None,
                     "dtype": "complex",
