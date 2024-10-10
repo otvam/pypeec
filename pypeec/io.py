@@ -530,7 +530,7 @@ def load_data(filename):
         data = _load_json(filename, False)
     elif ext in [".gz", ".gzip"]:
         data = _load_json(filename, True)
-    elif ext in [".pck", ".pkl"]:
+    elif ext in [".pck", ".pkl", ".pickle"]:
         data = _load_pickle(filename)
     else:
         raise ValueError("invalid file extension: %s" % filename)
@@ -559,7 +559,7 @@ def write_data(filename, data):
         _write_json(filename, data, False)
     elif ext in [".gz", ".gzip"]:
         _write_json(filename, data, True)
-    elif ext in [".pck", ".pkl"]:
+    elif ext in [".pck", ".pkl", ".pickle"]:
         _write_pickle(filename, data)
     else:
         raise ValueError("invalid file extension: %s" % filename)
