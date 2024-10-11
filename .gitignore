@@ -10,6 +10,7 @@
 # exclude data files
 *.pck
 *.pkl
+*.pickle
 *.gzip
 *.gz
 
