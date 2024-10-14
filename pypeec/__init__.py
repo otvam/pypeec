@@ -15,3 +15,7 @@ try:
         __version__ = file.read()
 except FileNotFoundError:
     __version__ = 'x.x.x'
+
+# import the main method
+from pypeec.script import *
+from pypeec.main import *

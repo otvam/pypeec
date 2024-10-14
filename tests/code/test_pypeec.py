@@ -11,8 +11,7 @@ import tempfile
 import warnings
 import logging
 import scisave
-from pypeec import main
-from pypeec import script
+import pypeec
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.CRITICAL)
@@ -50,7 +49,7 @@ def _run_script(argv):
     Run the command line script with arguments.
     """
 
-    status = script.run_arguments(argv)
+    status = pypeec.run_arguments(argv)
     if status != 0:
         raise RuntimeError("invalid return code for the script")
 
@@ -105,10 +104,10 @@ def run_workflow(name, use_script):
             _run_script(argv_so)
             _run_script(argv_pl)
         else:
-            main.run_mesher_file(file_geometry, file_voxel)
-            main.run_viewer_file(file_voxel, file_viewer, plot_mode="none")
-            main.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
-            main.run_plotter_file(file_solution, file_plotter, plot_mode="none")
+            pypeec.run_mesher_file(file_geometry, file_voxel)
+            pypeec.run_viewer_file(file_voxel, file_viewer, plot_mode="none")
+            pypeec.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
+            pypeec.run_plotter_file(file_solution, file_plotter, plot_mode="none")
 
         # load the files
         data_voxel = scisave.load_data(file_voxel)

@@ -8,7 +8,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import os.path
 import scisave
-from pypeec import main
+import pypeec
 
 # get the path of the root of the code
 PATH_ROOT = os.path.dirname(__file__)
@@ -44,10 +44,10 @@ def run_image(folder_example):
     data_viewer["domain"]["data_plot"]["title"] = None
 
     # run the mesher
-    data_voxel = main.run_mesher_data(data_geometry)
+    data_voxel = pypeec.run_mesher_data(data_geometry)
 
     # run the viewer
-    main.run_viewer_data(
+    pypeec.run_viewer_data(
         data_voxel, data_viewer,
         plot_mode="qt", tag_plot=["domain"],
     )

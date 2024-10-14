@@ -8,7 +8,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import sys
 import os.path
-from pypeec import main
+import pypeec
 import examples_config
 
 # get config
@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
     # run viewer
     try:
-        main.run_viewer_file(
+        pypeec.run_viewer_file(
             file_voxel, file_viewer,
             tag_plot=tag_plot,
             plot_mode="qt",

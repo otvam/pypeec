@@ -8,7 +8,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import sys
 import os.path
-from pypeec import main
+import pypeec
 import examples_config
 
 # get config
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     # run
     try:
-        main.run_mesher_file(file_geometry, file_voxel)
+        pypeec.run_mesher_file(file_geometry, file_voxel)
     except Exception:
         sys.exit(1)
     else:

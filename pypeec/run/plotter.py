@@ -171,7 +171,7 @@ def run(
 
     # plot the sweeps
     for tag_sweep, data_sweep_tmp in data_sweep.items():
-        LOGGER.info("plot sweep: " + tag_sweep):
+        LOGGER.info("plot sweep: " + tag_sweep)
         with LOGGER.BlockIndent():
             _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_plotter, gui_obj)
 

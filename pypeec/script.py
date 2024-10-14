@@ -385,7 +385,3 @@ def run_script():
 
     # exit code
     sys.exit(status)
-
-
-if __name__ == "__main__":
-    run_script()
