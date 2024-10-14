@@ -12,7 +12,7 @@ __license__ = "Mozilla Public License Version 2.0"
 import sys
 import argparse
 import importlib.resources
-from pypeec import main
+import pypeec
 
 
 def _get_parser():
@@ -271,24 +271,12 @@ def _get_arg_extract(subparsers):
         dest="path_extract",
     )
 
-    # add the logger config parser
-    parser = subparsers.add_parser(
-        "logger",
-        help="extract the default logger config file",
-    )
-    parser.add_argument(
-        help="path where the logger config file should be extracted",
-        type=str,
-        metavar="path",
-        dest="path_extract",
-    )
-
 
 def run_arguments(argv):
     """
     User script for running PyPEEC with given arguments.
         - The script offers a CLI for the mesher, solver, viewer, and plotter.
-        - The script can also be used to extract data (examples, documentation, and logger config).
+        - The script can also be used to extract data (examples or documentation).
 
     Parameters
     ----------
@@ -320,17 +308,17 @@ def run_arguments(argv):
 
     # display logo
     if not args.is_quiet:
-        main.run_display_logo()
+        pypeec.run_display_logo()
 
     # run the code
     try:
         if args.command in ["mesher", "me"]:
-            main.run_mesher_file(
+            pypeec.run_mesher_file(
                 args.file_geometry,
                 args.file_voxel,
             )
         elif args.command in ["viewer", "vi"]:
-            main.run_viewer_file(
+            pypeec.run_viewer_file(
                 args.file_voxel,
                 args.file_viewer,
                 tag_plot=args.tag_plot,
@@ -338,14 +326,14 @@ def run_arguments(argv):
                 folder=args.folder,
             )
         elif args.command in ["solver", "so"]:
-            main.run_solver_file(
+            pypeec.run_solver_file(
                 args.file_voxel,
                 args.file_problem,
                 args.file_tolerance,
                 args.file_solution,
             )
         elif args.command in ["plotter", "pl"]:
-            main.run_plotter_file(
+            pypeec.run_plotter_file(
                 args.file_solution,
                 args.file_plotter,
                 tag_sweep=args.tag_sweep,
@@ -354,11 +342,9 @@ def run_arguments(argv):
                 folder=args.folder,
             )
         elif args.command == "examples":
-            main.run_extract("examples.zip", True, args.path_extract)
+            pypeec.run_extract("examples.zip", args.path_extract)
         elif args.command == "documentation":
-            main.run_extract("documentation.zip", True, args.path_extract)
-        elif args.command == "logger":
-            main.run_extract("logger.ini", False, args.path_extract)
+            pypeec.run_extract("documentation.zip", args.path_extract)
         else:
             raise ValueError("invalid command")
     except Exception:
@@ -371,7 +357,7 @@ def run_script():
     """
     User script for running PyPEEC with the command line arguments.
         - The script offers a CLI for the mesher, solver, viewer, and plotter.
-        - The script can also be used to extract data (examples, documentation, and logger config).
+        - The script can also be used to extract data (examples or documentation).
 
     The script is installed with the package.
     The name of the command line script is "pypeec".
