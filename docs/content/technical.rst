@@ -74,7 +74,7 @@ Logger Configuration File
 * The logger configuration file is written as a Python ConfigParser INI file.
 * If the ``PYTHONLOGGER`` variable is not set, the default configuration is kept.
 * If the ``PYTHONLOGGER`` variable is is set, the default configuration is replaced.
-* The ``PYTHONLOGGER`` variable should contain a path towards the YAML configuration.
+* The ``PYTHONLOGGER`` variable should contain a path towards the INI file.
 
 Packaging and Environment
 -------------------------
