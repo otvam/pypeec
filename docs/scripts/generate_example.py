@@ -7,8 +7,8 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import os.path
+import scisave
 from pypeec import main
-from pypeec import io
 
 # get the path of the root of the code
 PATH_ROOT = os.path.dirname(__file__)
@@ -30,8 +30,8 @@ def run_image(folder_example):
     file_viewer = os.path.join(folder_base, "config", "viewer.yaml")
 
     # load data
-    data_viewer = io.load_input(file_viewer)
-    data_geometry = io.load_input(file_geometry)
+    data_viewer = scisave.load_config(file_viewer)
+    data_geometry = scisave.load_config(file_geometry)
 
     # tweak the plot options
     data_viewer["domain"]["data_window"]["show_menu"] = True

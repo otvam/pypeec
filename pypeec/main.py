@@ -14,8 +14,8 @@ __license__ = "Mozilla Public License Version 2.0"
 import sys
 import shutil
 import importlib.resources
+import scisave
 from pypeec import log
-from pypeec import io
 
 # create the logger
 LOGGER = log.get_logger(__name__, "pypeec")
@@ -125,7 +125,7 @@ def run_mesher_file(file_geometry, file_voxel):
     # load data
     try:
         LOGGER.info("load the input data")
-        data_geometry = io.load_input(file_geometry)
+        data_geometry = scisave.load_config(file_geometry)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -136,7 +136,7 @@ def run_mesher_file(file_geometry, file_voxel):
     # save results
     try:
         LOGGER.info("save the results")
-        io.write_data(file_voxel, data_voxel)
+        scisave.write_data(file_voxel, data_voxel)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -228,8 +228,8 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
     # load data
     try:
         LOGGER.info("load the input data")
-        data_voxel = io.load_data(file_voxel)
-        data_viewer = io.load_input(file_viewer)
+        data_voxel = scisave.load_data(file_voxel)
+        data_viewer = scisave.load_config(file_viewer)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -307,9 +307,9 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     # load data
     try:
         LOGGER.info("load the input data")
-        data_voxel = io.load_data(file_voxel)
-        data_problem = io.load_input(file_problem)
-        data_tolerance = io.load_input(file_tolerance)
+        data_voxel = scisave.load_data(file_voxel)
+        data_problem = scisave.load_config(file_problem)
+        data_tolerance = scisave.load_config(file_tolerance)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -320,7 +320,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     # save results
     try:
         LOGGER.info("save the results")
-        io.write_data(file_solution, data_solution)
+        scisave.write_data(file_solution, data_solution)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex
@@ -421,8 +421,8 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     try:
         # load data
         LOGGER.info("load the input data")
-        data_solution = io.load_data(file_solution)
-        data_plotter = io.load_input(file_plotter)
+        data_solution = scisave.load_data(file_solution)
+        data_plotter = scisave.load_config(file_plotter)
     except Exception as ex:
         log.log_exception(LOGGER, ex)
         raise ex

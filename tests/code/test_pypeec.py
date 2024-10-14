@@ -10,9 +10,9 @@ import os.path
 import tempfile
 import warnings
 import logging
+import scisave
 from pypeec import main
 from pypeec import script
-from pypeec import io
 
 # disable logging to prevent clutter during test evaluation
 logging.disable(logging.CRITICAL)
@@ -111,8 +111,8 @@ def run_workflow(name, use_script):
             main.run_plotter_file(file_solution, file_plotter, plot_mode="none")
 
         # load the files
-        data_voxel = io.load_data(file_voxel)
-        data_solution = io.load_data(file_solution)
+        data_voxel = scisave.load_data(file_voxel)
+        data_solution = scisave.load_data(file_solution)
     finally:
         # close the temporary files
         _delete_temp_file(file_voxel)
