@@ -17,6 +17,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import copy
+import scilogger
 from pypeec.lib_mesher import mesher_voxel
 from pypeec.lib_mesher import mesher_shape
 from pypeec.lib_mesher import mesher_png
@@ -27,10 +28,9 @@ from pypeec.lib_mesher import voxel_resampling
 from pypeec.lib_mesher import voxel_integrity
 from pypeec.lib_mesher import voxel_summary
 from pypeec.lib_check import check_data_geometry
-from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 def _run_mesher(data_geometry):
@@ -67,7 +67,7 @@ def _run_voxel(data_voxelize):
     domain_index = data_voxelize["domain_index"]
 
     # process the indices arrays
-    with log.BlockTimer(LOGGER, "mesher_voxel"):
+    with LOGGER.BlockTimer("mesher_voxel"):
         (n, d, c, domain_def, reference) = mesher_voxel.get_mesh(param, domain_index)
 
     # assemble the data
@@ -90,7 +90,7 @@ def _run_shape(data_voxelize):
     geometry_shape = data_voxelize["geometry_shape"]
 
     # process the shapes
-    with log.BlockTimer(LOGGER, "mesher_shape"):
+    with LOGGER.BlockTimer("mesher_shape"):
         (n, d, c, domain_def, reference) = mesher_shape.get_mesh(param, layer_stack, geometry_shape)
 
     # assemble the data
@@ -113,7 +113,7 @@ def _run_png(data_voxelize):
     layer_stack = data_voxelize["layer_stack"]
 
     # voxelize the PNG files
-    with log.BlockTimer(LOGGER, "mesher_png"):
+    with LOGGER.BlockTimer("mesher_png"):
         (n, d, c, domain_def, reference) = mesher_png.get_mesh(param, domain_color, layer_stack)
 
     # assemble the data
@@ -135,7 +135,7 @@ def _run_stl(data_voxelize):
     domain_stl = data_voxelize["domain_stl"]
 
     # voxelize the STL files
-    with log.BlockTimer(LOGGER, "mesher_stl"):
+    with LOGGER.BlockTimer("mesher_stl"):
         (n, d, c, domain_def, reference) = mesher_stl.get_mesh(param, domain_stl)
 
     # assemble the data
@@ -164,19 +164,19 @@ def _run_resample_graph(reference, data_internal, data_geometry):
     c = data_internal["c"]
     domain_def = data_internal["domain_def"]
 
-    with log.BlockTimer(LOGGER, "voxel_point"):
+    with LOGGER.BlockTimer("voxel_point"):
         pts_cloud = voxel_point.get_point(n, d, c, domain_def, data_point)
 
-    with log.BlockTimer(LOGGER, "voxel_resampling"):
+    with LOGGER.BlockTimer("voxel_resampling"):
         (n, d, c, s, domain_def) = voxel_resampling.get_resampling(n, d, c, domain_def, data_resampling)
 
-    with log.BlockTimer(LOGGER, "voxel_conflict"):
+    with LOGGER.BlockTimer("voxel_conflict"):
         domain_def = voxel_conflict.get_conflict(domain_def, data_conflict)
 
-    with log.BlockTimer(LOGGER, "voxel_integrity"):
+    with LOGGER.BlockTimer("voxel_integrity"):
         graph_def = voxel_integrity.get_integrity(n, domain_def, data_integrity)
 
-    with log.BlockTimer(LOGGER, "voxel_summary"):
+    with LOGGER.BlockTimer("voxel_summary"):
         voxel_status = voxel_summary.get_summary(n, d, s, c, pts_cloud, domain_def, graph_def)
 
     # assemble the data
@@ -201,7 +201,7 @@ def _get_data(data_geom, timestamp):
     """
 
     # end message
-    (seconds, duration, date) = log.get_duration(timestamp)
+    (seconds, duration, date) = scilogger.get_duration(timestamp)
 
     # get status
     status = True
@@ -225,7 +225,7 @@ def run(data_geometry):
     """
 
     # get timestamp
-    timestamp = log.get_timestamp()
+    timestamp = scilogger.get_timestamp()
 
     # make copies of input data
     data_geometry = copy.deepcopy(data_geometry)

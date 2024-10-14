@@ -6,15 +6,15 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import scilogger
 import numpy as np
 import scipy.linalg as lna
 import scipy.sparse.linalg as sla
 from pypeec.lib_matrix import matrix_condition
 from pypeec.lib_matrix import matrix_iterative
-from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 class PowerConvergenceError(RuntimeError):
@@ -480,7 +480,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
 
     # call the solver
     LOGGER.debug("solver run")
-    with log.BlockIndent():
+    with LOGGER.BlockIndent():
         # first callback with the solution
         iter_obj.get_callback_init(sol_init)
 
@@ -544,7 +544,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
 
     # display results
     LOGGER.debug("solver summary")
-    with log.BlockIndent():
+    with LOGGER.BlockIndent():
         # display results
         LOGGER.debug("status = %s" % status)
         LOGGER.debug("n_dof_total = %d" % n_dof_total)
@@ -603,7 +603,7 @@ def get_condition(S_mat, conditions_options):
 
     # display status
     LOGGER.debug("condition summary")
-    with log.BlockIndent():
+    with LOGGER.BlockIndent():
         LOGGER.debug("check = %s" % check)
         LOGGER.debug("status = %s" % status)
         if check:

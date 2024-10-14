@@ -40,10 +40,10 @@ import matplotlib
 import matplotlib.pyplot
 import PyQt5.QtWidgets
 import PyQt5.QtGui
-from pypeec import log
+import scilogger
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 class _QApplication(object):

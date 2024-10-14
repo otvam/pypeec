@@ -17,13 +17,13 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import scilogger
 import numpy as np
 import numpy.linalg as lna
 import scipy.constants as cst
-from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 def _get_biot_savart(pts, pts_net, J_src, vol):
@@ -253,7 +253,7 @@ def get_integral(P_fc, P_fm, W_fc, W_fm, S_total):
 
     # display
     LOGGER.debug("integral")
-    with log.BlockIndent():
+    with LOGGER.BlockIndent():
         LOGGER.debug("S_total_real = %.2e VA" % S_total.real)
         LOGGER.debug("S_total_imag = %.2ej VA" % S_total.imag)
         LOGGER.debug("P_electric = %.2e W" % P_electric)
@@ -295,7 +295,7 @@ def get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm):
 
         # display
         LOGGER.debug("domain: %s" % tag)
-        with log.BlockIndent():
+        with LOGGER.BlockIndent():
             LOGGER.debug("P_electric = %.2e W" % P_vc_tmp)
             LOGGER.debug("P_magnetic = %.2e W" % P_vm_tmp)
             LOGGER.debug("P_total = %.2e W" % P_tmp)
@@ -371,7 +371,7 @@ def get_source(freq, source_all, I_src, V_vc):
 
         # display
         LOGGER.debug("terminal: %s" % tag)
-        with log.BlockIndent():
+        with LOGGER.BlockIndent():
             # source type
             LOGGER.debug("type = %s / %s" % (source_type, var_type))
 

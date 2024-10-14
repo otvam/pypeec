@@ -6,10 +6,10 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-from pypeec import log
+import scilogger
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
@@ -60,7 +60,7 @@ def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
 
     # display status
     LOGGER.debug("voxel size")
-    with log.BlockIndent():
+    with LOGGER.BlockIndent():
         LOGGER.debug("n = (%d, %d, %d)" % (nx, ny, nz))
         LOGGER.debug("d = (%.2e, %.2e, %.2e)" % (dx, dy, dz))
         LOGGER.debug("s = (%.2e, %.2e, %.2e)" % (sx, sy, sz))
@@ -69,7 +69,7 @@ def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
 
     # plot the voxel number
     LOGGER.debug("voxel summary")
-    with log.BlockIndent():
+    with LOGGER.BlockIndent():
         LOGGER.debug("V_total = %.2e" % V_total)
         LOGGER.debug("V_used = %.2e" % V_used)
         LOGGER.debug("n_total = %d" % n_total)
@@ -81,7 +81,7 @@ def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
 
     # plot the domain size
     LOGGER.debug("voxel domain")
-    with log.BlockIndent():
+    with LOGGER.BlockIndent():
         for tag, idx in domain_def.items():
             LOGGER.debug("%s = %d" % (tag, len(idx)))
 

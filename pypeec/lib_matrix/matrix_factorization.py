@@ -19,10 +19,10 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import os
 import warnings
-from pypeec import log
+import scilogger
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 # dummy options
 LIBRARY = None
@@ -225,7 +225,7 @@ def get_factorize(name, mat):
     """
 
     LOGGER.debug("factorization: %s" % name)
-    with log.BlockIndent():
+    with LOGGER.BlockIndent():
         factor = _get_factorize_sub(mat)
 
     return factor

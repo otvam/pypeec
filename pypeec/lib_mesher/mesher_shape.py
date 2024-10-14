@@ -22,12 +22,12 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import warnings
+import scilogger
 import numpy as np
 import pyvista as pv
 import shapely as sha
 import rasterio.features as raf
 import rasterio.transform as rat
-from pypeec import log
 
 # prevent problematic linear transform to trigger warnings
 warnings.filterwarnings("ignore", module="shapely")
@@ -35,7 +35,7 @@ warnings.filterwarnings("ignore", module="rasterio.features")
 warnings.filterwarnings("ignore", module="rasterio.transform")
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 def _get_boundary_polygon(bnd, z_min):

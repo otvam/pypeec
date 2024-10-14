@@ -10,12 +10,12 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import vtk
+import scilogger
 import numpy as np
 import pyvista as pv
-from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 # prevent VTK to mess up the output
 vtk.vtkObject.GlobalWarningDisplayOff()

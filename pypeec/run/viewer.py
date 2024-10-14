@@ -18,16 +18,16 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import scilogger
 from pypeec.lib_visualization import parse_viewer
 from pypeec.lib_visualization import parse_voxel
 from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
 from pypeec.lib_check import check_data_options
-from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 def _get_grid_voxel(data_geom):
@@ -117,7 +117,8 @@ def run(
     (grid, voxel, point, reference) = _get_grid_voxel(data_geom)
 
     # make the plots
-    with log.BlockIndent(LOGGER, "generate plots"):
+    LOGGER.info("generate plots")
+    with LOGGER.BlockIndent():
         for i, (tag_plot, data_viewer_tmp) in enumerate(data_viewer.items()):
             LOGGER.info("plot / %d / %d / %s" % (i+1, len(data_viewer), tag_plot))
             _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)

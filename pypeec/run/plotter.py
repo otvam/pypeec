@@ -22,6 +22,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import scilogger
 from pypeec.lib_visualization import parse_plotter
 from pypeec.lib_visualization import parse_voxel
 from pypeec.lib_visualization import manage_pyvista
@@ -29,10 +30,9 @@ from pypeec.lib_visualization import manage_matplotlib
 from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
 from pypeec.lib_check import check_data_options
-from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 def _get_grid_voxel(data_init, data_sweep):
@@ -171,7 +171,8 @@ def run(
 
     # plot the sweeps
     for tag_sweep, data_sweep_tmp in data_sweep.items():
-        with log.BlockIndent(LOGGER, "plot sweep: " + tag_sweep):
+        LOGGER.info("plot sweep: " + tag_sweep):
+        with LOGGER.BlockIndent():
             _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_plotter, gui_obj)
 
     # enter the event loop (should be at the end, blocking call)

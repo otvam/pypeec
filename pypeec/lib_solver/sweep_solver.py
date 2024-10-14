@@ -11,9 +11,8 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-import os
 import joblib
-from pypeec import log
+import scilogger
 
 
 def _get_tree_tag(sweep_config, tag):
@@ -84,11 +83,11 @@ def _get_parallel_loop(parallel_sweep, fct_compute, arg_list):
             out_list.append(out)
     else:
         # get the log global parameters
-        (global_timestamp, global_level) = log.get_global()
+        (global_timestamp, global_level) = scilogger.get_global()
 
         # wrap the compute function for setting globals
         def fct_joblib(*args):
-            log.set_global(global_timestamp, global_level)
+            scilogger.set_global(global_timestamp, global_level)
             out = fct_compute(*args)
             return out
 

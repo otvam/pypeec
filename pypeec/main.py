@@ -15,10 +15,10 @@ import sys
 import shutil
 import importlib.resources
 import scisave
-from pypeec import log
+import scilogger
 
 # create the logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 def run_display_logo():
@@ -63,7 +63,7 @@ def run_extract(data_name, is_zip, path_extract):
             else:
                 shutil.copy(file, path_extract)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         LOGGER.error("invalid termination")
         raise ex
     else:
@@ -97,7 +97,7 @@ def run_mesher_data(data_geometry):
         LOGGER.info("run the mesher")
         data_voxel = mesher.run(data_geometry)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         LOGGER.error("invalid termination")
         raise ex
     else:
@@ -127,7 +127,7 @@ def run_mesher_file(file_geometry, file_voxel):
         LOGGER.info("load the input data")
         data_geometry = scisave.load_config(file_geometry)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         raise ex
 
     # run the tool
@@ -138,7 +138,7 @@ def run_mesher_file(file_geometry, file_voxel):
         LOGGER.info("save the results")
         scisave.write_data(file_voxel, data_voxel)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         raise ex
 
 
@@ -184,7 +184,7 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
         LOGGER.info("run the viewer")
         viewer.run(data_voxel, data_viewer, **kwargs)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         LOGGER.error("invalid termination")
         raise ex
     else:
@@ -231,7 +231,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         data_voxel = scisave.load_data(file_voxel)
         data_viewer = scisave.load_config(file_viewer)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         raise ex
 
     # run the tool
@@ -271,7 +271,7 @@ def run_solver_data(data_voxel, data_problem, data_tolerance):
         LOGGER.info("run the solver")
         data_solution = solver.run(data_voxel, data_problem, data_tolerance)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         LOGGER.error("invalid termination")
         raise ex
     else:
@@ -311,7 +311,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
         data_problem = scisave.load_config(file_problem)
         data_tolerance = scisave.load_config(file_tolerance)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         raise ex
 
     # run the tool
@@ -322,7 +322,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
         LOGGER.info("save the results")
         scisave.write_data(file_solution, data_solution)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         raise ex
 
 
@@ -372,7 +372,7 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         LOGGER.info("run the plotter")
         plotter.run(data_solution, data_plotter, **kwargs)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         LOGGER.error("invalid termination")
         raise ex
     else:
@@ -424,7 +424,7 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         data_solution = scisave.load_data(file_solution)
         data_plotter = scisave.load_config(file_plotter)
     except Exception as ex:
-        log.log_exception(LOGGER, ex)
+        LOGGER.log_exception(ex)
         raise ex
 
     # run the tool

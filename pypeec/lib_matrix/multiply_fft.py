@@ -13,11 +13,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import scilogger
 from pypeec.lib_matrix import fourier_transform
-from pypeec import log
 
 # get a logger
-LOGGER = log.get_logger(__name__, "pypeec")
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 # dummy options
 LIBRARY = None
@@ -364,7 +364,7 @@ def get_prepare(name, idx_out, idx_in, mat):
     """
 
     LOGGER.debug("multiplication: %s" % name)
-    with log.BlockIndent():
+    with LOGGER.BlockIndent():
         data = _get_prepare_sub(name, idx_out, idx_in, mat)
 
     return data
