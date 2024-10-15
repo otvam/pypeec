@@ -69,14 +69,16 @@ The following **Python version** are passing the **automated tests**:
 Logger and Data Serialization
 -----------------------------
 
-For the logger, PyPEEC is using **SciLogger**
+For the logger, PyPEEC is using **SciLogger**:
+
 * Custom logger configuration files can be set with the  ``SCILOGGER`` environment variable.
 * More information about the logging module: https://github.com/otvam/scilogger
 
-For the serialization, PyPEEC is using **SciSave**
+For the serialization, PyPEEC is using **SciSave**:
+
 * The input/configuration files are either JSON or YAML files.
 * The output/data files are either JSON or Pickle files.
-* More information about the logging module: https://github.com/otvam/scisave
+* More information about the serialization module: https://github.com/otvam/scisave
 
 Packaging and Environment
 -------------------------
