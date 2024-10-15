@@ -1,7 +1,3 @@
-"""
-Set the package metadata.
-"""
-
 import importlib.resources
 
 # set basic metadata

@@ -1,16 +1,7 @@
 API Doc
 =======
 
-Main Modules
-------------
-
-.. autosummary::
-    :toctree: .
-
-    pypeec.main
-    pypeec.script
-    pypeec.log
-    pypeec.io
+.. currentmodule:: pypeec
 
 Main Packages
 -------------
@@ -26,3 +17,33 @@ Main Packages
 ``pypeec.lib_visualization``  Modules used by the viewer and plotter.
 ``pypeec.data``               Modules containing the static data.
 ============================  =====================================================
+
+Mesher Function
+---------------
+
+.. autofunction:: run_mesher_data
+.. autofunction:: run_mesher_file
+
+Viewer Function
+---------------
+
+.. autofunction:: run_viewer_data
+.. autofunction:: run_viewer_file
+
+Solver Function
+---------------
+
+.. autofunction:: run_solver_data
+.. autofunction:: run_solver_file
+
+Plotter Function
+----------------
+
+.. autofunction:: run_plotter_data
+.. autofunction:: run_plotter_file
+
+Command Line
+------------
+
+.. autofunction:: run_arguments
+.. autofunction:: run_script

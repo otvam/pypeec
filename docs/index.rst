@@ -23,7 +23,7 @@ PyPEEC - 3D Quasi-Magnetostatic Solver
    content/implementation
    content/warnings
    content/format
-   api/api
+   content/api
 
 .. image:: images/banner.png
   :alt: PyPEEC Banner

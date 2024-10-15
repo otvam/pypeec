@@ -11,58 +11,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-import sys
-import shutil
-import importlib.resources
 import scisave
 import scilogger
 
 # create the logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
-
-
-def run_display_logo():
-    """
-    Display the logo as a splash screen.
-    """
-
-    # load logo data
-    with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file:
-        data = file.read()
-
-    # display logo
-    try:
-        data.encode(sys.stderr.encoding)
-        print("", flush=True, file=sys.stderr)
-        print(data, flush=True, file=sys.stderr)
-        print("", flush=True, file=sys.stderr)
-    except UnicodeEncodeError:
-        pass
-
-
-def run_extract(data_name, path_extract):
-    """
-    Extract data (config, examples, or documentation).
-
-    Parameters
-    ----------
-    data_name : string
-        Name of the file containing the data.
-    path_extract : string
-        Path where the data will be extracted.
-    """
-
-    # execute workflow
-    try:
-        LOGGER.info("data extraction")
-        with importlib.resources.path("pypeec.data", data_name) as file:
-            shutil.unpack_archive(file, path_extract)
-    except Exception as ex:
-        LOGGER.log_exception(ex)
-        LOGGER.error("invalid termination")
-        raise ex
-    else:
-        LOGGER.info("successful termination")
 
 
 def run_mesher_data(data_geometry):

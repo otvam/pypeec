@@ -10,9 +10,48 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import sys
+import shutil
 import argparse
 import importlib.resources
 import pypeec
+
+
+def _run_display_logo():
+    """
+    Display the logo as a splash screen.
+    """
+
+    # load logo data
+    with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file:
+        data = file.read()
+
+    # display logo
+    try:
+        data.encode(sys.stderr.encoding)
+        print("", flush=True, file=sys.stderr)
+        print(data, flush=True, file=sys.stderr)
+        print("", flush=True, file=sys.stderr)
+    except UnicodeEncodeError:
+        pass
+
+
+def _run_extract(data_name, path_extract):
+    """
+    Extract data (config, examples, or documentation).
+
+    Parameters
+    ----------
+    data_name : string
+        Name of the file containing the data.
+    path_extract : string
+        Path where the data will be extracted.
+    """
+
+    # execute workflow
+    print("data extraction: start", flush=True, file=sys.stderr)
+    with importlib.resources.path("pypeec.data", data_name) as file:
+        shutil.unpack_archive(file, path_extract)
+    print("data extraction: finished", flush=True, file=sys.stderr)
 
 
 def _get_parser():
@@ -342,9 +381,9 @@ def run_arguments(argv):
                 folder=args.folder,
             )
         elif args.command == "examples":
-            pypeec.run_extract("examples.zip", args.path_extract)
+            _run_extract("examples.zip", args.path_extract)
         elif args.command == "documentation":
-            pypeec.run_extract("documentation.zip", args.path_extract)
+            _run_extract("documentation.zip", args.path_extract)
         else:
             raise ValueError("invalid command")
     except Exception:
@@ -361,6 +400,7 @@ def run_script():
 
     The script is installed with the package.
     The name of the command line script is "pypeec".
+    Exit the program with "sys.exit()" with a status exit code.
     """
 
     # get arguments
