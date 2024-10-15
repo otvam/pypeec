@@ -6,7 +6,7 @@ Dependencies
 
 **PyPEEC** is entirely programmed in **Python 3** and has the following dependencies:
 
-* PyYAML (configuration file format)
+* scilogger and scisave (logging and serialization)
 * NumPy, SciPy, and Joblib (numerical libraries)
 * Pillow (for the mesher, image manipulation)
 * Shapely and Rasterio (for the mesher, 2D shape manipulation)

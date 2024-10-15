@@ -16,8 +16,9 @@ channels:
 dependencies:
   # base installation
   - python=3.10
-  # YAML parsing library
-  - pyyaml=6.0
+  # logging and serialization
+  - scilogger=1.1.0
+  - scisave=1.1.0
   # numerical libraries
   - numpy=1.24.1
   - scipy=1.9.3

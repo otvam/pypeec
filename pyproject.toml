@@ -49,8 +49,10 @@ classifiers = [
     "Natural Language :: English",
     "Environment :: Console",
 ]
+
 dependencies = [
-    "PyYAML >= 6.0",
+    "scilogger >= 1.1",
+    "scisave >= 1.1",
     "joblib >= 1.3",
     "numpy >= 1.24, < 1.27",
     "scipy >= 1.9, < 1.14",

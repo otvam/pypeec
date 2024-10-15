@@ -9,8 +9,9 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-# YAML parsing library
-PyYAML~=6.0.1
+# logging and serialization
+scilogger~=1.1.0
+scisave~=1.1.0
 
 # numerical libraries
 numpy~=1.26.4
