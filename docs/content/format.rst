@@ -7,8 +7,8 @@ PyPEEC Workflow
 .. figure:: ../images/workflow.png
 
    Description of the PyPEEC workflow (mesher, viewer, solver, and plotter).
-   The input and output files of the different tools are shown.
-   Additionally, a global configuration file is used for the logger.
+   The input files (geometry, problem, tolerance, plotter, and viewer) are either in JSON or YAML formats.
+   The output files (voxel and solution) are either in JSON or Pickle formats.
 
 Geometry File Format
 --------------------
@@ -55,8 +55,6 @@ This file contains the definition of the magnetic problem to be solved.
 Other File Formats
 ------------------
 
-* The logger configuration file format is documented in ``pypeec/data/logger.ini``.
-* The logger configuration can be changed with the ``PYTHONLOGGER`` environment variable.
 * The ``file_tolerance`` format is documented in ``examples/config/tolerance.yaml``.
 * The ``file_viewer`` format is documented in ``examples/config/viewer.yaml``.
 * The ``file_plotter`` format is documented in ``examples/config/plotter.yaml``.

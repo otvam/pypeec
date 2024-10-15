@@ -66,15 +66,17 @@ The following **Python version** are passing the **automated tests**:
 * CPython 3.11
 * CPython 3.12
 
-Logger Configuration File
--------------------------
+Logger and Data Serialization
+-----------------------------
 
-* The default logger configuration file is located in ``pypeec/data/logger.ini``.
-* A custom logger configuration file can set with an environment variable.
-* The logger configuration file is written as a Python ConfigParser INI file.
-* If the ``PYTHONLOGGER`` variable is not set, the default configuration is kept.
-* If the ``PYTHONLOGGER`` variable is is set, the default configuration is replaced.
-* The ``PYTHONLOGGER`` variable should contain a path towards the INI file.
+For the logger, PyPEEC is using **SciLogger**
+* Custom logger configuration files can be set with the  ``SCILOGGER`` environment variable.
+* More information about the logging module: https://github.com/otvam/scilogger
+
+For the serialization, PyPEEC is using **SciSave**
+* The input/configuration files are either JSON or YAML files.
+* The output/data files are either JSON or Pickle files.
+* More information about the logging module: https://github.com/otvam/scisave
 
 Packaging and Environment
 -------------------------

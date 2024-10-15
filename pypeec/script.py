@@ -47,10 +47,15 @@ def _run_extract(data_name, path_extract):
         Path where the data will be extracted.
     """
 
-    # execute workflow
+    # init
     print("data extraction: start", flush=True, file=sys.stderr)
+    print("data extraction: %s / %s" % (data_name, path_extract), flush=True, file=sys.stderr)
+
+    # execute workflow
     with importlib.resources.path("pypeec.data", data_name) as file:
         shutil.unpack_archive(file, path_extract)
+
+    # teardown
     print("data extraction: finished", flush=True, file=sys.stderr)
 
 
@@ -347,7 +352,7 @@ def run_arguments(argv):
 
     # display logo
     if not args.is_quiet:
-        pypeec.run_display_logo()
+        _run_display_logo()
 
     # run the code
     try:
