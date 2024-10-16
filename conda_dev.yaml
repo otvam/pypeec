@@ -55,5 +55,7 @@ dependencies:
   - cudatoolkit=11.8.0
   # optional optimized numerical libraries
   - pip:
+    # the conda package is not multithreaded
     - pyFFTW==0.13.1
+    # the conda package is partially broken
     - pydiso==0.0.5
