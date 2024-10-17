@@ -1,0 +1,64 @@
+"type": "object"
+"required":
+    - "param"
+    - "domain_color"
+    - "layer_stack"
+"properties":
+    "param":
+        "type": "object"
+        "required":
+            - "d"
+            - "c"
+            - "size"
+        "properties":
+            "d":
+                "type": "array"
+                "minItems": 3
+                "maxItems": 3
+                "items":
+                    "type": "number"
+                    "minimum": 0
+            "c":
+                "type": "array"
+                "minItems": 3
+                "maxItems": 3
+                "items":
+                    "type": "number"
+            "size":
+                "type": "array"
+                "minItems": 2
+                "maxItems": 2
+                "items":
+                    "type": "integer"
+                    "minimum": 1
+    "domain_color":
+        "type": "object"
+        "minProperties": 1
+        "additionalProperties":
+            "type": "array"
+            "minItems": 1
+            "items":
+                "type": "array"
+                "minItems": 4
+                "maxItems": 4
+                "items":
+                    "type": "integer"
+                    "minimum": 0
+    "layer_stack":
+        "type": "array"
+        "minItems": 1
+        "items":
+            "type": "object"
+            "required":
+                - "n_layer"
+                - "filename_list"
+            "properties":
+                "n_layer":
+                    "type": "integer"
+                    "minimum": 1
+                "filename_list":
+                    "type": "array"
+                    "minItems": 1
+                    "items":
+                        "type": "string"
+                        "minLength": 1

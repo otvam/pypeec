@@ -1,0 +1,40 @@
+"type": "object"
+"required":
+    - "param"
+    - "domain_index"
+"properties":
+    "param":
+        "type": "object"
+        "required":
+            - "n"
+            - "d"
+            - "c"
+        "properties":
+            "n":
+                "type": "array"
+                "minItems": 3
+                "maxItems": 3
+                "items":
+                    "type": "integer"
+                    "minimum": 1
+            "d":
+                "type": "array"
+                "minItems": 3
+                "maxItems": 3
+                "items":
+                    "type": "number"
+                    "minimum": 0
+            "c":
+                "type": "array"
+                "minItems": 3
+                "maxItems": 3
+                "items":
+                    "type": "number"
+    "domain_index":
+        "type": "object"
+        "minProperties": 1
+        "additionalProperties":
+            "type" : "array"
+            "items":
+                "type": "integer"
+                "minimum": 0

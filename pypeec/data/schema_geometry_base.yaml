@@ -1,0 +1,126 @@
+"type": "object"
+"required":
+    - "mesh_type"
+    - "data_voxelize"
+    - "data_point"
+    - "data_resampling"
+    - "data_conflict"
+    - "data_integrity"
+"properties":
+    "mesh_type":
+        "type": "string"
+        "enum": ["png", "stl", "shape", "voxel"]
+    "data_voxelize":
+        "type": "object"
+    "data_point":
+        "type": "object"
+        "required":
+            - "check_cloud"
+            - "full_cloud"
+            - "pts_cloud"
+        "properties":
+            "check_cloud":
+                "type": "boolean"
+            "full_cloud":
+                "type": "boolean"
+            "pts_cloud":
+                "type": "array"
+                "items":
+                    "type": "array"
+                    "minItems": 3
+                    "maxItems": 3
+                    "items":
+                        "type": "number"
+    "data_resampling":
+        "type": "object"
+        "required":
+            - "use_reduce"
+            - "use_resample"
+            - "resampling_factor"
+        "properties":
+            "use_reduce":
+                "type": "boolean"
+            "use_resample":
+                "type": "boolean"
+            "resampling_factor":
+                "type": "array"
+                "minItems": 3
+                "maxItems": 3
+                "items":
+                    "type": "integer"
+                    "minimum": 1
+    "data_conflict":
+        "type": "object"
+        "required":
+            - "resolve_rules"
+            - "resolve_random"
+            - "conflict_rules"
+        "properties":
+            "resolve_rules":
+                "type": "boolean"
+            "resolve_random":
+                "type": "boolean"
+            "conflict_rules":
+                "type": "array"
+                "items":
+                    "type": "object"
+                    "required":
+                        - "domain_resolve"
+                        - "domain_keep"
+                    "properties":
+                        "domain_resolve":
+                            "type": "array"
+                            "minItems": 1
+                            "items":
+                                "type": "string"
+                                "minLength": 1
+                        "domain_keep":
+                            "type": "array"
+                            "minItems": 1
+                            "items":
+                                "type": "string"
+                                "minLength": 1
+    "data_integrity":
+        "type": "object"
+        "required":
+            - "domain_connected"
+            - "domain_adjacent"
+        "properties":
+            "domain_connected":
+                "type": "object"
+                "additionalProperties":
+                    "type" : "object"
+                    "required":
+                        - "domain_group"
+                        - "connected"
+                    "properties":
+                        "domain_group":
+                            "type": "array"
+                            "minItems": 1
+                            "items":
+                                "type": "array"
+                                "minItems": 1
+                                "items":
+                                    "type": "string"
+                                    "minLength": 1
+                        "connected":
+                            "type": "boolean"
+            "domain_adjacent":
+                "type": "object"
+                "additionalProperties":
+                    "type" : "object"
+                    "required":
+                        - "domain_group"
+                        - "connected"
+                    "properties":
+                        "domain_group":
+                            "type": "array"
+                            "minItems": 1
+                            "items":
+                                "type": "array"
+                                "minItems": 1
+                                "items":
+                                    "type": "string"
+                                    "minLength": 1
+                        "connected":
+                            "type": "boolean"
