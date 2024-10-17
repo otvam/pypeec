@@ -445,6 +445,7 @@ def _plot_material(pl, voxel, data_plot, plot_clip, plot_theme):
     # extract
     color_electric = data_plot["color_electric"]
     color_magnetic = data_plot["color_magnetic"]
+    color_electromagnetic = data_plot["color_electromagnetic"]
     color_current_source = data_plot["color_current_source"]
     color_voltage_source = data_plot["color_voltage_source"]
     title = data_plot["title"]
@@ -456,6 +457,7 @@ def _plot_material(pl, voxel, data_plot, plot_clip, plot_theme):
     cmap = [
         color_electric,
         color_magnetic,
+        color_electromagnetic,
         color_current_source,
         color_voltage_source,
     ]
@@ -465,7 +467,7 @@ def _plot_material(pl, voxel, data_plot, plot_clip, plot_theme):
 
     # add the resulting plot to the plotter
     arg = dict(
-        clim=[1, 4],
+        clim=[1, 5],
         show_scalar_bar=False,
         scalars="material",
         cmap=cmap,
