@@ -21,6 +21,11 @@ def _get_domain_indices(domain_list, domain_def):
 
     idx_all = np.empty(0, dtype=np.int_)
     for tag in domain_list:
+        # check domain
+        if tag not in domain_def:
+            raise RuntimeError("invalid domain: name not found: %s" % tag)
+
+        # add indices
         idx_tmp = np.array(domain_def[tag], dtype=np.int_)
         idx_all = np.append(idx_all, idx_tmp)
 

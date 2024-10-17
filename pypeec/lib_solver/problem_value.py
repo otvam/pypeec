@@ -109,6 +109,24 @@ def _get_source_field(val_dict):
     return val_dict
 
 
+def _merge_val_idx(dict_val, dict_idx):
+    """
+    Merge the value and the index dicts.
+    Check that the name are compatible.
+    """
+
+    dict_all = {}
+    for tag in dict_idx:
+        # check domain
+        if tag not in dict_val:
+            raise RuntimeError("invalid domain: name not found: %s" % tag)
+
+        # merge
+        dict_all[tag] = {**dict_val[tag], **dict_idx[tag]}
+
+    return dict_all
+
+
 def get_material_value(material_val, material_idx):
     """
     Check the size of the material values.
@@ -116,9 +134,7 @@ def get_material_value(material_val, material_idx):
     """
 
     # mege data
-    material_all = {}
-    for tag in material_idx:
-        material_all[tag] = {**material_val[tag], **material_idx[tag]}
+    material_all = _merge_val_idx(material_val, material_idx)
 
     # reshape data
     for tag, material_all_tmp in material_all.items():
@@ -134,10 +150,9 @@ def get_source_value(source_val, source_idx):
     """
 
     # mege data
-    source_all = {}
-    for tag in source_idx:
-        source_all[tag] = {**source_val[tag], **source_idx[tag]}
+    source_all = _merge_val_idx(source_val, source_idx)
 
+    # reshape data
     for tag, source_all_tmp in source_all.items():
         source_all[tag] = _get_source_field(source_all_tmp)
 
