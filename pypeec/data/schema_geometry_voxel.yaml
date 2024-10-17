@@ -34,7 +34,7 @@
         "type": "object"
         "minProperties": 1
         "additionalProperties":
-            "type" : "array"
+            "type": "array"
             "items":
                 "type": "integer"
                 "minimum": 0

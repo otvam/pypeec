@@ -175,24 +175,21 @@
                             - "pad"
                             - "polygon"
                 "allOf":
-                    -
-                        if:
+                    -   if:
                             "properties":
                                 "shape_type":
                                     "const": "pad"
                         "then":
                             "properties":
                                 "shape_data": *shape_data_pad
-                    -
-                        if:
+                    -   if:
                             "properties":
                                 "shape_type":
                                     "const": "polygon"
                         "then":
                             "properties":
                                 "shape_data": *shape_data_polygon
-                    -
-                        if:
+                    -   if:
                             "properties":
                                 "shape_type":
                                     "const": "trace"

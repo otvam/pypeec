@@ -92,16 +92,13 @@
                             "additionalProperties":
                                 "type": "object"
                                 "anyOf":
-                                    -
-                                        "required":
+                                    -   "required":
                                             - "rho_re"
                                             - "rho_im"
-                                    -
-                                        "required":
+                                    -   "required":
                                             - "chi_re"
                                             - "chi_im"
-                                    -
-                                        "required":
+                                    -   "required":
                                             - "rho_re"
                                             - "rho_im"
                                             - "chi_re"

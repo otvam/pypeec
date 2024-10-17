@@ -91,7 +91,7 @@
             "domain_connected":
                 "type": "object"
                 "additionalProperties":
-                    "type" : "object"
+                    "type": "object"
                     "required":
                         - "domain_group"
                         - "connected"
@@ -110,7 +110,7 @@
             "domain_adjacent":
                 "type": "object"
                 "additionalProperties":
-                    "type" : "object"
+                    "type": "object"
                     "required":
                         - "domain_group"
                         - "connected"
@@ -127,32 +127,28 @@
                         "connected":
                             "type": "boolean"
 "allOf":
-    -
-        if:
+    -   if:
             "properties":
                 "mesh_type":
                     "const": "shape"
         "then":
             "properties":
                 "data_voxelize": !include schema_geometry_shape.yaml
-    -
-        if:
+    -   if:
             "properties":
                 "mesh_type":
                     "const": "voxel"
         "then":
             "properties":
                 "data_voxelize": !include schema_geometry_voxel.yaml
-    -
-        if:
+    -   if:
             "properties":
                 "mesh_type":
                     "const": "stl"
         "then":
             "properties":
                 "data_voxelize": !include schema_geometry_stl.yaml
-    -
-        if:
+    -   if:
             "properties":
                 "mesh_type":
                     "const": "png"
