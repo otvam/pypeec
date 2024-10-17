@@ -41,10 +41,10 @@ def _get_strict_validator():
     """
 
     def get_int(_, instance):
-        return np.issubdtype(instance.dtype, np.integer)
+        return np.issubdtype(type(instance), np.integer)
 
     def get_float(_, instance):
-        return np.issubdtype(instance.dtype, np.floating)
+        return np.issubdtype(type(instance), np.floating)
 
     def get_array(_, instance):
         if isinstance(instance, np.ndarray):
