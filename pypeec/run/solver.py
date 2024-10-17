@@ -26,7 +26,6 @@ from pypeec.lib_solver import equation_system
 from pypeec.lib_solver import equation_solver
 from pypeec.lib_solver import extract_solution
 from pypeec.lib_solver import extract_convergence
-from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_format
 from pypeec.lib_check import check_data_options
@@ -398,7 +397,7 @@ def run(data_voxel, data_problem, data_tolerance):
 
     # check the input data
     LOGGER.info("check the input data")
-    check_data_problem.check_data_problem(data_problem)
+    check_data_format.check_data_problem(data_problem)
     check_data_tolerance.check_data_tolerance(data_tolerance)
 
     # combine the problem and voxel data

@@ -1,0 +1,94 @@
+"type": "object"
+"required":
+    - "material_def"
+    - "source_def"
+    - "sweep_solver"
+"properties":
+    "material_def":
+        "type": "object"
+        "additionalProperties":
+            "type": "object"
+            "required":
+                - "domain_list"
+                - "material_type"
+                - "orientation_type"
+                - "var_type"
+            "properties":
+                "domain_list":
+                    "type": "array"
+                    "minItems": 1
+                    "items":
+                        "type": "string"
+                        "minLength": 1
+                "material_type":
+                    "type": "string"
+                    "enum": ["electric", "magnetic", "electromagnetic"]
+                "orientation_type":
+                    "type": "string"
+                    "enum": ["isotropic", "anisotropic"]
+                "var_type":
+                    "type": "string"
+                    "enum": ["lumped", "distributed"]
+    "source_def":
+        "type": "object"
+        "additionalProperties":
+            "type": "object"
+            "required":
+                - "domain_list"
+                - "source_type"
+                - "var_type"
+            "properties":
+                "domain_list":
+                    "type": "array"
+                    "minItems": 1
+                    "items":
+                        "type": "string"
+                        "minLength": 1
+                "source_type":
+                    "type": "string"
+                    "enum": ["current", "voltage"]
+                "var_type":
+                    "type": "string"
+                    "enum": ["lumped", "distributed"]
+    "sweep_solver":
+        "type": "object"
+        "additionalProperties":
+            "type": "object"
+            "required":
+                - "init"
+                - "param"
+            "properties":
+                "init":
+                    "type": ["null", "string"]
+                    "minLength": 1
+                "param":
+                    "type": "object"
+                    "required":
+                        - "freq"
+                        - "material_val"
+                        - "source_val"
+                    "properties":
+                        "freq":
+                            "type": "number"
+                            "minimum": 0
+                        "material_val":
+                            "type": "object"
+                            "additionalProperties":
+                                "type": "object"
+                                "anyOf":
+                                    -
+                                        "required":
+                                            - "rho_re"
+                                            - "rho_im"
+                                    -
+                                        "required":
+                                            - "chi_re"
+                                            - "chi_im"
+                                    -
+                                        "required":
+                                            - "rho_re"
+                                            - "rho_im"
+                                            - "chi_re"
+                                            - "chi_im"
+                                "additionalProperties":
+                                    "type": ["number", "array"]
