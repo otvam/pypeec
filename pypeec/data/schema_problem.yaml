@@ -6,6 +6,7 @@
 "properties":
     "material_def":
         "type": "object"
+        "minProperties": 1
         "additionalProperties":
             "type": "object"
             "required":
@@ -31,6 +32,7 @@
                     "enum": ["lumped", "distributed"]
     "source_def":
         "type": "object"
+        "minProperties": 1
         "additionalProperties":
             "type": "object"
             "required":
@@ -52,6 +54,7 @@
                     "enum": ["lumped", "distributed"]
     "sweep_solver":
         "type": "object"
+        "minProperties": 1
         "additionalProperties":
             "type": "object"
             "required":

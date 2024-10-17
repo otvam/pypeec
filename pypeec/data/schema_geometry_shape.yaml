@@ -135,7 +135,7 @@
                     "minLength": 1
     "geometry_shape":
         "type": "object"
-        "minItems": 1
+        "minProperties": 1
         "additionalProperties":
             "type": "array"
             "minItems": 1
