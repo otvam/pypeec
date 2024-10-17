@@ -396,7 +396,7 @@ def run(data_voxel, data_problem, data_tolerance):
 
     # combine the problem and voxel data
     LOGGER.info("combine the input data")
-    (data_solver, sweep_config, sweep_param) = check_data_solver.get_data_solver(data_geom, data_problem, data_tolerance)
+    (data_solver, sweep_param) = check_data_solver.get_data_solver(data_geom, data_problem, data_tolerance)
 
     # create the problem
     with LOGGER.BlockTimer("init"):
@@ -409,7 +409,7 @@ def run(data_voxel, data_problem, data_tolerance):
         return output, init
 
     # compute the different sweeps
-    data_sweep = sweep_solver.get_run_sweep(parallel_sweep, sweep_config, sweep_param, fct_compute)
+    data_sweep = sweep_solver.get_run_sweep(parallel_sweep, sweep_param, fct_compute)
 
     # create output data
     data_solution = _get_data(data_init, data_sweep, timestamp)

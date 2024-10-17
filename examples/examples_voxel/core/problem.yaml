@@ -32,15 +32,16 @@
 "source_val": &source_val
     "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
     "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
-"sweep_config":
-    "sim_dc": null
-    "sim_ac": "sim_dc"
 "sweep_param":
     "sim_dc":
-        "freq": 0.0
-        "material_val": *material_val
-        "source_val": *source_val
+        "init": null
+        "data_param":
+            "freq": 0.0
+            "material_val": *material_val
+            "source_val": *source_val
     "sim_ac":
-        "freq": 1.0e+3
-        "material_val": *material_val
-        "source_val": *source_val
+        "init": "sim_ac"
+        "data_param":
+            "freq": 1.0e+3
+            "material_val": *material_val
+            "source_val": *source_val

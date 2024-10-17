@@ -140,12 +140,16 @@ def _get_tree_compute(parallel_sweep, sweep_tree, sweep_param, fct_compute, tag_
     return output, init
 
 
-def get_run_sweep(parallel_sweep, sweep_config, sweep_param, fct_compute):
+def get_run_sweep(parallel_sweep, sweep_solver, fct_compute):
     """
     Build a tree representing the interdependencies between the sweeps.
     Check that the interdependencies are not impossible (no cyclical dependencies).
     Run the sweeps in the correct order and return the results.
     """
+
+    # extract data
+    sweep_config = {tag: val["init"] for tag, val in sweep_solver.items()}
+    sweep_param = {tag: val["param"] for tag, val in sweep_solver.items()}
 
     # create a representing the interdependencies between the sweeps
     sweep_tree = _get_tree_create(sweep_config)

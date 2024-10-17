@@ -177,16 +177,19 @@ def _get_source_idx(source_def, domain_def):
     return domain_s, idx_s, source_idx
 
 
-def _get_sweep_param(sweep_param, material_idx, source_idx):
+def _get_sweep_solver(sweep_solver, material_idx, source_idx):
     """
     Check the size of the material and source values.
     Convert the values to arrays.
     """
 
     # extract field
-    freq = sweep_param["freq"]
-    material_val = sweep_param["material_val"]
-    source_val = sweep_param["source_val"]
+    init = sweep_solver["init"]
+    param = sweep_solver["param"]
+
+    freq = param["freq"]
+    material_val = param["material_val"]
+    source_val = param["source_val"]
 
     # check the material domain name
     for tag in material_idx:
@@ -214,9 +217,12 @@ def _get_sweep_param(sweep_param, material_idx, source_idx):
         source_val[tag] = _get_field(source_val_tmp, idx, var_type, None)
 
     # assign results
-    sweep_param = {"freq": freq, "material_val": material_val, "source_val": source_val}
+    sweep_solver = {
+        "init": init,
+        "param": {"freq": freq, "material_val": material_val, "source_val": source_val},
+    }
 
-    return sweep_param
+    return sweep_solver
 
 
 def get_data_solver(data_geom, data_problem, data_tolerance):
@@ -231,8 +237,7 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
     # extract field
     material_def = data_problem["material_def"]
     source_def = data_problem["source_def"]
-    sweep_config = data_problem["sweep_config"]
-    sweep_param = data_problem["sweep_param"]
+    sweep_solver = data_problem["sweep_solver"]
 
     # extract geometry
     n = data_geom["n"]
@@ -253,8 +258,8 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
         datachecker.check_choice("source domain name", tag, domain_def)
 
     # get source and material values
-    for tag, sweep_param_tmp in sweep_param.items():
-        sweep_param[tag] = _get_sweep_param(sweep_param_tmp, material_idx, source_idx)
+    for tag, sweep_solver_tmp in sweep_solver.items():
+        sweep_solver[tag] = _get_sweep_solver(sweep_solver_tmp, material_idx, source_idx)
 
     # check voxel indices
     _check_indices(n, idx_c, idx_m, idx_s)
@@ -281,4 +286,4 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
     # add tolerance data
     data_solver = {**data_solver, **data_tolerance}
 
-    return data_solver, sweep_config, sweep_param
+    return data_solver, sweep_solver

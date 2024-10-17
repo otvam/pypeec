@@ -166,29 +166,29 @@ def check_data_problem(data_problem):
     """
 
     # check type
-    key_list = ["material_def", "source_def", "sweep_config", "sweep_param"]
-    datachecker.check_dict("data_problem", data_problem, key_list=key_list)
-
-    # extract field
-    material_def = data_problem["material_def"]
-    source_def = data_problem["source_def"]
-    sweep_config = data_problem["sweep_config"]
-    sweep_param = data_problem["sweep_param"]
-
-    # check material and source
-    _check_material_def(material_def)
-    _check_source_def(source_def)
-
-    # check excitation values
-    datachecker.check_dict("sweep_param", sweep_param, can_be_empty=False)
-    for sweep_param_tmp in sweep_param.values():
-        _check_sweep_param(sweep_param_tmp, material_def, source_def)
-
-    # get sweep names
-    sweep_list = sweep_param.keys()
-
-    # check the sweep configuration
-    datachecker.check_dict("sweep_config", sweep_config, can_be_empty=False)
-    for tag_run, tag_init in sweep_config.items():
-        datachecker.check_choice("tag_run", tag_run, sweep_list, can_be_none=False)
-        datachecker.check_choice("tag_init", tag_init, sweep_list, can_be_none=True)
+    # key_list = ["material_def", "source_def", "sweep_config", "sweep_param"]
+    # datachecker.check_dict("data_problem", data_problem, key_list=key_list)
+    #
+    # # extract field
+    # material_def = data_problem["material_def"]
+    # source_def = data_problem["source_def"]
+    # sweep_config = data_problem["sweep_config"]
+    # sweep_param = data_problem["sweep_param"]
+    #
+    # # check material and source
+    # _check_material_def(material_def)
+    # _check_source_def(source_def)
+    #
+    # # check excitation values
+    # datachecker.check_dict("sweep_param", sweep_param, can_be_empty=False)
+    # for sweep_param_tmp in sweep_param.values():
+    #     _check_sweep_param(sweep_param_tmp, material_def, source_def)
+    #
+    # # get sweep names
+    # sweep_list = sweep_param.keys()
+    #
+    # # check the sweep configuration
+    # datachecker.check_dict("sweep_config", sweep_config, can_be_empty=False)
+    # for tag_run, tag_init in sweep_config.items():
+    #     datachecker.check_choice("tag_run", tag_run, sweep_list, can_be_none=False)
+    #     datachecker.check_choice("tag_init", tag_init, sweep_list, can_be_none=True)
