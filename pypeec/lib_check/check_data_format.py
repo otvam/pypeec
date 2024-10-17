@@ -1,5 +1,15 @@
 """
-Module for the checking the data formats.
+Module for the checking the data format:
+    - check the geometry data (for the mesher)
+    - check the problem data (for the solver)
+    - check the tolerance data (for the solver)
+    - check the viewer data (for the viewer)
+    - check the plotter data (for the plotter)
+
+Warning
+-------
+    - The JSON schemas will detect 99% of the problems.
+    - However, the schemas are not fully bulletproof.
 """
 
 __author__ = "Thomas Guillod"
@@ -7,9 +17,9 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import importlib.resources
+import numpy as np
 import jsonschema
 import scisave
-
 
 # preload the schemas
 with importlib.resources.path("pypeec.data", "schema_geometry.yaml") as file:
@@ -24,12 +34,58 @@ with importlib.resources.path("pypeec.data", "schema_list_plotter.yaml") as file
     SCHEMA_PLOTTER = scisave.load_config(file)
 
 
+def _get_strict_validator():
+    """
+    Create a strict validator for numerics (integer and floating).
+    Cast NumPy arrays as lists for the type check.
+    """
+
+    def get_int(_, instance):
+        return np.issubdtype(instance.dtype, np.integer)
+
+    def get_float(_, instance):
+        return np.issubdtype(instance.dtype, np.floating)
+
+    def get_array(_, instance):
+        if isinstance(instance, np.ndarray):
+            return jsonschema.Draft202012Validator.TYPE_CHECKER.is_type(instance.tolist(), "array")
+        else:
+            return jsonschema.Draft202012Validator.TYPE_CHECKER.is_type(instance, "array")
+
+    # custom type checker
+    type_checker = jsonschema.Draft202012Validator.TYPE_CHECKER
+    type_checker = type_checker.redefine("number", get_float)
+    type_checker = type_checker.redefine("integer", get_int)
+    type_checker = type_checker.redefine("array", get_array)
+
+    # custom validator
+    StrictValidator = jsonschema.validators.extend(
+        jsonschema.Draft202012Validator,
+        type_checker=type_checker,
+    )
+
+    return StrictValidator
+
+
+def _get_validate_schema(data, schema):
+    """
+    Validate data with strict validator for numerics.
+    """
+
+    # get type checker
+    StrictValidator = _get_strict_validator()
+
+    # validate schema
+    validator = StrictValidator(schema=schema)
+    validator.validate(data)
+
+
 def check_data_geometry(data_geometry):
     """
     Check the mesher geometry data.
     """
 
-    jsonschema.validate(instance=data_geometry, schema=SCHEMA_GEOMETRY)
+    _get_validate_schema(data_geometry, SCHEMA_GEOMETRY)
 
 
 def check_data_problem(data_problem):
@@ -37,7 +93,7 @@ def check_data_problem(data_problem):
     Check the solver problem data.
     """
 
-    jsonschema.validate(instance=data_problem, schema=SCHEMA_PROBLEM)
+    _get_validate_schema(data_problem, SCHEMA_PROBLEM)
 
 
 def check_data_tolerance(data_tolerance):
@@ -45,7 +101,7 @@ def check_data_tolerance(data_tolerance):
     Check the solver tolerance data.
     """
 
-    jsonschema.validate(instance=data_tolerance, schema=SCHEMA_TOLERANCE)
+    _get_validate_schema(data_tolerance, SCHEMA_TOLERANCE)
 
 
 def check_data_viewer(data_viewer):
@@ -53,7 +109,7 @@ def check_data_viewer(data_viewer):
     Check the viewer data.
     """
 
-    jsonschema.validate(instance=data_viewer, schema=SCHEMA_VIEWER)
+    _get_validate_schema(data_viewer, SCHEMA_VIEWER)
 
 
 def check_data_plotter(data_tolerance):
@@ -61,4 +117,4 @@ def check_data_plotter(data_tolerance):
     Check the plotter data.
     """
 
-    jsonschema.validate(instance=data_tolerance, schema=SCHEMA_PLOTTER)
+    _get_validate_schema(data_tolerance, SCHEMA_PLOTTER)
