@@ -331,39 +331,25 @@ def get_source(freq, source_all, I_src, V_vc):
         idx_src = source_all_tmp["idx_src"]
         source_type = source_all_tmp["source_type"]
         var_type = source_all_tmp["var_type"]
-        value = source_all_tmp["value"]
-        element = source_all_tmp["element"]
 
         # get the distributed source
         if len(idx) == 0:
             V_tmp = np.complex_(0)
             I_tmp = np.complex_(0)
-            value = np.complex_(0)
-            element = np.complex_(0)
+            S_tmp = np.complex_(0)
         else:
             V_tmp = np.complex_(V_vc[idx_vc])
             I_tmp = np.complex_(I_src[idx_src])
 
-        # get the drop across the source impedance
-        if source_type == "current":
-            drop_tmp = np.sum(V_tmp*element)
-            src_tmp = np.sum(value)
-        elif source_type == "voltage":
-            drop_tmp = np.mean(I_tmp*element)
-            src_tmp = np.mean(value)
-        else:
-            raise ValueError("invalid source type")
-
-        # compute the lumped quantities
-        S_tmp = np.sum(fact*V_tmp*np.conj(I_tmp))
-        V_tmp = np.mean(V_tmp)
-        I_tmp = np.sum(I_tmp)
+            # compute the lumped quantities
+            S_tmp = np.sum(fact*V_tmp*np.conj(I_tmp))
+            V_tmp = np.mean(V_tmp)
+            I_tmp = np.sum(I_tmp)
 
         # assign the current and voltage
         source[tag] = {
             "V": V_tmp, "I": I_tmp, "S": S_tmp,
             "source_type": source_type, "var_type": var_type,
-            "src": src_tmp, "drop": drop_tmp,
         }
 
         # add the power
@@ -374,18 +360,6 @@ def get_source(freq, source_all, I_src, V_vc):
         with LOGGER.BlockIndent():
             # source type
             LOGGER.debug("type = %s / %s" % (source_type, var_type))
-
-            # source value
-            if source_type == "current":
-                LOGGER.debug("I_src = %+.2e + %+.2ej V" % (src_tmp.real, src_tmp.imag))
-                LOGGER.debug("I_drop = %+.2e + %+.2ej V" % (drop_tmp.real, drop_tmp.imag))
-            elif source_type == "voltage":
-                LOGGER.debug("V_src = %+.2e + %+.2ej V" % (src_tmp.real, src_tmp.imag))
-                LOGGER.debug("V_drop = %+.2e + %+.2ej V" % (drop_tmp.real, drop_tmp.imag))
-            else:
-                raise ValueError("invalid source type")
-
-            # terminal value
             LOGGER.debug("V = %+.2e + %+.2ej V" % (V_tmp.real, V_tmp.imag))
             LOGGER.debug("I = %+.2e + %+.2ej A" % (I_tmp.real, I_tmp.imag))
             LOGGER.debug("S = %+.2e + %+.2ej VA" % (S_tmp.real, S_tmp.imag))

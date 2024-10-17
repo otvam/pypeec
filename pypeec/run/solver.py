@@ -222,13 +222,12 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     with LOGGER.BlockTimer("problem_value"):
         # complete value
         material_all = problem_value.get_material_value(material_val, material_idx)
-        source_val = problem_value.get_source_value(source_val, source_idx)
+        source_all = problem_value.get_source_value(source_val, source_idx)
 
         # parse the material parameters
         (rho_vc, rho_vm) = problem_value.get_material_vector(material_all)
 
         # parse the source parameters
-        source_all = problem_value.get_source_all(source_val, source_idx)
         (I_src_c, Y_src_c) = problem_value.get_source_vector(source_all, "current")
         (V_src_v, Z_src_v) = problem_value.get_source_vector(source_all, "voltage")
 

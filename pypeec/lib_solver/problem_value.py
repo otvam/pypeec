@@ -29,6 +29,7 @@ def _get_material_field(val_dict):
     var_type = val_dict["var_type"]
     idx = val_dict["idx"]
 
+    # find required fields
     if material_type == "electric":
         tag_list = ["rho_re", "rho_im"]
     elif material_type == "magnetic":
@@ -68,14 +69,30 @@ def _get_material_field(val_dict):
     return val_dict
 
 
-def _get_source_field(val_dict, idx, var_type):
+def _get_source_field(val_dict):
     """
     Cast and check the source vectors.
     If the variable is a scalar, cast to an array.
     If the variable is an array, check the length.
     """
 
-    for tag, val in val_dict.items():
+    # extract the data
+    source_type = val_dict["source_type"]
+    var_type = val_dict["var_type"]
+    idx = val_dict["idx"]
+
+    # find required fields
+    if source_type == "current":
+        tag_list = ["I_re", "I_im", "Y_re", "Y_im"]
+    elif source_type == "voltage":
+        tag_list = ["V_re", "V_im", "Z_re", "Z_im"]
+    else:
+        raise ValueError("invalid material type")
+
+    for tag in tag_list:
+        # extract
+        val = val_dict[tag]
+
         # cast
         if var_type == "lumped":
             val = np.full(len(idx), val, dtype=np.float_)
@@ -105,7 +122,6 @@ def get_material_value(material_val, material_idx):
 
     # reshape data
     for tag, material_all_tmp in material_all.items():
-        # check type
         material_all[tag] = _get_material_field(material_all_tmp)
 
     return material_all
@@ -117,15 +133,15 @@ def get_source_value(source_val, source_idx):
     Convert the values to arrays.
     """
 
-    for tag, source_val_tmp in source_val.items():
-        # extract the data
-        var_type = source_idx[tag]["var_type"]
-        idx = source_idx[tag]["idx"]
+    # mege data
+    source_all = {}
+    for tag in source_idx:
+        source_all[tag] = {**source_val[tag], **source_idx[tag]}
 
-        # check type
-        source_val[tag] = _get_source_field(source_val_tmp, idx, var_type)
+    for tag, source_all_tmp in source_all.items():
+        source_all[tag] = _get_source_field(source_all_tmp)
 
-    return source_val
+    return source_all
 
 
 def get_material_vector(material_all):
@@ -150,6 +166,10 @@ def get_material_vector(material_all):
             rho_im = material_all_tmp["rho_im"]
             rho = rho_re+1j*rho_im
 
+            # check size
+            if len(rho) != len(idx):
+                raise RuntimeError("invalid material parameters")
+
             # append the resistivities
             rho_vc = np.concatenate((rho_vc, rho))
 
@@ -161,81 +181,14 @@ def get_material_vector(material_all):
             chi = chi_re-1j*chi_im
             rho = 1/(cst.mu_0*chi)
 
+            # check size
+            if len(rho) != len(idx):
+                raise RuntimeError("invalid material parameters")
+
             # append the resistivities
             rho_vm = np.concatenate((rho_vm, rho))
 
     return rho_vc, rho_vm
-
-
-def get_source_all(source_val, source_idx):
-    """
-    Merge the different source structures.
-    """
-
-    # init combined array
-    source_all = {}
-
-    # populate the arrays with the current sources
-    for tag in source_idx:
-        # extract the data
-        source_type = source_idx[tag]["source_type"]
-        var_type = source_idx[tag]["var_type"]
-        idx_src = source_idx[tag]["idx_src"]
-        idx_vc = source_idx[tag]["idx_vc"]
-        idx = source_idx[tag]["idx"]
-
-        # get the values and admittances/impedances for the source
-        if source_type == "current":
-            # extract the data
-            I_re = source_val[tag]["I_re"]
-            I_im = source_val[tag]["I_im"]
-            Y_re = source_val[tag]["Y_re"]
-            Y_im = source_val[tag]["Y_im"]
-            value = I_re+1j*I_im
-            element = Y_re+1j*Y_im
-
-            # scale the lumped parameters
-            if var_type == "lumped":
-                value_all = value/len(idx)
-                element_all = element/len(idx)
-            elif var_type == "distributed":
-                value_all = value
-                element_all = element
-            else:
-                raise ValueError("invalid variable type")
-        elif source_type == "voltage":
-            # extract the data
-            V_re = source_val[tag]["V_re"]
-            V_im = source_val[tag]["V_im"]
-            Z_re = source_val[tag]["Z_re"]
-            Z_im = source_val[tag]["Z_im"]
-            value = V_re+1j*V_im
-            element = Z_re+1j*Z_im
-
-            # scale the lumped parameters
-            if var_type == "lumped":
-                value_all = value
-                element_all = element*len(idx)
-            elif var_type == "distributed":
-                value_all = value
-                element_all = element
-            else:
-                raise ValueError("invalid variable type")
-        else:
-            raise ValueError("invalid source type")
-
-        # assign merged data
-        source_all[tag] = {
-            "source_type": source_type,
-            "var_type": var_type,
-            "idx": idx,
-            "idx_src": idx_src,
-            "idx_vc": idx_vc,
-            "value": value_all,
-            "element": element_all,
-        }
-
-    return source_all
 
 
 def get_source_vector(source_all, source_type_ref):
@@ -248,12 +201,48 @@ def get_source_vector(source_all, source_type_ref):
     element_src = np.empty(0, dtype=np.complex_)
 
     # populate the arrays with the current sources
-    for tag, source_idx_tmp in source_all.items():
+    for tag, source_all_tmp in source_all.items():
         # extract the data
-        source_type = source_idx_tmp["source_type"]
-        value = source_idx_tmp["value"]
-        element = source_idx_tmp["element"]
-        idx = source_idx_tmp["idx"]
+        source_type = source_all_tmp["source_type"]
+        var_type = source_all_tmp["var_type"]
+        idx = source_all_tmp["idx"]
+
+        # get the values and admittances/impedances for the source
+        if source_type == "current":
+            # extract the data
+            I_re = source_all_tmp["I_re"]
+            I_im = source_all_tmp["I_im"]
+            Y_re = source_all_tmp["Y_re"]
+            Y_im = source_all_tmp["Y_im"]
+            value = I_re+1j*I_im
+            element = Y_re+1j*Y_im
+
+            # scale the lumped parameters
+            if var_type == "lumped":
+                value = value/len(idx)
+                element = element/len(idx)
+            elif var_type == "distributed":
+                pass
+            else:
+                raise ValueError("invalid variable type")
+        elif source_type == "voltage":
+            # extract the data
+            V_re = source_all_tmp["V_re"]
+            V_im = source_all_tmp["V_im"]
+            Z_re = source_all_tmp["Z_re"]
+            Z_im = source_all_tmp["Z_im"]
+            value = V_re+1j*V_im
+            element = Z_re+1j*Z_im
+
+            # scale the lumped parameters
+            if var_type == "lumped":
+                element = element*len(idx)
+            elif var_type == "distributed":
+                pass
+            else:
+                raise ValueError("invalid variable type")
+        else:
+            raise ValueError("invalid source type")
 
         # check size
         if len(value) != len(idx):
