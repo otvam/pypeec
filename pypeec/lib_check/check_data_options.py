@@ -6,7 +6,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-from pypeec.lib_check import datachecker
+import jsonschema
 
 
 def check_tag_list(data_check, tag_list):
@@ -14,11 +14,24 @@ def check_tag_list(data_check, tag_list):
     Check the list of plots to be shown.
     """
 
+    # check fields
+    schema = {
+        "type": ["null", "array"],
+        "items": {
+            "type": "string",
+            "minLength": 1,
+        },
+    }
+
+    # validate base schema
+    jsonschema.validate(instance=tag_list, schema=schema)
+
     # check the list of plots
-    datachecker.check_list("tag_list", tag_list, can_be_empty=True, sub_type=str, can_be_none=True)
     if tag_list is not None:
         for tag in tag_list:
-            datachecker.check_choice("tag_list", tag, data_check)
+            if tag not in data_check:
+                raise ValueError("invalid tag list: name not found: %s" % tag)
+
 
 
 def check_plot_options(plot_mode, folder, name):
@@ -26,9 +39,20 @@ def check_plot_options(plot_mode, folder, name):
     Check the plot mode (display or not the plots).
     """
 
-    datachecker.check_choice("plot_mode", plot_mode, ["qt", "nb", "save", "none"])
-    datachecker.check_string("name", name, can_be_empty=False, can_be_none=True)
-    datachecker.check_folder("folder", folder, can_be_none=True)
+    # check plot_mode
+    schema = {
+        "type": "string",
+        "enum": ["qt", "nb", "save", "none"],
+    }
+    jsonschema.validate(instance=plot_mode, schema=schema)
+
+    # check folder and name
+    schema = {
+        "type": ["null", "string"],
+        "minLength": 1,
+    }
+    jsonschema.validate(instance=folder, schema=schema)
+    jsonschema.validate(instance=name, schema=schema)
 
 
 def check_data_voxel(data_voxel):
@@ -37,20 +61,25 @@ def check_data_voxel(data_voxel):
     """
 
     # check fields
-    key_list = [
-        "date",
-        "duration",
-        "seconds",
-        "status",
-        "data_geom",
-    ]
-    datachecker.check_dict("data_voxel", data_voxel, key_list=key_list)
+    schema = {
+        "type": "object",
+        "required": [
+            "date",
+            "duration",
+            "seconds",
+            "status",
+            "data_geom",
+        ],
+    }
+
+    # validate base schema
+    jsonschema.validate(instance=data_voxel, schema=schema)
 
     # extract fields
+    status = data_voxel["status"]
     data_geom = data_voxel["data_geom"]
-    datachecker.check_dict("data_geom", data_geom)
 
-    return data_geom
+    return status, data_geom
 
 
 def check_data_solution(data_solution):
@@ -59,20 +88,24 @@ def check_data_solution(data_solution):
     """
 
     # check fields
-    key_list = [
-        "date",
-        "duration",
-        "seconds",
-        "status",
-        "data_init",
-        "data_sweep",
-    ]
-    datachecker.check_dict("data_solution", data_solution, key_list=key_list)
+    schema = {
+        "type": "object",
+        "required": [
+            "date",
+            "duration",
+            "seconds",
+            "status",
+            "data_init",
+            "data_sweep",
+        ],
+    }
+
+    # validate base schema
+    jsonschema.validate(instance=data_solution, schema=schema)
 
     # extract fields
+    status = data_solution["status"]
     data_init = data_solution["data_init"]
     data_sweep = data_solution["data_sweep"]
-    datachecker.check_dict("data_geom", data_init)
-    datachecker.check_dict("data_geom", data_sweep)
 
-    return data_init, data_sweep
+    return status, data_init, data_sweep

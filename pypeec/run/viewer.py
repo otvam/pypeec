@@ -87,7 +87,7 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
 
 def run(
         data_voxel, data_viewer,
-        tag_plot=None, plot_mode="qt", folder=".", name=None,
+        tag_plot=None, plot_mode="qt", folder=None, name=None,
 ):
     """
     Main script for visualizing a 3D voxel structure.
@@ -96,7 +96,9 @@ def run(
 
     # check the voxel data
     LOGGER.info("check the voxel data")
-    data_geom = check_data_options.check_data_voxel(data_voxel)
+    (status, data_geom) = check_data_options.check_data_voxel(data_voxel)
+    if not status:
+        LOGGER.warning("invalid status for the voxel data")
 
     # check the input data
     LOGGER.info("check the input data")

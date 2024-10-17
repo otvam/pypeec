@@ -141,7 +141,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
 
 def run(
         data_solution, data_plotter,
-        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=".", name=None
+        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=None, name=None
 ):
     """
     Main script for plotting the solution of a PEEC problem.
@@ -150,7 +150,9 @@ def run(
 
     # check the solution data
     LOGGER.info("check the solution data")
-    (data_init, data_sweep) = check_data_options.check_data_solution(data_solution)
+    (status, data_init, data_sweep) = check_data_options.check_data_solution(data_solution)
+    if not status:
+        LOGGER.warning("invalid status for the solution data")
 
     # check the input data
     LOGGER.info("check the input data")

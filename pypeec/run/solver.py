@@ -385,7 +385,9 @@ def run(data_voxel, data_problem, data_tolerance):
 
     # check the voxel data
     LOGGER.info("check the voxel data")
-    data_geom = check_data_options.check_data_voxel(data_voxel)
+    (status, data_geom) = check_data_options.check_data_voxel(data_voxel)
+    if not status:
+        LOGGER.warning("invalid status for the voxel data")
 
     # check the input data
     LOGGER.info("check the input data")
