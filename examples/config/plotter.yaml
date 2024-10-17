@@ -56,13 +56,13 @@
 #       - arrow_threshold: relative threshold for hiding arrows with small scalar values
 #       - arrow_scale: relative arrow length (with respect to the voxel size)
 #
-#   - "convergence": plot the convergence of the iterative matrix solver
+#   - "convergence": plot the convergence of the iterative matrix solver (matplotlib)
 #       - color_active: color of the plot for the active power
 #       - color_reactive: color of the plot for the reactive power
 #       - marker: plot marker size
 #       - width: line line width
 #
-#   - "convergence": plot the solver residuum (histogram)
+#   - "convergence": plot the solver residuum histogram (matplotlib)
 #       - n_bins: number of bins
 #       - tol_bins: relative tolerance for the bin boundaries
 #       - bar_color: fill color of the bins
@@ -81,6 +81,7 @@
         "title": "Material"
         "color_electric": "darkorange"
         "color_magnetic": "gainsboro"
+        "color_electromagnetic": "darkviolet"
         "color_current_source": "forestgreen"
         "color_voltage_source": "royalblue"
 "V_c_norm":

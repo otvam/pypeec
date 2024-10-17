@@ -18,13 +18,17 @@
                     "type": "number"
                     "minimum": 0
             "xyz_min":
-                "type": ["null", "array"]
+                "type":
+                    - "null"
+                    - "array"
                 "minItems": 3
                 "maxItems": 3
                 "items":
                     "type": "number"
             "xyz_max":
-                "type": ["null", "array"]
+                "type":
+                    - "null"
+                    - "array"
                 "minItems": 3
                 "maxItems": 3
                 "items":

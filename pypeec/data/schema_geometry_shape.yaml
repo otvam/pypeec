@@ -27,7 +27,9 @@
         - "coord_holes"
     properties:
         "buffer":
-            "type": ["null", "number"]
+            "type":
+                - "null"
+                - "number"
             "minimum": 0
         "coord_shell":
             "type": "array"
@@ -101,19 +103,27 @@
             "cz":
                 "type": "number"
             "simplify":
-                "type": ["null", "number"]
+                "type":
+                    - "null"
+                    - "number"
                 "minimum": 0
             "construct":
-                "type": ["null", "number"]
+                "type":
+                    - "null"
+                    - "number"
                 "minimum": 0
             "xy_min":
-                "type": ["null", "array"]
+                "type":
+                    - "null"
+                    - "array"
                 "minItems": 2
                 "maxItems": 2
                 "items":
                     "type": "number"
             "xy_max":
-                "type": ["null", "array"]
+                "type":
+                    - "null"
+                    - "array"
                 "minItems": 2
                 "maxItems": 2
                 "items":
@@ -155,10 +165,15 @@
                             "minLength": 1
                     "shape_operation":
                         "type": "string"
-                        "enum": ["add", "sub"]
+                        "enum":
+                            - "add"
+                            - "sub"
                     "shape_type":
                         "type": "string"
-                        "enum": ["trace", "pad", "polygon"]
+                        "enum":
+                            - "trace"
+                            - "pad"
+                            - "polygon"
                 "allOf":
                     -
                         if:

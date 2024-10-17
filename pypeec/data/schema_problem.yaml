@@ -23,13 +23,20 @@
                         "minLength": 1
                 "material_type":
                     "type": "string"
-                    "enum": ["electric", "magnetic", "electromagnetic"]
+                    "enum":
+                        - "electric"
+                        - "magnetic"
+                        - "electromagnetic"
                 "orientation_type":
                     "type": "string"
-                    "enum": ["isotropic", "anisotropic"]
+                    "enum":
+                        - "isotropic"
+                        - "anisotropic"
                 "var_type":
                     "type": "string"
-                    "enum": ["lumped", "distributed"]
+                    "enum":
+                        - "lumped"
+                        - "distributed"
     "source_def":
         "type": "object"
         "minProperties": 1
@@ -48,10 +55,14 @@
                         "minLength": 1
                 "source_type":
                     "type": "string"
-                    "enum": ["current", "voltage"]
+                    "enum":
+                        - "current"
+                        - "voltage"
                 "var_type":
                     "type": "string"
-                    "enum": ["lumped", "distributed"]
+                    "enum":
+                        - "lumped"
+                        - "distributed"
     "sweep_solver":
         "type": "object"
         "minProperties": 1
@@ -62,7 +73,9 @@
                 - "param"
             "properties":
                 "init":
-                    "type": ["null", "string"]
+                    "type":
+                        - "null"
+                        - "string"
                     "minLength": 1
                 "param":
                     "type": "object"
@@ -94,4 +107,6 @@
                                             - "chi_re"
                                             - "chi_im"
                                 "additionalProperties":
-                                    "type": ["number", "array"]
+                                    "type":
+                                        - "number"
+                                        - "array"

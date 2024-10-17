@@ -10,7 +10,9 @@
     "properties":
         "solver":
             "type": "string"
-            "enum": [ "gmres", "gcrot" ]
+            "enum":
+                - "gmres"
+                - "gcrot"
         "n_inner":
             "type": "integer"
             "minimum": 0
@@ -121,13 +123,17 @@
             "n_jobs":
                 "type": "integer"
             "n_threads":
-                "type": [ "null", "integer" ]
+                "type":
+                    - "null"
+                    - "integer"
     "integral_simplify":
         "type": "number"
         "minimum": 0
     "mult_type":
         "type": "string"
-        "enum": [ "fft", "direct" ]
+        "enum":
+            - "fft"
+            - "direct"
     "fft_options":
         "type": "object"
         "required":
@@ -142,16 +148,23 @@
                 "type": "boolean"
             "library":
                 "type": "string"
-                "enum": [ "SciPy", "FFTW", "CuPy" ]
+                "enum":
+                    - "SciPy"
+                    - "FFTW"
+                    - "CuPy"
             "scipy_worker":
                 "type": "integer"
             "fftw_thread":
                 "type": "integer"
             "fftw_timeout":
-                "type": [ "null", "number" ]
+                "type":
+                    - "null"
+                    - "number"
                 "minimum": 0
             "fftw_byte_align":
-                "type": [ "null", "integer" ]
+                "type":
+                    - "null"
+                    - "integer"
                 "minimum": 0
     "factorization_options":
         "type": "object"
@@ -162,7 +175,11 @@
         "properties":
             "library":
                 "type": "string"
-                "enum": [ "SuperLU", "UMFPACK", "PARDISO", "PyAMG" ]
+                "enum":
+                    - "SuperLU"
+                    - "UMFPACK"
+                    - "PARDISO"
+                    - "PyAMG"
             "pyamg_options":
                 "type": "object"
                 "required":
@@ -175,10 +192,17 @@
                         "minimum": 0
                     "solver":
                         "type": "string"
-                        "enum": [ "adapt", "root" ]
+                        "enum":
+                            - "adapt"
+                            - "root"
                     "krylov":
-                        "type": [ "null", "string" ]
-                        "enum": [ null, "gmres", "fgmres" ]
+                        "type":
+                            - "null"
+                            - "string"
+                        "enum":
+                            - null
+                            - "gmres"
+                            - "fgmres"
             "pardiso_options":
                 "type": "object"
                 "required":
@@ -186,9 +210,13 @@
                     - "thread_mkl"
                 "properties":
                     "thread_pardiso":
-                        "type": [ "null", "integer" ]
+                        "type":
+                            - "null"
+                            - "integer"
                     "thread_mkl":
-                        "type": [ "null", "integer" ]
+                        "type":
+                            - "null"
+                            - "integer"
     "solver_options":
         "type": "object"
         "required":
@@ -200,7 +228,9 @@
         "properties":
             "coupling":
                 "type": "string"
-                "enum": [ "direct", "segregated" ]
+                "enum":
+                    - "direct"
+                    - "segregated"
             "tolerance_options": *tolerance_options
             "power_options": *power_options
             "direct_options": *iter_options

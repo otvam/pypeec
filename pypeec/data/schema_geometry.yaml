@@ -9,9 +9,11 @@
 "properties":
     "mesh_type":
         "type": "string"
-        "enum": ["png", "stl", "shape", "voxel"]
-    "data_voxelize":
-        "type": "object"
+        "enum":
+            - "png"
+            - "stl"
+            - "shape"
+            - "voxel"
     "data_point":
         "type": "object"
         "required":
