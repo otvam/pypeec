@@ -1,3 +1,4 @@
+#############################################################################
 "shape_data_pad": &shape_data_pad
     "type": "object"
     "required":
@@ -17,6 +18,7 @@
                 "items":
                     "type": "number"
 
+#############################################################################
 "shape_data_polygon": &shape_data_polygon
     "type": "object"
     "required":
@@ -48,6 +50,7 @@
                     "items":
                         "type": "number"
 
+#############################################################################
 "shape_data_trace": &shape_data_trace
     "type": "object"
     "required":
@@ -67,6 +70,7 @@
                 "items":
                     "type": "number"
 
+#############################################################################
 "type": "object"
 "required":
     - "param"
@@ -95,7 +99,7 @@
                 "type": "number"
                 "minimum": 0
             "cz":
-                "type": ["null", "number"]
+                "type": "number"
             "simplify":
                 "type": ["null", "number"]
                 "minimum": 0
