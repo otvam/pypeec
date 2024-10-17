@@ -6,11 +6,11 @@ Dependencies
 
 **PyPEEC** is entirely programmed in **Python 3** and has the following dependencies:
 
-* scilogger and scisave (logging and serialization)
-* NumPy, SciPy, and Joblib (numerical libraries)
-* Pillow (for the mesher, image manipulation)
-* Shapely and Rasterio (for the mesher, 2D shape manipulation)
-* VTK and PyVista (for the mesher, 3D shape manipulation)
+* scilogger, scisave, and jsonschema (logging and serialization)
+* NumPy, SciPy, and Joblib (basic numerical computing libraries)
+* Shapely and Rasterio (only used for the mesher, 2D shape manipulation)
+* Pillow (only used for the mesher, 2D image manipulation)
+* VTK and PyVista (only used for for the mesher, 3D shape manipulation)
 
 Additionally, the following **libraries** are used for the **plotter** and **viewer**:
 
