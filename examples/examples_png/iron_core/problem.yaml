@@ -37,10 +37,10 @@
     "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
     "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
     "gnd": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
-"sweep_config":
-    "sim_default": null
-"sweep_param":
+"sweep_solver":
     "sim_default":
-        "freq": 1.0e+3
-        "material_val": *material_val
-        "source_val": *source_val
+        "init": null
+        "param":
+            "freq": 1.0e+3
+            "material_val": *material_val
+            "source_val": *source_val

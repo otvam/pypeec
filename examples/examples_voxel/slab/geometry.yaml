@@ -16,6 +16,7 @@
         "wire": [13, 22, 31, 40, 49]
         "src": [4]
         "sink": [58]
+        "empty": []
 "data_point":
     "check_cloud": true
     "full_cloud": true

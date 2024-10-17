@@ -12,6 +12,11 @@
         "material_type": "electric"
         "orientation_type": "isotropic"
         "var_type": "lumped"
+    "empty":
+        "domain_list": ["empty"]
+        "material_type": "electric"
+        "orientation_type": "isotropic"
+        "var_type": "lumped"
 "source_def":
     "src":
         "domain_list": ["src"]
@@ -21,20 +26,27 @@
         "domain_list": ["sink"]
         "source_type": "voltage"
         "var_type": "lumped"
+    "empty":
+        "domain_list": ["empty"]
+        "source_type": "voltage"
+        "var_type": "lumped"
 "material_val": &material_val
     "copper": {"rho_re": 1.0e-8, "rho_im": 0.0}
+    "empty": {"rho_re": 0.0, "rho_im": 0.0}
 "source_val": &source_val
     "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 80.0e+3, "Y_im": 0.0}
     "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 6.0e-6, "Z_im": 0.0}
-"sweep_config":
-    "sim_dc": null
-    "sim_ac": "sim_dc"
-"sweep_param":
+    "empty": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
+"sweep_solver":
     "sim_dc":
-        "freq": 0.0
-        "material_val": *material_val
-        "source_val": *source_val
+        "init": null
+        "param":
+            "freq": 0.0
+            "material_val": *material_val
+            "source_val": *source_val
     "sim_ac":
-        "freq": 1.0e+3
-        "material_val": *material_val
-        "source_val": *source_val
+        "init": "sim_dc"
+        "param":
+            "freq": 1.0e+3
+            "material_val": *material_val
+            "source_val": *source_val
