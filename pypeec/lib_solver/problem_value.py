@@ -231,15 +231,6 @@ def get_source_vector(source_all, source_type_ref):
             Y_im = source_all_tmp["Y_im"]
             value = I_re+1j*I_im
             element = Y_re+1j*Y_im
-
-            # scale the lumped parameters
-            if var_type == "lumped":
-                value = value/len(idx)
-                element = element/len(idx)
-            elif var_type == "distributed":
-                pass
-            else:
-                raise ValueError("invalid variable type")
         elif source_type == "voltage":
             # extract the data
             V_re = source_all_tmp["V_re"]
@@ -248,16 +239,17 @@ def get_source_vector(source_all, source_type_ref):
             Z_im = source_all_tmp["Z_im"]
             value = V_re+1j*V_im
             element = Z_re+1j*Z_im
-
-            # scale the lumped parameters
-            if var_type == "lumped":
-                element = element*len(idx)
-            elif var_type == "distributed":
-                pass
-            else:
-                raise ValueError("invalid variable type")
         else:
             raise ValueError("invalid source type")
+
+        # scale the lumped parameters for current source
+        if (source_type == "current") and (var_type == "lumped"):
+            value = value/len(idx)
+            element = element/len(idx)
+
+        # scale the lumped parameters for voltage source
+        if (source_type == "voltage") and (var_type == "lumped"):
+            element = element*len(idx)
 
         # check size
         if len(value) != len(idx):
