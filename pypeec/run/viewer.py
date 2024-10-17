@@ -24,7 +24,7 @@ from pypeec.lib_visualization import parse_voxel
 from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
-from pypeec.lib_check import check_data_format
+from pypeec.lib_check import check_data_options
 
 # get a logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
@@ -96,15 +96,15 @@ def run(
 
     # check the voxel data
     LOGGER.info("check the voxel data")
-    (status, data_geom) = check_data_format.check_data_voxel(data_voxel)
+    (status, data_geom) = check_data_options.check_data_voxel(data_voxel)
     if not status:
         LOGGER.warning("invalid status for the voxel data")
 
     # check the input data
     LOGGER.info("check the input data")
     check_data_visualization.check_data_viewer(data_viewer)
-    check_data_format.check_plot_options(plot_mode, folder, name)
-    check_data_format.check_tag_list(data_viewer, tag_plot)
+    check_data_options.check_plot_options(plot_mode, folder, name)
+    check_data_options.check_tag_list(data_viewer, tag_plot)
 
     # find the plots
     if tag_plot is not None:

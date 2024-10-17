@@ -35,13 +35,13 @@
 "sweep_solver":
     "sim_dc":
         "init": null
-        "data_param":
+        "param":
             "freq": 0.0
             "material_val": *material_val
             "source_val": *source_val
     "sim_ac":
         "init": "sim_dc"
-        "data_param":
+        "param":
             "freq": 1.0e+3
             "material_val": *material_val
             "source_val": *source_val

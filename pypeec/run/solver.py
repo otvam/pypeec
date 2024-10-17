@@ -29,6 +29,7 @@ from pypeec.lib_solver import extract_convergence
 from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_format
+from pypeec.lib_check import check_data_options
 
 
 # get a logger
@@ -391,7 +392,7 @@ def run(data_voxel, data_problem, data_tolerance):
 
     # check the voxel data
     LOGGER.info("check the voxel data")
-    (status, data_geom) = check_data_format.check_data_voxel(data_voxel)
+    (status, data_geom) = check_data_options.check_data_voxel(data_voxel)
     if not status:
         LOGGER.warning("invalid status for the voxel data")
 
