@@ -101,7 +101,9 @@
                 "type": "number"
                 "minimum": 0
             "cz":
-                "type": "number"
+                "type":
+                    - "null"
+                    - "number"
             "simplify":
                 "type":
                     - "null"

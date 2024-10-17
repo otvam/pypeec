@@ -321,7 +321,8 @@ def _get_layer_stack(layer_stack, dz, cz):
     stack_pos *= dz
 
     # add offset
-    stack_pos += cz
+    if cz is not None:
+        stack_pos += cz
 
     return stack_pos, stack_idx, stack_tag
 
