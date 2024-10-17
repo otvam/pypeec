@@ -40,6 +40,11 @@ def _get_group_indices(domain_def, domain_group):
 
         # get the indices and colors
         for tag in domain_group_tmp:
+            # check domain
+            if tag not in domain_def:
+                raise RuntimeError("invalid domain: name not found: %s" % tag)
+
+            # add indices
             idx_tmp = np.append(idx_tmp, domain_def[tag])
 
         if len(idx_tmp) > 0:

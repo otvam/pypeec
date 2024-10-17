@@ -313,6 +313,10 @@ def _get_layer_stack(layer_stack, dz, cz):
     stack_pos = np.append(0, np.cumsum(stack_n))
     stack_pos = stack_pos-np.sum(stack_n)/2
 
+    # check layer tag names
+    if not (len(np.unique(stack_tag)) == len(stack_tag)):
+        raise RuntimeError("layer tag name should be unique")
+
     # scale the dimension
     stack_pos *= dz
 

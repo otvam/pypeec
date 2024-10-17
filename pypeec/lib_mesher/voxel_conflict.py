@@ -26,6 +26,12 @@ def _get_solve_overlap(domain_def, conflict_rules):
     # apply the conflict resolution rule
     for domain_keep_tmp in domain_keep:
         for domain_resolve_tmp in domain_resolve:
+            # check domain
+            if domain_keep_tmp not in domain_def:
+                raise RuntimeError("invalid domain: name not found: %s" % domain_keep_tmp)
+            if domain_resolve_tmp not in domain_def:
+                raise RuntimeError("invalid domain: name not found: %s" % domain_resolve_tmp)
+
             # get the indices
             idx_keep = domain_def[domain_keep_tmp]
             idx_resolve = domain_def[domain_resolve_tmp]
