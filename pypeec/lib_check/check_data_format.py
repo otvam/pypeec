@@ -1,12 +1,19 @@
 """
-Module for the user provided options.
+Module for the checking the data formats.
 """
 
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import importlib.resources
 import jsonschema
+import scisave
+
+
+# preload the schemas
+with importlib.resources.path("pypeec.data", "schema_geometry.yaml") as file:
+    SCHEMA_GEOMETRY = scisave.load_config(file)
 
 
 def check_tag_list(data_check, tag_list):
@@ -31,7 +38,6 @@ def check_tag_list(data_check, tag_list):
         for tag in tag_list:
             if tag not in data_check:
                 raise ValueError("invalid tag list: name not found: %s" % tag)
-
 
 
 def check_plot_options(plot_mode, folder, name):
@@ -109,3 +115,12 @@ def check_data_solution(data_solution):
     data_sweep = data_solution["data_sweep"]
 
     return status, data_init, data_sweep
+
+
+def check_data_geometry(data_geometry):
+    """
+    Check the mesher data type and extract the data.
+    """
+
+    jsonschema.validate(instance=data_geometry, schema=SCHEMA_GEOMETRY)
+

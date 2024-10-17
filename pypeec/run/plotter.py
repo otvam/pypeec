@@ -29,7 +29,7 @@ from pypeec.lib_visualization import manage_pyvista
 from pypeec.lib_visualization import manage_matplotlib
 from pypeec.lib_visualization import manage_plotgui
 from pypeec.lib_check import check_data_visualization
-from pypeec.lib_check import check_data_options
+from pypeec.lib_check import check_data_format
 
 # get a logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
@@ -150,16 +150,16 @@ def run(
 
     # check the solution data
     LOGGER.info("check the solution data")
-    (status, data_init, data_sweep) = check_data_options.check_data_solution(data_solution)
+    (status, data_init, data_sweep) = check_data_format.check_data_solution(data_solution)
     if not status:
         LOGGER.warning("invalid status for the solution data")
 
     # check the input data
     LOGGER.info("check the input data")
     check_data_visualization.check_data_plotter(data_plotter)
-    check_data_options.check_plot_options(plot_mode, folder, name)
-    check_data_options.check_tag_list(data_sweep, tag_sweep)
-    check_data_options.check_tag_list(data_plotter, tag_plot)
+    check_data_format.check_plot_options(plot_mode, folder, name)
+    check_data_format.check_tag_list(data_sweep, tag_sweep)
+    check_data_format.check_tag_list(data_plotter, tag_plot)
 
     # find the plots
     if tag_sweep is not None:

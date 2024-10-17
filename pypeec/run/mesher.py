@@ -27,7 +27,7 @@ from pypeec.lib_mesher import voxel_conflict
 from pypeec.lib_mesher import voxel_resampling
 from pypeec.lib_mesher import voxel_integrity
 from pypeec.lib_mesher import voxel_summary
-from pypeec.lib_check import check_data_geometry
+from pypeec.lib_check import check_data_format
 
 # get a logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
@@ -232,7 +232,7 @@ def run(data_geometry):
 
     # check the input data
     LOGGER.info("check the input data")
-    check_data_geometry.check_data_geometry(data_geometry)
+    check_data_format.check_data_geometry(data_geometry)
 
     # run the mesher
     (reference, data_internal) = _run_mesher(data_geometry)

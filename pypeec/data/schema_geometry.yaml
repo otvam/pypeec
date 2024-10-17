@@ -124,3 +124,36 @@
                                     "minLength": 1
                         "connected":
                             "type": "boolean"
+"allOf":
+    -
+        if:
+            "properties":
+                "mesh_type":
+                    "const": "shape"
+        "then":
+            "properties":
+                "data_voxelize": !include schema_geometry_shape.yaml
+    -
+        if:
+            "properties":
+                "mesh_type":
+                    "const": "voxel"
+        "then":
+            "properties":
+                "data_voxelize": !include schema_geometry_voxel.yaml
+    -
+        if:
+            "properties":
+                "mesh_type":
+                    "const": "stl"
+        "then":
+            "properties":
+                "data_voxelize": !include schema_geometry_stl.yaml
+    -
+        if:
+            "properties":
+                "mesh_type":
+                    "const": "png"
+        "then":
+            "properties":
+                "data_voxelize": !include schema_geometry_png.yaml

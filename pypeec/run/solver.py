@@ -29,7 +29,7 @@ from pypeec.lib_solver import extract_convergence
 from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
 from pypeec.lib_check import check_data_solver
-from pypeec.lib_check import check_data_options
+from pypeec.lib_check import check_data_format
 
 
 # get a logger
@@ -385,7 +385,7 @@ def run(data_voxel, data_problem, data_tolerance):
 
     # check the voxel data
     LOGGER.info("check the voxel data")
-    (status, data_geom) = check_data_options.check_data_voxel(data_voxel)
+    (status, data_geom) = check_data_format.check_data_voxel(data_voxel)
     if not status:
         LOGGER.warning("invalid status for the voxel data")
 
@@ -403,9 +403,9 @@ def run(data_voxel, data_problem, data_tolerance):
         (data_init, data_internal, parallel_sweep) = _run_solver_init(data_solver)
 
     # function for solving a single sweep
-    def fct_compute(tag, data, init):
+    def fct_compute(tag, data_param, init):
         with LOGGER.BlockTimer("run sweep: " + tag):
-            (output, init) = _run_solver_sweep(data_solver, data_internal, data, init)
+            (output, init) = _run_solver_sweep(data_solver, data_internal, data_param, init)
         return output, init
 
     # compute the different sweeps
