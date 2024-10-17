@@ -14,30 +14,153 @@ import numpy as np
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def get_material_indices(material_idx):
+def _get_domain_indices(domain_list, domain_def):
     """
-    Get the indices of the voxels for the different material types.
+    Get indices from a list of domain names.
     """
 
-    # array for the indices
+    idx_all = np.empty(0, dtype=np.int_)
+    for tag in domain_list:
+        idx_tmp = np.array(domain_def[tag], dtype=np.int_)
+        idx_all = np.append(idx_all, idx_tmp)
+
+    return idx_all
+
+
+def _check_indices(idx_vc, idx_src_c, idx_src_v):
+    """
+    Check that the material and source indices are valid.
+    The indices should be unique and compatible with the voxel size.
+    The source indices should be included in the electric indices.
+    Check that there is at least one source per connected electrical.
+    """
+
+    # check the indices
+    if len(idx_vc) == 0:
+        raise RuntimeError("electric indices cannot be empty")
+
+    if (len(idx_src_c) == 0) and (len(idx_src_v) == 0):
+        raise RuntimeError("source indices cannot be empty")
+
+    # check that the terminal indices are electric indices
+    if not np.all(np.in1d(idx_src_c, idx_vc)):
+        raise RuntimeError("current source indices should overlap with electric indices")
+    if not np.all(np.in1d(idx_src_v, idx_vc)):
+        raise RuntimeError("voltage source indices should overlap with electric indices")
+
+
+def _check_source_graph(idx_vc, idx_src_c, idx_src_v, graph_def):
+    """
+    Check that there is at least one source per connected component.
+    A connected components without a source would lead to a singular problem.
+    """
+
+    for idx_graph in graph_def:
+        has_electric = len(np.intersect1d(idx_graph, idx_vc)) > 0
+        has_current_source = len(np.intersect1d(idx_graph, idx_src_c)) > 0
+        has_voltage_source = len(np.intersect1d(idx_graph, idx_src_v)) > 0
+
+        if has_electric:
+            if not (has_current_source or has_voltage_source):
+                raise RuntimeError("electric components should include at least one source")
+
+
+def get_problem_type(idx_vc, idx_vm, idx_src_c, idx_src_v, graph_def):
+
+    # check the existence of magnetic domains
+    has_electric = len(idx_vc) > 0
+    has_magnetic = len(idx_vm) > 0
+    has_coupling = has_electric and has_magnetic
+
+    # check voxel indices
+    _check_indices(idx_vc, idx_src_c, idx_src_v)
+    _check_source_graph(idx_vc, idx_src_c, idx_src_v, graph_def)
+
+    # check the existence of magnetic domains
+    has_electric = len(idx_vc) > 0
+    has_magnetic = len(idx_vm) > 0
+
+    return  has_electric, has_magnetic
+
+
+def get_material_idx(material_def, domain_def):
+    """
+    Get the indices of the material.
+    Create a new dict with the indices in place of the domain names.
+    Split the electric and magnetic materials.
+    """
+
+    # init
+    material_idx = {}
     idx_vc = np.empty(0, dtype=np.int_)
     idx_vm = np.empty(0, dtype=np.int_)
 
-    # populate the arrays
-    for tag, material_idx_tmp in material_idx.items():
+    for tag, material_def_tmp in material_def.items():
         # extract the data
-        material_type = material_idx_tmp["material_type"]
-        idx = material_idx_tmp["idx"]
+        var_type = material_def_tmp["var_type"]
+        material_type = material_def_tmp["material_type"]
+        orientation_type = material_def_tmp["orientation_type"]
+        domain_list = material_def_tmp["domain_list"]
 
-        # get the electric materials
-        if material_type in ["electric", "electromagnetic"]:
+        # get indices
+        idx = _get_domain_indices(domain_list, domain_def)
+
+        # assign the indices
+        if material_type == "electric":
             idx_vc = np.append(idx_vc, idx)
-
-        # get the magnetic materials
-        if material_type in ["magnetic", "electromagnetic"]:
+        elif material_type == "magnetic":
             idx_vm = np.append(idx_vm, idx)
+        elif material_type == "electromagnetic":
+            idx_vc = np.append(idx_vc, idx)
+            idx_vm = np.append(idx_vm, idx)
+        else:
+            raise ValueError("invalid material type")
 
-    return idx_vc, idx_vm
+        # assign the material
+        material_idx[tag] = {
+            "idx": idx,
+            "var_type": var_type,
+            "material_type": material_type,
+            "orientation_type": orientation_type,
+        }
+
+    return idx_vc, idx_vm, material_idx
+
+
+def get_source_idx(source_def, domain_def):
+    """
+    Get the indices of the sources.
+    Create a new dict with the indices in place of the domain names.
+    """
+
+    # init
+    source_idx = {}
+    idx_src_c = np.empty(0, dtype=np.int_)
+    idx_src_v = np.empty(0, dtype=np.int_)
+
+    for tag, source_def_tmp in source_def.items():
+        # extract the data
+        var_type = source_def_tmp["var_type"]
+        source_type = source_def_tmp["source_type"]
+        domain_list = source_def_tmp["domain_list"]
+
+        # get indices
+        idx = _get_domain_indices(domain_list, domain_def)
+
+        # assign the indices
+        if source_type == "current":
+            idx_src_c = np.append(idx_src_c, idx)
+        if source_type == "voltage":
+            idx_src_v = np.append(idx_src_v, idx)
+
+        # get the source value
+        source_idx[tag] = {
+            "idx": idx,
+            "source_type": source_type,
+            "var_type": var_type,
+        }
+
+    return idx_src_c, idx_src_v, source_idx
 
 
 def get_material_pos(material_idx, idx_vc, idx_vm):
@@ -45,9 +168,6 @@ def get_material_pos(material_idx, idx_vc, idx_vm):
     Get the indices of the electric and magnetic materials.
     Convert from voxel indices to solver indices.
     """
-
-    # init material dict
-    material_pos = {}
 
     # parse the material domains
     for tag, material_idx_tmp in material_idx.items():
@@ -63,33 +183,10 @@ def get_material_pos(material_idx, idx_vc, idx_vm):
         idx_vm_tmp = np.flatnonzero(idx_vm_tmp)
 
         # assign the losses
-        material_pos[tag] = {"idx_vc": idx_vc_tmp, "idx_vm": idx_vm_tmp}
+        material_idx[tag]["idx_vc"] = idx_vc_tmp
+        material_idx[tag]["idx_vm"] = idx_vm_tmp
 
-    return material_pos
-
-
-def get_source_indices(source_idx):
-    """
-    Get the indices of the source voxels (current and voltage sources).
-    """
-
-    # array for the source indices
-    idx_src_c = np.empty(0, dtype=np.int_)
-    idx_src_v = np.empty(0, dtype=np.int_)
-
-    # populate the arrays with the current sources
-    for tag, source_idx_tmp in source_idx.items():
-        # extract the data
-        source_type = source_idx_tmp["source_type"]
-        idx = source_idx_tmp["idx"]
-
-        # assign the indices
-        if source_type == "current":
-            idx_src_c = np.append(idx_src_c, idx)
-        if source_type == "voltage":
-            idx_src_v = np.append(idx_src_v, idx)
-
-    return idx_src_c, idx_src_v
+    return material_idx
 
 
 def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
@@ -97,9 +194,6 @@ def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
     Get the indices of the source terminal voltages and currents.
     Convert from voxel indices to solver indices.
     """
-
-    # init source dict
-    source_pos = {}
 
     # assemble indices
     idx_src = np.concatenate((idx_src_c, idx_src_v))
@@ -118,9 +212,10 @@ def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
         idx_src_tmp = np.flatnonzero(idx_src_tmp)
 
         # assign the current and voltage
-        source_pos[tag] = {"idx_vc": idx_vc_tmp, "idx_src": idx_src_tmp}
+        source_idx[tag]["idx_vc"] = idx_vc_tmp
+        source_idx[tag]["idx_src"] = idx_src_tmp
 
-    return source_pos
+    return source_idx
 
 
 def get_reduce_matrix(pts_vox, A_vox, idx_v):

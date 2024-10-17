@@ -16,7 +16,7 @@ import scilogger
 from pypeec.lib_matrix import matrix_factorization
 from pypeec.lib_matrix import multiply_fft
 from pypeec.lib_matrix import fourier_transform
-from pypeec.lib_solver import sweep_solver
+from pypeec.lib_solver import sweep_joblib
 from pypeec.lib_solver import voxel_geometry
 from pypeec.lib_solver import system_tensor
 from pypeec.lib_solver import problem_geometry
@@ -28,7 +28,6 @@ from pypeec.lib_solver import extract_solution
 from pypeec.lib_solver import extract_convergence
 from pypeec.lib_check import check_data_problem
 from pypeec.lib_check import check_data_tolerance
-from pypeec.lib_check import check_data_solver
 from pypeec.lib_check import check_data_format
 
 
@@ -63,12 +62,12 @@ def _run_solver_init(data_solver):
     parallel_sweep = data_solver["parallel_sweep"]
     integral_simplify = data_solver["integral_simplify"]
     mult_type = data_solver["mult_type"]
-    has_coupling = data_solver["has_coupling"]
-    has_electric = data_solver["has_electric"]
-    has_magnetic = data_solver["has_magnetic"]
-    material_idx = data_solver["material_idx"]
-    source_idx = data_solver["source_idx"]
+    source_def = data_solver["source_def"]
+    material_def = data_solver["material_def"]
+    domain_def = data_solver["domain_def"]
+    graph_def = data_solver["graph_def"]
     pts_cloud = data_solver["pts_cloud"]
+    sweep_solver = data_solver["sweep_solver"]
 
     # load and configure the optional libraries
     _run_solver_options(data_solver)
@@ -83,13 +82,19 @@ def _run_solver_init(data_solver):
 
     # parse the problem geometry (materials and sources)
     with LOGGER.BlockTimer("problem_geometry"):
-        # parse the materials
-        (idx_vc, idx_vm) = problem_geometry.get_material_indices(material_idx)
-        material_pos = problem_geometry.get_material_pos(material_idx, idx_vc, idx_vm)
+        # get indices
+        (idx_vc, idx_vm, material_idx) = problem_geometry.get_material_idx(material_def, domain_def)
+        (idx_src_c, idx_src_v, source_idx) = problem_geometry.get_source_idx(source_def, domain_def)
 
-        # parse the sources
-        (idx_src_c, idx_src_v) = problem_geometry.get_source_indices(source_idx)
-        source_pos = problem_geometry.get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v)
+        # convert the indices
+        material_idx = problem_geometry.get_material_pos(material_idx, idx_vc, idx_vm)
+        source_idx = problem_geometry.get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v)
+
+        # check problem type
+        (has_electric, has_magnetic) = problem_geometry.get_problem_type(idx_vc, idx_vm, idx_src_c, idx_src_v, graph_def)
+
+        # get coupling
+        has_coupling = has_electric and has_magnetic
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
         (pts_net_c, A_net_c, idx_fc) = problem_geometry.get_reduce_matrix(pts_vox, A_vox, idx_vc)
@@ -147,8 +152,8 @@ def _run_solver_init(data_solver):
         "P_op_m": P_op_m,
         "K_op_c": K_op_c,
         "K_op_m": K_op_m,
-        "source_pos": source_pos,
-        "material_pos": material_pos,
+        "material_idx": material_idx,
+        "source_idx": source_idx,
         "pts_net_c": pts_net_c,
         "pts_net_m": pts_net_m,
     }
@@ -170,7 +175,7 @@ def _run_solver_init(data_solver):
         "pts_net_m": pts_net_m,
     }
 
-    return data_init, data_internal, parallel_sweep
+    return data_init, data_internal, sweep_solver, parallel_sweep
 
 
 def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
@@ -181,8 +186,6 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
-    material_idx = data_solver["material_idx"]
-    source_idx = data_solver["source_idx"]
     condition_options = data_solver["condition_options"]
     solver_options = data_solver["solver_options"]
     pts_cloud = data_solver["pts_cloud"]
@@ -202,8 +205,8 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     P_op_m = data_internal["P_op_m"]
     K_op_c = data_internal["K_op_c"]
     K_op_m = data_internal["K_op_m"]
-    material_pos = data_internal["material_pos"]
-    source_pos = data_internal["source_pos"]
+    material_idx = data_internal["material_idx"]
+    source_idx = data_internal["source_idx"]
     pts_net_c = data_internal["pts_net_c"]
     pts_net_m = data_internal["pts_net_m"]
 
@@ -217,11 +220,15 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
 
     # get the material and source values
     with LOGGER.BlockTimer("problem_value"):
+        # complete value
+        material_all = problem_value.get_material_value(material_val, material_idx)
+        source_val = problem_value.get_source_value(source_val, source_idx)
+
         # parse the material parameters
-        (rho_vc, rho_vm) = problem_value.get_material_vector(material_val, material_idx)
+        (rho_vc, rho_vm) = problem_value.get_material_vector(material_all)
 
         # parse the source parameters
-        source_all = problem_value.get_source_all(source_val, source_pos, source_idx)
+        source_all = problem_value.get_source_all(source_val, source_idx)
         (I_src_c, Y_src_c) = problem_value.get_source_vector(source_all, "current")
         (V_src_v, Z_src_v) = problem_value.get_source_vector(source_all, "voltage")
 
@@ -294,7 +301,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         Q_vm = extract_solution.get_divergence_density(d, A_net_m, I_fm)
 
         # get the domain losses for the different materials
-        material = extract_solution.get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm)
+        material = extract_solution.get_material(material_all, A_net_c, A_net_m, P_fc, P_fm)
 
         # get the terminal voltages and currents for the sources
         (source, S_total) = extract_solution.get_source(freq, source_all, I_src, V_vc)
@@ -396,11 +403,11 @@ def run(data_voxel, data_problem, data_tolerance):
 
     # combine the problem and voxel data
     LOGGER.info("combine the input data")
-    (data_solver, sweep_param) = check_data_solver.get_data_solver(data_geom, data_problem, data_tolerance)
+    data_solver = {**data_tolerance, **data_geom, **data_problem}
 
     # create the problem
     with LOGGER.BlockTimer("init"):
-        (data_init, data_internal, parallel_sweep) = _run_solver_init(data_solver)
+        (data_init, data_internal, sweep_solver, parallel_sweep) = _run_solver_init(data_solver)
 
     # function for solving a single sweep
     def fct_compute(tag, data_param, init):
@@ -409,7 +416,7 @@ def run(data_voxel, data_problem, data_tolerance):
         return output, init
 
     # compute the different sweeps
-    data_sweep = sweep_solver.get_run_sweep(parallel_sweep, sweep_param, fct_compute)
+    data_sweep = sweep_joblib.get_run_sweep(parallel_sweep, sweep_solver, fct_compute)
 
     # create output data
     data_solution = _get_data(data_init, data_sweep, timestamp)

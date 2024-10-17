@@ -16,7 +16,119 @@ import scipy.constants as cst
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def get_material_vector(material_val, material_idx):
+def _get_material_field(val_dict):
+    """
+    Cast and check the material vectors.
+    If the variable is a scalar, cast to an array.
+    If the variable is an array, check the length.
+    """
+
+    # extract the data
+    orientation_type = val_dict["orientation_type"]
+    material_type = val_dict["material_type"]
+    var_type = val_dict["var_type"]
+    idx = val_dict["idx"]
+
+    if material_type == "electric":
+        tag_list = ["rho_re", "rho_im"]
+    elif material_type == "magnetic":
+        tag_list = ["chi_re", "chi_im"]
+    elif material_type == "electromagnetic":
+        tag_list = ["rho_re", "rho_im", "chi_re", "chi_im"]
+    else:
+        raise ValueError("invalid material type")
+
+    for tag in tag_list:
+        # extract
+        val = val_dict[tag]
+
+        # cast
+        if var_type == "lumped" and orientation_type is None:
+            val = np.full(len(idx), val, dtype=np.float_)
+        elif var_type == "lumped" and orientation_type == "isotropic":
+            val = np.full((len(idx), 3), val, dtype=np.float_)
+        elif var_type == "lumped" and orientation_type == "anisotropic":
+            val = np.array(val, dtype=np.float_)
+            val = np.tile(val, (len(idx), 1))
+        elif var_type == "distributed" and orientation_type is None:
+            val = np.array(val, dtype=np.float_)
+        elif var_type == "distributed" and orientation_type == "isotropic":
+            val = np.array(val, dtype=np.float_)
+            val = np.tile(val, (3, 1)).transpose()
+        elif var_type == "distributed" and orientation_type == "anisotropic":
+            val = np.array(val, dtype=np.float_)
+
+        # check
+        if not (val.shape == (len(idx), 3)):
+            raise RuntimeError("vector length does not match the number of voxels")
+
+        # update
+        val_dict[tag] = val
+
+    return val_dict
+
+
+def _get_source_field(val_dict, idx, var_type):
+    """
+    Cast and check the source vectors.
+    If the variable is a scalar, cast to an array.
+    If the variable is an array, check the length.
+    """
+
+    for tag, val in val_dict.items():
+        # cast
+        if var_type == "lumped":
+            val = np.full(len(idx), val, dtype=np.float_)
+        elif var_type == "distributed":
+            val = np.array(val, dtype=np.float_)
+
+        # check
+        if not (len(val) == len(idx)):
+            raise RuntimeError("vector length does not match the number of voxels")
+
+        # update
+        val_dict[tag] = val
+
+    return val_dict
+
+
+def get_material_value(material_val, material_idx):
+    """
+    Check the size of the material values.
+    Convert the values to arrays.
+    """
+
+    # mege data
+    material_all = {}
+    for tag in material_idx:
+        material_all[tag] = {**material_val[tag], **material_idx[tag]}
+
+    # reshape data
+    for tag, material_all_tmp in material_all.items():
+        # check type
+        material_all[tag] = _get_material_field(material_all_tmp)
+
+    return material_all
+
+
+def get_source_value(source_val, source_idx):
+    """
+    Check the size of the source values.
+    Convert the values to arrays.
+    """
+
+    for tag, source_val_tmp in source_val.items():
+        # extract the data
+        var_type = source_idx[tag]["var_type"]
+        idx = source_idx[tag]["idx"]
+
+        # check type
+        source_val[tag] = _get_source_field(source_val_tmp, idx, var_type)
+
+    return source_val
+
+
+def get_material_vector(material_all):
     """
     Get the material parameters for the different material types.
     """
@@ -26,21 +138,17 @@ def get_material_vector(material_val, material_idx):
     rho_vm = np.empty((0, 3), dtype=np.complex_)
 
     # populate the arrays
-    for tag, material_idx_tmp in material_idx.items():
+    for material_all_tmp in material_all.values():
         # extract the data
-        material_type = material_idx_tmp["material_type"]
-        idx = material_idx_tmp["idx"]
+        material_type = material_all_tmp["material_type"]
+        idx = material_all_tmp["idx"]
 
         # get the resistivities for the electric materials
         if material_type in ["electric", "electromagnetic"]:
             # assemble
-            rho_re = material_val[tag]["rho_re"]
-            rho_im = material_val[tag]["rho_im"]
+            rho_re = material_all_tmp["rho_re"]
+            rho_im = material_all_tmp["rho_im"]
             rho = rho_re+1j*rho_im
-
-            # check size
-            if len(rho) != len(idx):
-                raise RuntimeError("invalid source parameters")
 
             # append the resistivities
             rho_vc = np.concatenate((rho_vc, rho))
@@ -48,14 +156,10 @@ def get_material_vector(material_val, material_idx):
         # get the resistivities for the magnetic materials
         if material_type in ["magnetic", "electromagnetic"]:
             # assemble
-            chi_re = material_val[tag]["chi_re"]
-            chi_im = material_val[tag]["chi_im"]
+            chi_re = material_all_tmp["chi_re"]
+            chi_im = material_all_tmp["chi_im"]
             chi = chi_re-1j*chi_im
             rho = 1/(cst.mu_0*chi)
-
-            # check size
-            if len(rho) != len(idx):
-                raise RuntimeError("invalid material parameters")
 
             # append the resistivities
             rho_vm = np.concatenate((rho_vm, rho))
@@ -63,7 +167,7 @@ def get_material_vector(material_val, material_idx):
     return rho_vc, rho_vm
 
 
-def get_source_all(source_val, source_pos, source_idx):
+def get_source_all(source_val, source_idx):
     """
     Merge the different source structures.
     """
@@ -76,11 +180,9 @@ def get_source_all(source_val, source_pos, source_idx):
         # extract the data
         source_type = source_idx[tag]["source_type"]
         var_type = source_idx[tag]["var_type"]
+        idx_src = source_idx[tag]["idx_src"]
+        idx_vc = source_idx[tag]["idx_vc"]
         idx = source_idx[tag]["idx"]
-
-        # extract the data
-        idx_src = source_pos[tag]["idx_src"]
-        idx_vc = source_pos[tag]["idx_vc"]
 
         # get the values and admittances/impedances for the source
         if source_type == "current":

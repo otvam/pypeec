@@ -266,7 +266,7 @@ def get_integral(P_fc, P_fm, W_fc, W_fm, S_total):
     return integral
 
 
-def get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm):
+def get_material(material_all, A_net_c, A_net_m, P_fc, P_fm):
     """
     Parse the losses for the materials.
     The results are assigned to a dict with the magnetic and electric losses.
@@ -280,10 +280,10 @@ def get_material(material_pos, A_net_c, A_net_m, P_fc, P_fm):
     P_vm = 0.5*np.abs(A_net_m)*P_fm
 
     # parse the material domains
-    for tag, material_pos_tmp in material_pos.items():
+    for tag, material_idx_tmp in material_all.items():
         # extract the data
-        idx_vc = material_pos_tmp["idx_vc"]
-        idx_vm = material_pos_tmp["idx_vm"]
+        idx_vc = material_idx_tmp["idx_vc"]
+        idx_vm = material_idx_tmp["idx_vm"]
 
         # get the domain losses
         P_vc_tmp = np.sum(P_vc[idx_vc])

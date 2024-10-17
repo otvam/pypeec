@@ -21,23 +21,20 @@ def check_tag_list(data_check, tag_list):
     Check the list of plots to be shown.
     """
 
+    # allowed tags
+    tag_allowed = list(data_check.keys())
+
     # check fields
     schema = {
         "type": ["null", "array"],
         "items": {
             "type": "string",
-            "minLength": 1,
+            "enum": tag_allowed,
         },
     }
 
     # validate base schema
     jsonschema.validate(instance=tag_list, schema=schema)
-
-    # check the list of plots
-    if tag_list is not None:
-        for tag in tag_list:
-            if tag not in data_check:
-                raise ValueError("invalid tag list: name not found: %s" % tag)
 
 
 def check_plot_options(plot_mode, folder, name):
