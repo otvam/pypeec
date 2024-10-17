@@ -1,0 +1,235 @@
+#############################################################################
+"iter_options": &iter_options
+    "type": "object"
+    "required":
+        - "solver"
+        - "n_inner"
+        - "n_outer"
+        - "rel_tol"
+        - "abs_tol"
+    "properties":
+        "solver":
+            "type": "string"
+            "enum": [ "gmres", "gcrot" ]
+        "n_inner":
+            "type": "integer"
+            "minimum": 0
+        "n_outer":
+            "type": "integer"
+            "minimum": 0
+        "rel_tol":
+            "type": "number"
+            "minimum": 0
+        "abs_tol":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"segregated_options": &segregated_options
+    "type": "object"
+    "required":
+        - "relax_electric"
+        - "relax_magnetic"
+        - "n_min"
+        - "n_max"
+        - "rel_tol"
+        - "abs_tol"
+    "properties":
+        "relax_electric":
+            "type": "number"
+            "minimum": 0
+        "relax_magnetic":
+            "type": "number"
+            "minimum": 0
+        "n_min":
+            "type": "integer"
+            "minimum": 0
+        "n_max":
+            "type": "integer"
+            "minimum": 0
+        "rel_tol":
+            "type": "number"
+            "minimum": 0
+        "abs_tol":
+            "type": "number"
+            "minimum": 0
+        "iter_electric_options": *iter_options
+        "iter_magnetic_options": *iter_options
+
+#############################################################################
+"tolerance_options": &tolerance_options
+    "type": "object"
+    "required":
+        - "ignore_status"
+        - "ignore_res"
+        - "rel_tol"
+        - "abs_tol"
+    "properties":
+        "ignore_status":
+            "type": "boolean"
+        "ignore_res":
+            "type": "boolean"
+        "rel_tol":
+            "type": "number"
+            "minimum": 0
+        "abs_tol":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"power_options": &power_options
+    "type": "object"
+    "required":
+        - "stop"
+        - "n_min"
+        - "n_cmp"
+        - "rel_tol"
+        - "abs_tol"
+    "properties":
+        "stop":
+            "type": "boolean"
+        "n_min":
+            "type": "integer"
+            "minimum": 0
+        "n_cmp":
+            "type": "integer"
+            "minimum": 0
+        "rel_tol":
+            "type": "number"
+            "minimum": 0
+        "abs_tol":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"type": "object"
+"required":
+    - "parallel_sweep"
+    - "integral_simplify"
+    - "mult_type"
+    - "fft_options"
+    - "factorization_options"
+    - "solver_options"
+    - "condition_options"
+"properties":
+    "parallel_sweep":
+        "type": "object"
+        "required":
+            - "n_jobs"
+            - "n_threads"
+        "properties":
+            "n_jobs":
+                "type": "integer"
+            "n_threads":
+                "type": [ "null", "integer" ]
+    "integral_simplify":
+        "type": "number"
+        "minimum": 0
+    "mult_type":
+        "type": "string"
+        "enum": [ "fft", "direct" ]
+    "fft_options":
+        "type": "object"
+        "required":
+            - "matrix_split"
+            - "library"
+            - "scipy_worker"
+            - "fftw_thread"
+            - "fftw_timeout"
+            - "fftw_byte_align"
+        "properties":
+            "matrix_split":
+                "type": "boolean"
+            "library":
+                "type": "string"
+                "enum": [ "SciPy", "FFTW", "CuPy" ]
+            "scipy_worker":
+                "type": "integer"
+            "fftw_thread":
+                "type": "integer"
+            "fftw_timeout":
+                "type": [ "null", "number" ]
+                "minimum": 0
+            "fftw_byte_align":
+                "type": [ "null", "integer" ]
+                "minimum": 0
+    "factorization_options":
+        "type": "object"
+        "required":
+            - "library"
+            - "pyamg_options"
+            - "pardiso_options"
+        "properties":
+            "library":
+                "type": "string"
+                "enum": [ "SuperLU", "UMFPACK", "PARDISO", "PyAMG" ]
+            "pyamg_options":
+                "type": "object"
+                "required":
+                    - "tol"
+                    - "solver"
+                    - "krylov"
+                "properties":
+                    "tol":
+                        "type": "number"
+                        "minimum": 0
+                    "solver":
+                        "type": "string"
+                        "enum": [ "adapt", "root" ]
+                    "krylov":
+                        "type": [ "null", "string" ]
+                        "enum": [ null, "gmres", "fgmres" ]
+            "pardiso_options":
+                "type": "object"
+                "required":
+                    - "thread_pardiso"
+                    - "thread_mkl"
+                "properties":
+                    "thread_pardiso":
+                        "type": [ "null", "integer" ]
+                    "thread_mkl":
+                        "type": [ "null", "integer" ]
+    "solver_options":
+        "type": "object"
+        "required":
+            - "coupling"
+            - "tolerance_options"
+            - "power_options"
+            - "direct_options"
+            - "segregated_options"
+        "properties":
+            "coupling":
+                "type": "string"
+                "enum": [ "direct", "segregated" ]
+            "tolerance_options": *tolerance_options
+            "power_options": *power_options
+            "direct_options": *iter_options
+            "segregated_options": *segregated_options
+    "condition_options":
+        "type": "object"
+        "required":
+            - "check"
+            - "tolerance_electric"
+            - "tolerance_magnetic"
+            - "norm_options"
+        "properties":
+            "check":
+                "type": "boolean"
+            "tolerance_electric":
+                "type": "number"
+                "minimum": 0
+            "tolerance_magnetic":
+                "type": "number"
+                "minimum": 0
+            "norm_options":
+                "type": "object"
+                "required":
+                    - "t_accuracy"
+                    - "n_iter_max"
+                "properties":
+                    "t_accuracy":
+                        "type": "number"
+                        "minimum": 0
+                    "n_iter_max":
+                        "type": "number"
+                        "minimum": 0
