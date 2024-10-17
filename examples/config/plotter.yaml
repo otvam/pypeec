@@ -43,7 +43,7 @@
 #       - point_size: size of the marker used for plotting on the point cloud
 #
 #   - "arrow_voxel": plot a vector phasor variable on the voxel structure (arrow plot)
-#   - "arrow_voxel": plot a vector phasor variable on the point cloud (arrow plot)
+#   - "arrow_point": plot a vector phasor variable on the point cloud (arrow plot)
 #       - title: title located at the corner of the plot (null for hiding)
 #       - legend: legend of variable being shown with the color axis (null for hiding)
 #       - var: name of the vector phasor variable to be plotted

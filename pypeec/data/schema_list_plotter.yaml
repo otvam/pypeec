@@ -76,7 +76,7 @@
             "minimum": 0
 
 #############################################################################
-"data_plot_scalar_norm": &data_plot_scalar_norm
+"data_plot_scalar_norm": &data_plot_norm
     "type": "object"
     "required":
         - "scale"
@@ -90,7 +90,7 @@
             "minimum": 0
 
 #############################################################################
-"data_plot_scalar_phasor": &data_plot_scalar_phasor
+"data_plot_scalar_phasor": &data_plot_phasor
     "type": "object"
     "required":
         - "phase"
@@ -280,7 +280,7 @@
                             - "norm_point"
             "then":
                 "properties":
-                    "data_plot": *data_plot_scalar_norm
+                    "data_plot": *data_plot_norm
                     "framework":
                         "const": "pyvista"
         -   if:
@@ -291,7 +291,7 @@
                             - "phasor_point"
             "then":
                 "properties":
-                    "data_plot": *data_plot_scalar_phasor
+                    "data_plot": *data_plot_phasor
                     "framework":
                         "const": "pyvista"
         -   if:
