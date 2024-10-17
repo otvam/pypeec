@@ -10,7 +10,7 @@ import numpy as np
 from pypeec.lib_check import datachecker
 
 
-def _check_indices(n, idx_c, idx_m, idx_s):
+def _check_indices(idx_c, idx_m, idx_s):
     """
     Check that the material and source indices are valid.
     The indices should be unique and compatible with the voxel size.
@@ -18,14 +18,10 @@ def _check_indices(n, idx_c, idx_m, idx_s):
     Check that there is at least one source per connected electrical.
     """
 
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx*ny*nz
-
     # check the indices
-    datachecker.check_index_array("index electric", idx_c, bnd=nv, can_be_empty=False)
-    datachecker.check_index_array("index magnetic", idx_m, bnd=nv, can_be_empty=True)
-    datachecker.check_index_array("index source", idx_s, bnd=nv, can_be_empty=False)
+    datachecker.check_index_array("index electric", idx_c, can_be_empty=False)
+    datachecker.check_index_array("index magnetic", idx_m, can_be_empty=True)
+    datachecker.check_index_array("index source", idx_s, can_be_empty=False)
 
     # check that the terminal indices are electric indices
     cond = np.all(np.in1d(idx_s, idx_c))
@@ -240,12 +236,8 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
     sweep_solver = data_problem["sweep_solver"]
 
     # extract geometry
-    n = data_geom["n"]
-    d = data_geom["d"]
-    c = data_geom["c"]
     domain_def = data_geom["domain_def"]
     graph_def = data_geom["graph_def"]
-    pts_cloud = data_geom["pts_cloud"]
 
     # get material and source indices
     (domain_cm, idx_c, idx_m, material_idx) = _get_material_idx(material_def, domain_def)
@@ -262,7 +254,7 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
         sweep_solver[tag] = _get_sweep_solver(sweep_solver_tmp, material_idx, source_idx)
 
     # check voxel indices
-    _check_indices(n, idx_c, idx_m, idx_s)
+    _check_indices(idx_c, idx_m, idx_s)
     _check_source_graph(idx_c, idx_s, graph_def)
 
     # check the existence of magnetic domains
@@ -272,18 +264,14 @@ def get_data_solver(data_geom, data_problem, data_tolerance):
 
     # assign combined data
     data_solver = {
-        "n": n,
-        "d": d,
-        "c": c,
         "material_idx": material_idx,
         "source_idx": source_idx,
         "has_electric": has_electric,
         "has_magnetic": has_magnetic,
         "has_coupling": has_coupling,
-        "pts_cloud": pts_cloud,
     }
 
     # add tolerance data
-    data_solver = {**data_solver, **data_tolerance}
+    data_solver = {**data_solver, **data_tolerance, **data_geom, **data_problem}
 
     return data_solver, sweep_solver

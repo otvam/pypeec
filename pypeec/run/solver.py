@@ -81,17 +81,6 @@ def _run_solver_init(data_solver):
         # compute the incidence matrix
         A_vox = voxel_geometry.get_incidence_matrix(n)
 
-    # get the Green functions
-    with LOGGER.BlockTimer("system_tensor"):
-        # Green function self-coefficient
-        G_self = system_tensor.get_green_self(d)
-
-        # Green function mutual coefficients
-        G_mutual = system_tensor.get_green_tensor(n, d, integral_simplify)
-
-        # Green function mutual coefficients
-        K_tsr = system_tensor.get_coupling_tensor(n, d, integral_simplify, has_coupling)
-
     # parse the problem geometry (materials and sources)
     with LOGGER.BlockTimer("problem_geometry"):
         # parse the materials
@@ -112,6 +101,17 @@ def _run_solver_init(data_solver):
 
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
+
+    # get the Green functions
+    with LOGGER.BlockTimer("system_tensor"):
+        # Green function self-coefficient
+        G_self = system_tensor.get_green_self(d)
+
+        # Green function mutual coefficients
+        G_mutual = system_tensor.get_green_tensor(n, d, integral_simplify)
+
+        # Green function mutual coefficients
+        K_tsr = system_tensor.get_coupling_tensor(n, d, integral_simplify, has_coupling)
 
     # get the system operators
     with LOGGER.BlockTimer("system_matrix"):
