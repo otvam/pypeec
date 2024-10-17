@@ -1,0 +1,137 @@
+#############################################################################
+"data_plot_domain": &data_plot_domain
+    "type": "object"
+    "required":
+        - "title"
+        - "colormap"
+        - "opacity"
+    properties:
+        "title":
+            "type":
+                - "null"
+                - "string"
+            "minLength": 1
+        "colormap":
+            "type": "string"
+            "minLength": 1
+        "opacity":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"data_plot_graph": &data_plot_graph
+    "type": "object"
+    "required":
+        - "title"
+        - "colormap"
+        - "opacity"
+    properties:
+        "title":
+            "type":
+                - "null"
+                - "string"
+            "minLength": 1
+        "colormap":
+            "type": "string"
+            "minLength": 1
+        "opacity":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"data_plot_mesh": &data_plot_mesh
+    "type": "object"
+    "required":
+        - "title"
+        - "color_voxel"
+        - "color_reference"
+        - "opacity_voxel"
+        - "opacity_reference"
+    properties:
+        "title":
+            "type":
+                - "null"
+                - "string"
+            "minLength": 1
+        "color_voxel":
+            "type": "string"
+            "minLength": 1
+        "color_reference":
+            "type": "string"
+            "minLength": 1
+        "opacity_voxel":
+            "type": "number"
+            "minimum": 0
+        "opacity_reference":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"type": "object"
+"additionalProperties":
+    "type": "object"
+    "required":
+        - "framework"
+        - "layout"
+        - "title"
+        - "data_window"
+        - "data_options"
+        - "data_plot"
+    "properties":
+        "framework":
+            "type": "string"
+            "enum":
+                - "pyvista"
+                - "matplotlib"
+        "layout":
+            "type": "string"
+            "enum":
+                - "domain"
+                - "graph"
+                - "mesh"
+        "title":
+            "type": "string"
+            "minLength": 1
+        "data_window": !include schema_plot_window.yaml
+    "allOf":
+        -   if:
+                "properties":
+                    "framework":
+                        "const": "pyvista"
+            "then":
+                "properties":
+                    "data_options": !include schema_plot_pyvista.yaml
+        -   if:
+                "properties":
+                    "framework":
+                        "const": "matplotlib"
+            "then":
+                "properties":
+                    "data_options": !include schema_plot_matplotlib.yaml
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "domain"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_domain
+                    "framework":
+                        "const": "pyvista"
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "graph"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_graph
+                    "framework":
+                        "const": "pyvista"
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "mesh"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_mesh
+                    "framework":
+                        "const": "pyvista"

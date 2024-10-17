@@ -1,0 +1,36 @@
+"type": "object"
+"required":
+    - "show_menu"
+    - "image_size"
+    - "window_size"
+    - "notebook_size"
+"properties":
+    "show_menu":
+        "type": "boolean"
+    "image_size":
+        "type":
+            - "null"
+            - "array"
+        "minItems": 2
+        "maxItems": 2
+        "items":
+            "type": "integer"
+            "minimum": 0
+    "window_size":
+        "type":
+            - "null"
+            - "array"
+        "minItems": 2
+        "maxItems": 2
+        "items":
+            "type": "integer"
+            "minimum": 0
+    "notebook_size":
+        "type":
+            - "null"
+            - "array"
+        "minItems": 2
+        "maxItems": 2
+        "items":
+            "type": "integer"
+            "minimum": 0

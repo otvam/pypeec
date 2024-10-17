@@ -1,0 +1,307 @@
+#############################################################################
+"data_plot_material": &data_plot_material
+    "type": "object"
+    "required":
+        - "title"
+        - "color_electric"
+        - "color_magnetic"
+        - "color_electromagnetic"
+        - "color_current_source"
+        - "color_voltage_source"
+    properties:
+        "title":
+            "type":
+                - "null"
+                - "string"
+            "minLength": 1
+        "color_electric":
+            "type": "string"
+            "minLength": 1
+        "color_magnetic":
+            "type": "string"
+            "minLength": 1
+        "color_electromagnetic":
+            "type": "string"
+            "minLength": 1
+        "color_current_source":
+            "type": "string"
+            "minLength": 1
+        "color_voltage_source":
+            "type": "string"
+            "minLength": 1
+
+
+#############################################################################
+"data_plot_convergence": &data_plot_convergence
+    "type": "object"
+    "required":
+        - "color_active"
+        - "color_reactive"
+        - "marker"
+        - "width"
+    properties:
+        "color_active":
+            "type": "string"
+            "minLength": 1
+        "color_reactive":
+            "type": "string"
+            "minLength": 1
+        "marker":
+            "type": "number"
+            "minimum": 0
+        "width":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"data_plot_residuum": &data_plot_residuum
+    "type": "object"
+    "required":
+        - "bar_color"
+        - "edge_color"
+        - "tol_bins"
+        - "n_bins"
+    properties:
+        "bar_color":
+            "type": "string"
+            "minLength": 1
+        "edge_color":
+            "type": "string"
+            "minLength": 1
+        "tol_bins":
+            "type": "number"
+            "minimum": 0
+        "n_bins":
+            "type": "integer"
+            "minimum": 0
+
+#############################################################################
+"data_plot_scalar_norm": &data_plot_scalar_norm
+    "type": "object"
+    "required":
+        - "scale"
+        - "point_size"
+    properties:
+        "scale":
+            "type":
+                - "number"
+        "point_size":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"data_plot_scalar_phasor": &data_plot_scalar_phasor
+    "type": "object"
+    "required":
+        - "phase"
+        - "scale"
+        - "point_size"
+    properties:
+        "phase":
+            "type":
+                - "number"
+        "scale":
+            "type":
+                - "number"
+        "point_size":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"data_plot_arrow": &data_plot_arrow
+    "type": "object"
+    "required":
+        - "phase"
+        - "scale"
+        - "arrow_threshold"
+        - "arrow_scale"
+    properties:
+        "phase":
+            "type":
+                - "number"
+        "scale":
+            "type":
+                - "number"
+        "arrow_threshold":
+            "type": "number"
+            "minimum": 0
+        "arrow_scale":
+            "type": "number"
+            "minimum": 0
+
+#############################################################################
+"data_plot_pyvista": &data_plot_pyvista
+    "type": "object"
+    "required":
+        - "title"
+        - "legend"
+        - "var"
+        - "log"
+        - "color_lim"
+        - "filter_lim"
+        - "clamp_lim"
+    properties:
+        "title":
+            "type":
+                - "null"
+                - "string"
+            "minLength": 1
+        "legend":
+            "type":
+                - "null"
+                - "string"
+            "minLength": 1
+        "var":
+            "type": "string"
+            "minLength": 1
+        "log":
+            "type":
+                - "boolean"
+        "color_lim":
+            "type":
+                - "null"
+                - "array"
+            "minItems": 2
+            "maxItems": 2
+            "items":
+                "type": "number"
+        "filter_lim":
+            "type":
+                - "null"
+                - "array"
+            "minItems": 2
+            "maxItems": 2
+            "items":
+                "type": "number"
+        "clamp_lim":
+            "type":
+                - "null"
+                - "array"
+            "minItems": 2
+            "maxItems": 2
+            "items":
+                "type": "number"
+
+#############################################################################
+"type": "object"
+"additionalProperties":
+    "type": "object"
+    "required":
+        - "framework"
+        - "layout"
+        - "title"
+        - "data_window"
+        - "data_options"
+        - "data_plot"
+    "properties":
+        "framework":
+            "type": "string"
+            "enum":
+                - "pyvista"
+                - "matplotlib"
+        "layout":
+            "type": "string"
+            "enum":
+                - "material"
+                - "norm_voxel"
+                - "phasor_voxel"
+                - "arrow_voxel"
+                - "norm_point"
+                - "phasor_point"
+                - "arrow_point"
+                - "convergence"
+                - "residuum"
+        "title":
+            "type": "string"
+            "minLength": 1
+        "data_window": !include schema_plot_window.yaml
+    "allOf":
+        -   if:
+                "properties":
+                    "framework":
+                        "const": "pyvista"
+            "then":
+                "properties":
+                    "data_options": !include schema_plot_pyvista.yaml
+        -   if:
+                "properties":
+                    "framework":
+                        "const": "matplotlib"
+            "then":
+                "properties":
+                    "data_options": !include schema_plot_matplotlib.yaml
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "material"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_material
+                    "framework":
+                        "const": "pyvista"
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "convergence"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_convergence
+                    "framework":
+                        "const": "matplotlib"
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "residuum"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_residuum
+                    "framework":
+                        "const": "matplotlib"
+        -   if:
+                "properties":
+                    "layout":
+                        "enum":
+                            - "norm_voxel"
+                            - "norm_point"
+                            - "phasor_voxel"
+                            - "phasor_point"
+                            - "arrow_voxel"
+                            - "arrow_point"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_pyvista
+                    "framework":
+                        "const": "pyvista"
+        -   if:
+                "properties":
+                    "layout":
+                        "enum":
+                            - "norm_voxel"
+                            - "norm_point"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_scalar_norm
+                    "framework":
+                        "const": "pyvista"
+        -   if:
+                "properties":
+                    "layout":
+                        "enum":
+                            - "phasor_voxel"
+                            - "phasor_point"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_scalar_phasor
+                    "framework":
+                        "const": "pyvista"
+        -   if:
+                "properties":
+                    "layout":
+                        "enum":
+                            - "arrow_voxel"
+                            - "arrow_point"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_arrow
+                    "framework":
+                        "const": "pyvista"

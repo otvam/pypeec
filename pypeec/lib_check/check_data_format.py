@@ -18,6 +18,10 @@ with importlib.resources.path("pypeec.data", "schema_problem.yaml") as file:
     SCHEMA_PROBLEM = scisave.load_config(file)
 with importlib.resources.path("pypeec.data", "schema_tolerance.yaml") as file:
     SCHEMA_TOLERANCE = scisave.load_config(file)
+with importlib.resources.path("pypeec.data", "schema_list_viewer.yaml") as file:
+    SCHEMA_VIEWER = scisave.load_config(file)
+with importlib.resources.path("pypeec.data", "schema_list_plotter.yaml") as file:
+    SCHEMA_PLOTTER = scisave.load_config(file)
 
 
 def check_data_geometry(data_geometry):
@@ -42,3 +46,19 @@ def check_data_tolerance(data_tolerance):
     """
 
     jsonschema.validate(instance=data_tolerance, schema=SCHEMA_TOLERANCE)
+
+
+def check_data_viewer(data_viewer):
+    """
+    Check the viewer data.
+    """
+
+    jsonschema.validate(instance=data_viewer, schema=SCHEMA_VIEWER)
+
+
+def check_data_plotter(data_tolerance):
+    """
+    Check the plotter data.
+    """
+
+    jsonschema.validate(instance=data_tolerance, schema=SCHEMA_PLOTTER)

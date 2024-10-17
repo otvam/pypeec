@@ -1,0 +1,15 @@
+"type": "object"
+"required":
+    - "style"
+    - "legend"
+    - "font"
+"properties":
+    "style":
+        "type": "string"
+        "minLength": 1
+    "legend":
+        "type": "string"
+        "minLength": 1
+    "font":
+        "type": "integer"
+        "minimum": 0

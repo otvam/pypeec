@@ -11,13 +11,17 @@
 # For the viewer, the following types of plots are available:
 #
 #   - "domain": plot the different domains composing the voxel structures
+#       - title: title located at the corner of the plot (null for hiding)
+#       - colormap: colormap used to plot the different voxel groups
+#       - opacity: opacity of the face color
+#
 #   - "connection": plot the connections between the voxels
-#       - title: title located at the corner of the plot
+#       - title: title located at the corner of the plot (null for hiding)
 #       - colormap: colormap used to plot the different voxel groups
 #       - opacity: opacity of the face color
 #
 #   - "voxelization": plot the deviation between the voxelized and reference geometries
-#       - title: title located at the corner of the plot
+#       - title: title located at the corner of the plot (null for hiding)
 #       - color_voxel: face color for the voxelized structure
 #       - color_reference: face color for the reference structure
 #       - opacity_voxel: face opacity for the voxelized structure

@@ -1,0 +1,127 @@
+"type": "object"
+"required":
+    - "plot_clip"
+    - "plot_theme"
+    - "plot_view"
+"properties":
+    "plot_clip":
+        "type": "object"
+        "required":
+            - "clip_plot"
+            - "clip_invert"
+            - "clip_axis"
+            - "clip_value"
+        "properties":
+            "plot_clip":
+                "type": "boolean"
+            "clip_invert":
+                "type": "boolean"
+            "clip_axis":
+                "type": "string"
+                "enum":
+                    - "x"
+                    - "y"
+                    - "z"
+            "clip_value":
+                "type": "number"
+    "plot_theme":
+        "type": "object"
+        "required":
+            - "text_color"
+            - "title_font"
+            - "colorbar_font"
+            - "colorbar_size"
+            - "colorbar_plot"
+            - "background_color"
+            - "axis_add"
+            - "axis_size"
+        "properties":
+            "text_color":
+                "type": "string"
+                "minLength": 1
+            "title_font":
+                "type": "integer"
+                "minimum": 0
+            "colorbar_font":
+                "type": "integer"
+                "minimum": 0
+            "colorbar_size":
+                "type": "integer"
+                "minimum": 0
+            "colorbar_plot":
+                "type": "boolean"
+            "background_color":
+                "type": "string"
+                "minLength": 1
+            "axis_add":
+                "type": "boolean"
+            "axis_size":
+                "type": "integer"
+                "minimum": 0
+    "plot_view":
+        "type": "object"
+        "required":
+            - "grid_plot"
+            - "grid_thickness"
+            - "grid_color"
+            - "grid_opacity"
+            - "geom_plot"
+            - "geom_thickness"
+            - "geom_color"
+            - "geom_opacity"
+            - "point_plot"
+            - "point_color"
+            - "point_size"
+            - "point_opacity"
+            - "camera_roll"
+            - "camera_azimuth"
+            - "camera_elevation"
+        "properties":
+            "grid_plot":
+                "type": "boolean"
+            "grid_thickness":
+                "type": "number"
+                "minimum": 0
+            "grid_color":
+                "type": "string"
+                "minLength": 1
+            "grid_opacity":
+                "type": "number"
+                "minimum": 0
+            "geom_plot":
+                "type": "boolean"
+            "geom_thickness":
+                "type": "number"
+                "minimum": 0
+            "geom_color":
+                "type": "string"
+                "minLength": 1
+            "geom_opacity":
+                "type": "number"
+                "minimum": 0
+            "point_plot":
+                "type": "boolean"
+            "point_color":
+                "type": "string"
+                "minLength": 1
+            "point_size":
+                "type": "number"
+                "minimum": 0
+            "point_opacity":
+                "type": "number"
+                "minimum": 0
+            "camera_roll":
+                "type":
+                    - "null"
+                    - "number"
+                "minimum": 0
+            "camera_azimuth":
+                "type":
+                    - "null"
+                    - "number"
+                "minimum": 0
+            "camera_elevation":
+                "type":
+                    - "null"
+                    - "number"
+                "minimum": 0
