@@ -99,6 +99,16 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, mult_type):
         - output size: n_f
     """
 
+    # check if the matrix is required
+    if len(idx_f) == 0:
+        # dummy diagonal coefficient
+        L = np.nan
+
+        # dummy matrix multiplication operator
+        L_op = _get_operator_zeros(idx_f)
+
+        return L, L_op
+
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
@@ -129,7 +139,7 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, mult_type):
     return L, L_op
 
 
-def get_potential_matrix(d, idx_v, G_self, G_mutual, has_domain, mult_type):
+def get_potential_matrix(d, idx_v, G_self, G_mutual, mult_type):
     """
     Extract the potential matrix of the system.
 
@@ -143,7 +153,7 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, has_domain, mult_type):
     """
 
     # check if the matrix is required
-    if not has_domain:
+    if len(idx_v) == 0:
         # dummy diagonal coefficient
         P = np.nan
 
@@ -172,7 +182,7 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, has_domain, mult_type):
     return P, P_op
 
 
-def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_magnetic, mult_type):
+def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, mult_type):
     """
     Extract the magnetic-electric coupling matrices.
 
@@ -202,7 +212,7 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
     """
 
     # check if the matrix is required
-    if not has_magnetic:
+    if (len(idx_fc) == 0) or (len(idx_fm) == 0):
         # dummy magnetic to the electric multiplication operator
         K_op_c = _get_operator_zeros(idx_fc)
 
