@@ -71,11 +71,10 @@ def _check_source_graph(idx_vc, idx_src_c, idx_src_v, graph_def):
 
 
 def get_problem_type(idx_vc, idx_vm, idx_src_c, idx_src_v, graph_def):
-
-    # check the existence of magnetic domains
-    has_electric = len(idx_vc) > 0
-    has_magnetic = len(idx_vm) > 0
-    has_coupling = has_electric and has_magnetic
+    """
+    Check the validity of the problem.
+    Detect if magnetic material are present.
+    """
 
     # check voxel indices
     _check_indices(idx_vc, idx_src_c, idx_src_v)
@@ -85,7 +84,7 @@ def get_problem_type(idx_vc, idx_vm, idx_src_c, idx_src_v, graph_def):
     has_electric = len(idx_vc) > 0
     has_magnetic = len(idx_vm) > 0
 
-    return  has_electric, has_magnetic
+    return has_electric, has_magnetic
 
 
 def get_material_idx(material_def, domain_def):

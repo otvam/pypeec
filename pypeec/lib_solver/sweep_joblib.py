@@ -88,8 +88,8 @@ def _get_parallel_loop(parallel_sweep, fct_compute, arg_list):
         # wrap the compute function for setting globals
         def fct_joblib(*args):
             scilogger.set_global(global_timestamp, global_level)
-            out = fct_compute(*args)
-            return out
+            out_tmp = fct_compute(*args)
+            return out_tmp
 
         # run the parallel loop
         with joblib.parallel_config(backend="loky", n_jobs=n_jobs, inner_max_num_threads=n_threads):
