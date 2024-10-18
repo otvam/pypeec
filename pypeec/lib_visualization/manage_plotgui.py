@@ -11,12 +11,7 @@ Warning
 Todo
 ----
     - Making many plots can lead to segmentation fault with PyVista.
-    - Not sure if the problem lies with PyPEEC, PyVista, PyVistaQt or Vtk.
-
-Todo
-----
-    - A delay is adding between the plots when using the Qt framework.
-    - This is a dirty workaround for a race condition in PyVista/PyVistaQt.
+    - Not sure if the problem lies with PyPEEC, PyVista, PyVistaQt, or Vtk.
 
 Todo
 ----
