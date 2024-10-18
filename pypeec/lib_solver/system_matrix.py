@@ -86,7 +86,7 @@ def _get_operator_zeros(idx_out):
     return op
 
 
-def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain, mult_type):
+def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, mult_type):
     """
     Extract the inductance matrix of the system (used for the full system).
 
@@ -98,12 +98,6 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain, mult_type):
         - input size: n_f
         - output size: n_f
     """
-
-    # check if the matrix is required
-    if not has_domain:
-        L = np.zeros(len(idx_f), dtype=np.float_)
-        L_op = _get_operator_zeros(idx_f)
-        return L, L_op
 
     # extract the voxel data
     (nx, ny, nz) = n
@@ -121,13 +115,13 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, has_domain, mult_type):
     scale[idx_fy] = cst.mu_0/(dx**2*dz**2)
     scale[idx_fz] = cst.mu_0/(dx**2*dy**2)
 
-    # self-inductance for the preconditioner
+    # self-inductance for the preconditioner (diagonal coefficient)
     L = scale*G_self
 
     # get the matrix-vector operator
     L_op_tmp = matrix_multiply.get_operator_inductance(idx_f, G_mutual, mult_type)
 
-    # function describing the coupling from the electric to the magnetic faces
+    # function describing the inductance matrix multiplication
     def L_op(var_f):
         res_f = scale*L_op_tmp(var_f)
         return res_f
@@ -150,8 +144,12 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, has_domain, mult_type):
 
     # check if the matrix is required
     if not has_domain:
-        P = 0.0
+        # dummy diagonal coefficient
+        P = np.nan
+
+        # dummy matrix multiplication operator
         P_op = _get_operator_zeros(idx_v)
+
         return P, P_op
 
     # extract the voxel data
@@ -160,13 +158,13 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, has_domain, mult_type):
     # scaling factor
     scale = 1/(cst.mu_0*dx**2*dy**2*dz**2)
 
-    # self-inductance for the preconditioner
+    # self-potential for the preconditioner (diagonal coefficient)
     P = scale*G_self
 
     # get the matrix-vector operator
     P_op_tmp = matrix_multiply.get_operator_potential(idx_v, G_mutual, mult_type)
 
-    # function describing the coupling from the electric to the magnetic faces
+    # function describing the potential matrix multiplication
     def P_op(var_v):
         res_v = scale*P_op_tmp(var_v)
         return res_v
@@ -174,7 +172,7 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, has_domain, mult_type):
     return P, P_op
 
 
-def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling, mult_type):
+def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_magnetic, mult_type):
     """
     Extract the magnetic-electric coupling matrices.
 
@@ -204,9 +202,13 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
     """
 
     # check if the matrix is required
-    if not has_coupling:
+    if not has_magnetic:
+        # dummy magnetic to the electric multiplication operator
         K_op_c = _get_operator_zeros(idx_fc)
+
+        # dummy electric to the magnetic multiplication operator
         K_op_m = _get_operator_zeros(idx_fm)
+
         return K_op_c, K_op_m
 
     # get the face voxel incidence matrix

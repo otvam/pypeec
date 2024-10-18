@@ -90,10 +90,7 @@ def _run_solver_init(data_solver):
         source_idx = problem_geometry.get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v)
 
         # check problem type
-        (has_electric, has_magnetic) = problem_geometry.get_problem_type(idx_vc, idx_vm, idx_src_c, idx_src_v, graph_def)
-
-        # get coupling
-        has_coupling = has_electric and has_magnetic
+        has_magnetic = problem_geometry.get_problem_type(idx_vc, idx_vm, idx_src_c, idx_src_v, graph_def)
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices
         (pts_net_c, A_net_c, idx_fc) = problem_geometry.get_reduce_matrix(pts_vox, A_vox, idx_vc)
@@ -115,12 +112,12 @@ def _run_solver_init(data_solver):
         G_mutual = system_tensor.get_green_tensor(n, d, integral_simplify)
 
         # Green function mutual coefficients
-        K_tsr = system_tensor.get_coupling_tensor(n, d, integral_simplify, has_coupling)
+        K_tsr = system_tensor.get_coupling_tensor(n, d, integral_simplify, has_magnetic)
 
     # get the system operators
     with LOGGER.BlockTimer("system_matrix"):
         # get the inductance tensor (preconditioner and full problem)
-        (L_c, L_op_c) = system_matrix.get_inductance_matrix(n, d, idx_fc, G_self, G_mutual, has_electric, mult_type)
+        (L_c, L_op_c) = system_matrix.get_inductance_matrix(n, d, idx_fc, G_self, G_mutual, mult_type)
 
         # get the potential tensor (preconditioner and full problem)
         (P_m, P_op_m) = system_matrix.get_potential_matrix(d, idx_vm, G_self, G_mutual, has_magnetic, mult_type)
@@ -130,7 +127,7 @@ def _run_solver_init(data_solver):
         del G_mutual
 
         # get the coupling matrices
-        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_coupling, mult_type)
+        (K_op_c, K_op_m) = system_matrix.get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_tsr, has_magnetic, mult_type)
 
         # free memory
         del K_tsr
