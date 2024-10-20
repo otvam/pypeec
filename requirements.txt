@@ -20,7 +20,7 @@ scipy~=1.13.1
 joblib~=1.4.2
 
 # geometry manipulation
-vtk~=9.2.6
+vtk~=9.3.1
 pyvista~=0.43.10
 shapely~=2.0.4
 rasterio~=1.3.10
