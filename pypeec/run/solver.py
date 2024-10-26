@@ -339,6 +339,17 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     return data_sweep, sol
 
 
+def _run_parallel_sweep(tag, sol_init, data_solver, data_internal, data_param):
+    """
+    Wrapper to solve a sweep in parallel (ensure that everything can be serialized).
+    """
+
+    with LOGGER.BlockTimer("run sweep: " + tag):
+        (data_sweep, sol) = _run_solver_sweep(data_solver, data_internal, data_param, sol_init)
+
+    return data_sweep, sol
+
+
 def _get_data(data_init, data_sweep, timestamp):
     """
     Assemble the returned data.
@@ -405,10 +416,8 @@ def run(data_voxel, data_problem, data_tolerance):
         (data_init, data_internal, sweep_solver, parallel_sweep) = _run_solver_init(data_solver)
 
     # function for solving a single sweep
-    def fct_compute(tag, data_param, init):
-        with LOGGER.BlockTimer("run sweep: " + tag):
-            (output, init) = _run_solver_sweep(data_solver, data_internal, data_param, init)
-        return output, init
+    def fct_compute(tag, data_param, sol_init):
+        return _run_parallel_sweep(tag, sol_init, data_solver, data_internal, data_param)
 
     # compute the different sweeps
     data_sweep = sweep_joblib.get_run_sweep(parallel_sweep, sweep_solver, fct_compute)
