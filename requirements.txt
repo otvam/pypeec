@@ -10,8 +10,8 @@
 # Mozilla Public License Version 2.0
 
 # logging and serialization
-scilogger~=1.1.0
-scisave~=1.2.0
+scilogger~=1.2.0
+scisave~=1.3.0
 jsonschema~=4.23
 
 # numerical libraries
