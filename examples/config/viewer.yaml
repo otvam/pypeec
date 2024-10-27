@@ -2,7 +2,7 @@
 #
 # A plot is described with a dictionary with the following fields:
 #   - framework: framework used for the rendering ("pyvista" or "matplotlib")
-#   - layout: string describing the plot type
+#   - layout: string describing the plot type (see description below)
 #   - title: title of the plot window
 #   - data_window: dictionary describing the plot window
 #   - data_options: dictionary describing the plot options
@@ -15,12 +15,12 @@
 #       - colormap: colormap used to plot the different voxel groups
 #       - opacity: opacity of the face color
 #
-#   - "connection": plot the connections between the voxels
+#   - "graph": plot the connections between the voxels
 #       - title: title located at the corner of the plot (null for hiding)
 #       - colormap: colormap used to plot the different voxel groups
 #       - opacity: opacity of the face color
 #
-#   - "voxelization": plot the deviation between the voxelized and reference geometries
+#   - "mesh": plot the deviation between the voxelized and reference geometries
 #       - title: title located at the corner of the plot (null for hiding)
 #       - color_voxel: face color for the voxelized structure
 #       - color_reference: face color for the reference structure

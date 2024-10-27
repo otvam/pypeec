@@ -2,7 +2,7 @@
 #
 # A plot is described with a dictionary with the following fields:
 #   - framework: framework used for the rendering ("pyvista" or "matplotlib")
-#   - layout: string describing the plot type
+#   - layout: string describing the plot type (see description below)
 #   - title: title of the plot window
 #   - data_window: dictionary describing the plot window
 #   - data_options: dictionary describing the plot options
@@ -13,8 +13,9 @@
 #   - "material": plot the different materials composing the voxel structures
 #       - title: title located at the corner of the plot (null for hiding)
 #       - color_electric: color of the electric domains
-#       - color_magnetic: "color of the magnetic domains
-#       - color_current_source: "color of the current source domains"
+#       - color_magnetic: color of the magnetic domains
+#       - color_electromagnetic: color of the electromagnetic domains
+#       - color_current_source: color of the current source domains"
 #       - color_voltage_source: color of the voltage source domains
 #
 #   - "norm_voxel": plot a scalar norm variable on the voxel structure
