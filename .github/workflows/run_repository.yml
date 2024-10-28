@@ -6,6 +6,17 @@
 #   - installing the package from the PyPi repository
 #   - installing the package from the Conda repository
 #
+# The tests are run on the following systems:
+#   - Linux / Ubuntu / Conda / PyPi
+#   - Microsoft / Windows / Conda / PyPi
+#   - Apple / macOS / Conda
+#
+# The tests are run on the following interpreter versions:
+#   - Python 3.10
+#   - Python 3.11
+#   - Python 3.12
+#
+#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
@@ -85,7 +96,6 @@ jobs:
       matrix:
         system:
           - "ubuntu-latest"
-          - "macos-latest"
           - "windows-latest"
         version:
           - "3.10"

@@ -38,11 +38,13 @@ The main **target platform** of PyPEEC is **Linux** on x86/x64:
 * Linux / Debian 12.4 on x86/x64
 * Linux / Ubuntu 20.04 on x86/x64
 * Linux / Ubuntu 22.04 on x86/x64
+* Linux / Ubuntu 24.04 on x86/x64
 
 The following **platforms** and systems have been  **partially tested**:
 
 * Apple / macOS Monterey 12 on x86/x64
-* Apple / macOS Ventura 13 on M1 Pro
+* Apple / macOS Ventura 13 on ARM64
+* Apple / macOS Sonoma 14 on ARM64
 * MS Windows / Pro 10 on x86/x64
 * MS Windows / Pro 11 on x86/x64
 
@@ -55,9 +57,9 @@ The following **GPUs** have been tested (CUDA / CuPy compatible):
 
 The following **platforms** are passing the **automated tests**:
 
-* Linux / Ubuntu 22.04 on x86/x64
-* Microsoft / Windows Server 2022 on x86/x64
-* Apple / macOS Monterey 12 on x86/x64
+* Linux / Ubuntu 22.04 on x86/x64 / Conda / PyPi
+* Microsoft / Windows Server 2022 on x86/x64 / Conda / PyPi
+* Apple / macOS Sonoma 14 on ARM64 / Conda
 
 The following **Python version** are passing the **automated tests**:
 
