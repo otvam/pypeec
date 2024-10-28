@@ -15,7 +15,7 @@ name: pypeec
 channels: [conda-forge]
 dependencies:
   # base installation
-  - python=3.10
+  - python=3.11
   # dev tools
   - pip=23.1.2
   - twine=4.0.2
