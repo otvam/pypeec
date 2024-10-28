@@ -6,7 +6,7 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-name: Run Standard Tests
+name: Run Standard Tests (OSX)
 
 on:
   push:
@@ -15,7 +15,7 @@ on:
 
 jobs:
   default:
-    runs-on: "ubuntu-latest"
+    runs-on: "macos-latest"
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,3 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install --requirement requirements.txt
-      - name: Run the tests
-        shell: bash -el {0}
-        run: |
-          ./scripts/run_tests.sh
