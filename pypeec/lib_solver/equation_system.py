@@ -216,14 +216,14 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     # assemble the matrices
     A_12_mat = -A_net_c.transpose()
     A_21_mat = A_net_c
-    A_22_mat = sps.csc_matrix((n_vc, n_vc), dtype=np.int_)
+    A_22_mat = sps.csc_matrix((n_vc, n_vc), dtype=np.int64)
 
     # expand for the source matrices
-    A_add = sps.csc_matrix((n_fc, n_src), dtype=np.int_)
+    A_add = sps.csc_matrix((n_fc, n_src), dtype=np.int64)
     A_12_mat = sps.hstack([A_12_mat, A_add], dtype=np.complex_, format="csr")
 
     # expand for the source matrices
-    A_add = sps.csc_matrix((n_src, n_fc), dtype=np.int_)
+    A_add = sps.csc_matrix((n_src, n_fc), dtype=np.int64)
     A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex_, format="csc")
 
     # add the source
@@ -426,8 +426,8 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, Z_src_v):
     idx_src_v_local = idx_s[idx_src_v_p]
 
     # indices of the new source equations to be added
-    idx_src_c_add = np.arange(0, n_src_c, dtype=np.int_)
-    idx_src_v_add = np.arange(n_src_c, n_src_c+n_src_v, dtype=np.int_)
+    idx_src_c_add = np.arange(0, n_src_c, dtype=np.int64)
+    idx_src_v_add = np.arange(n_src_c, n_src_c+n_src_v, dtype=np.int64)
 
     # constant vector with the size of the sources
     cst_src_c = np.full(n_src_c, 1, dtype=np.complex_)

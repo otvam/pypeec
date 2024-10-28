@@ -18,7 +18,7 @@ def _get_graph_component(idx, graph_def):
     """
 
     # init the data with invalid data
-    graph = np.zeros(len(idx), dtype=np.int_)
+    graph = np.zeros(len(idx), dtype=np.int64)
 
     # find to corresponding connected components
     for i, idx_graph in enumerate(graph_def):
@@ -42,14 +42,14 @@ def _get_geometry_tag(domain_def, graph_def):
     """
 
     # init
-    domain = np.empty(0, dtype=np.int_)
-    graph = np.empty(0, dtype=np.int_)
+    domain = np.empty(0, dtype=np.int64)
+    graph = np.empty(0, dtype=np.int64)
 
     # get the indices and colors
     counter = 1
     for tag, idx_tmp in domain_def.items():
         # assign the color (n different integer for each domain)
-        domain_tmp = np.full(len(idx_tmp), counter, dtype=np.int_)
+        domain_tmp = np.full(len(idx_tmp), counter, dtype=np.int64)
 
         # find the connected components corresponding to the indices
         graph_tmp = _get_graph_component(idx_tmp, graph_def)
@@ -92,7 +92,7 @@ def get_voxel(domain_def):
     Get the indices of the non-empty voxels.
     """
 
-    idx = np.empty(0, dtype=np.int_)
+    idx = np.empty(0, dtype=np.int64)
     for idx_tmp in domain_def.values():
         idx = np.append(idx, idx_tmp)
 

@@ -130,7 +130,7 @@ def _get_coupling_matrix(n_winding, RL_mat):
     Get the coupling matrix between the windings.
     """
 
-    k_mat = np.zeros((n_winding, n_winding), dtype=np.float_)
+    k_mat = np.zeros((n_winding, n_winding), dtype=np.float64)
     for i in range(n_winding):
         for j in range(n_winding):
             k_mat[i, j] = RL_mat[i, j]/np.sqrt(RL_mat[i, i]*RL_mat[j, j])

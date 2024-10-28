@@ -29,7 +29,7 @@ def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
     nv = nx*ny*nz
 
     # get the local indices (face indices of the incidence matrix)
-    idx_local = np.in1d(idx_f, np.arange(offset*nv, (offset+1)*nv, dtype=np.int_))
+    idx_local = np.in1d(idx_f, np.arange(offset*nv, (offset+1)*nv, dtype=np.int64))
 
     # slice matrix (columns)
     A_net = A_net[:, idx_local]
@@ -115,9 +115,9 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, mult_type):
     nv = nx*ny*nz
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int_))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=np.int_))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int_))
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int64))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=np.int64))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
 
     # scaling factor
     scale = np.zeros(len(idx_f), dtype=np.complex_)

@@ -21,7 +21,7 @@ def _get_coupling(d, idx, method, dimension):
 
     # extract the voxel data
     (dx, dy, dz) = d
-    d = np.array(d, np.float_)
+    d = np.array(d, np.float64)
 
     # dimension permutation:
     #   - the 5D integral is solved for the xy faces
@@ -84,9 +84,9 @@ def _get_voxel_indices(n):
     (nx, ny, nz) = n
 
     # get the indices array
-    idx_x = np.arange(nx, dtype=np.int_)
-    idx_y = np.arange(ny, dtype=np.int_)
-    idx_z = np.arange(nz, dtype=np.int_)
+    idx_x = np.arange(nx, dtype=np.int64)
+    idx_y = np.arange(ny, dtype=np.int64)
+    idx_z = np.arange(nz, dtype=np.int64)
     [idx_x, idx_y, idx_z] = np.meshgrid(idx_x, idx_y, idx_z, indexing="ij")
 
     # flatten the indices into vectors
@@ -123,7 +123,7 @@ def get_green_self(d):
     The self-coefficient is used for the preconditioner.
     """
 
-    idx = np.array([[0, 0, 0]], dtype=np.int_)
+    idx = np.array([[0, 0, 0]], dtype=np.int64)
     G_self = green_function.get_green_ana(d, idx, "6D")
     G_self = G_self[0]
 
@@ -157,7 +157,7 @@ def get_green_tensor(n, d, integral_simplify):
     idx_num = np.invert(idx_ana)
 
     # init the result vector
-    G_mutual = np.empty(nv, dtype=np.float_)
+    G_mutual = np.empty(nv, dtype=np.float64)
 
     # analytical solution
     G_mutual[idx_ana] = green_function.get_green_ana(d, idx[idx_ana], "6D")
@@ -201,7 +201,7 @@ def get_coupling_tensor(n, d, integral_simplify, has_magnetic):
     idx_num = np.invert(idx_ana)
 
     # init the result vector
-    K_tsr = np.empty((nv, 3), dtype=np.float_)
+    K_tsr = np.empty((nv, 3), dtype=np.float64)
 
     # analytical solution
     K_tsr[idx_ana, 0] = _get_coupling(d, idx[idx_ana], "ana", "yz")

@@ -19,14 +19,14 @@ def _get_domain_indices(domain_list, domain_def):
     Get indices from a list of domain names.
     """
 
-    idx_all = np.empty(0, dtype=np.int_)
+    idx_all = np.empty(0, dtype=np.int64)
     for tag in domain_list:
         # check domain
         if tag not in domain_def:
             raise RuntimeError("invalid domain: name not found: %s" % tag)
 
         # add indices
-        idx_tmp = np.array(domain_def[tag], dtype=np.int_)
+        idx_tmp = np.array(domain_def[tag], dtype=np.int64)
         idx_all = np.append(idx_all, idx_tmp)
 
     return idx_all
@@ -95,8 +95,8 @@ def get_material_idx(material_def, domain_def):
 
     # init
     material_idx = {}
-    idx_vc = np.empty(0, dtype=np.int_)
-    idx_vm = np.empty(0, dtype=np.int_)
+    idx_vc = np.empty(0, dtype=np.int64)
+    idx_vm = np.empty(0, dtype=np.int64)
 
     for tag, material_def_tmp in material_def.items():
         # extract the data
@@ -138,8 +138,8 @@ def get_source_idx(source_def, domain_def):
 
     # init
     source_idx = {}
-    idx_src_c = np.empty(0, dtype=np.int_)
-    idx_src_v = np.empty(0, dtype=np.int_)
+    idx_src_c = np.empty(0, dtype=np.int64)
+    idx_src_v = np.empty(0, dtype=np.int64)
 
     for tag, source_def_tmp in source_def.items():
         # extract the data

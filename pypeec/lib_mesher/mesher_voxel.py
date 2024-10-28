@@ -40,7 +40,7 @@ def get_mesh(param, domain_index):
         LOGGER.debug("%s: size = %d" % (tag, len(idx)))
 
         # parse the array
-        idx_tmp = np.array(idx, dtype=np.int_)
+        idx_tmp = np.array(idx, dtype=np.int64)
 
         # check the indices
         if not (len(np.unique(idx_tmp)) == len(idx_tmp)):

@@ -48,11 +48,11 @@ def _get_boundary_polygon(bnd, z_min):
         raise RuntimeError("invalid shape: boundary is ill-formed")
 
     # get the 2D boundary
-    xy = np.array(bnd.xy, dtype=np.float_)
+    xy = np.array(bnd.xy, dtype=np.float64)
     xy = np.swapaxes(xy, 0, 1)
 
     # get the 3D boundary
-    z = np.full(len(xy), z_min, dtype=np.float_)
+    z = np.full(len(xy), z_min, dtype=np.float64)
     z = np.expand_dims(z, axis=1)
     xyz = np.hstack((xy, z))
 
@@ -165,7 +165,7 @@ def _get_idx_voxel(n, idx_shape, stack_idx):
     (nx, ny, nz) = n
 
     # init voxel indices
-    idx_voxel = np.empty(0, dtype=np.int_)
+    idx_voxel = np.empty(0, dtype=np.int64)
 
     # convert image indices into voxel indices
     for idx in stack_idx:
@@ -256,8 +256,8 @@ def _get_shape_obj(geometry_shape, stack_tag, simplify, construct):
     shape_obj = []
 
     # init the coordinate (minimum and maximum coordinates)
-    xy_min = np.full(2, +np.inf, dtype=np.float_)
-    xy_max = np.full(2, -np.inf, dtype=np.float_)
+    xy_min = np.full(2, +np.inf, dtype=np.float64)
+    xy_max = np.full(2, -np.inf, dtype=np.float64)
 
     # create the shapes and find the bounding box
     for tag, geometry_shape_tmp in geometry_shape.items():
@@ -271,8 +271,8 @@ def _get_shape_obj(geometry_shape, stack_tag, simplify, construct):
 
             # find the bounds
             (x_min, y_min, x_max, y_max) = obj.bounds
-            tmp_min = np.array((x_min, y_min), dtype=np.float_)
-            tmp_max = np.array((x_max, y_max), dtype=np.float_)
+            tmp_min = np.array((x_min, y_min), dtype=np.float64)
+            tmp_max = np.array((x_max, y_max), dtype=np.float64)
 
             # update the bounds
             xy_min = np.minimum(xy_min, tmp_min)
@@ -302,7 +302,7 @@ def _get_layer_stack(layer_stack, dz, cz):
         tag_layer = layer_stack_tmp["tag_layer"]
 
         # find the layer indices
-        idx_layer = np.arange(np.sum(stack_n), np.sum(stack_n)+n_layer, dtype=np.int_)
+        idx_layer = np.arange(np.sum(stack_n), np.sum(stack_n)+n_layer, dtype=np.int64)
 
         # append the results
         stack_n.append(n_layer)
@@ -339,7 +339,7 @@ def _get_domain_def(n, d, c, geometry_shape, stack_idx, shape_obj):
     # init the domain dict
     domain_def = {}
     for tag in geometry_shape:
-        domain_def[tag] = np.empty(0, np.int_)
+        domain_def[tag] = np.empty(0, np.int64)
 
     # voxelize the shapes
     for shape_obj_tmp in shape_obj:
@@ -378,9 +378,9 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     z_max = np.max(stack_pos)
 
     # get the arrays
-    d = np.array([dx, dy, dz], dtype=np.float_)
-    xyz_min = np.array([x_min, y_min, z_min], dtype=np.float_)
-    xyz_max = np.array([x_max, y_max, z_max], dtype=np.float_)
+    d = np.array([dx, dy, dz], dtype=np.float64)
+    xyz_min = np.array([x_min, y_min, z_min], dtype=np.float64)
+    xyz_max = np.array([x_max, y_max, z_max], dtype=np.float64)
 
     # geometry size
     c = (xyz_max+xyz_min)/2
@@ -390,8 +390,8 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     d = (xyz_max-xyz_min)/n
 
     # cast data
-    d = d.astype(np.float_)
-    n = n.astype(np.int_)
+    d = d.astype(np.float64)
+    n = n.astype(np.int64)
 
     # check voxel validity
     if not np.all(d > 0):
@@ -470,11 +470,11 @@ def get_mesh(param, layer_stack, geometry_shape):
 
     # if provided, the user specified bounds are used, otherwise the STL bounds
     if xy_min is not None:
-        xy_min = np.array(xy_min, np.float_)
+        xy_min = np.array(xy_min, np.float64)
     else:
         xy_min = xy_min_obj
     if xy_max is not None:
-        xy_max = np.array(xy_max, np.float_)
+        xy_max = np.array(xy_max, np.float64)
     else:
         xy_max = xy_max_obj
 
@@ -485,7 +485,7 @@ def get_mesh(param, layer_stack, geometry_shape):
     # init domain definition dict
     domain_def = {}
     for tag in geometry_shape:
-        domain_def[tag] = np.empty(0, np.int_)
+        domain_def[tag] = np.empty(0, np.int64)
 
     # voxelize the shapes and get the indices
     LOGGER.debug("voxelize the shapes")
@@ -502,8 +502,8 @@ def get_mesh(param, layer_stack, geometry_shape):
 
     # cast reference mesh
     reference = {
-        "faces": np.array(reference.faces, dtype=np.int_),
-        "points": np.array(reference.points, dtype=np.float_),
+        "faces": np.array(reference.faces, dtype=np.int64),
+        "points": np.array(reference.points, dtype=np.float64),
     }
 
     return n, d, c, domain_def, reference

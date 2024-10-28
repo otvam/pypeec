@@ -19,7 +19,7 @@ def _get_all_indices(domain_def):
     """
 
     # init
-    idx = np.empty(0, dtype=np.int_)
+    idx = np.empty(0, dtype=np.int64)
 
     # get the indices and colors
     for tag in domain_def:
@@ -36,7 +36,7 @@ def _get_group_indices(domain_def, domain_group):
     group_def = []
     for domain_group_tmp in domain_group:
         # init
-        idx_tmp = np.empty(0, dtype=np.int_)
+        idx_tmp = np.empty(0, dtype=np.int64)
 
         # get the indices and colors
         for tag in domain_group_tmp:
@@ -64,43 +64,43 @@ def _get_connection_matrix(n):
     nv = nx*ny*nz
 
     # voxel index array
-    x = np.arange(nx, dtype=np.int_)
-    y = np.arange(ny, dtype=np.int_)
-    z = np.arange(nz, dtype=np.int_)
+    x = np.arange(nx, dtype=np.int64)
+    y = np.arange(ny, dtype=np.int64)
+    z = np.arange(nz, dtype=np.int64)
     (idx_x, idx_y, idx_z) = np.meshgrid(x, y, z, indexing="ij")
 
     # voxel index number
     idx = idx_x+idx_y*nx+idx_z*nx*ny
 
     # create the sparse matrix
-    voxel_matrix = sps.csc_matrix((nv, nv), dtype=np.int_)
+    voxel_matrix = sps.csc_matrix((nv, nv), dtype=np.int64)
 
     # self connections
     idx_col = np.arange(nv)
     idx_row = np.arange(nv)
-    data = np.ones(nv, dtype=np.int_)
-    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
+    data = np.ones(nv, dtype=np.int64)
+    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
 
     # connections along x direction
     idx_col = idx[:-1, :, :].flatten()
     idx_row = idx[+1:, :, :].flatten()
-    data = np.ones((nx-1)*ny*nz, dtype=np.int_)
-    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
-    voxel_matrix += sps.csc_matrix((data, (idx_col, idx_row)), shape=(nv, nv), dtype=np.int_)
+    data = np.ones((nx-1)*ny*nz, dtype=np.int64)
+    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
+    voxel_matrix += sps.csc_matrix((data, (idx_col, idx_row)), shape=(nv, nv), dtype=np.int64)
 
     # connections along y direction
     idx_col = idx[:, :-1, :].flatten()
     idx_row = idx[:, +1:, :].flatten()
-    data = np.ones(nx*(ny-1)*nz, dtype=np.int_)
-    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
-    voxel_matrix += sps.csc_matrix((data, (idx_col, idx_row)), shape=(nv, nv), dtype=np.int_)
+    data = np.ones(nx*(ny-1)*nz, dtype=np.int64)
+    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
+    voxel_matrix += sps.csc_matrix((data, (idx_col, idx_row)), shape=(nv, nv), dtype=np.int64)
 
     # connections along z direction
     idx_col = idx[:, :, :-1].flatten()
     idx_row = idx[:, :, +1:].flatten()
-    data = np.ones(nx*ny*(nz-1), dtype=np.int_)
-    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int_)
-    voxel_matrix += sps.csc_matrix((data, (idx_col, idx_row)), shape=(nv, nv), dtype=np.int_)
+    data = np.ones(nx*ny*(nz-1), dtype=np.int64)
+    voxel_matrix += sps.csc_matrix((data, (idx_row, idx_col)), shape=(nv, nv), dtype=np.int64)
+    voxel_matrix += sps.csc_matrix((data, (idx_col, idx_row)), shape=(nv, nv), dtype=np.int64)
 
     return voxel_matrix
 

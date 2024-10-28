@@ -45,19 +45,19 @@ def _get_material_field(val_dict):
 
         # cast
         if var_type == "lumped" and orientation_type is None:
-            val = np.full(len(idx), val, dtype=np.float_)
+            val = np.full(len(idx), val, dtype=np.float64)
         elif var_type == "lumped" and orientation_type == "isotropic":
-            val = np.full((len(idx), 3), val, dtype=np.float_)
+            val = np.full((len(idx), 3), val, dtype=np.float64)
         elif var_type == "lumped" and orientation_type == "anisotropic":
-            val = np.array(val, dtype=np.float_)
+            val = np.array(val, dtype=np.float64)
             val = np.tile(val, (len(idx), 1))
         elif var_type == "distributed" and orientation_type is None:
-            val = np.array(val, dtype=np.float_)
+            val = np.array(val, dtype=np.float64)
         elif var_type == "distributed" and orientation_type == "isotropic":
-            val = np.array(val, dtype=np.float_)
+            val = np.array(val, dtype=np.float64)
             val = np.tile(val, (3, 1)).transpose()
         elif var_type == "distributed" and orientation_type == "anisotropic":
-            val = np.array(val, dtype=np.float_)
+            val = np.array(val, dtype=np.float64)
 
         # check
         if not (val.shape == (len(idx), 3)):
@@ -95,9 +95,9 @@ def _get_source_field(val_dict):
 
         # cast
         if var_type == "lumped":
-            val = np.full(len(idx), val, dtype=np.float_)
+            val = np.full(len(idx), val, dtype=np.float64)
         elif var_type == "distributed":
-            val = np.array(val, dtype=np.float_)
+            val = np.array(val, dtype=np.float64)
 
         # check
         if not (len(val) == len(idx)):
@@ -282,9 +282,9 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
     rho = 0.5*rho_v.transpose()*np.abs(A_net)
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int_))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=np.int_))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int_))
+    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int64))
+    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=np.int64))
+    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
 
     # resistance vector (different directions)
     R = np.zeros(len(idx_f), dtype=np.complex_)

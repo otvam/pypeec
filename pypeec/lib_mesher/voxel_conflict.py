@@ -51,8 +51,8 @@ def _get_random(domain_def):
     """
 
     # assemble all the indices
-    idx_tag = np.empty(0, dtype=np.int_)
-    idx_vox = np.empty(0, dtype=np.int_)
+    idx_tag = np.empty(0, dtype=np.int64)
+    idx_vox = np.empty(0, dtype=np.int64)
     for idx_tag_tmp, idx_vox_tmp in enumerate(domain_def.values()):
         idx_tag = np.append(idx_tag, np.repeat(idx_tag_tmp, len(idx_vox_tmp)))
         idx_vox = np.append(idx_vox, idx_vox_tmp)
@@ -79,7 +79,7 @@ def _get_resolution(domain_def):
     """
 
     # assemble all the indices
-    idx_all = np.empty(0, dtype=np.int_)
+    idx_all = np.empty(0, dtype=np.int64)
     for idx in domain_def.values():
         idx_all = np.append(idx_all, idx)
 

@@ -59,12 +59,12 @@ def _get_cloud_valid(c, d, n, domain_def, pts_cloud):
     """
 
     # cast to array
-    c = np.array(c, dtype=np.float_)
-    d = np.array(d, dtype=np.float_)
-    n = np.array(n, dtype=np.int_)
+    c = np.array(c, dtype=np.float64)
+    d = np.array(d, dtype=np.float64)
+    n = np.array(n, dtype=np.int64)
 
     # assemble all the indices
-    idx_all = np.empty(0, dtype=np.int_)
+    idx_all = np.empty(0, dtype=np.int64)
     for idx in domain_def.values():
         idx_all = np.append(idx_all, idx)
 
@@ -72,7 +72,7 @@ def _get_cloud_valid(c, d, n, domain_def, pts_cloud):
     pts_vox = _get_voxel_coordinate(n, d, c, idx_all)
 
     # check the points
-    valid_cloud = np.empty(0, dtype=np.bool_)
+    valid_cloud = np.empty(0, dtype=bool)
     for pts_tmp in pts_cloud:
         valid_tmp = _get_point_valid(d, pts_vox, pts_tmp)
         valid_cloud = np.append(valid_cloud, valid_tmp)
@@ -96,7 +96,7 @@ def get_point(n, d, c, domain_def, data_point):
     LOGGER.debug("original number = %d" % len(pts_cloud))
 
     # cast to array
-    pts_cloud = np.array(pts_cloud, np.float_)
+    pts_cloud = np.array(pts_cloud, np.float64)
 
     # check valid points
     if check_cloud:
