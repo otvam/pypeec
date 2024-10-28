@@ -15,12 +15,12 @@ scisave~=1.3.0
 jsonschema~=4.23
 
 # numerical libraries
-numpy
-scipy
-joblib
+numpy~=1.26.4
+scipy~=1.14.1
+joblib~=1.4.2
 
 # geometry manipulation
-vtk
+vtk~=9.3.1
 pyvista~=0.43.10
 shapely~=2.0.4
 rasterio~=1.3.10
