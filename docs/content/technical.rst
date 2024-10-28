@@ -61,7 +61,6 @@ The following **platforms** are passing the **automated tests**:
 
 The following **Python version** are passing the **automated tests**:
 
-* CPython 3.9
 * CPython 3.10
 * CPython 3.11
 * CPython 3.12

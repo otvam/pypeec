@@ -66,7 +66,7 @@ dependencies = [
     "pyvistaqt >= 0.11",
     "PyQt5 >= 5.15",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dynamic = ["version"]
 
 [project.urls]

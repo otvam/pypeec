@@ -8,7 +8,6 @@
 #   - Microsoft / Windows
 #
 # The tests are run on the following interpreter versions:
-#   - Python 3.9
 #   - Python 3.10
 #   - Python 3.11
 #   - Python 3.12
@@ -57,7 +56,6 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
