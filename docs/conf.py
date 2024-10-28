@@ -28,6 +28,7 @@ date = datetime.datetime.today().strftime('%a, %b %d, %Y')
 
 # project title and version
 project = 'PyPEEC - %s' % ver
+html_title = 'PyPEEC - %s' % ver
 
 # project author
 author = 'Thomas Guillod'
