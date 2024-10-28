@@ -45,14 +45,26 @@ env:
 jobs:
   # ===================== run the tests with conda
   conda:
-    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+        system:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+        version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+    name: ${{ matrix.system }} / ${{ matrix.version }}
+    runs-on: ${{ matrix.system }}
     timeout-minutes: 20
     steps:
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
-          python-version: "3.11"
+          python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
           use-mamba: true
@@ -68,13 +80,25 @@ jobs:
           ${{ env.CMD_PLOT }}
   # ===================== run the tests with pip
   pip:
-    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+        system:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
+        version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+    name: ${{ matrix.system }} / ${{ matrix.version }}
+    runs-on: ${{ matrix.system }}
     timeout-minutes: 20
     steps:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.version }}
       - name: Install dependencies
         shell: bash -el {0}
         run: |
