@@ -30,7 +30,7 @@ def _get_inverse_operator(mat, decomposition):
         return sol
 
     # assign linear operator for inversion
-    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec, dtype=np.complex_)
+    op = sla.LinearOperator(mat.shape, matvec=fct_matvec, rmatvec=fct_rmatvec, dtype=np.complex128)
 
     return op
 

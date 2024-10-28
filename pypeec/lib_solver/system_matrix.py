@@ -77,7 +77,7 @@ def _get_operator_zeros(idx_out):
     """
 
     # vector with zeros
-    var_out = np.zeros(len(idx_out), dtype=np.complex_)
+    var_out = np.zeros(len(idx_out), dtype=np.complex128)
 
     # function returning zeros
     def op(_):
@@ -120,7 +120,7 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, mult_type):
     idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
 
     # scaling factor
-    scale = np.zeros(len(idx_f), dtype=np.complex_)
+    scale = np.zeros(len(idx_f), dtype=np.complex128)
     scale[idx_fx] = cst.mu_0/(dy**2*dz**2)
     scale[idx_fy] = cst.mu_0/(dx**2*dz**2)
     scale[idx_fz] = cst.mu_0/(dx**2*dy**2)

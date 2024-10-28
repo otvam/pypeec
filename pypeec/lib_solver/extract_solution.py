@@ -82,7 +82,7 @@ def get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, pts_cloud):
     vol = np.prod(d)
 
     # for each provided point, compute the magnetic field
-    H_pts = np.zeros((len(pts_cloud), 3), dtype=np.complex_)
+    H_pts = np.zeros((len(pts_cloud), 3), dtype=np.complex128)
     for i, pts_tmp in enumerate(pts_cloud):
         H_c = _get_biot_savart(pts_tmp, pts_net_c, J_vc, vol)
         H_m = _get_magnetic_charge(pts_tmp, pts_net_m, Q_vm, vol)
@@ -334,12 +334,12 @@ def get_source(freq, source_all, I_src, V_vc):
 
         # get the distributed source
         if len(idx) == 0:
-            V_tmp = np.complex_(0)
-            I_tmp = np.complex_(0)
-            S_tmp = np.complex_(0)
+            V_tmp = np.complex128(0)
+            I_tmp = np.complex128(0)
+            S_tmp = np.complex128(0)
         else:
-            V_tmp = np.complex_(V_vc[idx_vc])
-            I_tmp = np.complex_(I_src[idx_src])
+            V_tmp = np.complex128(V_vc[idx_vc])
+            I_tmp = np.complex128(I_src[idx_src])
 
             # compute the lumped quantities
             S_tmp = np.sum(fact*V_tmp*np.conj(I_tmp))

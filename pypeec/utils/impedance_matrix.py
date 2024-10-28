@@ -41,7 +41,7 @@ def _get_assign_matrix(n_winding, var_idx, sol):
     The coefficients are given in a vector.
     """
 
-    mat = np.zeros((n_winding, n_winding), dtype=np.complex_)
+    mat = np.zeros((n_winding, n_winding), dtype=np.complex128)
     for i, (idx_i_1, idx_i_2) in enumerate(var_idx):
         mat[idx_i_1, idx_i_2] = sol[i]
         mat[idx_i_2, idx_i_1] = sol[i]
@@ -54,7 +54,7 @@ def _get_eqn_matrix(n_winding, var_idx, I_vec):
     Create the equation matrix for a given current excitation.
     """
 
-    eqn_mat = np.zeros((n_winding, len(var_idx)), dtype=np.complex_)
+    eqn_mat = np.zeros((n_winding, len(var_idx)), dtype=np.complex128)
     for i, (idx_i_1, idx_i_2) in enumerate(var_idx):
         eqn_mat[idx_i_1, i] = I_vec[idx_i_2]
         eqn_mat[idx_i_2, i] = I_vec[idx_i_1]
@@ -88,8 +88,8 @@ def _get_solve_matrix(terminal):
     var_idx = _get_idx_matrix(n_winding)
 
     # init the matrices
-    rhs_vec = np.zeros(0, dtype=np.complex_)
-    eqn_mat = np.zeros((0, len(var_idx)), dtype=np.complex_)
+    rhs_vec = np.zeros(0, dtype=np.complex128)
+    eqn_mat = np.zeros((0, len(var_idx)), dtype=np.complex128)
 
     # get the matrices
     for i in range(n_solution):

@@ -43,8 +43,8 @@ def _get_load_terminal(source, terminal_list):
         I_vec.append(I)
 
     # assign the data
-    V_vec = np.array(V_vec, dtype=np.complex_)
-    I_vec = np.array(I_vec, dtype=np.complex_)
+    V_vec = np.array(V_vec, dtype=np.complex128)
+    I_vec = np.array(I_vec, dtype=np.complex128)
 
     return V_vec, I_vec
 
@@ -90,8 +90,8 @@ def get_extract(data_solution, sweep_list, terminal_list):
     terminal = {
         "n_solution": len(sweep_list),
         "n_winding": len(terminal_list),
-        "V_mat": np.array(V_mat, dtype=np.complex_).transpose(),
-        "I_mat": np.array(I_mat, dtype=np.complex_).transpose(),
+        "V_mat": np.array(V_mat, dtype=np.complex128).transpose(),
+        "I_mat": np.array(I_mat, dtype=np.complex128).transpose(),
         "freq": freq,
     }
 

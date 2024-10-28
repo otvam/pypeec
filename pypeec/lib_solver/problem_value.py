@@ -165,8 +165,8 @@ def get_material_vector(material_all):
     """
 
     # array for the resistivities
-    rho_vc = np.empty((0, 3), dtype=np.complex_)
-    rho_vm = np.empty((0, 3), dtype=np.complex_)
+    rho_vc = np.empty((0, 3), dtype=np.complex128)
+    rho_vm = np.empty((0, 3), dtype=np.complex128)
 
     # populate the arrays
     for material_all_tmp in material_all.values():
@@ -212,8 +212,8 @@ def get_source_vector(source_all, source_type_ref):
     """
 
     # array for the source indices
-    value_src = np.empty(0, dtype=np.complex_)
-    element_src = np.empty(0, dtype=np.complex_)
+    value_src = np.empty(0, dtype=np.complex128)
+    element_src = np.empty(0, dtype=np.complex128)
 
     # populate the arrays with the current sources
     for tag, source_all_tmp in source_all.items():
@@ -287,7 +287,7 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
     idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
 
     # resistance vector (different directions)
-    R = np.zeros(len(idx_f), dtype=np.complex_)
+    R = np.zeros(len(idx_f), dtype=np.complex128)
     R[idx_fx] = (dx/(dy*dz))*rho[0, idx_fx]
     R[idx_fy] = (dy/(dx*dz))*rho[1, idx_fy]
     R[idx_fz] = (dz/(dx*dy))*rho[2, idx_fz]
