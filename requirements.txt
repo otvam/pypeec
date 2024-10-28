@@ -10,4 +10,4 @@
 # Mozilla Public License Version 2.0
 
 # numerical libraries
-scipy~=1.13.1
+scipy~=1.11.4
