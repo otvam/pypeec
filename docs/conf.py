@@ -26,10 +26,13 @@ version = ver
 # get date
 date = datetime.datetime.today().strftime('%a, %b %d, %Y')
 
-# project metadata
-project = 'PyPEEC'
-html_title = "PyPEEC"
+# project title and version
+project = 'PyPEEC - %s' % ver
+
+# project author
 author = 'Thomas Guillod'
+
+# project copyright
 copyright = 'Thomas Guillod - Dartmouth College'
 
 # add prolog
@@ -76,8 +79,7 @@ html_domain_indices = False
 
 # html theme
 html_theme_options = {
-    'logo_only': True,
-    'display_version': True,
+    'logo_only': False,
     'style_nav_header_background': '#137e9c',
     'prev_next_buttons_location': None,
     'collapse_navigation': True,

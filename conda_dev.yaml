@@ -22,8 +22,8 @@ dependencies:
   - python-build=0.10.0
   - coverage=7.4.1
   - setuptools_scm=7.1.0
-  - sphinx_rtd_theme=1.2.2
-  - sphinx=6.2.1
+  - sphinx_rtd_theme=3.0.1
+  - sphinx=8.1.3
   - pkg-config=0.29.2
   # logging and serialization
   - scilogger=1.2.0
