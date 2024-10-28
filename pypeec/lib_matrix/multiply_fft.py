@@ -32,19 +32,19 @@ def _get_tensor_sign(name, nd_in):
     """
 
     if name == "potential":
-        sign = NPCP.ones((2, 2, 2, nd_in), dtype=NPCP.float_)
+        sign = NPCP.ones((2, 2, 2, nd_in), dtype=NPCP.float64)
     elif name == "inductance":
-        sign = NPCP.ones((2, 2, 2, nd_in), dtype=NPCP.float_)
+        sign = NPCP.ones((2, 2, 2, nd_in), dtype=NPCP.float64)
     elif name == "coupling":
-        sign = NPCP.empty((2, 2, 2, nd_in), dtype=NPCP.float_)
-        sign[0, 0, 0, :] = NPCP.array([+1, +1, +1], dtype=NPCP.float_)
-        sign[1, 0, 0, :] = NPCP.array([-1, +1, +1], dtype=NPCP.float_)
-        sign[0, 1, 0, :] = NPCP.array([+1, -1, +1], dtype=NPCP.float_)
-        sign[0, 0, 1, :] = NPCP.array([+1, +1, -1], dtype=NPCP.float_)
-        sign[1, 1, 0, :] = NPCP.array([-1, -1, +1], dtype=NPCP.float_)
-        sign[1, 0, 1, :] = NPCP.array([-1, +1, -1], dtype=NPCP.float_)
-        sign[0, 1, 1, :] = NPCP.array([+1, -1, -1], dtype=NPCP.float_)
-        sign[1, 1, 1, :] = NPCP.array([-1, -1, -1], dtype=NPCP.float_)
+        sign = NPCP.empty((2, 2, 2, nd_in), dtype=NPCP.float64)
+        sign[0, 0, 0, :] = NPCP.array([+1, +1, +1], dtype=NPCP.float64)
+        sign[1, 0, 0, :] = NPCP.array([-1, +1, +1], dtype=NPCP.float64)
+        sign[0, 1, 0, :] = NPCP.array([+1, -1, +1], dtype=NPCP.float64)
+        sign[0, 0, 1, :] = NPCP.array([+1, +1, -1], dtype=NPCP.float64)
+        sign[1, 1, 0, :] = NPCP.array([-1, -1, +1], dtype=NPCP.float64)
+        sign[1, 0, 1, :] = NPCP.array([-1, +1, -1], dtype=NPCP.float64)
+        sign[0, 1, 1, :] = NPCP.array([+1, -1, -1], dtype=NPCP.float64)
+        sign[1, 1, 1, :] = NPCP.array([-1, -1, -1], dtype=NPCP.float64)
     else:
         raise ValueError("invalid matrix type")
 
@@ -64,7 +64,7 @@ def _get_tensor_circulant(mat, sign):
     (nx, ny, nz, nd_in) = mat.shape
 
     # init the circulant tensor
-    mat_fft = NPCP.zeros((2*nx, 2*ny, 2*nz, nd_in), dtype=NPCP.float_)
+    mat_fft = NPCP.zeros((2*nx, 2*ny, 2*nz, nd_in), dtype=NPCP.float64)
 
     # cube none
     mat_fft[0:nx, 0:ny, 0:nz, :] = mat[0:nx, 0:ny, 0:nz, :]*sign[0:1, 0:1, 0:1, :]
@@ -136,7 +136,7 @@ def _get_tensor(idx, vec):
     idx_mat = idx["idx_mat"]
 
     # init the tensor
-    res = NPCP.zeros(shape, dtype=NPCP.complex_)
+    res = NPCP.zeros(shape, dtype=NPCP.complex128)
 
     # assign the tensor (4D or 3D slice)
     if idx_sel is None:
@@ -159,7 +159,7 @@ def _get_vector(idx, res):
     idx_mat = idx["idx_mat"]
 
     # init the vector
-    vec = NPCP.zeros(length, dtype=NPCP.complex_)
+    vec = NPCP.zeros(length, dtype=NPCP.complex128)
 
     # assign the vector (4D or 3D slice)
     if idx_sel is None:
@@ -203,7 +203,7 @@ def _get_compute_combined(name, idx_in, idx_out, mat_fft, vec_in):
     elif name == "inductance":
         res *= mat_fft
     elif name == "coupling":
-        res_tmp = NPCP.empty(res.shape, dtype=NPCP.complex_)
+        res_tmp = NPCP.empty(res.shape, dtype=NPCP.complex128)
         res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2]*res[:, :, :, 1]+mat_fft[:, :, :, 1]*res[:, :, :, 2]
         res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2]*res[:, :, :, 0]+mat_fft[:, :, :, 0]*res[:, :, :, 2]
         res_tmp[:, :, :, 2] = -mat_fft[:, :, :, 1]*res[:, :, :, 0]-mat_fft[:, :, :, 0]*res[:, :, :, 1]
@@ -271,13 +271,13 @@ def _get_compute_split(name, n_out, idx_in, idx_out, mat_fft, vec_in):
         res = _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 0, 0, 0)
     elif name == "inductance":
         # the multiplication is decomposed into three slices
-        res = NPCP.zeros(n_out, dtype=NPCP.complex_)
+        res = NPCP.zeros(n_out, dtype=NPCP.complex128)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 0, 0, 0)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 1, 1, 0)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 2, 2, 0)
     elif name == "coupling":
         # the multiplication is decomposed into six slices
-        res = NPCP.zeros(n_out, dtype=NPCP.complex_)
+        res = NPCP.zeros(n_out, dtype=NPCP.complex128)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 1, 0, 2)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 2, 0, 1)
         res += _get_multiply_slice(idx_in, idx_out, mat_fft, vec_in, 2, 1, 0)
@@ -305,7 +305,7 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
 
     # get the memory footprint
     nnz = (2*nx)*(2*ny)*(2*nz)*nd_in
-    itemsize = NPCP.dtype(NPCP.complex_).itemsize
+    itemsize = NPCP.dtype(NPCP.complex128).itemsize
     footprint = (itemsize*nnz)/(1024**2)
 
     # display the tensor size
