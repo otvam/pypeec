@@ -29,12 +29,12 @@ Library Issues
 --------------
 
 .. Warning::
-    The **plotting code** is probably sensitive to the environment (platform and the version of the libraries).
+    The **plotting code** is probably sensitive to the environment (platform and version of the libraries).
     Therefore, these dependencies are minimized and insulated from the rest of the code.
     The plotting code (viewer and plotter) is separated from the simulation code (mesher and solver).
 
 .. Warning::
-    **Jupyter** is not included in the package dependencies.
+    **Jupyter** is not included in the default package dependencies.
     Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
     Jupyter support is optional, PyPEEC is fully functional without Jupyter.
 
@@ -44,8 +44,8 @@ Library Issues
     GPU support is optional, PyPEEC is fully functional without GPU support.
 
 .. Warning::
-    **FFTW, UMFPACK, PyAMG, and MKL/PARDISO** are not included in the package dependencies.
-    These libraries can be tricky to install, especially on MS Windows.
+    **FFTW, UMFPACK, PyAMG, and MKL/PARDISO** are not included in the default package dependencies.
+    These libraries can be tricky to install, especially on MS Windows or Apple MacOS.
     Make sure that these libraries are compiled with multithreading support.
     FFTW, UMFPACK, PyAMG, and MKL/PARDISO are optional, PyPEEC is fully functional without them.
 

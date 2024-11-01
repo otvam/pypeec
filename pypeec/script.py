@@ -405,7 +405,7 @@ def run_script():
 
     The script is installed with the package.
     The name of the command line script is "pypeec".
-    Exit the program with "sys.exit()" with a status exit code.
+    Exit the program with "sys.exit()" with a status code.
     """
 
     # get arguments

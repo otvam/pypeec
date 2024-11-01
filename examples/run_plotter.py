@@ -31,13 +31,8 @@ if __name__ == "__main__":
     ]
 
     # run
-    try:
-        pypeec.run_plotter_file(
-            file_solution, file_plotter,
-            tag_plot=tag_plot,
-            plot_mode="qt",
-        )
-    except Exception:
-        sys.exit(1)
-    else:
-        sys.exit(0)
+    pypeec.run_plotter_file(
+        file_solution, file_plotter,
+        tag_plot=tag_plot,
+        plot_mode="qt",
+    )

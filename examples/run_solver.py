@@ -25,9 +25,4 @@ if __name__ == "__main__":
     file_tolerance = os.path.join(PATH_ROOT, FOLDER_CONFIG, "tolerance.yaml")
 
     # run
-    try:
-        pypeec.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
-    except Exception:
-        sys.exit(1)
-    else:
-        sys.exit(0)
+    pypeec.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)

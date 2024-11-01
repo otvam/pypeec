@@ -23,9 +23,4 @@ if __name__ == "__main__":
     file_voxel = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "voxel.json.gz")
 
     # run
-    try:
-        pypeec.run_mesher_file(file_geometry, file_voxel)
-    except Exception:
-        sys.exit(1)
-    else:
-        sys.exit(0)
+    pypeec.run_mesher_file(file_geometry, file_voxel)

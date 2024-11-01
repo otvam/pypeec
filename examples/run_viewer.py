@@ -26,13 +26,8 @@ if __name__ == "__main__":
     tag_plot = ["domain", "graph"]
 
     # run viewer
-    try:
-        pypeec.run_viewer_file(
-            file_voxel, file_viewer,
-            tag_plot=tag_plot,
-            plot_mode="qt",
-        )
-    except Exception:
-        sys.exit(1)
-    else:
-        sys.exit(0)
+    pypeec.run_viewer_file(
+        file_voxel, file_viewer,
+        tag_plot=tag_plot,
+        plot_mode="qt",
+    )

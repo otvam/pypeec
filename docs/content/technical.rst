@@ -42,18 +42,18 @@ The main **target platform** of PyPEEC is **Linux** on x86/x64:
 
 The following **platforms** and systems have been  **partially tested**:
 
-* Apple / macOS Monterey 12 on x86/x64
-* Apple / macOS Ventura 13 on ARM64
-* Apple / macOS Sonoma 14 on ARM64
+* Apple macOS Monterey 12 on x86/x64
+* Apple macOS Ventura 13 on ARM64
+* Apple macOS Sonoma 14 on ARM64
 * MS Windows / Pro 10 on x86/x64
 * MS Windows / Pro 11 on x86/x64
 
 The following **GPUs** have been tested (CUDA / CuPy compatible):
 
-* GPU / NVIDIA RTX 2070
-* GPU / NVIDIA T4 Tensor
-* GPU / NVIDIA Tesla K80
-* GPU / NVIDIA RTX 3090
+* NVIDIA RTX 2070
+* NVIDIA T4 Tensor
+* NVIDIA Tesla K80
+* NVIDIA RTX 3090
 
 The following **platforms** are passing the **automated tests**:
 
