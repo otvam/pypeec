@@ -6,7 +6,7 @@ Dependencies
 
 **PyPEEC** is entirely programmed in **Python 3** and has the following dependencies:
 
-* scilogger, scisave, and jsonschema (logging and serialization)
+* SciLogger, SciSave, and jsonschema (logging and serialization)
 * NumPy, SciPy, and Joblib (basic numerical computing libraries)
 * Shapely and Rasterio (only used for the mesher, 2D shape manipulation)
 * Pillow (only used for the mesher, 2D image manipulation)
@@ -51,9 +51,9 @@ The following **platforms** and systems have been  **partially tested**:
 The following **GPUs** have been tested (CUDA / CuPy compatible):
 
 * NVIDIA RTX 2070
+* NVIDIA RTX 3090
 * NVIDIA T4 Tensor
 * NVIDIA Tesla K80
-* NVIDIA RTX 3090
 
 The following **platforms** are passing the **automated tests**:
 
@@ -118,7 +118,7 @@ These files are used to run the tests (locally and/or continuous integration):
 Contributing
 ------------
 
-PyPEEC is welcoming contributions (code, documentation, example, benchmark, test, tutorial, etc.) !
+PyPEEC is welcoming contributions (code, documentation, example, benchmark, test, tutorial, etc.)!
 For large changes, please first discuss the change you wish to make in the issue tracker.
 
 Bug report

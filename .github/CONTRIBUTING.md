@@ -1,6 +1,6 @@
 # Contributing
 
-PyPEEC is welcoming contributions (code, documentation, example, benchmark, test, tutorial, etc.).
+PyPEEC is welcoming contributions (code, documentation, example, benchmark, test, tutorial, etc.)!
 For large contributions, please first discuss the changes in the issue tracker.
 
 # Bug report
