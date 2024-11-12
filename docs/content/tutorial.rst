@@ -53,7 +53,7 @@ Viewer: Plot the Geometry and Mesh
     pypeec viewer \
         --voxel tutorial/voxel.json.gz \
         --viewer config/viewer.yaml \
-        --tag_plot domain connection
+        --tag_plot domain graph
 
 .. figure:: ../tutorial/viewer_domain.png
 
