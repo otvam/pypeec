@@ -25,12 +25,16 @@ def check_tag_list(data_check, tag_list):
         "type": ["null", "array"],
         "items": {
             "type": "string",
-            "enum": tag_allowed,
         },
     }
 
     # validate base schema
     jsonschema.validate(instance=tag_list, schema=schema)
+
+    # check tag
+    for tag in tag_list:
+        if tag not in tag_allowed:
+            raise ValueError("invalid plot tag: %s" % tag)
 
 
 def check_plot_options(plot_mode, folder, name):
