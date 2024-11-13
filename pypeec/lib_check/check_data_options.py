@@ -32,9 +32,10 @@ def check_tag_list(data_check, tag_list):
     jsonschema.validate(instance=tag_list, schema=schema)
 
     # check tag
-    for tag in tag_list:
-        if tag not in tag_allowed:
-            raise ValueError("invalid plot tag: %s" % tag)
+    if tag_list is not None:
+        for tag in tag_list:
+            if tag not in tag_allowed:
+                raise ValueError("invalid plot tag: %s" % tag)
 
 
 def check_plot_options(plot_mode, folder, name):
