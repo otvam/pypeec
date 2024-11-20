@@ -26,20 +26,20 @@ import scipy.constants as cst
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def _get_biot_savart(pts, pts_net, J_src, vol):
+def _get_biot_savart(pts, pts_face, I_face):
     """
     Compute the magnetic field at a specified point.
     The field is created by many currents.
     """
 
     # get the distance between the points and the voxels
-    vec = pts-pts_net
+    vec = pts-pts_face
 
     # get the norm of the distance
     nrm = lna.norm(vec, axis=1, keepdims=True)
 
     # compute the Biot-Savart contributions
-    H_all = (vol/(4*np.pi))*(np.cross(J_src, vec, axis=1)/(nrm**3))
+    H_all = (1/(4*np.pi))*(np.cross(I_face, vec, axis=1)/(nrm**3))
 
     # sum the contributions
     H_pts = np.sum(H_all, axis=0)
@@ -47,7 +47,7 @@ def _get_biot_savart(pts, pts_net, J_src, vol):
     return H_pts
 
 
-def _get_magnetic_charge(pts, pts_src, Q_src, vol):
+def _get_magnetic_charge(pts, pts_src, I_src):
     """
     Compute the magnetic field at a specified point.
     The field is created by many magnetic charge.
@@ -60,10 +60,10 @@ def _get_magnetic_charge(pts, pts_src, Q_src, vol):
     nrm = lna.norm(vec, axis=1, keepdims=True)
 
     # transform the charge into a vector
-    Q_src = np.tile(Q_src, (3, 1)).transpose()
+    I_src = np.tile(I_src, (3, 1)).transpose()
 
-    # compute the Biot-Savart contributions
-    H_all = (vol/(4*np.pi*cst.mu_0))*((Q_src*vec)/(nrm**3))
+    # compute the charge contributions
+    H_all = (1/(4*np.pi*cst.mu_0))*((I_src*vec)/(nrm**3))
 
     # sum the contributions
     H_pts = np.sum(H_all, axis=0)
@@ -71,22 +71,54 @@ def _get_magnetic_charge(pts, pts_src, Q_src, vol):
     return H_pts
 
 
-def get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, pts_cloud):
+def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud):
     """
-    Compute the magnetic field for the provided points.
+    Compute the magnetic field for the provided points (electric of the magnetic domains).
     The Biot-Savart law is used for the electric material contribution.
-    The magnetic charge is used for the magnetic material contribution.
     """
 
-    # extract the voxel volume
-    vol = np.prod(d)
+    # extract the voxel data
+    (nx, ny, nz) = n
+    nv = nx*ny*nz
+
+    # extract the voxel data
+    (dx, dy, dz) = d
+
+    # get the direction of the faces (x, y, z)
+    idx_fx = np.in1d(idx_fc, np.arange(0*nv, 1*nv, dtype=np.int64))
+    idx_fy = np.in1d(idx_fc, np.arange(1*nv, 2*nv, dtype=np.int64))
+    idx_fz = np.in1d(idx_fc, np.arange(2*nv, 3*nv, dtype=np.int64))
+
+    # get the face positions
+    pts_face = 0.5*np.abs(A_net_c.transpose())*pts_net_c
+
+    # get the face currents
+    I_face = np.zeros((len(I_fc), 3), dtype=np.complex128)
+    I_face[idx_fx, 0] = dx*I_fc[idx_fx]
+    I_face[idx_fy, 1] = dy*I_fc[idx_fy]
+    I_face[idx_fz, 2] = dy*I_fc[idx_fz]
 
     # for each provided point, compute the magnetic field
     H_pts = np.zeros((len(pts_cloud), 3), dtype=np.complex128)
     for i, pts_tmp in enumerate(pts_cloud):
-        H_c = _get_biot_savart(pts_tmp, pts_net_c, J_vc, vol)
-        H_m = _get_magnetic_charge(pts_tmp, pts_net_m, Q_vm, vol)
-        H_pts[i, :] = H_c+H_m
+        H_pts[i, :] = _get_biot_savart(pts_tmp, pts_face, I_face)
+
+    return H_pts
+
+
+def get_magnetic_magnetic(A_net_m, I_fm, pts_net_m, pts_cloud):
+    """
+    Compute the magnetic field for the provided points (contributions of the magnetic domains).
+    The magnetic charge is used for the magnetic material contribution.
+    """
+
+    # compute the divergence
+    var_v = A_net_m*I_fm
+
+    # for each provided point, compute the magnetic field
+    H_pts = np.zeros((len(pts_cloud), 3), dtype=np.complex128)
+    for i, pts_tmp in enumerate(pts_cloud):
+        H_pts[i, :] = _get_magnetic_charge(pts_tmp, pts_net_m, var_v)
 
     return H_pts
 

@@ -304,8 +304,11 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         # get the global quantities (energy and losses)
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm, S_total)
 
-        # get the cloud point magnetic field
-        H_pts = extract_solution.get_magnetic_field(d, J_vc, Q_vm, pts_net_c, pts_net_m, pts_cloud)
+        # get the cloud point magnetic field (contributions of the electric domains)
+        H_pts_c = extract_solution.get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud)
+
+        # get the cloud point magnetic field (contributions of the magnetic domains)
+        H_pts_m = extract_solution.get_magnetic_magnetic(A_net_m, I_fm, pts_net_m, pts_cloud)
 
     # assemble solution
     var = {
@@ -317,7 +320,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         "P_m": {"var": P_vm, "cat": "scalar_magnetic"},
         "Q_m": {"var": Q_vm, "cat": "scalar_magnetic"},
         "B_m": {"var": B_vm, "cat": "vector_magnetic"},
-        "H_p": {"var": H_pts, "cat": "cloud"},
+        "H_p": {"var": H_pts_c+H_pts_m, "cat": "cloud"},
     }
 
     # assign the results (will be merged in the solver output)
