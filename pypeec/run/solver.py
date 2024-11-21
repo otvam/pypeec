@@ -306,7 +306,10 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm, S_total)
 
         # get the cloud point magnetic field (contributions of the electric domains)
-        H_pts_c = extract_solution.get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud, biot_savart)
+        H_pts_c = extract_solution.get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud, "voxel")
+        print(H_pts_c)
+
+        sfdsfdsf
 
         # get the cloud point magnetic field (contributions of the magnetic domains)
         H_pts_m = extract_solution.get_magnetic_magnetic(A_net_m, I_fm, pts_net_m, pts_cloud)
