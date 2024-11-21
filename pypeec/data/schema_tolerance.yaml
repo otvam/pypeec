@@ -108,6 +108,7 @@
 "required":
     - "parallel_sweep"
     - "integral_simplify"
+    - "biot_savart"
     - "mult_type"
     - "fft_options"
     - "factorization_options"
@@ -129,6 +130,11 @@
     "integral_simplify":
         "type": "number"
         "minimum": 0
+    "biot_savart":
+        "type": "string"
+        "enum":
+            - "face"
+            - "voxel"
     "mult_type":
         "type": "string"
         "enum":

@@ -71,7 +71,7 @@ def _get_magnetic_charge(pts, pts_src, I_src):
     return H_pts
 
 
-def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud):
+def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud, biot_savart):
     """
     Compute the magnetic field for the provided points (electric of the magnetic domains).
     The Biot-Savart law is used for the electric material contribution.

@@ -182,6 +182,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     # extract the data
     n = data_solver["n"]
     d = data_solver["d"]
+    biot_savart = data_solver["biot_savart"]
     condition_options = data_solver["condition_options"]
     solver_options = data_solver["solver_options"]
     pts_cloud = data_solver["pts_cloud"]
@@ -305,7 +306,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         integral = extract_solution.get_integral(P_fc, P_fm, W_fc, W_fm, S_total)
 
         # get the cloud point magnetic field (contributions of the electric domains)
-        H_pts_c = extract_solution.get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud)
+        H_pts_c = extract_solution.get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud, biot_savart)
 
         # get the cloud point magnetic field (contributions of the magnetic domains)
         H_pts_m = extract_solution.get_magnetic_magnetic(A_net_m, I_fm, pts_net_m, pts_cloud)
