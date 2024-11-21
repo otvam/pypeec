@@ -96,7 +96,7 @@ def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_clou
     I_face = np.zeros((len(I_fc), 3), dtype=np.complex128)
     I_face[idx_fx, 0] = dx*I_fc[idx_fx]
     I_face[idx_fy, 1] = dy*I_fc[idx_fy]
-    I_face[idx_fz, 2] = dy*I_fc[idx_fz]
+    I_face[idx_fz, 2] = dz*I_fc[idx_fz]
 
     # for each provided point, compute the magnetic field
     H_pts = np.zeros((len(pts_cloud), 3), dtype=np.complex128)
