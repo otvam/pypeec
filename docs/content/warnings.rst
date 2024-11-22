@@ -9,6 +9,10 @@ PyPEEC Issues
     This implies that large geometries with small features cannot be meshed efficiently.
 
 .. Warning::
+    If should be noted than the inductance is only fully defined for closed loops.
+    For non-closed loops, only the concept of partial inductance is well defined.
+
+.. Warning::
     For problems with **magnetic domains**, the **preconditioner** is not optimal.
     This might lead to a slow convergence of the iterative matrix solver.
     For such cases, using the segregated solver approach might be useful.
