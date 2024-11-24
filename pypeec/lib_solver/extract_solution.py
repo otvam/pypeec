@@ -26,20 +26,20 @@ import scipy.constants as cst
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def _get_biot_savart(pts, pts_face, I_face):
+def _get_biot_savart(pts, pts_src, I_src):
     """
     Compute the magnetic field at a specified point.
     The field is created by many currents.
     """
 
     # get the distance between the points and the voxels
-    vec = pts-pts_face
+    vec = pts-pts_src
 
     # get the norm of the distance
     nrm = lna.norm(vec, axis=1, keepdims=True)
 
     # compute the Biot-Savart contributions
-    H_all = (1/(4*np.pi))*(np.cross(I_face, vec, axis=1)/(nrm**3))
+    H_all = (1/(4*np.pi))*(np.cross(I_src, vec, axis=1)/(nrm**3))
 
     # sum the contributions
     H_pts = np.sum(H_all, axis=0)
@@ -71,7 +71,7 @@ def _get_magnetic_charge(pts, pts_src, I_src):
     return H_pts
 
 
-def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud):
+def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_cloud, biot_savart):
     """
     Compute the magnetic field for the provided points (contributions of the electric domains).
     The Biot-Savart law is used for the electric material contribution.
@@ -89,19 +89,31 @@ def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_clou
     idx_fy = np.in1d(idx_fc, np.arange(1*nv, 2*nv, dtype=np.int64))
     idx_fz = np.in1d(idx_fc, np.arange(2*nv, 3*nv, dtype=np.int64))
 
-    # get the face positions
-    pts_face = 0.5*np.abs(A_net_c.transpose())*pts_net_c
+    if biot_savart == "voxel":
+        # get the voxel positions
+        pts_src = pts_net_c
 
-    # get the face currents
-    I_face = np.zeros((len(I_fc), 3), dtype=np.complex128)
-    I_face[idx_fx, 0] = dx*I_fc[idx_fx]
-    I_face[idx_fy, 1] = dy*I_fc[idx_fy]
-    I_face[idx_fz, 2] = dz*I_fc[idx_fz]
+        # project the faces current into the voxels
+        I_src = np.zeros((len(pts_net_c), 3), dtype=np.complex128)
+        I_src[:, 0] = dx*0.5*np.abs(A_net_c[:, idx_fx])*I_fc[idx_fx]
+        I_src[:, 1] = dy*0.5*np.abs(A_net_c[:, idx_fy])*I_fc[idx_fy]
+        I_src[:, 2] = dz*0.5*np.abs(A_net_c[:, idx_fz])*I_fc[idx_fz]
+    elif biot_savart == "face":
+        # get the face positions
+        pts_src = 0.5*np.abs(A_net_c.transpose())*pts_net_c
+
+        # get the face currents as vector
+        I_src = np.zeros((len(I_fc), 3), dtype=np.complex128)
+        I_src[idx_fx, 0] = dx*I_fc[idx_fx]
+        I_src[idx_fy, 1] = dy*I_fc[idx_fy]
+        I_src[idx_fz, 2] = dz*I_fc[idx_fz]
+    else:
+        raise ValueError("invalid field computation method")
 
     # for each provided point, compute the magnetic field
     H_pts = np.zeros((len(pts_cloud), 3), dtype=np.complex128)
     for i, pts_tmp in enumerate(pts_cloud):
-        H_pts[i, :] = _get_biot_savart(pts_tmp, pts_face, I_face)
+        H_pts[i, :] = _get_biot_savart(pts_tmp, pts_src, I_src)
 
     return H_pts
 
