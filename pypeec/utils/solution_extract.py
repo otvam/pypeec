@@ -60,7 +60,7 @@ def get_extract(data_solution, sweep_list, terminal_list):
 
     # check status
     assert isinstance(data_init, dict), "invalid solution"
-    assert isinstance(data_init, dict), "invalid solution"
+    assert isinstance(data_sweep, dict), "invalid solution"
 
     # init data
     V_mat = []
