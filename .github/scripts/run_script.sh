@@ -12,6 +12,8 @@ export ALLOW_PLOTTING="true"      # tests can run without a display server
 export PYTHONIOENCODING="utf8"    # set encoding for the console
 export PYTHONUNBUFFERED="1"       # disable buffering for the console
 
+ls -l
+
 # check the version
 pypeec --version
 
