@@ -1,15 +1,5 @@
 #!/bin/bash
-# Script for running the tests:
-#   - run the tests
-#   - check the test status
-#
-# The variable "ALLOW_PLOTTING" are allowing the tests to be run without a display server.
-# The variables "PYTHONIOENCODING" and "PYTHONUNBUFFERED" are setting up the Python interpreter.
-#
-# The following variables control the tests:
-#   - TEST_TOL: relative tolerance for the test results
-#   - TEST_CHECK: check (or not) the test results
-#   - TEST_SET: generate (or not) the test results
+# Script for running and checking the tests.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -38,15 +28,15 @@ function test_collect {
   fi
 }
 
-# global variables for the Python interpreter
-export ALLOW_PLOTTING="true"
-export PYTHONIOENCODING="utf8"
-export PYTHONUNBUFFERED="1"
+# set up the Python interpreter
+export ALLOW_PLOTTING="true"      # tests can run without a display server
+export PYTHONIOENCODING="utf8"    # set encoding for the console
+export PYTHONUNBUFFERED="1"       # disable buffering for the console
 
-# global variables for enabling the tests
-export TEST_TOL="1e-5"
-export TEST_CHECK="1"
-export TEST_SET="0"
+# options for the tests
+export TEST_TOL="1e-5"            # relative tolerance for the test results
+export TEST_CHECK="1"             # check (or not) the test results
+export TEST_SET="0"               # generate (or not) the test results
 
 # change to root directory
 cd "$(dirname "$0")" && cd ..
