@@ -44,4 +44,4 @@ FOLDER_CONFIG = "config"
 #       examples_png/gerber
 
 # name of the selected example
-FOLDER_EXAMPLE = "examples_voxel/core"
+FOLDER_EXAMPLE = "tutorial"

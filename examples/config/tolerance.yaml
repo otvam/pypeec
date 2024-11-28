@@ -57,7 +57,7 @@ parallel_sweep:
     #   - "SuperLU" is typically slower but is always available (integrated with SciPy)
     #   - "PARDISO" is typically faster than SuperLU (available through Pydiso)
     #   - "PyAMG" is typically slow but uses less memory (risk of convergence issues)
-    "library": "PARDISO"
+    "library": "SuperLU"
 
     # options for PyAMG
     #   - options for the algebraic multigrid sparse solver
