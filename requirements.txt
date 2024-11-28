@@ -1,10 +1,9 @@
 # Definition of the Python Virtual Environment.
 #
+# WARNING: Only tested with Linux x86/64.
+#
 # WARNING: Only the required packages are in the environment.
-#          The following optional libraries are not installed:
-#              - FFTW, UMFPACK, PyAMG, and MKL/PARDISO
-#              - Jupyter, IPyWidgets, and Trame
-#              - CuPy and CUDA
+#          The optional libraries are not installed.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0

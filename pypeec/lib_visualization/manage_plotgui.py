@@ -5,7 +5,7 @@ The Qt framework or Jupyter are used for showing the plots.
 Warning
 -------
     - This module is using different more or less dirty hacks.
-    - This module is likely to be non-portable across platforms (tested on Linux x64).
+    - This module is likely to be non-portable across platforms.
     - This module is likely to break with newer/older versions of the dependencies.
 
 Todo
