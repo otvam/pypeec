@@ -86,10 +86,9 @@ Packaging and Environment
 
 The following files are describing the package, documentation, and dependencies:
 
-* List of Python dependencies (pinned versions): ``requirements.txt``
-* Package definition with dependencies (minimum versions): ``pyproject.toml``
-* Conda file with the minimum requirements for PyPEEC: ``conda_base.yaml``
-* Conda file including the optional and development packages: ``conda_dev.yaml``
+* Definition of the Python package: ``pyproject.toml``
+* Conda file including the optional and development packages: ``conda.yaml``
+* Python dependencies excluding the optional and development packages: ``requirements.txt``
 * Conda feedstock recipe: https://github.com/conda-forge/pypeec-feedstock
 * The examples and the tutorial are located in the ``examples`` folder.
 * The Sphinx documentation is located in the ``docs`` folder.

@@ -1,59 +1,61 @@
-# Run the "Repository tests" with the following conditions.
+# Install and test the package with the following conditions (various platforms / versions).
 #   - dispatch
 #   - weekly
 #
 # The tests are run on the following repositories:
-#   - installing the package from the PyPi repository
-#   - installing the package from the Conda repository
-#
-# The tests are run on the following systems:
-#   - Linux / Ubuntu / conda / pip
-#   - Microsoft / Windows / conda / pip
-#   - Apple / macOS / conda
-#
-# The tests are run on the following interpreter versions:
-#   - Python 3.10
-#   - Python 3.11
-#   - Python 3.12
+#   - PyPi repository
+#   - Conda repository
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
 name: Run Repository Tests
 
+### ===================== job triggers
 on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
 
+### ===================== job steps
+step_extract: &step_extract
+  name: Prepare the tests
+  shell: bash -el {0}
+  run: |
+    pypeec --version
+    pypeec examples examples
+    pypeec documentation documentation
+step_run: &step_run
+  name: Run the tests
+  shell: bash -el {0}
+  run: |
+    pypeec mesher \
+        --geometry examples/tutorial/geometry.yaml \
+        --voxel examples/tutorial/voxel.json.gz
+    pypeec solver \
+        --voxel examples/tutorial/voxel.json.gz \
+        --problem examples/tutorial/problem.yaml \
+        --tolerance examples/config/tolerance.yaml \
+        --solution examples/tutorial/solution.json.gz
+    pypeec viewer \
+        --voxel examples/tutorial/voxel.json.gz \
+        --viewer examples/config/viewer.yaml \
+        --plot_mode none
+    pypeec plotter \
+        --solution examples/tutorial/solution.json.gz \
+        --plotter examples/config/plotter.yaml \
+        --plot_mode none
+
+### ===================== job environment
 env:
   ALLOW_PLOTTING: "true"
   PYTHONIOENCODING: "utf8"
   PYTHONUNBUFFERED: "1"
-  CMD_EXTRACT: |
-    pypeec --version
-    pypeec examples .
-  CMD_SOLVE: |
-    pypeec mesher \
-        --geometry tutorial/geometry.yaml \
-        --voxel tutorial/voxel.json.gz
-    pypeec solver \
-        --voxel tutorial/voxel.json.gz \
-        --problem tutorial/problem.yaml \
-        --tolerance config/tolerance.yaml \
-        --solution tutorial/solution.json.gz
-  CMD_PLOT: |
-    pypeec viewer \
-        --voxel tutorial/voxel.json.gz \
-        --viewer config/viewer.yaml \
-        --plot_mode none
-    pypeec plotter \
-        --solution tutorial/solution.json.gz \
-        --plotter config/plotter.yaml \
-        --plot_mode none
 
+### ===================== job definition
 jobs:
-  # ===================== run the tests with conda
+  # ===================== run the conda
   conda:
     strategy:
       fail-fast: false
@@ -82,14 +84,10 @@ jobs:
         shell: bash -el {0}
         run: |
           conda install --yes conda-forge::pypeec
-      - name: Run the tests
-        shell: bash -el {0}
-        run: |
-          ${{ env.CMD_EXTRACT }}
-          ${{ env.CMD_SOLVE }}
-          ${{ env.CMD_PLOT }}
-  # ===================== run the tests with pip
-  pip:
+      - *step_extract
+      - *step_run
+  # ===================== run the pypi
+  pypi:
     strategy:
       fail-fast: false
       matrix:
@@ -112,9 +110,5 @@ jobs:
         shell: bash -el {0}
         run: |
           python -m pip install pypeec
-      - name: Run the tests
-        shell: bash -el {0}
-        run: |
-          ${{ env.CMD_EXTRACT }}
-          ${{ env.CMD_SOLVE }}
-          ${{ env.CMD_PLOT }}
+      - *step_extract
+      - *step_run

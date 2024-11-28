@@ -1,57 +1,26 @@
-# Run the "Version tests" with the following conditions.
+# Run all the tests with the following conditions (various platforms / versions).
 #   - dispatch
 #   - weekly
 #
-# The tests are run on the following repositories:
-#   - installing the dependencies from "pyproject.toml"
-#   - installing the dependencies from "pyconda.yaml"
-#
-# The tests are run on the following systems:
-#   - Linux / Ubuntu / conda / pip
-#   - Microsoft / Windows / conda / pip
-#   - Apple / macOS / conda
-#
-# The tests are run on the following interpreter versions:
-#   - Python 3.10
-#   - Python 3.11
-#   - Python 3.12
+# The tests are run on the following environments:
+#   - PyPi environment
+#   - Conda environment
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
 name: Run Version Tests
 
+### ===================== job triggers
 on:
   push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
 
-env:
-  ALLOW_PLOTTING: "true"
-  PYTHONIOENCODING: "utf8"
-  PYTHONUNBUFFERED: "1"
-  CMD_SOLVE: |
-    pypeec mesher \
-        --geometry examples/tutorial/geometry.yaml \
-        --voxel examples/tutorial/voxel.json.gz
-    pypeec solver \
-        --voxel examples/tutorial/voxel.json.gz \
-        --problem examples/tutorial/problem.yaml \
-        --tolerance examples/config/tolerance.yaml \
-        --solution examples/tutorial/solution.json.gz
-  CMD_PLOT: |
-    pypeec viewer \
-        --voxel examples/tutorial/voxel.json.gz \
-        --viewer examples/config/viewer.yaml \
-        --plot_mode none
-    pypeec plotter \
-        --solution examples/tutorial/solution.json.gz \
-        --plotter examples/config/plotter.yaml \
-        --plot_mode none
-
+### ===================== job definition
 jobs:
-  # ===================== run the tests with conda
+  # ===================== run with conda
   conda:
     strategy:
       fail-fast: false
@@ -83,11 +52,9 @@ jobs:
           conda env update --file .github/envs/conda.yaml
       - name: Run the tests
         shell: bash -el {0}
-        run: |
-          ${{ env.CMD_SOLVE }}
-          ${{ env.CMD_PLOT }}
-  # ===================== run the tests with pip
-  pip:
+        run: ./scripts/run_tests.sh
+  # ===================== run with pypi
+  pypi:
     strategy:
       fail-fast: false
       matrix:
@@ -113,6 +80,4 @@ jobs:
           python -m pip install --requirement .github/envs/pip.txt
       - name: Run the tests
         shell: bash -el {0}
-        run: |
-          ${{ env.CMD_SOLVE }}
-          ${{ env.CMD_PLOT }}
+        run: ./scripts/run_tests.sh

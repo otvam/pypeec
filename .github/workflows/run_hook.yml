@@ -1,5 +1,5 @@
-# Run the "Standard tests" with the following conditions.
-#   - push (all)
+# Run all the tests with the following conditions (single platform / version).
+#   - git push
 #   - pull request
 #   - dispatch
 #
@@ -8,11 +8,13 @@
 
 name: Run Hook Tests
 
+### ===================== job triggers
 on:
   push:
   pull_request:
   workflow_dispatch:
 
+### ===================== job definition
 jobs:
   default:
     runs-on: "ubuntu-latest"
@@ -30,5 +32,4 @@ jobs:
           python -m pip install --requirement requirements.txt
       - name: Run the tests
         shell: bash -el {0}
-        run: |
-          ./scripts/run_tests.sh
+        run: ./scripts/run_tests.sh
