@@ -9,7 +9,7 @@ Available Packages
 
 The following **optional libraries are not included** is the package:
 
-* **HPC libraries** - FFTW, UMFPACK, PyAMG, and MKL/PARDISO
+* **HPC libraries** - FFTW, PyAMG, and MKL/PARDISO
 * **Notebook support** - Jupyter, IPyWidgets, and Trame
 * **GPU libraries** - CuPy and CUDA
 

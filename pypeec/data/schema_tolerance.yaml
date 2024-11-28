@@ -183,7 +183,6 @@
                 "type": "string"
                 "enum":
                     - "SuperLU"
-                    - "UMFPACK"
                     - "PARDISO"
                     - "PyAMG"
             "pyamg_options":

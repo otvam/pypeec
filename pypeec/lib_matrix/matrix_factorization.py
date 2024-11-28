@@ -3,14 +3,8 @@ Module for factorizing sparse matrix.
 
 This module is used as a common interface for different solvers:
     - SuperLU is typically slower but is always available (integrated with SciPy)
-    - UMFPACK is typically faster than SuperLU (available through SciKits)
-    - PARDISO is typically faster than UMFPACK (available through Pydiso)
+    - PARDISO is typically faster than SuperLU (available through Pydiso)
     - PyAMG is typically slow but uses less memory (risk of convergence issues)
-
-Todo
-----
-    - The warning triggered by UMFPACK should be handled in a cleaner way.
-    - Such warnings are triggered by ill-conditioned matrices.
 """
 
 __author__ = "Thomas Guillod"
@@ -120,25 +114,6 @@ def _get_fact_pyamg(mat):
     return factor
 
 
-def _get_fact_umfpack(mat):
-    """
-    Factorize a matrix with UMFPACK.
-    """
-
-    # factorize the matrix
-    try:
-        mat_factor = IMPORTLIB.splu(mat)
-    except Warning:
-        raise RuntimeError("invalid factorization: UMFPACK") from None
-
-    # matrix solver
-    def factor(rhs):
-        sol = mat_factor.solve(rhs)
-        return sol
-
-    return factor
-
-
 def _get_factorize_sub(mat):
     """
     Factorize a sparse matrix (main function).
@@ -168,8 +143,6 @@ def _get_factorize_sub(mat):
     LOGGER.debug("compute factorization")
     if LIBRARY == "SuperLU":
         factor = _get_fact_superlu(mat)
-    elif LIBRARY == "UMFPACK":
-        factor = _get_fact_umfpack(mat)
     elif LIBRARY == "PARDISO":
         factor = _get_fact_pardiso(mat)
     elif LIBRARY == "PyAMG":
@@ -199,8 +172,6 @@ def set_options(factorization_options):
     # import the right library
     if LIBRARY == "SuperLU":
         import scipy.sparse.linalg as lib_tmp
-    elif LIBRARY == "UMFPACK":
-        import scikits.umfpack as lib_tmp
     elif LIBRARY == "PARDISO":
         import pydiso.mkl_solver as lib_tmp
     elif LIBRARY == "PyAMG":
@@ -215,7 +186,8 @@ def set_options(factorization_options):
     IMPORTLIB = lib_tmp
 
     # prevent problematic matrices to trigger warnings
-    warnings.filterwarnings("error", module="scikits.umfpack")
+    warnings.filterwarnings("error", module="scipy.sparse.linalg")
+    warnings.filterwarnings("error", module="pyamg.aggregation")
     warnings.filterwarnings("error", module="pydiso.mkl_solver")
 
 

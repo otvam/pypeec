@@ -20,7 +20,6 @@ Additionally, the following **libraries** are used for the **plotter** and **vie
 The following **optional packages** can be used for speeding up the solver:
 
 * PyAMG (pure Python solver)
-* UMFPACK (available through SciKits)
 * MKL/PARDISO (available through Pydiso)
 * FFTW (available through pyFFTW)
 * CuPy (using GPUs through CUDA)

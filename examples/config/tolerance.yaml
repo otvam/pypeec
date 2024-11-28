@@ -55,10 +55,9 @@ parallel_sweep:
 "factorization_options":
     # matrix factorization library
     #   - "SuperLU" is typically slower but is always available (integrated with SciPy)
-    #   - "UMFPACK" is typically faster than SuperLU (available through SciKits)
-    #   - "PARDISO" is typically faster than UMFPACK (available through Pydiso)
+    #   - "PARDISO" is typically faster than SuperLU (available through Pydiso)
     #   - "PyAMG" is typically slow but uses less memory (risk of convergence issues)
-    "library": "SuperLU"
+    "library": "PARDISO"
 
     # options for PyAMG
     #   - options for the algebraic multigrid sparse solver
