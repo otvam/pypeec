@@ -31,26 +31,23 @@ env:
   ALLOW_PLOTTING: "true"
   PYTHONIOENCODING: "utf8"
   PYTHONUNBUFFERED: "1"
-  CMD_EXTRACT: |
-    pypeec --version
-    pypeec examples .
   CMD_SOLVE: |
     pypeec mesher \
-        --geometry tutorial/geometry.yaml \
-        --voxel tutorial/voxel.json.gz
+        --geometry examples/tutorial/geometry.yaml \
+        --voxel examples/tutorial/voxel.json.gz
     pypeec solver \
-        --voxel tutorial/voxel.json.gz \
-        --problem tutorial/problem.yaml \
-        --tolerance config/tolerance.yaml \
-        --solution tutorial/solution.json.gz
+        --voxel examples/tutorial/voxel.json.gz \
+        --problem examples/tutorial/problem.yaml \
+        --tolerance examples/config/tolerance.yaml \
+        --solution examples/tutorial/solution.json.gz
   CMD_PLOT: |
     pypeec viewer \
-        --voxel tutorial/voxel.json.gz \
-        --viewer config/viewer.yaml \
+        --voxel examples/tutorial/voxel.json.gz \
+        --viewer examples/config/viewer.yaml \
         --plot_mode none
     pypeec plotter \
-        --solution tutorial/solution.json.gz \
-        --plotter config/plotter.yaml \
+        --solution examples/tutorial/solution.json.gz \
+        --plotter examples/config/plotter.yaml \
         --plot_mode none
 
 jobs:
@@ -79,17 +76,14 @@ jobs:
           python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
-          environment-file: pyconda.yaml
           use-mamba: true
       - name: Install dependencies
         shell: bash -el {0}
         run: |
           conda env update --file .github/envs/conda.yaml
-          python -m pip install --no-deps .
       - name: Run the tests
         shell: bash -el {0}
         run: |
-          ${{ env.CMD_EXTRACT }}
           ${{ env.CMD_SOLVE }}
           ${{ env.CMD_PLOT }}
   # ===================== run the tests with pip
@@ -117,10 +111,8 @@ jobs:
         shell: bash -el {0}
         run: |
           python -m pip install --requirement .github/envs/pip.txt
-          python -m pip install --no-deps .
       - name: Run the tests
         shell: bash -el {0}
         run: |
-          ${{ env.CMD_EXTRACT }}
           ${{ env.CMD_SOLVE }}
           ${{ env.CMD_PLOT }}
