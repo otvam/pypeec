@@ -37,7 +37,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        sparse-checkout: .github
+        with:
+          sparse-checkout: .github
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v3
         with:
@@ -69,7 +70,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        sparse-checkout: .github
+        with:
+          sparse-checkout: .github
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
