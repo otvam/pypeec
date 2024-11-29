@@ -1,8 +1,5 @@
 # Definition of the Conda Environment for PyPEEC (minimum versions).
 #
-# WARNING: Only the required packages are in the environment.
-#          The optional libraries are not installed.
-#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
