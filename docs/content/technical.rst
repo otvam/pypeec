@@ -30,14 +30,14 @@ Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
 Supported Platforms
 -------------------
 
-The main **target platform** of PyPEEC is **Linux** on x86/x64:
+The main **target platform** of PyPEEC is **Linux** on x86/x64/glibc:
 
-* Linux / RedHat 7.9 on x86/x64
-* Linux / RedHat 8.7 on x86/x64
-* Linux / Debian 12.4 on x86/x64
-* Linux / Ubuntu 20.04 on x86/x64
-* Linux / Ubuntu 22.04 on x86/x64
-* Linux / Ubuntu 24.04 on x86/x64
+* Linux / RedHat 7.9 on x86/x64/glibc
+* Linux / RedHat 8.7 on x86/x64/glibc
+* Linux / Debian 12.4 on x86/x64/glibc
+* Linux / Ubuntu 20.04 on x86/x64/glibc
+* Linux / Ubuntu 22.04 on x86/x64/glibc
+* Linux / Ubuntu 24.04 on x86/x64/glibc
 
 The following **platforms** and systems have been  **partially tested**:
 

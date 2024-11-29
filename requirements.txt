@@ -1,6 +1,6 @@
 # Definition of the Python Virtual Environment.
 #
-# WARNING: Only tested with Linux x86/64.
+# WARNING: Only tested with Linux x86/x64/glibc.
 #
 # WARNING: Only the required packages are in the environment.
 #          The optional libraries are not installed.
