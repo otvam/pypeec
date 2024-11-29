@@ -64,8 +64,8 @@ if __name__ == "__main__":
         "margin": 0.1,                    # relative margin to be considered around the board
         "oversampling": 1.0,              # oversampling factor for exporting the GERBER files
         "voxel": 17.0e-6,                 # size of the voxel
-        "folder_gerber": "../gerber",     # GERBER file location
-        "folder_png": "../png",           # PNG file location
+        "folder_gerber": "gerber",        # GERBER file location
+        "folder_png": "png",              # PNG file location
     }
 
     # ######################## run
