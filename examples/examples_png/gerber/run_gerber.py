@@ -7,7 +7,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import sys
-from pypeec.utils import gerber_png
+from pypeec.utils import gerber
 
 
 if __name__ == "__main__":
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     }
 
     # ######################## run
-    gerber_png.get_convert(data_export, data_gerber, data_stack)
+    gerber.get_convert(data_export, data_gerber, data_stack)
 
     # ######################## exit
     sys.exit(0)

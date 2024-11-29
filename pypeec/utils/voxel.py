@@ -17,6 +17,9 @@ def get_idx_linear(n, idx_tensor):
     # extract the voxel data
     (nx, ny, nz) = n
 
+    # cast to array
+    idx_tensor = np.array(idx_tensor, dtype=np.int64)
+
     # extract indices
     idx_x = idx_tensor[:, 0]
     idx_y = idx_tensor[:, 1]
@@ -27,7 +30,7 @@ def get_idx_linear(n, idx_tensor):
         raise ValueError("invalid index range (x coordinate)")
     if not (np.all(idx_y >= 0) and np.all(idx_y < nx)):
         raise ValueError("invalid index range (y coordinate)")
-    if not (np.all(idx_z >= 0) and np.all(idx_z < nx)):
+    if not (np.all(idx_z >= 0) and np.all(idx_z < nz)):
         raise ValueError("invalid index range (z coordinate)")
 
     # convert tensor indices into linear indices
@@ -44,6 +47,9 @@ def get_idx_tensor(n, idx_linear):
     # extract the voxel data
     (nx, ny, nz) = n
     nv = nx*ny*nz
+
+    # cast to array
+    idx_linear = np.array(idx_linear, dtype=np.int64)
 
     # check bounds
     if not (np.all(idx_linear >= 0) and np.all(idx_linear < nv)):
