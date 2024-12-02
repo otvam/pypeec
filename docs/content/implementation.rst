@@ -66,13 +66,14 @@ The following optimizations are available for the computationally heavy operatio
 * Two different iterative solvers are available for the dense matrices.
 
   * GMRES - Generalized Minimal RESidual algorithm
-  * GCROT - Flexible GCROT(m,k) algorithm
+  * GCROT - Flexible GCROT(m,k) algorithm (often faster)
 
 * The FFTs for computing matrix-vector product can be done with several algorithms.
 
   * NumPy FFT library is always available (integrated with NumPy)
   * SciPy FFT library is always available (integrated with SciPy)
   * FFTW has to be installed separately (available through pyFFTW)
+  * MKL/FFT has to be installed separately (available through mkl_fft)
   * CuPy is extremely fast but require GPUs compatible with the CUDA toolkit
 
 * The ``file_tolerance`` input file is setting up all the numerical parameters:

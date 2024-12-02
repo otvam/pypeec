@@ -7,8 +7,8 @@
 #          The packaging/development tools are included.
 #
 # WARNING: Some listed packages are NOT open source.
-#          INTEL MKL is not open source.
-#          NVIDIA CUDA is not open source.
+#          INTEL/MKL is not open source.
+#          NVIDIA/CUDA is not open source.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -56,6 +56,7 @@ dependencies:
   - cupy=13.3.0
   - pyfftw=0.15.0
   - pydiso=0.1.2
+  - mkl_fft=1.3.11
   # optional optimized numerical toolkits
   - mkl-devel=2024.2.2
   - cudatoolkit=11.8.0

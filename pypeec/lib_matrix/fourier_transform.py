@@ -4,6 +4,7 @@ Module for computer FFT/iFFT of tensors.
 This module is used as a common interface for different FFT libraries:
     - NumPy FFT library
     - SciPy FFT library
+    - MKL/FFT library (available through mkl_fft)
     - FFTW FFT library (available through pyFFTW)
     - CuPy FFT library (computation with GPUs)
 """
@@ -33,27 +34,27 @@ def set_options(fft_options):
 
     # import the right library
     if library == "CuPy":
-        import cupy.fft as fftc
+        import cupy.fft
 
         # find FFTN function
         def fct_fftn(mat, shape, axes, _):
-            return fftc.fftn(mat, shape, axes=axes)
+            return cupy.fft.fftn(mat, shape, axes=axes)
 
         # find iFFTN function
         def fct_ifftn(mat, shape, axes, _):
-            return fftc.ifftn(mat, shape, axes=axes)
+            return cupy.fft.ifftn(mat, shape, axes=axes)
     elif library == "NumPy":
-        import numpy.fft as fftn
+        import numpy.fft
 
         # find FFTN function
         def fct_fftn(mat, shape, axes, _):
-            return fftn.fftn(mat, shape, axes=axes)
+            return numpy.fft.fftn(mat, shape, axes=axes)
 
         # find iFFTN function
         def fct_ifftn(mat, shape, axes, _):
-            return fftn.ifftn(mat, shape, axes=axes)
+            return numpy.fft.ifftn(mat, shape, axes=axes)
     elif library == "SciPy":
-        import scipy.fft as ffts
+        import scipy.fft
 
         # find the number of workers
         if scipy_worker < 0:
@@ -63,11 +64,21 @@ def set_options(fft_options):
 
         # find FFTN function
         def fct_fftn(mat, shape, axes, replace):
-            return ffts.fftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
+            return scipy.fft.fftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
 
         # find iFFTN function
         def fct_ifftn(mat, shape, axes, replace):
-            return ffts.ifftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
+            return scipy.fft.ifftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
+    elif library == "MKL":
+        import mkl_fft
+
+        # find FFTN function
+        def fct_fftn(mat, shape, axes, replace):
+            return mkl_fft.fftn(mat, shape, axes=axes, overwrite_x=replace)
+
+        # find iFFTN function
+        def fct_ifftn(mat, shape, axes, replace):
+            return mkl_fft.ifftn(mat, shape, axes=axes, overwrite_x=replace)
     elif library == "FFTW":
         import pyfftw
         from pyfftw.interfaces import cache

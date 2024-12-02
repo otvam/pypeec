@@ -48,10 +48,9 @@ Library Issues
     GPU support is optional, PyPEEC is fully functional without GPU support.
 
 .. Warning::
-    **FFTW, PyAMG, and MKL/PARDISO** are not included in the default package dependencies.
+    **FFTW, PyAMG, MKL/FFT, and MKL/PARDISO** are not included in the default package dependencies.
     These libraries can be tricky to install, especially on MS Windows or Apple MacOS.
-    Make sure that these libraries are compiled with multithreading support.
-    FFTW, PyAMG, and MKL/PARDISO are optional, PyPEEC is fully functional without them.
+    The aforementioned libraries are optional, PyPEEC is fully functional without them.
 
 General Issues
 --------------
@@ -65,4 +64,4 @@ General Issues
     The **dependencies** are under **various licences**.
     Make sure to respect these licenses if you package and/or distribute these libraries.
     Qt is under a copyleft license (LGPL and GPL). FFTW is also under a copyleft license (GPL).
-    MKL/PARDISO and CUDA are proprietary software (these libraries are optional).
+    INTEL/MKL and NVIDIA/CUDA are proprietary software (these libraries are optional).

@@ -389,7 +389,7 @@ def set_options(fft_options):
         import cupy as lib_tmp
         NPCP = lib_tmp
         USE_FFT_GPU = True
-    elif LIBRARY in ["NumPy", "SciPy", "FFTW"]:
+    elif LIBRARY in ["NumPy", "SciPy", "MKL", "FFTW"]:
         import numpy as lib_tmp
         NPCP = lib_tmp
         USE_FFT_GPU = False
