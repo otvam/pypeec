@@ -155,7 +155,9 @@
             "library":
                 "type": "string"
                 "enum":
+                    - "NumPy"
                     - "SciPy"
+                    - "MKL"
                     - "FFTW"
                     - "CuPy"
             "scipy_worker":
