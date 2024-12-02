@@ -70,6 +70,7 @@ The following optimizations are available for the computationally heavy operatio
 
 * The FFTs for computing matrix-vector product can be done with several algorithms.
 
+  * NumPy FFT library is always available (integrated with NumPy)
   * SciPy FFT library is always available (integrated with SciPy)
   * FFTW has to be installed separately (available through pyFFTW)
   * CuPy is extremely fast but require GPUs compatible with the CUDA toolkit

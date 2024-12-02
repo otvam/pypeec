@@ -155,6 +155,7 @@
             "library":
                 "type": "string"
                 "enum":
+                    - "NumPy"
                     - "SciPy"
                     - "FFTW"
                     - "CuPy"

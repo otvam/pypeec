@@ -2,6 +2,7 @@
 Module for computer FFT/iFFT of tensors.
 
 This module is used as a common interface for different FFT libraries:
+    - NumPy FFT library
     - SciPy FFT library
     - FFTW FFT library (available through pyFFTW)
     - CuPy FFT library (computation with GPUs)
@@ -41,6 +42,16 @@ def set_options(fft_options):
         # find iFFTN function
         def fct_ifftn(mat, shape, axes, _):
             return fftc.ifftn(mat, shape, axes=axes)
+    elif library == "NumPy":
+        import numpy.fft as fftn
+
+        # find FFTN function
+        def fct_fftn(mat, shape, axes, _):
+            return fftn.fftn(mat, shape, axes=axes)
+
+        # find iFFTN function
+        def fct_ifftn(mat, shape, axes, _):
+            return fftn.ifftn(mat, shape, axes=axes)
     elif library == "SciPy":
         import scipy.fft as ffts
 
