@@ -25,7 +25,7 @@ pypeec/data/version.txt
 pypeec/data/examples.zip
 pypeec/data/documentation.zip
 
-# exclude generated files
+# exclude generated directories
 html/
 dist/
 build/
