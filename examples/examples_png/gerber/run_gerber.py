@@ -52,11 +52,20 @@ if __name__ == "__main__":
 
     # assemble the GERBER data
     data_gerber = {
-        "gerber_edge": "pcb-edge.gbr",           # name of the GERBER file with the board edges
-        "color_background": (255, 255, 255),     # background color for the images
-        "color_edge": (0, 0, 0),                 # color of the board edges
-        "color_def": color_def,                  # dict with the color definition
-        "gerber_def": gerber_def                 # dict with the GERBER file definition
+        "gerber_edge": "pcb-edge.gbr",         # name of the GERBER file with the board edges
+        "color_background": (255, 255, 255),   # background color for the images
+        "color_edge": (0, 0, 0),               # color of the board edges
+        "color_def": color_def,                # dict with the color definition
+        "gerber_def": gerber_def               # dict with the GERBER file definition
+    }
+
+    # get the export instructions
+    data_export = {
+        "margin": 0.1,               # relative margin to be considered around the board
+        "oversampling": 1.0,         # oversampling factor for exporting the GERBER files
+        "voxel": 17.0e-6,            # size of the voxel
+        "folder_gerber": "gerber",   # GERBER file location
+        "folder_png": "png",         # PNG file location
     }
 
     # get the layer stack (combination between GERBER files and colors)
@@ -80,15 +89,6 @@ if __name__ == "__main__":
         ],
     }
 
-    # get the export instructions
-    data_export = {
-        "margin": 0.1,                    # relative margin to be considered around the board
-        "oversampling": 1.0,              # oversampling factor for exporting the GERBER files
-        "voxel": 17.0e-6,                 # size of the voxel
-        "folder_gerber": "gerber",        # GERBER file location
-        "folder_png": "png",              # PNG file location
-    }
-
     # ########################################################
     # ### convert the GERBER files
     # ########################################################
@@ -96,11 +96,13 @@ if __name__ == "__main__":
     # convert the GERBER files to PNG files
     gerber.get_convert(data_export, data_gerber, data_stack)
 
-    # show the images
+    # plot the generated images
     _plot_image("png", "front")
     _plot_image("png", "back")
     _plot_image("png", "terminal")
     _plot_image("png", "via")
+
+    # show the plots
     plt.show()
 
     # exit
