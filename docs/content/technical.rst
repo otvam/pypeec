@@ -73,13 +73,14 @@ Logger and Data Serialization
 For the logger, PyPEEC is using **SciLogger**:
 
 * Custom logger configuration files can be set with the  ``SCILOGGER`` environment variable.
-* More information about the logging module: https://github.com/otvam/scilogger
+* More information on the logging module: https://github.com/otvam/scilogger
 
 For the serialization, PyPEEC is using **SciSave**:
 
 * The input/configuration files are either JSON or YAML files.
 * The output/data files are either JSON or Pickle files.
-* More information about the serialization module: https://github.com/otvam/scisave
+* Pickle is faster than JSON for large output/data files.
+* More information on the serialization module: https://github.com/otvam/scisave
 
 Packaging and Environment
 -------------------------

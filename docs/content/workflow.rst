@@ -79,7 +79,6 @@ Additionally, a command line tool is located in the ``pypeec.script`` module:
 * ``pypeec plotter`` for running the **plotter**
 * ``pypeec examples`` for extracting the **examples**
 * ``pypeec documentation`` for extracting the **documentation**
-* ``pypeec config`` for extracting the **default config file**
 
 Input/Output File Description
 -----------------------------
