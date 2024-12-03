@@ -28,7 +28,7 @@ def _create_temp_file():
     Get a temporary file.
     """
 
-    (_, filename) = tempfile.mkstemp(suffix=".gz")
+    (_, filename) = tempfile.mkstemp(suffix=".pck")
 
     return filename
 

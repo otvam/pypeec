@@ -1,0 +1,71 @@
+# Definition of a "file_problem" data.
+#
+# This file is used by the solver.
+# Definition of the magnetic problem to be solved.
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+"material_def":
+    "copper":
+        "domain_list": ["src", "sink", "trace"]
+        "material_type": "electric"
+        "orientation_type": "isotropic"
+        "var_type": "lumped"
+"source_def":
+    "src":
+        "domain_list": ["src"]
+        "source_type": "voltage"
+        "var_type": "lumped"
+    "sink":
+        "domain_list": ["sink"]
+        "source_type": "voltage"
+        "var_type": "lumped"
+"material_val": &material_val
+    "copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
+"source_val": &source_val
+    "src": {"V_re": +1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
+    "sink": {"V_re": -1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
+"sweep_solver":
+    "sim_0":
+        "init": null
+        "param":
+            "freq": 10.0e+03
+            "material_val": *material_val
+            "source_val": *source_val
+    "sim_1":
+        "init": null
+        "param":
+            "freq": 21.5e+03
+            "material_val": *material_val
+            "source_val": *source_val
+    "sim_2":
+        "init": null
+        "param":
+            "freq": 46.4e+03
+            "material_val": *material_val
+            "source_val": *source_val
+    "sim_3":
+        "init": null
+        "param":
+            "freq": 100.0e+03
+            "material_val": *material_val
+            "source_val": *source_val
+    "sim_4":
+        "init": null
+        "param":
+            "freq": 215.0e+03
+            "material_val": *material_val
+            "source_val": *source_val
+    "sim_5":
+        "init": null
+        "param":
+            "freq": 464.0e+03
+            "material_val": *material_val
+            "source_val": *source_val
+    "sim_6":
+        "init": null
+        "param":
+            "freq": 1000.0e+03
+            "material_val": *material_val
+            "source_val": *source_val

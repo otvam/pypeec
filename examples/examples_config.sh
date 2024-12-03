@@ -20,11 +20,12 @@ FOLDER_CONFIG="config"
 #       examples_voxel/distributed
 #       examples_voxel/logo
 #   examples_shape
+#       examples_shape/coplanar
+#       examples_shape/parallel
 #       examples_shape/busbar
 #       examples_shape/wire
 #       examples_shape/hole
-#       examples_shape/coplanar
-#       examples_shape/parallel
+#       examples_shape/pwm
 #   examples_stl
 #       examples_stl/inductor_air
 #       examples_stl/inductor_core

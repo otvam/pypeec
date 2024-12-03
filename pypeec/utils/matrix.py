@@ -279,7 +279,7 @@ def get_extract(data_solution, sweep_list, terminal_list):
     data_init = data_solution["data_init"]
     data_sweep = data_solution["data_sweep"]
 
-    # check status
+    # check solution
     assert isinstance(data_init, dict), "invalid solution"
     assert isinstance(data_sweep, dict), "invalid solution"
 
