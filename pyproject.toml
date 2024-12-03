@@ -87,7 +87,7 @@ packages = [
     "pypeec",
     "pypeec.lib_mesher",
     "pypeec.lib_solver",
-    "pypeec.lib_visualization",
+    "pypeec.lib_plot",
     "pypeec.lib_check",
     "pypeec.lib_matrix",
     "pypeec.run",
