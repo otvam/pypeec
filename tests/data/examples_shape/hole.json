@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/hole",
-        "timestamp": "2024-10-03 18:24:28.654690"
+        "timestamp": "2024-12-03 12:07:21.953657"
     },
     "mesher": {
         "n_total": 19200,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 0.0,
             "has_converged": true,
-            "P_total": 109.54204243789712,
-            "W_total": 0.00013462443208337447
+            "P_total": 109.5420424378973,
+            "W_total": 0.00013462443208337469
         }
     }
 }

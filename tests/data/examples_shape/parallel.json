@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/parallel",
-        "timestamp": "2024-10-03 18:24:32.162198"
+        "timestamp": "2024-12-03 12:07:23.247911"
     },
     "mesher": {
         "n_total": 26000,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 0.0,
             "has_converged": true,
-            "P_total": 0.00446249999999877,
-            "W_total": 1.1460684678243022e-08
+            "P_total": 0.004462499999998941,
+            "W_total": 1.1460684678243459e-08
         }
     }
 }

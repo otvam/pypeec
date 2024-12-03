@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/wire",
-        "timestamp": "2024-10-03 18:25:07.832593"
+        "timestamp": "2024-12-03 12:08:31.936748"
     },
     "mesher": {
         "n_total": 25000,
@@ -11,14 +11,14 @@
         "sim_dc": {
             "freq": 0.0,
             "has_converged": true,
-            "P_total": 15.752945422577469,
-            "W_total": 0.0006446185420702136
+            "P_total": 15.752945422577145,
+            "W_total": 0.0006446185420702006
         },
         "sim_ac": {
             "freq": 100000.0,
             "has_converged": true,
-            "P_total": 16.74326642677522,
-            "W_total": 0.0002564114212085483
+            "P_total": 16.74326511694347,
+            "W_total": 0.0002564114004987317
         }
     }
 }

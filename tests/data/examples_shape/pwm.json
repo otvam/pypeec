@@ -1,0 +1,54 @@
+{
+    "metadata": {
+        "name": "examples_shape/pwm",
+        "timestamp": "2024-12-03 12:07:58.755813"
+    },
+    "mesher": {
+        "n_total": 99225,
+        "n_used": 71845
+    },
+    "solver": {
+        "sim_0": {
+            "freq": 10000.0,
+            "has_converged": true,
+            "P_total": 80.89818241027125,
+            "W_total": 0.0001711310820638395
+        },
+        "sim_1": {
+            "freq": 21500.0,
+            "has_converged": true,
+            "P_total": 67.43801074722526,
+            "W_total": 0.00014221761412153022
+        },
+        "sim_2": {
+            "freq": 46400.0,
+            "has_converged": true,
+            "P_total": 38.278009710674134,
+            "W_total": 7.961742587510227e-05
+        },
+        "sim_3": {
+            "freq": 100000.0,
+            "has_converged": true,
+            "P_total": 13.36851593782345,
+            "W_total": 2.636415472197548e-05
+        },
+        "sim_4": {
+            "freq": 215000.0,
+            "has_converged": true,
+            "P_total": 3.8317689489984064,
+            "W_total": 6.591176247075354e-06
+        },
+        "sim_5": {
+            "freq": 464000.0,
+            "has_converged": true,
+            "P_total": 1.0619826219716921,
+            "W_total": 1.5040433044346987e-06
+        },
+        "sim_6": {
+            "freq": 1000000.0,
+            "has_converged": true,
+            "P_total": 0.28616411413255705,
+            "W_total": 3.337010995734245e-07
+        }
+    }
+}

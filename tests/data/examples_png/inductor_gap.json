@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_png/inductor_gap",
-        "timestamp": "2024-10-03 18:26:11.033885"
+        "timestamp": "2024-12-03 12:09:19.684622"
     },
     "mesher": {
         "n_total": 87480,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 0.0,
             "has_converged": true,
-            "P_total": 62.45639959938359,
-            "W_total": 0.054459824451705496
+            "P_total": 62.45639959949551,
+            "W_total": 0.054459824397006557
         }
     }
 }

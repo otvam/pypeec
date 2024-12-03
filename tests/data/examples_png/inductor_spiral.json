@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_png/inductor_spiral",
-        "timestamp": "2024-10-03 18:26:36.406772"
+        "timestamp": "2024-12-03 12:09:41.355648"
     },
     "mesher": {
         "n_total": 225280,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 1000000.0,
             "has_converged": true,
-            "P_total": 4.47548206048483,
-            "W_total": 1.3023142243700648e-06
+            "P_total": 4.475482060483626,
+            "W_total": 1.302314224370035e-06
         }
     }
 }

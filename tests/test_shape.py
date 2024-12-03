@@ -16,11 +16,12 @@ class TestShape(test_workflow.TestWorkflow):
 
 # name of the examples
 name_list = [
+    "examples_shape/coplanar",
+    "examples_shape/parallel",
     "examples_shape/busbar",
     "examples_shape/wire",
     "examples_shape/hole",
-    "examples_shape/coplanar",
-    "examples_shape/parallel",
+    "examples_shape/pwm",
 ]
 
 # add the tests

@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/busbar",
-        "timestamp": "2024-10-03 18:24:23.150923"
+        "timestamp": "2024-12-03 12:07:19.090166"
     },
     "mesher": {
         "n_total": 10000,
@@ -17,8 +17,8 @@
         "sim_ac": {
             "freq": 1000000.0,
             "has_converged": true,
-            "P_total": 124.88424256427072,
-            "W_total": 1.173589423339258e-05
+            "P_total": 124.88424260525238,
+            "W_total": 1.173589424203397e-05
         }
     }
 }
