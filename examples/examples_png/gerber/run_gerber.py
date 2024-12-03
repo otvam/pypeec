@@ -34,20 +34,20 @@ if __name__ == "__main__":
 
     # definition of the colors
     color_def = {
-        "none":  (255, 255, 255),
-        "copper": (255, 0, 0),
-        "sink":  (0, 0, 255),
-        "src": (0, 255, 0),
+        "none":  (255, 255, 255),   # color used for the background
+        "copper": (255, 0, 0),      # color used for the copper material
+        "sink":  (0, 0, 255),       # color used for the sink terminal
+        "src": (0, 255, 0),         # color used for the source terminal
     }
 
     # definition of the GERBER files
     gerber_def = {
-        "front": "pcb-front_copper.gbr",
-        "back": "pcb-back_copper.gbr",
-        "src": "pcb-src.gbr",
-        "sink": "pcb-sink.gbr",
-        "drill": "pcb-PTH.drl",
-        "via":  "pcb-VIA.drl",
+        "front": "pcb-front_copper.gbr",   # top layer of the PCB
+        "back": "pcb-back_copper.gbr",     # bottom layer of the PCB
+        "sink": "pcb-sink.gbr",            # layer with the  sink terminal
+        "src": "pcb-src.gbr",              # layer with the  source terminal
+        "drill": "pcb-PTH.drl",            # layer with the via drilling
+        "via":  "pcb-VIA.drl",             # layer with the via platting
     }
 
     # assemble the GERBER data
