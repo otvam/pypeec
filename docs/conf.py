@@ -49,14 +49,7 @@ rst_epilog = rst_epilog.format(ver=ver, date=date)
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.napoleon',
 ]
-
-# autodoc order
-autodoc_member_order = 'bysource'
-
-# disable API file generation
-autosummary_generate = False
 
 # allowed redirect for the external links
 linkcheck_allowed_redirects = {

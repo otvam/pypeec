@@ -22,4 +22,3 @@ pypeec viewer \
     --voxel $FILE_VOXEL \
     --viewer $FILE_VIEWER \
     --tag_plot $TAG_PLOT \
-    --plot_mode qt

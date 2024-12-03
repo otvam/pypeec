@@ -23,11 +23,11 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import scilogger
-from pypeec.lib_visualization import parse_plotter
-from pypeec.lib_visualization import parse_voxel
-from pypeec.lib_visualization import manage_pyvista
-from pypeec.lib_visualization import manage_matplotlib
-from pypeec.lib_visualization import manage_plotgui
+from pypeec.lib_plot import parse_plotter
+from pypeec.lib_plot import parse_voxel
+from pypeec.lib_plot import manage_pyvista
+from pypeec.lib_plot import manage_matplotlib
+from pypeec.lib_plot import manage_plotgui
 from pypeec.lib_check import check_data_format
 from pypeec.lib_check import check_data_options
 
@@ -141,7 +141,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
 
 def run(
         data_solution, data_plotter,
-        tag_sweep=None, tag_plot=None, plot_mode="qt", folder=None, name=None
+        tag_sweep=None, tag_plot=None, plot_mode=None, folder=None, name=None
 ):
     """
     Main script for plotting the solution of a PEEC problem.

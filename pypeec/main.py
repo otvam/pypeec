@@ -27,12 +27,12 @@ def run_mesher_data(data_geometry):
     Parameters
     ----------
     data_geometry : data
-        The dict describes the geometry, meshing and resampling process.
+        - The dict describes the geometry, meshing and resampling process.
 
     Returns
     -------
     data_voxel : data
-        The dict describes the voxel structure.
+        - The dict describes the meshed voxel structure.
     """
 
     # execute workflow
@@ -63,11 +63,11 @@ def run_mesher_file(file_geometry, file_voxel):
     Parameters
     ----------
     file_geometry : filename
-        The file content describes the geometry, meshing and resampling process.
-        This input file is loaded by this function (JSON or YAML format).
+        - The file content describes the geometry, meshing and resampling process.
+        - This input file is loaded by this function (JSON or YAML format).
     file_voxel : filename
-        The file content describes the voxel structure.
-        This output file is written by this function (JSON or Pickle format).
+        - The file content describes the meshed voxel structure.
+        - This output file is created by this function (JSON or Pickle format).
     """
 
     # load data
@@ -94,32 +94,29 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
     """
     Main script for visualizing a 3D voxel structure.
         - Get the voxel data as an argument.
-        - Get the point data as an argument.
         - Get the viewer data as an argument.
 
     Parameters
     ----------
     data_voxel : data
-        The dict describes the voxel structure.
+        - The dict describes the meshed voxel structure.
     data_viewer: data
-        The dict describes the different plots to be created.
+        - The dict describes the different plots to be created.
     tag_plot : list
-        The list describes plots to be shown.
-        If None, all the plots are shown (default).
-        This argument is optional.
+        - The list describes plots to be shown.
+        - If None or omitted: all the plots are shown.
     plot_mode : string
-        If "qt", the Qt framework is used for the rendering (default).
-        If "nb", the plots are rendered within the Jupyter notebook.
-        If "save", the plots are not shown but saved as screenshots.
-        If "none", the plots are not shown (test mode).
-        This argument is optional.
+        - If "qt", the Qt framework is used for the rendering.
+        - If "nb", the plots are rendered within the Jupyter notebook.
+        - If "save", the plots are not shown but saved as screenshots.
+        - If "debug", the plots are not shown (test mode).
+        - If None or omitted: the Qt framework is used.
     folder : string
-        Folder name for saving the screenshots.
-        The current directory is used as the default directory.
-        This argument is optional.
+        - Folder name for saving the screenshots.
+        - If None or omitted: the current directory is used.
     name : string
-        Prepended at the beginning of the screenshot filenames.
-        This argument is optional.
+        - Prepended at the beginning of the screenshot filenames.
+        - If None or omitted: the original filenames are used.
     """
 
     # execute workflow
@@ -143,34 +140,31 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
     """
     Main script for visualizing a 3D voxel structure.
         - Load the voxel data from a file.
-        - Load the point data from a file.
         - Load the viewer data from a file.
 
     Parameters
     ----------
     file_voxel : filename
-        The file content describes the voxel structure.
-        This input file is loaded by this function (JSON or Pickle format).
+        - The file content describes the meshed voxel structure.
+        - This input file is loaded by this function (JSON or Pickle format).
     file_viewer: filename
         The file content describes the different plots to be created.
         This input file is loaded by this function (JSON or YAML format).
     tag_plot : list
-        The list describes plots to be shown.
-        If None, all the plots are shown (default).
-        This argument is optional.
+        - The list describes plots to be shown.
+        - If None or omitted: all the plots are shown.
     plot_mode : string
-        If "qt", the Qt framework is used for the rendering (default).
-        If "nb", the plots are rendered within the Jupyter notebook.
-        If "save", the plots are not shown but saved as screenshots.
-        If "none", the plots are not shown (test mode).
-        This argument is optional.
+        - If "qt", the Qt framework is used for the rendering.
+        - If "nb", the plots are rendered within the Jupyter notebook.
+        - If "save", the plots are not shown but saved as screenshots.
+        - If "debug", the plots are not shown (test mode).
+        - If None or omitted: the Qt framework is used.
     folder : string
-        Folder name for saving the screenshots.
-        The current directory is used as the default directory.
-        This argument is optional.
+        - Folder name for saving the screenshots.
+        - If None or omitted: the current directory is used.
     name : string
-        Prepended at the beginning of the screenshot filenames.
-        This argument is optional.
+        - Prepended at the beginning of the screenshot filenames.
+        - If None or omitted: the original filenames are used.
     """
 
     # load data
@@ -197,16 +191,16 @@ def run_solver_data(data_voxel, data_problem, data_tolerance):
     Parameters
     ----------
     data_voxel : data
-        The dict describes the voxel structure.
+        - The dict describes the meshed voxel structure.
     data_problem: data
-        The dict describes the problem to be solved.
+        - The dict describes the problem to be solved.
     data_tolerance: data
-        The dict describes the numerical options.
+        - The dict describes the numerical options.
 
     Returns
     -------
     data_solution : data
-        The dict describes the problem solution.
+        - The dict describes the problem solution.
     """
 
     # execute workflow
@@ -239,17 +233,17 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     Parameters
     ----------
     file_voxel : filename
-        The file content describes the voxel structure.
-        This input file is loaded by this function (JSON or Pickle format).
+        - The file content describes the meshed voxel structure.
+        - This input file is loaded by this function (JSON or Pickle format).
     file_problem: filename
-        The file content describes the problem to be solved.
-        This input file is loaded by this function (JSON or YAML format).
+        - The file content describes the problem to be solved.
+        - This input file is loaded by this function (JSON or YAML format).
     file_tolerance: filename
-        The file content describes the numerical options.
-        This input file is loaded by this function (JSON or YAML format).
+        - The file content describes the numerical options.
+        - This input file is loaded by this function (JSON or YAML format).
     file_solution : filename
-        The file content describes the problem solution.
-        This output file is written by this function (JSON or Pickle format).
+        - The file content describes the problem solution.
+        - This output file is created by this function (JSON or Pickle format).
     """
 
     # load data
@@ -278,36 +272,32 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
     """
     Main script for plotting the solution of a PEEC problem.
         - Get the solution data as an argument.
-        - Get the point data as an argument.
         - Get the plotter data as an argument.
 
     Parameters
     ----------
     data_solution : data
-        The dict describes the problem solution.
+        - The dict describes the problem solution.
     data_plotter : data
-        The dict describes the different plots to be created.
+        - The dict describes the different plots to be created.
     tag_sweep : list
-        The list describes sweeps to be shown.
-        If None, all the sweeps are shown (default).
-        This argument is optional.
+        - The list describes the solver sweeps to be shown.
+        - If None or omitted: all the sweeps are shown.
     tag_plot : list
-        The list describes plots to be shown.
-        If None, all the plots are shown (default).
-        This argument is optional.
+        - The list describes plots to be shown.
+        - If None or omitted: all the plots are shown.
     plot_mode : string
-        If "qt", the Qt framework is used for the rendering (default).
-        If "nb", the plots are rendered within the Jupyter notebook.
-        If "save", the plots are not shown but saved as screenshots.
-        If "none", the plots are not shown (test mode).
-        This argument is optional.
+        - If "qt", the Qt framework is used for the rendering.
+        - If "nb", the plots are rendered within the Jupyter notebook.
+        - If "save", the plots are not shown but saved as screenshots.
+        - If "debug", the plots are not shown (test mode).
+        - If None or omitted: the Qt framework is used.
     folder : string
-        Folder name for saving the screenshots.
-        The current directory is used as the default directory.
-        This argument is optional.
+        - Folder name for saving the screenshots.
+        - If None or omitted: the current directory is used.
     name : string
-        Prepended at the beginning of the screenshot filenames.
-        This argument is optional.
+        - Prepended at the beginning of the screenshot filenames.
+        - If None or omitted: the original filenames are used.
     """
 
     # execute workflow
@@ -331,38 +321,34 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     """
     Main script for plotting the solution of a PEEC problem.
         - Load the solution data from a file.
-        - Load the point data from a file.
         - Load the plotter data from a file.
 
     Parameters
     ----------
     file_solution : filename
-        The dict describes the problem solution.
-        This input file is loaded by this function (JSON or Pickle format).
+        - The dict describes the problem solution.
+        - This input file is loaded by this function (JSON or Pickle format).
     file_plotter : filename
-        The dict describes the different plots to be created.
-        This input file is loaded by this function (JSON or YAML format).
+        - The dict describes the different plots to be created.
+        - This input file is loaded by this function (JSON or YAML format).
     tag_sweep : list
-        The list describes sweeps to be shown.
-        If None, all the sweeps are shown (default).
-        This argument is optional.
+        - The list describes the solver sweeps to be shown.
+        - If None or omitted: all the sweeps are shown.
     tag_plot : list
-        The list describes plots to be shown.
-        If None, all the plots are shown (default).
-        This argument is optional.
+        - The list describes plots to be shown.
+        - If None or omitted: all the plots are shown.
     plot_mode : string
-        If "qt", the Qt framework is used for the rendering (default).
-        If "nb", the plots are rendered within the Jupyter notebook.
-        If "save", the plots are not shown but saved as screenshots.
-        If "none", the plots are not shown (test mode).
-        This argument is optional.
+        - If "qt", the Qt framework is used for the rendering.
+        - If "nb", the plots are rendered within the Jupyter notebook.
+        - If "save", the plots are not shown but saved as screenshots.
+        - If "debug", the plots are not shown (test mode).
+        - If None or omitted: the Qt framework is used.
     folder : string
-        Folder name for saving the screenshots.
-        The current directory is used as the default directory.
-        This argument is optional.
+        - Folder name for saving the screenshots.
+        - If None or omitted: the current directory is used.
     name : string
-        Prepended at the beginning of the screenshot filenames.
-        This argument is optional.
+        - Prepended at the beginning of the screenshot filenames.
+        - If None or omitted: the original filenames are used.
     """
 
     # load data

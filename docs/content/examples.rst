@@ -219,7 +219,7 @@ examples_voxel/core
 
 * Defined with **voxel indices**
 * **Simple slab conductor surrounded by a magnetic core**
-* **Procedural generation** of the voxel indices
+* **Procedural generation** of the voxel indices (1D and 3D)
 * Example for generating the voxel indices: ``run_voxel.py``
 
 .. image:: ../examples/examples_voxel_core.png

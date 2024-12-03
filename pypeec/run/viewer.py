@@ -19,10 +19,10 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import scilogger
-from pypeec.lib_visualization import parse_viewer
-from pypeec.lib_visualization import parse_voxel
-from pypeec.lib_visualization import manage_pyvista
-from pypeec.lib_visualization import manage_plotgui
+from pypeec.lib_plot import parse_viewer
+from pypeec.lib_plot import parse_voxel
+from pypeec.lib_plot import manage_pyvista
+from pypeec.lib_plot import manage_plotgui
 from pypeec.lib_check import check_data_format
 from pypeec.lib_check import check_data_options
 
@@ -87,7 +87,7 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
 
 def run(
         data_voxel, data_viewer,
-        tag_plot=None, plot_mode="qt", folder=None, name=None,
+        tag_plot=None, plot_mode=None, folder=None, name=None,
 ):
     """
     Main script for visualizing a 3D voxel structure.

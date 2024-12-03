@@ -34,5 +34,4 @@ if __name__ == "__main__":
     pypeec.run_plotter_file(
         file_solution, file_plotter,
         tag_plot=tag_plot,
-        plot_mode="qt",
     )

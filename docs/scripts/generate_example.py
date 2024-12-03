@@ -49,7 +49,7 @@ def run_image(folder_example):
     # run the viewer
     pypeec.run_viewer_data(
         data_voxel, data_viewer,
-        plot_mode="qt", tag_plot=["domain"],
+        tag_plot=["domain"],
     )
 
 

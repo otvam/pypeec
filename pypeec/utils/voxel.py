@@ -1,5 +1,7 @@
 """
-Module for handling voxel indices (linear and tensor indices).
+Module for handling voxel indices (1D and 3D indices):
+    - the 1D indices are also called linear indices
+    - the 3D indices are also called tensor indices
 """
 
 __author__ = "Thomas Guillod"

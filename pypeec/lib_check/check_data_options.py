@@ -45,8 +45,8 @@ def check_plot_options(plot_mode, folder, name):
 
     # check plot_mode
     schema = {
-        "type": "string",
-        "enum": ["qt", "nb", "save", "none"],
+        "type": ["null", "string"],
+        "enum": [None, "qt", "nb", "save", "debug"],
     }
     jsonschema.validate(instance=plot_mode, schema=schema)
 

@@ -22,4 +22,3 @@ pypeec plotter \
     --solution $FILE_SOLUTION \
     --plotter $FILE_PLOTTER \
     --tag_plot $TAG_PLOT \
-    --plot_mode qt

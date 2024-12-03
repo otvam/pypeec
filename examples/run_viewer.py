@@ -29,5 +29,4 @@ if __name__ == "__main__":
     pypeec.run_viewer_file(
         file_voxel, file_viewer,
         tag_plot=tag_plot,
-        plot_mode="qt",
     )

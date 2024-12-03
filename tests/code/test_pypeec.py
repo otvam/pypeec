@@ -93,10 +93,30 @@ def run_workflow(name, use_script):
         # run the workflow
         if use_script:
             # get the arguments
-            argv_me = ["-q", "me", "-ge", file_geometry, "-vo", file_voxel]
-            argv_vi = ["-q", "vi", "-vo", file_voxel,  "-vi", file_viewer, "-pm", "none"]
-            argv_so = ["-q", "so", "-vo", file_voxel,  "-pr", file_problem, "-to", file_tolerance, "-so", file_solution]
-            argv_pl = ["-q", "pl", "-so", file_solution,  "-pl", file_plotter, "-pm", "none"]
+            argv_me = [
+                "-q", "me",
+                "-ge", file_geometry,
+                "-vo", file_voxel,
+            ]
+            argv_vi = [
+                "-q", "vi",
+                "-vo", file_voxel,
+                "-vi", file_viewer,
+                "-pm", "debug",
+            ]
+            argv_so = [
+                "-q", "so",
+                "-vo", file_voxel,
+                "-pr", file_problem,
+                "-to", file_tolerance,
+                "-so", file_solution,
+            ]
+            argv_pl = [
+                "-q", "pl",
+                "-so", file_solution,
+                "-pl", file_plotter,
+                "-pm", "debug",
+            ]
 
             # run the scripts
             _run_script(argv_me)
@@ -105,9 +125,9 @@ def run_workflow(name, use_script):
             _run_script(argv_pl)
         else:
             pypeec.run_mesher_file(file_geometry, file_voxel)
-            pypeec.run_viewer_file(file_voxel, file_viewer, plot_mode="none")
+            pypeec.run_viewer_file(file_voxel, file_viewer, plot_mode="debug")
             pypeec.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
-            pypeec.run_plotter_file(file_solution, file_plotter, plot_mode="none")
+            pypeec.run_plotter_file(file_solution, file_plotter, plot_mode="debug")
 
         # load the files
         data_voxel = scisave.load_data(file_voxel)

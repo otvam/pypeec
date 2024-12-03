@@ -72,7 +72,7 @@ class PlotGui:
         - "qt", the Qt framework is used for the rendering (default).
         - "nb", the plots are rendered within the Jupyter notebook.
         - "save", the plots are not shown but saved as screenshots.
-        - "none", the plots are not shown (test mode).
+        - "debug", the plots are not shown (test mode).
     """
 
     def __init__(self, plot_mode, folder, name):
@@ -80,6 +80,14 @@ class PlotGui:
         Constructor.
         Init the plots.
         """
+
+        # check the default values
+        if plot_mode is None:
+            plot_mode = "qt"
+        if folder is None:
+            folder = os.getcwd()
+        if name is None:
+            name = "pypeec"
 
         # assign variable
         self.plot_mode = plot_mode
@@ -284,11 +292,8 @@ class PlotGui:
         Get the plot filenames.
         """
 
-        filename = "%s.png" % tag
-        if self.name:
-            filename = "%s_%s" % (self.name, filename)
-        if self.folder:
-            filename = os.path.join(self.folder, filename)
+        filename = "%s_%s.png" % (self.name, tag)
+        filename = os.path.join(self.folder, filename)
 
         return filename
 
@@ -326,7 +331,7 @@ class PlotGui:
             pl = self._get_plotter_pyvista_qt(title, show_menu, window_size)
         elif self.plot_mode == "nb":
             pl = self._get_plotter_pyvista_nb(notebook_size)
-        elif self.plot_mode in ["save", "none"]:
+        elif self.plot_mode in ["save", "debug"]:
             pl = self._get_plotter_pyvista_nop(image_size)
         else:
             raise ValueError("invalid plot mode")
@@ -355,7 +360,7 @@ class PlotGui:
             fig = self._get_figure_matplotlib_qt(title, show_menu, window_size)
         elif self.plot_mode == "nb":
             fig = self._get_figure_matplotlib_nb(notebook_size)
-        elif self.plot_mode in ["save", "none"]:
+        elif self.plot_mode in ["save", "debug"]:
             fig = self._get_figure_matplotlib_nop(image_size)
         else:
             raise ValueError("invalid plot mode")
@@ -393,7 +398,7 @@ class PlotGui:
             self._save_screenshot()
             self._show_figure_nop()
             LOGGER.debug("exit plotting routine")
-        elif self.plot_mode == "none":
+        elif self.plot_mode == "debug":
             LOGGER.debug("close all the plots")
             self._show_figure_nop()
             LOGGER.debug("exit plotting routine")

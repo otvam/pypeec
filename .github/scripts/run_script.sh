@@ -35,10 +35,10 @@ pypeec solver \
 pypeec viewer \
   --voxel examples/tutorial/voxel.json.gz \
   --viewer examples/config/viewer.yaml \
-  --plot_mode none
+  --plot_mode debug
 
 # run the plotter
 pypeec plotter \
   --solution examples/tutorial/solution.json.gz \
   --plotter examples/config/plotter.yaml \
-  --plot_mode none
+  --plot_mode debug

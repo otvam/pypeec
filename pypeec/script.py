@@ -171,8 +171,8 @@ def _get_arg_viewer(subparsers):
     parser.add_argument(
         "-pm", "--plot_mode",
         help="selection of the plot mode (default: window)",
-        choices=["qt", "nb", "save", "none"],
-        default="qt",
+        choices=["qt", "nb", "save", "debug"],
+        default=None,
         dest="plot_mode",
     )
     parser.add_argument(
@@ -273,8 +273,8 @@ def _get_arg_plotter(subparsers):
     parser.add_argument(
         "-pm", "--plot_mode",
         help="selection of the plot mode (default: window)",
-        choices=["qt", "nb", "save", "none"],
-        default="qt",
+        choices=["qt", "nb", "save", "debug"],
+        default=None,
         dest="plot_mode",
     )
     parser.add_argument(
@@ -325,13 +325,12 @@ def run_arguments(argv):
     Parameters
     ----------
     argv : list
-        List with the command line arguments.
+        - List with the command line arguments.
 
     Returns
     -------
     status : int
-        The status exit code of the script.
-
+        - The status exit code of the script.
     """
 
     # get the parser
@@ -405,7 +404,7 @@ def run_script():
 
     The script is installed with the package.
     The name of the command line script is "pypeec".
-    Exit the program with "sys.exit()" with a status code.
+    Exit the program with "sys.exit()" and a status exit code.
     """
 
     # get arguments
