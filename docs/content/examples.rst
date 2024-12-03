@@ -33,32 +33,34 @@ STL Mesher Examples
 examples_stl/inductor_air
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **3D air-core inductor**
 * Defined with **STL files**
+* **3D air-core spiral inductor**
 
 .. image:: ../examples/examples_stl_inductor_air.png
 
 examples_stl/inductor_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **3D inductor with a magnetic E-core**
 * Defined with **STL files**
+* **3D inductor with a magnetic E-core**
 
 .. image:: ../examples/examples_stl_inductor_core.png
 
 examples_stl/inductor_toroid
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **3D inductor with a toroidal core**
 * Defined with **STL files**
+* **3D inductor with a toroidal core**
 
 .. image:: ../examples/examples_stl_inductor_toroid.png
 
 examples_stl/transformer
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **Planar transformer with two windings**
 * Defined with **STL files**
+* **Planar transformer with two windings**
+* Extraction of the **impedance matrix** from the solution
+* Example for the extraction of the impedance matrix: ``run_matrix.py``
 
 .. image:: ../examples/examples_stl_transformer.png
 
@@ -68,42 +70,53 @@ Shape Mesher Examples
 examples_shape/busbar
 ^^^^^^^^^^^^^^^^^^^^^
 
-* **Coplanar L-shaped busbar**
 * Defined with **2D shapes**
+* **Coplanar L-shaped busbar**
 
 .. image:: ../examples/examples_shape_busbar.png
 
 examples_shape/coplanar
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-* **PCB with coplanar traces**
 * Defined with **2D shapes**
+* **PCB with coplanar traces**
 
 .. image:: ../examples/examples_shape_coplanar.png
 
 examples_shape/parallel
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-* **Parallel wires with opposing currents**
 * Defined with **2D shapes**
+* **Parallel wires with opposing currents**
 
 .. image:: ../examples/examples_shape_parallel.png
 
 examples_shape/hole
 ^^^^^^^^^^^^^^^^^^^
 
-* **Trace with a hole**
 * Defined with **2D shapes**
+* **Single PCB trace with a hole**
 
 .. image:: ../examples/examples_shape_hole.png
 
 examples_shape/wire
 ^^^^^^^^^^^^^^^^^^^
 
-* **Straight round wire**
 * Defined with **2D shapes**
+* **Single straight round wire**
 
 .. image:: ../examples/examples_shape_wire.png
+
+examples_shape/pwm
+^^^^^^^^^^^^^^^^^^
+
+* Defined with **2D shapes**
+* **Planar spiral inductor**
+* **Non-sinusoidal** analysis with **Fourier** series
+* Example for the frequency domain analysis: ``run_fourier.py``
+
+.. image:: ../examples/examples_shape_pwm.png
+
 
 PNG Mesher Examples
 -------------------
@@ -111,48 +124,50 @@ PNG Mesher Examples
 examples_png/inductor_spiral
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **Planar spiral inductor**
 * Defined with **PNG files**
+* **Planar spiral inductor**
 
 .. image:: ../examples/examples_png_inductor_spiral.png
 
 examples_png/inductor_gap
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **Gapped inductor with a magnetic E-core**
 * Defined with **PNG files**
+* **Gapped inductor with a magnetic E-core**
 
 .. image:: ../examples/examples_png_inductor_gap.png
 
 examples_png/inductor_pot
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **Pot-core inductor with external gap**
 * Defined with **PNG files**
+* **Pot-core inductor with external gap**
 
 .. image:: ../examples/examples_png_inductor_pot.png
 
 examples_png/iron_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **Iron magnetic core with relative permeability and finite resistivity**
 * Defined with **PNG files**
+* **Iron magnetic core with a non-zero resistivity**
 
 .. image:: ../examples/examples_png_iron_core.png
 
 examples_png/shield
 ^^^^^^^^^^^^^^^^^^^
 
-* **Conductor loop with a magnetic shield**
 * Defined with **PNG files**
+* **Conductor loop with a magnetic shield**
 
 .. image:: ../examples/examples_png_shield.png
 
 examples_png/gerber
 ^^^^^^^^^^^^^^^^^^^
 
+* Defined with **PNG files**
 * **PCB inductor defined with GERBER files**
-* The **PNG files** are generated from **GERBER files**
+* Generation of the PNG files from **GERBER files**
+* Example for parsing the GERBER files: ``run_gerber.py``
 
 .. image:: ../examples/examples_png_gerber.png
 
@@ -162,47 +177,49 @@ Voxel Mesher Examples
 examples_voxel/slab
 ^^^^^^^^^^^^^^^^^^^
 
-* **Simple slab conductor in free space**
 * Defined with **voxel indices**
+* **Simple slab conductor in free space**
 
 .. image:: ../examples/examples_voxel_slab.png
-
-examples_voxel/core
-^^^^^^^^^^^^^^^^^^^
-
-* **Simple slab conductor surrounded by a magnetic core**
-* Defined with **voxel indices**
-
-.. image:: ../examples/examples_voxel_core.png
 
 examples_voxel/transformer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **Simple transformer with a short-circuited winding**
 * Defined with **voxel indices**
+* **Simple transformer with a short-circuited winding**
 
 .. image:: ../examples/examples_voxel_transformer.png
 
 examples_voxel/anisotropic
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **L-shaped conductor with anisotropic resistivity**
 * Defined with **voxel indices**
+* **L-shaped conductor with anisotropic resistivity**
 
 .. image:: ../examples/examples_voxel_anisotropic.png
 
 examples_voxel/distributed
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* **Slab conductor with space dependent resistivity**
 * Defined with **voxel indices**
+* **Slab conductor with space dependent resistivity**
 
 .. image:: ../examples/examples_voxel_distributed.png
 
 examples_voxel/logo
 ^^^^^^^^^^^^^^^^^^^
 
-* **Simple geometry used for the PyPEEC logo**
 * Defined with **voxel indices**
+* **Simple geometry used for the PyPEEC logo**
 
 .. image:: ../examples/examples_voxel_logo.png
+
+examples_voxel/core
+^^^^^^^^^^^^^^^^^^^
+
+* Defined with **voxel indices**
+* **Simple slab conductor surrounded by a magnetic core**
+* **Procedural generation** of the voxel indices
+* Example for generating the voxel indices: ``run_voxel.py``
+
+.. image:: ../examples/examples_voxel_core.png

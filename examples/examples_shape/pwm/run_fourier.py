@@ -193,7 +193,8 @@ if __name__ == "__main__":
     f_pwm = 50e3    # fundamental frequency of the signal
     f_cut = 2.0e6   # cutoff frequency for the low-pass filter
     n_time = 2000   # number of time domain samples
-    n_freq = 1000   # number of frequencies
+    n_freq = 1000   # number of frequencies for the FFT
+    n_plot = 20     # number of frequencies to be plotted
 
     # get the time and frequency vectors
     t_vec = fourier.get_time(f_pwm, n_time)
@@ -239,9 +240,6 @@ if __name__ == "__main__":
     # ########################################################
     # ### plot the results
     # ########################################################
-
-    # number of frequencies to be shown for the spectrums
-    n_plot = 20
 
     # plot the extracted resistance and inductance values
     _plot_circuit(f_sim, R_sim, L_sim)

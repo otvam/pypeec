@@ -61,8 +61,9 @@ def get_plotter(voxel):
     """
 
     # setup plot
-    pv.rcParams['transparent_background'] = True
-    pv.rcParams["edge_color"] = "black"
+    pv.global_theme.transparent_background = True
+    pv.global_theme.edge_color = "black"
+    pv.global_theme.edge_opacity = 1.0
 
     # create plotter
     pl = pv.Plotter(
