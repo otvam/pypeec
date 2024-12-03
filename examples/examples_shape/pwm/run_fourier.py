@@ -61,11 +61,11 @@ def _get_impedance_fourier(f_vec, f_sim, R_sim, L_sim):
     """
 
     # clip to prevent extrapolation
-    f_vec = np.clip(f_vec, np.min(f_sim), np.max(f_sim))
+    f_clamp_vec = np.clip(f_vec, np.min(f_sim), np.max(f_sim))
 
     # interpolate the circuit parameters (log-scale frequency)
-    R_freq = np.interp(np.log10(f_vec), np.log10(f_sim), R_sim)
-    L_freq = np.interp(np.log10(f_vec), np.log10(f_sim), L_sim)
+    R_freq = np.interp(np.log10(f_clamp_vec), np.log10(f_sim), R_sim)
+    L_freq = np.interp(np.log10(f_clamp_vec), np.log10(f_sim), L_sim)
 
     # assemble the impedance
     Z_freq = R_freq+(1j*2*np.pi*f_vec)*L_freq
@@ -191,10 +191,10 @@ if __name__ == "__main__":
     d_pwm = 0.1     # duty cycle for the PWM voltage
     V_pwm = 1.0     # peak value for the PWM voltage
     f_pwm = 50e3    # fundamental frequency of the signal
-    f_cut = 2.0e6   # cutoff frequency for the low-pass filter
+    f_cut = 5.0e6   # cutoff frequency for the low-pass filter
     n_time = 2000   # number of time domain samples
     n_freq = 1000   # number of frequencies for the FFT
-    n_plot = 20     # number of frequencies to be plotted
+    n_plot = 21     # number of frequencies to be plotted
 
     # get the time and frequency vectors
     t_vec = fourier.get_time(f_pwm, n_time)
@@ -227,6 +227,8 @@ if __name__ == "__main__":
 
     # compute the complex power spectrum
     S_vec = 0.5*V_freq*np.conj(I_freq)
+
+    # get the correct scaling for the DC power
     S_vec[0] *= 2.0
 
     # extract the active and reactive power spectrums
