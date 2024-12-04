@@ -3,6 +3,9 @@ Compute non-sinusoidal waveforms with Fourier analysis:
     - extract the frequency domain impedance
     - compute the waveforms in the frequency domain
     - transform back the results in the time domain
+
+This script is loading and post-processing the solver results.
+Before running this script, the PyPEEC mesher and solver should be run.
 """
 
 __author__ = "Thomas Guillod"
@@ -80,13 +83,13 @@ def _plot_circuit(f_sim, R_sim, L_sim):
 
     (fig, ax) = plt.subplots(2, 1)
 
-    ax[0].semilogx(f_sim, 1e3*R_sim, "x-")
+    ax[0].semilogx(f_sim, 1e3*R_sim, "o-")
     ax[0].set_xlabel("f (Hz)")
     ax[0].set_ylabel("R (mOhm)")
     ax[0].set_title("Resistance")
     ax[0].grid()
 
-    ax[1].semilogx(f_sim, 1e9*L_sim, "x-")
+    ax[1].semilogx(f_sim, 1e9*L_sim, "o-")
     ax[1].set_xlabel("f (Hz)")
     ax[1].set_ylabel("L (nH)")
     ax[1].set_title("Inductance")
@@ -106,16 +109,16 @@ def _plot_frequency(f_vec, V_freq, I_freq, n_plot):
 
     (fig, ax) = plt.subplots(2, 1)
 
-    ax[0].plot(1e-3*f_vec, np.abs(V_freq), "-")
+    ax[0].plot(1e-3*f_vec, np.abs(V_freq), "o-")
     ax[0].set_xlabel("f (kHz)")
     ax[0].set_ylabel("V (V)")
-    ax[0].set_title("Voltage")
+    ax[0].set_title("Voltage - Frequency Domain")
     ax[0].grid()
 
-    ax[1].plot(1e-3*f_vec, np.abs(I_freq), "-")
+    ax[1].plot(1e-3*f_vec, np.abs(I_freq), "o-")
     ax[1].set_xlabel("f (kHz)")
     ax[1].set_ylabel("I (A)")
-    ax[1].set_title("Current")
+    ax[1].set_title("Current - Frequency Domain")
     ax[1].grid()
 
     fig.tight_layout()
@@ -132,16 +135,16 @@ def _plot_power(f_vec, P_vec, Q_vec, n_plot):
 
     (fig, ax) = plt.subplots(2, 1)
 
-    ax[0].plot(1e-3*f_vec, np.abs(P_vec), "-")
+    ax[0].plot(1e-3*f_vec, np.abs(P_vec), "o-")
     ax[0].set_xlabel("f (kHz)")
     ax[0].set_ylabel("P (W)")
-    ax[0].set_title("Active Power")
+    ax[0].set_title("Active Power - Frequency Domain")
     ax[0].grid()
 
-    ax[1].plot(1e-3*f_vec, np.abs(Q_vec), "-")
+    ax[1].plot(1e-3*f_vec, np.abs(Q_vec), "o-")
     ax[1].set_xlabel("f (kHz)")
     ax[1].set_ylabel("Q (VA)")
-    ax[1].set_title("Reative Power")
+    ax[1].set_title("Reative Power - Frequency Domain")
     ax[1].grid()
 
     fig.tight_layout()
@@ -157,13 +160,13 @@ def _plot_waveform(t_vec, V_time, I_time):
     ax[0].plot(1e6*t_vec, V_time, "-")
     ax[0].set_xlabel("t (us)")
     ax[0].set_ylabel("V (V)")
-    ax[0].set_title("Voltage")
+    ax[0].set_title("Voltage - Time Domain")
     ax[0].grid()
 
     ax[1].plot(1e6*t_vec, I_time, "-")
     ax[1].set_xlabel("t (us)")
     ax[1].set_ylabel("I (A)")
-    ax[1].set_title("Current")
+    ax[1].set_title("Current - Time Domain")
     ax[1].grid()
 
     fig.tight_layout()
@@ -188,21 +191,22 @@ if __name__ == "__main__":
     # ########################################################
 
     # parameters for the signal
-    d_pwm = 0.1     # duty cycle for the PWM voltage
-    V_pwm = 1.0     # peak value for the PWM voltage
-    f_pwm = 50e3    # fundamental frequency of the signal
-    f_cut = 5.0e6   # cutoff frequency for the low-pass filter
-    n_time = 2000   # number of time domain samples
-    n_freq = 1000   # number of frequencies for the FFT
-    n_plot = 21     # number of frequencies to be plotted
+    d_pulse = 0.10   # duty cycle of the PWM pulses
+    d_wait = 0.20    # duty cycle between the PWM pulses
+    V_pwm = 1.0      # peak value for the PWM voltage
+    f_pwm = 50e3     # fundamental frequency of the signal
+    f_cut = 5.0e6    # cutoff frequency for the low-pass filter
+    n_time = 2000    # number of time domain samples
+    n_freq = 1000    # number of frequencies for the FFT
+    n_plot = 21      # number of frequencies to be plotted
 
     # get the time and frequency vectors
     t_vec = fourier.get_time(f_pwm, n_time)
     f_vec = fourier.get_freq(f_pwm, n_freq)
 
     # indices of the positive and negative PWM pulses
-    idx_pos = (t_vec > (0.25-d_pwm/2)/f_pwm) & (t_vec < (0.25+d_pwm/2)/f_pwm)
-    idx_neg = (t_vec > (0.75-d_pwm/2)/f_pwm) & (t_vec < (0.75+d_pwm/2)/f_pwm)
+    idx_pos = (t_vec > (0.5-d_wait/2-d_pulse/2)/f_pwm) & (t_vec < (0.5-d_wait/2+d_pulse/2)/f_pwm)
+    idx_neg = (t_vec > (0.5+d_wait/2-d_pulse/2)/f_pwm) & (t_vec < (0.5+d_wait/2+d_pulse/2)/f_pwm)
 
     # construct the time domain excitation
     V_time = np.zeros(n_time, dtype=np.float64)
