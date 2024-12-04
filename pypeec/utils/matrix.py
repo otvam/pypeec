@@ -7,8 +7,9 @@ The following procedure is used:
     - extract the impedance matrix from the terminal data
 
 For the impedance matrix, the following method is used:
-    - an equation system is formed with all the terminal quantities.
-    - the least-square solution of the system is computed.
+    - components with an arbitrary number of terminals can be handled
+    - an equation system is formed with all the terminal quantities
+    - the least-square solution of the system is computed
 
 The impedance matrix is post-processed:
     - computation of the resistance matrix
