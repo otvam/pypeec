@@ -46,7 +46,7 @@ jobs:
           use-mamba: true
       - name: Install dependencies
         shell: bash -el {0}
-        run: conda install --channel conda-forge --file .github/envs/env_conda.yaml
+        run: conda install --channel conda-forge --file .github/envs/env_conda.txt
       - name: Run the tests
         shell: bash -el {0}
         run: ./.github/scripts/run_tests.sh
