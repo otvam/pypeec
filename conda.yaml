@@ -47,7 +47,7 @@ dependencies:
   - matplotlib-base=3.9.2
   # optional packages for Jupyter
   - jupyterlab=4.3.1
-  - jupyter-server-proxy==4.4.0
+  - jupyter-server-proxy=4.4.0
   - ipywidgets=8.1.5
   - trame-vtk=2.8.12
   - trame-vuetify=2.7.2
