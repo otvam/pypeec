@@ -3,8 +3,9 @@ Module containing the program entry points.
     - Used for calling the mesher, solver, viewer, and plotter.
     - Files can be used for the input and output data.
     - Data structure can be used for the input and output data.
-    - The import statements for the different modules are located inside the code.
-    - This allows for a minimization of the loaded dependencies.
+
+The import statements for the different modules are located inside the code.
+This allows for a minimization of the loaded dependencies.
 """
 
 __author__ = "Thomas Guillod"

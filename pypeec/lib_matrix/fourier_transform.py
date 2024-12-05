@@ -7,6 +7,9 @@ This module is used as a common interface for different FFT libraries:
     - MKL/FFT library (available through mkl_fft)
     - FFTW FFT library (available through pyFFTW)
     - CuPy FFT library (computation with GPUs)
+
+This module is only importing the required FFT library.
+This means that the unused FFT libraries are not required.
 """
 
 __author__ = "Thomas Guillod"

@@ -1,22 +1,18 @@
 """
-Module for managing plotting windows with PyVista and Matplotlib.
-The Qt framework or Jupyter are used for showing the plots.
+Module for managing plotting windows with PyVista and Matplotlib:
+    - show the plot using the Qt framework
+    - show the plots inside a Jupyter notebook
+    - save the plots into screenshot files
+    - debug mode (do not render the plots)
+
+The Qt-related library are only import when used.
+This means that this module can run without Qt.
 
 Warning
 -------
     - This module is using different more or less dirty hacks.
     - This module is likely to be non-portable across platforms.
     - This module is likely to break with newer/older versions of the dependencies.
-
-Todo
-----
-    - Making many plots can lead to segmentation fault with PyVista.
-    - Not sure if the problem lies with PyPEEC, PyVista, PyVistaQt, or Vtk.
-
-Todo
-----
-    - Quitting or making screenshot might cause a crash of PyVista.
-    - The reason is that the rendering is not forced properly with multiple windows.
 """
 
 __author__ = "Thomas Guillod"
@@ -29,12 +25,9 @@ import ctypes
 import signal
 import os.path
 import importlib.resources
-import pyvista
-import pyvistaqt
-import matplotlib
 import matplotlib.pyplot
-import PyQt5.QtWidgets
-import PyQt5.QtGui
+import matplotlib
+import pyvista
 import scilogger
 
 # get a logger
@@ -48,9 +41,13 @@ class _QApplication(object):
 
     def __new__(cls):
         """
-        Create the singleton QT application instance.
+        Create the singleton Qt application instance.
         """
 
+        # lazy import of the library
+        import PyQt5.QtWidgets
+
+        # create the Qt application
         if not hasattr(cls, 'app'):
             cls.instance = super(_QApplication, cls).__new__(cls)
             cls.app = PyQt5.QtWidgets.QApplication([])
@@ -59,7 +56,7 @@ class _QApplication(object):
 
     def get_app(self):
         """
-        Get the singleton QT application instance.
+        Get the singleton Qt application instance.
         """
 
         return self.app
@@ -120,6 +117,9 @@ class PlotGui:
         Create a PyVista plotter for the Qt framework.
         """
 
+        # lazy import of the library
+        import pyvistaqt
+
         # cast window size
         if window_size is not None:
             window_size = tuple(window_size)
@@ -173,6 +173,9 @@ class PlotGui:
         """
         Create a Matplotlib figure for the Qt framework.
         """
+
+        # lazy import of the library
+        import PyQt5.QtGui
 
         # get the icon
         with importlib.resources.path("pypeec.data", "pypeec.png") as file:
