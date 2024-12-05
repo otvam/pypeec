@@ -27,9 +27,7 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         shell: bash -el {0}
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --requirement .github/envs/requirements.txt
+        run: python -m pip install --requirement .github/envs/requirements.txt
       - name: Run the tests
         shell: bash -el {0}
         run: ./.github/scripts/run_tests.sh
