@@ -41,10 +41,10 @@ dependencies:
   - shapely=2.0.6
   - rasterio=1.4.2
   - pillow=11.0.0
-  # plotting libraries
+  - matplotlib-base=3.9.2
+  # interface libraries
   - pyqt=5.15.9
   - pyvistaqt=0.11.1
-  - matplotlib-base=3.9.2
   # optional packages for Jupyter
   - jupyterlab=4.3.1
   - jupyter-server-proxy=4.4.0
