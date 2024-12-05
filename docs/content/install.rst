@@ -50,7 +50,7 @@ Using a Conda Environment
     #   - Using mamba as a dependency solver is faster
 
     # Create a Conda Environment with a Python interpreter
-    mamba create -n pypeec python=3.10 pypeec
+    mamba create -n pypeec python=3.11 pypeec
 
     # Activate the Conda Environment
     mamba activate pypeec
