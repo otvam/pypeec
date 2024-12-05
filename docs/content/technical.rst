@@ -57,9 +57,9 @@ The following **GPUs** have been tested (CUDA / CuPy compatible):
 
 The following **platforms** are passing the **automated tests**:
 
-* Linux / Ubuntu 22.04 on x86/x64 / Conda / PyPi
-* Microsoft / Windows Server 2022 on x86/x64 / Conda / PyPi
-* Apple / macOS Sonoma 14 on ARM64 / Conda
+* Linux / Ubuntu 22.04 on x86/x64
+* Microsoft / Windows Server 2022 on x86/x64
+* Apple / macOS Sonoma 14 on ARM64
 
 The following **Python version** are passing the **automated tests**:
 
