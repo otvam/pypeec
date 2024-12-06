@@ -17,16 +17,19 @@ Additionally, the following **libraries** are used for the **plotter** and **vie
 * Matplotlib and PyQt5 (2D plots)
 * VTK, PyVista, PyVistaQt, and PyQt5 (3D plots)
 
-The following **optional packages** can be used for speeding up the solver:
+The following **optional packages** can be used for **speeding up** the solver:
 
-* PyAMG (pure Python solver)
+* PyAMG (Python Algebraic Multigrid)
 * MKL/FFT (available through mkl_fft)
 * MKL/PARDISO (available through Pydiso)
 * FFTW (available through pyFFTW)
 * CuPy (using GPUs through CUDA)
 
-If you deploy PyPEEC on computing nodes, the GUI libraries (Matplotlib, PyVistaQt, PyQt5) are not required.
-Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
+The following **optional packages** are required for **Jupyter notebooks**:
+
+* JupyterLab
+* IPyWidgets
+* Trame
 
 Supported Platforms
 -------------------
@@ -85,14 +88,18 @@ For the serialization, PyPEEC is using **SciSave**:
 Packaging and Environment
 -------------------------
 
-The following files are describing the package, documentation, and dependencies:
+The following files are describing the packages and dependencies:
 
 * Definition of the Python package: ``pyproject.toml``
-* Conda file including the optional and development packages: ``conda.yaml``
-* Python dependencies excluding the optional and development packages: ``requirements.txt``
+* Dockerfile and dependencies for building the Docker image: ``docker``
 * Conda feedstock recipe: https://github.com/conda-forge/pypeec-feedstock
-* The examples and the tutorial are located in the ``examples`` folder.
-* The Sphinx documentation is located in the ``docs`` folder.
+
+The development environment is defined in ``conda.yaml``:
+
+* Contains all the required and optional dependencies.
+* Contains the packaging/development tools.
+* All the version number are pinned.
+* Tested with Linux x86/x64/glibc.
 
 The following scripts are used to build the package, documentation, and releases:
 
@@ -118,20 +125,17 @@ These files are used to run the tests (locally and/or continuous integration):
 Contributing
 ------------
 
-PyPEEC is welcoming contributions (code, documentation, example, benchmark, test, tutorial, etc.)!
-For large changes, please first discuss the change you wish to make in the issue tracker.
+PyPEEC is gladly accepting contributions (code, benchmark, packages, or tests).
+Non-code contributions (documentation, examples, or tutorials) are particularly welcomed.
+For large contributions, please first discuss the changes in the issue tracker.
 
-Bug report
+Bug Report
 ----------
 
-Please include a clear and concise description of what the bug is.
-Ideally, provide a minimal working example for the bug.
-
-Additionally, please report the following parameters:
-
-* The version of the PyPEEC you are using.
-* The platform/hardware you are using.
-* The version of Python and of the relevant dependencies.
+* The **version of PyPEEC and Python**.
+* The **operating system/platform/hardware**.
+* A **clear and concise description** of the bug.
+* A **minimal working example** for the bug.
 * For PyVista related bugs, please include the ``pyvista.Report`` output.
 * For NumPy related bugs, please include the ``numpy.show_config`` output.
 * For SciPy related bugs, please include the ``scipy.show_config`` output.

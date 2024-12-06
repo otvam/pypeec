@@ -5,9 +5,24 @@
 * **Python Package** - available through PyPI
 * **Conda Package** - available through conda-forge
 
-PyPEEC packages are generic (architecture and system independent packages).
-However, some dependencies are architecture and system dependent packages.
-The optional HPC libraries are usually easier to install through Conda.
+The following **optional libraries are not included** is the package:
+
+* **HPC libraries** - FFTW, PyAMG, MKL/FFT, and MKL/PARDISO
+* **Notebook support** - JupyterLab, IPyWidgets, and Trame
+* **GPU libraries** - CuPy and CUDA
+
+Some **important remarks** about the PyPEEC **packages**:
+
+* PyPEEC packages are architecture and system independent.
+* Some dependencies are architecture and system dependent.
+* The optional HPC libraries are usually easier to install through Conda.
+* The Jupyter libraries are usually easier to install through Conda.
+
+A **Docker Image** is also available through GHCR:
+
+* Contains an Ubuntu image with PyPEEC and Jupyter.
+* The PyPEEC tutorial and examples are included.
+* The image is only intended for test purposes.
 
 ## Using a Python Environment
 
@@ -23,7 +38,7 @@ python -m venv venv
 # Activate the Python Virtual Environment
 source venv/bin/activate
 
-# Install PyPEEC from PyPi
+# Install PyPEEC from PyPI
 python -m pip install pypeec
 
 # Check that PyPEEC is available
@@ -46,4 +61,19 @@ mamba activate pypeec
 
 # Check that PyPEEC is available
 pypeec --version
+```
+
+## Using the Docker Image
+
+```bash
+# Ppull the Docker image
+docker pull ghcr.io/otvam/pypeec:latest
+
+# Run the Docker image
+docker run -p 8888:8888 \
+    "ghcr.io/otvam/pypeec:latest" "start-notebook.py" \
+    --NotebookApp.password="" --NotebookApp.token=""
+
+# Access Jupyter inside the Docker image
+xdg-open "http://127.0.0.1:8888/lab/tree/notebook.ipynb"
 ```

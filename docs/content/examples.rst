@@ -24,7 +24,7 @@ Running the Examples
 
 * For running the examples from a **Jupyter notebook**, use ``notebook.ipynb``:
 
-  * Jupyter should be installed (not included in the default environment).
+  * JupyterLab should be installed (not included in the default environment).
   * IPyWidgets and Trame are used for the rendering inside Jupyter notebooks.
 
 STL Mesher Examples

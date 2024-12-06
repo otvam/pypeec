@@ -6,7 +6,7 @@
 * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**
 * **Repository: [github.com/otvam/pypeec](https://github.com/otvam/pypeec)**
 * **Conda: [anaconda.org/conda-forge/pypeec](https://anaconda.org/conda-forge/pypeec)**
-* **PyPi: [pypi.org/project/pypeec](https://pypi.org/project/pypeec)**
+* **PyPI: [pypi.org/project/pypeec](https://pypi.org/project/pypeec)**
 ---
 
 ## Summary
@@ -19,6 +19,7 @@ The code is written in **Python** and is fully **open source**!
 ## Capabilities
 
 **PyPEEC** features the following **characteristics**:
+
 * **PEEC method** with **FFT acceleration**
 * Representation of the **geometry** with **3D voxels**
 * **Multithreading** and **GPU acceleration** are available
@@ -31,6 +32,7 @@ The code is written in **Python** and is fully **open source**!
 * Advanced **plotting** capabilities
 
 **PyPEEC** solves the following **3D quasi-magnetostatic problems**:
+
 * Frequency domain solution (DC and AC)
 * Conductive and magnetic domains (ideal or lossy)
 * Isotropic, anisotropic, lumped, and distributed materials
@@ -41,6 +43,7 @@ The code is written in **Python** and is fully **open source**!
 * Computation of the free-space magnetic field 
 
 **PyPEEC** has the following **limitations**:
+
 * No capacitive effects
 * No dielectric domains
 * No advanced boundaries conditions
@@ -48,6 +51,7 @@ The code is written in **Python** and is fully **open source**!
 * Limited to voxel geometries
 
 The **PyPEEC** package contains the following **tools**:
+
 * **mesher** - create a 3D voxel structure from STL or PNG files
 * **viewer** - visualization of the 3D voxel structure
 * **solver** - solver for the magnetic field problem
@@ -62,14 +66,20 @@ For such cases, PyPEEC can be very slow and consume a lot of memory.
 ## Project Links
 
 * **PyPEEC**
+
   * [Website](https://pypeec.otvam.ch)
   * [Repository](https://github.com/otvam/pypeec)
   * [Issues](https://github.com/otvam/pypeec/issues)
+
 * **Releases**
-  * [GitHub](https://github.com/otvam/pypeec/releases)
+
+  * [PyPI](https://pypi.org/project/pypeec)
   * [Conda](https://anaconda.org/conda-forge/pypeec)
-  * [PyPi](https://pypi.org/project/pypeec)
+  * [GitHub](https://github.com/otvam/pypeec/releases)
+  * [Docker](https://github.com/otvam/pypeec/pkgs/container/pypeec)
+
 * **Documentation**
+
   * [Installation](https://pypeec.otvam.ch/content/install.html)
   * [Tutorial](https://pypeec.otvam.ch/content/tutorial.html)
   * [Examples](https://pypeec.otvam.ch/content/examples.html)
@@ -85,11 +95,13 @@ For such cases, PyPEEC can be very slow and consume a lot of memory.
 ## Credits
 
 PyPEEC was created at **Dartmouth College** by the research group of **Prof. Sullivan**:
+
 * Dartmouth College, NH, USA: https://dartmouth.edu
 * Dartmouth Engineering: https://engineering.dartmouth.edu
 * NSF/PMIC: https://pmic.engineering.dartmouth.edu
 
 The FFT-accelerated PEEC method with voxels has been first described and implemented in:
+
 * Torchio, R., IEEE TPEL, 10.1109/TPEL.2021.3092431, 2022
 * Torchio, R., https://github.com/UniPD-DII-ETCOMP/FFT-PEEC
 

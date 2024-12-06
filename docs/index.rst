@@ -36,6 +36,8 @@ The code is written in **Python** and is fully **open source**!
 .. Important::
     * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
     * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`_
+    * **Conda:** `anaconda.org/conda-forge/pypeec <https://anaconda.org/conda-forge/pypeec>`_
+    * **PyPI:** `pypi.org/project/pypeec <https://pypi.org/project/pypeec>`_
 
 ------------
 

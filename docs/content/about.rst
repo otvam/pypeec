@@ -23,13 +23,14 @@ Website      https://otvam.ch
 Release
 -------
 
-==========  ========================================
+==========  =====================================================
 Package     **pypeec**
 Version     |ver| / |date|
-GitHub      https://github.com/otvam/pypeec/releases
+PyPI        https://pypi.org/project/pypeec
 Conda       https://anaconda.org/conda-forge/pypeec
-PyPi        https://pypi.org/project/pypeec
-==========  ========================================
+GitHub      https://github.com/otvam/pypeec/releases
+Docker      https://github.com/otvam/pypeec/pkgs/container/pypeec
+==========  =====================================================
 
 Authors
 -------

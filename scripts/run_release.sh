@@ -154,7 +154,7 @@ function upload_package {
   echo "UPLOAD PACKAGE"
   echo "======================================================================"
 
-  # upload to PyPi
+  # upload to PyPI
   twine upload dist/*
 }
 

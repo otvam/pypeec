@@ -3,7 +3,7 @@
 #   - weekly
 #
 # The tests are run on the following environments:
-#   - PyPi environment
+#   - PyPI environment
 #   - Conda environment
 #
 # Thomas Guillod - Dartmouth College

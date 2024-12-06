@@ -45,4 +45,3 @@ ENV PYVISTA_TRAME_SERVER_PROXY_PREFIX="/proxy/"
 # switch back to the user and working dir
 USER ${NB_UID}
 WORKDIR ${HOME}
-
