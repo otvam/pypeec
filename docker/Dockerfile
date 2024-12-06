@@ -1,0 +1,48 @@
+# Definition of the Docker image with PyPEEC and Jupyter.
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+# definition of the base image
+FROM quay.io/jupyter/base-notebook:2024-11-25
+
+# image metadata
+LABEL org.opencontainers.image.authors="Thomas Guillod <guillod@otvam.ch>"
+LABEL org.opencontainers.image.source="https://github.com/otvam/pypeec"
+LABEL org.opencontainers.image.documentation="https://pypeec.otvam.ch"
+LABEL org.opencontainers.image.title="PyPEEC - 3D Quasi-Magnetostatic FFT/PEEC Solver"
+LABEL org.opencontainers.image.description="Docker image with PyPEEC and Jupyter"
+LABEL org.opencontainers.image.licenses="MPL-2.0"
+
+# copy the package lists
+COPY --chown=${NB_UID}:${NB_GID} conda_pkgs.txt .
+COPY --chown=${NB_UID}:${NB_GID} conda_pypeec.txt .
+
+# install the dependencies
+RUN mamba install --yes --channel conda-forge --file conda_pkgs.txt
+
+# install PyPEEC
+RUN mamba install --yes --no-deps --channel conda-forge --file conda_pypeec.txt
+
+# clean mamba and fix permissions
+RUN mamba clean --all --force-pkgs-dirs --yes
+RUN fix-permissions "${CONDA_DIR}" 
+RUN fix-permissions "/home/${NB_USER}"
+
+# extract the PyPEEC examples
+RUN pypeec examples .
+
+# clean the workspace
+RUN rm -rf *.py
+RUN rm -rf *.sh
+RUN rm -rf work
+RUN rm -rf conda_pkgs.txt
+RUN rm -rf conda_pypeec.txt
+
+# allow Jupyter to display VTK graphics
+ENV PYVISTA_TRAME_SERVER_PROXY_PREFIX="/proxy/"
+
+# switch back to the user and working dir
+USER ${NB_UID}
+WORKDIR ${HOME}
+
