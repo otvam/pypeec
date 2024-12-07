@@ -33,7 +33,7 @@ PyPEEC is a **fast solver** (FFT and GPU accelerated) that can simulate a large 
 The tool contains a **mesher** (STL, PNG, and GERBER formats), a **solver** (static and frequency domain), and **advanced plotting** capabilities.
 The code is written in **Python** and is fully **open source**!
 
-.. Important::
+.. important::
     * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
     * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`_
     * **Conda:** `anaconda.org/conda-forge/pypeec <https://anaconda.org/conda-forge/pypeec>`_
@@ -82,12 +82,12 @@ The **PyPEEC** package contains the following **tools**:
 
 ------------
 
-.. Warning::
+.. warning::
     The geometry is meshed with a **regular voxel structure** (uniform grid).
     Some geometries/problems are not suited for voxel structures (inefficient meshing).
     For such cases, PyPEEC can be very slow and consume a lot of memory.
 
-.. Note::
+.. note::
     * **Author:** `Thomas Guillod <https://otvam.ch>`_
     * **Institution:** `Dartmouth College <https://dartmouth.edu>`_
     * **Licence:** `MPL-2.0 <http://mozilla.org/MPL/2.0>`_

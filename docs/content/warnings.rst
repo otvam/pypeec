@@ -4,50 +4,50 @@ Known Issues
 PyPEEC Issues
 -------------
 
-.. Warning::
+.. note::
     The geometry is meshed with a **regular voxel structure** (uniform grid).
     This implies that large geometries with small features cannot be meshed efficiently.
 
-.. Warning::
+.. note::
     If should be noted than the **inductance** is only fully defined for closed loops.
     For non-closed loops, only the concept of **partial inductance** is well defined.
 
-.. Warning::
+.. note::
     For problems with **magnetic domains**, the **preconditioner** is not optimal.
     This might lead to a slow convergence of the iterative matrix solver.
     For such cases, using the segregated solver approach might be useful.
 
-.. Warning::
+.. note::
     It should be noted that **surface charges** are not considered.
     Only volume charges are used, which is an approximation.
 
-.. Warning::
+.. note::
     For **large problems**, the code might allocate huge amounts of **memory**.
     This might crash the program and/or your operating system.
 
-.. Warning::
+.. note::
     During the **voxelization** process, the same voxel can be assigned to several domains.
     The problem is solved with used-provided **conflict** resolution rules between the domains.
 
 Library Issues
 --------------
 
-.. Warning::
+.. important::
     The **plotting code** is probably sensitive to the environment (platform and version of the libraries).
     Therefore, these dependencies are minimized and insulated from the rest of the code.
     The plotting code (viewer and plotter) is separated from the simulation code (mesher and solver).
 
-.. Warning::
+.. important::
     **Jupyter** is not included in the default package dependencies.
     Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
     Jupyter support is optional, PyPEEC is fully functional without Jupyter.
 
-.. Warning::
+.. important::
     The **GPU libraries** (CuPy and CUDA) are not included in the package dependencies.
     The GPU support is extremely hardware/platform/version dependent.
     GPU support is optional, PyPEEC is fully functional without GPU support.
 
-.. Warning::
+.. important::
     **FFTW, PyAMG, MKL/FFT, and MKL/PARDISO** are not included in the default package dependencies.
     These libraries can be tricky to install, especially on MS Windows or Apple MacOS.
     The aforementioned libraries are optional, PyPEEC is fully functional without them.
@@ -55,12 +55,17 @@ Library Issues
 General Issues
 --------------
 
-.. Warning::
+.. warning::
     Python **Pickle files** can be used to store the mesher and solver results.
     Pickling data is not secure. Only load Pickle files that you trust.
     JSON or GZIP/JSON files can be used to solve this problem.
 
-.. Warning::
+.. warning::
+    The **Docker image** is only intended for test purposes.
+    This image is not screened for eventual vulnerabilities.
+    Do not use the image for public-facing servers.
+
+.. warning::
     The **dependencies** are under **various licences**.
     Make sure to respect these licenses if you package and/or distribute these libraries.
     Qt is under a copyleft license (LGPL and GPL). FFTW is also under a copyleft license (GPL).
