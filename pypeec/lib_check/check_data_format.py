@@ -21,17 +21,15 @@ import numpy as np
 import jsonschema
 import scisave
 
+# static data folder
+folder = importlib.resources.files("pypeec.data")
+
 # preload the schemas
-with importlib.resources.path("pypeec.data", "schema_geometry.yaml") as file:
-    SCHEMA_GEOMETRY = scisave.load_config(file)
-with importlib.resources.path("pypeec.data", "schema_problem.yaml") as file:
-    SCHEMA_PROBLEM = scisave.load_config(file)
-with importlib.resources.path("pypeec.data", "schema_tolerance.yaml") as file:
-    SCHEMA_TOLERANCE = scisave.load_config(file)
-with importlib.resources.path("pypeec.data", "schema_list_viewer.yaml") as file:
-    SCHEMA_VIEWER = scisave.load_config(file)
-with importlib.resources.path("pypeec.data", "schema_list_plotter.yaml") as file:
-    SCHEMA_PLOTTER = scisave.load_config(file)
+SCHEMA_GEOMETRY = scisave.load_config(folder.joinpath("schema_geometry.yaml"))
+SCHEMA_PROBLEM = scisave.load_config(folder.joinpath("schema_problem.yaml"))
+SCHEMA_TOLERANCE = scisave.load_config(folder.joinpath("schema_tolerance.yaml"))
+SCHEMA_VIEWER = scisave.load_config(folder.joinpath("schema_list_viewer.yaml"))
+SCHEMA_PLOTTER = scisave.load_config(folder.joinpath("schema_list_plotter.yaml"))
 
 
 def _get_strict_validator():

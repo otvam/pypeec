@@ -22,8 +22,9 @@ def _run_display_logo():
     """
 
     # load logo data
-    with importlib.resources.open_text("pypeec.data", "pypeec.txt") as file:
-        data = file.read()
+    filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
+    with filename.open("r") as fid:
+        data = fid.read()
 
     # display logo
     try:
@@ -49,11 +50,15 @@ def _run_extract(data_name, path_extract):
 
     # init
     print("data extraction: start", flush=True, file=sys.stderr)
-    print("data extraction: %s / %s" % (data_name, path_extract), flush=True, file=sys.stderr)
+    print("data extraction: extract", flush=True, file=sys.stderr)
 
     # execute workflow
-    with importlib.resources.path("pypeec.data", data_name) as file:
-        shutil.unpack_archive(file, path_extract)
+    try:
+        folder = importlib.resources.files("pypeec.data")
+        with importlib.resources.as_file(folder.joinpath(data_name)) as fid:
+            shutil.unpack_archive(fid, path_extract)
+    except OSError as ex:
+        print("data extraction: failure", flush=True, file=sys.stderr)
 
     # teardown
     print("data extraction: finished", flush=True, file=sys.stderr)
@@ -74,8 +79,9 @@ def _get_parser():
 
     # get version
     try:
-        with importlib.resources.open_text("pypeec.data", "version.txt") as file:
-            version = file.read()
+        filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
+        with filename.open("r") as fid:
+            version = fid.read()
     except FileNotFoundError:
         version = 'x.x.x'
 
