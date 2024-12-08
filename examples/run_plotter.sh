@@ -1,17 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 # User script for plotting the solution of a FFT-PEEC problem.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-set -o nounset
-set -o pipefail
-
 # get the path
 PATH_ROOT=$(dirname "$0")
 
 # get config
-source "$PATH_ROOT/examples_config.sh"
+. "$PATH_ROOT/examples_config.sh"
 
 # get the filenames
 FILE_SOLUTION="$PATH_ROOT/$FOLDER_EXAMPLE/solution.json.gz"
