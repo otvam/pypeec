@@ -85,9 +85,9 @@ def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_clou
     (dx, dy, dz) = d
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_fc, np.arange(0*nv, 1*nv, dtype=np.int64))
-    idx_fy = np.in1d(idx_fc, np.arange(1*nv, 2*nv, dtype=np.int64))
-    idx_fz = np.in1d(idx_fc, np.arange(2*nv, 3*nv, dtype=np.int64))
+    idx_fx = np.isin(idx_fc, np.arange(0*nv, 1*nv, dtype=np.int64))
+    idx_fy = np.isin(idx_fc, np.arange(1*nv, 2*nv, dtype=np.int64))
+    idx_fz = np.isin(idx_fc, np.arange(2*nv, 3*nv, dtype=np.int64))
 
     if biot_savart == "voxel":
         # get the voxel positions
@@ -166,9 +166,9 @@ def get_vector_density(n, d, idx_f, A_net, var_f):
     (dx, dy, dz) = d
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int64))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=np.int64))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
+    idx_fx = np.isin(idx_f, np.arange(0*nv, 1*nv, dtype=np.int64))
+    idx_fy = np.isin(idx_f, np.arange(1*nv, 2*nv, dtype=np.int64))
+    idx_fz = np.isin(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
 
     # project the faces into the voxels
     var_v_x = 0.5*np.abs(A_net[:, idx_fx])*var_f[idx_fx]

@@ -42,8 +42,8 @@ def _get_dense_zero(idx_out, idx_in, mat, idx_row, idx_col):
     nv = nx*ny*nz
 
     # get the matrix size
-    idx_row = np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=np.int64), idx_out)
-    idx_col = np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=np.int64), idx_in)
+    idx_row = np.isin(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=np.int64), idx_out)
+    idx_col = np.isin(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=np.int64), idx_in)
     n_row = np.count_nonzero(idx_row)
     n_col = np.count_nonzero(idx_col)
 
@@ -69,8 +69,8 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     mat_tmp = mat.flatten(order="F")
 
     # get the indices of the non-empty face for the current dimension
-    idx_row = np.in1d(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=np.int64), idx_out)
-    idx_col = np.in1d(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=np.int64), idx_in)
+    idx_row = np.isin(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=np.int64), idx_out)
+    idx_col = np.isin(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=np.int64), idx_in)
     n_row = np.count_nonzero(idx_row)
     n_col = np.count_nonzero(idx_col)
 

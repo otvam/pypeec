@@ -282,9 +282,9 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
     rho = 0.5*rho_v.transpose()*np.abs(A_net)
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.in1d(idx_f, np.arange(0*nv, 1*nv, dtype=np.int64))
-    idx_fy = np.in1d(idx_f, np.arange(1*nv, 2*nv, dtype=np.int64))
-    idx_fz = np.in1d(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
+    idx_fx = np.isin(idx_f, np.arange(0*nv, 1*nv, dtype=np.int64))
+    idx_fy = np.isin(idx_f, np.arange(1*nv, 2*nv, dtype=np.int64))
+    idx_fz = np.isin(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
 
     # resistance vector (different directions)
     R = np.zeros(len(idx_f), dtype=np.complex128)

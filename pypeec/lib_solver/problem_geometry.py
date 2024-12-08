@@ -48,9 +48,9 @@ def _check_indices(idx_vc, idx_src_c, idx_src_v):
         raise RuntimeError("source indices cannot be empty")
 
     # check that the terminal indices are electric indices
-    if not np.all(np.in1d(idx_src_c, idx_vc)):
+    if not np.all(np.isin(idx_src_c, idx_vc)):
         raise RuntimeError("current source indices should overlap with electric indices")
-    if not np.all(np.in1d(idx_src_v, idx_vc)):
+    if not np.all(np.isin(idx_src_v, idx_vc)):
         raise RuntimeError("voltage source indices should overlap with electric indices")
 
 
@@ -178,8 +178,8 @@ def get_material_pos(material_idx, idx_vc, idx_vm):
         idx = material_idx_tmp["idx"]
 
         # get the position of the material domain
-        idx_vc_tmp = np.in1d(idx_vc, idx)
-        idx_vm_tmp = np.in1d(idx_vm, idx)
+        idx_vc_tmp = np.isin(idx_vc, idx)
+        idx_vm_tmp = np.isin(idx_vm, idx)
 
         # find indices
         idx_vc_tmp = np.flatnonzero(idx_vc_tmp)
@@ -207,8 +207,8 @@ def get_source_pos(source_idx, idx_vc, idx_src_c, idx_src_v):
         idx = source_idx_tmp["idx"]
 
         # get the position of the voltage terminals
-        idx_vc_tmp = np.in1d(idx_vc, idx)
-        idx_src_tmp = np.in1d(idx_src, idx)
+        idx_vc_tmp = np.isin(idx_vc, idx)
+        idx_src_tmp = np.isin(idx_src, idx)
 
         # find indices
         idx_vc_tmp = np.flatnonzero(idx_vc_tmp)

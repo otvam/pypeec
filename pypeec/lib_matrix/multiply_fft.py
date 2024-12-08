@@ -112,7 +112,7 @@ def _get_indices(nx, ny, nz, idx, nd_out, dim):
         shape = (nx, ny, nz)
 
         # indices of the elements included in the considered 3D slices
-        idx_sel = NPCP.in1d(idx, NPCP.arange(dim*nv, (dim+1)*nv))
+        idx_sel = NPCP.isin(idx, NPCP.arange(dim*nv, (dim+1)*nv))
 
         # mapping between the vector indices and the tensor indices (3D)
         idx_tmp = idx[idx_sel]-dim*nv

@@ -19,10 +19,10 @@ def set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v):
     """
 
     # find position
-    idx_vc_local = np.in1d(idx, idx_vc)
-    idx_vm_local = np.in1d(idx, idx_vm)
-    idx_src_c_local = np.in1d(idx, idx_src_c)
-    idx_src_v_local = np.in1d(idx, idx_src_v)
+    idx_vc_local = np.isin(idx, idx_vc)
+    idx_vm_local = np.isin(idx, idx_vm)
+    idx_src_c_local = np.isin(idx, idx_src_c)
+    idx_src_v_local = np.isin(idx, idx_src_v)
     idx_vcm_local = np.logical_and(idx_vc_local, idx_vm_local)
 
     # init the material

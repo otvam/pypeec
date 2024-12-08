@@ -23,7 +23,7 @@ def _get_graph_component(idx, graph_def):
     # find to corresponding connected components
     for i, idx_graph in enumerate(graph_def):
         # find which indices are part of the connected component
-        idx_ok = np.in1d(idx, idx_graph)
+        idx_ok = np.isin(idx, idx_graph)
 
         # assign the component number to the corresponding indices
         graph[idx_ok] = i+1
