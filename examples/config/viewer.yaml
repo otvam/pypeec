@@ -3,7 +3,6 @@
 # A plot is described with a dictionary with the following fields:
 #   - framework: framework used for the rendering ("pyvista" or "matplotlib")
 #   - layout: string describing the plot type (see description below)
-#   - title: title of the plot window
 #   - data_window: dictionary describing the plot window
 #   - data_options: dictionary describing the plot options
 #   - data_plot: dictionary describing the plot content
@@ -33,7 +32,6 @@
 "domain":
     "framework": "pyvista"
     "layout": "domain"
-    "title": "Domain"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -43,7 +41,6 @@
 "graph":
     "framework": "pyvista"
     "layout": "graph"
-    "title": "Graph"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -53,7 +50,6 @@
 "mesh":
     "framework": "pyvista"
     "layout": "mesh"
-    "title": "Mesh"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":

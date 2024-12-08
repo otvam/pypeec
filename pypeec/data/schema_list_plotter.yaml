@@ -189,7 +189,6 @@
     "required":
         - "framework"
         - "layout"
-        - "title"
         - "data_window"
         - "data_options"
         - "data_plot"
@@ -211,9 +210,6 @@
                 - "arrow_point"
                 - "convergence"
                 - "residuum"
-        "title":
-            "type": "string"
-            "minLength": 1
         "data_window": !include schema_plot_window.yaml
     "allOf":
         -   if:

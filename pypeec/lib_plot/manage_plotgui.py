@@ -335,7 +335,7 @@ class PlotGui:
             filename = self._get_filename(tag)
             fig.savefig(filename)
 
-    def open_pyvista(self, tag, title, data_window):
+    def open_pyvista(self, tag, data_window):
         """
         Get a PyVista plotter.
         """
@@ -346,16 +346,13 @@ class PlotGui:
         window_size = data_window["window_size"]
         notebook_size = data_window["notebook_size"]
 
-        # prepend tag
-        title = tag + " / " + title
-
         # create the figure
         if self.plot_mode in ["nb_int", "nb_std"]:
             pl = self._get_plotter_pyvista_nb(notebook_size)
         elif self.plot_mode in ["save", "debug"]:
             pl = self.__get_plotter_pyvista_base(image_size)
         elif self.plot_mode == "qt":
-            pl = self._get_plotter_pyvista_qt(title, show_menu, window_size)
+            pl = self._get_plotter_pyvista_qt(tag, show_menu, window_size)
         else:
             raise ValueError("invalid plot mode")
 
@@ -364,7 +361,7 @@ class PlotGui:
 
         return pl
 
-    def open_matplotlib(self, tag, title, data_window):
+    def open_matplotlib(self, tag, data_window):
         """
         Get a Matplotlib figure.
         """
@@ -375,16 +372,13 @@ class PlotGui:
         window_size = data_window["window_size"]
         notebook_size = data_window["notebook_size"]
 
-        # prepend tag
-        title = tag + " / " + title
-
         # create the figure
         if self.plot_mode in ["nb_int", "nb_std"]:
             fig = self._get_figure_matplotlib_nb(notebook_size)
         elif self.plot_mode in ["save", "debug"]:
             fig = self._get_figure_matplotlib_base(image_size)
         elif self.plot_mode == "qt":
-            fig = self._get_figure_matplotlib_qt(title, show_menu, window_size)
+            fig = self._get_figure_matplotlib_qt(tag, show_menu, window_size)
         else:
             raise ValueError("invalid plot mode")
 

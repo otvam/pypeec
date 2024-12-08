@@ -68,7 +68,6 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
 
     # extract the data
     framework = data_viewer["framework"]
-    title = data_viewer["title"]
     layout = data_viewer["layout"]
     data_window = data_viewer["data_window"]
     data_plot = data_viewer["data_plot"]
@@ -79,7 +78,7 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
         raise ValueError("invalid plot framework")
 
     # get the plotter (with the Qt framework)
-    pl = gui_obj.open_pyvista(tag, title, data_window)
+    pl = gui_obj.open_pyvista(tag, data_window)
 
     # make the plot
     manage_pyvista.get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_options)

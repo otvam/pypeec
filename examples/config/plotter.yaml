@@ -3,7 +3,6 @@
 # A plot is described with a dictionary with the following fields:
 #   - framework: framework used for the rendering ("pyvista" or "matplotlib")
 #   - layout: string describing the plot type (see description below)
-#   - title: title of the plot window
 #   - data_window: dictionary describing the plot window
 #   - data_options: dictionary describing the plot options
 #   - data_plot: dictionary describing the plot content
@@ -75,7 +74,6 @@
 "material":
     "framework": "pyvista"
     "layout": "material"
-    "title": "Material"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -88,7 +86,6 @@
 "V_c_norm":
     "framework": "pyvista"
     "layout": "norm_voxel"
-    "title": "El. Potential"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -104,7 +101,6 @@
 "V_c_phasor":
     "framework": "pyvista"
     "layout": "phasor_voxel"
-    "title": "El. Potential"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -121,7 +117,6 @@
 "P_c_norm":
     "framework": "pyvista"
     "layout": "norm_voxel"
-    "title": "El. Losses"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -137,7 +132,6 @@
 "P_m_norm":
     "framework": "pyvista"
     "layout": "norm_voxel"
-    "title": "Mag. Losses"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -153,7 +147,6 @@
 "J_c_norm":
     "framework": "pyvista"
     "layout": "norm_voxel"
-    "title": "Current Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -169,7 +162,6 @@
 "J_c_vec":
     "framework": "pyvista"
     "layout": "arrow_voxel"
-    "title": "Current Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -187,7 +179,6 @@
 "B_m_norm":
     "framework": "pyvista"
     "layout": "norm_voxel"
-    "title": "Flux Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -203,7 +194,6 @@
 "B_m_vec":
     "framework": "pyvista"
     "layout": "arrow_voxel"
-    "title": "Flux Density"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -221,7 +211,6 @@
 "H_p_norm":
     "framework": "pyvista"
     "layout": "norm_point"
-    "title": "Mag. Field Norm"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -237,7 +226,6 @@
 "H_p_vec":
     "framework": "pyvista"
     "layout": "arrow_point"
-    "title": "Mag. Field"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
@@ -255,7 +243,6 @@
 "convergence":
     "framework": "matplotlib"
     "layout": "convergence"
-    "title": "Convergence"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
@@ -266,7 +253,6 @@
 "residuum":
     "framework": "matplotlib"
     "layout": "residuum"
-    "title": "Residuum"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":

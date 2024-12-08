@@ -73,7 +73,6 @@
     "required":
         - "framework"
         - "layout"
-        - "title"
         - "data_window"
         - "data_options"
         - "data_plot"
@@ -89,9 +88,6 @@
                 - "domain"
                 - "graph"
                 - "mesh"
-        "title":
-            "type": "string"
-            "minLength": 1
         "data_window": !include schema_plot_window.yaml
     "allOf":
         -   if:
