@@ -7,8 +7,11 @@
 set -o nounset
 set -o pipefail
 
+# get the path
+PATH_ROOT=$(dirname "$0")
+
 # get config
-source examples_config.sh
+source "$PATH_ROOT/examples_config.sh"
 
 # get the filenames
 FILE_PROBLEM="$PATH_ROOT/$FOLDER_EXAMPLE/problem.yaml"

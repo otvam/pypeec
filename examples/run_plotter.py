@@ -10,8 +10,10 @@ import os.path
 import pypeec
 import examples_config
 
+# get the path of the root of the code
+PATH_ROOT = os.path.dirname(__file__)
+
 # get config
-PATH_ROOT = examples_config.PATH_ROOT
 FOLDER_CONFIG = examples_config.FOLDER_CONFIG
 FOLDER_EXAMPLE = examples_config.FOLDER_EXAMPLE
 
