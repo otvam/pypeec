@@ -13,6 +13,10 @@ PyPEEC Issues
     For non-closed loops, only the concept of **partial inductance** is well defined.
 
 .. note::
+    The **magnetic near-field** computation is done with **lumped variables**.
+    Therefore, the computation is only accurate far away from the voxel structure.
+
+.. note::
     For problems with **magnetic domains**, the **preconditioner** is not optimal.
     This might lead to a slow convergence of the iterative matrix solver.
     For such cases, using the segregated solver approach might be useful.
@@ -20,10 +24,6 @@ PyPEEC Issues
 .. note::
     It should be noted that **surface charges** are not considered.
     Only volume charges are used, which is an approximation.
-
-.. note::
-    For **large problems**, the code might allocate huge amounts of **memory**.
-    This might crash the program and/or your operating system.
 
 .. note::
     During the **voxelization** process, the same voxel can be assigned to several domains.

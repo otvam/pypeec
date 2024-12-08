@@ -121,8 +121,8 @@ def run(
     # make the plots
     LOGGER.info("generate plots")
     with LOGGER.BlockIndent():
-        for i, (tag_plot, data_viewer_tmp) in enumerate(data_viewer.items()):
-            LOGGER.info("plot / %d / %d / %s" % (i+1, len(data_viewer), tag_plot))
+        for tag_plot, data_viewer_tmp in data_viewer.items():
+            LOGGER.info("plot / %s" % tag_plot)
             _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)
 
     # enter the event loop (should be at the end, blocking call)

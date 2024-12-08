@@ -9,7 +9,7 @@ Compute the magnetic field for the point cloud.
 
 Warning
 -------
-    - The magnetic field computation is done with lumped variables.
+    - The magnetic near-field computation is done with lumped variables.
     - Therefore, the computation is only accurate far away from the voxel structure.
 """
 

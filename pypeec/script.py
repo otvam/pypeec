@@ -171,7 +171,7 @@ def _get_arg_viewer(subparsers):
     parser.add_argument(
         "-pm", "--plot_mode",
         help="selection of the plot mode (default: window)",
-        choices=["qt", "nb", "save", "debug"],
+        choices=["qt", "nb_int", "nb_std", "save", "debug"],
         default=None,
         dest="plot_mode",
     )
@@ -273,7 +273,7 @@ def _get_arg_plotter(subparsers):
     parser.add_argument(
         "-pm", "--plot_mode",
         help="selection of the plot mode (default: window)",
-        choices=["qt", "nb", "save", "debug"],
+        choices=["qt", "nb_int", "nb_std", "save", "debug"],
         default=None,
         dest="plot_mode",
     )

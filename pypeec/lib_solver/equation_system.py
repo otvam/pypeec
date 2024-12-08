@@ -83,7 +83,7 @@ Only volume charges are used, which is an approximation.
 
 For the preconditioner, the diagonal of the inductance and potential matrix is used.
 For the preconditioner, the electric-magnetic coupling matrices are simplified.
-The preconditioner is solved with the Schur complement and the matrix factorization.
+The preconditioner is solved with a sparse matrix factorization and the Schur complement.
 The preconditioner is solved separately for the electric and magnetic equations.
 
 The preconditioner matrices (electric and magnetic) have the following form:
@@ -92,9 +92,7 @@ The preconditioner matrices (electric and magnetic) have the following form:
         A_21_mat,    A_22_mat;
     ]
 
-The matrix impedance matrix (Z_mat) is diagonal.
-Therefore, the factorization is computed on the Schur complement.
-The Schur complement is computed as:
+The matrix impedance matrix (Z_mat) is diagonal and the Schur complement is used:
     - Y_mat = 1/Z_mat
     - S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
 
@@ -104,6 +102,12 @@ For the full equation system, the complete dense matrix are used:
     - the system is split in three parts: electric, magnetic, and electric-magnetic coupling
     - the system is meant to be solved with an iterative solver
     - the full system matrix is not built and a matrix-vector operator is returned
+
+Warning
+-------
+    - For problems with magnetic domains, the preconditioner is not optimal.
+    - This might lead to a slow convergence of the iterative matrix solver.
+    - For such cases, using the segregated solver approach might be useful.
 """
 
 __author__ = "Thomas Guillod"

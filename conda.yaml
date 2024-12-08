@@ -52,6 +52,7 @@ dependencies:
   - trame-vtk=2.8.12
   - trame-vuetify=2.7.2
   - trame=3.7.0
+  - ipympl=0.9.4
   # optional optimized numerical libraries
   - pyamg=5.2.1
   - cupy=13.3.0

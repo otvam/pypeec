@@ -134,8 +134,8 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
     (grid, voxel, point, res, conv) = _get_grid_voxel(data_init, data_sweep)
 
     # make the plots
-    for i, (tag_plot, data_plotter_tmp) in enumerate(data_plotter.items()):
-        LOGGER.info("plot / %d / %d / %s" % (i+1, len(data_plotter), tag_plot))
+    for tag_plot, data_plotter_tmp in data_plotter.items():
+        LOGGER.info("plot / %s" % tag_plot)
         _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)
 
 

@@ -65,17 +65,13 @@ class _QApplication(object):
 class PlotGui:
     """
     Manage PyVista and Matplotlib plots.
-    Three different plot mode are available:
-        - "qt", the Qt framework is used for the rendering (default).
-        - "nb", the plots are rendered within the Jupyter notebook.
-        - "save", the plots are not shown but saved as screenshots.
-        - "debug", the plots are not shown (test mode).
     """
 
     def __init__(self, plot_mode, folder, name):
         """
         Constructor.
-        Init the plots.
+        Create the Qt application.
+        Set the global plot parameters.
         """
 
         # check the default values
@@ -105,11 +101,13 @@ class PlotGui:
 
         # setup PyVista and Matplotlib
         if self.plot_mode == "qt":
-            pyvista.set_plot_theme("default")
             matplotlib.use("QtAgg")
-        if self.plot_mode == "nb":
-            pyvista.set_plot_theme("default")
+        if self.plot_mode == "nb_int":
             pyvista.set_jupyter_backend("trame")
+            matplotlib.use("ipympl")
+        if self.plot_mode == "nb_std":
+            pyvista.set_jupyter_backend("static")
+            matplotlib.use("inline")
 
     @staticmethod
     def _get_plotter_pyvista_qt(title, show_menu, window_size):
@@ -154,7 +152,7 @@ class PlotGui:
         return pl
 
     @staticmethod
-    def _get_plotter_pyvista_nop(image_size):
+    def __get_plotter_pyvista_base(image_size):
         """
         Create a PyVista plotter for silent rendering.
         """
@@ -182,7 +180,8 @@ class PlotGui:
             res_icon = PyQt5.QtGui.QIcon(str(file))
 
         # get the figure
-        fig = matplotlib.pyplot.figure(tight_layout=True)
+        with matplotlib.pyplot.ioff():
+            fig = matplotlib.pyplot.figure(tight_layout=True)
 
         # set the Qt options
         man = matplotlib.pyplot.get_current_fig_manager()
@@ -209,7 +208,14 @@ class PlotGui:
         """
 
         # create figure
-        fig = matplotlib.pyplot.figure(tight_layout=True)
+        with matplotlib.pyplot.ioff():
+            fig = matplotlib.pyplot.figure(tight_layout=True)
+
+        # set display options
+        fig.canvas.toolbar_position = 'top'
+        fig.canvas.header_visible = False
+        fig.canvas.footer_visible = False
+        fig.canvas.resizable = False
 
         # set window size
         if notebook_size is not None:
@@ -219,13 +225,14 @@ class PlotGui:
         return fig
 
     @staticmethod
-    def _get_figure_matplotlib_nop(image_size):
+    def _get_figure_matplotlib_base(image_size):
         """
         Create a Matplotlib figure for silent rendering.
         """
 
         # create figure
-        fig = matplotlib.pyplot.figure(tight_layout=True)
+        with matplotlib.pyplot.ioff():
+            fig = matplotlib.pyplot.figure(tight_layout=True)
 
         # set window size
         if image_size is not None:
@@ -254,7 +261,8 @@ class PlotGui:
             pl.app_window.show()
 
         # show the different Matplotlib plots
-        matplotlib.pyplot.show(block=False)
+        for tag, fig in self.fig_list:
+            fig.show()
 
         # enter the event loop
         exit_code = self.app.exec()
@@ -266,19 +274,30 @@ class PlotGui:
         if exit_code != 0:
             RuntimeError("error during the Qt event loop / exit_code = %d" % exit_code)
 
-    def _show_figure_nb(self):
+    def _show_figure_nb(self, interactive):
         """
         Show all the figures (Jupyter notebooks)
         """
 
+        # lazy import of the library
+        import IPython.display
+
         # show the different PyVista plots
-        for tag, pl in self.pl_list:
-            pl.show(jupyter_backend='trame')
+        with LOGGER.BlockIndent():
+            for tag, pl in self.pl_list:
+                LOGGER.debug("show / %s" % tag)
+                pl.show()
 
         # show the different Matplotlib plots
-        matplotlib.pyplot.show(block=False)
+        with LOGGER.BlockIndent():
+            for tag, fig in self.fig_list:
+                LOGGER.debug("show / %s" % tag)
+                if interactive:
+                    IPython.display.display(fig.canvas)
+                else:
+                    IPython.display.display(fig)
 
-    def _show_figure_nop(self):
+    def _close_figure(self):
         """
         Show all the figures (silent rendering)
         """
@@ -288,7 +307,8 @@ class PlotGui:
             pl.close()
 
         # close the different Matplotlib plots
-        matplotlib.pyplot.close("all")
+        for tag, fig in self.fig_list:
+            matplotlib.pyplot.close(fig)
 
     def _get_filename(self, tag):
         """
@@ -330,12 +350,12 @@ class PlotGui:
         title = tag + " / " + title
 
         # create the figure
-        if self.plot_mode == "qt":
-            pl = self._get_plotter_pyvista_qt(title, show_menu, window_size)
-        elif self.plot_mode == "nb":
+        if self.plot_mode in ["nb_int", "nb_std"]:
             pl = self._get_plotter_pyvista_nb(notebook_size)
         elif self.plot_mode in ["save", "debug"]:
-            pl = self._get_plotter_pyvista_nop(image_size)
+            pl = self.__get_plotter_pyvista_base(image_size)
+        elif self.plot_mode == "qt":
+            pl = self._get_plotter_pyvista_qt(title, show_menu, window_size)
         else:
             raise ValueError("invalid plot mode")
 
@@ -359,12 +379,12 @@ class PlotGui:
         title = tag + " / " + title
 
         # create the figure
-        if self.plot_mode == "qt":
-            fig = self._get_figure_matplotlib_qt(title, show_menu, window_size)
-        elif self.plot_mode == "nb":
+        if self.plot_mode in ["nb_int", "nb_std"]:
             fig = self._get_figure_matplotlib_nb(notebook_size)
         elif self.plot_mode in ["save", "debug"]:
-            fig = self._get_figure_matplotlib_nop(image_size)
+            fig = self._get_figure_matplotlib_base(image_size)
+        elif self.plot_mode == "qt":
+            fig = self._get_figure_matplotlib_qt(title, show_menu, window_size)
         else:
             raise ValueError("invalid plot mode")
 
@@ -388,22 +408,26 @@ class PlotGui:
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
             return
 
-        if self.plot_mode == "qt":
-            LOGGER.debug("entering the plot event loop")
-            self._show_figure_qt()
-            LOGGER.debug("exiting the plot event loop")
-        elif self.plot_mode == "nb":
+        if self.plot_mode == "nb_int":
             LOGGER.debug("display notebook plots")
-            self._show_figure_nb()
+            self._show_figure_nb(True)
+            LOGGER.debug("exit plotting routine")
+        elif self.plot_mode == "nb_std":
+            LOGGER.debug("display notebook plots")
+            self._show_figure_nb(False)
             LOGGER.debug("exit plotting routine")
         elif self.plot_mode == "save":
             LOGGER.debug("save and close all the plots")
             self._save_screenshot()
-            self._show_figure_nop()
+            self._close_figure()
             LOGGER.debug("exit plotting routine")
         elif self.plot_mode == "debug":
             LOGGER.debug("close all the plots")
-            self._show_figure_nop()
+            self._close_figure()
             LOGGER.debug("exit plotting routine")
+        elif self.plot_mode == "qt":
+            LOGGER.debug("entering the plot event loop")
+            self._show_figure_qt()
+            LOGGER.debug("exiting the plot event loop")
         else:
             raise ValueError("invalid plot mode")
