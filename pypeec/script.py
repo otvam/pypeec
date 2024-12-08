@@ -79,7 +79,7 @@ def _get_parser():
 
     # get version
     try:
-        filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
+        filename = importlib.resources.files("pypeec.data").joinpath("version.txt")
         with filename.open("r") as fid:
             version = fid.read()
     except FileNotFoundError:

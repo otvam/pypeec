@@ -1,4 +1,4 @@
-# Definition of the Conda dependencies for Docker.
+# Definition of the PyPEEC dependencies for Docker.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0

@@ -15,14 +15,13 @@ LABEL org.opencontainers.image.description="Docker image with PyPEEC and Jupyter
 LABEL org.opencontainers.image.licenses="MPL-2.0"
 
 # copy the package lists
-COPY --chown=${NB_UID}:${NB_GID} conda_pkgs.txt .
-COPY --chown=${NB_UID}:${NB_GID} conda_pypeec.txt .
+COPY --chown=${NB_UID}:${NB_GID} pkgs.txt .
 
 # install all the dependencies (but not PyPEEC)
-RUN mamba install --yes --channel conda-forge --file conda_pkgs.txt
+RUN mamba install --yes --channel conda-forge --file pkgs.txt
 
 # install PyPEEC (no-deps as everything required has been installed)
-RUN mamba install --yes --no-deps --channel conda-forge --file conda_pypeec.txt
+RUN mamba install --yes --no-deps conda-forge::pypeec
 
 # clean mamba and fix permissions
 RUN mamba clean --all --force-pkgs-dirs --yes
@@ -35,9 +34,8 @@ RUN pypeec examples .
 # clean the workspace
 RUN rm -rf *.py
 RUN rm -rf *.sh
+RUN rm -rf pkgs.txt
 RUN rm -rf work
-RUN rm -rf conda_pkgs.txt
-RUN rm -rf conda_pypeec.txt
 
 # allow Jupyter to display VTK graphics
 ENV PYVISTA_TRAME_SERVER_PROXY_PREFIX="/proxy/"
