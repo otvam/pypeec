@@ -20,11 +20,17 @@ Some **important remarks** about the PyPEEC **packages**:
 * The optional HPC libraries are usually easier to install through Conda.
 * The Jupyter libraries are usually easier to install through Conda.
 
-A **Docker Image** is also available through GHCR:
+Test Online With Binder
+-----------------------
 
-* Contains an Ubuntu image with PyPEEC and Jupyter.
+**PyPEEC** can be **tested online without installation**:
+
+* The online test service is provided by Binder.
+* The link will open a JupyterLab instance with PyPEEC.
 * The PyPEEC tutorial and examples are included.
-* The image is only intended for test purposes.
+* The Binder instance is only intended for test purposes.
+* The Binder instance is very slow and memory limited.
+* `Test Online with Binder <https://mybinder.org/v2/gh/otvam/pypeec/HEAD>`_
 
 Using a Python Environment
 --------------------------
@@ -71,6 +77,11 @@ Using the Docker Image
 ----------------------
 
 .. code-block:: bash
+
+    # A Docker Image is also available through GHCR
+    #   - Contains an Ubuntu image with PyPEEC and Jupyter
+    #   - The PyPEEC tutorial and examples are included
+    #   - The image is only intended for test purposes
 
     # Pull the Docker image
     docker pull ghcr.io/otvam/pypeec:latest

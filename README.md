@@ -2,6 +2,15 @@
 
 ![PyPEEC Banner](docs/images/banner.png)
 
+![python 3](https://img.shields.io/badge/python_3-orange)
+![MPL-2.0](https://img.shields.io/badge/MPL--2.0-orange)
+[![git / repo](https://img.shields.io/badge/git-repo-yellow)](https://github.com/otvam/pypeec)
+[![doc / sphinx](https://img.shields.io/badge/doc-sphinx-yellow)](https://pypeec.otvam.ch)
+[![pypi / pkg](https://img.shields.io/pypi/v/pypeec?label=pypi&color=green)](https://pypi.org/project/pypeec)
+[![conda / pkg](https://img.shields.io/conda/vn/conda-forge/pypeec?label=conda&color=green)](https://anaconda.org/conda-forge/pypeec)
+[![docker / img](https://img.shields.io/badge/docker-img-blue)](https://github.com/otvam/pypeec/pkgs/container/pypeec)
+[![binder / launch](https://img.shields.io/badge/binder-launch-blue)](https://mybinder.org/v2/gh/otvam/pypeec/HEAD)
+
 ---
 * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**
 * **Repository: [github.com/otvam/pypeec](https://github.com/otvam/pypeec)**

@@ -26,12 +26,44 @@ PyPEEC - 3D Quasi-Magnetostatic Solver
    content/api
 
 .. image:: images/banner.png
-  :alt: PyPEEC Banner
+   :alt: PyPEEC Banner
 
 **PyPEEC** is a **3D quasi-magnetostatic PEEC solver** developed at **Dartmouth College** within the Power Management Integration Center (PMIC).
 PyPEEC is a **fast solver** (FFT and GPU accelerated) that can simulate a large variety of **magnetic components** (inductors, transformers, chokes, IPT coils, busbars, etc.).
 The tool contains a **mesher** (STL, PNG, and GERBER formats), a **solver** (static and frequency domain), and **advanced plotting** capabilities.
 The code is written in **Python** and is fully **open source**!
+
+------------
+
+.. image:: images/badge_lang.svg
+   :alt: python 3
+
+.. image:: images/badge_license.svg
+   :alt: MPL-2.0
+
+.. image:: images/badge_git.svg
+   :target: https://github.com/otvam/pypeec
+   :alt: git / repo
+
+.. image:: images/badge_doc.svg
+   :target: https://pypeec.otvam.ch
+   :alt: doc / sphinx
+
+.. image:: images/badge_pypi.svg
+   :target: https://pypi.org/project/pypeec
+   :alt: pypi / pkg
+
+.. image:: images/badge_conda.svg
+   :target: https://anaconda.org/conda-forge/pypeec
+   :alt: conda / pkg
+
+.. image:: images/badge_docker.svg
+   :target: https://github.com/otvam/pypeec/pkgs/container/pypeec
+   :alt: docker / img
+
+.. image:: images/badge_binder.svg
+   :target: https://mybinder.org/v2/gh/otvam/pypeec/HEAD
+   :alt: binder / launch
 
 .. important::
     * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
@@ -93,4 +125,4 @@ The **PyPEEC** package contains the following **tools**:
     * **Licence:** `MPL-2.0 <http://mozilla.org/MPL/2.0>`_
 
 .. image:: images/institution.png
-  :alt: Dartmouth and PMIC
+   :alt: Dartmouth and PMIC
