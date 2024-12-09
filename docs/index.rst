@@ -62,7 +62,7 @@ The code is written in **Python** and is fully **open source**!
    :alt: docker / img
 
 .. image:: images/badge_binder.svg
-   :target: https://mybinder.org/v2/gh/otvam/pypeec/HEAD
+   :target: https://mybinder.org/v2/gh/otvam/pypeec/main?labpath=notebook.ipynb
    :alt: binder / launch
 
 .. important::

@@ -9,7 +9,7 @@
 [![pypi / pkg](https://img.shields.io/pypi/v/pypeec?label=pypi&color=green)](https://pypi.org/project/pypeec)
 [![conda / pkg](https://img.shields.io/conda/vn/conda-forge/pypeec?label=conda&color=green)](https://anaconda.org/conda-forge/pypeec)
 [![docker / img](https://img.shields.io/badge/docker-img-blue)](https://github.com/otvam/pypeec/pkgs/container/pypeec)
-[![binder / launch](https://img.shields.io/badge/binder-launch-blue)](https://mybinder.org/v2/gh/otvam/pypeec/HEAD)
+[![binder / launch](https://img.shields.io/badge/binder-launch-blue)](https://mybinder.org/v2/gh/otvam/pypeec/main?labpath=notebook.ipynb)
 
 ---
 * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**

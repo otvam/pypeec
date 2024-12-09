@@ -65,8 +65,10 @@ function build_package {
   echo "BUILD PACKAGE"
   echo "======================================================================"
 
-  # make the README compatible with PyPI
+  # backup the README file
   cp README.md README.md.bak
+
+  # make the README compatible with PyPI
   sed -i '/\!\[[^]]*\]([^)]*)/d' README.md
   sed -i 'N;/^\n$/D;P;D;' README.md
 
@@ -82,7 +84,7 @@ function build_package {
   # update status
   ret=$(( ret || $? ))
 
-  # restore the original README
+  # restore the README file
   mv README.md.bak README.md
 }
 
