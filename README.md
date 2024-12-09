@@ -1,6 +1,6 @@
 # PyPEEC - 3D Quasi-Magnetostatic Solver
 
-![PyPEEC Banner](https://pypeec.otvam.ch/_images/banner.png)
+![PyPEEC Banner](docs/images/banner.png)
 
 ---
 * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**
@@ -115,4 +115,4 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 ---
 
-![Dartmouth and PMIC](https://pypeec.otvam.ch/_images/institution.png)
+![Dartmouth and PMIC](docs/images/institution.png)

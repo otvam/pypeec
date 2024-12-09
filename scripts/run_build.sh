@@ -65,6 +65,11 @@ function build_package {
   echo "BUILD PACKAGE"
   echo "======================================================================"
 
+  # make the README compatible with PyPI
+  cp README.md README.md.bak
+  sed -i '/\!\[[^]]*\]([^)]*)/d' README.md
+  sed -i 'N;/^\n$/D;P;D;' README.md
+
   # pack examples
   (cd examples && git archive -o ../pypeec/data/examples.zip HEAD)
 
@@ -76,6 +81,9 @@ function build_package {
 
   # update status
   ret=$(( ret || $? ))
+
+  # restore the original README
+  mv README.md.bak README.md
 }
 
 # change to root directory
