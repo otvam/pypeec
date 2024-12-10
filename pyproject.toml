@@ -21,7 +21,7 @@ version_scheme = "guess-next-dev"
 
 [project]
 name = "pypeec"
-description = "PyPEEC - 3D PEEC Solver"
+description = "PyPEEC - 3D Quasi-Magnetostatic Solver"
 license = {text = "MPL-2.0"}
 authors = [{name = "Thomas Guillod", email = "guillod@otvam.ch"}]
 maintainers = [{name = "Thomas Guillod", email = "guillod@otvam.ch"}]
