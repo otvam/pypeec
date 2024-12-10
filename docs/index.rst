@@ -36,9 +36,11 @@ The code is written in **Python** and is fully **open source**!
 ------------
 
 .. image:: images/badge_lang.svg
+   :target: https://www.python.org/downloads
    :alt: python 3
 
 .. image:: images/badge_license.svg
+   :target: http://mozilla.org/MPL/2.0
    :alt: MPL-2.0
 
 .. image:: images/badge_git.svg
