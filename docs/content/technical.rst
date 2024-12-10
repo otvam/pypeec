@@ -4,7 +4,7 @@ Technical Details
 Dependencies
 ------------
 
-**PyPEEC** is entirely programmed in **Python 3** and has the following dependencies:
+**PyPEEC** is entirely programmed in **Python 3** and has the following **dependencies**:
 
 * SciLogger, SciSave, and jsonschema (logging and serialization)
 * NumPy, SciPy, and Joblib (basic numerical computing libraries)
@@ -29,53 +29,31 @@ The following **optional packages** are required for **Jupyter notebooks**:
 
 * JupyterLab
 * IPyWidgets
-* Trame
+* Trame / ipympl
 
 Supported Platforms
 -------------------
 
-The main **target platform** of PyPEEC is **Linux** on x86/x64/glibc:
+PyPEEC is known to **work** with the following **platforms**:
 
-* Linux / RedHat 7.9 on x86/x64/glibc
-* Linux / RedHat 8.7 on x86/x64/glibc
-* Linux / Debian 12.4 on x86/x64/glibc
-* Linux / Ubuntu 20.04 on x86/x64/glibc
-* Linux / Ubuntu 22.04 on x86/x64/glibc
-* Linux / Ubuntu 24.04 on x86/x64/glibc
+* Linux on x86/x64/glibc
+* Apple macOS on x86/x64
+* Apple macOS on ARM64
+* MS Windows on x86/x64
 
-The following **platforms** and systems have been  **partially tested**:
+Some more **details** on the supported **platforms**:
 
-* Apple macOS Monterey 12 on x86/x64
-* Apple macOS Ventura 13 on ARM64
-* Apple macOS Sonoma 14 on ARM64
-* MS Windows / Pro 10 on x86/x64
-* MS Windows / Pro 11 on x86/x64
-
-The following **GPUs** have been tested (CUDA / CuPy compatible):
-
-* NVIDIA RTX 2070
-* NVIDIA RTX 3090
-* NVIDIA T4 Tensor
-* NVIDIA Tesla K80
-
-The following **platforms** are passing the **automated tests**:
-
-* Linux / Ubuntu 22.04 on x86/x64
-* Microsoft / Windows Server 2022 on x86/x64
-* Apple / macOS Sonoma 14 on ARM64
-
-The following **Python version** are passing the **automated tests**:
-
-* CPython 3.10
-* CPython 3.11
-* CPython 3.12
+* The main **target platform** of PyPEEC is **Linux** on x86/x64/glibc.
+* PyPEEC is a **pure-python package** and should work on any platform.
+* Any **CUDA and CuPy** compatible **GPU** is supported.
+* Compatible **Python versions**: 3.10, 3.11, and 3.12
 
 Logger and Data Serialization
 -----------------------------
 
-For the logger, PyPEEC is using **SciLogger**:
+For the logging, PyPEEC is using **SciLogger**:
 
-* Custom logger configuration files can be set with the  ``SCILOGGER`` environment variable.
+* The logger configuration files can be set with the  ``SCILOGGER`` environment variable.
 * More information on the logging module: https://github.com/otvam/scilogger
 
 For the serialization, PyPEEC is using **SciSave**:
@@ -122,15 +100,31 @@ These files are used to run the tests (locally and/or continuous integration):
 * ``scripts/run_tests.sh``: run all the integration tests.
 * ``scripts/run_coverage.sh``: run a code coverage analysis.
 
-Contributing
-------------
+The following **automated tests** are performed:
+
+* Test the latest version of the released Conda and PyPI pakages
+* Test the Conda and PyPI environments with the current Git code
+
+The following **platforms** are passing the **automated tests**:
+
+* Linux / Ubuntu 22.04 on x86/x64
+* Microsoft / Windows Server 2022 on x86/x64
+* Apple / macOS Sonoma 14 on ARM64
+
+The following **Python versions** are passing the **automated tests**:
+
+* CPython 3.10
+* CPython 3.11
+* CPython 3.12
+
+Contributing and Bug Report
+---------------------------
 
 PyPEEC is gladly accepting contributions (code, benchmark, packages, or tests).
 Non-code contributions (documentation, examples, or tutorials) are particularly welcomed.
 For large contributions, please first discuss the changes in the issue tracker.
 
-Bug Report
-----------
+For the bug reports, please report the following information:
 
 * The **version of PyPEEC and Python**.
 * The **operating system/platform/hardware**.

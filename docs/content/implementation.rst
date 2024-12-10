@@ -79,6 +79,6 @@ The following optimizations are available for the computationally heavy operatio
 * The ``file_tolerance`` input file is setting up all the numerical parameters:
 
   * Definition of the numerical options and tolerances.
-  * Selection of the library used for numerical operations.
+  * Selection of the libraries used for numerical operations.
   * Definition of the multithreading/multiprocessing options.
   * The complete file format is documented in ``examples/config/tolerance.yaml``.

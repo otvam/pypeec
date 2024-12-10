@@ -1,10 +1,10 @@
-# Contributing
+# Contributing and Bug Report
 
 PyPEEC is gladly accepting contributions (code, benchmark, packages, or tests).
 Non-code contributions (documentation, examples, or tutorials) are particularly welcomed.
 For large contributions, please first discuss the changes in the issue tracker.
 
-# Bug Report
+For the bug reports, please report the following information:
 
 * The **version of PyPEEC and Python**.
 * The **operating system/platform/hardware**.

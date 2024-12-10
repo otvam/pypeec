@@ -10,7 +10,7 @@ Available Packages
 The following **optional libraries are not included** is the package:
 
 * **HPC libraries** - FFTW, PyAMG, MKL/FFT, and MKL/PARDISO
-* **Notebook support** - JupyterLab, IPyWidgets, and Trame
+* **Notebook support** - JupyterLab, IPyWidgets, Trame, and ipympl
 * **GPU libraries** - CuPy and CUDA
 
 Some **important remarks** about the PyPEEC **packages**:

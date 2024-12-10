@@ -13,8 +13,8 @@ PyPEEC Workflow
 Geometry File Format
 --------------------
 
-The ``file_geometry`` file format is used by the mesher.
-This file contains the definition of the voxel structure.
+* The ``file_geometry`` file format is used by the mesher.
+* This file contains the definition of the voxel structure.
 
 .. literalinclude:: ../format/file_geometry.yaml
    :language: yaml
@@ -46,8 +46,8 @@ Definition from STL Files
 Problem File Format
 -------------------
 
-The ``file_problem`` file format is used by the solver.
-This file contains the definition of the magnetic problem to be solved.
+* The ``file_problem`` file format is used by the solver.
+* This file contains the definition of the magnetic problem to be solved.
 
 .. literalinclude:: ../format/file_problem.yaml
    :language: yaml

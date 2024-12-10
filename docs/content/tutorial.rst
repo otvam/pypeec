@@ -1,8 +1,8 @@
 Tutorial
 ========
 
-Extracting the Data
--------------------
+Step 1: Setup
+-------------
 
 .. code-block:: bash
 
@@ -19,15 +19,19 @@ Extracting the Data
     # Extract the PyPEEC documentation
     pypeec documentation documentation
 
-Solving a Problem
------------------
+Step 2: Introduction
+--------------------
 
 This tutorial demonstrates how PyPEEC can be used to simulate a four-layer PCB coil.
 The coil has two terminals and the simulation is done in the frequency domain.
-All the command are executed inside the virtual environment in the ``examples`` folder.
+All the command are executed inside the virtual environment from the ``examples`` folder.
 
-Mesher: Building and Meshing the Geometry
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. figure:: ../tutorial/geometry.png
+
+   Geometry of the considered four-layer PCB coil.
+
+Step 3: Mesher
+--------------
 
 .. code-block:: bash
 
@@ -41,8 +45,8 @@ Mesher: Building and Meshing the Geometry
 .. literalinclude:: ../tutorial/log_mesher.txt
    :language: text
 
-Viewer: Plot the Geometry and Mesh
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 4: Viewer
+--------------
 
 .. code-block:: bash
 
@@ -63,8 +67,8 @@ Viewer: Plot the Geometry and Mesh
 
    Plot showing which domains are interconnected.
 
-Solver: Solve the PEEC Problem
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 5: Solver
+--------------
 
 .. code-block:: bash
 
@@ -82,8 +86,8 @@ Solver: Solve the PEEC Problem
 .. literalinclude:: ../tutorial/log_solver.txt
    :language: text
 
-Plotter: Plot the Solution
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 6: Plotter
+---------------
 
 .. code-block:: bash
 

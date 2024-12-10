@@ -39,7 +39,7 @@ Library Issues
 
 .. important::
     **Jupyter** is not included in the default package dependencies.
-    Inside Jupyter notebooks, IPyWidgets and Trame are used for the rendering.
+    Inside Jupyter notebooks, IPyWidgets Trame, and ipympl are used for the rendering.
     Jupyter support is optional, PyPEEC is fully functional without Jupyter.
 
 .. important::

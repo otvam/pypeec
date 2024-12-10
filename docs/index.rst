@@ -95,7 +95,7 @@ The code is written in **Python** and is fully **open source**!
 * Extraction of the loss and energy densities
 * Extraction of the current density, flux density, and potential
 * Extraction of the terminal voltage, current, and power
-* Computation of the free-space magnetic field
+* Computation of the free-space magnetic near-field
 
 **PyPEEC** has the following **limitations**:
 
