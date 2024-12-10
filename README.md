@@ -2,8 +2,8 @@
 
 ![PyPEEC Banner](docs/images/banner.png)
 
-![python 3](https://img.shields.io/badge/python_3-orange)
-![MPL-2.0](https://img.shields.io/badge/MPL--2.0-orange)
+[![python 3](https://img.shields.io/badge/python_3-orange)](https://www.python.org/downloads)
+[![MPL-2.0](https://img.shields.io/badge/MPL--2.0-orange)](http://mozilla.org/MPL/2.0)
 [![git / repo](https://img.shields.io/badge/git-repo-yellow)](https://github.com/otvam/pypeec)
 [![doc / sphinx](https://img.shields.io/badge/doc-sphinx-yellow)](https://pypeec.otvam.ch)
 [![pypi / pkg](https://img.shields.io/pypi/v/pypeec?label=pypi&color=green)](https://pypi.org/project/pypeec)
