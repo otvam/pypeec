@@ -42,13 +42,13 @@ function build_docs {
   mkdir html
 
   # build documentation
-  sphinx-build -b html docs html
+  sphinx-build -W -b html docs html
 
   # update status
   ret=$(( ret || $? ))
 
   # check external links
-  sphinx-build -b linkcheck docs html
+  sphinx-build -W -b linkcheck docs html
 
   # update status
   ret=$(( ret || $? ))
