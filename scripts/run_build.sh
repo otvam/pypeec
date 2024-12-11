@@ -27,6 +27,7 @@ function clean_data {
 
   # clean documentation
   rm -rf html
+  rm -rf website
   rm -rf docs/_static
   rm -rf docs/_templates
 }
@@ -58,6 +59,25 @@ function build_docs {
   rm -rf html/.doctrees
   rm -rf html/output.json
   rm -rf html/output.txt
+
+  # copy html for website
+  cp -r html website
+
+  # add the hidden files
+  touch website/.gitignore
+  touch website/.nojekyll
+
+  # get the timestamp for the sitemap
+  export LASTMOD=$(date '+%Y-%m-%d')
+
+  # substitute the timestamp for the sitemap
+  cat docs/website/sitemap.xml | envsubst > website/sitemap.xml
+
+  # copy metadata
+  cp docs/website/CNAME website
+  cp docs/website/README.md website
+  cp docs/website/robots.txt website
+  cp docs/website/googlec2be449c43987dd0.html website
 }
 
 function build_package {

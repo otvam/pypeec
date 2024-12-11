@@ -29,6 +29,7 @@ pypeec/data/documentation.zip
 html/
 dist/
 build/
+website/
 coverage/
 pypeecdocs/
 pypeec.egg-info/

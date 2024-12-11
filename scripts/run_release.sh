@@ -122,23 +122,7 @@ function upload_documentation {
   rm -rf pypeecdocs/*
 
   # copy the last version
-  cp -r html/* pypeecdocs
-
-  # add the hidden files
-  touch pypeecdocs/.gitignore
-  touch pypeecdocs/.nojekyll
-
-  # get the timestamp for the sitemap
-  export LASTMOD=$(date '+%Y-%m-%d')
-
-  # substitute the timestamp for the sitemap
-  cat docs/website/sitemap.xml | envsubst > pypeecdocs/sitemap.xml
-
-  # copy metadata
-  cp docs/website/CNAME pypeecdocs
-  cp docs/website/README.md pypeecdocs
-  cp docs/website/robots.txt pypeecdocs
-  cp docs/website/googlec2be449c43987dd0.html pypeecdocs
+  cp -r website/* pypeecdocs
 
   # add all the files to git
   git -C pypeecdocs add .
