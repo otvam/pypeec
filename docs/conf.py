@@ -18,7 +18,8 @@ sys.path.insert(0, os.path.abspath('..'))
 ver = setuptools_scm.get_version(
     root='..',
     relative_to=__file__,
-    version_scheme="guess-next-dev",
+    version_scheme="only-version",
+    local_scheme = "no-local-version",
 )
 release = ver
 version = ver

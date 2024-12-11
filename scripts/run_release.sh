@@ -18,6 +18,16 @@ function check_release {
   echo "CHECK RELEASE"
   echo "======================================================================"
 
+  # get the version and release message
+  if [[ "$#" -eq 2 ]]
+  then
+    VER=$(echo $1 | awk '{$1=$1;print}')
+    MSG=$(echo $2 | awk '{$1=$1;print}')
+  else
+    echo "error: usage : run_release.sh VER MSG"
+    exit 1
+  fi
+
   # init status
   ret=0
 
@@ -86,25 +96,16 @@ function run_build_test {
     echo "RELEASE FAILURE"
     echo "======================================================================"
 
-    # clean tags
+    # clean tag
     git tag -d $VER
 
     # force quit
     exit $ret
+  else
+    # push the tag
+    git push origin --tags
   fi
-}
-
-function create_release {
-  echo "======================================================================"
-  echo "CREATE RELEASE"
-  echo "======================================================================"
-
-  # push the tags
-  git push origin --tags
-
-  # create a release
-  gh release create $VER --title $VER --notes "$MSG"
-}
+  }
 
 function upload_documentation {
   echo "======================================================================"
@@ -154,29 +155,21 @@ function upload_package {
   echo "UPLOAD PACKAGE"
   echo "======================================================================"
 
+  # create a release
+  gh release create $VER --title $VER --notes "$MSG"
+
   # upload to PyPI
   twine upload dist/*
 }
 
-# get the version and release message
-if [[ "$#" -eq 2 ]]
-then
-  VER=$(echo $1 | awk '{$1=$1;print}')
-  MSG=$(echo $2 | awk '{$1=$1;print}')
-else
-  echo "======================================================================"
-  echo "error: usage : run_release.sh VER MSG"
-  echo "======================================================================"
-  exit 1
-fi
-
 # change to root directory
 cd "$(dirname "$0")" && cd ..
 
+# parse the arguments
+check_release $@
+
 # run the code
-check_release
 run_build_test
-create_release
 upload_documentation
 upload_package
 
