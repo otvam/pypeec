@@ -105,13 +105,13 @@ The following **automated tests** are performed:
 * Test the latest version of the released Conda and PyPI pakages
 * Test the Conda and PyPI environments with the current Git code
 
-The following **platforms** are passing the **automated tests**:
+The following **platforms** are considered for the **automated tests**:
 
-* Linux / Ubuntu 22.04 on x86/x64
-* Microsoft / Windows Server 2022 on x86/x64
-* Apple / macOS Sonoma 14 on ARM64
+* Linux / Ubuntu on x86/x64
+* Microsoft / Windows on x86/x64
+* Apple / macOS on ARM64
 
-The following **Python versions** are passing the **automated tests**:
+The following **Python versions** are considered for the **automated tests**:
 
 * CPython 3.10
 * CPython 3.11
