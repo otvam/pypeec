@@ -80,7 +80,7 @@ function build_docs {
   cp docs/website/googlec2be449c43987dd0.html website
 }
 
-function build_package {
+function build_pkg {
   echo "======================================================================"
   echo "BUILD PACKAGE"
   echo "======================================================================"
@@ -117,6 +117,6 @@ ret=0
 # build the documentation
 clean_data
 build_docs
-build_package
+build_pkg
 
 exit $ret

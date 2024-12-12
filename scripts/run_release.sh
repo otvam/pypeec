@@ -75,7 +75,7 @@ function check_release {
   fi
 }
 
-function run_build_test {
+function build_test {
   # create a tag
   git tag -a $VER -m "$MSG"
 
@@ -107,7 +107,7 @@ function run_build_test {
   fi
   }
 
-function upload_documentation {
+function upload_docs {
   echo "======================================================================"
   echo "UPLOAD DOCUMENTATION"
   echo "======================================================================"
@@ -134,7 +134,7 @@ function upload_documentation {
   git -C pypeecdocs push
 }
 
-function upload_package {
+function upload_pkg {
   echo "======================================================================"
   echo "UPLOAD PACKAGE"
   echo "======================================================================"
@@ -153,8 +153,8 @@ cd "$(dirname "$0")" && cd ..
 check_release $@
 
 # run the code
-run_build_test
-upload_documentation
-upload_package
+build_test
+upload_docs
+upload_pkg
 
 exit 0
