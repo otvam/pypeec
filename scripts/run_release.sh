@@ -132,6 +132,9 @@ function upload_docs {
 
   # push the new version
   git -C pypeecdocs push
+
+  # remove the documentation repository
+  rm -rf pypeecdocs
 }
 
 function upload_pkg {

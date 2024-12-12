@@ -31,7 +31,6 @@ dist/
 build/
 website/
 coverage/
-pypeecdocs/
 pypeec.egg-info/
 
 # exclude scratch directory

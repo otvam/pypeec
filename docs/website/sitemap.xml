@@ -40,27 +40,27 @@
 
   <url>
     <loc>https://pypeec.otvam.ch/content/technical.html</loc>
-    <priority>0.80</priority>
+    <priority>0.50</priority>
     <lastmod>$LASTMOD</lastmod>
   </url>
   <url>
     <loc>https://pypeec.otvam.ch/content/implementation.html</loc>
-    <priority>0.80</priority>
+    <priority>0.50</priority>
     <lastmod>$LASTMOD</lastmod>
   </url>
   <url>
     <loc>https://pypeec.otvam.ch/content/warnings.html</loc>
-    <priority>0.80</priority>
+    <priority>0.50</priority>
     <lastmod>$LASTMOD</lastmod>
   </url>
   <url>
     <loc>https://pypeec.otvam.ch/content/format.html</loc>
-    <priority>0.80</priority>
+    <priority>0.50</priority>
     <lastmod>$LASTMOD</lastmod>
   </url>
   <url>
     <loc>https://pypeec.otvam.ch/content/api.html</loc>
-    <priority>0.80</priority>
+    <priority>0.50</priority>
     <lastmod>$LASTMOD</lastmod>
   </url>
 

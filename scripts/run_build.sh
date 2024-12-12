@@ -40,7 +40,6 @@ function build_docs {
   # create folders
   mkdir docs/_static
   mkdir docs/_templates
-  mkdir html
 
   # build documentation
   sphinx-build -W -b html docs html
