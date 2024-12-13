@@ -28,21 +28,21 @@ def _run_display_logo():
     try:
         with filename.open("r") as fid:
             data = fid.read()
-    except UnicodeEncodeError:
+    except UnicodeDecodeError:
         print("fail original")
 
     # display logo
     try:
         with filename.open("r", encoding="utf-8") as fid:
             data = fid.read()
-    except UnicodeEncodeError:
+    except UnicodeDecodeError:
         print("fail utf")
 
     # display logo
     try:
         with filename.open("rb") as fid:
             data = fid.read()
-    except UnicodeEncodeError:
+    except UnicodeDecodeError:
         print("fail rb")
 
     data = "yolo"
