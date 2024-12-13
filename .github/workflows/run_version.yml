@@ -43,6 +43,8 @@ jobs:
           python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
+          channels: conda-forge
+          conda-remove-defaults: true
           use-mamba: true
       - name: Install dependencies
         shell: bash -el {0}
