@@ -158,7 +158,7 @@ function upload_pkg {
 cd "$(dirname "$0")" && cd ..
 
 # parse the arguments
-check_release $@
+check_release "$@"
 
 # run the code
 build_test
