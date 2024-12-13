@@ -69,7 +69,7 @@ Packaging and Environment
 The following files are describing the packages and dependencies:
 
 * Definition of the Python package: ``pyproject.toml``
-* Dockerfile and dependencies for building the Docker image: ``docker``
+* Dockerfile for building the Docker image: ``Dockerfile``
 * Conda feedstock recipe: https://github.com/conda-forge/pypeec-feedstock
 
 The development environment is defined in ``conda.yaml``:
