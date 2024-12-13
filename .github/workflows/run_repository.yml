@@ -47,7 +47,7 @@ jobs:
           auto-activate-base: false
           activate-environment: pypeec
           channels: conda-forge
-          conda-remove-defaults: true
+          mamba-version: "*"
       - name: Install dependencies
         shell: bash -el {0}
         run: mamba install --yes conda-forge::pypeec
