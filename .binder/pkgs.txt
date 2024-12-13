@@ -1,0 +1,31 @@
+# Definition of the PyPEEC dependencies for Docker.
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+# logging and serialization
+scilogger==1.2.1=pyhd8ed1ab_0
+scisave==1.4.1=pyhd8ed1ab_0
+jsonschema==4.23.0=pyhd8ed1ab_0
+
+# numerical libraries
+numpy==2.1.3=py312h58c1407_0
+scipy==1.14.1=py312h62794b6_1
+joblib==1.4.2=pyhd8ed1ab_0
+
+# geometry libraries
+vtk==9.3.1=osmesa_py312h838d114_109
+pyvista==0.44.2=pyhd8ed1ab_0
+shapely==2.0.6=py312h391bc85_2
+rasterio==1.4.2=py312h8cae83d_1
+pillow==11.0.0=py312h7b63e92_0
+matplotlib-base==3.9.2=py312hd3ec401_2
+
+# packages for Jupyter
+jupyterlab==4.3.1=pyhff2d567_0
+jupyter-server-proxy==4.4.0=pyhd8ed1ab_0
+ipywidgets==8.1.5=pyhd8ed1ab_0
+trame-vtk==2.8.12=pyhbc30e4a_0
+trame-vuetify==2.7.2=pyhff2d567_0
+trame==3.7.0=pyhd8ed1ab_0
+ipympl=0.9.4=pyhd8ed1ab_0
