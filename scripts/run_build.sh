@@ -1,8 +1,8 @@
 #!/bin/bash
-# Script for building the Python package:
+# Script for building the documentation and the package:
 #   - clean the generated files
-#   - build the documentation
-#   - build the package
+#   - build the Sphinx documentation
+#   - build the Python package
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0

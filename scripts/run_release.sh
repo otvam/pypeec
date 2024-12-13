@@ -1,11 +1,16 @@
 #!/bin/bash
-# Script for creating a release:
-#   - create a tag
-#   - build the documentation and the package
-#   - run the tests and check the results
-#   - create a release
+# Script for creating and uploading a release:
+#   - create a tag and a release
+#   - build the Sphinx documentation
+#   - build the Python package
+#   - run the all the tests
 #   - upload the documentation
-#   - upload the package
+#   - upload the Python package
+#
+# WARNING: The following steps are not performed by this script.
+#          The Conda package is not updated.
+#          The Docker image is not updated.
+#
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -68,9 +73,12 @@ function check_release {
     ret=1
   fi
 
-  # check status
+  # abort in case of failure
   if [[ $ret != 0 ]]
   then
+    echo "======================================================================"
+    echo "RELEASE FAILURE"
+    echo "======================================================================"
     exit $ret
   fi
 }
@@ -90,22 +98,18 @@ function build_test {
   ./scripts/run_tests.sh
   ret=$(( ret || $? ))
 
+  # clean the tag
+  git tag -d $VER
+
+  # abort in case of failure
   if [[ $ret != 0 ]]
   then
     echo "======================================================================"
     echo "RELEASE FAILURE"
     echo "======================================================================"
-
-    # clean tag
-    git tag -d $VER
-
-    # force quit
     exit $ret
-  else
-    # push the tag
-    git push origin --tags
   fi
-  }
+}
 
 function upload_docs {
   echo "======================================================================"
@@ -141,6 +145,12 @@ function upload_pkg {
   echo "======================================================================"
   echo "UPLOAD PACKAGE"
   echo "======================================================================"
+
+  # create a tag
+  git tag -a $VER -m "$MSG"
+
+  # push the tag
+  git push origin --tags
 
   # create a release
   gh release create $VER --title $VER --notes "$MSG"
