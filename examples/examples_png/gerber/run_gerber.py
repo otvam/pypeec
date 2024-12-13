@@ -8,18 +8,38 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import os
 import sys
+import scilogger
 import matplotlib.pyplot as plt
 import matplotlib.image as img
 from pypeec.utils import gerber
 
+# get a logger
+LOGGER = scilogger.get_logger(__name__, "script")
 
-def _plot_image(folder, name):
+# get the path the folder
+PATH_ROOT = os.path.dirname(__file__)
+
+
+def _plot_stack(folder_png, stack_list):
+    """
+    Display all the images composing a stack.
+    """
+
+    # plot the
+    for name in stack_list:
+        _plot_image(folder_png, name)
+
+    # show the plots
+    plt.show()
+
+
+def _plot_image(folder_png, name):
     """
     Display an image on the screen.
     """
 
     # load the images
-    data = img.imread(os.path.join(folder, name + ".png"))
+    data = img.imread(os.path.join(folder_png, name + ".png"))
 
     # make a plot
     plt.figure()
@@ -31,6 +51,10 @@ if __name__ == "__main__":
     # ########################################################
     # ### definition of the parameters
     # ########################################################
+
+    # get the folder locations
+    folder_gerber = os.path.join(PATH_ROOT, "gerber")
+    folder_png = os.path.join(PATH_ROOT, "png")
 
     # definition of the colors
     color_def = {
@@ -61,11 +85,11 @@ if __name__ == "__main__":
 
     # get the export instructions
     data_export = {
-        "margin": 0.1,               # relative margin to be considered around the board
-        "oversampling": 1.0,         # oversampling factor for exporting the GERBER files
-        "voxel": 17.0e-6,            # size of the voxel
-        "folder_gerber": "gerber",   # GERBER file location
-        "folder_png": "png",         # PNG file location
+        "margin": 0.1,                    # relative margin to be considered around the board
+        "oversampling": 1.0,              # oversampling factor for exporting the GERBER files
+        "voxel": 17.0e-6,                 # size of the voxel
+        "folder_gerber": folder_gerber,   # GERBER file location
+        "folder_png": folder_png,         # PNG file location
     }
 
     # get the layer stack (combination between GERBER files and colors)
@@ -93,17 +117,13 @@ if __name__ == "__main__":
     # ### convert the GERBER files
     # ########################################################
 
-    # convert the GERBER files to PNG files
+    # convert the GERBER files
+    LOGGER.info("convert the GERBER files")
     gerber.get_convert(data_export, data_gerber, data_stack)
 
     # plot the generated images
-    _plot_image("png", "front")
-    _plot_image("png", "back")
-    _plot_image("png", "terminal")
-    _plot_image("png", "via")
-
-    # show the plots
-    plt.show()
+    LOGGER.info("plot the generated images")
+    _plot_stack(folder_png, ["front", "back", "terminal", "via"])
 
     # exit
     sys.exit(0)

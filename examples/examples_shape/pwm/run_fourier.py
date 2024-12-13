@@ -12,11 +12,44 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import os
 import sys
+import scilogger
 import scisave
+import pypeec
 import numpy as np
 import matplotlib.pyplot as plt
 from pypeec.utils import fourier
+
+# get a logger
+LOGGER = scilogger.get_logger(__name__, "script")
+
+# get the path the folder
+PATH_ROOT = os.path.dirname(__file__)
+
+
+def _solve_peec(folder_example, folder_config):
+    """
+    Solve the PEEC problem (mesher and solver).
+    """
+
+    # define the input
+    file_geometry = os.path.join(folder_example, "geometry.yaml")
+    file_problem = os.path.join(folder_example, "problem.yaml")
+
+    # define the configuration
+    file_tolerance = os.path.join(folder_config, "tolerance.yaml")
+
+    # define the output
+    file_voxel = os.path.join(folder_example, "voxel.pck")
+    file_solution = os.path.join(folder_example, "solution.pck")
+
+    # run the workflow and load the solution
+    pypeec.run_mesher_file(file_geometry, file_voxel)
+    pypeec.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
+    data_solution = scisave.load_data(file_solution)
+
+    return data_solution
 
 
 def _get_impedance_peec(data_solution):
@@ -174,21 +207,23 @@ def _plot_waveform(t_vec, V_time, I_time):
 
 if __name__ == "__main__":
     # ########################################################
-    # ### extract the inductor equivalent circuit
+    # ### solve the PEEC problem
     # ########################################################
 
-    # name of the solution file
-    filename = "solution.json.gz"
+    # folder containing the example files
+    folder_example = os.path.join(PATH_ROOT, ".")
 
-    # load the solution
-    data_solution = scisave.load_data(filename)
+    # folder containing the global configuration files
+    folder_config = os.path.join(PATH_ROOT, "..", "..", "config")
 
-    # extract the resistance and inductance values
-    (f_sim, R_sim, L_sim) = _get_impedance_peec(data_solution)
+    # solve the PEEC problem
+    data_solution = _solve_peec(folder_example, folder_config)
 
     # ########################################################
-    # ### define the voltage excitation
+    # ### define the time domain voltage excitation
     # ########################################################
+
+    LOGGER.info("define the time domain voltage excitation")
 
     # parameters for the signal
     d_pulse = 0.10   # duty cycle of the PWM pulses
@@ -214,8 +249,13 @@ if __name__ == "__main__":
     V_time[idx_neg] = -V_pwm
 
     # ########################################################
-    # ### compute the waveforms with Fourier analysis
+    # ### compute the waveforms in the frequency domain
     # ########################################################
+
+    LOGGER.info("compute the waveforms with Fourier analysis")
+
+    # extract the resistance and inductance values
+    (f_sim, R_sim, L_sim) = _get_impedance_peec(data_solution)
 
     # transform the voltage into the frequency domain
     V_freq = fourier.get_fft(V_time, n_freq=n_freq)
@@ -229,6 +269,12 @@ if __name__ == "__main__":
     # compute the inductor current with the impedance
     I_freq = V_freq/Z_freq
 
+    # ########################################################
+    # ### compute the complex power harmonics
+    # ########################################################
+
+    LOGGER.info("compute the complex power harmonics")
+
     # compute the complex power spectrum
     S_vec = 0.5*V_freq*np.conj(I_freq)
 
@@ -239,13 +285,21 @@ if __name__ == "__main__":
     P_vec = np.real(S_vec)
     Q_vec = np.imag(S_vec)
 
+    # ########################################################
+    # ### transform the waveforms in the time domain
+    # ########################################################
+
+    LOGGER.info("transform the waveforms in the time domain")
+
     # transform the waveforms back into the time domain
     V_time = fourier.get_ifft(V_freq, n_time=n_time)
     I_time = fourier.get_ifft(I_freq, n_time=n_time)
 
     # ########################################################
-    # ### plot the results
+    # ### plot the waveforms and spectrums
     # ########################################################
+
+    LOGGER.info("plot the waveforms and spectrums")
 
     # plot the extracted resistance and inductance values
     _plot_circuit(f_sim, R_sim, L_sim)

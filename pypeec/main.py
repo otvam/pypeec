@@ -47,10 +47,10 @@ def run_mesher_data(data_geometry):
         data_voxel = mesher.run(data_geometry)
     except Exception as ex:
         LOGGER.log_exception(ex)
-        LOGGER.error("invalid termination")
+        LOGGER.error("invalid mesher termination")
         raise ex
     else:
-        LOGGER.info("successful termination")
+        LOGGER.info("successful mesher termination")
 
     return data_voxel
 
@@ -132,10 +132,10 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
         viewer.run(data_voxel, data_viewer, **kwargs)
     except Exception as ex:
         LOGGER.log_exception(ex)
-        LOGGER.error("invalid termination")
+        LOGGER.error("invalid viewer termination")
         raise ex
     else:
-        LOGGER.info("successful termination")
+        LOGGER.info("successful viewer termination")
 
 
 def run_viewer_file(file_voxel, file_viewer, **kwargs):
@@ -217,10 +217,10 @@ def run_solver_data(data_voxel, data_problem, data_tolerance):
         data_solution = solver.run(data_voxel, data_problem, data_tolerance)
     except Exception as ex:
         LOGGER.log_exception(ex)
-        LOGGER.error("invalid termination")
+        LOGGER.error("invalid solver termination")
         raise ex
     else:
-        LOGGER.info("successful termination")
+        LOGGER.info("successful solver termination")
 
     return data_solution
 
@@ -315,10 +315,10 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         plotter.run(data_solution, data_plotter, **kwargs)
     except Exception as ex:
         LOGGER.log_exception(ex)
-        LOGGER.error("invalid termination")
+        LOGGER.error("invalid plotter termination")
         raise ex
     else:
-        LOGGER.info("successful termination")
+        LOGGER.info("successful plotter termination")
 
 
 def run_plotter_file(file_solution, file_plotter, **kwargs):

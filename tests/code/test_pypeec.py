@@ -9,18 +9,15 @@ __license__ = "Mozilla Public License Version 2.0"
 import os.path
 import tempfile
 import warnings
-import logging
+import scilogger
 import scisave
 import pypeec
 
-# disable logging to prevent clutter during test evaluation
-logging.disable(logging.CRITICAL)
+# disable logging
+scilogger.disable()
 
 # get the path the folder
 PATH_ROOT = os.path.dirname(__file__)
-
-# construct the config folder path
-FOLDER_EXAMPLES = os.path.join(PATH_ROOT, "..", "..", "examples")
 
 
 def _create_temp_file():
@@ -75,14 +72,17 @@ def run_workflow(name, use_script):
     warnings.filterwarnings("ignore", category=DeprecationWarning)
     warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
 
+    # construct the folder path for the examples
+    folder_examples = os.path.join(PATH_ROOT, "..", "..", "examples")
+
     # get input file name
-    file_geometry = os.path.join(FOLDER_EXAMPLES, name, "geometry.yaml")
-    file_problem = os.path.join(FOLDER_EXAMPLES, name, "problem.yaml")
+    file_geometry = os.path.join(folder_examples, name, "geometry.yaml")
+    file_problem = os.path.join(folder_examples, name, "problem.yaml")
 
     # get config file name
-    file_plotter = os.path.join(FOLDER_EXAMPLES, "config", "plotter.yaml")
-    file_viewer = os.path.join(FOLDER_EXAMPLES, "config", "viewer.yaml")
-    file_tolerance = os.path.join(FOLDER_EXAMPLES, "config", "tolerance.yaml")
+    file_plotter = os.path.join(folder_examples, "config", "plotter.yaml")
+    file_viewer = os.path.join(folder_examples, "config", "viewer.yaml")
+    file_tolerance = os.path.join(folder_examples, "config", "tolerance.yaml")
 
     # get the temporary files
     file_voxel = _create_temp_file()

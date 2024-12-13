@@ -19,7 +19,7 @@ COPY --chown=${NB_UID}:${NB_GID} pkgs.txt .
 
 # install all the dependencies (but not PyPEEC)
 RUN mamba install --yes --channel conda-forge \
-    scilogger==1.2.1=pyhd8ed1ab_0 \
+    scilogger==1.2.2=pyhd8ed1ab_0 \
     scisave==1.4.1=pyhd8ed1ab_0 \
     jsonschema==4.23.0=pyhd8ed1ab_0 \
     numpy==2.1.3=py312h58c1407_0 \

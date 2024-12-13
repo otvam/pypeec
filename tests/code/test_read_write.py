@@ -11,13 +11,14 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import os.path
 import datetime
-import json
+import scilogger
+import scisave
+
+# disable logging
+scilogger.disable()
 
 # get the path the folder
 PATH_ROOT = os.path.dirname(__file__)
-
-# construct the test folder path
-FOLDER_TESTS = os.path.join(PATH_ROOT, "..", "data")
 
 
 def write_results(name, mesher, solver):
@@ -37,11 +38,9 @@ def write_results(name, mesher, solver):
     # assemble results
     data_test = {"metadata": metadata, "mesher": mesher, "solver": solver}
 
-    # file containing the test results
-    file_test = os.path.join(FOLDER_TESTS, name + ".json")
-
-    with open(file_test, "w") as fid:
-        json.dump(data_test, fid, indent=4)
+    # write the file containing the test results
+    file_test = os.path.join(PATH_ROOT, "..", "data", name + ".json")
+    scisave.write_data(file_test, data_test)
 
 
 def read_results(name):
@@ -49,12 +48,9 @@ def read_results(name):
     Load the file containing the prescribed test results.
     """
 
-    # file containing the test results
-    file_test = os.path.join(FOLDER_TESTS, name + ".json")
-
-    # load the test results
-    with open(file_test, "r") as fid:
-        data_test = json.load(fid)
+    # load the file containing the test results
+    file_test = os.path.join(PATH_ROOT, "..", "data", name + ".json")
+    data_test = scisave.load_data(file_test)
 
     # extract results
     mesher = data_test["mesher"]

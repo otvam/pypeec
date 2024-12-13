@@ -7,7 +7,11 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import sys
+import scilogger
 from pypeec.utils import voxel
+
+# get a logger
+LOGGER = scilogger.get_logger(__name__, "script")
 
 
 if __name__ == "__main__":
@@ -58,9 +62,11 @@ if __name__ == "__main__":
     # ########################################################
 
     # convert tensor to linear indices
+    LOGGER.info("convert tensor to linear indices")
     idx_linear = {tag: voxel.get_idx_linear(n, idx) for tag, idx in idx_input.items()}
 
     # convert linear to tensor indices
+    LOGGER.info("convert linear to tensor indices")
     idx_tensor = {tag: voxel.get_idx_tensor(n, idx) for tag, idx in idx_linear.items()}
 
     # ########################################################
@@ -68,14 +74,16 @@ if __name__ == "__main__":
     # ########################################################
 
     # display the linear indices
-    print("linear indices")
-    for tag, idx in idx_linear.items():
-        print("    %s = %s" % (tag, idx.tolist()))
+    LOGGER.info("show the linear indices")
+    with LOGGER.BlockIndent():
+        for tag, idx in idx_linear.items():
+            LOGGER.info("%s = %s" % (tag, idx.tolist()))
 
     # display the tensor indices
-    print("tensor indices")
-    for tag, idx in idx_tensor.items():
-        print("    %s = %s" % (tag, idx.tolist()))
+    LOGGER.info("shoow the tensor indices")
+    with LOGGER.BlockIndent():
+        for tag, idx in idx_tensor.items():
+            LOGGER.info("%s = %s" % (tag, idx.tolist()))
 
     # exit
     sys.exit(0)
