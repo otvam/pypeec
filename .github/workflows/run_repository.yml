@@ -44,10 +44,8 @@ jobs:
         with:
           miniforge-version: latest
           python-version: ${{ matrix.version }}
-          auto-update-conda: true
           auto-activate-base: false
           activate-environment: pypeec
-          channels: conda-forge
       - name: Install dependencies
         shell: bash -el {0}
         run: conda install --yes conda-forge::pypeec
