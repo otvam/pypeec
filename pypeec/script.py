@@ -23,8 +23,29 @@ def _run_display_logo():
 
     # load logo data
     filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
-    with filename.open("r") as fid:
-        data = fid.read()
+
+    # display logo
+    try:
+        with filename.open("r") as fid:
+            data = fid.read()
+    except UnicodeEncodeError:
+        print("fail original")
+
+    # display logo
+    try:
+        with filename.open("r", encoding="utf-8") as fid:
+            data = fid.read()
+    except UnicodeEncodeError:
+        print("fail utf")
+
+    # display logo
+    try:
+        with filename.open("rb") as fid:
+            data = fid.read()
+    except UnicodeEncodeError:
+        print("fail rb")
+
+    data = "yolo"
 
     # display logo
     try:

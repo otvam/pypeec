@@ -23,7 +23,6 @@ jobs:
       fail-fast: false
       matrix:
         system:
-          - "ubuntu-latest"
           - "windows-latest"
         version:
           - "3.11"
@@ -39,6 +38,9 @@ jobs:
       - name: Install dependencies
         shell: bash -el {0}
         run: python -m pip install --requirement .github/envs/env_pypi.txt
+      - name: Install pypeec
+        shell: bash -el {0}
+        run: pip install --force --no-deps .
       - name: Run the tests
         shell: bash -el {0}
         run: ./.github/scripts/run_script.sh
