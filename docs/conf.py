@@ -19,7 +19,7 @@ ver = setuptools_scm.get_version(
     root='..',
     relative_to=__file__,
     version_scheme="only-version",
-    local_scheme = "no-local-version",
+    local_scheme="no-local-version",
 )
 release = ver
 version = ver

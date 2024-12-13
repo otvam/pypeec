@@ -17,7 +17,8 @@ requires = [
 
 [tool.setuptools_scm]
 write_to = "pypeec/data/version.txt"
-version_scheme = "guess-next-dev"
+version_scheme = "only-version"
+local_scheme = "no-local-version"
 
 [project]
 name = "pypeec"
