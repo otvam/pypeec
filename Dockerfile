@@ -14,9 +14,6 @@ LABEL org.opencontainers.image.title="PyPEEC - 3D Quasi-Magnetostatic Solver"
 LABEL org.opencontainers.image.description="Docker image with PyPEEC and Jupyter"
 LABEL org.opencontainers.image.licenses="MPL-2.0 and others"
 
-# copy the package lists
-COPY --chown=${NB_UID}:${NB_GID} pkgs.txt .
-
 # install all the dependencies (but not PyPEEC)
 RUN mamba install --yes --channel conda-forge \
     scilogger==1.2.2=pyhd8ed1ab_0 \
@@ -53,7 +50,6 @@ RUN pypeec examples .
 # clean the workspace
 RUN rm -rf *.py
 RUN rm -rf *.sh
-RUN rm -rf pkgs.txt
 RUN rm -rf work
 
 # allow Jupyter to display VTK graphics
