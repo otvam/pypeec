@@ -80,7 +80,7 @@ function check_release {
 
 function build_test {
   # create a tag
-  git tag -a $VER -m "$MSG"
+  git tag -a $VER -m "$MSG" > /dev/null
 
   # init status
   ret=0
@@ -94,7 +94,7 @@ function build_test {
   ret=$(( ret || $? ))
 
   # clean the tag
-  git tag -d $VER
+  git tag -d $VER > /dev/null
 
   # abort in case of failure
   if [[ $ret != 0 ]]
