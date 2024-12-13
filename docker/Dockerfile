@@ -10,9 +10,9 @@ FROM quay.io/jupyter/base-notebook:2024-11-25
 LABEL org.opencontainers.image.authors="Thomas Guillod <guillod@otvam.ch>"
 LABEL org.opencontainers.image.source="https://github.com/otvam/pypeec"
 LABEL org.opencontainers.image.documentation="https://pypeec.otvam.ch"
-LABEL org.opencontainers.image.title="PyPEEC - 3D Quasi-Magnetostatic FFT/PEEC Solver"
+LABEL org.opencontainers.image.title="PyPEEC - 3D Quasi-Magnetostatic Solver"
 LABEL org.opencontainers.image.description="Docker image with PyPEEC and Jupyter"
-LABEL org.opencontainers.image.licenses="MPL-2.0"
+LABEL org.opencontainers.image.licenses="MPL-2.0 and others"
 
 # copy the package lists
 COPY --chown=${NB_UID}:${NB_GID} pkgs.txt .
