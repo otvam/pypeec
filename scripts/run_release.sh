@@ -7,11 +7,6 @@
 #   - upload the documentation
 #   - upload the Python package
 #
-# WARNING: The following steps are not performed by this script.
-#          The Conda package is not updated.
-#          The Docker image is not updated.
-#
-#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
