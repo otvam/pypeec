@@ -120,9 +120,9 @@ This Source Code Form is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-In order to facilitate the redistribution, this source code is 
-multi-licensed under the following additional licenses:  
-LGPLv2,  LGPLv3, GPLv2, and GPLv3.
+In order to facilitate the redistribution, this source code is
+multi-licensed under the following additional licenses:
+LGPLv2, LGPLv3, GPLv2, and GPLv3.
 
 ---
 
