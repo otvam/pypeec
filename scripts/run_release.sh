@@ -79,22 +79,22 @@ function check_release {
 }
 
 function build_test {
-  # create a tag
-  git tag -a $VER -m "$MSG" > /dev/null
-
   # init status
   ret=0
+
+  # create a temporary tag
+  git tag -a $VER -m "$MSG" > /dev/null
 
   # check build
   ./scripts/run_build.sh
   ret=$(( ret || $? ))
 
+  # remove the temporary tag
+  git tag -d $VER > /dev/null
+
   # check tests
   ./scripts/run_tests.sh
   ret=$(( ret || $? ))
-
-  # clean the tag
-  git tag -d $VER > /dev/null
 
   # abort in case of failure
   if [[ $ret != 0 ]]
