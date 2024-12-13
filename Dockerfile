@@ -40,7 +40,7 @@ RUN mamba install --yes --channel conda-forge \
     ipympl=0.9.4=pyhd8ed1ab_0
 
 # install PyPEEC (no-deps as everything required has been installed)
-RUN mamba install --yes --no-deps conda-forge::pypeec
+RUN mamba install --yes --no-deps --channel conda-forge pypeec
 
 # clean mamba and fix permissions
 RUN mamba clean --all --force-pkgs-dirs --yes

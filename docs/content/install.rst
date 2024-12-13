@@ -78,17 +78,20 @@ Using the Docker Image
 
 .. code-block:: bash
 
-    # A Docker Image is also available through GHCR
+    # A Dockerfile is also available for building an image
     #   - Contains an Ubuntu image with PyPEEC and Jupyter
     #   - The PyPEEC tutorial and examples are included
     #   - The image is only intended for test purposes
 
-    # Pull the Docker image
-    docker pull ghcr.io/otvam/pypeec:latest
+    # Clone the repository
+    git clone git@github.com:otvam/pypeec.git
+
+    # Build the Docker image
+    docker build --tag "pypeec:latest" .
 
     # Run the Docker image
     docker run -p 8888:8888 \
-        "ghcr.io/otvam/pypeec:latest" "start-notebook.py" \
+        "pypeec:latest" "start-notebook.py" \
         --NotebookApp.password="" --NotebookApp.token=""
 
     # Access Jupyter inside the Docker image

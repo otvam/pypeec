@@ -59,10 +59,6 @@ The code is written in **Python** and is fully **open source**!
    :target: https://anaconda.org/conda-forge/pypeec
    :alt: conda / pkg
 
-.. image:: images/badge_docker.svg
-   :target: https://github.com/otvam/pypeec/pkgs/container/pypeec
-   :alt: docker / img
-
 .. image:: images/badge_binder.svg
    :target: https://mybinder.org/v2/gh/otvam/pypeec/main?labpath=notebook.ipynb
    :alt: binder / launch

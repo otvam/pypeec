@@ -29,7 +29,6 @@ Version     |ver| / |date|
 PyPI        https://pypi.org/project/pypeec
 Conda       https://anaconda.org/conda-forge/pypeec
 GitHub      https://github.com/otvam/pypeec/releases
-Docker      https://github.com/otvam/pypeec/pkgs/container/pypeec
 ==========  =====================================================
 
 Authors
