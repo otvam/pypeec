@@ -8,6 +8,7 @@
 *.pyo
 
 # exclude data files
+*.bak
 *.pck
 *.pkl
 *.pickle
