@@ -6,8 +6,11 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+# base packages
 import sys
 import scilogger
+
+# import utils to be demonstrated
 from pypeec.utils import voxel
 
 # get a logger

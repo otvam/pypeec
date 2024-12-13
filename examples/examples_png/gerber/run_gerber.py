@@ -6,11 +6,16 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+# base packages
 import os
 import sys
 import scilogger
+
+# import plotting libraries
 import matplotlib.pyplot as plt
 import matplotlib.image as img
+
+# import utils to be demonstrated
 from pypeec.utils import gerber
 
 # get a logger

@@ -9,13 +9,20 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+# base packages
 import os
 import sys
 import scilogger
 import scisave
 import pypeec
+
+# import numerical library
 import numpy as np
+
+# import plotting library
 import matplotlib.pyplot as plt
+
+# import utils to be demonstrated
 from pypeec.utils import fourier
 
 # get a logger
