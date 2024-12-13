@@ -3,9 +3,6 @@ Extract the impedance matrix from the solution:
     - extract the terminal data (currents and voltages) from the solution
     - expand the extracted terminal data with the given symmetries
     - extract the impedance matrix from the terminal data
-
-This script is loading and post-processing the solver results.
-Before running this script, the PyPEEC mesher and solver should be run.
 """
 
 __author__ = "Thomas Guillod"

@@ -3,9 +3,6 @@ Compute non-sinusoidal waveforms with Fourier analysis:
     - extract the frequency domain impedance
     - compute the waveforms in the frequency domain
     - transform back the results in the time domain
-
-This script is loading and post-processing the solver results.
-Before running this script, the PyPEEC mesher and solver should be run.
 """
 
 __author__ = "Thomas Guillod"
