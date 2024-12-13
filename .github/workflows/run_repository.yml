@@ -48,10 +48,9 @@ jobs:
           activate-environment: pypeec
           channels: conda-forge
           conda-remove-defaults: true
-          use-mamba: true
       - name: Install dependencies
         shell: bash -el {0}
-        run: conda install --yes conda-forge::pypeec
+        run: mamba install --yes conda-forge::pypeec
       - name: Run the script
         shell: bash -el {0}
         run: ./.github/scripts/run_script.sh
