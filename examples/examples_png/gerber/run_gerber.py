@@ -1,5 +1,6 @@
 """
-Generate PNG files from the GERBER files for the example.
+Generate PNG files from GERBER files (for the different layers).
+The PNG files are then used to describe the voxel geometry.
 """
 
 __author__ = "Thomas Guillod"
