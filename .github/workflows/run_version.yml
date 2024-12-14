@@ -25,6 +25,7 @@ jobs:
         system:
           - "ubuntu-latest"
           - "windows-latest"
+          - "macos-latest"
         version:
           - "3.11"
     name: pip / ${{ matrix.system }} / ${{ matrix.version }}
