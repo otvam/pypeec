@@ -30,11 +30,13 @@ def _run_display_logo():
             data = fid.read()
 
         # try to decode the logo
-        data.encode(sys.stderr.encoding)
+        data = data.encode(sys.stderr.encoding)
 
         # display the logo
         print("", flush=True, file=sys.stderr)
-        print(data, flush=True, file=sys.stderr)
+        sys.stderr.buffer.flush()
+        sys.stderr.buffer.write(data)
+        sys.stderr.buffer.flush()
         print("", flush=True, file=sys.stderr)
     except (UnicodeDecodeError, UnicodeEncodeError):
         pass
