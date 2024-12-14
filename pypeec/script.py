@@ -21,18 +21,24 @@ def _run_display_logo():
     Display the logo as a splash screen.
     """
 
-    # load logo data
-    filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
-    with filename.open("r") as fid:
-        data = fid.read()
-
-    # display logo
     try:
-        data.encode(sys.stderr.encoding)
+        # get the logo path
+        filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
+
+        # load the logo as utf-8
+        with filename.open("r", encoding="utf-8") as fid:
+            data = fid.read()
+
+        # try to decode the logo
+        data = data.encode(sys.stderr.encoding)
+
+        # display the logo
         print("", flush=True, file=sys.stderr)
-        print(data, flush=True, file=sys.stderr)
+        sys.stderr.buffer.flush()
+        sys.stderr.buffer.write(data)
+        sys.stderr.buffer.flush()
         print("", flush=True, file=sys.stderr)
-    except UnicodeEncodeError:
+    except (UnicodeDecodeError, UnicodeEncodeError):
         pass
 
 
