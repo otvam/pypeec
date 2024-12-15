@@ -43,7 +43,7 @@ def _get_load_stl(scale, offset, filename):
     return mesh
 
 
-def _get_voxelize_stl(grid, mesh):
+def _get_voxelize_stl(grid, mesh, strict):
     """
     Voxelize an STL mesh with respect to a uniform grid.
     Return the indices of the created voxels.
@@ -51,8 +51,8 @@ def _get_voxelize_stl(grid, mesh):
 
     # voxelize the mesh
     try:
-        selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=True)
-    except RuntimeError:
+        selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=strict)
+    except RuntimeError as ex:
         raise RuntimeError("invalid mesh: mesh cannot be voxelized") from None
 
     # create a boolean mask
@@ -165,7 +165,7 @@ def _get_voxel_grid(n, d, c):
     return grid
 
 
-def _get_domain_def(grid, domain_stl, mesh_stl):
+def _get_domain_def(grid, domain_stl, mesh_stl, strict):
     """
     Voxelize meshes and assign the indices to a dict.
     """
@@ -182,7 +182,7 @@ def _get_domain_def(grid, domain_stl, mesh_stl):
         mesh = mesh_stl_tmp["mesh"]
 
         # voxelize and get the indices
-        idx_voxel = _get_voxelize_stl(grid, mesh)
+        idx_voxel = _get_voxelize_stl(grid, mesh, strict)
 
         # append the indices into the corresponding domain
         domain_def[tag] = np.append(domain_def[tag], idx_voxel)
@@ -206,6 +206,7 @@ def get_mesh(param, domain_stl):
     d = param["d"]
     xyz_min = param["xyz_min"]
     xyz_max = param["xyz_max"]
+    strict = param["strict"]
 
     # load the mesh and get the STL bounds
     LOGGER.debug("load STL files")
@@ -231,7 +232,7 @@ def get_mesh(param, domain_stl):
 
     # voxelize the meshes and get the indices
     LOGGER.debug("voxelize STL files")
-    domain_def = _get_domain_def(grid, domain_stl, mesh_stl)
+    domain_def = _get_domain_def(grid, domain_stl, mesh_stl, strict)
 
     # cast to lists
     n = n.tolist()

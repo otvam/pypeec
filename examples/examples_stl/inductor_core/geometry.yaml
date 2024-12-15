@@ -12,6 +12,7 @@
         "d": [89.0e-6, 85.5e-6, 62.5e-6]
         "xyz_min": null
         "xyz_max": null
+        "strict": true
     "domain_stl":
         "core": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/core.stl"}]
         "coil": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/coil.stl"}]

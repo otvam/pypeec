@@ -12,6 +12,7 @@
         "d": [600.0e-6, 600.0e-6, 250.0e-6]
         "xyz_min": null
         "xyz_max": null
+        "strict": true
     "domain_stl":
         "pri_coil": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/pri_coil.stl"}]
         "pri_src": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/pri_src.stl"}]

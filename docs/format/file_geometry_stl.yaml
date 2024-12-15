@@ -5,13 +5,20 @@
 "data_voxelize":
     # definition of the voxel structure
     #   - d: array with the voxel dimensions (x, y, and z directions)
-    #   - xyz_min: array with the lower corner coordinates of the voxel structure (x, y, and z directions)
-    #   - xyz_max: array with the upper corner coordinates of the voxel structure (x, y, and z directions)
-    #   - alternatively, the xyz_min/xyz_max can be set to null and the STL mesh bounds are kept
+    #   - xyz_min: array with the lower corner coordinates of the voxel structure
+    #       - vector with the x, y, and z coordinates
+    #       - if null, the STL mesh bounds are used
+    #   - xyz_max: array with the upper corner coordinates of the voxel structure
+    #       - vector with the x, y, and z coordinates
+    #       - if null, the STL mesh bounds are used
+    #   - strict: boolean parameters for checking the STL mesh integrity
+    #       - if true, the STL mesh should represent a closed surface
+    #       - if false, the surface status of the STL mesh is not checked
     "param":
         "d": [10.0e-3, 10.0e-3, 10.0e-3]
         "xyz_min": [-20e-3, -20e-3, -20e-3]
         "xyz_max": [+20e-3, +20e-3, +20e-3]
+        "strict": true
 
     # definition of the STL files of the different domains
     #   - dict with the domain name and the STL files

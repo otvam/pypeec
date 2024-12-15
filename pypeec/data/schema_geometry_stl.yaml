@@ -9,6 +9,7 @@
             - "d"
             - "xyz_min"
             - "xyz_max"
+            - "strict"
         "properties":
             "d":
                 "type": "array"
@@ -33,6 +34,8 @@
                 "maxItems": 3
                 "items":
                     "type": "number"
+            "strict":
+                "type": "boolean"
     "domain_stl":
         "type": "object"
         "minProperties": 1

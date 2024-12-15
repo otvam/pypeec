@@ -108,6 +108,7 @@ The following **open-source tools** can be used to generate **STL** files:
 
 * Interactive software: ``FreeCAD`` or ``Blender``
 * Scripting software: ``CadQuery`` or ``OpenSCAD``
+* Mesh tools: ``MeshLab`` or ``MeshFix``
 
 The following **open-source tools** can be used to generate **GERBER** files:
 

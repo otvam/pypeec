@@ -10,9 +10,12 @@
     #   - cz: coordinates of the voxel structure center for the z direction  (null for centering)
     #   - simplify: tolerance for simplifying the shapes (null for disabling simplification)
     #   - construct: grid size for constructing the shapes (null for default grid size)
-    #   - xy_min: array with the lower corner coordinates of the voxel structure (x and y directions)
-    #   - xy_max: array with the upper corner coordinates of the voxel structure (x and y directions)
-    #   - alternatively, the xy_min/xy_max can be set to null and the shape bounds are kept
+    #   - xy_min: array with the lower corner coordinates of the voxel structure
+    #       - vector with the x and y coordinates
+    #       - if null, the shape bounds are used
+    #   - xy_max: array with the upper corner coordinates of the voxel structure
+    #       - vector with the x and y coordinates
+    #       - if null, the shape bounds are used
     "param":
         "dx": 50.0e-6
         "dy": 50.0e-6
