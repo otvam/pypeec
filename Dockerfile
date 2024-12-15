@@ -42,7 +42,7 @@ RUN mamba install --yes --no-deps --channel conda-forge pypeec
 # clean mamba and fix permissions
 RUN mamba clean --all --force-pkgs-dirs --yes
 RUN fix-permissions "${CONDA_DIR}" 
-RUN fix-permissions "/home/${NB_USER}"
+RUN fix-permissions "${HOME}"
 
 # extract the PyPEEC examples
 RUN pypeec examples .
