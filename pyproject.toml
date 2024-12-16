@@ -50,7 +50,6 @@ classifiers = [
     "Natural Language :: English",
     "Environment :: Console",
 ]
-
 dependencies = [
     "scilogger >= 1.2.2",
     "scisave >= 1.4.1",
