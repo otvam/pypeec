@@ -2,7 +2,7 @@
 Module for managing plotting windows with PyVista and Matplotlib:
     - show the plot using the Qt framework
     - show the plots inside a Jupyter notebook
-    - save the plots into screenshot files
+    - save the data into files (PNG images and VTK objects)
     - debug mode (do not render the plots)
 
 The Qt-related library are only import when used.
