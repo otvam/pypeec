@@ -35,9 +35,10 @@ The code is written in **Python** and is fully **open source**!
 * Import the **geometry** from **STL**, **PNG**, and **GERBER** files
 * Draw the **geometry** with stacked 2D **vector shapes** or **voxel indices**
 * **Pure Python** and **open source** implementation
+* Advanced **plotting** capabilities
 * Can be used from the **command line**
 * Can be used with **Jupyter notebooks**
-* Advanced **plotting** capabilities
+* Compatible with **ParaView visualizations**
 
 **PyPEEC** solves the following **3D quasi-magnetostatic problems**:
 
