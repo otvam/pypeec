@@ -30,7 +30,7 @@ def _get_safe_inv(x):
     Compute the inverse. Set to zero if not finite.
     """
 
-    y = 1/x
+    y = 1 / x
     y[np.isnan(y)] = 0.0
     y[np.isinf(y)] = 0.0
 
@@ -70,34 +70,34 @@ def _get_green_6D_fct(x, y, z):
 
     # precompute terms
     with np.errstate(all="ignore"):
-        nrm = np.sqrt(x**2+y**2+z**2)
-        atanx = _get_safe_arctan((y*z)/(x*nrm))
-        atany = _get_safe_arctan((x*z)/(y*nrm))
-        atanz = _get_safe_arctan((x*y)/(z*nrm))
-        logx = _get_safe_log(x+nrm)
-        logy = _get_safe_log(y+nrm)
-        logz = _get_safe_log(z+nrm)
+        nrm = np.sqrt(x**2 + y**2 + z**2)
+        atanx = _get_safe_arctan((y * z) / (x * nrm))
+        atany = _get_safe_arctan((x * z) / (y * nrm))
+        atanz = _get_safe_arctan((x * y) / (z * nrm))
+        logx = _get_safe_log(x + nrm)
+        logy = _get_safe_log(y + nrm)
+        logz = _get_safe_log(z + nrm)
 
     # compute function
-    val = 1.0*(
-            + (x**4*nrm)/60 +
-            + (y**4*nrm)/60 +
-            + (z**4*nrm)/60 +
-            - (x*y**4*logx)/24 +
-            - (x*z**4*logx)/24 +
-            - (x**4*y*logy)/24 +
-            - (y*z**4*logy)/24 +
-            - (x**4*z*logz)/24 +
-            - (y**4*z*logz)/24 +
-            - (x**2*y**2*nrm)/20 +
-            - (x**2*z**2*nrm)/20 +
-            - (y**2*z**2*nrm)/20 +
-            + (x*y**2*z**2*logx)/4 +
-            + (x**2*y*z**2*logy)/4 +
-            + (x**2*y**2*z*logz)/4 +
-            - (x*y*z**3*atanz)/6 +
-            - (x*y**3*z*atany)/6 +
-            - (x**3*y*z*atanx)/6
+    val = 1.0 * (
+        +(x**4 * nrm) / 60
+        + +(y**4 * nrm) / 60
+        + +(z**4 * nrm) / 60
+        + -(x * y**4 * logx) / 24
+        + -(x * z**4 * logx) / 24
+        + -(x**4 * y * logy) / 24
+        + -(y * z**4 * logy) / 24
+        + -(x**4 * z * logz) / 24
+        + -(y**4 * z * logz) / 24
+        + -(x**2 * y**2 * nrm) / 20
+        + -(x**2 * z**2 * nrm) / 20
+        + -(y**2 * z**2 * nrm) / 20
+        + +(x * y**2 * z**2 * logx) / 4
+        + +(x**2 * y * z**2 * logy) / 4
+        + +(x**2 * y**2 * z * logz) / 4
+        + -(x * y * z**3 * atanz) / 6
+        + -(x * y**3 * z * atany) / 6
+        + -(x**3 * y * z * atanx) / 6
     )
 
     return val
@@ -112,52 +112,52 @@ def _get_green_5D_fct(x, y, z):
 
     # precompute terms
     with np.errstate(all="ignore"):
-        nrm = np.sqrt(x**2+y**2+z**2)
+        nrm = np.sqrt(x**2 + y**2 + z**2)
         inv = _get_safe_inv(nrm)
-        invx = _get_safe_inv(x+nrm)
-        invy = _get_safe_inv(y+nrm)
-        invxz = _get_safe_inv(x**2+z**2)
-        invyz = _get_safe_inv(y**2+z**2)
-        invxyz = _get_safe_inv(x**2*y**2+x**2*z**2+y**2*z**2+z**4)
-        logx = _get_safe_log(x+nrm)
-        logy = _get_safe_log(y+nrm)
-        logz = _get_safe_log(z+nrm)
-        atany = _get_safe_arctan((x*z)/(y*nrm))
-        atanx = _get_safe_arctan((y*z)/(x*nrm))
-        atanz = _get_safe_arctan((x*y)/(z*nrm))
+        invx = _get_safe_inv(x + nrm)
+        invy = _get_safe_inv(y + nrm)
+        invxz = _get_safe_inv(x**2 + z**2)
+        invyz = _get_safe_inv(y**2 + z**2)
+        invxyz = _get_safe_inv(x**2 * y**2 + x**2 * z**2 + y**2 * z**2 + z**4)
+        logx = _get_safe_log(x + nrm)
+        logy = _get_safe_log(y + nrm)
+        logz = _get_safe_log(z + nrm)
+        atany = _get_safe_arctan((x * z) / (y * nrm))
+        atanx = _get_safe_arctan((y * z) / (x * nrm))
+        atanz = _get_safe_arctan((x * y) / (z * nrm))
 
     # compute function
-    val = 1.0*(
-            + (z**3*nrm)/15 +
-            + (z**5*inv)/60 +
-            - (x**4*logz)/24 +
-            - (y**4*logz)/24 +
-            - (x*z**3*logx)/6 +
-            - (y*z**3*logy)/6 +
-            + (x**2*y**2*logz)/4 +
-            + (x*y**2*z*logx)/2 +
-            + (x**2*y*z*logy)/2 +
-            - (x*y**3*atany)/6 +
-            - (x**3*y*atanx)/6 +
-            - (x*y*z**2*atanz)/2 +
-            - (x**2*z**3*inv)/20 +
-            - (y**2*z**3*inv)/20 +
-            - (x**2*z*nrm)/10 +
-            - (y**2*z*nrm)/10 +
-            - (x**4*z*inv)/40 +
-            - (y**4*z*inv)/40 +
-            + (x**2*y**2*z*inv)/5 +
-            - (x*z**5*inv*invx)/24 +
-            - (y*z**5*inv*invy)/24 +
-            - (x**4*y**2*z*inv*invxz)/6 +
-            - (x**2*y**4*z*inv*invyz)/6 +
-            + (x*y**2*z**3*inv*invx)/4 +
-            + (x**2*y*z**3*inv*invy)/4 +
-            - (x*y**4*z*inv*invx)/24 +
-            - (x**4*y*z*inv*invy)/24 +
-            + (x**2*y**2*z**5*inv*invxyz)/3 +
-            + (x**2*y**4*z**3*inv*invxyz)/6 +
-            + (x**4*y**2*z**3*inv*invxyz)/6
+    val = 1.0 * (
+        +(z**3 * nrm) / 15
+        + +(z**5 * inv) / 60
+        + -(x**4 * logz) / 24
+        + -(y**4 * logz) / 24
+        + -(x * z**3 * logx) / 6
+        + -(y * z**3 * logy) / 6
+        + +(x**2 * y**2 * logz) / 4
+        + +(x * y**2 * z * logx) / 2
+        + +(x**2 * y * z * logy) / 2
+        + -(x * y**3 * atany) / 6
+        + -(x**3 * y * atanx) / 6
+        + -(x * y * z**2 * atanz) / 2
+        + -(x**2 * z**3 * inv) / 20
+        + -(y**2 * z**3 * inv) / 20
+        + -(x**2 * z * nrm) / 10
+        + -(y**2 * z * nrm) / 10
+        + -(x**4 * z * inv) / 40
+        + -(y**4 * z * inv) / 40
+        + +(x**2 * y**2 * z * inv) / 5
+        + -(x * z**5 * inv * invx) / 24
+        + -(y * z**5 * inv * invy) / 24
+        + -(x**4 * y**2 * z * inv * invxz) / 6
+        + -(x**2 * y**4 * z * inv * invyz) / 6
+        + +(x * y**2 * z**3 * inv * invx) / 4
+        + +(x**2 * y * z**3 * inv * invy) / 4
+        + -(x * y**4 * z * inv * invx) / 24
+        + -(x**4 * y * z * inv * invy) / 24
+        + +(x**2 * y**2 * z**5 * inv * invxyz) / 3
+        + +(x**2 * y**4 * z**3 * inv * invxyz) / 6
+        + +(x**4 * y**2 * z**3 * inv * invxyz) / 6
     )
 
     return val
@@ -199,7 +199,7 @@ def _get_green_preproc(int_type):
     idx_z = idx_z.flatten()
 
     # get the sign vector
-    sign = (-1)**(idx_x+idx_y+idx_z+1)
+    sign = (-1) ** (idx_x + idx_y + idx_z + 1)
 
     return offset_x, offset_y, offset_z, sign
 
@@ -230,9 +230,9 @@ def get_green_ana(d, idx, int_type):
     (offset_x, offset_y, offset_z, sign) = _get_green_preproc(int_type)
 
     # position vector
-    x_vec = dx*(idx_x+offset_x)
-    y_vec = dy*(idx_y+offset_y)
-    z_vec = dz*(idx_z+offset_z)
+    x_vec = dx * (idx_x + offset_x)
+    y_vec = dy * (idx_y + offset_y)
+    z_vec = dz * (idx_z + offset_z)
 
     # compute the values
     if int_type == "6D":
@@ -243,10 +243,10 @@ def get_green_ana(d, idx, int_type):
         raise ValueError("invalid integral type")
 
     # sum the value of all the points
-    G = np.sum(sign*val, axis=1)
+    G = np.sum(sign * val, axis=1)
 
     # add scaling
-    G = G/(4*np.pi)
+    G = G / (4 * np.pi)
 
     return G
 
@@ -277,9 +277,9 @@ def get_green_num(d, idx, int_type):
 
     # compute the approximation
     if int_type == "6D":
-        G = (vol*vol)/(4*np.pi*dis)
+        G = (vol * vol) / (4 * np.pi * dis)
     elif int_type == "5D":
-        G = (dx*dy*vol)/(4*np.pi*dis)
+        G = (dx * dy * vol) / (4 * np.pi * dis)
     else:
         raise ValueError("invalid integral type")
 

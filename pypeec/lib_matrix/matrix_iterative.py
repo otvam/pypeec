@@ -25,16 +25,27 @@ def get_solve(sol_init, op_sys, op_pcd, rhs, fct_callback, iter_options):
     # call the solver
     if solver == "gmres":
         (sol, flag) = sla.gmres(
-            op_sys, rhs, M=op_pcd, x0=sol_init,
-            rtol=rel_tol, atol=abs_tol,
-            restart=n_inner, maxiter=n_outer,
-            callback=fct_callback, callback_type="x",
+            op_sys,
+            rhs,
+            M=op_pcd,
+            x0=sol_init,
+            rtol=rel_tol,
+            atol=abs_tol,
+            restart=n_inner,
+            maxiter=n_outer,
+            callback=fct_callback,
+            callback_type="x",
         )
     elif solver == "gcrot":
         (sol, flag) = sla.gcrotmk(
-            op_sys, rhs, M=op_pcd, x0=sol_init,
-            rtol=rel_tol, atol=abs_tol,
-            m=n_inner, maxiter=n_outer,
+            op_sys,
+            rhs,
+            M=op_pcd,
+            x0=sol_init,
+            rtol=rel_tol,
+            atol=abs_tol,
+            m=n_inner,
+            maxiter=n_outer,
             callback=fct_callback,
         )
     else:
