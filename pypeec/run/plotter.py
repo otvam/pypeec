@@ -144,8 +144,13 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
 
 
 def run(
-        data_solution, data_plotter,
-        tag_sweep=None, tag_plot=None, plot_mode=None, folder=None, name=None
+    data_solution,
+    data_plotter,
+    tag_sweep=None,
+    tag_plot=None,
+    plot_mode=None,
+    folder=None,
+    name=None,
 ):
     """
     Main script for plotting the solution of a PEEC problem.

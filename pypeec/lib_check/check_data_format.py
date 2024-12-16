@@ -87,7 +87,7 @@ def check_data_geometry(data_geometry):
 
 
 def check_data_problem(data_problem):
-    """"
+    """
     Check the solver problem data.
     """
 

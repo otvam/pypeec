@@ -39,11 +39,11 @@ def _get_dense_zero(idx_out, idx_in, mat, idx_row, idx_col):
 
     # get the
     (nx, ny, nz, nd) = mat.shape
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # get the matrix size
-    idx_row = np.isin(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=np.int64), idx_out)
-    idx_col = np.isin(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=np.int64), idx_in)
+    idx_row = np.isin(np.arange(idx_row * nv, (idx_row + 1) * nv, dtype=np.int64), idx_out)
+    idx_col = np.isin(np.arange(idx_col * nv, (idx_col + 1) * nv, dtype=np.int64), idx_in)
     n_row = np.count_nonzero(idx_row)
     n_col = np.count_nonzero(idx_col)
 
@@ -60,7 +60,7 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
 
     # get the tensor size
     (nx, ny, nz) = mat.shape
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # voxel index array
     (idx_x, idx_y, idx_z) = _get_voxel_indices(nx, ny, nz)
@@ -69,8 +69,8 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     mat_tmp = mat.flatten(order="F")
 
     # get the indices of the non-empty face for the current dimension
-    idx_row = np.isin(np.arange(idx_row*nv, (idx_row+1)*nv, dtype=np.int64), idx_out)
-    idx_col = np.isin(np.arange(idx_col*nv, (idx_col+1)*nv, dtype=np.int64), idx_in)
+    idx_row = np.isin(np.arange(idx_row * nv, (idx_row + 1) * nv, dtype=np.int64), idx_out)
+    idx_col = np.isin(np.arange(idx_col * nv, (idx_col + 1) * nv, dtype=np.int64), idx_in)
     n_row = np.count_nonzero(idx_row)
     n_col = np.count_nonzero(idx_col)
 
@@ -78,9 +78,9 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     (idx_x_1, idx_x_2) = np.meshgrid(idx_x[idx_row], idx_x[idx_col], indexing="ij")
     (idx_y_1, idx_y_2) = np.meshgrid(idx_y[idx_row], idx_y[idx_col], indexing="ij")
     (idx_z_1, idx_z_2) = np.meshgrid(idx_z[idx_row], idx_z[idx_col], indexing="ij")
-    idx_x_tmp = idx_x_1-idx_x_2
-    idx_y_tmp = idx_y_1-idx_y_2
-    idx_z_tmp = idx_z_1-idx_z_2
+    idx_x_tmp = idx_x_1 - idx_x_2
+    idx_y_tmp = idx_y_1 - idx_y_2
+    idx_z_tmp = idx_z_1 - idx_z_2
 
     # select the element with a positive sign
     if sign_type == "abs":
@@ -106,10 +106,10 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     idx_z_tmp = np.abs(idx_z_tmp)
 
     # get the linear indices
-    idx = idx_x_tmp+idx_y_tmp*nx+idx_z_tmp*nx*ny
+    idx = idx_x_tmp + idx_y_tmp * nx + idx_z_tmp * nx * ny
 
     # assemble the full matrix for the current dimension
-    mat_dense = sign*mat_tmp[idx]
+    mat_dense = sign * mat_tmp[idx]
 
     return mat_dense
 
@@ -127,7 +127,7 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
     n_out = len(idx_out)
     n_in = len(idx_in)
     itemsize = np.dtype(np.float64).itemsize
-    footprint = (itemsize*n_out*n_in)/(1024**2)
+    footprint = (itemsize * n_out * n_in) / (1024**2)
 
     # display the matrix size
     LOGGER.debug("matrix size: (%d, %d)" % (n_out, n_in))

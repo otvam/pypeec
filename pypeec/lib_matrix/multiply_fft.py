@@ -64,24 +64,24 @@ def _get_tensor_circulant(mat, sign):
     (nx, ny, nz, nd_in) = mat.shape
 
     # init the circulant tensor
-    mat_fft = NPCP.zeros((2*nx, 2*ny, 2*nz, nd_in), dtype=NPCP.float64)
+    mat_fft = NPCP.zeros((2 * nx, 2 * ny, 2 * nz, nd_in), dtype=NPCP.float64)
 
     # cube none
-    mat_fft[0:nx, 0:ny, 0:nz, :] = mat[0:nx, 0:ny, 0:nz, :]*sign[0:1, 0:1, 0:1, :]
+    mat_fft[0:nx, 0:ny, 0:nz, :] = mat[0:nx, 0:ny, 0:nz, :] * sign[0:1, 0:1, 0:1, :]
     # cube x
-    mat_fft[nx+1:2*nx, 0:ny, 0:nz, :] = mat[nx-1:0:-1, 0:ny, 0:nz, :]*sign[1:2, 0:1, 0:1, :]
+    mat_fft[nx + 1 : 2 * nx, 0:ny, 0:nz, :] = mat[nx - 1 : 0 : -1, 0:ny, 0:nz, :] * sign[1:2, 0:1, 0:1, :]
     # cube y
-    mat_fft[0:nx, ny+1:2*ny, 0:nz, :] = mat[0:nx, ny-1:0:-1, 0:nz, :]*sign[0:1, 1:2, 0:1, :]
+    mat_fft[0:nx, ny + 1 : 2 * ny, 0:nz, :] = mat[0:nx, ny - 1 : 0 : -1, 0:nz, :] * sign[0:1, 1:2, 0:1, :]
     # cube z
-    mat_fft[0:nx, 0:ny, nz+1:2*nz, :] = mat[0:nx, 0:ny, nz-1:0:-1, :]*sign[0:1, 0:1, 1:2, :]
+    mat_fft[0:nx, 0:ny, nz + 1 : 2 * nz, :] = mat[0:nx, 0:ny, nz - 1 : 0 : -1, :] * sign[0:1, 0:1, 1:2, :]
     # cube xy
-    mat_fft[nx+1:2*nx, ny+1:2*ny, 0:nz, :] = mat[nx-1:0:-1, ny-1:0:-1, 0:nz, :]*sign[1:2, 1:2, 0:1, :]
+    mat_fft[nx + 1 : 2 * nx, ny + 1 : 2 * ny, 0:nz, :] = mat[nx - 1 : 0 : -1, ny - 1 : 0 : -1, 0:nz, :] * sign[1:2, 1:2, 0:1, :]
     # cube xz
-    mat_fft[nx+1:2*nx, 0:ny, nz+1:2*nz, :] = mat[nx-1:0:-1, 0:ny, nz-1:0:-1, :]*sign[1:2, 0:1, 1:2, :]
+    mat_fft[nx + 1 : 2 * nx, 0:ny, nz + 1 : 2 * nz, :] = mat[nx - 1 : 0 : -1, 0:ny, nz - 1 : 0 : -1, :] * sign[1:2, 0:1, 1:2, :]
     # cube yz
-    mat_fft[0:nx, ny+1:2*ny, nz+1:2*nz, :] = mat[0:nx, ny-1:0:-1, nz-1:0:-1, :]*sign[0:1, 1:2, 1:2, :]
+    mat_fft[0:nx, ny + 1 : 2 * ny, nz + 1 : 2 * nz, :] = mat[0:nx, ny - 1 : 0 : -1, nz - 1 : 0 : -1, :] * sign[0:1, 1:2, 1:2, :]
     # cube xyz
-    mat_fft[nx+1:2*nx, ny+1:2*ny, nz+1:2*nz, :] = mat[nx-1:0:-1, ny-1:0:-1, nz-1:0:-1, :]*sign[1:2, 1:2, 1:2, :]
+    mat_fft[nx + 1 : 2 * nx, ny + 1 : 2 * ny, nz + 1 : 2 * nz, :] = mat[nx - 1 : 0 : -1, ny - 1 : 0 : -1, nz - 1 : 0 : -1, :] * sign[1:2, 1:2, 1:2, :]
 
     # get the FFT of the circulant tensor
     mat_fft = fourier_transform.get_fft_tensor_keep(mat_fft, True)
@@ -106,16 +106,16 @@ def _get_indices(nx, ny, nz, idx, nd_out, dim):
         idx_sel = None
     else:
         # number of element for the 3D sluce
-        nv = nx*ny*nz
+        nv = nx * ny * nz
 
         # shape of the tensor with the vectors (4D)
         shape = (nx, ny, nz)
 
         # indices of the elements included in the considered 3D slices
-        idx_sel = NPCP.isin(idx, NPCP.arange(dim*nv, (dim+1)*nv))
+        idx_sel = NPCP.isin(idx, NPCP.arange(dim * nv, (dim + 1) * nv))
 
         # mapping between the vector indices and the tensor indices (3D)
-        idx_tmp = idx[idx_sel]-dim*nv
+        idx_tmp = idx[idx_sel] - dim * nv
         idx_mat = NPCP.unravel_index(idx_tmp, shape, order="F")
 
     # assign the dict with the indices
@@ -204,9 +204,9 @@ def _get_compute_combined(name, idx_in, idx_out, mat_fft, vec_in):
         res *= mat_fft
     elif name == "coupling":
         res_tmp = NPCP.empty(res.shape, dtype=NPCP.complex128)
-        res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2]*res[:, :, :, 1]+mat_fft[:, :, :, 1]*res[:, :, :, 2]
-        res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2]*res[:, :, :, 0]+mat_fft[:, :, :, 0]*res[:, :, :, 2]
-        res_tmp[:, :, :, 2] = -mat_fft[:, :, :, 1]*res[:, :, :, 0]-mat_fft[:, :, :, 0]*res[:, :, :, 1]
+        res_tmp[:, :, :, 0] = +mat_fft[:, :, :, 2] * res[:, :, :, 1] + mat_fft[:, :, :, 1] * res[:, :, :, 2]
+        res_tmp[:, :, :, 1] = -mat_fft[:, :, :, 2] * res[:, :, :, 0] + mat_fft[:, :, :, 0] * res[:, :, :, 2]
+        res_tmp[:, :, :, 2] = -mat_fft[:, :, :, 1] * res[:, :, :, 0] - mat_fft[:, :, :, 0] * res[:, :, :, 1]
         res = res_tmp
     else:
         raise ValueError("invalid matrix type")
@@ -304,9 +304,9 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
     (nx, ny, nz, nd_in) = mat.shape
 
     # get the memory footprint
-    nnz = (2*nx)*(2*ny)*(2*nz)*nd_in
+    nnz = (2 * nx) * (2 * ny) * (2 * nz) * nd_in
     itemsize = NPCP.dtype(NPCP.complex128).itemsize
-    footprint = (itemsize*nnz)/(1024**2)
+    footprint = (itemsize * nnz) / (1024**2)
 
     # display the tensor size
     LOGGER.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
@@ -387,10 +387,12 @@ def set_options(fft_options):
 
     if LIBRARY == "CuPy":
         import cupy as lib_tmp
+
         NPCP = lib_tmp
         USE_FFT_GPU = True
     elif LIBRARY in ["NumPy", "SciPy", "MKL", "FFTW"]:
         import numpy as lib_tmp
+
         NPCP = lib_tmp
         USE_FFT_GPU = False
     else:

@@ -58,9 +58,9 @@ def _get_fact_pardiso(mat):
 
     # find the number of threads
     if thread_pardiso < 0:
-        thread_pardiso = os.cpu_count()+thread_pardiso+1
+        thread_pardiso = os.cpu_count() + thread_pardiso + 1
     if thread_mkl < 0:
-        thread_mkl = os.cpu_count()+thread_mkl+1
+        thread_mkl = os.cpu_count() + thread_mkl + 1
     if thread_pardiso == 0:
         thread_pardiso = 1
     if thread_mkl == 0:
@@ -135,7 +135,7 @@ def _get_factorize_sub(mat):
         return factor_dummy
 
     # compute matrix density
-    density = nnz/(nx*ny)
+    density = nnz / (nx * ny)
 
     # display
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))

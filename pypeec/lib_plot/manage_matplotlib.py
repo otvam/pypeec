@@ -30,7 +30,7 @@ def _get_plot_residuum(fig, res, data_plot):
 
     # get rms
     n_dof = len(res)
-    res_rms = np.sqrt(np.mean(np.abs(res)**2))
+    res_rms = np.sqrt(np.mean(np.abs(res) ** 2))
 
     # get absolute value
     res_abs = np.abs(res)
@@ -41,8 +41,8 @@ def _get_plot_residuum(fig, res, data_plot):
     res_abs = np.clip(res_abs, v_min, v_max)
 
     # get the bins
-    v_min = np.min(res_abs)/(1+tol_bins)
-    v_max = np.max(res_abs)*(1+tol_bins)
+    v_min = np.min(res_abs) / (1 + tol_bins)
+    v_max = np.max(res_abs) * (1 + tol_bins)
     bins = np.logspace(np.log10(v_min), np.log10(v_max), n_bins)
 
     # plot the histogram
@@ -80,7 +80,7 @@ def _get_plot_convergence(fig, conv, data_plot):
 
     # get convergence
     power_vec = np.concatenate(([power_init], power_vec))
-    error_vec = (power_vec-power_final)/np.abs(power_final)
+    error_vec = (power_vec - power_final) / np.abs(power_final)
     real_vec = np.abs(np.real(error_vec))
     imag_vec = np.abs(np.imag(error_vec))
 

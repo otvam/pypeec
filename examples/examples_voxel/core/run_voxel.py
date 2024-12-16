@@ -44,7 +44,7 @@ if __name__ == "__main__":
     idx_input["sink"].append([idx_x, idx_y, idx_z_max])
 
     # definition of wire indices
-    for idx_z in range(idx_z_min+1, idx_z_max+0):
+    for idx_z in range(idx_z_min + 1, idx_z_max + 0):
         idx_input["wire"].append([idx_x, idx_y, idx_z])
 
     # position of the magnetic core
@@ -54,9 +54,9 @@ if __name__ == "__main__":
     idx_z_max = 4
 
     # definition of core indices
-    for idx_z in range(idx_z_min+0, idx_z_max+1):
-        for idx_x in range(idx_xy_min+0, idx_xy_max+1):
-            for idx_y in range(idx_xy_min+0, idx_xy_max+1):
+    for idx_z in range(idx_z_min + 0, idx_z_max + 1):
+        for idx_x in range(idx_xy_min + 0, idx_xy_max + 1):
+            for idx_y in range(idx_xy_min + 0, idx_xy_max + 1):
                 if (idx_x in [idx_xy_min, idx_xy_max]) or (idx_y in [idx_xy_min, idx_xy_max]):
                     idx_input["core"].append([idx_x, idx_y, idx_z])
 

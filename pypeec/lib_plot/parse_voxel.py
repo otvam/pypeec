@@ -24,16 +24,16 @@ def get_grid(n, d, c):
     (cx, cy, cz) = c
 
     # origin coordinate
-    ox = cx-(nx*dx)/2
-    oy = cy-(ny*dy)/2
-    oz = cz-(nz*dz)/2
+    ox = cx - (nx * dx) / 2
+    oy = cy - (ny * dy) / 2
+    oz = cz - (nz * dz) / 2
 
     # create a uniform grid for the complete structure
     grid = pv.ImageData()
 
     # set the array size and the voxel size
     grid.origin = (ox, oy, oz)
-    grid.dimensions = (nx+1, ny+1, nz+1)
+    grid.dimensions = (nx + 1, ny + 1, nz + 1)
     grid.spacing = (dx, dy, dz)
 
     return grid

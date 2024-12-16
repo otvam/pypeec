@@ -72,7 +72,9 @@ def _run_voxel(data_voxelize):
 
     # assemble the data
     data_internal = {
-        "n": n, "d": d, "c": c,
+        "n": n,
+        "d": d,
+        "c": c,
         "domain_def": domain_def,
     }
 
@@ -95,7 +97,9 @@ def _run_shape(data_voxelize):
 
     # assemble the data
     data_internal = {
-        "n": n, "d": d, "c": c,
+        "n": n,
+        "d": d,
+        "c": c,
         "domain_def": domain_def,
     }
 
@@ -118,7 +122,9 @@ def _run_png(data_voxelize):
 
     # assemble the data
     data_internal = {
-        "n": n, "d": d, "c": c,
+        "n": n,
+        "d": d,
+        "c": c,
         "domain_def": domain_def,
     }
 
@@ -140,7 +146,9 @@ def _run_stl(data_voxelize):
 
     # assemble the data
     data_internal = {
-        "n": n, "d": d, "c": c,
+        "n": n,
+        "d": d,
+        "c": c,
         "domain_def": domain_def,
     }
 

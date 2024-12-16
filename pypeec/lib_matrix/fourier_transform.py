@@ -61,7 +61,7 @@ def set_options(fft_options):
 
         # find the number of workers
         if scipy_worker < 0:
-            scipy_worker = os.cpu_count()+scipy_worker+1
+            scipy_worker = os.cpu_count() + scipy_worker + 1
         if scipy_worker == 0:
             scipy_worker = None
 
@@ -89,7 +89,7 @@ def set_options(fft_options):
 
         # find the number of threads
         if fftw_thread < 0:
-            fftw_thread = os.cpu_count()+fftw_thread+1
+            fftw_thread = os.cpu_count() + fftw_thread + 1
         if fftw_thread == 0:
             fftw_thread = 1
 
@@ -140,7 +140,7 @@ def get_fft_tensor_expand(mat, replace):
     (nx, ny, nz) = mat.shape[0:3]
 
     # get the transform
-    mat_trf = FFTN(mat, (2*nx, 2*ny, 2*nz), (0, 1, 2), replace)
+    mat_trf = FFTN(mat, (2 * nx, 2 * ny, 2 * nz), (0, 1, 2), replace)
 
     return mat_trf
 

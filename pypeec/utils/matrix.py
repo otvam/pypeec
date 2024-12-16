@@ -35,7 +35,7 @@ def _get_matrix_idx(n_winding):
 
     var_idx = []
     for i in range(n_winding):
-        for j in range(i+1):
+        for j in range(i + 1):
             var_idx.append([i, j])
 
     return var_idx
@@ -76,8 +76,8 @@ def _get_matrix_coupling(n_winding, RL_mat):
     k_mat = np.zeros((n_winding, n_winding), dtype=np.float64)
     for i in range(n_winding):
         for j in range(n_winding):
-            k_mat[i, j] = RL_mat[i, j]/np.sqrt(RL_mat[i, i]*RL_mat[j, j])
-            k_mat[j, i] = RL_mat[j, i]/np.sqrt(RL_mat[i, i]*RL_mat[j, j])
+            k_mat[i, j] = RL_mat[i, j] / np.sqrt(RL_mat[i, i] * RL_mat[j, j])
+            k_mat[j, i] = RL_mat[j, i] / np.sqrt(RL_mat[i, i] * RL_mat[j, j])
 
     return k_mat
 
@@ -127,7 +127,7 @@ def _get_matrix_solve(terminal):
     assert len(rhs_vec) >= len(var_idx), "invalid solution: number of equation is too low"
 
     # check system rank
-    assert lna.matrix_rank(eqn_mat) == len(var_idx),  "invalid solution: system rank is insufficient"
+    assert lna.matrix_rank(eqn_mat) == len(var_idx), "invalid solution: system rank is insufficient"
 
     # extraction impedance coefficients with a least-square solution
     (sol, _, _, _) = lna.lstsq(eqn_mat, rhs_vec, rcond=None)
@@ -144,7 +144,7 @@ def _get_matrix_parse(n_winding, n_solution, freq, Z_mat):
     """
 
     # angular frequency
-    w = 2*np.pi*freq
+    w = 2 * np.pi * freq
 
     # get the resistance
     R_mat = np.real(Z_mat)
@@ -153,10 +153,10 @@ def _get_matrix_parse(n_winding, n_solution, freq, Z_mat):
     if freq == 0:
         L_mat = np.full(Z_mat.shape, np.nan)
     else:
-        L_mat = np.imag(Z_mat)/w
+        L_mat = np.imag(Z_mat) / w
 
     # # get the quality factor
-    Q_mat = (w*L_mat)/R_mat
+    Q_mat = (w * L_mat) / R_mat
 
     # get the coupling
     k_R_mat = _get_matrix_coupling(n_winding, R_mat)
@@ -165,9 +165,14 @@ def _get_matrix_parse(n_winding, n_solution, freq, Z_mat):
     # assign the results
     matrix = {
         "freq": freq,
-        "n_winding": n_winding, "n_solution": n_solution,
-        "Z_mat": Z_mat, "R_mat": R_mat, "L_mat": L_mat,
-        "k_R_mat": k_R_mat, "k_L_mat": k_L_mat, "Q_mat": Q_mat,
+        "n_winding": n_winding,
+        "n_solution": n_solution,
+        "Z_mat": Z_mat,
+        "R_mat": R_mat,
+        "L_mat": L_mat,
+        "k_R_mat": k_R_mat,
+        "k_L_mat": k_L_mat,
+        "Q_mat": Q_mat,
     }
 
     return matrix
@@ -209,8 +214,8 @@ def _get_extract_sweep(source, terminal_list):
         sink = terminal["sink"]
 
         # extract the terminal quantities
-        V_vec[idx] = source[src]["V"]-source[sink]["V"]
-        I_vec[idx] = (source[src]["I"]-source[sink]["I"])/2
+        V_vec[idx] = source[src]["V"] - source[sink]["V"]
+        I_vec[idx] = (source[src]["I"] - source[sink]["I"]) / 2
 
     # assign the data
     V_vec = np.array(V_vec, dtype=np.complex128)
@@ -257,7 +262,7 @@ def get_symmetry(terminal, symmetry):
     # remove redundant solutions
     IV_mat = np.vstack((I_mat, V_mat))
     (n_terminal, n_solution) = IV_mat.shape
-    assert n_terminal == (2*n_winding), "invalid solution: terminal matrix shape"
+    assert n_terminal == (2 * n_winding), "invalid solution: terminal matrix shape"
 
     # update terminal
     terminal = {

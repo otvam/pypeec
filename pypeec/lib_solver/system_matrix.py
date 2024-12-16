@@ -26,10 +26,10 @@ def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # get the local indices (face indices of the incidence matrix)
-    idx_local = np.isin(idx_f, np.arange(offset*nv, (offset+1)*nv, dtype=np.int64))
+    idx_local = np.isin(idx_f, np.arange(offset * nv, (offset + 1) * nv, dtype=np.int64))
 
     # slice matrix (columns)
     A_net = A_net[:, idx_local]
@@ -41,13 +41,13 @@ def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
     A_net = A_net[idx_local, :]
 
     # scale the matrix for vector projection
-    A_net = 0.5*np.abs(A_net)
+    A_net = 0.5 * np.abs(A_net)
 
     # extract the indices
     idx = idx_v[idx_local]
 
     # add index offset (such that the x, z, and z indices are not identical)
-    idx = offset*nv+idx
+    idx = offset * nv + idx
 
     return A_net, idx
 
@@ -112,28 +112,28 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, mult_type):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.isin(idx_f, np.arange(0*nv, 1*nv, dtype=np.int64))
-    idx_fy = np.isin(idx_f, np.arange(1*nv, 2*nv, dtype=np.int64))
-    idx_fz = np.isin(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
+    idx_fx = np.isin(idx_f, np.arange(0 * nv, 1 * nv, dtype=np.int64))
+    idx_fy = np.isin(idx_f, np.arange(1 * nv, 2 * nv, dtype=np.int64))
+    idx_fz = np.isin(idx_f, np.arange(2 * nv, 3 * nv, dtype=np.int64))
 
     # scaling factor
     scale = np.zeros(len(idx_f), dtype=np.complex128)
-    scale[idx_fx] = cst.mu_0/(dy**2*dz**2)
-    scale[idx_fy] = cst.mu_0/(dx**2*dz**2)
-    scale[idx_fz] = cst.mu_0/(dx**2*dy**2)
+    scale[idx_fx] = cst.mu_0 / (dy**2 * dz**2)
+    scale[idx_fy] = cst.mu_0 / (dx**2 * dz**2)
+    scale[idx_fz] = cst.mu_0 / (dx**2 * dy**2)
 
     # self-inductance for the preconditioner (diagonal coefficient)
-    L = scale*G_self
+    L = scale * G_self
 
     # get the matrix-vector operator
     L_op_tmp = matrix_multiply.get_operator_inductance(idx_f, G_mutual, mult_type)
 
     # function describing the inductance matrix multiplication
     def L_op(var_f):
-        res_f = scale*L_op_tmp(var_f)
+        res_f = scale * L_op_tmp(var_f)
         return res_f
 
     return L, L_op
@@ -166,17 +166,17 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, mult_type):
     (dx, dy, dz) = d
 
     # scaling factor
-    scale = 1/(cst.mu_0*dx**2*dy**2*dz**2)
+    scale = 1 / (cst.mu_0 * dx**2 * dy**2 * dz**2)
 
     # self-potential for the preconditioner (diagonal coefficient)
-    P = scale*G_self
+    P = scale * G_self
 
     # get the matrix-vector operator
     P_op_tmp = matrix_multiply.get_operator_potential(idx_v, G_mutual, mult_type)
 
     # function describing the potential matrix multiplication
     def P_op(var_v):
-        res_v = scale*P_op_tmp(var_v)
+        res_v = scale * P_op_tmp(var_v)
         return res_v
 
     return P, P_op
@@ -230,12 +230,12 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
 
     # function describing the coupling from the magnetic to the electric faces
     def K_op_c(var_fm):
-        var_fc = A_fv_net_c.transpose()*K_op_c_tmp(A_fv_net_m*var_fm)
+        var_fc = A_fv_net_c.transpose() * K_op_c_tmp(A_fv_net_m * var_fm)
         return var_fc
 
     # function describing the coupling from the electric to the magnetic faces
     def K_op_m(var_fc):
-        var_fm = A_fv_net_m.transpose()*K_op_m_tmp(A_fv_net_c*var_fc)
+        var_fm = A_fv_net_m.transpose() * K_op_m_tmp(A_fv_net_c * var_fc)
         return var_fm
 
     return K_op_c, K_op_m

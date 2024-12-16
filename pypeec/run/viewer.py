@@ -85,8 +85,12 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
 
 
 def run(
-        data_voxel, data_viewer,
-        tag_plot=None, plot_mode=None, folder=None, name=None,
+    data_voxel,
+    data_viewer,
+    tag_plot=None,
+    plot_mode=None,
+    folder=None,
+    name=None,
 ):
     """
     Main script for visualizing a 3D voxel structure.

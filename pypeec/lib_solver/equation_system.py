@@ -152,13 +152,13 @@ def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
     I_fm = sol_m[0:n_fm]
 
     # get the angular frequency
-    s = 1j*2*np.pi*freq
+    s = 1j * 2 * np.pi * freq
 
     # compute the couplings
     if freq == 0:
         cpl_fc = np.zeros(n_fc, dtype=np.complex128)
     else:
-        cpl_fc = s*K_op_c(I_fm)
+        cpl_fc = s * K_op_c(I_fm)
 
     cpl_vc = np.zeros(n_vc, dtype=np.complex128)
     cpl_src = np.zeros(n_src, dtype=np.complex128)
@@ -209,10 +209,10 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     (n_src, n_src) = A_src_src.shape
 
     # get the angular frequency
-    s = 1j*2*np.pi*freq
+    s = 1j * 2 * np.pi * freq
 
     # get the electric admittance
-    Y_c = 1/(R_c+s*L_c)
+    Y_c = 1 / (R_c + s * L_c)
 
     # admittance matrix
     Y_mat = sps.diags(Y_c, format="csc")
@@ -234,7 +234,7 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=np.complex128, format="csc")
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
+    S_mat = A_22_mat - A_21_mat * Y_mat * A_12_mat
 
     return Y_mat, S_mat, A_12_mat, A_21_mat
 
@@ -253,7 +253,7 @@ def _get_cond_fact_magnetic(A_net_m, R_m, P_m):
     (n_vm, n_fm) = A_net_m.shape
 
     # get the magnetic admittance (avoid singularity for DC solution)
-    Y_m = 1/R_m
+    Y_m = 1 / R_m
     I_m = np.ones(n_vm, dtype=np.complex128)
 
     # admittance matrix
@@ -264,11 +264,11 @@ def _get_cond_fact_magnetic(A_net_m, R_m, P_m):
 
     # assemble the matrices
     A_12_mat = -A_net_m.transpose()
-    A_21_mat = P_m*A_net_m
+    A_21_mat = P_m * A_net_m
     A_22_mat = I_mat_m
 
     # computing the Schur complement (with respect to the diagonal admittance matrix)
-    S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
+    S_mat = A_22_mat - A_21_mat * Y_mat * A_12_mat
 
     return Y_mat, S_mat, A_12_mat, A_21_mat
 
@@ -287,9 +287,9 @@ def _get_cond_solve(rhs, Y_mat, S_fact, A_12_mat, A_21_mat):
     rhs_b = rhs[n_schur:]
 
     # solve the equation system (Schur complement and matrix factorization)
-    tmp = rhs_b-(A_21_mat*(Y_mat*rhs_a))
+    tmp = rhs_b - (A_21_mat * (Y_mat * rhs_a))
     sol_b = matrix_factorization.get_solve(S_fact, tmp)
-    sol_a = Y_mat*(rhs_a-(A_12_mat*sol_b))
+    sol_a = Y_mat * (rhs_a - (A_12_mat * sol_b))
 
     # assemble the solution
     sol = np.concatenate((sol_a, sol_b))
@@ -313,35 +313,35 @@ def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
     (n_src, n_src) = A_src_src.shape
 
     # get the angular frequency
-    s = 1j*2*np.pi*freq
+    s = 1j * 2 * np.pi * freq
 
     # split the solution vector
     I_fc = sol[0:n_fc]
-    V_vc = sol[n_fc:n_fc+n_vc]
-    I_src = sol[n_fc+n_vc:n_fc+n_vc+n_src]
+    V_vc = sol[n_fc : n_fc + n_vc]
+    I_src = sol[n_fc + n_vc : n_fc + n_vc + n_src]
 
     # multiply the inductance matrix
     if freq == 0:
         rhs_kvl_ind = np.zeros(n_fc, dtype=np.complex128)
     else:
-        rhs_kvl_ind = s*L_op_c(I_fc)
+        rhs_kvl_ind = s * L_op_c(I_fc)
 
     # electric KVL equations
-    rhs_kvl_res = R_c*I_fc
-    rhs_kvl_net = -A_net_c.transpose()*V_vc
+    rhs_kvl_res = R_c * I_fc
+    rhs_kvl_net = -A_net_c.transpose() * V_vc
 
     # electric KCL equations
-    rhs_kcl_net = A_net_c*I_fc
-    rhs_kvl_src = A_vc_src*I_src
+    rhs_kcl_net = A_net_c * I_fc
+    rhs_kvl_src = A_vc_src * I_src
 
     # form the source equation
-    rhs_src_con = A_src_vc*V_vc
-    rhs_src_src = A_src_src*I_src
+    rhs_src_con = A_src_vc * V_vc
+    rhs_src_src = A_src_src * I_src
 
     # assemble the solution
-    rhs_kvl = rhs_kvl_ind+rhs_kvl_res+rhs_kvl_net
-    rhs_kcl = rhs_kcl_net+rhs_kvl_src
-    rhs_src = rhs_src_con+rhs_src_src
+    rhs_kvl = rhs_kvl_ind + rhs_kvl_res + rhs_kvl_net
+    rhs_kcl = rhs_kcl_net + rhs_kvl_src
+    rhs_src = rhs_src_con + rhs_src_src
     rhs = np.concatenate((rhs_kvl, rhs_kcl, rhs_src))
 
     return rhs
@@ -360,21 +360,21 @@ def _get_system_multiply_magnetic(sol, A_net_m, R_m, P_op_m):
 
     # split the solution vector
     I_fm = sol[0:n_fm]
-    V_vm = sol[n_fm:n_fm+n_vm]
+    V_vm = sol[n_fm : n_fm + n_vm]
 
     # multiply the potential matrix
-    rhs_kcl_pot = P_op_m(A_net_m*I_fm)
+    rhs_kcl_pot = P_op_m(A_net_m * I_fm)
 
     # get the term that are different for DC and AC cases
-    rhs_kvl_res = R_m*I_fm
+    rhs_kvl_res = R_m * I_fm
     rhs_kcl_net = V_vm
 
     # magnetic KVL equations
-    rhs_kvl_net = -A_net_m.transpose()*V_vm
+    rhs_kvl_net = -A_net_m.transpose() * V_vm
 
     # assemble the solution
-    rhs_kvl = rhs_kvl_res+rhs_kvl_net
-    rhs_kcl = rhs_kcl_pot+rhs_kcl_net
+    rhs_kvl = rhs_kvl_res + rhs_kvl_net
+    rhs_kcl = rhs_kcl_pot + rhs_kcl_net
     rhs = np.concatenate((rhs_kvl, rhs_kcl))
 
     return rhs
@@ -389,8 +389,8 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     """
 
     # extract the voxel data
-    n_c = len(idx_vc)+len(idx_fc)
-    n_m = len(idx_vm)+len(idx_fm)
+    n_c = len(idx_vc) + len(idx_fc)
+    n_m = len(idx_vm) + len(idx_fm)
 
     # excitation are handled separately
     rhs_c = np.zeros(n_c, dtype=np.complex128)
@@ -431,7 +431,7 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, Z_src_v):
 
     # indices of the new source equations to be added
     idx_src_c_add = np.arange(0, n_src_c, dtype=np.int64)
-    idx_src_v_add = np.arange(n_src_c, n_src_c+n_src_v, dtype=np.int64)
+    idx_src_v_add = np.arange(n_src_c, n_src_c + n_src_v, dtype=np.int64)
 
     # constant vector with the size of the sources
     cst_src_c = np.full(n_src_c, 1, dtype=np.complex128)
@@ -441,19 +441,19 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, Z_src_v):
     idx_row = np.concatenate((idx_src_c_local, idx_src_v_local))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((-cst_src_c, -cst_src_v))
-    A_vc_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc, n_src_c+n_src_v), dtype=np.complex128)
+    A_vc_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_vc, n_src_c + n_src_v), dtype=np.complex128)
 
     # matrix between the source equations and the potential variables
     idx_row = np.concatenate((idx_src_v_add, idx_src_c_add))
     idx_col = np.concatenate((idx_src_v_local, idx_src_c_local))
     val = np.concatenate((cst_src_v, Y_src_c))
-    A_src_vc = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_vc), dtype=np.complex128)
+    A_src_vc = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c + n_src_v, n_vc), dtype=np.complex128)
 
     # matrix between the source equations and the source variables
     idx_row = np.concatenate((idx_src_c_add, idx_src_v_add))
     idx_col = np.concatenate((idx_src_c_add, idx_src_v_add))
     val = np.concatenate((cst_src_c, Z_src_v))
-    A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c+n_src_v, n_src_c+n_src_v), dtype=np.complex128)
+    A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c + n_src_v, n_src_c + n_src_v), dtype=np.complex128)
 
     return A_vc_src, A_src_vc, A_src_src
 
@@ -565,17 +565,17 @@ def get_system_sol_idx(A_net_c, A_net_m, A_src):
     n_offset = 0
 
     # get the electric variable
-    sol_idx["I_fc"] = range(n_offset, n_offset+n_fc)
+    sol_idx["I_fc"] = range(n_offset, n_offset + n_fc)
     n_offset += n_fc
-    sol_idx["V_vc"] = range(n_offset, n_offset+n_vc)
+    sol_idx["V_vc"] = range(n_offset, n_offset + n_vc)
     n_offset += n_vc
-    sol_idx["I_src"] = range(n_offset, n_offset+n_src)
+    sol_idx["I_src"] = range(n_offset, n_offset + n_src)
     n_offset += n_src
 
     # get the magnetic variable
-    sol_idx["I_fm"] = range(n_offset, n_offset+n_fm)
+    sol_idx["I_fm"] = range(n_offset, n_offset + n_fm)
     n_offset += n_fm
-    sol_idx["V_vm"] = range(n_offset, n_offset+n_vm)
+    sol_idx["V_vm"] = range(n_offset, n_offset + n_vm)
     n_offset += n_vm
 
     return sol_idx

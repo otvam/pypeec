@@ -43,8 +43,8 @@ def _get_coupling(d, idx, method, dimension):
     idx_add = np.array([[0.0, 0.0, 0.5]])
 
     # compute the evaluation coordinate
-    idx_1 = idx_tmp+idx_add
-    idx_2 = idx_tmp-idx_add
+    idx_1 = idx_tmp + idx_add
+    idx_2 = idx_tmp - idx_add
 
     # get the partially integrated coefficients (5D integration)
     if method == "ana":
@@ -59,15 +59,15 @@ def _get_coupling(d, idx, method, dimension):
     # get the 6D integral from the 5D integrals
     #   - the last dimension is the integral of the derivative
     #   - therefore, the integral is reduced to a subtraction
-    G = G_2-G_1
+    G = G_2 - G_1
 
     # scale the coefficients with the area of the faces
     if dimension == "xy":
-        G = +G/(dy*dz*dx*dz)
+        G = +G / (dy * dz * dx * dz)
     elif dimension == "xz":
-        G = -G/(dy*dz*dx*dy)
+        G = -G / (dy * dz * dx * dy)
     elif dimension == "yz":
-        G = +G/(dx*dz*dx*dy)
+        G = +G / (dx * dz * dx * dy)
     else:
         raise ValueError("invalid dimension")
 
@@ -106,13 +106,13 @@ def _get_voxel_distances(d, idx):
     """
 
     # scale the distances
-    d_idx = d*idx
+    d_idx = d * idx
 
     # compute the distances
     d_cell = lna.norm(d_idx, axis=1)
 
     # normalize the distances
-    n_cell = d_cell/max(d)
+    n_cell = d_cell / max(d)
 
     return n_cell
 
@@ -144,7 +144,7 @@ def get_green_tensor(n, d, integral_simplify):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # get the indices of the complete voxel structure (as a matrix)
     idx = _get_voxel_indices(n)
@@ -184,7 +184,7 @@ def get_coupling_tensor(n, d, integral_simplify, has_magnetic):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # check if the tensor is required
     if not has_magnetic:

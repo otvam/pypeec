@@ -36,9 +36,9 @@ def _get_idx_resample_tensor(resampling_factor, idx_n, idx_r, idx):
     idx_r_z = idx_r[:, [2]]
 
     # get the global indices
-    idx_x = rx*idx_n_x+idx_r_x
-    idx_y = ry*idx_n_y+idx_r_y
-    idx_z = rz*idx_n_z+idx_r_z
+    idx_x = rx * idx_n_x + idx_r_x
+    idx_y = ry * idx_n_y + idx_r_y
+    idx_z = rz * idx_n_z + idx_r_z
 
     return idx_x, idx_y, idx_z
 
@@ -73,7 +73,7 @@ def _get_idx_linear(n, idx_x, idx_y, idx_z):
     (nx, ny, nz) = n
 
     # convert tensor indices into linear indices
-    idx_out = idx_x+nx*idx_y+nx*ny*idx_z
+    idx_out = idx_x + nx * idx_y + nx * ny * idx_z
     idx_out = idx_out.flatten()
 
     return idx_out
@@ -89,7 +89,7 @@ def _get_original_grid(n):
     (nx, ny, nz) = n
 
     # get the total number of voxels
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # get the indices of the original grid
     idx_all = np.arange(nv, dtype=np.int64)
@@ -111,7 +111,7 @@ def _get_resampled_grid(resampling_factor):
     (rx, ry, rz) = resampling_factor
 
     # get the number of resampled voxels per original voxel
-    rv = rx*ry*rz
+    rv = rx * ry * rz
 
     # get the indices of a single resampled voxel
     idx_all = np.arange(rv, dtype=np.int64)
@@ -195,10 +195,10 @@ def _get_update_size(n, d, resampling_factor):
     (rx, ry, rz) = resampling_factor
 
     # update the number of voxels
-    n = [nx*rx, ny*ry, nz*rz]
+    n = [nx * rx, ny * ry, nz * rz]
 
     # update the dimension of the voxels
-    d = [dx/rx, dy/ry, dz/rz]
+    d = [dx / rx, dy / ry, dz / rz]
 
     return n, d
 
@@ -215,11 +215,11 @@ def _get_reduce(n, d, c, domain_def):
     (idx_min, idx_max) = _get_grid_bounds(idx_n, domain_def)
 
     # get the center shift
-    n_diff = (idx_min+idx_max+1-n)/2
-    c += n_diff*d
+    n_diff = (idx_min + idx_max + 1 - n) / 2
+    c += n_diff * d
 
     # get the new voxel number
-    n = idx_max-idx_min+1
+    n = idx_max - idx_min + 1
 
     # cast to list
     n = n.tolist()
@@ -275,7 +275,7 @@ def get_resampling(n, d, c, domain_def, data_resampling):
         (n, d, domain_def) = _get_resample(n, d, domain_def, resampling_factor)
 
     # voxel structure size
-    s = tuple(x*y for x, y in zip(n, d, strict=True))
+    s = tuple(x * y for x, y in zip(n, d, strict=True))
 
     # display number of voxels
     LOGGER.debug("final number = %d" % np.prod(n))

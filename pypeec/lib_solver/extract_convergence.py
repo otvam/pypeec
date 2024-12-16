@@ -50,7 +50,7 @@ def _get_total_power(freq, source_all, I_src, V_vc):
             I_tmp = I_src[idx_src]
 
             # compute the apparent power
-            power_tmp = np.sum(fact*V_tmp*np.conj(I_tmp))
+            power_tmp = np.sum(fact * V_tmp * np.conj(I_tmp))
 
             # add the power
             power += power_tmp

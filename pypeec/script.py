@@ -89,18 +89,20 @@ def _get_parser():
         with filename.open("r") as fid:
             version = fid.read()
     except FileNotFoundError:
-        version = 'x.x.x'
+        version = "x.x.x"
 
     # display the version
     parser.add_argument(
-        "-v", "--version",
+        "-v",
+        "--version",
         action="version",
         version="PyPEEC %s" % version,
     )
 
     # hide logo
     parser.add_argument(
-        "-q", "--quiet",
+        "-q",
+        "--quiet",
         help="do not show the logo  (default: show)",
         action="store_true",
         dest="is_quiet",
@@ -130,14 +132,16 @@ def _get_arg_mesher(subparsers):
 
     # add the arguments
     parser.add_argument(
-        "-ge", "--geometry",
+        "-ge",
+        "--geometry",
         help="geometry file (input / JSON or YAML)",
         required=True,
         metavar="file",
         dest="file_geometry",
     )
     parser.add_argument(
-        "-vo", "--voxel",
+        "-vo",
+        "--voxel",
         help="voxel file (output / pickle)",
         required=True,
         metavar="file",
@@ -159,36 +163,41 @@ def _get_arg_viewer(subparsers):
 
     # add the arguments
     parser.add_argument(
-        "-vo", "--voxel",
+        "-vo",
+        "--voxel",
         help="voxel file (input / pickle)",
         required=True,
         metavar="file",
         dest="file_voxel",
     )
     parser.add_argument(
-        "-vi", "--viewer",
+        "-vi",
+        "--viewer",
         help="viewer file (input / JSON or YAML)",
         required=True,
         metavar="file",
         dest="file_viewer",
     )
     parser.add_argument(
-        "-tp", "--tag_plot",
+        "-tp",
+        "--tag_plot",
         help="list of plots to be shown (default: all the plots)",
-        nargs='+',
+        nargs="+",
         default=None,
         metavar="tag_plot",
         dest="tag_plot",
     )
     parser.add_argument(
-        "-pm", "--plot_mode",
+        "-pm",
+        "--plot_mode",
         help="selection of the plot mode (default: window)",
         choices=["qt", "nb_int", "nb_std", "save", "debug"],
         default=None,
         dest="plot_mode",
     )
     parser.add_argument(
-        "-f", "--folder",
+        "-f",
+        "--folder",
         help="folder for saving the PNG and VTK files (default: cwd)",
         default=".",
         metavar="folder",
@@ -210,28 +219,32 @@ def _get_arg_solver(subparsers):
 
     # add the arguments
     parser.add_argument(
-        "-vo", "--voxel",
+        "-vo",
+        "--voxel",
         help="voxel file (input / pickle)",
         required=True,
         metavar="file",
         dest="file_voxel",
     )
     parser.add_argument(
-        "-pr", "--problem",
+        "-pr",
+        "--problem",
         help="problem file (input / JSON or YAML)",
         required=True,
         metavar="file",
         dest="file_problem",
     )
     parser.add_argument(
-        "-to", "--tolerance",
+        "-to",
+        "--tolerance",
         help="tolerance file (input / JSON or YAML)",
         required=True,
         metavar="file",
         dest="file_tolerance",
     )
     parser.add_argument(
-        "-so", "--solution",
+        "-so",
+        "--solution",
         help="solution file (output / pickle)",
         required=True,
         metavar="file",
@@ -253,44 +266,50 @@ def _get_arg_plotter(subparsers):
 
     # add the arguments
     parser.add_argument(
-        "-so", "--solution",
+        "-so",
+        "--solution",
         help="solution file (input / pickle)",
         required=True,
         metavar="file",
         dest="file_solution",
     )
     parser.add_argument(
-        "-pl", "--plotter",
+        "-pl",
+        "--plotter",
         help="plotter file (input / JSON or YAML)",
         required=True,
         metavar="file",
         dest="file_plotter",
     )
     parser.add_argument(
-        "-ts", "--tag_sweep",
+        "-ts",
+        "--tag_sweep",
         help="list of sweeps to be shown (default: show the sweeps)",
-        nargs='+',
+        nargs="+",
         default=None,
         metavar="tag_sweep",
         dest="tag_sweep",
     )
     parser.add_argument(
-        "-tp", "--tag_plot",
+        "-tp",
+        "--tag_plot",
         help="list of plots to be shown (default: all the plots)",
-        nargs='+',
+        nargs="+",
         default=None,
         metavar="tag_plot",
         dest="tag_plot",
     )
     parser.add_argument(
-        "-pm", "--plot_mode",
+        "-pm",
+        "--plot_mode",
         help="selection of the plot mode (default: window)",
         choices=["qt", "nb_int", "nb_std", "save", "debug"],
         default=None,
         dest="plot_mode",
     )
     parser.add_argument(
-        "-f", "--folder",
+        "-f",
+        "--folder",
         help="folder for saving the PNG and VTK files (default: cwd)",
         default=".",
         metavar="folder",

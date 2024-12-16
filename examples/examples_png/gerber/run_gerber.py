@@ -64,38 +64,38 @@ if __name__ == "__main__":
 
     # definition of the colors
     color_def = {
-        "none":  (255, 255, 255),   # color used for the background
-        "copper": (255, 0, 0),      # color used for the copper material
-        "sink":  (0, 0, 255),       # color used for the sink terminal
-        "src": (0, 255, 0),         # color used for the source terminal
+        "none": (255, 255, 255),  # color used for the background
+        "copper": (255, 0, 0),  # color used for the copper material
+        "sink": (0, 0, 255),  # color used for the sink terminal
+        "src": (0, 255, 0),  # color used for the source terminal
     }
 
     # definition of the GERBER files
     gerber_def = {
-        "front": "pcb-front_copper.gbr",   # top layer of the PCB
-        "back": "pcb-back_copper.gbr",     # bottom layer of the PCB
-        "sink": "pcb-sink.gbr",            # layer with the  sink terminal
-        "src": "pcb-src.gbr",              # layer with the  source terminal
-        "drill": "pcb-PTH.drl",            # layer with the via drilling
-        "via":  "pcb-VIA.drl",             # layer with the via platting
+        "front": "pcb-front_copper.gbr",  # top layer of the PCB
+        "back": "pcb-back_copper.gbr",  # bottom layer of the PCB
+        "sink": "pcb-sink.gbr",  # layer with the  sink terminal
+        "src": "pcb-src.gbr",  # layer with the  source terminal
+        "drill": "pcb-PTH.drl",  # layer with the via drilling
+        "via": "pcb-VIA.drl",  # layer with the via platting
     }
 
     # assemble the GERBER data
     data_gerber = {
-        "gerber_edge": "pcb-edge.gbr",         # name of the GERBER file with the board edges
-        "color_background": (255, 255, 255),   # background color for the images
-        "color_edge": (0, 0, 0),               # color of the board edges
-        "color_def": color_def,                # dict with the color definition
-        "gerber_def": gerber_def               # dict with the GERBER file definition
+        "gerber_edge": "pcb-edge.gbr",  # name of the GERBER file with the board edges
+        "color_background": (255, 255, 255),  # background color for the images
+        "color_edge": (0, 0, 0),  # color of the board edges
+        "color_def": color_def,  # dict with the color definition
+        "gerber_def": gerber_def,  # dict with the GERBER file definition
     }
 
     # get the export instructions
     data_export = {
-        "margin": 0.1,                    # relative margin to be considered around the board
-        "oversampling": 1.0,              # oversampling factor for exporting the GERBER files
-        "voxel": 17.0e-6,                 # size of the voxel
-        "folder_gerber": folder_gerber,   # GERBER file location
-        "folder_png": folder_png,         # PNG file location
+        "margin": 0.1,  # relative margin to be considered around the board
+        "oversampling": 1.0,  # oversampling factor for exporting the GERBER files
+        "voxel": 17.0e-6,  # size of the voxel
+        "folder_gerber": folder_gerber,  # GERBER file location
+        "folder_png": folder_png,  # PNG file location
     }
 
     # get the layer stack (combination between GERBER files and colors)

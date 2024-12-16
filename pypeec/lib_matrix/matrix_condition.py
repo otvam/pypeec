@@ -53,7 +53,7 @@ def _get_condition_matrix_sub(mat, norm_options):
         return 0.0
 
     # compute matrix density
-    density = nnz/(nx*ny)
+    density = nnz / (nx * ny)
 
     # display
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
@@ -77,7 +77,7 @@ def _get_condition_matrix_sub(mat, norm_options):
 
     # compute an estimate of the condition
     LOGGER.debug("compute condition estimate")
-    cond = nrm_ori*nrm_inv
+    cond = nrm_ori * nrm_inv
 
     return cond
 
