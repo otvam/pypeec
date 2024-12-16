@@ -48,7 +48,7 @@ class _QApplication(object):
         import PyQt5.QtWidgets
 
         # create the Qt application
-        if not hasattr(cls, 'app'):
+        if not hasattr(cls, "app"):
             cls.instance = super(_QApplication, cls).__new__(cls)
             cls.app = PyQt5.QtWidgets.QApplication([])
 
@@ -213,7 +213,7 @@ class PlotGui:
             fig = matplotlib.pyplot.figure(tight_layout=True)
 
         # set display options
-        fig.canvas.toolbar_position = 'top'
+        fig.canvas.toolbar_position = "top"
         fig.canvas.header_visible = False
         fig.canvas.footer_visible = False
         fig.canvas.resizable = False
@@ -221,7 +221,7 @@ class PlotGui:
         # set window size
         if notebook_size is not None:
             (sx, sy) = notebook_size
-            fig.set_size_inches(sx/fig.dpi, sy/fig.dpi)
+            fig.set_size_inches(sx / fig.dpi, sy / fig.dpi)
 
         return fig
 
@@ -238,7 +238,7 @@ class PlotGui:
         # set window size
         if image_size is not None:
             (sx, sy) = image_size
-            fig.set_size_inches(sx/fig.dpi, sy/fig.dpi)
+            fig.set_size_inches(sx / fig.dpi, sy / fig.dpi)
 
         return fig
 

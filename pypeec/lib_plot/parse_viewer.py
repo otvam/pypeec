@@ -26,7 +26,7 @@ def _get_graph_component(idx, graph_def):
         idx_ok = np.isin(idx, idx_graph)
 
         # assign the component number to the corresponding indices
-        graph[idx_ok] = i+1
+        graph[idx_ok] = i + 1
 
     # check that everything was assigned
     if not np.all(graph):

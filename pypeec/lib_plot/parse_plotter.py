@@ -60,7 +60,7 @@ def set_voxel_scalar(voxel, idx, idx_var, var, name):
     idx_var_local = idx_s[idx_p]
 
     # assign scalar variable (nan for the voxels where the variable is not defined)
-    var_all = np.full(len(idx), np.nan+1j*np.nan, dtype=np.complex128)
+    var_all = np.full(len(idx), np.nan + 1j * np.nan, dtype=np.complex128)
     var_all[idx_var_local] = var
 
     # sort the variable
@@ -86,7 +86,7 @@ def set_voxel_vector(voxel, idx, idx_var, var, name):
     idx_var_local = idx_s[idx_p]
 
     # assign vector variable (nan for the voxels where the variable is not defined)
-    var_all = np.full((len(idx), 3), np.nan+1j*np.nan, dtype=np.complex128)
+    var_all = np.full((len(idx), 3), np.nan + 1j * np.nan, dtype=np.complex128)
     var_all[idx_var_local] = var
 
     # sort the variable

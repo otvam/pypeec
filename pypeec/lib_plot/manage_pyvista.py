@@ -44,7 +44,7 @@ def _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme):
             style="wireframe",
             color=plot_view["grid_color"],
             opacity=plot_view["grid_opacity"],
-            line_width=plot_view["grid_thickness"]
+            line_width=plot_view["grid_thickness"],
         )
 
     # plot the non-empty voxels
@@ -54,7 +54,7 @@ def _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme):
             style="wireframe",
             color=plot_view["geom_color"],
             opacity=plot_view["geom_opacity"],
-            line_width=plot_view["geom_thickness"]
+            line_width=plot_view["geom_thickness"],
         )
 
     # plot the cloud points
@@ -143,7 +143,7 @@ def _get_scale_norm(obj, scale):
     data = obj["norm"]
 
     # add scaling
-    data = scale*data
+    data = scale * data
 
     # assign data
     obj["norm"] = data
@@ -167,7 +167,7 @@ def _get_filter_arrow(obj, arrow_threshold):
 
     # threshold for arrow removal
     if np.any(np.isfinite(data)):
-        thr = np.nanmax(data)*arrow_threshold
+        thr = np.nanmax(data) * arrow_threshold
     else:
         thr = np.nan
 
@@ -289,7 +289,7 @@ def _get_phasor(obj, data_plot):
     obj_tmp = obj.copy(deep=True)
     re = obj_tmp[var + "_re"]
     im = obj_tmp[var + "_im"]
-    norm = np.real((re+1j*im)*np.exp(1j*phase))
+    norm = np.real((re + 1j * im) * np.exp(1j * phase))
 
     # scale and clamp the variable
     obj_tmp["norm"] = norm
@@ -323,7 +323,7 @@ def _get_arrow(obj, data_plot):
     obj_tmp = obj.copy(deep=True)
     re = obj_tmp[var + "_re"]
     im = obj_tmp[var + "_im"]
-    vector = np.real((re+1j*im)*np.exp(1j*phase))
+    vector = np.real((re + 1j * im) * np.exp(1j * phase))
     norm = lna.norm(vector, axis=1)
 
     # scale and clamp the variable
@@ -422,7 +422,7 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
 
     # get arrow size
     d_char = min(grid.spacing)
-    factor = d_char*arrow_scale
+    factor = d_char * arrow_scale
 
     # add the resulting plot to the plotter
     arg = dict(
