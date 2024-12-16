@@ -216,7 +216,7 @@ def get_source_vector(source_all, source_type_ref):
     element_src = np.empty(0, dtype=np.complex128)
 
     # populate the arrays with the current sources
-    for tag, source_all_tmp in source_all.items():
+    for source_all_tmp in source_all.values():
         # extract the data
         source_type = source_all_tmp["source_type"]
         var_type = source_all_tmp["var_type"]

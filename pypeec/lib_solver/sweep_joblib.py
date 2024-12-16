@@ -124,11 +124,11 @@ def _get_tree_compute(parallel_sweep, sweep_tree, sweep_param, fct_compute, tag_
         return output, init
 
     # run the serial or parallel loop
-    arg_list = zip(tag_sub, data_sub, init_sub)
+    arg_list = zip(tag_sub, data_sub, init_sub, strict=True)
     out_list = _get_parallel_loop(parallel_sweep, fct_compute, arg_list)
 
     # assemble the results
-    for tag_tmp, out_tmp in zip(tag_sub, out_list):
+    for tag_tmp, out_tmp in zip(tag_sub, out_list, strict=True):
         (output_tmp, sol_tmp) = out_tmp
         output[tag_tmp] = output_tmp
         init[tag_tmp] = sol_tmp

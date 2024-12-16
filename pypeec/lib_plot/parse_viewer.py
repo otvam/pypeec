@@ -47,7 +47,7 @@ def _get_geometry_tag(domain_def, graph_def):
 
     # get the indices and colors
     counter = 1
-    for tag, idx_tmp in domain_def.items():
+    for idx_tmp in domain_def.values():
         # assign the color (n different integer for each domain)
         domain_tmp = np.full(len(idx_tmp), counter, dtype=np.int64)
 

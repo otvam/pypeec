@@ -283,7 +283,7 @@ def _get_shape_obj(geometry_shape, stack_tag, simplify, construct):
         (layer_list, obj_list) = _get_shape_layer(geometry_shape_tmp, stack_tag, simplify, construct)
 
         # find the layer position and add the objects
-        for layer, obj in zip(layer_list, obj_list):
+        for layer, obj in zip(layer_list, obj_list, strict=True):
             # get the stack position
             idx = stack_tag.index(layer)
 

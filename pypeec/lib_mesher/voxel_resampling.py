@@ -133,7 +133,7 @@ def _get_grid_bounds(idx_n, domain_def):
     idx_lin = np.empty(0, dtype=np.int64)
 
     # find the indices
-    for tag, idx in domain_def.items():
+    for idx in domain_def.values():
         idx_lin = np.append(idx_lin, idx)
 
     # get the tensor indices
@@ -275,7 +275,7 @@ def get_resampling(n, d, c, domain_def, data_resampling):
         (n, d, domain_def) = _get_resample(n, d, domain_def, resampling_factor)
 
     # voxel structure size
-    s = tuple(x*y for x, y in zip(n, d))
+    s = tuple(x*y for x, y in zip(n, d, strict=True))
 
     # display number of voxels
     LOGGER.debug("final number = %d" % np.prod(n))

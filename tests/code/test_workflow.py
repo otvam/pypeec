@@ -74,7 +74,7 @@ class TestWorkflow(unittest.TestCase):
         self.assertEqual(solver.keys(), solver_ref.keys(), "invalid sweep")
 
         # check the solver results
-        for solver_tmp, solver_ref_tmp in zip(solver.values(), solver_ref.values()):
+        for solver_tmp, solver_ref_tmp in zip(solver.values(), solver_ref.values(), strict=True):
             self._check_solver(solver_tmp, solver_ref_tmp, test_tol)
 
     def run_test(self, tag, name, use_script):

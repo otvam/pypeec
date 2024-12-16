@@ -105,3 +105,16 @@ pypeec = [
     "data/*.yaml",
     "data/*.zip",
 ]
+
+[tool.ruff]
+indent-width = 4
+line-length = 200
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "B"]
+ignore = ["B009", "B010"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

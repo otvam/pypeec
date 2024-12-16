@@ -39,7 +39,7 @@ def _get_total_power(freq, source_all, I_src, V_vc):
     power = 0.0
 
     # parse the source terminals
-    for tag, source_all_tmp in source_all.items():
+    for source_all_tmp in source_all.values():
         # extract the data
         idx_vc = source_all_tmp["idx_vc"]
         idx_src = source_all_tmp["idx_src"]

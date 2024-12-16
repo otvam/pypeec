@@ -249,7 +249,7 @@ class PlotGui:
 
         # signal handler for closing all the windows
         def signal_handler(*_):
-            for tag, pl in self.pl_list:
+            for _, pl in self.pl_list:
                 pl.app_window.close()
             matplotlib.pyplot.close("all")
             sys.exit(130)
@@ -258,11 +258,11 @@ class PlotGui:
         signal.signal(signal.SIGINT, signal_handler)
 
         # show the different PyVista plots
-        for tag, pl in self.pl_list:
+        for _, pl in self.pl_list:
             pl.app_window.show()
 
         # show the different Matplotlib plots
-        for tag, fig in self.fig_list:
+        for _, fig in self.fig_list:
             fig.show()
 
         # enter the event loop
@@ -304,11 +304,11 @@ class PlotGui:
         """
 
         # close the different PyVista plots
-        for tag, pl in self.pl_list:
+        for _, pl in self.pl_list:
             pl.close()
 
         # close the different Matplotlib plots
-        for tag, fig in self.fig_list:
+        for _, fig in self.fig_list:
             matplotlib.pyplot.close(fig)
 
     def _get_filename(self, tag, ext):
