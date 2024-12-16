@@ -45,10 +45,10 @@ def _get_point_valid(d, pts_vox, pts_tmp):
     pts_valid = pts_dis > d
 
     # check if distance are respected
-    pts_valid = np.any(pts_valid == True, axis=1)
+    pts_valid = np.any(pts_valid, axis=1)
 
     # valid if all the voxel are valid
-    valid = np.all(pts_valid == True, axis=0)
+    valid = np.all(pts_valid, axis=0)
 
     return valid
 
@@ -104,7 +104,7 @@ def get_point(n, d, c, domain_def, data_point):
         valid_cloud = _get_cloud_valid(c, d, n, domain_def, pts_cloud)
 
         # check that everything is valid
-        if full_cloud and np.any(valid_cloud == False):
+        if full_cloud and not np.any(valid_cloud):
             raise RuntimeError("invalid cloud points")
 
         # remove the invalid points
