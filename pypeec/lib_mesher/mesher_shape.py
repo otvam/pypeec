@@ -97,7 +97,7 @@ def _get_shape_mesh(z_min, z_max, obj):
     return mesh
 
 
-def _get_shape_single(shape_type, shape_data):
+def _get_shape_single(tag, shape_type, shape_data):
     """
     Get a Shapely object for different shapes:
         - a trace (multi-segment line)
@@ -108,23 +108,41 @@ def _get_shape_single(shape_type, shape_data):
     # get the shape
     if shape_type == "pad":
         buffer = 0.5*shape_data["diameter"]
-        obj = sha.geometry.MultiPoint(shape_data["coord"])
+        coord = shape_data["coord"]
+
+        if len(coord) < 1:
+            raise RuntimeError("invalid shape: a pad should contain at least one coordinate: %s" % tag)
+
+        obj = sha.geometry.MultiPoint(coord)
     elif shape_type == "trace":
         buffer = 0.5*shape_data["width"]
-        obj = sha.geometry.LineString(shape_data["coord"])
+        coord = shape_data["coord"]
+
+        if len(coord) < 2:
+            raise RuntimeError("invalid shape: a trace should contain at least two coordinate: %s" % tag)
+
+        obj = sha.geometry.LineString(coord)
     elif shape_type == "polygon":
-        buffer = shape_data["buffer"]
-        obj = sha.geometry.Polygon(shape_data["coord_shell"], holes=shape_data["coord_holes"])
+        buffer = 1.0*shape_data["buffer"]
+        coord_shell = shape_data["coord_shell"]
+        coord_holes = shape_data["coord_holes"]
+
+        if len(coord_shell) < 3:
+            raise RuntimeError("invalid shape: a polygon should contain at least three coordinate: %s" % tag)
+        for coord_holes_tmp in coord_holes:
+            if len(coord_holes_tmp) < 3:
+                raise RuntimeError("invalid shape: a polygon should contain at least three coordinate: %s" % tag)
+
+        obj = sha.geometry.Polygon(coord_shell, holes=coord_holes)
     else:
         raise ValueError("invalid shape type")
 
     # add a buffer with a given thickness around the shape
-    if buffer is not None:
-        obj = obj.buffer(buffer, cap_style="round", join_style="round")
+    obj = obj.buffer(buffer, cap_style="round", join_style="round")
 
     # check if valid
     if not obj.is_valid:
-        raise RuntimeError("invalid shape: geometry is ill-formed")
+        raise RuntimeError("invalid shape: geometry is ill-formed: %s" % tag)
 
     return obj
 
@@ -178,7 +196,7 @@ def _get_idx_voxel(n, idx_shape, stack_idx):
     return idx_voxel
 
 
-def _get_shape_assemble(geometry_shape, tag, simplify, construct):
+def _get_shape_assemble(tag, geometry_shape, simplify, construct):
     """
     Assemble the shapes (for a specified layer).
     """
@@ -198,7 +216,7 @@ def _get_shape_assemble(geometry_shape, tag, simplify, construct):
         # add the shape
         if tag in shape_layer:
             # get the shape
-            obj = _get_shape_single(shape_type, shape_data)
+            obj = _get_shape_single(tag, shape_type, shape_data)
 
             # add to the list
             if shape_operation == "add":
@@ -232,11 +250,11 @@ def _get_shape_layer(geometry_shape, stack_tag, simplify, construct):
     # get the shapes
     for tag in stack_tag:
         # get the assembled shape
-        obj = _get_shape_assemble(geometry_shape, tag, simplify, construct)
+        obj = _get_shape_assemble(tag, geometry_shape, simplify, construct)
 
         # check that the shape is valid
         if not obj.is_valid:
-            raise RuntimeError("invalid shape: geometry is ill-formed")
+            raise RuntimeError("invalid shape: geometry is ill-formed: %s" % tag)
 
         # add the object
         if not obj.is_empty:
@@ -396,7 +414,6 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     # check voxel validity
     if not np.all(d > 0):
         RuntimeError("invalid voxel dimension: should be positive")
-    # check voxel validity
     if not np.all(n > 0):
         RuntimeError("invalid voxel number: should be positive")
 
@@ -468,7 +485,7 @@ def get_mesh(param, layer_stack, geometry_shape):
     LOGGER.debug("create the shapes")
     (shape_obj, xy_min_obj, xy_max_obj) = _get_shape_obj(geometry_shape, stack_tag, simplify, construct)
 
-    # if provided, the user specified bounds are used, otherwise the STL bounds
+    # if provided, the specified bounds are used, otherwise the shape bounds are used
     if xy_min is not None:
         xy_min = np.array(xy_min, np.float64)
     else:

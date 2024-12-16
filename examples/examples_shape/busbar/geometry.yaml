@@ -28,7 +28,7 @@
                 "shape_operation": "add"
                 "shape_type": "polygon"
                 "shape_data":
-                    "buffer": null
+                    "buffer": 0.0
                     "coord_shell": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                     "coord_holes":
                         - [[0.1e-3, 0.1e-3], [0.2e-3, 0.1e-3], [0.2e-3, 0.2e-3], [0.1e-3, 0.2e-3]]
@@ -38,7 +38,7 @@
                 "shape_operation": "add"
                 "shape_type": "polygon"
                 "shape_data":
-                    "buffer": null
+                    "buffer": 0.0
                     "coord_shell": [[0.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                     "coord_holes": []
             -
@@ -46,7 +46,7 @@
                 "shape_operation": "sub"
                 "shape_type": "polygon"
                 "shape_data":
-                    "buffer": null
+                    "buffer": 0.0
                     "coord_shell": [[0.0e-3, 0.0e-3], [2.0e-3, 0.0e-3], [2.0e-3, 2.0e-3], [0.0e-3, 2.0e-3]]
                     "coord_holes": []
             -
@@ -54,7 +54,7 @@
                 "shape_operation": "add"
                 "shape_type": "polygon"
                 "shape_data":
-                    "buffer": null
+                    "buffer": 0.0
                     "coord_shell": [[2.0e-3, 0.0e-3], [2.5e-3, 0.0e-3], [2.5e-3, 0.2e-3], [2.0e-3, 0.2e-3]]
                     "coord_holes": []
         "src":
@@ -63,7 +63,7 @@
                 "shape_operation": "add"
                 "shape_type": "polygon"
                 "shape_data":
-                    "buffer": null
+                    "buffer": 0.0
                     "coord_shell": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                     "coord_holes": []
         "sink":
@@ -72,7 +72,7 @@
                 "shape_operation": "add"
                 "shape_type": "polygon"
                 "shape_data":
-                    "buffer": null
+                    "buffer": 0.0
                     "coord_shell": [[0.0e-3, 2.0e-3], [0.05e-3, 2.0e-3], [0.05e-3, 2.5e-3], [0.0e-3, 2.5e-3]]
                     "coord_holes": []
 "data_point":

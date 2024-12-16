@@ -21,7 +21,7 @@ LOGGER = scilogger.get_logger(__name__, "pypeec")
 vtk.vtkObject.GlobalWarningDisplayOff()
 
 
-def _get_load_stl(scale, offset, filename):
+def _get_load_stl(filename, scale, offset, strict):
     """
     Load several STL files and merge the meshes.
     """
@@ -32,9 +32,13 @@ def _get_load_stl(scale, offset, filename):
     except ValueError:
         raise RuntimeError("invalid stl: invalid file: %s" % filename) from None
 
-    # check that the file is valid
+    # check that the mesh is not empty
     if mesh.n_cells == 0:
-        raise RuntimeError("invalid stl: invalid file content: %s" % filename)
+        raise RuntimeError("invalid stl: mesh is empty: %s" % filename)
+
+    # check that the mesh is closed
+    if strict and (mesh.n_open_edges > 0):
+        raise RuntimeError("invalid stl: mesh is not closed: %s" % filename)
 
     # translate the meshes
     mesh = mesh.scale(scale, inplace=True)
@@ -43,7 +47,7 @@ def _get_load_stl(scale, offset, filename):
     return mesh
 
 
-def _get_voxelize_stl(grid, mesh, strict):
+def _get_voxelize_stl(grid, mesh):
     """
     Voxelize an STL mesh with respect to a uniform grid.
     Return the indices of the created voxels.
@@ -51,8 +55,8 @@ def _get_voxelize_stl(grid, mesh, strict):
 
     # voxelize the mesh
     try:
-        selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=strict)
-    except RuntimeError as ex:
+        selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=False)
+    except RuntimeError:
         raise RuntimeError("invalid mesh: mesh cannot be voxelized") from None
 
     # create a boolean mask
@@ -71,7 +75,7 @@ def _get_voxelize_stl(grid, mesh, strict):
     return idx_voxel
 
 
-def _get_mesh_stl(domain_stl):
+def _get_mesh_stl(domain_stl, strict):
     """
     Load meshes from STL files and find the minimum and maximum coordinates.
     Find the bounding box for all the meshes (minimum and maximum coordinates).
@@ -94,7 +98,7 @@ def _get_mesh_stl(domain_stl):
             filename = domain_stl_tmp_tmp["filename"]
 
             # load the STL
-            mesh = _get_load_stl(scale, offset, filename)
+            mesh = _get_load_stl(filename, scale, offset, strict)
 
             # find the bounds
             (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
@@ -135,7 +139,6 @@ def _get_voxel_size(d, xyz_max, xyz_min):
     # check voxel validity
     if not np.all(d > 0):
         RuntimeError("invalid voxel dimension: should be positive")
-    # check voxel validity
     if not np.all(n > 0):
         RuntimeError("invalid voxel number: should be positive")
 
@@ -165,7 +168,7 @@ def _get_voxel_grid(n, d, c):
     return grid
 
 
-def _get_domain_def(grid, domain_stl, mesh_stl, strict):
+def _get_domain_def(grid, domain_stl, mesh_stl):
     """
     Voxelize meshes and assign the indices to a dict.
     """
@@ -182,7 +185,7 @@ def _get_domain_def(grid, domain_stl, mesh_stl, strict):
         mesh = mesh_stl_tmp["mesh"]
 
         # voxelize and get the indices
-        idx_voxel = _get_voxelize_stl(grid, mesh, strict)
+        idx_voxel = _get_voxelize_stl(grid, mesh)
 
         # append the indices into the corresponding domain
         domain_def[tag] = np.append(domain_def[tag], idx_voxel)
@@ -210,9 +213,9 @@ def get_mesh(param, domain_stl):
 
     # load the mesh and get the STL bounds
     LOGGER.debug("load STL files")
-    (mesh_stl, reference, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl)
+    (mesh_stl, reference, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl, strict)
 
-    # if provided, the specified bounds are used, otherwise the STL bounds are used
+    # if provided, the specified bounds are used, otherwise the mesh bounds are used
     if xyz_min is not None:
         xyz_min = np.array(xyz_min, np.float64)
     else:
@@ -232,7 +235,7 @@ def get_mesh(param, domain_stl):
 
     # voxelize the meshes and get the indices
     LOGGER.debug("voxelize STL files")
-    domain_def = _get_domain_def(grid, domain_stl, mesh_stl, strict)
+    domain_def = _get_domain_def(grid, domain_stl, mesh_stl)
 
     # cast to lists
     n = n.tolist()

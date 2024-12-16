@@ -22,11 +22,14 @@ import PIL.Image as pmg
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def _get_load_image(filename_list):
+def _get_load_image(filename_list, size):
     """
     Load several images into a list of tensors.
     Flip the axis in order to get standard cartesian coordinate (non-standard image coordinate).
     """
+
+    # get the image size
+    (nx, ny) = size
 
     # list for the images
     img_list = []
@@ -47,29 +50,24 @@ def _get_load_image(filename_list):
         img = np.swapaxes(img, 0, 1)
         img = np.flip(img, axis=1)
 
+        # check image
+        if not (img.shape == (nx, ny, 4)):
+            raise RuntimeError("invalid image:  invalid size: %s" % filename)
+
         # store the loaded image
         img_list.append(img)
 
     return img_list
 
 
-def _get_idx_image(size, img, color):
+def _get_idx_image(img, color):
     """
     Get the 2D indices of an image that correspond to a specified color.
     """
 
-    # get the image size
-    (nx, ny) = size
-
-    # check image
-    if not (img.shape == (nx, ny, 4)):
-        raise RuntimeError("invalid image:  size is not compatible with the voxel structure")
-
     # get the color vector
     color_tmp = np.array(color, dtype=np.uint8)
     color_tmp = np.expand_dims(color_tmp, axis=(0, 1))
-    if not (color_tmp.shape == (1, 1, 4)):
-        raise RuntimeError("invalid color: colors should be a specified with for values")
 
     # find the color in the image
     idx_img = np.all(img == color_tmp, axis=2)
@@ -115,8 +113,13 @@ def _get_domain(size, nz, n_layer, color_list, img_list):
 
     # get image indices (2D indices)
     for color in color_list:
+        # check the color
+        if len(color) != 4:
+            raise RuntimeError("invalid color: colors should be a specified with four values")
+
+        # find the indices
         for img in img_list:
-            idx_img_tmp = _get_idx_image(size, img, color)
+            idx_img_tmp = _get_idx_image(img, color)
             idx_img = np.append(idx_img, idx_img_tmp)
 
     # remove duplicate (between the images in the list)
@@ -128,7 +131,7 @@ def _get_domain(size, nz, n_layer, color_list, img_list):
     return idx_voxel
 
 
-def _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list):
+def _get_layer(nz, size, domain_color, domain_def, n_layer, filename_list):
     """
     Find the voxel indices for a single layer.
     A single layer can be composed of several images.
@@ -136,7 +139,7 @@ def _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list):
     """
 
     # extract the image data as a tensor
-    img_list = _get_load_image(filename_list)
+    img_list = _get_load_image(filename_list, size)
 
     # count the number of voxel for the layer
     n_voxel = 0
@@ -180,6 +183,10 @@ def get_mesh(param, domain_color, layer_stack):
     # get the image size
     (nx, ny) = size
 
+    # check voxel validity
+    if (nx < 1) or (ny < 1):
+        RuntimeError("invalid image size: should be positive")
+
     # init the layer stack
     nz = 0
 
@@ -195,9 +202,13 @@ def get_mesh(param, domain_color, layer_stack):
         filename_list = layer_stack_tmp["filename_list"]
 
         # add the layer
-        (nz, domain_def) = _get_layer(size, nz, domain_color, domain_def, n_layer, filename_list)
+        (nz, domain_def) = _get_layer(nz, size, domain_color, domain_def, n_layer, filename_list)
+
+    # check voxel validity
+    if nz < 1:
+        RuntimeError("invalid stack size: should be positive")
 
     # assemble
-    n = (nx, ny, nz)
+    n = [nx, ny, nz]
 
     return n, d, c, domain_def, reference

@@ -27,9 +27,7 @@
         - "coord_holes"
     properties:
         "buffer":
-            "type":
-                - "null"
-                - "number"
+            "type": "number"
             "minimum": 0
         "coord_shell":
             "type": "array"
