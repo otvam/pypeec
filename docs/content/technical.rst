@@ -97,6 +97,7 @@ PyPEEC is using different tests to check for potential regressions:
 
 These files are used to run the tests (locally and/or continuous integration):
 
+* ``scripts/run_ruff.sh``: run the the code quality checks.
 * ``scripts/run_tests.sh``: run all the integration tests.
 * ``scripts/run_coverage.sh``: run a code coverage analysis.
 

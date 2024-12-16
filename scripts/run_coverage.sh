@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script for checking the code coverage.
+# Script for running a code coverage analysis (using "coverage").
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
