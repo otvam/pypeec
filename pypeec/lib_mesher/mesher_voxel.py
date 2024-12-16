@@ -25,11 +25,11 @@ def get_mesh(param, domain_index):
     d = param["d"]
     c = param["c"]
 
-    # no reference geometry, direct voxelization
-    reference = None
-
     # get total size
     nv = np.prod(n)
+
+    # no reference geometry, direct voxelization
+    reference = None
 
     # init new domain indices
     domain_def = {}

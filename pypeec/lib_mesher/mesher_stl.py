@@ -151,6 +151,9 @@ def _get_voxel_grid(n, d, c):
     The grid is located around the STL meshes to be voxelized.
     """
 
+    # get total size
+    nv = np.prod(n)
+
     # create a uniform grid for the complete structure
     grid = pv.ImageData()
 
@@ -160,7 +163,7 @@ def _get_voxel_grid(n, d, c):
     grid.spacing = d
 
     # add indices for tracking the voxels after voxelization
-    grid["idx"] = np.arange(np.prod(n), dtype=np.int64)
+    grid["idx"] = np.arange(nv, dtype=np.int64)
 
     # cast is required for voxelization
     grid = grid.cast_to_unstructured_grid()

@@ -269,8 +269,8 @@ def get_green_num(d, idx, int_type):
     # extract the voxel data
     (dx, dy, dz) = d
 
-    # compute the volume and the distance
-    vol = np.prod(d)
+    # get the volume
+    vol = dx * dy * dz
 
     # compute the physical distance
     dis = lna.norm(np.multiply(d, idx), axis=1)

@@ -24,9 +24,8 @@ def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
     Create an index vector for the non-zero voxel vector components.
     """
 
-    # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx * ny * nz
+    # get total size
+    nv = np.prod(n)
 
     # get the local indices (face indices of the incidence matrix)
     idx_local = np.isin(idx_f, np.arange(offset * nv, (offset + 1) * nv, dtype=np.int64))
@@ -110,9 +109,10 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, mult_type):
         return L, L_op
 
     # extract the voxel data
-    (nx, ny, nz) = n
     (dx, dy, dz) = d
-    nv = nx * ny * nz
+
+    # get total size
+    nv = np.prod(n)
 
     # get the direction of the faces (x, y, z)
     idx_fx = np.isin(idx_f, np.arange(0 * nv, 1 * nv, dtype=np.int64))

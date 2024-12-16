@@ -78,11 +78,10 @@ def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_clou
     """
 
     # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx * ny * nz
-
-    # extract the voxel data
     (dx, dy, dz) = d
+
+    # get total size
+    nv = np.prod(n)
 
     # get the direction of the faces (x, y, z)
     idx_fx = np.isin(idx_fc, np.arange(0 * nv, 1 * nv, dtype=np.int64))
@@ -159,11 +158,10 @@ def get_vector_density(n, d, idx_f, A_net, var_f):
     """
 
     # extract the voxel data
-    (nx, ny, nz) = n
-    nv = nx * ny * nz
-
-    # extract the voxel data
     (dx, dy, dz) = d
+
+    # get total size
+    nv = np.prod(n)
 
     # get the direction of the faces (x, y, z)
     idx_fx = np.isin(idx_f, np.arange(0 * nv, 1 * nv, dtype=np.int64))

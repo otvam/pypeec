@@ -25,8 +25,11 @@ def get_voxel_coordinate(n, d, c):
     d = np.array(d, dtype=np.float64)
     n = np.array(n, dtype=np.int64)
 
+    # get total size
+    nv = np.prod(n)
+
     # all the indices
-    idx_linear = np.arange(0, np.prod(n), dtype=np.int64)
+    idx_linear = np.arange(0, nv, dtype=np.int64)
 
     # convert linear indices into tensor indices
     (idx_x, idx_y, idx_z) = np.unravel_index(idx_linear, n, order="F")
@@ -56,7 +59,9 @@ def get_incidence_matrix(n):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx * ny * nz
+
+    # get total size
+    nv = np.prod(n)
 
     # voxel index array
     x = np.arange(nx, dtype=np.int64)
@@ -71,7 +76,7 @@ def get_incidence_matrix(n):
     A_vox = sps.csc_matrix((nv, 3 * nv), dtype=np.int64)
 
     # assign the diagonal, each voxel is connected to three faces with positive indices
-    data = np.ones(nv)
+    data = np.ones(nv, dtype=np.int64)
     idx_row_col = np.arange(nv, dtype=np.int64)
     A_vox += sps.csc_matrix((data, (idx_row_col, 0 * nv + idx_row_col)), shape=(nv, 3 * nv), dtype=np.int64)
     A_vox += sps.csc_matrix((data, (idx_row_col, 1 * nv + idx_row_col)), shape=(nv, 3 * nv), dtype=np.int64)

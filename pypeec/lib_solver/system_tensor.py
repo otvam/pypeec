@@ -144,7 +144,9 @@ def get_green_tensor(n, d, integral_simplify):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx * ny * nz
+
+    # get total size
+    nv = np.prod(n)
 
     # get the indices of the complete voxel structure (as a matrix)
     idx = _get_voxel_indices(n)
@@ -184,7 +186,9 @@ def get_coupling_tensor(n, d, integral_simplify, has_magnetic):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx * ny * nz
+
+    # get total size
+    nv = np.prod(n)
 
     # check if the tensor is required
     if not has_magnetic:
