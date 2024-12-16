@@ -108,7 +108,7 @@ pypeec = [
 
 [tool.ruff]
 indent-width = 4
-line-length = 200
+line-length = 160
 target-version = "py310"
 
 [tool.ruff.lint]
