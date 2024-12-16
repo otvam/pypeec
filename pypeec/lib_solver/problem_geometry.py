@@ -260,8 +260,8 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     (nx, ny, nz) = n
 
     # count
-    n_voxel_total = nx*ny*nz
-    n_face_total = 3*nx*ny*nz
+    n_voxel_total = nx * ny * nz
+    n_face_total = 3 * nx * ny * nz
     n_voxel_electric = len(idx_vc)
     n_voxel_magnetic = len(idx_vm)
     n_face_electric = len(idx_fc)
@@ -270,10 +270,10 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     n_src_voltage = len(idx_src_v)
 
     # fraction of voxels
-    n_voxel_used = n_voxel_electric+n_voxel_magnetic
-    n_face_used = n_face_electric+n_face_magnetic
-    ratio_voxel = n_voxel_used/n_voxel_total
-    ratio_face = n_face_used/n_face_total
+    n_voxel_used = n_voxel_electric + n_voxel_magnetic
+    n_face_used = n_face_electric + n_face_magnetic
+    ratio_voxel = n_voxel_used / n_voxel_total
+    ratio_face = n_face_used / n_face_total
 
     # assign data
     problem_status = {

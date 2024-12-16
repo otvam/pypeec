@@ -84,7 +84,7 @@ class _IterCounter:
         LOGGER.debug(f"i = {iter_tmp:d} / {power_tmp:.2e} VA")
 
         # convergence iter condition
-        n_iter_min = np.max([2, self.n_cmp+1, self.n_min])
+        n_iter_min = np.max([2, self.n_cmp + 1, self.n_min])
 
         # check for convergence
         if self.stop and (self.n_iter >= n_iter_min):
@@ -92,11 +92,11 @@ class _IterCounter:
             power_ref = self.power_vec[-1]
 
             # get previous iteration
-            power_cmp = self.power_vec[-(self.n_cmp+1):-1]
+            power_cmp = self.power_vec[-(self.n_cmp + 1) : -1]
 
             # get convergence status
-            power_err = np.max(np.abs(power_ref-power_cmp))
-            power_thr = np.maximum(self.rel_tol*np.abs(power_ref), self.abs_tol)
+            power_err = np.max(np.abs(power_ref - power_cmp))
+            power_thr = np.maximum(self.rel_tol * np.abs(power_ref), self.abs_tol)
             status = power_err <= power_thr
 
             # if convergence is achieved, stop the solver and save the solution
@@ -232,7 +232,7 @@ def _fct_pcd_all(rhs_tmp, rhs, fct_pcd):
 
     # split vector
     rhs_c = rhs_tmp[0:n_dof_c]
-    rhs_m = rhs_tmp[n_dof_c:n_dof_c+n_dof_m]
+    rhs_m = rhs_tmp[n_dof_c : n_dof_c + n_dof_m]
 
     # solve the preconditioner
     sol_c = fct_pcd_c(rhs_c)
@@ -260,11 +260,11 @@ def _fct_sys_all(sol_tmp, rhs, fct_cpl, fct_sys):
 
     # split vector
     sol_c = sol_tmp[0:n_dof_c]
-    sol_m = sol_tmp[n_dof_c:n_dof_c+n_dof_m]
+    sol_m = sol_tmp[n_dof_c : n_dof_c + n_dof_m]
 
     # solve the system
-    rhs_c = fct_sys_c(sol_c)+fct_cpl_c(sol_m)
-    rhs_m = fct_sys_m(sol_m)+fct_cpl_m(sol_c)
+    rhs_c = fct_sys_c(sol_c) + fct_cpl_c(sol_m)
+    rhs_m = fct_sys_m(sol_m) + fct_cpl_m(sol_c)
 
     # assemble solution
     rhs_all = np.concatenate((rhs_c, rhs_m))
@@ -293,8 +293,8 @@ def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, direct_options,
         return _fct_sys_all(sol_tmp, rhs, fct_cpl, fct_sys)
 
     # get operator
-    op_pcd = op_obj.get_fct_pcd(fct_pcd_all, n_dof_c+n_dof_m)
-    op_sys = op_obj.get_fct_sys(fct_sys_all, n_dof_c+n_dof_m)
+    op_pcd = op_obj.get_fct_pcd(fct_pcd_all, n_dof_c + n_dof_m)
+    op_sys = op_obj.get_fct_sys(fct_sys_all, n_dof_c + n_dof_m)
 
     # get callback
     def fct_callback(sol):
@@ -330,7 +330,7 @@ def _get_solver_domain(sol_init, sol_other, fct_cpl, fct_sys, fct_pcd, rhs, iter
     op_sys = op_obj.get_fct_sys(fct_sys_dom, n_dof)
 
     # add coupling
-    rhs_cpl = rhs-fct_cpl(sol_other)
+    rhs_cpl = rhs - fct_cpl(sol_other)
 
     # get callback
     fct_callback = None
@@ -368,7 +368,7 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_
 
     # split initial solution
     sol_c = sol_init[0:n_dof_c]
-    sol_m = sol_init[n_dof_c:n_dof_c+n_dof_m]
+    sol_m = sol_init[n_dof_c : n_dof_c + n_dof_m]
 
     # init
     converged = False
@@ -379,15 +379,15 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_
     while not converged:
         # solve and relax the electric equation systems
         (status_c, sol_c_new) = _get_solver_domain(sol_c, sol_m, fct_cpl_c, fct_sys_c, fct_pcd_c, rhs_c, iter_electric_options, op_obj)
-        sol_c = (1-relax_electric)*sol_c+relax_electric*sol_c_new
+        sol_c = (1 - relax_electric) * sol_c + relax_electric * sol_c_new
 
         # solve and relax the magnetic equation systems
         (status_m, sol_m_new) = _get_solver_domain(sol_m, sol_c, fct_cpl_m, fct_sys_m, fct_pcd_m, rhs_m, iter_magnetic_options, op_obj)
-        sol_m = (1-relax_magnetic)*sol_m+relax_magnetic*sol_m_new
+        sol_m = (1 - relax_magnetic) * sol_m + relax_magnetic * sol_m_new
 
         # get residuum
-        res_c = fct_sys_c(sol_c)+fct_cpl_c(sol_m)-rhs_c
-        res_m = fct_sys_m(sol_m)+fct_cpl_m(sol_c)-rhs_m
+        res_c = fct_sys_c(sol_c) + fct_cpl_c(sol_m) - rhs_c
+        res_m = fct_sys_m(sol_m) + fct_cpl_m(sol_c) - rhs_m
 
         # aggregate the results
         sol_all = np.concatenate((sol_c, sol_m))
@@ -399,7 +399,7 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_
         n_iter = iter_obj.get_n_iter()
 
         # check status
-        res_thr = np.maximum(rel_tol*lna.norm(rhs_all), abs_tol)
+        res_thr = np.maximum(rel_tol * lna.norm(rhs_all), abs_tol)
         status_res = lna.norm(res_all) <= res_thr
         status = status_c and status_m and status_res
 
@@ -427,11 +427,11 @@ def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, tolerance_options):
     # get sol
     rhs_all = np.concatenate((rhs_c, rhs_m))
     out_all = _fct_sys_all(sol_all, rhs, fct_cpl, fct_sys)
-    res_all = out_all-rhs_all
+    res_all = out_all - rhs_all
 
     # residuum threshold
     res_val = lna.norm(res_all)
-    res_thr = np.maximum(rel_tol*lna.norm(rhs_all), abs_tol)
+    res_thr = np.maximum(rel_tol * lna.norm(rhs_all), abs_tol)
 
     # consider the solver status
     if ignore_status:
@@ -468,7 +468,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
     (rhs_c, rhs_m) = rhs
     n_dof_electric = len(rhs_c)
     n_dof_magnetic = len(rhs_m)
-    n_dof_total = n_dof_electric+n_dof_magnetic
+    n_dof_total = n_dof_electric + n_dof_magnetic
 
     # get initial solution
     if sol_init is None:
@@ -493,16 +493,24 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
             if coupling == "direct":
                 (status, sol) = _get_solver_direct(
                     sol_init,
-                    fct_cpl, fct_sys, fct_pcd, rhs,
+                    fct_cpl,
+                    fct_sys,
+                    fct_pcd,
+                    rhs,
                     direct_options,
-                    op_obj, iter_obj,
+                    op_obj,
+                    iter_obj,
                 )
             elif coupling == "segregated":
                 (status, sol) = _get_solver_segregated(
                     sol_init,
-                    fct_cpl, fct_sys, fct_pcd, rhs,
+                    fct_cpl,
+                    fct_sys,
+                    fct_pcd,
+                    rhs,
                     segregated_options,
-                    op_obj, iter_obj,
+                    op_obj,
+                    iter_obj,
                 )
             else:
                 raise ValueError("invalid coupling method")

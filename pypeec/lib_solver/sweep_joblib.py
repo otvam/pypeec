@@ -93,9 +93,7 @@ def _get_parallel_loop(parallel_sweep, fct_compute, arg_list):
 
         # run the parallel loop
         with joblib.parallel_config(backend="loky", n_jobs=n_jobs, inner_max_num_threads=n_threads):
-            out_list = joblib.Parallel()(
-                joblib.delayed(fct_joblib)(*arg) for arg in arg_list
-            )
+            out_list = joblib.Parallel()(joblib.delayed(fct_joblib)(*arg) for arg in arg_list)
 
     return out_list
 
@@ -117,7 +115,7 @@ def _get_tree_compute(parallel_sweep, sweep_tree, sweep_param, fct_compute, tag_
 
     # get the input
     data_sub = [sweep_param[tag_tmp] for tag_tmp in tag_sub]
-    init_sub = [init_tmp]*len(tag_sub)
+    init_sub = [init_tmp] * len(tag_sub)
 
     # return if there is nothing to compute
     if not tag_sub:

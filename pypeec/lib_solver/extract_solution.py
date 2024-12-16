@@ -33,13 +33,13 @@ def _get_biot_savart(pts, pts_src, I_src):
     """
 
     # get the distance between the points and the voxels
-    vec = pts-pts_src
+    vec = pts - pts_src
 
     # get the norm of the distance
     nrm = lna.norm(vec, axis=1, keepdims=True)
 
     # compute the Biot-Savart contributions
-    H_all = (1/(4*np.pi))*(np.cross(I_src, vec, axis=1)/(nrm**3))
+    H_all = (1 / (4 * np.pi)) * (np.cross(I_src, vec, axis=1) / (nrm**3))
 
     # sum the contributions
     H_pts = np.sum(H_all, axis=0)
@@ -54,7 +54,7 @@ def _get_magnetic_charge(pts, pts_src, I_src):
     """
 
     # get the distance between the points and the voxels
-    vec = pts_src-pts
+    vec = pts_src - pts
 
     # get the norm of the distance
     nrm = lna.norm(vec, axis=1, keepdims=True)
@@ -63,7 +63,7 @@ def _get_magnetic_charge(pts, pts_src, I_src):
     I_src = np.tile(I_src, (3, 1)).transpose()
 
     # compute the charge contributions
-    H_all = (1/(4*np.pi*cst.mu_0))*((I_src*vec)/(nrm**3))
+    H_all = (1 / (4 * np.pi * cst.mu_0)) * ((I_src * vec) / (nrm**3))
 
     # sum the contributions
     H_pts = np.sum(H_all, axis=0)
@@ -79,15 +79,15 @@ def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_clou
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # extract the voxel data
     (dx, dy, dz) = d
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.isin(idx_fc, np.arange(0*nv, 1*nv, dtype=np.int64))
-    idx_fy = np.isin(idx_fc, np.arange(1*nv, 2*nv, dtype=np.int64))
-    idx_fz = np.isin(idx_fc, np.arange(2*nv, 3*nv, dtype=np.int64))
+    idx_fx = np.isin(idx_fc, np.arange(0 * nv, 1 * nv, dtype=np.int64))
+    idx_fy = np.isin(idx_fc, np.arange(1 * nv, 2 * nv, dtype=np.int64))
+    idx_fz = np.isin(idx_fc, np.arange(2 * nv, 3 * nv, dtype=np.int64))
 
     if biot_savart == "voxel":
         # get the voxel positions
@@ -95,18 +95,18 @@ def get_magnetic_field_electric(n, d, idx_fc, A_net_c, I_fc, pts_net_c, pts_clou
 
         # project the faces current into the voxels
         I_src = np.zeros((len(pts_net_c), 3), dtype=np.complex128)
-        I_src[:, 0] = dx*0.5*np.abs(A_net_c[:, idx_fx])*I_fc[idx_fx]
-        I_src[:, 1] = dy*0.5*np.abs(A_net_c[:, idx_fy])*I_fc[idx_fy]
-        I_src[:, 2] = dz*0.5*np.abs(A_net_c[:, idx_fz])*I_fc[idx_fz]
+        I_src[:, 0] = dx * 0.5 * np.abs(A_net_c[:, idx_fx]) * I_fc[idx_fx]
+        I_src[:, 1] = dy * 0.5 * np.abs(A_net_c[:, idx_fy]) * I_fc[idx_fy]
+        I_src[:, 2] = dz * 0.5 * np.abs(A_net_c[:, idx_fz]) * I_fc[idx_fz]
     elif biot_savart == "face":
         # get the face positions
-        pts_src = 0.5*np.abs(A_net_c.transpose())*pts_net_c
+        pts_src = 0.5 * np.abs(A_net_c.transpose()) * pts_net_c
 
         # get the face currents as vector
         I_src = np.zeros((len(I_fc), 3), dtype=np.complex128)
-        I_src[idx_fx, 0] = dx*I_fc[idx_fx]
-        I_src[idx_fy, 1] = dy*I_fc[idx_fy]
-        I_src[idx_fz, 2] = dz*I_fc[idx_fz]
+        I_src[idx_fx, 0] = dx * I_fc[idx_fx]
+        I_src[idx_fy, 1] = dy * I_fc[idx_fy]
+        I_src[idx_fz, 2] = dz * I_fc[idx_fz]
     else:
         raise ValueError("invalid field computation method")
 
@@ -125,7 +125,7 @@ def get_magnetic_field_magnetic(A_net_m, I_fm, pts_net_m, pts_cloud):
     """
 
     # compute the divergence
-    var_v = A_net_m*I_fm
+    var_v = A_net_m * I_fm
 
     # for each provided point, compute the magnetic field
     H_pts = np.zeros((len(pts_cloud), 3), dtype=np.complex128)
@@ -160,25 +160,25 @@ def get_vector_density(n, d, idx_f, A_net, var_f):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # extract the voxel data
     (dx, dy, dz) = d
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.isin(idx_f, np.arange(0*nv, 1*nv, dtype=np.int64))
-    idx_fy = np.isin(idx_f, np.arange(1*nv, 2*nv, dtype=np.int64))
-    idx_fz = np.isin(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
+    idx_fx = np.isin(idx_f, np.arange(0 * nv, 1 * nv, dtype=np.int64))
+    idx_fy = np.isin(idx_f, np.arange(1 * nv, 2 * nv, dtype=np.int64))
+    idx_fz = np.isin(idx_f, np.arange(2 * nv, 3 * nv, dtype=np.int64))
 
     # project the faces into the voxels
-    var_v_x = 0.5*np.abs(A_net[:, idx_fx])*var_f[idx_fx]
-    var_v_y = 0.5*np.abs(A_net[:, idx_fy])*var_f[idx_fy]
-    var_v_z = 0.5*np.abs(A_net[:, idx_fz])*var_f[idx_fz]
+    var_v_x = 0.5 * np.abs(A_net[:, idx_fx]) * var_f[idx_fx]
+    var_v_y = 0.5 * np.abs(A_net[:, idx_fy]) * var_f[idx_fy]
+    var_v_z = 0.5 * np.abs(A_net[:, idx_fz]) * var_f[idx_fz]
 
     # convert to density.
-    var_v_x = var_v_x/(dy*dz)
-    var_v_y = var_v_y/(dx*dz)
-    var_v_z = var_v_z/(dx*dy)
+    var_v_x = var_v_x / (dy * dz)
+    var_v_y = var_v_y / (dx * dz)
+    var_v_z = var_v_z / (dx * dy)
 
     # assemble the variables
     var_v = np.stack((var_v_x, var_v_y, var_v_z), axis=1)
@@ -199,10 +199,10 @@ def get_scalar_density(d, A_net, var_f):
     (dx, dy, dz) = d
 
     # convert face to voxel variable
-    var_v = 0.5*np.abs(A_net)*var_f
+    var_v = 0.5 * np.abs(A_net) * var_f
 
     # convert to density.
-    var_v = var_v/(dx*dy*dz)
+    var_v = var_v / (dx * dy * dz)
 
     return var_v
 
@@ -220,10 +220,10 @@ def get_divergence_density(d, A_net, var_f):
     (dx, dy, dz) = d
 
     # compute the divergence
-    var_v = A_net*var_f
+    var_v = A_net * var_f
 
     # convert to density.
-    var_v = var_v/(dx*dy*dz)
+    var_v = var_v / (dx * dy * dz)
 
     return var_v
 
@@ -234,7 +234,7 @@ def get_losses(freq, I_fc, I_fm, R_c, R_m):
     """
 
     # get the angular frequency
-    s = 1j*2*np.pi*freq
+    s = 1j * 2 * np.pi * freq
 
     # get the factor for getting the loss time-averaged values
     if freq == 0:
@@ -243,11 +243,11 @@ def get_losses(freq, I_fc, I_fm, R_c, R_m):
         fact = 0.5
 
     # get the magnetic losses linked with the electric domains
-    P_fc = fact*np.conj(I_fc)*R_c*I_fc
+    P_fc = fact * np.conj(I_fc) * R_c * I_fc
     P_fc = np.real(P_fc)
 
     # get the magnetic losses linked with the magnetic domains
-    P_fm = fact*np.conj(s*I_fm)*R_m*I_fm
+    P_fm = fact * np.conj(s * I_fm) * R_m * I_fm
     P_fm = np.real(P_fm)
 
     return P_fc, P_fm
@@ -265,11 +265,11 @@ def get_energy(freq, I_fc, I_fm, L_op_c, K_op_c):
         fact = 0.25
 
     # get the magnetic energy linked with the electric domains
-    W_fc = fact*np.conj(I_fc)*L_op_c(I_fc)
+    W_fc = fact * np.conj(I_fc) * L_op_c(I_fc)
     W_fc = np.real(W_fc)
 
     # get the magnetic energy linked with the magnetic domains
-    W_fm = fact*np.conj(I_fc)*K_op_c(I_fm)
+    W_fm = fact * np.conj(I_fc) * K_op_c(I_fm)
     W_fm = np.real(W_fm)
 
     return W_fc, W_fm
@@ -285,14 +285,18 @@ def get_integral(P_fc, P_fm, W_fc, W_fm, S_total):
     P_magnetic = np.sum(P_fm)
     W_electric = np.sum(W_fc)
     W_magnetic = np.sum(W_fm)
-    P_total = P_electric+P_magnetic
-    W_total = W_electric+W_magnetic
+    P_total = P_electric + P_magnetic
+    W_total = W_electric + W_magnetic
 
     # assign the integral quantities
     integral = {
-        "P_electric": P_electric, "P_magnetic": P_magnetic,
-        "W_electric": W_electric, "W_magnetic": W_magnetic,
-        "P_total": P_total, "W_total": W_total, "S_total": S_total,
+        "P_electric": P_electric,
+        "P_magnetic": P_magnetic,
+        "W_electric": W_electric,
+        "W_magnetic": W_magnetic,
+        "P_total": P_total,
+        "W_total": W_total,
+        "S_total": S_total,
     }
 
     # display
@@ -320,8 +324,8 @@ def get_material(material_all, A_net_c, A_net_m, P_fc, P_fm):
     material = {}
 
     # compute the losses of the voxels
-    P_vc = 0.5*np.abs(A_net_c)*P_fc
-    P_vm = 0.5*np.abs(A_net_m)*P_fm
+    P_vc = 0.5 * np.abs(A_net_c) * P_fc
+    P_vm = 0.5 * np.abs(A_net_m) * P_fm
 
     # parse the material domains
     for tag, material_idx_tmp in material_all.items():
@@ -332,7 +336,7 @@ def get_material(material_all, A_net_c, A_net_m, P_fc, P_fm):
         # get the domain losses
         P_vc_tmp = np.sum(P_vc[idx_vc])
         P_vm_tmp = np.sum(P_vm[idx_vm])
-        P_tmp = P_vc_tmp+P_vm_tmp
+        P_tmp = P_vc_tmp + P_vm_tmp
 
         # assign the losses
         material[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_total": P_tmp}
@@ -386,14 +390,17 @@ def get_source(freq, source_all, I_src, V_vc):
             I_tmp = np.complex128(I_src[idx_src])
 
             # compute the lumped quantities
-            S_tmp = np.sum(fact*V_tmp*np.conj(I_tmp))
+            S_tmp = np.sum(fact * V_tmp * np.conj(I_tmp))
             V_tmp = np.mean(V_tmp)
             I_tmp = np.sum(I_tmp)
 
         # assign the current and voltage
         source[tag] = {
-            "V": V_tmp, "I": I_tmp, "S": S_tmp,
-            "source_type": source_type, "var_type": var_type,
+            "V": V_tmp,
+            "I": I_tmp,
+            "S": S_tmp,
+            "source_type": source_type,
+            "var_type": var_type,
         }
 
         # add the power

@@ -179,7 +179,7 @@ def get_material_vector(material_all):
             # assemble
             rho_re = material_all_tmp["rho_re"]
             rho_im = material_all_tmp["rho_im"]
-            rho = rho_re+1j*rho_im
+            rho = rho_re + 1j * rho_im
 
             # check size
             if len(rho) != len(idx):
@@ -193,8 +193,8 @@ def get_material_vector(material_all):
             # assemble
             chi_re = material_all_tmp["chi_re"]
             chi_im = material_all_tmp["chi_im"]
-            chi = chi_re-1j*chi_im
-            rho = 1/(cst.mu_0*chi)
+            chi = chi_re - 1j * chi_im
+            rho = 1 / (cst.mu_0 * chi)
 
             # check size
             if len(rho) != len(idx):
@@ -229,27 +229,27 @@ def get_source_vector(source_all, source_type_ref):
             I_im = source_all_tmp["I_im"]
             Y_re = source_all_tmp["Y_re"]
             Y_im = source_all_tmp["Y_im"]
-            value = I_re+1j*I_im
-            element = Y_re+1j*Y_im
+            value = I_re + 1j * I_im
+            element = Y_re + 1j * Y_im
         elif source_type == "voltage":
             # extract the data
             V_re = source_all_tmp["V_re"]
             V_im = source_all_tmp["V_im"]
             Z_re = source_all_tmp["Z_re"]
             Z_im = source_all_tmp["Z_im"]
-            value = V_re+1j*V_im
-            element = Z_re+1j*Z_im
+            value = V_re + 1j * V_im
+            element = Z_re + 1j * Z_im
         else:
             raise ValueError("invalid source type")
 
         # scale the lumped parameters for current source
         if (source_type == "current") and (var_type == "lumped"):
-            value = value/len(idx)
-            element = element/len(idx)
+            value = value / len(idx)
+            element = element / len(idx)
 
         # scale the lumped parameters for voltage source
         if (source_type == "voltage") and (var_type == "lumped"):
-            element = element*len(idx)
+            element = element * len(idx)
 
         # check size
         if len(value) != len(idx):
@@ -276,20 +276,20 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
     # extract the voxel data
     (nx, ny, nz) = n
     (dx, dy, dz) = d
-    nv = nx*ny*nz
+    nv = nx * ny * nz
 
     # get the resistivity of the faces (average between voxels)
-    rho = 0.5*rho_v.transpose()*np.abs(A_net)
+    rho = 0.5 * rho_v.transpose() * np.abs(A_net)
 
     # get the direction of the faces (x, y, z)
-    idx_fx = np.isin(idx_f, np.arange(0*nv, 1*nv, dtype=np.int64))
-    idx_fy = np.isin(idx_f, np.arange(1*nv, 2*nv, dtype=np.int64))
-    idx_fz = np.isin(idx_f, np.arange(2*nv, 3*nv, dtype=np.int64))
+    idx_fx = np.isin(idx_f, np.arange(0 * nv, 1 * nv, dtype=np.int64))
+    idx_fy = np.isin(idx_f, np.arange(1 * nv, 2 * nv, dtype=np.int64))
+    idx_fz = np.isin(idx_f, np.arange(2 * nv, 3 * nv, dtype=np.int64))
 
     # resistance vector (different directions)
     R = np.zeros(len(idx_f), dtype=np.complex128)
-    R[idx_fx] = (dx/(dy*dz))*rho[0, idx_fx]
-    R[idx_fy] = (dy/(dx*dz))*rho[1, idx_fy]
-    R[idx_fz] = (dz/(dx*dy))*rho[2, idx_fz]
+    R[idx_fx] = (dx / (dy * dz)) * rho[0, idx_fx]
+    R[idx_fy] = (dy / (dx * dz)) * rho[1, idx_fy]
+    R[idx_fz] = (dz / (dx * dy)) * rho[2, idx_fz]
 
     return R
