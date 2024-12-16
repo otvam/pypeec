@@ -12,11 +12,11 @@ import datetime
 import setuptools_scm
 
 # define the package path
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath(".."))
 
 # get the version number
 ver = setuptools_scm.get_version(
-    root='..',
+    root="..",
     relative_to=__file__,
     version_scheme="only-version",
     local_scheme="no-local-version",
@@ -25,19 +25,19 @@ release = ver
 version = ver
 
 # get date
-date = datetime.datetime.today().strftime('%a, %b %d, %Y')
+date = datetime.datetime.today().strftime("%a, %b %d, %Y")
 
 # project title and version
-project = 'PyPEEC - %s' % ver
+project = "PyPEEC - %s" % ver
 
 # title for the html pages
-html_title = 'PyPEEC'
+html_title = "PyPEEC"
 
 # project author
-author = 'Thomas Guillod'
+author = "Thomas Guillod"
 
 # project copyright
-copyright = 'Thomas Guillod - Dartmouth College'
+copyright = "Thomas Guillod - Dartmouth College"
 
 # add prolog
 rst_epilog = """
@@ -48,24 +48,24 @@ rst_epilog = rst_epilog.format(ver=ver, date=date)
 
 # load extensions
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
 ]
 
 # allowed redirect for the external links
 linkcheck_allowed_redirects = {
-    'http://mozilla.org/MPL/2.0': 'https://www.mozilla.org/en-US/MPL/2.0',
-    'https://dartmouth.edu': 'https://home.dartmouth.edu'
+    "http://mozilla.org/MPL/2.0": "https://www.mozilla.org/en-US/MPL/2.0",
+    "https://dartmouth.edu": "https://home.dartmouth.edu",
 }
 
 # define paths
-templates_path = ['_templates']
-html_static_path = ['_static']
-html_theme_path = ['_static']
+templates_path = ["_templates"]
+html_static_path = ["_static"]
+html_theme_path = ["_static"]
 
 # html options
-html_baseurl = 'https://pypeec.otvam.ch'
-html_theme = 'sphinx_rtd_theme'
+html_baseurl = "https://pypeec.otvam.ch"
+html_theme = "sphinx_rtd_theme"
 html_logo = "images/sphinx.png"
 html_favicon = "images/icon.png"
 html_show_sphinx = False
@@ -76,12 +76,12 @@ html_domain_indices = False
 
 # html theme
 html_theme_options = {
-    'logo_only': False,
-    'style_nav_header_background': '#137e9c',
-    'prev_next_buttons_location': None,
-    'collapse_navigation': True,
-    'sticky_navigation': True,
-    'navigation_depth': 2,
-    'includehidden': True,
-    'titles_only': False,
+    "logo_only": False,
+    "style_nav_header_background": "#137e9c",
+    "prev_next_buttons_location": None,
+    "collapse_navigation": True,
+    "sticky_navigation": True,
+    "navigation_depth": 2,
+    "includehidden": True,
+    "titles_only": False,
 }
