@@ -37,7 +37,7 @@ def _get_dense_zero(idx_out, idx_in, mat, idx_row, idx_col):
     Construct a zero matrix for a given block position.
     """
 
-    # get the
+    # extract the voxel data
     (nx, ny, nz, nd) = mat.shape
     nv = nx * ny * nz
 

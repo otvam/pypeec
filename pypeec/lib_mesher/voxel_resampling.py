@@ -88,8 +88,8 @@ def _get_original_grid(n):
     # extract the voxel data
     (nx, ny, nz) = n
 
-    # get the total number of voxels
-    nv = nx * ny * nz
+    # get total size
+    nv = np.prod(n)
 
     # get the indices of the original grid
     idx_all = np.arange(nv, dtype=np.int64)

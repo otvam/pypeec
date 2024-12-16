@@ -61,7 +61,9 @@ def _get_connection_matrix(n):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx * ny * nz
+
+    # get total size
+    nv = np.prod(n)
 
     # voxel index array
     x = np.arange(nx, dtype=np.int64)

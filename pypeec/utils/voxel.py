@@ -48,7 +48,9 @@ def get_idx_tensor(n, idx_linear):
 
     # extract the voxel data
     (nx, ny, nz) = n
-    nv = nx * ny * nz
+
+    # get total size
+    nv = np.prod(n)
 
     # cast to array
     idx_linear = np.array(idx_linear, dtype=np.int64)

@@ -104,7 +104,7 @@ def get_point(n, d, c, domain_def, data_point):
         valid_cloud = _get_cloud_valid(c, d, n, domain_def, pts_cloud)
 
         # check that everything is valid
-        if full_cloud and not np.any(valid_cloud):
+        if full_cloud and not np.all(valid_cloud):
             raise RuntimeError("invalid cloud points")
 
         # remove the invalid points

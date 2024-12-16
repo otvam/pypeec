@@ -274,9 +274,10 @@ def get_resistance_vector(n, d, A_net, idx_f, rho_v):
     """
 
     # extract the voxel data
-    (nx, ny, nz) = n
     (dx, dy, dz) = d
-    nv = nx * ny * nz
+
+    # get total size
+    nv = np.prod(n)
 
     # get the resistivity of the faces (average between voxels)
     rho = 0.5 * rho_v.transpose() * np.abs(A_net)
