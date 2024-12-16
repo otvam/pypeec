@@ -33,6 +33,7 @@ if __name__ == "__main__":
 
     # run
     pypeec.run_plotter_file(
-        file_solution, file_plotter,
+        file_solution,
+        file_plotter,
         tag_plot=tag_plot,
     )

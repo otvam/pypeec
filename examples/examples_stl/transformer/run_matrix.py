@@ -57,20 +57,20 @@ def _show_matrix(matrix):
 
     LOGGER.info("n_winding = %d" % matrix["n_winding"])
     LOGGER.info("n_solution = %d" % matrix["n_solution"])
-    LOGGER.info("freq = %.2f kHz" % (1e-3*matrix["freq"]))
+    LOGGER.info("freq = %.2f kHz" % (1e-3 * matrix["freq"]))
     LOGGER.info("impedance matrix")
     with LOGGER.BlockIndent():
         LOGGER.info("Z_re_mat = %s Ohm" % matrix["Z_mat"].real.tolist())
         LOGGER.info("Z_im_mat = %s Ohm" % matrix["Z_mat"].imag.tolist())
     LOGGER.info("resistance / inductance matrix")
     with LOGGER.BlockIndent():
-        LOGGER.info("R_mat = %s mOhm" % (1e3*matrix["R_mat"]).tolist())
-        LOGGER.info("L_mat = %s nH" % (1e9*matrix["L_mat"]).tolist())
+        LOGGER.info("R_mat = %s mOhm" % (1e3 * matrix["R_mat"]).tolist())
+        LOGGER.info("L_mat = %s nH" % (1e9 * matrix["L_mat"]).tolist())
     LOGGER.info("coupling / quality matrix")
     with LOGGER.BlockIndent():
-        LOGGER.info("k_R_mat = %s %%" % (1e2*matrix["k_R_mat"]).tolist())
-        LOGGER.info("k_L_mat = %s %%" % (1e2*matrix["k_L_mat"]).tolist())
-        LOGGER.info("Q_mat = %s p.u." % (1e0*matrix["Q_mat"]).tolist())
+        LOGGER.info("k_R_mat = %s %%" % (1e2 * matrix["k_R_mat"]).tolist())
+        LOGGER.info("k_L_mat = %s %%" % (1e2 * matrix["k_L_mat"]).tolist())
+        LOGGER.info("Q_mat = %s p.u." % (1e0 * matrix["Q_mat"]).tolist())
 
 
 if __name__ == "__main__":

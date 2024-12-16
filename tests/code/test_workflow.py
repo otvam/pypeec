@@ -58,9 +58,9 @@ class TestWorkflow(unittest.TestCase):
 
         # check solution
         self.assertEqual(has_converged, has_converged_ref, msg="invalid convergence")
-        self.assertAlmostEqual(freq, freq_ref, delta=test_tol*freq_ref, msg="invalid frequency")
-        self.assertAlmostEqual(P_total, P_total_ref, delta=test_tol*P_total_ref, msg="invalid losses")
-        self.assertAlmostEqual(W_total, W_total_ref, delta=test_tol*W_total_ref, msg="invalid energy")
+        self.assertAlmostEqual(freq, freq_ref, delta=test_tol * freq_ref, msg="invalid frequency")
+        self.assertAlmostEqual(P_total, P_total_ref, delta=test_tol * P_total_ref, msg="invalid losses")
+        self.assertAlmostEqual(W_total, W_total_ref, delta=test_tol * W_total_ref, msg="invalid energy")
 
     def _check_results(self, mesher, solver, mesher_ref, solver_ref, test_tol):
         """

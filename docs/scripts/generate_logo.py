@@ -24,20 +24,40 @@ def get_voxel():
 
     # voxel indices
     idx = [
-        0,  1,  2,
-        6,  7,  8,
-        9, 11, 15,
-        18, 20, 23,
-        24, 25, 26,
+        0,
+        1,
+        2,
+        6,
+        7,
+        8,
+        9,
+        11,
+        15,
+        18,
+        20,
+        23,
+        24,
+        25,
+        26,
     ]
 
     # voxel colors
     var = [
-        0.85714286, 0.78571429, 0.71428571,
-        0.14285714, 0.07142857, 0.00000000,
-        0.92857143, 0.64285714, 0.21428571,
-        1.00000000, 0.57142857, 0.50000000,
-        0.28571429, 0.35714286, 0.42857143,
+        0.85714286,
+        0.78571429,
+        0.71428571,
+        0.14285714,
+        0.07142857,
+        0.00000000,
+        0.92857143,
+        0.64285714,
+        0.21428571,
+        1.00000000,
+        0.57142857,
+        0.50000000,
+        0.28571429,
+        0.35714286,
+        0.42857143,
     ]
 
     # create a uniform grid for the complete structure
@@ -66,13 +86,7 @@ def get_plotter(voxel):
     pv.global_theme.edge_opacity = 1.0
 
     # create plotter
-    pl = pv.Plotter(
-        window_size=(256, 256),
-        off_screen=True,
-        line_smoothing=True,
-        polygon_smoothing=True,
-        lighting="three lights"
-    )
+    pl = pv.Plotter(window_size=(256, 256), off_screen=True, line_smoothing=True, polygon_smoothing=True, lighting="three lights")
 
     # add content
     pl.add_mesh(
@@ -105,7 +119,7 @@ def get_mesh(voxel):
 
     # get the texture
     texture = cm.viridis(var)
-    texture = 255*texture
+    texture = 255 * texture
     texture = texture.astype(np.uint8)
 
     return mesh, texture
