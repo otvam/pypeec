@@ -38,14 +38,14 @@ def _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
     gerber_def = data_gerber["gerber_def"]
 
     # get base color
-    color_edge = tuple([257*x for x in color_edge])
-    color_background = tuple([257*x for x in color_background])
+    color_edge = tuple([257 * x for x in color_edge])
+    color_background = tuple([257 * x for x in color_background])
 
     # get GERBER edge file
     gerber_edge = os.path.join(folder_gerber, gerber_edge)
 
     # get transparency value
-    alpha_channel = 257*255
+    alpha_channel = 257 * 255
 
     # create the file
     with open(filename_gerbv, "w") as fid:
@@ -55,13 +55,13 @@ def _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
         # add stack
         for i, data_stack_tmp in enumerate(data_stack):
             # extract the data
-            layer = i+1
+            layer = i + 1
             gerber = data_stack_tmp["gerber"]
             color = data_stack_tmp["color"]
 
             # get layer color
             color = color_def[color]
-            color = tuple([257*x for x in color])
+            color = tuple([257 * x for x in color])
 
             # get GERBER file
             gerber = gerber_def[gerber]
@@ -69,26 +69,26 @@ def _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
 
             # add layer
             fid.write('(define-layer! %d (cons \'filename "%s")\n' % (layer, gerber))
-            fid.write('\t(cons \'visible #t)\n')
-            fid.write('\t(cons \'color #(%d %d %d))\n' % color)
-            fid.write('\t(cons \'alpha #(%d))\n' % alpha_channel)
-            fid.write(')\n')
+            fid.write("\t(cons 'visible #t)\n")
+            fid.write("\t(cons 'color #(%d %d %d))\n" % color)
+            fid.write("\t(cons 'alpha #(%d))\n" % alpha_channel)
+            fid.write(")\n")
 
         # add board edges
         fid.write('(define-layer! 0 (cons \'filename "%s")\n' % gerber_edge)
-        fid.write('\t(cons \'visible #t)\n')
-        fid.write('\t(cons \'color #(%d %d %d))\n' % tuple(color_edge))
-        fid.write('\t(cons \'alpha #(%d))\n' % alpha_channel)
-        fid.write(')\n')
+        fid.write("\t(cons 'visible #t)\n")
+        fid.write("\t(cons 'color #(%d %d %d))\n" % tuple(color_edge))
+        fid.write("\t(cons 'alpha #(%d))\n" % alpha_channel)
+        fid.write(")\n")
 
         # add background
         fid.write('(define-layer! -1 (cons \'filename "%s")\n' % filename_gerbv)
-        fid.write('\t(cons \'color #(%d %d %d))\n' % tuple(color_background))
-        fid.write('\t(cons \'alpha #(%d))\n' % alpha_channel)
-        fid.write(')\n')
+        fid.write("\t(cons 'color #(%d %d %d))\n" % tuple(color_background))
+        fid.write("\t(cons 'alpha #(%d))\n" % alpha_channel)
+        fid.write(")\n")
 
         # add rendering settings
-        fid.write('(set-render-type! 3)\n')
+        fid.write("(set-render-type! 3)\n")
 
 
 def _get_png_file(filename_gerbv, filename_png, margin, voxel, oversampling):
@@ -97,9 +97,9 @@ def _get_png_file(filename_gerbv, filename_png, margin, voxel, oversampling):
     """
 
     # get the resolution and margin
-    resolution = round(25.4e-3*oversampling/voxel)
-    resize = 100/oversampling
-    border = 100*margin
+    resolution = round(25.4e-3 * oversampling / voxel)
+    resize = 100 / oversampling
+    border = 100 * margin
 
     # transform the GERBER files into a PNG file
     cmd = "gerbv -p %s -o %s -x png --border %d --dpi %d 2>/dev/null" % (
