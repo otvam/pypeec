@@ -60,7 +60,7 @@ def _get_boundary_polygon(bnd, z_min):
     xyz = xyz[:-1]
 
     # get the face indices
-    faces = np.arange(len(xyz)+1)
+    faces = np.arange(len(xyz) + 1)
     faces = np.roll(faces, 1)
 
     # create the polygon
@@ -92,7 +92,7 @@ def _get_shape_mesh(z_min, z_max, obj):
     polygon = polygon.delaunay_2d(edge_source=polygon)
 
     # extrude the polygon into a 3D mesh
-    mesh = polygon.extrude((0, 0, z_max-z_min), capping=True)
+    mesh = polygon.extrude((0, 0, z_max - z_min), capping=True)
 
     return mesh
 
@@ -107,7 +107,7 @@ def _get_shape_single(tag, shape_type, shape_data):
 
     # get the shape
     if shape_type == "pad":
-        buffer = 0.5*shape_data["diameter"]
+        buffer = 0.5 * shape_data["diameter"]
         coord = shape_data["coord"]
 
         if len(coord) < 1:
@@ -115,7 +115,7 @@ def _get_shape_single(tag, shape_type, shape_data):
 
         obj = sha.geometry.MultiPoint(coord)
     elif shape_type == "trace":
-        buffer = 0.5*shape_data["width"]
+        buffer = 0.5 * shape_data["width"]
         coord = shape_data["coord"]
 
         if len(coord) < 2:
@@ -123,7 +123,7 @@ def _get_shape_single(tag, shape_type, shape_data):
 
         obj = sha.geometry.LineString(coord)
     elif shape_type == "polygon":
-        buffer = 1.0*shape_data["buffer"]
+        buffer = 1.0 * shape_data["buffer"]
         coord_shell = shape_data["coord_shell"]
         coord_holes = shape_data["coord_holes"]
 
@@ -188,7 +188,7 @@ def _get_idx_voxel(n, idx_shape, stack_idx):
     # convert image indices into voxel indices
     for idx in stack_idx:
         # convert indices
-        idx_tmp = idx*nx*ny+idx_shape
+        idx_tmp = idx * nx * ny + idx_shape
 
         # add the indices to the array
         idx_voxel = np.append(idx_voxel, idx_tmp)
@@ -320,7 +320,7 @@ def _get_layer_stack(layer_stack, dz, cz):
         tag_layer = layer_stack_tmp["tag_layer"]
 
         # find the layer indices
-        idx_layer = np.arange(np.sum(stack_n), np.sum(stack_n)+n_layer, dtype=np.int64)
+        idx_layer = np.arange(np.sum(stack_n), np.sum(stack_n) + n_layer, dtype=np.int64)
 
         # append the results
         stack_n.append(n_layer)
@@ -329,7 +329,7 @@ def _get_layer_stack(layer_stack, dz, cz):
 
     # get the positions
     stack_pos = np.append(0, np.cumsum(stack_n))
-    stack_pos = stack_pos-np.sum(stack_n)/2
+    stack_pos = stack_pos - np.sum(stack_n) / 2
 
     # check layer tag names
     if not (len(np.unique(stack_tag)) == len(stack_tag)):
@@ -351,8 +351,8 @@ def _get_domain_def(n, d, c, geometry_shape, stack_idx, shape_obj):
     """
 
     # get the voxelization bounds
-    xyz_min = c-(n*d)/2
-    xyz_max = c+(n*d)/2
+    xyz_min = c - (n * d) / 2
+    xyz_max = c + (n * d) / 2
 
     # init the domain dict
     domain_def = {}
@@ -401,11 +401,11 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     xyz_max = np.array([x_max, y_max, z_max], dtype=np.float64)
 
     # geometry size
-    c = (xyz_max+xyz_min)/2
+    c = (xyz_max + xyz_min) / 2
 
     # extract the number of voxels and the voxel size
-    n = np.rint((xyz_max-xyz_min)/d)
-    d = (xyz_max-xyz_min)/n
+    n = np.rint((xyz_max - xyz_min) / d)
+    d = (xyz_max - xyz_min) / n
 
     # cast data
     d = d.astype(np.float64)
@@ -438,8 +438,8 @@ def _get_merge_shape(stack_pos, shape_obj):
         idx = shape_obj_tmp["idx"]
 
         # get the coordinates
-        z_min = stack_pos[idx+0]
-        z_max = stack_pos[idx+1]
+        z_min = stack_pos[idx + 0]
+        z_max = stack_pos[idx + 1]
 
         # transform the shapes into meshes
         if isinstance(obj, sha.Polygon):

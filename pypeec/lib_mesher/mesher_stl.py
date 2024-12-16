@@ -126,11 +126,11 @@ def _get_voxel_size(d, xyz_max, xyz_min):
     """
 
     # geometry size
-    c = (xyz_max+xyz_min)/2
+    c = (xyz_max + xyz_min) / 2
 
     # extract the number of voxels and the voxel size
-    n = np.rint((xyz_max-xyz_min)/d)
-    d = (xyz_max-xyz_min)/n
+    n = np.rint((xyz_max - xyz_min) / d)
+    d = (xyz_max - xyz_min) / n
 
     # cast data
     d = d.astype(np.float64)
@@ -155,8 +155,8 @@ def _get_voxel_grid(n, d, c):
     grid = pv.ImageData()
 
     # set the array size and the voxel size
-    grid.origin = c-(n*d)/2
-    grid.dimensions = n+1
+    grid.origin = c - (n * d) / 2
+    grid.dimensions = n + 1
     grid.spacing = d
 
     # add indices for tracking the voxels after voxelization

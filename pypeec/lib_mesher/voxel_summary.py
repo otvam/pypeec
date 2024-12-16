@@ -24,7 +24,7 @@ def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
     (sx, sy, sz) = s
 
     # compute voxel numbers
-    n_total = nx*ny*nz
+    n_total = nx * ny * nz
     n_graph = len(graph_def)
     n_domain = len(domain_def)
     n_cloud = len(pts_cloud)
@@ -33,15 +33,15 @@ def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
     n_used = sum(len(idx) for idx in domain_def.values())
 
     # voxel utilization ratio
-    ratio = n_used/n_total
+    ratio = n_used / n_total
 
     # get the volume and areas
-    V_voxel = dx*dy*dz
-    V_total = n_total*V_voxel
-    V_used = n_used*V_voxel
-    A_xy = sx*sy
-    A_yz = sy*sz
-    A_xz = sx*sz
+    V_voxel = dx * dy * dz
+    V_total = n_total * V_voxel
+    V_used = n_used * V_voxel
+    A_xy = sx * sy
+    A_yz = sy * sz
+    A_xz = sx * sz
 
     # assign data
     voxel_status = {

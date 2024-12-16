@@ -27,10 +27,10 @@ def _get_voxel_coordinate(n, d, c, idx_all):
     idx_vox = np.stack((idx_x, idx_y, idx_z), axis=1)
 
     # origin coordinate
-    o = c-(n*d)/2
+    o = c - (n * d) / 2
 
     # assemble the coordinate array
-    pts_vox = o+d/2+d*idx_vox
+    pts_vox = o + d / 2 + d * idx_vox
 
     return pts_vox
 
@@ -41,7 +41,7 @@ def _get_point_valid(d, pts_vox, pts_tmp):
     """
 
     # compute distance for each dimension
-    pts_dis = np.abs(pts_vox-pts_tmp)
+    pts_dis = np.abs(pts_vox - pts_tmp)
     pts_valid = pts_dis > d
 
     # check if distance are respected
