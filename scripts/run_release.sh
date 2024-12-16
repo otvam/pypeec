@@ -3,7 +3,8 @@
 #   - create a tag and a release
 #   - build the Sphinx documentation
 #   - build the Python package
-#   - run the all the tests
+#   - run the code quality checks
+#   - run all the integration tests
 #   - upload the documentation
 #   - upload the Python package
 #
@@ -78,21 +79,25 @@ function check_release {
   fi
 }
 
-function build_test {
+function build_check {
   # init status
   ret=0
 
   # create a temporary tag
   git tag -a $VER -m "$MSG" > /dev/null
 
-  # check build
+  # build the release
   ./scripts/run_build.sh
   ret=$(( ret || $? ))
 
   # remove the temporary tag
   git tag -d $VER > /dev/null
 
-  # check tests
+  # check code quality checks
+  ./scripts/run_ruff.sh
+  ret=$(( ret || $? ))
+
+  # check all the integration tests
   ./scripts/run_tests.sh
   ret=$(( ret || $? ))
 
@@ -161,7 +166,7 @@ cd "$(dirname "$0")" && cd ..
 check_release "$@"
 
 # run the code
-build_test
+build_check
 upload_docs
 upload_pkg
 

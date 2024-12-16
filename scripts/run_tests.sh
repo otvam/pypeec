@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script for running and checking the tests.
+# Script for running all the integration tests (using "unittest").
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
