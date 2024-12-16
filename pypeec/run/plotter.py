@@ -132,6 +132,11 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
     # handle the data
     (grid, voxel, point, res, conv) = _get_grid_voxel(data_init, data_sweep)
 
+    # add the raw VTK objects
+    gui_obj.open_vtk(tag_sweep + "_grid", grid)
+    gui_obj.open_vtk(tag_sweep + "_voxel", voxel)
+    gui_obj.open_vtk(tag_sweep + "_point", point)
+
     # make the plots
     for tag_plot, data_plotter_tmp in data_plotter.items():
         LOGGER.info("plot / %s" % tag_plot)

@@ -88,6 +88,7 @@ class PlotGui:
         self.name = name
         self.pl_list = []
         self.fig_list = []
+        self.vtk_list = []
 
         # create the Qt App
         if self.plot_mode == "qt":
@@ -310,12 +311,12 @@ class PlotGui:
         for tag, fig in self.fig_list:
             matplotlib.pyplot.close(fig)
 
-    def _get_filename(self, tag):
+    def _get_filename(self, tag, ext):
         """
         Get the plot filenames.
         """
 
-        filename = "%s_%s.png" % (self.name, tag)
+        filename = "%s_%s.%s" % (self.name, tag, ext)
         filename = os.path.join(self.folder, filename)
 
         return filename
@@ -327,13 +328,25 @@ class PlotGui:
 
         # save the PyVista plots
         for tag, pl in self.pl_list:
-            filename = self._get_filename(tag)
+            filename = self._get_filename(tag, "png")
             pl.screenshot(filename)
 
         # save the Matplotlib plots
         for tag, fig in self.fig_list:
-            filename = self._get_filename(tag)
+            filename = self._get_filename(tag, "png")
             fig.savefig(filename)
+
+        # save the VTK objects
+        for tag, vtk in self.vtk_list:
+            filename = self._get_filename(tag, "vtk")
+            vtk.save(filename)
+
+    def open_vtk(self, tag, vtk):
+        """
+        Add a VTK object.
+        """
+
+        self.vtk_list.append((tag, vtk))
 
     def open_pyvista(self, tag, data_window):
         """

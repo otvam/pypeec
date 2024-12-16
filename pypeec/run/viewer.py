@@ -124,5 +124,11 @@ def run(
             LOGGER.info("plot / %s" % tag_plot)
             _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)
 
+    # add the raw VTK objects
+    gui_obj.open_vtk("grid", grid)
+    gui_obj.open_vtk("voxel", voxel)
+    gui_obj.open_vtk("point", point)
+    gui_obj.open_vtk("reference", reference)
+
     # enter the event loop (should be at the end, blocking call)
     gui_obj.show()
