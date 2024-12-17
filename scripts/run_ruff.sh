@@ -12,7 +12,7 @@ function ruff_check {
   echo "RUFF: CHECK"
   echo "======================================================================"
 
-  ruff check .
+  ruff check --no-cache .
 
   ret=$(( ret || $? ))
 }
@@ -22,7 +22,7 @@ function ruff_format {
   echo "RUFF: FORMAT"
   echo "======================================================================"
 
-  ruff format --check .
+  ruff format --no-cache --check .
 
   ret=$(( ret || $? ))
 }
