@@ -62,7 +62,7 @@ def _run_extract(data_name, path_extract):
         print("data extraction: extract", flush=True, file=sys.stderr)
         folder = importlib.resources.files("pypeec.data")
         with importlib.resources.as_file(folder.joinpath(data_name)) as fid:
-            shutil.unpack_archive(fid, path_extract)
+            shutil.unpack_archive(fid, path_extract, format="xztar", filter="data")
     except OSError:
         print("data extraction: failure", flush=True, file=sys.stderr)
 
@@ -416,9 +416,9 @@ def run_arguments(argv):
                 folder=args.folder,
             )
         elif args.command == "examples":
-            _run_extract("examples.zip", args.path_extract)
+            _run_extract("examples.tar.xz", args.path_extract)
         elif args.command == "documentation":
-            _run_extract("documentation.zip", args.path_extract)
+            _run_extract("documentation.tar.xz", args.path_extract)
         else:
             raise ValueError("invalid command")
     except Exception:

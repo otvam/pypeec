@@ -92,10 +92,10 @@ function build_pkg {
   sed -i 'N;/^\n$/D;P;D;' README.md
 
   # pack examples
-  (cd examples && git archive -o ../pypeec/data/examples.zip HEAD)
+  (cd examples && git archive HEAD | xz > ../pypeec/data/examples.tar.xz)
 
   # pack documentation
-  (cd html && zip -qr ../pypeec/data/documentation.zip .)
+  (cd html && tar -cf - * | xz > ../pypeec/data/documentation.tar.xz)
 
   # build package
   python -m build

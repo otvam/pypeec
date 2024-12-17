@@ -102,7 +102,7 @@ pypeec = [
     "data/*.png",
     "data/*.txt",
     "data/*.yaml",
-    "data/*.zip",
+    "data/*.xz",
 ]
 
 [tool.ruff]
