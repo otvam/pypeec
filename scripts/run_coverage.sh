@@ -9,7 +9,7 @@ set -o pipefail
 
 function coverage_run {
   echo "======================================================================"
-  echo "COVERAGE: RUN"
+  echo "============================== COVERAGE: RUN"
   echo "======================================================================"
 
   python \
@@ -22,7 +22,7 @@ function coverage_run {
 
 function coverage_html {
   echo "======================================================================"
-  echo "COVERAGE: REPORT"
+  echo "============================== COVERAGE: REPORT"
   echo "======================================================================"
 
   python \
@@ -36,6 +36,19 @@ function coverage_html {
   python -m coverage report --data-file="coverage/coverage.dat"
 
   ret=$(( ret || $? ))
+}
+
+function ret_collect {
+  if [[ $ret == 0 ]]
+  then
+    status="SUCCESS"
+  else
+    status="FAILURE"
+  fi
+
+  echo "======================================================================"
+  echo "============================== COVERAGE: $status"
+  echo "======================================================================"
 }
 
 # set up the Python interpreter
@@ -63,5 +76,8 @@ coverage_run
 
 # run report
 coverage_html
+
+# collect status
+ret_collect
 
 exit $ret

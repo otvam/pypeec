@@ -9,7 +9,7 @@ set -o pipefail
 
 function ruff_check {
   echo "======================================================================"
-  echo "RUFF: CHECK"
+  echo "============================== RUFF: CHECK"
   echo "======================================================================"
 
   ruff check --no-cache .
@@ -19,7 +19,7 @@ function ruff_check {
 
 function ruff_format {
   echo "======================================================================"
-  echo "RUFF: FORMAT"
+  echo "============================== RUFF: FORMAT"
   echo "======================================================================"
 
   ruff format --no-cache --check .
@@ -27,16 +27,17 @@ function ruff_format {
   ret=$(( ret || $? ))
 }
 
-function test_collect {
-  echo "======================================================================"
-  echo "RUFF: SUMMARY"
-  echo "======================================================================"
+function ret_collect {
   if [[ $ret == 0 ]]
   then
-    echo "SUCCESS"
+    status="SUCCESS"
   else
-    echo "FAILURE"
+    status="FAILURE"
   fi
+
+  echo "======================================================================"
+  echo "============================== RUFF: $status"
+  echo "======================================================================"
 }
 
 # change to root directory
@@ -55,7 +56,7 @@ ruff_check
 # run format
 ruff_format
 
-# collect results
-test_collect
+# collect status
+ret_collect
 
 exit $ret

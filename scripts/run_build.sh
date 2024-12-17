@@ -10,9 +10,9 @@
 set -o nounset
 set -o pipefail
 
-function clean_data {
+function build_clean {
   echo "======================================================================"
-  echo "CLEAN DATA"
+  echo "============================== BUILD: CLEAN"
   echo "======================================================================"
 
   # clean package
@@ -34,7 +34,7 @@ function clean_data {
 
 function build_docs {
   echo "======================================================================"
-  echo "BUILD DOCUMENTATION"
+  echo "============================== BUILD: DOCS"
   echo "======================================================================"
 
   # create folders
@@ -81,7 +81,7 @@ function build_docs {
 
 function build_pkg {
   echo "======================================================================"
-  echo "BUILD PACKAGE"
+  echo "============================== BUILD: PKG"
   echo "======================================================================"
 
   # backup the README file
@@ -107,6 +107,19 @@ function build_pkg {
   mv README.md.bak README.md
 }
 
+function ret_collect {
+  if [[ $ret == 0 ]]
+  then
+    status="SUCCESS"
+  else
+    status="FAILURE"
+  fi
+
+  echo "======================================================================"
+  echo "============================== BUILD: $status"
+  echo "======================================================================"
+}
+
 # change to root directory
 cd "$(dirname "$0")" && cd ..
 
@@ -114,8 +127,11 @@ cd "$(dirname "$0")" && cd ..
 ret=0
 
 # build the documentation
-clean_data
+build_clean
 build_docs
 build_pkg
+
+# collect status
+ret_collect
 
 exit $ret

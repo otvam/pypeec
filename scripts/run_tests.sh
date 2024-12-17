@@ -9,23 +9,24 @@ set -o pipefail
 
 function test_run {
   echo "======================================================================"
-  echo "TEST: $1"
+  echo "============================== TEST: $1"
   echo "======================================================================"
 
   python -m unittest "tests/$1.py" -v
   ret=$(( ret || $? ))
 }
 
-function test_collect {
-  echo "======================================================================"
-  echo "TEST: SUMMARY"
-  echo "======================================================================"
+function ret_collect {
   if [[ $ret == 0 ]]
   then
-    echo "SUCCESS"
+    status="SUCCESS"
   else
-    echo "FAILURE"
+    status="FAILURE"
   fi
+
+  echo "======================================================================"
+  echo "============================== TEST: $status"
+  echo "======================================================================"
 }
 
 # set up the Python interpreter
@@ -51,7 +52,7 @@ test_run test_shape
 test_run test_png
 test_run test_stl
 
-# collect results
-test_collect
+# collect status
+ret_collect
 
 exit $ret
