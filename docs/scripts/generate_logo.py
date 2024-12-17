@@ -86,7 +86,13 @@ def get_plotter(voxel):
     pv.global_theme.edge_opacity = 1.0
 
     # create plotter
-    pl = pv.Plotter(window_size=(256, 256), off_screen=True, line_smoothing=True, polygon_smoothing=True, lighting="three lights")
+    pl = pv.Plotter(
+        window_size=(256, 256),
+        off_screen=True,
+        line_smoothing=True,
+        polygon_smoothing=True,
+        lighting="three lights",
+    )
 
     # add content
     pl.add_mesh(
