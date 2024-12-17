@@ -33,33 +33,8 @@ import scilogger
 # get a logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
-
-class _QApplication(object):
-    """
-    Singleton class for creating a single instance of the Qt application.
-    """
-
-    def __new__(cls):
-        """
-        Create the singleton Qt application instance.
-        """
-
-        # lazy import of the library
-        import PyQt5.QtWidgets
-
-        # create the Qt application
-        if not hasattr(cls, "app"):
-            cls.instance = super(_QApplication, cls).__new__(cls)
-            cls.app = PyQt5.QtWidgets.QApplication([])
-
-        return getattr(cls, "instance")
-
-    def get_app(self):
-        """
-        Get the singleton Qt application instance.
-        """
-
-        return self.app
+# variable for the Qt application single instance
+APPQT = None
 
 
 class PlotGui:
@@ -90,11 +65,16 @@ class PlotGui:
         self.fig_list = []
         self.vtk_list = []
 
-        # create the Qt App
-        if self.plot_mode == "qt":
-            self.app = _QApplication().get_app()
-        else:
-            self.app = None
+        # variable for the Qt application single instance
+        global APPQT
+
+        # create a single instance of the Qt App
+        if (self.plot_mode == "qt") and (APPQT is None):
+            # lazy import of the library
+            import PyQt5.QtWidgets
+
+            # create and assign a single instance
+            APPQT = PyQt5.QtWidgets.QApplication([])
 
         # set the app ID in order to get a consistent icon on MS Windows
         if (self.plot_mode == "qt") and (os.name == "nt"):
@@ -266,10 +246,10 @@ class PlotGui:
             fig.show()
 
         # enter the event loop
-        exit_code = self.app.exec()
+        exit_code = APPQT.exec()
 
         # quit app
-        self.app.quit()
+        APPQT.quit()
 
         # check status
         if exit_code != 0:
