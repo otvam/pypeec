@@ -39,7 +39,7 @@ Using a Python Environment
 
     # Install a Python interpreter
     #   - Website: https://www.python.org/downloads
-    #   - Supported versions: 3.10, 3.11, and 3.12
+    #   - Supported versions: 3.10, 3.11, 3.12, and 3.13
     #   - Python executable: "python" or "python3"
 
     # Create a Python Virtual Environment

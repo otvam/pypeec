@@ -71,10 +71,10 @@ class PlotGui:
         # create a single instance of the Qt App
         if (self.plot_mode == "qt") and (APPQT is None):
             # lazy import of the library
-            import PyQt5.QtWidgets
+            import qtpy.QtWidgets
 
             # create and assign a single instance
-            APPQT = PyQt5.QtWidgets.QApplication([])
+            APPQT = qtpy.QtWidgets.QApplication([])
 
         # set the app ID in order to get a consistent icon on MS Windows
         if (self.plot_mode == "qt") and (os.name == "nt"):
@@ -154,11 +154,11 @@ class PlotGui:
         """
 
         # lazy import of the library
-        import PyQt5.QtGui
+        import qtpy.QtGui
 
         # get the icon
         filename = importlib.resources.files("pypeec.data").joinpath("pypeec.png")
-        res_icon = PyQt5.QtGui.QIcon(str(filename))
+        res_icon = qtpy.QtGui.QIcon(str(filename))
 
         # get the figure
         with matplotlib.pyplot.ioff():
