@@ -22,5 +22,5 @@ pillow>=10.0.0
 matplotlib-base>=3.7.0
 
 # interface libraries
-pyqt>=5.15.0
+qtpy>=2.4.0
 pyvistaqt>=0.11.0
