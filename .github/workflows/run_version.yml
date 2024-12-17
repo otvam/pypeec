@@ -13,7 +13,6 @@ name: Run Version Tests
 
 on:
   # ===================== job triggers
-  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
@@ -29,8 +28,8 @@ jobs:
           - "macos-latest"
           - "windows-latest"
         version:
-#          - "3.10"
-#          - "3.11"
+          - "3.10"
+          - "3.11"
           - "3.12"
           - "3.13"
     name: conda / ${{ matrix.system }} / ${{ matrix.version }}
@@ -61,8 +60,8 @@ jobs:
           - "macos-latest"
           - "windows-latest"
         version:
-#          - "3.10"
-#          - "3.11"
+          - "3.10"
+          - "3.11"
           - "3.12"
           - "3.13"
     name: pip / ${{ matrix.system }} / ${{ matrix.version }}

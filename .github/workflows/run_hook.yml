@@ -10,8 +10,8 @@ name: Run Hook Tests
 
 on:
   # ===================== job triggers
-#  push:
-#  pull_request:
+  push:
+  pull_request:
   workflow_dispatch:
 
 jobs:

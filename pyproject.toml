@@ -64,7 +64,7 @@ dependencies = [
     "vtk >= 9.2.0",
     "pyvista >= 0.40.0",
     "pyvistaqt >= 0.11.0",
-    "pyside2 >= 5.15.0",
+    "pyside6 >= 6.7.0",
     "qtpy >= 2.4.0",
 ]
 requires-python = ">=3.10"
