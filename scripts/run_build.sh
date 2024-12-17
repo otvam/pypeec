@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script for building the documentation and the package:
-#   - clean the generated files
 #   - build the Sphinx documentation
 #   - build the Python package
 #
@@ -10,36 +9,14 @@
 set -o nounset
 set -o pipefail
 
-function build_clean {
-  echo "======================================================================"
-  echo "============================== BUILD: CLEAN"
-  echo "======================================================================"
-
-  # clean package
-  rm -rf dist
-  rm -rf build
-  rm -rf pypeec.egg-info
-
-  # clean generated files
-  rm -rf pypeec/data/examples.zip
-  rm -rf pypeec/data/documentation.zip
-  rm -rf pypeec/data/version.txt
-
-  # clean documentation
-  rm -rf html
-  rm -rf website
-  rm -rf docs/_static
-  rm -rf docs/_templates
-}
-
 function build_docs {
   echo "======================================================================"
   echo "============================== BUILD: DOCS"
   echo "======================================================================"
 
   # create folders
-  mkdir docs/_static
-  mkdir docs/_templates
+  mkdir -p docs/_static
+  mkdir -p docs/_templates
 
   # build documentation
   sphinx-build -W -b html docs html
@@ -127,8 +104,9 @@ cd "$(dirname "$0")" && cd ..
 ret=0
 
 # build the documentation
-build_clean
 build_docs
+
+# build the package
 build_pkg
 
 # collect status

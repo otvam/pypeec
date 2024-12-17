@@ -12,6 +12,11 @@ function coverage_run {
   echo "============================== COVERAGE: RUN"
   echo "======================================================================"
 
+  # clean coverage
+  rm -rf coverage
+  mkdir -p coverage
+
+  # run the coverage report
   python \
       -m coverage run \
       --data-file="coverage/coverage.dat" \
@@ -25,6 +30,7 @@ function coverage_html {
   echo "============================== COVERAGE: REPORT"
   echo "======================================================================"
 
+  # generate the html output
   python \
       -m coverage html \
       --data-file="coverage/coverage.dat" \
@@ -33,6 +39,7 @@ function coverage_html {
 
   ret=$(( ret || $? ))
 
+  # generate the console output
   python -m coverage report --data-file="coverage/coverage.dat"
 
   ret=$(( ret || $? ))
@@ -66,10 +73,6 @@ cd "$(dirname "$0")" && cd ..
 
 # init status
 ret=0
-
-# clean coverage
-rm -rf coverage
-mkdir coverage
 
 # run coverage
 coverage_run

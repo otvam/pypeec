@@ -46,10 +46,6 @@ cd "$(dirname "$0")" && cd ..
 # init status
 ret=0
 
-# clean coverage
-rm -rf coverage
-mkdir coverage
-
 # run check
 ruff_check
 

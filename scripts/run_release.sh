@@ -85,6 +85,10 @@ function build_check {
   # init status
   ret=0
 
+  # clean the generated and temporary data
+  ./scripts/run_clean.sh
+  ret=$(( ret || $? ))
+
   # create a temporary tag
   git tag -a $VER -m "$MSG" > /dev/null
 
@@ -125,7 +129,7 @@ function upload_docs {
   git clone git@github.com:otvam/pypeecdocs.git
 
   # remove the existing data
-  rm -rf pypeecdocs/*
+  (cd pypeecdocs && rm -rf *)
 
   # copy the last version
   cp -r website/* pypeecdocs

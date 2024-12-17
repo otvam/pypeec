@@ -8,6 +8,7 @@
 *.pyo
 
 # exclude data files
+*.log
 *.bak
 *.pck
 *.pkl
@@ -26,20 +27,24 @@ pypeec/data/version.txt
 pypeec/data/examples.tar.xz
 pypeec/data/documentation.tar.xz
 
-# exclude generated directories
+# exclude package data
 html/
 dist/
 build/
+
+# exclude generated folders
 website/
 coverage/
 pypeec.egg-info/
 
-# exclude scratch directory
+# exclude Sphinx data
+docs/_static/
+docs/_templates/
+
+# exclude temporary folders
 scratch/
+temp/
 
-# exclude virtual environments
-venv/
-cenv/
-
-# exclude the PyCharm project
+# exclude the IDE folders
 .idea/
+.vscode/
