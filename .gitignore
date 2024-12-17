@@ -43,7 +43,7 @@ docs/_templates/
 
 # exclude temporary folders
 scratch/
-tmp/
+temp/
 
 # exclude the IDE folders
 .idea/
