@@ -14,8 +14,8 @@ Dependencies
 
 Additionally, the following **libraries** are used for the **plotter** and **viewer**:
 
-* Matplotlib and PyQt5 (2D plots)
-* VTK, PyVista, PyVistaQt, and PyQt5 (3D plots)
+* Matplotlib and QtPy (2D plots)
+* VTK, PyVista, PyVistaQt, and QtPy (3D plots)
 
 The following **optional packages** can be used for **speeding up** the solver:
 
@@ -46,7 +46,7 @@ Some more **details** on the supported **platforms**:
 * The main **target platform** of PyPEEC is **Linux** on x86/x64/glibc.
 * PyPEEC is a **pure-python package** and should work on any platform.
 * Any **CUDA and CuPy** compatible **GPU** is supported.
-* Compatible **Python versions**: 3.10, 3.11, and 3.12
+* Compatible **Python versions**: 3.10, 3.11, 3.12, and 3.13
 
 Logger and Data Serialization
 -----------------------------
@@ -118,6 +118,7 @@ The following **Python versions** are considered for the **automated tests**:
 * CPython 3.10
 * CPython 3.11
 * CPython 3.12
+* CPython 3.13
 
 Contributing and Bug Report
 ---------------------------
