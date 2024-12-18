@@ -1,4 +1,10 @@
+############# PyPEEC - robots.txt - $LASTMOD
+
+############# allow all the robots
 User-agent: *
+
+############# allow all the content
 Allow: /
 
+############# sitemap with the main pages
 Sitemap: https://pypeec.otvam.ch/sitemap.xml

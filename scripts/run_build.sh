@@ -43,17 +43,20 @@ function build_docs {
   touch website/.gitignore
   touch website/.nojekyll
 
-  # get the timestamp for the sitemap
+  # get the timestamp for the substitution
   export LASTMOD=$(date '+%Y-%m-%d')
 
-  # substitute the timestamp for the sitemap
+  # substitute the timestamp for sitemap.xml
   cat docs/website/sitemap.xml | envsubst > website/sitemap.xml
 
-  # copy metadata
-  cp docs/website/CNAME website
+  # substitute the timestamp for robots.txt
+  cat docs/website/robots.txt | envsubst > website/robots.txt
+
+  # domain name description file
+  echo "pypeec.otvam.ch" > website/CNAME
+
+  # copy a simple README file
   cp docs/website/README.md website
-  cp docs/website/robots.txt website
-  cp docs/website/googlec2be449c43987dd0.html website
 }
 
 function build_pkg {
