@@ -19,6 +19,7 @@ function coverage_run {
   # run the coverage report
   python \
       -m coverage run \
+      --source="pypeec" \
       --data-file="coverage/coverage.dat" \
       --module unittest discover tests -v
 
