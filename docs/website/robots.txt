@@ -1,4 +1,4 @@
-############# PyPEEC - robots.txt - $LASTMOD
+############# PyPEEC - robots.txt
 
 ############# allow all the robots
 User-agent: *
