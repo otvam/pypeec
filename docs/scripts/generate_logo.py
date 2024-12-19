@@ -26,7 +26,7 @@ def get_voxel():
     idx = np.array([8, 7, 6, 15, 24, 25, 26, 23, 20, 11, 2, 1, 0, 9, 18])
 
     # voxel colors
-    var = np.linspace(0.0, 1.0, len(idx))
+    var = np.linspace(0.2, 1.0, len(idx))
 
     # create a uniform grid for the complete structure
     grid = pv.ImageData()
@@ -72,10 +72,11 @@ def get_plotter(voxel):
         voxel,
         scalars="var",
         show_scalar_bar=False,
-        show_edges=True,
+        show_edges=False,
         edge_color="black",
         cmap="viridis",
         line_width=1.0,
+        clim=[0.0, 1.0],
     )
 
     # set camera
