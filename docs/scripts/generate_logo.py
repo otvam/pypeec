@@ -23,42 +23,10 @@ def get_voxel():
     """
 
     # voxel indices
-    idx = [
-        0,
-        1,
-        2,
-        6,
-        7,
-        8,
-        9,
-        11,
-        15,
-        18,
-        20,
-        23,
-        24,
-        25,
-        26,
-    ]
+    idx = np.array([8, 7, 6, 15, 24, 25, 26, 23, 20, 11, 2, 1, 0, 9, 18])
 
     # voxel colors
-    var = [
-        0.85714286,
-        0.78571429,
-        0.71428571,
-        0.14285714,
-        0.07142857,
-        0.00000000,
-        0.92857143,
-        0.64285714,
-        0.21428571,
-        1.00000000,
-        0.57142857,
-        0.50000000,
-        0.28571429,
-        0.35714286,
-        0.42857143,
-    ]
+    var = np.linspace(0.0, 1.0, len(idx))
 
     # create a uniform grid for the complete structure
     grid = pv.ImageData()
@@ -67,6 +35,11 @@ def get_voxel():
     grid.origin = (1.5, 1.5, 1.5)
     grid.dimensions = (4, 4, 4)
     grid.spacing = (1, 1, 1)
+
+    # sort data
+    srt = np.argsort(idx)
+    idx = idx[srt]
+    var = var[srt]
 
     # get the voxel structure
     voxel = grid.extract_cells(idx)
