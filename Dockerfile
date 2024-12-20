@@ -16,8 +16,8 @@ LABEL org.opencontainers.image.licenses="MPL-2.0 and others"
 
 # install all the dependencies (but not PyPEEC)
 RUN mamba install --yes --channel conda-forge \
-    scilogger==1.2.2=pyhd8ed1ab_0 \
-    scisave==1.4.1=pyhd8ed1ab_0 \
+    scilogger==1.2.3=pyhd8ed1ab_0 \
+    scisave==1.4.3=pyhd8ed1ab_0 \
     jsonschema==4.23.0=pyhd8ed1ab_0 \
     numpy==2.1.3=py312h58c1407_0 \
     scipy==1.14.1=py312h62794b6_1 \
