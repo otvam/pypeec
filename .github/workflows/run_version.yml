@@ -13,44 +13,12 @@ name: Run Version Tests
 
 on:
   # ===================== job triggers
+  push:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * 1"
 
 jobs:
-  # ===================== run with conda
-  conda:
-    strategy:
-      fail-fast: false
-      matrix:
-        system:
-          - "ubuntu-latest"
-          - "macos-latest"
-          - "windows-latest"
-        version:
-          - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
-    name: conda / ${{ matrix.system }} / ${{ matrix.version }}
-    runs-on: ${{ matrix.system }}
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Conda
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          miniforge-version: latest
-          python-version: ${{ matrix.version }}
-          auto-activate-base: false
-          activate-environment: pypeec
-      - name: Install dependencies
-        shell: bash -el {0}
-        run: conda install --channel conda-forge --file .github/envs/env_conda.txt
-      - name: Run the tests
-        shell: bash -el {0}
-        run: ./.github/scripts/run_tests.sh
-  # ===================== run with pypi
   pypi:
     strategy:
       fail-fast: false
@@ -61,9 +29,6 @@ jobs:
           - "windows-latest"
         version:
           - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
     name: pip / ${{ matrix.system }} / ${{ matrix.version }}
     runs-on: ${{ matrix.system }}
     timeout-minutes: 20
@@ -73,9 +38,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.version }}
-      - name: Install dependencies
-        shell: bash -el {0}
-        run: python -m pip install --requirement .github/envs/env_pypi.txt
       - name: Run the tests
         shell: bash -el {0}
         run: ./.github/scripts/run_tests.sh
