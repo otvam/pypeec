@@ -63,8 +63,12 @@ def _run_extract(data_name, path_extract):
         folder = importlib.resources.files("pypeec.data")
         with importlib.resources.as_file(folder.joinpath(data_name)) as fid:
             shutil.unpack_archive(fid, path_extract, format="xztar")
+    except FileNotFoundError:
+        print("data extraction: extraction failure", flush=True, file=sys.stderr)
+        print("data extraction: data is not packaged", flush=True, file=sys.stderr)
     except OSError:
-        print("data extraction: failure", flush=True, file=sys.stderr)
+        print("data extraction: extraction failure", flush=True, file=sys.stderr)
+        print("data extraction: extraction problem", flush=True, file=sys.stderr)
 
     # teardown
     print("data extraction: finished", flush=True, file=sys.stderr)
