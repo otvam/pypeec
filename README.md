@@ -55,7 +55,10 @@ The code is written in **Python** and is fully **open source**!
 
 * No capacitive effects
 * No dielectric domains
+* No force computations
 * No advanced boundaries conditions
+* No domain decomposition techniques
+* No hierarchical matrix techniques
 * No model order reduction techniques
 * Limited to voxel geometries
 
