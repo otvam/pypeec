@@ -29,16 +29,16 @@ The code is written in **Python** and is fully **open source**!
 **PyPEEC** features the following **characteristics**:
 
 * **PEEC method** with **FFT acceleration**
-* Representation of the **geometry** with **3D voxels**
-* **Multithreading** and **GPU acceleration** are available
 * **Fast** with **moderate memory** requirements
+* Representation of the **geometry** with **3D voxels**
+* **Parallel processing** and **GPU acceleration** are available
 * Import the **geometry** from **STL**, **PNG**, and **GERBER** files
 * Draw the **geometry** with stacked 2D **vector shapes** or **voxel indices**
 * **Pure Python** and **open source** implementation
-* Advanced **plotting** capabilities
-* Can be used from the **command line**
-* Can be used with **Jupyter notebooks**
-* Compatible with **ParaView visualizations**
+* Can be used from the **command line** pr with an **API**
+* Advanced **plotting and visualization** capabilities
+* Compatible with **Jupyter notebooks**
+* Compatible with **ParaView**
 
 **PyPEEC** solves the following **3D quasi-magnetostatic problems**:
 
@@ -46,7 +46,6 @@ The code is written in **Python** and is fully **open source**!
 * Conductive and magnetic domains (ideal or lossy)
 * Isotropic, anisotropic, lumped, and distributed materials
 * Connection of current and voltage sources
-* Extraction of the loss and energy densities
 * Extraction of the current density, flux density, and potential
 * Extraction of the terminal voltage, current, and power
 * Computation of the free-space magnetic field 

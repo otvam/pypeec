@@ -64,14 +64,17 @@ Credits
 
 The FFT-accelerated PEEC method with voxels has been first described and implemented in:
 
-* Torchio, R., IEEE TPEL, 10.1109/TPEL.2021.3092431, 2022
+* Torchio, R., IEEE TPEL, 2022, https://doi.org/10.1109/TPEL.2021.3092431
 * Torchio, R., https://github.com/UniPD-DII-ETCOMP/FFT-PEEC
 
 Other interesting papers and codes about similar methods:
 
-* Yucel, A., IEEE TMTT, 10.1109/TMTT.2017.2785842, 2018
-* Bettini, P., IOP, 10.1088/1361-6587/abce8f, 2020
-* Marconato, N., ICECCME, 10.1109/ICECCME52200.2021.9590864, 2021
+* Ruehli, A., IEEE TMTT, 1974, https://doi.org/10.1109/TMTT.1974.1128204
+* Yucel, A., IEEE TMTT, 2018, https://doi.org/10.1109/TMTT.2017.2785842
+* Torchio, R., IEEE TAP, 2019, https://doi.org/10.1109/TAP.2019.2927789
+* Bettini, P., IOP, 2020, https://doi.org/10.1088/1361-6587/abce8f
+* Marconato, N., ICECCME, 2021, https://doi.org/10.1109/ICECCME52200.2021.9590864
+* Villena, J., https://github.com/thanospol/MARIE
 * Yucel, A., https://github.com/acyucel/VoxHenry
 
 Copyright
@@ -88,4 +91,4 @@ Copyright
 .. important::
     In order to facilitate the redistribution, this source code is
     multi-licensed under the following additional licenses:
-    LGPLv2,  LGPLv3, GPLv2, and GPLv3.
+    LGPLv2, LGPLv3, GPLv2, and GPLv3.

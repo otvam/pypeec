@@ -54,8 +54,10 @@ extensions = [
 
 # allowed redirect for the external links
 linkcheck_allowed_redirects = {
-    "http://mozilla.org/MPL/2.0": "https://www.mozilla.org/en-US/MPL/2.0",
-    "https://dartmouth.edu": "https://home.dartmouth.edu",
+    "http://mozilla.org/*": ".*",
+    "https://mybinder.org/*": ".*",
+    "https://dartmouth.edu/*": ".*",
+    "https://doi.org/*": ".*",
 }
 
 # define paths

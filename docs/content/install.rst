@@ -30,7 +30,7 @@ Test Online With Binder
 * The PyPEEC tutorial and examples are included.
 * The Binder instance is only intended for test purposes.
 * The Binder instance is very slow and memory limited.
-* `Launch PyPEEC with Binder <https://mybinder.org/v2/gh/otvam/pypeec/main?labpath=notebook.ipynb>`_
+* `Launch PyPEEC with Binder <https://mybinder.org/v2/gh/otvam/pypeec/main?labpath=notebook.ipynb>`__
 
 Using a Python Environment
 --------------------------

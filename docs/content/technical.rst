@@ -1,8 +1,8 @@
 Technical Details
 =================
 
-Dependencies
-------------
+Dependencies and Platforms
+--------------------------
 
 **PyPEEC** is entirely programmed in **Python 3** and has the following **dependencies**:
 
@@ -31,9 +31,6 @@ The following **optional packages** are required for **Jupyter notebooks**:
 * IPyWidgets
 * Trame / ipympl
 
-Supported Platforms
--------------------
-
 PyPEEC is known to **work** with the following **platforms**:
 
 * Linux on x86/x64/glibc
@@ -45,8 +42,8 @@ Some more **details** on the supported **platforms**:
 
 * The main **target platform** of PyPEEC is **Linux** on x86/x64/glibc.
 * PyPEEC is a **pure-python package** and should work on any platform.
-* Any **CUDA and CuPy** compatible **GPU** is supported.
 * Compatible **Python versions**: 3.10, 3.11, 3.12, and 3.13
+* Any **CUDA and CuPy** compatible **GPU** is supported.
 
 Logger and Data Serialization
 -----------------------------

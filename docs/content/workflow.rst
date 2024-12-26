@@ -16,13 +16,14 @@ PyPEEC Tools
 * **mesher**
 
   * Create the voxel structure
-  * Import the geometry from voxel files
-  * Import the geometry from STL files
+  * Draw the geometry from voxel indices
+  * Create the geometry from 3D STL files
   * Create the geometry with stacked PNG files
   * Draw the geometry with stacked 2D vector shapes
   * Assign different domain names to the voxels
   * Resampling (refine) the voxel structure
-  * Construct the graph of the structure and detect connected components
+  * Construct the graph of the structure
+  * Check the integrity of the voxel structure
 
 * **viewer**
 
@@ -36,10 +37,10 @@ PyPEEC Tools
   * Computation of the Green and coupling tensors
   * Computation of the resistance, inductance, and potential matrices
   * Computation of the electric-magnetic coupling matrices
-  * Creation of the equation system
-  * Extraction of a sparse pre-conditioner
+  * Creation of the equation system describing the PEEC problem
+  * Extraction of a sparse pre-conditioner for the dense system
+  * Check the condition number of the equation system
   * Extraction of a matrix-vector linear operator for the full system
-  * Check the condition number of the system
   * Solve the equation system with the pre-conditioner and the linear operator
   * Extract the solution (terminal voltages and currents, scalar fields, and vector fields)
 

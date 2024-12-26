@@ -19,8 +19,8 @@ PyPEEC - 3D Quasi-Magnetostatic Solver
    :maxdepth: 0
    :hidden:
 
+   content/method
    content/technical
-   content/implementation
    content/warnings
    content/format
    content/api
@@ -64,26 +64,26 @@ The code is written in **Python** and is fully **open source**!
    :alt: binder / launch
 
 .. important::
-    * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`_
-    * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`_
-    * **Conda:** `anaconda.org/conda-forge/pypeec <https://anaconda.org/conda-forge/pypeec>`_
-    * **PyPI:** `pypi.org/project/pypeec <https://pypi.org/project/pypeec>`_
+    * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`__
+    * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`__
+    * **Conda:** `anaconda.org/conda-forge/pypeec <https://anaconda.org/conda-forge/pypeec>`__
+    * **PyPI:** `pypi.org/project/pypeec <https://pypi.org/project/pypeec>`__
 
 ------------
 
 **PyPEEC** features the following **characteristics**:
 
 * **PEEC method** with **FFT acceleration**
-* Representation of the **geometry** with **3D voxels**
-* **Multithreading** and **GPU acceleration** are available
 * **Fast** with **moderate memory** requirements
+* Representation of the **geometry** with **3D voxels**
+* **Parallel processing** and **GPU acceleration** are available
 * Import the **geometry** from **STL**, **PNG**, and **GERBER** files
 * Draw the **geometry** with stacked 2D **vector shapes** or **voxel indices**
 * **Pure Python** and **open source** implementation
-* Advanced **plotting** capabilities
-* Can be used from the **command line**
-* Can be used with **Jupyter notebooks**
-* Compatible with **ParaView visualizations**
+* Can be used from the **command line** pr with an **API**
+* Advanced **plotting and visualization** capabilities
+* Compatible with **Jupyter notebooks**
+* Compatible with **ParaView**
 
 **PyPEEC** solves the following **3D quasi-magnetostatic problems**:
 
@@ -91,7 +91,6 @@ The code is written in **Python** and is fully **open source**!
 * Conductive and magnetic domains (ideal or lossy)
 * Isotropic, anisotropic, lumped, and distributed materials
 * Connection of current and voltage sources
-* Extraction of the loss and energy densities
 * Extraction of the current density, flux density, and potential
 * Extraction of the terminal voltage, current, and power
 * Computation of the free-space magnetic near-field
@@ -122,9 +121,9 @@ The **PyPEEC** package contains the following **tools**:
     For such cases, PyPEEC can be very slow and consume a lot of memory.
 
 .. note::
-    * **Author:** `Thomas Guillod <https://otvam.ch>`_
-    * **Institution:** `Dartmouth College <https://dartmouth.edu>`_
-    * **Licence:** `MPL-2.0 <http://mozilla.org/MPL/2.0>`_
+    * **Author:** `Thomas Guillod <https://otvam.ch>`__
+    * **Institution:** `Dartmouth College <https://dartmouth.edu>`__
+    * **Licence:** `MPL-2.0 <http://mozilla.org/MPL/2.0>`__
 
 .. image:: images/institution.png
    :alt: Dartmouth and PMIC
