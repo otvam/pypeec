@@ -29,6 +29,9 @@ date: 20 December 2023
 bibliography: paper.bib
 ---
 
+\interlinepenalty=10000
+\widowpenalty=10000
+
 # Summary
 
 The partial element equivalent circuit method (PEEC) is a particularly 
@@ -96,33 +99,35 @@ arbitrary problems without having to modify the source code.
 
 # Capabilities and Workflow
 
-In this paper, the release 4.18 of PyPEEC is considered. PyPEEC solves 3D 
+In this paper, the release 5.4 of PyPEEC is considered. PyPEEC solves 3D 
 magnetostatic and quasi-magnetostatic problems with voxel geometries. An 
 arbitrary number of conductive domains, magnetic domains (ideal and/or lossy), 
 and sources (voltage and/or current) can be used. The current density, flux 
-density, potential, loss density, and energy density are computed. The 
-free space magnetic field (near-field) can also be computed on a point cloud. 
+density, electric potential, magnetic potential, and loss density are computed. 
+The free space magnetic field (near-field) can also be computed on a point cloud. 
 Additionally, the voltage, current, complex power, and impedance of the 
 different terminals are extracted.
+
+![PyPEEC workflow consisting of the *mesher*, *solver*, *viewer*, and 
+*plotter*](workflow.pdf){#fig:workflow width="100%"}
 
 PyPEEC is implemented in pure Python using NumPy, SciPy, Joblib, Rasterio, 
 Shapely, Pillow, Matplotlib, and PyVista. The solver is able to leverage 
 multi-core CPUs and GPUs. Optional HPC libraries are available for accelerating 
-the sparse preconditioner factorization (MKL/PARDISO, UMFPACK, and PyAMG) and 
-the FFT operations (FFTW and CuPy/CUDA). PyPEEC can be used through an API, a 
+the sparse preconditioner factorization (MKL/PARDISO and PyAMG) and the FFT 
+operations (FFTW, MKL/FFT, and CuPy/CUDA). PyPEEC can be used through an API, a 
 command-line tool, or Jupyter notebooks. The package is available through the
 Python package index (PyPi) and the community-driven packaging for Conda
-(conda-forge).
-
-![PyPEEC workflow consisting of the *mesher*, *solver*, *viewer*, and 
-*plotter*](workflow.pdf){#fig:workflow width="100%"}
+(conda-forge). A Docker image with JupyterLab is also maintained. 
 
 \autoref{fig:workflow} depicts the PyPEEC workflow. First the *mesher* builds 
 the geometry (from vector shapes, STL files, PNG files, or GERBER files), 
 performs the voxelization, and checks the validity of the discretization. 
 Afterward, the *solver* creates the FFT-multiplication operators, assembles the 
-equation systems, solves the problem, and post-processes the solution. The 
-*viewer* and the *plotter* are used to visualize the results.
+equation systems, extract sparse preconditioners, solves the problem, and 
+post-processes the solution. The *viewer* and the *plotter* are used to 
+visualize the results. Aternatively, ParaView can be used to analyze and 
+visualize the solutions.
 
 # Solver Performance
 
@@ -131,8 +136,8 @@ is considered. The inductor has a footprint of 4\ mm^2^ and is operated in the
 40.68\ MHz ISM band. \autoref{fig:performance} shows the ratio between the AC 
 and DC current densities, the relative error on the extracted impedance, and 
 the computational cost. The number of degrees of freedom represents the number 
-of unknowns for the PEEC problem. The computational cost is evaluated with an 
-AMD\ EPYC\ 7543\ CPU (without GPUs).
+of unknowns for the PEEC problem (dense equation system). The computational 
+cost is evaluated with an AMD\ EPYC\ 7543\ CPU (without GPUs).
 
 ![(a)\ Ratio between the AC and DC current densities. (b)\ Relative error on 
 the extract equivalent resistance and the inductance. (c)\ Wall clock time 
@@ -156,10 +161,12 @@ using a regular voxel structure to represent the geometry. This implies
 that large geometries with small features cannot be meshed efficiently.
 
 # Acknowledgments
-  
+
 This work was supported by the Power Management Integration Center (NSF IUCRC) 
 at Dartmouth College under Grant No. PMIC-062. The authors would like to thank 
 Yue (Will) Wu for discovering and reporting several bugs.
 
 # References
 
+\interlinepenalty=10000
+\widowpenalty=10000
