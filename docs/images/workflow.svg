@@ -8,10 +8,10 @@
    version="1.1"
    id="svg5"
    sodipodi:docname="workflow.svg"
-   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
-   inkscape:export-filename="/home/tguillod/pypeec/docs/images/workflow.png"
-   inkscape:export-xdpi="92.286667"
-   inkscape:export-ydpi="92.286667"
+   inkscape:version="1.4 (e7c3feb, 2024-10-09)"
+   inkscape:export-filename="workflow.png"
+   inkscape:export-xdpi="138.54546"
+   inkscape:export-ydpi="138.54546"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -27,20 +27,27 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="1.096075"
-     inkscape:cx="357.63976"
-     inkscape:cy="133.65874"
+     inkscape:cx="358.09593"
+     inkscape:cy="134.11491"
      inkscape:window-width="2490"
      inkscape:window-height="1376"
      inkscape:window-x="70"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1">
+     inkscape:current-layer="layer1"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1">
     <inkscape:grid
        type="xygrid"
        id="grid20924"
        color="#3f3fff"
        opacity="0"
-       empspacing="10" />
+       empspacing="10"
+       originx="0"
+       originy="0"
+       spacingy="1"
+       spacingx="1"
+       units="mm" />
   </sodipodi:namedview>
   <defs
      id="defs2">
