@@ -65,7 +65,7 @@ functions (i.e. the inductance and potential matrices) have analytical
 solutions, avoiding computationally intensive numerical integrals [@hoer_exact; 
 @piatek_exact]. The second advantage is that, due to the regular voxel 
 discretization, many coefficients of the inductance and potential matrices are 
-repeated. The dense matrices are block-Toeplitz Toeplitz-block matrices and 
+redundant. The dense matrices are block-Toeplitz Toeplitz-block matrices and 
 feature the following key properties [@fft_multi_solver; @fft_multi_theory]:
 
 - The block-Toeplitz Toeplitz-block matrices can be embedded into circulant 
