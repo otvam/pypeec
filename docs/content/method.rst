@@ -1,52 +1,103 @@
 PEEC Method
 ===========
 
-PEEC for Static Problems
-------------------------
+PEEC Introduction
+-----------------
 
 The PEEC method is an integral equation method proposed in 1974 (`paper <https://doi.org/10.1109/TMTT.1974.1128204>`__).
 The fundamental idea is to represent the field simulation problem with a very large distributed equivalent circuit.
+In order to explain the PEEC method step-by-step, a U-shaped busbar (:ref:`Fig. 1 <fig_1>`) is considered.
+For this geometry, an inhomogeneous current distribution is expected (current crowding in the corners).
 
+.. _fig_1:
 .. figure:: ../method/peec_1.png
 
-   Description of the peec1.
+   Example problem: U-shaped busbar with a current source.
 
-(`paper <https://doi.org>`__).
+PEEC for Static Problems
+------------------------
+
+In order to get the static solution (DC solution) of the problem, a discretization of the geometry is required.
+The geometry is divided into simple cells and the resistance of each cell can be analytically calculated.
+Then, the PEEC problem can be formulated with a distributed equivalent circuit (:ref:`Fig. 2 <fig_2>`).
+Finally, the circuit is solved and the current and voltage distribution is obtained.
+
+.. _fig_2:
+.. figure:: ../method/peec_2.png
+
+   PEEC equivalent circuit and solution for the static problem.
 
 PEEC for Quasi-Static Problems
 ------------------------------
 
-FFT-Accelerated PEEC Method
----------------------------
+For the quasi-static solution (AC solution), the system cannot be represented with a purely resistive circuit.
+A natural step would be to extend the resistive circuit with self inductances (:ref:`Fig. 3 <fig_3>`).
+However, the obtained current distribution is identical to the DC solution, which is incorrect.
 
+.. _fig_3:
+.. figure:: ../method/peec_3.png
 
-FFT-Accelerated PEEC Method
----------------------------
+   Extension of the PEEC circuit with self inductances (incorrect solution).
 
+The reason behind this incorrect solution is linked to the Faraday's law of induction.
+The magnetic field produced by the current of a cell is inducing a voltage in the neighboring cells.
+Therefore, self inductances are not sufficient, mutual inductances between the cells are also required.
+The updated equivalent circuit (:ref:`Fig. 4 <fig_4>`) depicts the resistances, self inductances, and mutual inductances.
+The obtained current distribution differs from the DC solution, which can be explained by the induced currents (eddy currents).
+It can be seen that the current distribution is concentrated towards the edges of the busbar (skin and proximity effects).
 
-This PEEC method features several advantanges:
+.. _fig_4:
+.. figure:: ../method/peec_4.png
+
+   PEEC equivalent circuit and solution for the quasi-static problem.
+
+With this simple example, the main advantanges of the PEEC method are apparent:
 
 * Only the active materials are discretized (no need to mesh the free-space).
 * Intuitive understanding of the equation discretization process.
 * Straightforward connection of external circuit elements.
 
-The fundamental drawback of the PEEC method is that the matrix describing the equation system is not sparse.
-This means that the computational cost and the memory requirements are becoming problematic for large systems.
+However, the PEEC method also features some drawbacks:
 
-This problem can be mitigated if the geometry is represented with a voxel structure. 
-In this case, the dense matrices are block-Toeplitz Toeplitz-block matrices. 
-Such matrices can be embedded into circulant tensors reducing the memory requirements from O(n^2) to O(n).
-Additionally, the matrix-vector multiplications can be done with Fourier transforms.
-With an FFT algorithm, the computational complexity of matrix-vector multiplications is reduced from O(n^2) to O(n*log(n)).
-Besides the reduced computational cost and memory requirement, the FFTs allows for the usage of heavily optimized libraries leveraging the parallel processing capabilities of CPUs or GPUs.
+* The number of mutual inductances increases quadratically with the number of cells.
+* The matrix describing the equation system is not sparse (due to the dense inductance matrix).
+* The computational cost and the memory requirement are becoming problematic for large systems.
 
-PyPEEC is using voxels to describe the geometry and, therefore, can take advantage of the FFT acceleration.
-This implies that PEEC problems with several millions of voxels can be solved in a few minutes on a laptop computer.
+FFT-Accelerated PEEC Method
+---------------------------
 
-Here are some interesting papers about the PEEC method:
+Several methods can be used to mitigate the dense matrix problem (domain decomposition, hierarchical matrix, multipole method, etc.).
+PyPEEC is using the FFT-accelerated method proposed in 2002 (`paper <https://doi.org/10.1109/TPEL.2021.3092431>`__).
+This method relies on the translational invariance of the mutual inductance coefficients.
+In other word, the mutual inductance between two cells is only dependent on their relative positions to each other.
+Therefore, if a regular voxel structure is used for the discretization, many coefficients are identical (:ref:`Fig. 5 <fig_5>`).
 
-* A. Ruehli IEEE TMTT, 10.1109/TMTT.1974.1128204, 1974
-* R. Torchio, IEEE TPEL, 10.1109/TPEL.2021.3092431, 2022
+.. _fig_5:
+.. figure:: ../method/peec_5.png
+
+   Illustration of the translational invariance of the inductance matrix coefficients.
+
+The identical coefficients can be used to reduce the computational cost of the PEEC problem (:ref:`Fig. 6 <fig_6>`).
+First, all the mutual inductances are computed with respect to a reference voxel (located at the corner of the structure).
+Then, for any location, all the mutual inductances are obtained with a remapping of the coefficients computed for the reference voxel.
+This implies that, for the inductance matrix, the number of independent coefficients is reduced from O(n^2) to O(n).
+Hence, the computational cost and memory requirement for generating and storing the inductance matrix is massively reduced.
+
+.. _fig_6:
+.. figure:: ../method/peec_6.png
+
+   Illustration of the remapping of the inductance matrix coefficients.
+
+With all the repeated coefficients, the inductance matrix is a a block-Toeplitz Toeplitz-block matrix.
+For such matrices, the matrix-vector multiplications can be done with Fast Fourier Transforms.
+Hence, the computational complexity of multiplications is reduced from O(n^2) to O(n*log(n)).
+
+In summary, with a voxel structure, the PEEC method features the following advantages:
+
+* Reduction of the number of independent inductance coefficients from O(n^2) to O(n).
+* Reduction of the memory footprint of the inductance matrix from O(n^2) to O(n).
+* Reduction of the matrix multiplication complexity from O(n^2) to O(n*log(n)).
+* PEEC problems with several millions of voxels can be solved in a few minutes.
 
 Numerical Optimization
 ----------------------
