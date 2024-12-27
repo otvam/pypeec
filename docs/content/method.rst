@@ -67,7 +67,7 @@ FFT-Accelerated PEEC Method
 ---------------------------
 
 Several methods can be used to mitigate the dense matrix problem (domain decomposition, hierarchical matrix, multipole method, etc.).
-PyPEEC is using the FFT-accelerated method proposed in 2002 (`paper <https://doi.org/10.1109/TPEL.2021.3092431>`__).
+PyPEEC is using the FFT-accelerated method proposed in 2022 (`paper <https://doi.org/10.1109/TPEL.2021.3092431>`__).
 This method relies on the translational invariance of the mutual inductance coefficients.
 In other word, the mutual inductance between two cells is only dependent on their relative positions to each other.
 Therefore, if a regular voxel structure is used for the discretization, many coefficients are identical (:ref:`Fig. 5 <fig_5>`).

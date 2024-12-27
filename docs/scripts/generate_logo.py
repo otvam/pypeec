@@ -1,10 +1,5 @@
 """
 Script for rendering the PyPEEC logo.
-
-Three files are created:
-    - logo.ply: 3D logo in PLY format
-    - logo.png: 2D logo in PNG format
-    - icon.png: 2D icon in PNG format
 """
 
 __author__ = "Thomas Guillod"
