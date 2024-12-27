@@ -11,46 +11,15 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import json
 import numpy as np
 import pyvista as pv
-import matplotlib.cm as cm
 import PIL.Image as pmg
 
 
-def get_voxel():
+def get_plotter(off_screen, logo_size, render_size):
     """
-    Create the voxel structure with the logo.
-    """
-
-    # voxel indices
-    idx = np.array([8, 7, 6, 15, 24, 25, 26, 23, 20, 11, 2, 1, 0, 9, 18])
-
-    # voxel colors
-    var = np.linspace(0.2, 1.0, len(idx))
-
-    # create a uniform grid for the complete structure
-    grid = pv.ImageData()
-
-    # set the array size and the voxel size
-    grid.origin = (1.5, 1.5, 1.5)
-    grid.dimensions = (4, 4, 4)
-    grid.spacing = (1, 1, 1)
-
-    # sort data
-    srt = np.argsort(idx)
-    idx = idx[srt]
-    var = var[srt]
-
-    # get the voxel structure
-    voxel = grid.extract_cells(idx)
-    voxel["var"] = var
-
-    return voxel
-
-
-def get_plotter(voxel):
-    """
-    Plotter for rendering the logo from the voxel structure.
+    Get a PyVista plotter object.
     """
 
     # setup plot
@@ -58,71 +27,108 @@ def get_plotter(voxel):
     pv.global_theme.edge_color = "black"
     pv.global_theme.edge_opacity = 1.0
 
+    # get size
+    if off_screen:
+        plotter_size = logo_size
+    else:
+        plotter_size = render_size
+
     # create plotter
     pl = pv.Plotter(
-        window_size=(256, 256),
-        off_screen=True,
+        off_screen=off_screen,
+        window_size=plotter_size,
         line_smoothing=True,
         polygon_smoothing=True,
-        lighting="three lights",
+        lighting="none",
     )
-
-    # add content
-    pl.add_mesh(
-        voxel,
-        scalars="var",
-        show_scalar_bar=False,
-        show_edges=False,
-        edge_color="black",
-        cmap="viridis",
-        line_width=1.0,
-        clim=[0.0, 1.0],
-    )
-
-    # set camera
-    pl.camera.SetWindowCenter(0, -0.1)
-    pl.camera.roll = 0
-    pl.camera.azimuth = 180
-    pl.camera.elevation = 170
 
     return pl
 
 
-def get_mesh(voxel):
+def set_camera(pl):
     """
-    Extract a surface mesh from the voxel structure.
+    Set the camera for the plotter object.
     """
 
-    # get mesh
-    mesh = voxel.extract_surface()
-    var = mesh["var"]
+    # set the camera angle
+    pl.camera_position = "xz"
+    pl.camera.azimuth = -45
+    pl.camera.elevation = +25
 
-    # get the texture
-    texture = cm.viridis(var)
-    texture = 255 * texture
-    texture = texture.astype(np.uint8)
+    # set the zoom
+    pl.camera.zoom(1.0)
 
-    return mesh, texture
+    # set the shift
+    pl.camera.SetWindowCenter(0.0, -0.1)
+
+
+def set_light(pl):
+    """
+    Set the lights for the plotter object.
+    """
+
+    # definition of the lights
+    intensity_vec = np.array([0.80, 0.30, 0.40, 0.50])
+    position_vec = np.array([[-5, -5, 5], [0, 0, 5], [-5, 0, 0], [0, -5, 0]])
+
+    # add the lights
+    for intensity, position in zip(intensity_vec, position_vec, strict=True):
+        light = pv.Light(
+            light_type="scenelight",
+            position=position,
+            intensity=intensity,
+        )
+        pl.add_light(light)
+
+
+def get_voxel(pl):
+    """
+    Add the logo to the plotter object.
+    """
+
+    # load the voxel data
+    with open("brick.json") as file:
+        data = json.load(file)
+        idx_vec = data["idx_vec"]
+        col_vec = data["col_vec"]
+
+    # load voxel shape
+    mesh = pv.read("brick.stl")
+
+    # add the voxels
+    for col, idx in zip(col_vec, idx_vec, strict=True):
+        pl.add_mesh(mesh.translate(idx), color=col)
 
 
 if __name__ == "__main__":
-    # get the data
-    voxel = get_voxel()
-    pl = get_plotter(voxel)
-    (mesh, texture) = get_mesh(voxel)
+    # interactive plot
+    off_screen = True
 
     # set the filename
-    filename_logo_ply = "logo.ply"
     filename_logo_png = "logo.png"
     filename_logo_icn = "icon.png"
+    render_size = (800, 800)
+    logo_size = (512, 512)
+    icon_size = (96, 96)
 
-    # save the PNG file
-    pl.show(screenshot=filename_logo_png)
+    # get the plotter
+    pl = get_plotter(off_screen, logo_size, render_size)
 
-    # save the PLY file
-    mesh.save(filename_logo_ply, texture=texture)
+    # add the geometry
+    get_voxel(pl)
 
-    # create the icon
-    img = pmg.open(filename_logo_png, formats=["png"])
-    img = img.resize((96, 96), pmg.BICUBIC)
-    img.save(filename_logo_icn)
+    # set the view
+    set_camera(pl)
+    set_light(pl)
+
+    # show/save the plot
+    if off_screen:
+        # save the PNG file
+        pl.show(screenshot=filename_logo_png)
+
+        # create the icon
+        img = pmg.open(filename_logo_png)
+        img = img.resize(icon_size, pmg.BICUBIC)
+        img.save(filename_logo_icn)
+    else:
+        pl.show()
