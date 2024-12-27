@@ -21,8 +21,8 @@ PyPEEC - 3D Quasi-Magnetostatic Solver
 
    content/method
    content/technical
+   content/formats
    content/warnings
-   content/format
    content/api
 
 .. image:: images/banner.png

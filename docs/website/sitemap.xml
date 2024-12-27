@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- =================== -->
-  <!-- PyPEEC - sitemap.xm -->
-  <!-- =================== -->
+  <!-- ==================== -->
+  <!-- PyPEEC - sitemap.xml -->
+  <!-- ==================== -->
 
   <!-- index -->
   <url>
@@ -45,28 +45,28 @@
 
   <!-- secondary pages -->
   <url>
-    <loc>https://pypeec.otvam.ch/content/technical.html</loc>
-    <priority>0.50</priority>
+    <loc>https://pypeec.otvam.ch/content/method.html</loc>
+    <priority>0.40</priority>
     <lastmod>$LASTMOD</lastmod>
   </url>
   <url>
-    <loc>https://pypeec.otvam.ch/content/implementation.html</loc>
-    <priority>0.50</priority>
+    <loc>https://pypeec.otvam.ch/content/technical.html</loc>
+    <priority>0.40</priority>
+    <lastmod>$LASTMOD</lastmod>
+  </url>
+  <url>
+    <loc>https://pypeec.otvam.ch/content/formats.html</loc>
+    <priority>0.40</priority>
     <lastmod>$LASTMOD</lastmod>
   </url>
   <url>
     <loc>https://pypeec.otvam.ch/content/warnings.html</loc>
-    <priority>0.50</priority>
-    <lastmod>$LASTMOD</lastmod>
-  </url>
-  <url>
-    <loc>https://pypeec.otvam.ch/content/format.html</loc>
-    <priority>0.50</priority>
+    <priority>0.40</priority>
     <lastmod>$LASTMOD</lastmod>
   </url>
   <url>
     <loc>https://pypeec.otvam.ch/content/api.html</loc>
-    <priority>0.50</priority>
+    <priority>0.40</priority>
     <lastmod>$LASTMOD</lastmod>
   </url>
 
