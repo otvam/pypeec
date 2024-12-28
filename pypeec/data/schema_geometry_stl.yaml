@@ -9,7 +9,10 @@
             - "d"
             - "xyz_min"
             - "xyz_max"
-            - "strict"
+            - "check"
+            - "tol"
+            - "thr"
+            - "pts"
         "properties":
             "d":
                 "type": "array"
@@ -34,8 +37,20 @@
                 "maxItems": 3
                 "items":
                     "type": "number"
-            "strict":
+            "check":
                 "type": "boolean"
+                "minimum": 0
+
+            "tol":
+                "type": "number"
+                "minimum": 0
+            "thr":
+                "type": "number"
+                "minimum": 0
+                "maximum": 1
+            "pts":
+                "type": "integer"
+                "minimum": 1
     "domain_stl":
         "type": "object"
         "minProperties": 1

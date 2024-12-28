@@ -2,7 +2,9 @@
 Module for transforming STL files into a 3D voxel structure.
 Each STL file corresponds to a domain of the 3D voxel structure.
 
-The voxelization is done with PyVista.
+The voxelization is done with PyVista:
+    - using the enclosed point detection
+    - with custom test points
 """
 
 __author__ = "Thomas Guillod"
@@ -13,6 +15,7 @@ import vtk
 import scilogger
 import numpy as np
 import pyvista as pv
+import scipy.sparse as sps
 
 # get a logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
@@ -21,7 +24,7 @@ LOGGER = scilogger.get_logger(__name__, "pypeec")
 vtk.vtkObject.GlobalWarningDisplayOff()
 
 
-def _get_load_stl(filename, scale, offset, strict):
+def _get_load_stl(filename, scale, offset, check):
     """
     Load several STL files and merge the meshes.
     """
@@ -37,7 +40,7 @@ def _get_load_stl(filename, scale, offset, strict):
         raise RuntimeError("invalid stl: mesh is empty: %s" % filename)
 
     # check that the mesh is closed
-    if strict and (mesh.n_open_edges > 0):
+    if check and (mesh.n_open_edges > 0):
         raise RuntimeError("invalid stl: mesh is not closed: %s" % filename)
 
     # translate the meshes
@@ -47,15 +50,21 @@ def _get_load_stl(filename, scale, offset, strict):
     return mesh
 
 
-def _get_voxelize_stl(grid, mesh):
+def _get_voxelize_stl(pts, connect, mesh, thr):
     """
-    Voxelize an STL mesh with respect to a uniform grid.
+    Voxelize a STL mesh with respect to a voxel structure.
     Return the indices of the created voxels.
     """
 
+    # get the point cloud
+    cloud = pv.PointSet(pts)
+
+    # required number of test points per voxel
+    cut = thr * (connect.shape[1] / connect.shape[0])
+
     # voxelize the mesh
     try:
-        selection = grid.select_enclosed_points(mesh, tolerance=0.0, check_surface=False)
+        selection = cloud.select_enclosed_points(mesh, tolerance=0.0, check_surface=False)
     except RuntimeError:
         raise RuntimeError("invalid mesh: mesh cannot be voxelized") from None
 
@@ -64,18 +73,18 @@ def _get_voxelize_stl(grid, mesh):
 
     # find the voxel indices
     if np.any(mask):
-        # transform the grid into an unstructured grid (keeping the non-empty voxels)
-        voxel = grid.extract_points(mask)
+        # count the number of test points per voxel
+        count = connect * mask
 
         # get the indices of the extracted voxels
-        idx_voxel = voxel["idx"]
+        idx_voxel = np.flatnonzero(count >= cut)
     else:
         idx_voxel = np.empty(0, dtype=np.int64)
 
     return idx_voxel
 
 
-def _get_mesh_stl(domain_stl, strict):
+def _get_mesh_stl(domain_stl, check):
     """
     Load meshes from STL files and find the minimum and maximum coordinates.
     Find the bounding box for all the meshes (minimum and maximum coordinates).
@@ -98,7 +107,7 @@ def _get_mesh_stl(domain_stl, strict):
             filename = domain_stl_tmp_tmp["filename"]
 
             # load the STL
-            mesh = _get_load_stl(filename, scale, offset, strict)
+            mesh = _get_load_stl(filename, scale, offset, check)
 
             # find the bounds
             (x_min, x_max, y_min, y_max, z_min, z_max) = mesh.bounds
@@ -145,33 +154,98 @@ def _get_voxel_size(d, xyz_max, xyz_min):
     return n, d, c
 
 
-def _get_voxel_grid(n, d, c):
+def _get_point_test(d, tol, pts):
     """
-    Construct a PyVista uniform grid for the complete voxel structure.
-    The grid is located around the STL meshes to be voxelized.
+    Get the test point coordinates for a single voxel.
     """
+
+    # extract the voxel data
+    (dx, dy, dz) = d
+
+    # point vectors
+    if pts == 1:
+        x_vec = [0.0]
+        y_vec = [0.0]
+        z_vec = [0.0]
+    else:
+        x_vec = np.linspace(-dx / 2 + tol, +dx / 2 - tol, pts, dtype=np.float64)
+        y_vec = np.linspace(-dy / 2 + tol, +dy / 2 - tol, pts, dtype=np.float64)
+        z_vec = np.linspace(-dz / 2 + tol, +dz / 2 - tol, pts, dtype=np.float64)
+
+    # span the voxel points
+    [x_vec, y_vec, z_vec] = np.meshgrid(x_vec, y_vec, z_vec)
+    x_vec = x_vec.flatten()
+    y_vec = y_vec.flatten()
+    z_vec = z_vec.flatten()
+
+    # get the points
+    pts_test = np.stack((x_vec, y_vec, z_vec), axis=1)
+
+    return pts_test
+
+
+def _get_point_grid(n, d, c):
+    """
+    Get the center point coordinates for the single structure.
+    """
+
+    # extract the voxel data
+    (nx, ny, nz) = n
+    (dx, dy, dz) = d
+    (cx, cy, cz) = c
 
     # get total size
     nv = np.prod(n)
 
-    # create a uniform grid for the complete structure
-    grid = pv.ImageData()
+    # point vectors
+    x_vec = cx + dx * (np.arange(nx, dtype=np.float64) - ((nx - 1) / 2))
+    y_vec = cy + dy * (np.arange(ny, dtype=np.float64) - ((ny - 1) / 2))
+    z_vec = cz + dz * (np.arange(nz, dtype=np.float64) - ((nz - 1) / 2))
 
-    # set the array size and the voxel size
-    grid.origin = c - (n * d) / 2
-    grid.dimensions = n + 1
-    grid.spacing = d
+    # all the indices
+    idx_linear = np.arange(0, nv, dtype=np.int64)
 
-    # add indices for tracking the voxels after voxelization
-    grid["idx"] = np.arange(nv, dtype=np.int64)
+    # convert linear indices into tensor indices
+    (idx_x, idx_y, idx_z) = np.unravel_index(idx_linear, n, order="F")
 
-    # cast is required for voxelization
-    grid = grid.cast_to_unstructured_grid()
+    # span the voxel points
+    x_vec = x_vec[idx_x]
+    y_vec = y_vec[idx_y]
+    z_vec = z_vec[idx_z]
 
-    return grid
+    # get the points
+    pts_grid = np.stack((x_vec, y_vec, z_vec), axis=1)
+
+    return pts_grid
 
 
-def _get_domain_def(grid, domain_stl, mesh_stl):
+def _get_voxel_structure(pts_test, pts_grid):
+    """
+    Get the test points for the complete voxel structure.
+    Assign the test points to the voxels.
+    """
+
+    # span the test points
+    idx_test = np.arange(len(pts_test), dtype=np.int64)
+    idx_grid = np.arange(len(pts_grid), dtype=np.int64)
+    [idx_grid, idx_test] = np.meshgrid(idx_grid, idx_test, indexing="ij")
+    idx_test = idx_test.flatten()
+    idx_grid = idx_grid.flatten()
+
+    # expand the test points
+    pts = pts_test[idx_test] + pts_grid[idx_grid]
+
+    # assign the test points to the voxels
+    data = np.ones(len(pts), dtype=np.int64)
+    idx_col = np.arange(len(pts), dtype=np.int64)
+    idx_row = np.arange(len(pts_grid), dtype=np.int64)
+    idx_row = np.repeat(idx_row, len(pts_test))
+    connect = sps.csc_matrix((data, (idx_row, idx_col)), shape=(len(pts_grid), len(pts)), dtype=np.int64)
+
+    return pts, connect
+
+
+def _get_domain_def(pts, connect, domain_stl, mesh_stl, thr):
     """
     Voxelize meshes and assign the indices to a dict.
     """
@@ -188,7 +262,7 @@ def _get_domain_def(grid, domain_stl, mesh_stl):
         mesh = mesh_stl_tmp["mesh"]
 
         # voxelize and get the indices
-        idx_voxel = _get_voxelize_stl(grid, mesh)
+        idx_voxel = _get_voxelize_stl(pts, connect, mesh, thr)
 
         # append the indices into the corresponding domain
         domain_def[tag] = np.append(domain_def[tag], idx_voxel)
@@ -212,11 +286,14 @@ def get_mesh(param, domain_stl):
     d = param["d"]
     xyz_min = param["xyz_min"]
     xyz_max = param["xyz_max"]
-    strict = param["strict"]
+    check = param["check"]
+    tol = param["tol"]
+    thr = param["thr"]
+    pts = param["pts"]
 
     # load the mesh and get the STL bounds
     LOGGER.debug("load STL files")
-    (mesh_stl, reference, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl, strict)
+    (mesh_stl, reference, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl, check)
 
     # if provided, the specified bounds are used, otherwise the mesh bounds are used
     if xyz_min is not None:
@@ -232,13 +309,18 @@ def get_mesh(param, domain_stl):
     LOGGER.debug("get the voxel size")
     (n, d, c) = _get_voxel_size(d, xyz_max, xyz_min)
 
-    # get the uniform grid
-    LOGGER.debug("get the voxel grid")
-    grid = _get_voxel_grid(n, d, c)
+    # get the voxel points
+    LOGGER.debug("get the voxel points")
+    pts_test = _get_point_test(d, tol, pts)
+    pts_grid = _get_point_grid(n, d, c)
+
+    # get the voxel structure
+    LOGGER.debug("get the voxel structure")
+    (pts, connect) = _get_voxel_structure(pts_test, pts_grid)
 
     # voxelize the meshes and get the indices
     LOGGER.debug("voxelize STL files")
-    domain_def = _get_domain_def(grid, domain_stl, mesh_stl)
+    domain_def = _get_domain_def(pts, connect, domain_stl, mesh_stl, thr)
 
     # cast to lists
     n = n.tolist()
