@@ -1,18 +1,18 @@
 {
     "metadata": {
         "name": "examples_stl/inductor_toroid",
-        "timestamp": "2024-12-03 12:11:38.555392"
+        "timestamp": "2024-12-29 15:02:20.426132"
     },
     "mesher": {
-        "n_total": 142400,
-        "n_used": 31524
+        "n_total": 99840,
+        "n_used": 23648
     },
     "solver": {
         "sim_default": {
             "freq": 0.0,
             "has_converged": true,
-            "P_total": 37.788920830401544,
-            "W_total": 0.22796447561497582
+            "P_total": 28.995293985321503,
+            "W_total": 0.17961177795281655
         }
     }
 }
