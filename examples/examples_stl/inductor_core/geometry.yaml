@@ -9,15 +9,18 @@
 "mesh_type": "stl"
 "data_voxelize":
     "param":
-        "d": [89.0e-6, 85.5e-6, 62.5e-6]
+        "d": [1.0e-3, 1.0e-3, 1.0e-3]
         "xyz_min": null
         "xyz_max": null
-        "strict": true
+        "check": true
+        "tol": 1.0e-6
+        "thr": 0.5
+        "pts": 1
     "domain_stl":
-        "core": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/core.stl"}]
-        "coil": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/coil.stl"}]
-        "src": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/src.stl"}]
-        "sink": [{"scale": 1.0, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/sink.stl"}]
+        "core": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/core.stl"}]
+        "coil": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/coil.stl"}]
+        "src": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/src.stl"}]
+        "sink": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/sink.stl"}]
 "data_point":
     "check_cloud": true
     "full_cloud": true
