@@ -16,13 +16,13 @@ def get_cad():
     """
 
     coil = cq.Workplane("XY").box(80.0, 40, 1.0)
-    coil = coil.rect(72.0, 32.0).cutThruAll()
-    coil = coil.moveTo(48.0, +4.0).box(16.0, 4.0, 1.0)
-    coil = coil.moveTo(48.0, -4.0).box(16.0, 4.0, 1.0)
-    coil = coil.moveTo(38.0, 0.0).rect(4.0, 4.0).cutThruAll()
+    coil = coil.rect(+72.0, +32.0).cutThruAll()
+    coil = coil.moveTo(+48.0, +4.0).box(16.0, 4.0, 1.0)
+    coil = coil.moveTo(+48.0, -4.0).box(16.0, 4.0, 1.0)
+    coil = coil.moveTo(+38.0, 0.0).rect(4.0, 4.0).cutThruAll()
 
-    src = cq.Workplane("XY").moveTo(56.5, +4.0).box(1.0, 4.0, 1.0)
-    sink = cq.Workplane("XY").moveTo(56.5, -4.0).box(1.0, 4.0, 1.0)
+    src = cq.Workplane("XY").moveTo(+56.5, +4.0).box(1.0, 4.0, 1.0)
+    sink = cq.Workplane("XY").moveTo(+56.5, -4.0).box(1.0, 4.0, 1.0)
 
     cad_dict = {
         "pri_coil": coil.translate((0.0, 0.0, +2.0)),

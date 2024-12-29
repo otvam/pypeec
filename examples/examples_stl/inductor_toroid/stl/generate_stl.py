@@ -18,12 +18,12 @@ def get_cad():
     core = cq.Workplane("XY").cylinder(height=8.0, radius=16.0)
     core = core.circle(10.0).cutThruAll()
 
-    coil = cq.Workplane("XZ").moveTo(13, 0.0).box(20.0, 20.0, 8.0)
-    coil = coil.moveTo(13, 0).rect(12.0, 12.0).cutThruAll()
-    coil = coil.moveTo(21, 0).rect(4.0, 4.0).cutThruAll()
+    coil = cq.Workplane("XZ").moveTo(+13, 0.0).box(20.0, 20.0, 8.0)
+    coil = coil.moveTo(+13, 0).rect(12.0, 12.0).cutThruAll()
+    coil = coil.moveTo(+21, 0).rect(4.0, 4.0).cutThruAll()
 
-    src = cq.Workplane("XZ").moveTo(21.0, +1.5).box(4.0, 1.0, 8.0)
-    sink = cq.Workplane("XZ").moveTo(21.0, -1.5).box(4.0, 1.0, 8.0)
+    src = cq.Workplane("XZ").moveTo(+21.0, +1.5).box(4.0, 1.0, 8.0)
+    sink = cq.Workplane("XZ").moveTo(+21.0, -1.5).box(4.0, 1.0, 8.0)
 
     cad_dict = {
         "core": core,
