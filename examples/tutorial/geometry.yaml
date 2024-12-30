@@ -6,8 +6,26 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
+# mesher type
+#   - "voxel" for voxel index arrays
+#   - "shape" for 2D vector shapes
+#   - "png" for PNG files
+#   - "stl" for STL files
 "mesh_type": "shape"
+
+# definition of the voxel structure
+#   - specific for the different mesher types
+#   - this particular file is using the "shape" format
 "data_voxelize":
+    # definition of the voxel structure
+    #   - dx: voxel dimension for the x direction
+    #   - dy: voxel dimension for the y direction
+    #   - dz: voxel dimension for the z direction
+    #   - cz: coordinates of the voxel structure center for the z direction  (null for centering)
+    #   - simplify: tolerance for simplifying the shapes (null for disabling simplification)
+    #   - construct: grid size for constructing the shapes (null for default grid size)
+    #   - xy_min: array with the lower corner coordinates of the voxel structure (null for default)
+    #   - xy_max: array with the upper corner coordinates of the voxel structure (null for default)
     "param":
         "dx": 35.0e-6
         "dy": 35.0e-6
@@ -17,6 +35,10 @@
         "construct": null
         "xy_min": null
         "xy_max": null
+
+    # definition of the layer stack (voxels in the z-direction)
+    #   - n_layer: number of voxels in the z-direction for the layer
+    #   - tag_layer: string with the name of the layer
     "layer_stack":
         - {"n_layer": 1, "tag_layer": "copper_1"}
         - {"n_layer": 5, "tag_layer": "insulation_1"}
@@ -25,6 +47,12 @@
         - {"n_layer": 1, "tag_layer": "copper_3"}
         - {"n_layer": 5, "tag_layer": "insulation_3"}
         - {"n_layer": 1, "tag_layer": "copper_4"}
+
+    # definition of the shapes composing the different domains
+    #   - shape_layer: list of layer where the shape is located
+    #   - shape_operation: composition operation for assembling the shape ("add" or "sub")
+    #   - shape_type: type of the shape ("pad" or "trace" or "polygon")
+    #   - shape_data: data containing the shape geometry
     "geometry_shape":
         "trace":
             -
@@ -93,6 +121,11 @@
                 "shape_data":
                     "diameter": 0.75e-3
                     "coord": [[0.0e-3, 0.0e-3]]
+
+# parameters for checking the validity of the point cloud
+#   - check_cloud: check (or not) the validity of the point cloud
+#   - full_cloud: enforce (or not) the validity of all the provided points
+#   - pts_cloud: array containing the points used for magnetic field evaluation
 "data_point":
     "check_cloud": true
     "full_cloud": true
@@ -106,16 +139,30 @@
         - [+03.00e-3, +01.00e-3, +00.00e-3]
         - [+03.00e-3, +02.00e-3, +00.00e-3]
         - [+03.00e-3, +03.00e-3, +00.00e-3]
+
+# control the resampling of the voxel structure
+#   - use_reduce: reduce (or not) the voxel structure by removing unused voxels
+#   - use_resample: resample (or not) the voxel structure by subdividing voxels
+#   - resampling_factor: array with resampling factors (x, y, and z directions)
 "data_resampling":
     "use_reduce": false
     "use_resample": false
     "resampling_factor": [1, 1, 1]
+
+# parameters for resolving conflict between domains
+#   - resolve_rules: perform (or not) the rule-based conflict resolution
+#   - resolve_random: perform (or not) the random conflict resolution
+#   - conflict_rules: definition of the conflict resolution rules between domains
 "data_conflict":
     "resolve_rules": true
     "resolve_random": false
     "conflict_rules":
         - {"domain_resolve": ["trace"], "domain_keep": ["src"]}
         - {"domain_resolve": ["trace"], "domain_keep": ["sink"]}
+
+# parameters for checking the integrity of the voxel structure
+#   - domain_connected: check if specified domains are connected to each other
+#   - domain_adjacent: check if specified domains are adjacent to each other
 "data_integrity":
     "domain_connected":
         "conductor": {"domain_group": [["trace", "via"], ["src", "sink"]], "connected": true}

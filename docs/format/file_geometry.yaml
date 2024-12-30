@@ -1,5 +1,5 @@
 # mesher type
-#   - "voxel" for index arrays
+#   - "voxel" for voxel index arrays
 #   - "shape" for 2D vector shapes
 #   - "png" for PNG files
 #   - "stl" for STL files
@@ -10,7 +10,7 @@
 #   - format definition is located in separate files
 "data_voxelize": {}
 
-# parameters for checking the validity of the point cloud
+# parameters defining the point cloud
 "data_point":
     # check (or not) the validity of the point cloud
     "check_cloud": true
