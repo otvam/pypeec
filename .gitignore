@@ -32,14 +32,14 @@ pypeec/data/examples.tar.xz
 pypeec/data/documentation.tar.xz
 
 # exclude package data
-html/
 dist/
 build/
+*.egg-info/
 
 # exclude generated folders
+html/
 website/
 coverage/
-pypeec.egg-info/
 
 # exclude Sphinx data
 docs/_static/
@@ -50,5 +50,5 @@ scratch/
 temp/
 
 # exclude the IDE folders
-.idea/
 .vscode/
+.idea/
