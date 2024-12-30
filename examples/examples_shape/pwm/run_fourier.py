@@ -44,8 +44,8 @@ def _solve_peec(folder_example, folder_config):
     file_tolerance = os.path.join(folder_config, "tolerance.yaml")
 
     # define the output
-    file_voxel = os.path.join(folder_example, "voxel.pck")
-    file_solution = os.path.join(folder_example, "solution.pck")
+    file_voxel = os.path.join(folder_example, "voxel.pkl")
+    file_solution = os.path.join(folder_example, "solution.pkl")
 
     # run the workflow and load the solution
     pypeec.run_mesher_file(file_geometry, file_voxel)

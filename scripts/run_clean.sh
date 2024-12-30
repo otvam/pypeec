@@ -10,17 +10,25 @@ set -o pipefail
 # change to root directory
 cd "$(dirname "$0")" && cd ..
 
-# clean Python objects
-find . -name "*.pyc" -type f -delete
-find . -name "*.pyo" -type f -delete
-
-# clean cache directories
+# clean Python caches
 find . -path '*/__pycache__/*' -type f -delete
 find . -name "__pycache__" -type d -delete
 
 # clean Jupyter checkpoints
 find . -path '*/.ipynb_checkpoints/*' -type f -delete
 find . -name ".ipynb_checkpoints" -type d -delete
+
+# clean Python objects
+find . \( -name "*.pyc" -o -name "*.pyo" \) -type f -delete
+
+# clean temp files
+find . \( -name "*.log" -o -name "*.bak" \) -type f -delete
+
+# clean gzip files
+find . \( -name "*.gz" -o -name "*.gzip" \) -type f -delete
+
+# clean pickle files
+find . \( -name "*.pck" -o -name "*.pkl" -o -name "*.pickle" \) -type f -delete
 
 # clean generated files
 rm -rf pypeec/data/version.txt

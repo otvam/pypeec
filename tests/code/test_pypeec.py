@@ -25,7 +25,7 @@ def _create_temp_file():
     Get a temporary file.
     """
 
-    (_, filename) = tempfile.mkstemp(suffix=".pck")
+    (_, filename) = tempfile.mkstemp(suffix=".pkl")
 
     return filename
 

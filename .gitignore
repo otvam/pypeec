@@ -7,14 +7,18 @@
 *.pyc
 *.pyo
 
-# exclude data files
+# exclude temp files
 *.log
 *.bak
+
+# exclude gzip files
+*.gzip
+*.gz
+
+# exclude pickle files
 *.pck
 *.pkl
 *.pickle
-*.gzip
-*.gz
 
 # exclude cache directories
 **/__pycache__
