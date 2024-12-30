@@ -7,7 +7,6 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 # base packages
-import sys
 import scilogger
 
 # import utils to be demonstrated
@@ -87,6 +86,3 @@ if __name__ == "__main__":
     with LOGGER.BlockIndent():
         for tag, idx in idx_tensor.items():
             LOGGER.info("%s = %s" % (tag, idx.tolist()))
-
-    # exit
-    sys.exit(0)

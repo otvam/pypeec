@@ -11,7 +11,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 # base packages
 import os
-import sys
 import scilogger
 import scisave
 import pypeec
@@ -319,6 +318,3 @@ if __name__ == "__main__":
 
     # show the plots
     plt.show()
-
-    # exit
-    sys.exit(0)

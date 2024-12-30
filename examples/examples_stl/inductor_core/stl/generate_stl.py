@@ -6,7 +6,6 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-import sys
 import cadquery as cq
 
 
@@ -92,6 +91,3 @@ if __name__ == "__main__":
 
     # save STL/STEP files
     write_cad(cad_dict, tol)
-
-    # exit
-    sys.exit(0)

@@ -9,7 +9,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 # base packages
 import os
-import sys
 import scilogger
 
 # import plotting libraries
@@ -130,6 +129,3 @@ if __name__ == "__main__":
     # plot the generated images
     LOGGER.info("plot the generated images")
     _plot_stack(folder_png, ["front", "back", "terminal", "via"])
-
-    # exit
-    sys.exit(0)
