@@ -1,5 +1,9 @@
 # Definition of the Docker image with PyPEEC and Jupyter.
 #
+# The Docker image is only intended for test purposes.
+# This image is not screened for eventual vulnerabilities.
+# Do not use the image for public-facing servers.
+#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 

@@ -10,6 +10,11 @@
 #          INTEL/MKL is not open source.
 #          NVIDIA/CUDA is not open source.
 #
+# WARNING: Some listed packages are under a copyleft license.
+#          Qt is under a copyleft license (LGPL and GPL).
+#          FFTW is also under a copyleft license (GPL).
+#
+#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
