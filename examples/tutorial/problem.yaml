@@ -6,6 +6,11 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
+# material definition
+#   - domain_list: list of domains with the specified material
+#   - material_type: material type ("electric" or "magnetic" or "electromagnetic")
+#   - orientation_type: material type ("isotropic" or "anisotropic")
+#   - var_type: type of material parameters ("lumped" or "distributed")
 "material_def":
     "trace_via":
         "domain_list": ["trace", "via"]
@@ -17,6 +22,11 @@
         "material_type": "electric"
         "orientation_type": "isotropic"
         "var_type": "lumped"
+
+# source definition
+#   - domain_list: list of domains with the specified source
+#   - source_type: source type ("current" or "voltage")
+#   - var_type: type of source parameters ("lumped" or "distributed")
 "source_def":
     "src":
         "domain_list": ["src"]
@@ -26,12 +36,26 @@
         "domain_list": ["sink"]
         "source_type": "voltage"
         "var_type": "lumped"
+
+# material parameters
+#   - permeability for magnetic materials
+#   - resistivity for electric materials
 "material_val": &material_val
     "trace_via": {"rho_re": 1.75e-8, "rho_im": 0.0}
     "src_sink": {"rho_re": 1.75e-8, "rho_im": 0.0}
+
+# source parameters
+#   - current value and internal admittance for current sources
+#   - voltage value and internal impedance for voltage sources
 "source_val": &source_val
     "src": {"V_re": +1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
     "sink": {"V_re": -1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
+
+# definition of the sweep configurations and the sweep parameters
+#   - init: the dependency is used as an initial guess for the solver
+#   - freq: operating frequency for the problem
+#   - material_val: material parameters
+#   - source_val: source parameters
 "sweep_solver":
     "sim_dc":
         "init": null
