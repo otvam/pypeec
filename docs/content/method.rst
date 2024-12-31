@@ -12,7 +12,7 @@ For this geometry, an inhomogeneous current distribution is expected (current cr
 .. _fig_1:
 .. figure:: ../method/peec_1.png
 
-   Example problem: U-shaped busbar with a current source.
+   Fig. 1 - Example problem: U-shaped busbar with a current source.
 
 PEEC for Static Problems
 ------------------------
@@ -25,7 +25,7 @@ Finally, the circuit is solved and the current and voltage distribution is obtai
 .. _fig_2:
 .. figure:: ../method/peec_2.png
 
-   PEEC equivalent circuit and solution for the static problem.
+   Fig. 2 - PEEC equivalent circuit and solution for the static problem.
 
 PEEC for Quasi-Static Problems
 ------------------------------
@@ -37,7 +37,7 @@ However, the obtained current distribution is identical to the DC solution, whic
 .. _fig_3:
 .. figure:: ../method/peec_3.png
 
-   Extension of the PEEC circuit with self inductances (incorrect solution).
+   Fig. 3 - Extension of the PEEC circuit with self inductances (incorrect solution).
 
 The reason behind this incorrect solution is linked to the Faraday's law of induction.
 The magnetic field produced by the current of a cell is inducing a voltage in the neighboring cells.
@@ -49,7 +49,7 @@ It can be seen that the current distribution is concentrated towards the edges o
 .. _fig_4:
 .. figure:: ../method/peec_4.png
 
-   PEEC equivalent circuit and solution for the quasi-static problem.
+   Fig. 4 - PEEC equivalent circuit and solution for the quasi-static problem.
 
 With this simple example, the main advantanges of the PEEC method are apparent:
 
@@ -75,7 +75,7 @@ Therefore, if a regular voxel structure is used for the discretization, many coe
 .. _fig_5:
 .. figure:: ../method/peec_5.png
 
-   Illustration of the translational invariance of the inductance matrix coefficients.
+   Fig. 5 - Illustration of the translational invariance of the inductance matrix coefficients.
 
 The identical coefficients can be used to reduce the computational cost of the PEEC problem (:ref:`Fig. 6 <fig_6>`).
 First, all the mutual inductances are computed with respect to a reference voxel (located at the corner of the structure).
@@ -86,7 +86,7 @@ Hence, the computational cost and memory requirement for generating and storing 
 .. _fig_6:
 .. figure:: ../method/peec_6.png
 
-   Illustration of the remapping of the inductance matrix coefficients.
+   Fig. 6 - Illustration of the remapping of the inductance matrix coefficients.
 
 With all the repeated coefficients, the inductance matrix is a a block-Toeplitz Toeplitz-block matrix.
 For such matrices, the matrix-vector multiplications can be done with Fast Fourier Transforms.
