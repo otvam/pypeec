@@ -81,7 +81,7 @@ Copyright
 ---------
 
 .. important::
-    \(c\) 2023-2024 / Thomas Guillod / Dartmouth College
+    \(c\) 2023-2025 / Thomas Guillod / Dartmouth College
 
 .. important::
     This Source Code Form is subject to the terms of the Mozilla Public
