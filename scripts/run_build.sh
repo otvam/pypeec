@@ -43,17 +43,14 @@ function build_docs {
   touch website/.gitignore
   touch website/.nojekyll
 
-  # get the timestamp for the substitution
-  export LASTMOD=$(date '+%Y-%m-%d')
-
-  # substitute the timestamp for sitemap.xml
-  cat docs/website/sitemap.xml | envsubst > website/sitemap.xml
-
-  # substitute the timestamp for robots.txt
-  cat docs/website/robots.txt | envsubst > website/robots.txt
-
   # domain name description file
   echo "pypeec.otvam.ch" > website/CNAME
+
+  # substitute the timestamp for sitemap.xml
+  sed "s/\$LASTMOD/$(date '+%Y-%m-%d')/g" docs/website/sitemap.xml > website/sitemap.xml
+
+  # copy a simple robots.txt
+  cp docs/website/robots.txt website
 
   # copy a simple README file
   cp docs/website/README.md website
