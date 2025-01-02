@@ -15,8 +15,8 @@
     # check (or not) the validity of the point cloud
     "check_cloud": true
 
-    # enforce (or not) the validity of all the provided points
-    "full_cloud": true
+    # remove (or not) the invalid points from the cloud
+    "filter_cloud": true
 
     # 2D array containing the points used for magnetic field evaluation
     #   - the number of points (n_pts) can be zero.

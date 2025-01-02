@@ -87,12 +87,12 @@ def get_point(n, d, c, domain_def, data_point):
 
     # extract the data
     check_cloud = data_point["check_cloud"]
-    full_cloud = data_point["full_cloud"]
+    filter_cloud = data_point["filter_cloud"]
     pts_cloud = data_point["pts_cloud"]
 
     # display number of cloud points
     LOGGER.debug("check_cloud = %s" % check_cloud)
-    LOGGER.debug("full_cloud = %s" % full_cloud)
+    LOGGER.debug("filter_cloud = %s" % filter_cloud)
     LOGGER.debug("original number = %d" % len(pts_cloud))
 
     # cast to array
@@ -103,12 +103,12 @@ def get_point(n, d, c, domain_def, data_point):
         # get the valid points
         valid_cloud = _get_cloud_valid(c, d, n, domain_def, pts_cloud)
 
-        # check that everything is valid
-        if full_cloud and not np.all(valid_cloud):
-            raise RuntimeError("invalid cloud points")
-
         # remove the invalid points
-        pts_cloud = pts_cloud[valid_cloud]
+        if filter_cloud:
+            pts_cloud = pts_cloud[valid_cloud]
+        else:
+            if not np.all(valid_cloud):
+                raise RuntimeError("all the cloud points should be located outside the voxel structure")
 
     # display number of cloud points
     LOGGER.debug("final number = %d" % len(pts_cloud))

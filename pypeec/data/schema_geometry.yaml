@@ -18,12 +18,12 @@
         "type": "object"
         "required":
             - "check_cloud"
-            - "full_cloud"
+            - "filter_cloud"
             - "pts_cloud"
         "properties":
             "check_cloud":
                 "type": "boolean"
-            "full_cloud":
+            "filter_cloud":
                 "type": "boolean"
             "pts_cloud":
                 "type": "array"

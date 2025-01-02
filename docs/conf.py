@@ -52,7 +52,7 @@ extensions = [
     "sphinx.ext.autosummary",
 ]
 
-# allowed redirect for the external links
+# allowed redirects for the external links
 linkcheck_allowed_redirects = {
     "http://mozilla.org/*": ".*",
     "https://mybinder.org/*": ".*",
@@ -60,12 +60,12 @@ linkcheck_allowed_redirects = {
     "https://doi.org/*": ".*",
 }
 
-# define paths
+# define folder paths
 templates_path = ["_templates"]
 html_static_path = ["_static"]
 html_theme_path = ["_static"]
 
-# html options
+# html base options
 html_baseurl = "https://pypeec.otvam.ch"
 html_theme = "sphinx_rtd_theme"
 html_logo = "images/sphinx.png"
@@ -76,7 +76,7 @@ html_copy_source = False
 html_use_index = False
 html_domain_indices = False
 
-# html theme
+# html theme options
 html_theme_options = {
     "logo_only": False,
     "style_nav_header_background": "#137e9c",

@@ -20,7 +20,7 @@
         "sec_short": [52]
 "data_point":
     "check_cloud": true
-    "full_cloud": true
+    "filter_cloud": true
     "pts_cloud":
         - [-04.00e-3, -04.00e-3, +02.00e-3]
         - [-04.00e-3, -02.86e-3, +02.00e-3]

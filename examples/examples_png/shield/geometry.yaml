@@ -23,7 +23,7 @@
         - {"n_layer": 1, "filename_list": !path ["png/shield.png"]}
 "data_point":
     "check_cloud": true
-    "full_cloud": true
+    "filter_cloud": true
     "pts_cloud":
         - [-10.00e-3, -10.00e-3, -08.00e-3]
         - [-10.00e-3, -10.00e-3, +08.00e-3]

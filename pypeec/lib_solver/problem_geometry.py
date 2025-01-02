@@ -42,16 +42,16 @@ def _check_indices(idx_vc, idx_src_c, idx_src_v):
 
     # check the indices
     if len(idx_vc) == 0:
-        raise RuntimeError("electric indices cannot be empty")
+        raise RuntimeError("the geometry does not include any electric voxel")
 
     if (len(idx_src_c) == 0) and (len(idx_src_v) == 0):
-        raise RuntimeError("source indices cannot be empty")
+        raise RuntimeError("the geometry does not include any source voxel")
 
     # check that the terminal indices are electric indices
     if not np.all(np.isin(idx_src_c, idx_vc)):
-        raise RuntimeError("current source indices should overlap with electric indices")
+        raise RuntimeError("current source voxels should overlap with electric voxels")
     if not np.all(np.isin(idx_src_v, idx_vc)):
-        raise RuntimeError("voltage source indices should overlap with electric indices")
+        raise RuntimeError("voltage source voxels should overlap with electric voxels")
 
 
 def _check_source_graph(idx_vc, idx_src_c, idx_src_v, graph_def):

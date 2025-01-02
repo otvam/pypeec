@@ -77,7 +77,7 @@
                     "coord_holes": []
 "data_point":
     "check_cloud": true
-    "full_cloud": true
+    "filter_cloud": true
     "pts_cloud": []
 "data_resampling":
     "use_reduce": false

@@ -22,7 +22,7 @@
         - {"n_layer": 2, "filename_list": !path ["png/front.png", "png/terminal.png"]}
 "data_point":
     "check_cloud": true
-    "full_cloud": true
+    "filter_cloud": true
     "pts_cloud": []
 "data_resampling":
     "use_reduce": true

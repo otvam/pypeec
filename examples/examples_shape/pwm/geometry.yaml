@@ -56,7 +56,7 @@
                     "coord": [[10.0e-3, 4.0e-3]]
 "data_point":
     "check_cloud": true
-    "full_cloud": true
+    "filter_cloud": true
     "pts_cloud": []
 "data_resampling":
     "use_reduce": false

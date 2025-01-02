@@ -25,7 +25,7 @@
         "sec_sink": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/sec_sink.stl"}]
 "data_point":
     "check_cloud": true
-    "full_cloud": true
+    "filter_cloud": true
     "pts_cloud": []
 "data_resampling":
     "use_reduce": false

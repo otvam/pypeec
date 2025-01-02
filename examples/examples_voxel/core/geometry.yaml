@@ -23,7 +23,7 @@
         "sink": [162]
 "data_point":
     "check_cloud": true
-    "full_cloud": true
+    "filter_cloud": true
     "pts_cloud":
         - [+50.00e-3, +00.00e-3, -30.00e-3]
         - [+50.00e-3, +00.00e-3, -10.00e-3]

@@ -124,11 +124,11 @@
 
 # parameters for checking the validity of the point cloud
 #   - check_cloud: check (or not) the validity of the point cloud
-#   - full_cloud: enforce (or not) the validity of all the provided points
+#   - filter_cloud: remove (or not) the invalid points from the cloud
 #   - pts_cloud: array containing the points used for magnetic field evaluation
 "data_point":
     "check_cloud": true
-    "full_cloud": true
+    "filter_cloud": true
     "pts_cloud":
         - [+01.00e-3, +01.00e-3, +00.00e-3]
         - [+01.00e-3, +02.00e-3, +00.00e-3]

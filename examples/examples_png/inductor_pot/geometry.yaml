@@ -27,7 +27,7 @@
         - {"n_layer": 2, "filename_list": !path ["png/cover.png"]}
 "data_point":
     "check_cloud": true
-    "full_cloud": true
+    "filter_cloud": true
     "pts_cloud":
         - [-11.75e-3, -11.75e-3, -05.75e-3]
         - [-11.75e-3, -11.75e-3, -03.83e-3]
