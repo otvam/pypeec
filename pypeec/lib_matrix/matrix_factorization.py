@@ -179,8 +179,6 @@ def set_options(factorization_options):
         import pydiso.mkl_solver as lib_tmp
     elif LIBRARY == "PyAMG":
         import pyamg.aggregation as lib_tmp
-    elif LIBRARY == "none":
-        lib_tmp = None
     else:
         raise ValueError("invalid factorization library")
 
@@ -211,11 +209,6 @@ def get_solve(factor, rhs):
     Solve an equation system with a given factorization.
     """
 
-    # check that the factorization is valid
-    if factor is None:
-        raise RuntimeError("invalid factorization: factorization failure")
-
-    # solve the equation system
     sol = factor(rhs)
 
     return sol
