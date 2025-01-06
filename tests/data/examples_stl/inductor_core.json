@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_stl/inductor_core",
-        "timestamp": "2024-12-29 15:01:46.554017"
+        "timestamp": "2025-01-05 20:43:00.406444"
     },
     "mesher": {
         "n_total": 77280,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 0.0,
             "has_converged": true,
-            "P_total": 443.43324480053894,
-            "W_total": 0.9897048824702335
+            "P_total": 110.85831120013472,
+            "W_total": 0.2474262206175588
         }
     }
 }

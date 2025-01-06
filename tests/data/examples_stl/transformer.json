@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_stl/transformer",
-        "timestamp": "2024-12-29 15:02:21.791305"
+        "timestamp": "2025-01-05 20:44:05.842986"
     },
     "mesher": {
         "n_total": 19400,
@@ -11,14 +11,14 @@
         "sim_dc": {
             "freq": 0.0,
             "has_converged": true,
-            "P_total": 453.66858483782204,
-            "W_total": 0.03001312575500402
+            "P_total": 113.41714620990051,
+            "W_total": 0.007503281438780309
         },
         "sim_ac": {
             "freq": 100000.0,
             "has_converged": true,
-            "P_total": 1.034987246601819,
-            "W_total": 2.7086550821308268e-05
+            "P_total": 0.2587468116523943,
+            "W_total": 6.771637705365883e-06
         }
     }
 }
