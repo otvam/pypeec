@@ -35,10 +35,10 @@
     "resolve_rules": true
     "resolve_random": false
     "conflict_rules":
-        - { "domain_resolve": ["pri_coil"], "domain_keep": ["pri_src"]}
-        - { "domain_resolve": ["pri_coil"], "domain_keep": ["pri_sink"]}
-        - { "domain_resolve": ["sec_coil"], "domain_keep": ["sec_src"]}
-        - { "domain_resolve": ["sec_coil"], "domain_keep": ["sec_sink"]}
+        - {"domain_resolve": ["pri_coil"], "domain_keep": ["pri_src"]}
+        - {"domain_resolve": ["pri_coil"], "domain_keep": ["pri_sink"]}
+        - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_src"]}
+        - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_sink"]}
 "data_integrity":
     "domain_connected":
         "pri_conductor": {"domain_group": [["pri_coil"], ["pri_src"], ["pri_sink"]], "connected": true}

@@ -32,8 +32,8 @@
     "resolve_rules": true
     "resolve_random": false
     "conflict_rules":
-        - { "domain_resolve": ["coil"], "domain_keep": ["src"]}
-        - { "domain_resolve": ["coil"], "domain_keep": ["sink"]}
+        - {"domain_resolve": ["coil"], "domain_keep": ["src"]}
+        - {"domain_resolve": ["coil"], "domain_keep": ["sink"]}
 "data_integrity":
     "domain_connected":
         "conductor": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}

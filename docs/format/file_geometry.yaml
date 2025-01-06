@@ -36,7 +36,7 @@
     "use_resample": true
 
     # array with resampling factors (x, y, and z directions)
-    "resampling_factor": [ 2, 2, 1 ]
+    "resampling_factor": [2, 2, 1]
 
 # parameters for resolving conflict between domains
 "data_conflict":
