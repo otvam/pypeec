@@ -63,7 +63,7 @@ Step 4: Viewer
 
    Plot showing which the different domains.
 
-.. figure:: ../tutorial/viewer_connection.png
+.. figure:: ../tutorial/viewer_graph.png
 
    Plot showing which domains are interconnected.
 
