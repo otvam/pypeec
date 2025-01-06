@@ -61,7 +61,8 @@ However, the PEEC method also features some drawbacks:
 
 * The number of mutual inductances increases quadratically with the number of cells.
 * The matrix describing the equation system is not sparse (due to the dense inductance matrix).
-* The computational cost and the memory requirement are becoming problematic for large systems.
+* The computational cost is becoming problematic for large systems.
+* The memory requirement is becoming problematic for large systems.
 
 FFT-Accelerated PEEC Method
 ---------------------------
