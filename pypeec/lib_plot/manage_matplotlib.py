@@ -20,6 +20,7 @@ def _get_plot_residuum(fig, res, data_plot):
     """
 
     # extract the data
+    title = data_plot["title"]
     n_bins = data_plot["n_bins"]
     tol_bins = data_plot["tol_bins"]
     bar_color = data_plot["bar_color"]
@@ -27,10 +28,6 @@ def _get_plot_residuum(fig, res, data_plot):
 
     # activate the figure
     plt.figure(fig)
-
-    # get rms
-    n_dof = len(res)
-    res_rms = np.sqrt(np.mean(np.abs(res) ** 2))
 
     # get absolute value
     res_abs = np.abs(res)
@@ -56,7 +53,8 @@ def _get_plot_residuum(fig, res, data_plot):
     plt.grid()
     plt.xlabel("residuum (a.u.)")
     plt.ylabel("counts (a.u.)")
-    plt.title("Residuum / n_dof = %d / res_rms = %.2e" % (n_dof, res_rms))
+    if title is not None:
+        plt.title(title)
 
 
 def _get_plot_convergence(fig, conv, data_plot):
@@ -65,6 +63,7 @@ def _get_plot_convergence(fig, conv, data_plot):
     """
 
     # extract the data
+    title = data_plot["title"]
     color_active = data_plot["color_active"]
     color_reactive = data_plot["color_reactive"]
     marker = data_plot["marker"]
@@ -102,7 +101,8 @@ def _get_plot_convergence(fig, conv, data_plot):
     plt.legend()
     plt.xlabel("iterations (#)")
     plt.ylabel("convergence (a.u.)")
-    plt.title(f"Convergence: S = {power_final:.2e} VA")
+    if title is not None:
+        plt.title(title)
 
 
 def get_plot_plotter(fig, res, conv, layout, data_plot, data_options):

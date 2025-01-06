@@ -35,11 +35,17 @@
 "data_plot_convergence": &data_plot_convergence
     "type": "object"
     "required":
+        - "title"
         - "color_active"
         - "color_reactive"
         - "marker"
         - "width"
     properties:
+        "title":
+            "type":
+                - "null"
+                - "string"
+            "minLength": 1
         "color_active":
             "type": "string"
             "minLength": 1
@@ -57,11 +63,17 @@
 "data_plot_residuum": &data_plot_residuum
     "type": "object"
     "required":
+        - "title"
         - "bar_color"
         - "edge_color"
         - "tol_bins"
         - "n_bins"
     properties:
+        "title":
+            "type":
+                - "null"
+                - "string"
+            "minLength": 1
         "bar_color":
             "type": "string"
             "minLength": 1

@@ -57,16 +57,18 @@
 #       - arrow_scale: relative arrow length (with respect to the voxel size)
 #
 #   - "convergence": plot the convergence of the iterative matrix solver (matplotlib)
+#       - title: title located at the top of the plot (null for hiding)
 #       - color_active: color of the plot for the active power
 #       - color_reactive: color of the plot for the reactive power
 #       - marker: plot marker size
 #       - width: line line width
 #
 #   - "convergence": plot the solver residuum histogram (matplotlib)
-#       - n_bins: number of bins
-#       - tol_bins: relative tolerance for the bin boundaries
+#       - title: title located at the top of the plot (null for hiding)
 #       - bar_color: fill color of the bins
 #       - edge_color: "edge color of the bins
+#       - tol_bins: relative tolerance for the bin boundaries
+#       - n_bins: number of bins for the residuum histogram
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -246,6 +248,7 @@
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
+        "title": "Convergence"
         "color_active": "red"
         "color_reactive": "blue"
         "marker": 8.0
@@ -256,7 +259,8 @@
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
-        "n_bins": 10
-        "tol_bins": 0.05
+        "title": "Residuum"
         "bar_color": "blue"
         "edge_color": "black"
+        "tol_bins": 0.05
+        "n_bins": 10
