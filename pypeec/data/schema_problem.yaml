@@ -107,3 +107,22 @@
                                     "type":
                                         - "number"
                                         - "array"
+                        "source_val":
+                            "type": "object"
+                            "additionalProperties":
+                                "type": "object"
+                                "anyOf":
+                                    -   "required":
+                                            - "I_re"
+                                            - "I_im"
+                                            - "Y_re"
+                                            - "Y_im"
+                                    -   "required":
+                                            - "V_re"
+                                            - "V_im"
+                                            - "Z_re"
+                                            - "Z_im"
+                                "additionalProperties":
+                                    "type":
+                                        - "number"
+                                        - "array"
