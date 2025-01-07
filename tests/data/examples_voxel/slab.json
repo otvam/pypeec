@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_voxel/slab",
-        "timestamp": "2025-01-06 21:56:25.381746"
+        "timestamp": "2025-01-07 01:45:15.139046"
     },
     "mesher": {
         "n_total": 28,
@@ -11,14 +11,14 @@
         "sim_dc": {
             "freq": 0.0,
             "has_converged": true,
-            "P_total": 1.5618492294877264e-06,
-            "W_total": 3.708742171799451e-09
+            "P_total": 1.4999999999999998e-06,
+            "W_total": 3.5618759817961648e-09
         },
         "sim_ac": {
             "freq": 1000.0,
             "has_converged": true,
-            "P_total": 1.4354457313284771e-08,
-            "W_total": 3.408586449060491e-11
+            "P_total": 9.243536116031175e-09,
+            "W_total": 2.1949552852371286e-11
         }
     }
 }

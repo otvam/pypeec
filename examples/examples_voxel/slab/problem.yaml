@@ -34,8 +34,8 @@
     "copper": {"rho_re": 1.0e-8, "rho_im": 0.0}
     "empty": {"rho_re": 0.0, "rho_im": 0.0}
 "source_val": &source_val
-    "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 80.0e+3, "Y_im": 0.0}
-    "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 6.0e-6, "Z_im": 0.0}
+    "src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 100.0e+3, "Y_im": 0.0}
+    "sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 4.0e-6, "Z_im": 0.0}
     "empty": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}
 "sweep_solver":
     "sim_dc":

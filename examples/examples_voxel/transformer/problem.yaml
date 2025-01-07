@@ -31,8 +31,8 @@
         "source_type": "voltage"
         "var_type": "lumped"
 "material_val": &material_val
-    "pri_copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
-    "sec_copper": {"rho_re": 8.75e-8, "rho_im": 0.0}
+    "pri_copper": {"rho_re": 1.0e-8, "rho_im": 0.0}
+    "sec_copper": {"rho_re": 1.0e-8, "rho_im": 0.0}
 "source_val": &source_val
     "pri_src": {"I_re": 1.0, "I_im": 0.0, "Y_re": 0.0, "Y_im": 0.0}
     "pri_sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 0.0, "Z_im": 0.0}

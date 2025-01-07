@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_stl/transformer_core",
-        "timestamp": "2025-01-06 22:01:03.117527"
+        "timestamp": "2025-01-07 01:49:59.975893"
     },
     "mesher": {
         "n_total": 69654,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 100000.0,
             "has_converged": true,
-            "P_total": 0.0004815214738165568,
-            "W_total": 3.004377486803331e-07
+            "P_total": 0.000840309977983697,
+            "W_total": 5.270893449942206e-07
         }
     }
 }

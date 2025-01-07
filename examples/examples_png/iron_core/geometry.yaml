@@ -20,11 +20,11 @@
         "sink": [[0, 255, 255, 255]]
     "layer_stack":
         - {"n_layer": 1, "filename_list": !path ["png/src.png"]}
-        - {"n_layer": 4, "filename_list": !path ["png/wire.png"]}
+        - {"n_layer": 8, "filename_list": !path ["png/wire.png"]}
         - {"n_layer": 2, "filename_list": !path ["png/core.png"]}
         - {"n_layer": 1, "filename_list": !path ["png/gnd.png"]}
         - {"n_layer": 2, "filename_list": !path ["png/core.png"]}
-        - {"n_layer": 4, "filename_list": !path ["png/wire.png"]}
+        - {"n_layer": 8, "filename_list": !path ["png/wire.png"]}
         - {"n_layer": 1, "filename_list": !path ["png/sink.png"]}
 "data_point":
     "check_cloud": true

@@ -1,7 +1,7 @@
 {
     "metadata": {
         "name": "examples_shape/coplanar",
-        "timestamp": "2025-01-06 21:56:30.664774"
+        "timestamp": "2025-01-07 01:45:21.670655"
     },
     "mesher": {
         "n_total": 19200,
@@ -11,8 +11,8 @@
         "sim_default": {
             "freq": 1000000.0,
             "has_converged": true,
-            "P_total": 4.5907127994646535,
-            "W_total": 2.0870287627163845e-06
+            "P_total": 0.0063281484796884726,
+            "W_total": 2.8775998767340667e-09
         }
     }
 }
