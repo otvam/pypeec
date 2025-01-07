@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "name": "examples_stl/transformer",
-        "timestamp": "2025-01-05 20:44:05.842986"
+        "name": "examples_stl/transformer_air",
+        "timestamp": "2025-01-06 22:00:08.644229"
     },
     "mesher": {
         "n_total": 19400,
@@ -17,8 +17,8 @@
         "sim_ac": {
             "freq": 100000.0,
             "has_converged": true,
-            "P_total": 0.2587468116523943,
-            "W_total": 6.771637705365883e-06
+            "P_total": 0.10028159940725602,
+            "W_total": 4.638307694906992e-06
         }
     }
 }
