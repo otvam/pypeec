@@ -76,8 +76,8 @@ def _get_matrix_coupling(n_winding, RL_mat):
     k_mat = np.zeros((n_winding, n_winding), dtype=np.float64)
     for i in range(n_winding):
         for j in range(n_winding):
-            k_mat[i, j] = RL_mat[i, j] / np.sqrt(RL_mat[i, i] * RL_mat[j, j])
-            k_mat[j, i] = RL_mat[j, i] / np.sqrt(RL_mat[i, i] * RL_mat[j, j])
+            k_mat[i, j] = np.abs(RL_mat[i, j]) / np.sqrt(RL_mat[i, i] * RL_mat[j, j])
+            k_mat[j, i] = np.abs(RL_mat[j, i]) / np.sqrt(RL_mat[i, i] * RL_mat[j, j])
 
     return k_mat
 
