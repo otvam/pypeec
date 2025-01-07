@@ -256,9 +256,8 @@ def get_symmetry(terminal, symmetry):
     assert V_mat.shape == (n_winding, n_solution), "invalid solution: voltage matrix shape"
 
     # expand the solution with the symmetries
-    for sym_tmp in symmetry:
-        I_mat = _get_symmetry_expand(I_mat, sym_tmp)
-        V_mat = _get_symmetry_expand(V_mat, sym_tmp)
+    I_mat = _get_symmetry_expand(I_mat, symmetry)
+    V_mat = _get_symmetry_expand(V_mat, symmetry)
 
     # remove redundant solutions
     IV_mat = np.vstack((I_mat, V_mat))

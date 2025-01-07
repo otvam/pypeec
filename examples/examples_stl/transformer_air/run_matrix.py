@@ -106,10 +106,8 @@ if __name__ == "__main__":
         {"src": "sec_src", "sink": "sec_sink"},
     ]
 
-    # definition of a list of permutations defining the symmetries
-    symmetry = [
-        [[0, 1], [1, 0]],
-    ]
+    # definition of a list of permutations with the symmetries
+    symmetry = [[0, 1], [1, 0]]
 
     # ########################################################
     # ### extract the impedance matrix
