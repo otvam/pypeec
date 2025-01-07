@@ -1,0 +1,57 @@
+# Definition of a "file_problem" data.
+#
+# This file is used by the solver.
+# Definition of the magnetic problem to be solved.
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+"material_def":
+    "pri_copper":
+        "domain_list": ["pri_src", "pri_sink", "pri_coil"]
+        "material_type": "electric"
+        "orientation_type": "isotropic"
+        "var_type": "lumped"
+    "sec_copper":
+        "domain_list": ["sec_src", "sec_sink", "sec_coil"]
+        "material_type": "electric"
+        "orientation_type": "isotropic"
+        "var_type": "lumped"
+    "core":
+        "domain_list": ["core"]
+        "material_type": "magnetic"
+        "orientation_type": "isotropic"
+        "var_type": "lumped"
+"source_def":
+    "pri_src":
+        "domain_list": ["pri_src"]
+        "source_type": "voltage"
+        "var_type": "lumped"
+    "pri_sink":
+        "domain_list": ["pri_sink"]
+        "source_type": "voltage"
+        "var_type": "lumped"
+    "sec_src":
+        "domain_list": ["sec_src"]
+        "source_type": "voltage"
+        "var_type": "lumped"
+    "sec_sink":
+        "domain_list": ["sec_sink"]
+        "source_type": "voltage"
+        "var_type": "lumped"
+"material_val": &material_val
+    "pri_copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
+    "sec_copper": {"rho_re": 1.75e-8, "rho_im": 0.0}
+    "core": { "chi_re": 150.0, "chi_im": 0.0 }
+"source_val": &source_val
+    "pri_src": {"V_re": 1.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
+    "pri_sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 1.0e-3, "Z_im": 0.0}
+    "sec_src": {"V_re": 0.0, "V_im": 0.0, "Z_re": 1.0e+3, "Z_im": 0.0}
+    "sec_sink": {"V_re": 0.0, "V_im": 0.0, "Z_re": 1.0e+3, "Z_im": 0.0}
+"sweep_solver":
+    "sim_default":
+        "init": null
+        "param":
+            "freq": 100.0e+3
+            "material_val": *material_val
+            "source_val": *source_val

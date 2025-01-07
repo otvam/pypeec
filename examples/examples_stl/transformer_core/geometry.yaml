@@ -1,0 +1,50 @@
+# Definition of a "file_geometry" data.
+#
+# This file is used by the mesher.
+# Definition of the voxel structure.
+#
+# Thomas Guillod - Dartmouth College
+# Mozilla Public License Version 2.0
+
+"mesh_type": "stl"
+"data_voxelize":
+    "param":
+        "d": [1.0e-3, 1.0e-3, 1.0e-3]
+        "xyz_min": null
+        "xyz_max": null
+        "check": true
+        "tol": 1.0e-6
+        "thr": 0.5
+        "pts": 1
+    "domain_stl":
+        "core": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/core.stl"}]
+        "pri_coil": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/pri_coil.stl"}]
+        "pri_src": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/pri_src.stl"}]
+        "pri_sink": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/pri_sink.stl"}]
+        "sec_coil": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/sec_coil.stl"}]
+        "sec_src": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/sec_src.stl"}]
+        "sec_sink": [{"scale": 1.0e-3, "offset": [0.0, 0.0, 0.0], "filename": !path "stl/sec_sink.stl"}]
+"data_point":
+    "check_cloud": true
+    "filter_cloud": true
+    "pts_cloud": []
+"data_resampling":
+    "use_reduce": false
+    "use_resample": false
+    "resampling_factor": [1, 1, 1]
+"data_conflict":
+    "resolve_rules": true
+    "resolve_random": false
+    "conflict_rules":
+        - {"domain_resolve": ["pri_coil"], "domain_keep": ["pri_src"]}
+        - {"domain_resolve": ["pri_coil"], "domain_keep": ["pri_sink"]}
+        - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_src"]}
+        - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_sink"]}
+"data_integrity":
+    "domain_connected":
+        "pri_conductor": {"domain_group": [["pri_coil"], ["pri_src"], ["pri_sink"]], "connected": true}
+        "sec_conductor": {"domain_group": [["sec_coil"], ["sec_src"], ["sec_sink"]], "connected": true}
+        "insulation": {"domain_group": [["pri_coil"], ["sec_coil"], ["core"]], "connected": false}
+    "domain_adjacent":
+        "pri_terminal": {"domain_group": [["pri_src"], ["pri_sink"]], "connected": false}
+        "sec_terminal": {"domain_group": [["sec_src"], ["sec_sink"]], "connected": false}

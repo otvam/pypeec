@@ -54,11 +54,21 @@ examples_stl/inductor_toroid
 
 .. image:: ../examples/examples_stl_inductor_toroid.png
 
+examples_stl/transformer_core
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Defined with **STL files**
+* **Transformer with two windings and a magnetic core**
+* Extraction of the **impedance matrix** from the solution
+* Example for the extraction of the impedance matrix: ``run_matrix.py``
+
+.. image:: ../examples/examples_stl_transformer_core.png
+
 examples_stl/transformer_air
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Defined with **STL files**
-* **Planar transformer with two windings**
+* **Planar air-core transformer with two windings**
 * Extraction of the **impedance matrix** from the solution
 * Example for the extraction of the impedance matrix: ``run_matrix.py``
 
