@@ -90,15 +90,11 @@ if __name__ == "__main__":
     # ### definition of the parameters
     # ########################################################
 
-    # list of sweeps for used for the DC impedance matrix
-    sweep_list_dc = [
-        "sim_dc",
-    ]
+    # list of sweeps for the DC impedance matrix
+    sweep_list_dc = ["sim_dc"]
 
-    # list of sweeps for used for the AC impedance matrix
-    sweep_list_ac = [
-        "sim_ac",
-    ]
+    # list of sweeps for the AC impedance matrix
+    sweep_list_ac = ["sim_ac"]
 
     # definition of the terminals for the impedance matrix
     terminal_list = [
