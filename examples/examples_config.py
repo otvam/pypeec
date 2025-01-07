@@ -30,7 +30,8 @@ FOLDER_CONFIG = "config"
 #       examples_stl/inductor_air
 #       examples_stl/inductor_core
 #       examples_stl/inductor_toroid
-#       examples_stl/transformer
+#       examples_stl/transformer_air
+#       examples_stl/transformer_core
 #   examples_png
 #       examples_png/inductor_spiral
 #       examples_png/inductor_gap
