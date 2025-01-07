@@ -155,8 +155,9 @@ def _get_matrix_parse(n_winding, n_solution, freq, Z_mat):
     else:
         L_mat = np.imag(Z_mat) / w
 
-    # # get the quality factor
+    # get the quality factor
     Q_mat = (w * L_mat) / R_mat
+    Q_vec = np.diagonal(Q_mat)
 
     # get the coupling
     k_R_mat = _get_matrix_coupling(n_winding, R_mat)
@@ -172,7 +173,7 @@ def _get_matrix_parse(n_winding, n_solution, freq, Z_mat):
         "L_mat": L_mat,
         "k_R_mat": k_R_mat,
         "k_L_mat": k_L_mat,
-        "Q_mat": Q_mat,
+        "Q_vec": Q_vec,
     }
 
     return matrix

@@ -69,7 +69,7 @@ def _show_matrix(matrix):
     with LOGGER.BlockIndent():
         LOGGER.info("k_R_mat = %s %%" % (1e2 * matrix["k_R_mat"]).tolist())
         LOGGER.info("k_L_mat = %s %%" % (1e2 * matrix["k_L_mat"]).tolist())
-        LOGGER.info("Q_mat = %s p.u." % (1e0 * matrix["Q_mat"]).tolist())
+        LOGGER.info("Q_vec = %s p.u." % (1e0 * matrix["Q_vec"]).tolist())
 
 
 if __name__ == "__main__":
