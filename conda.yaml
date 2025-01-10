@@ -1,6 +1,6 @@
 # Definition of the Conda Development Environment.
 #
-# WARNING: Only tested with Linux x86/x64/glibc.
+# WARNING: Only tested with Linux x86/x64/X11/glibc.
 #
 # WARNING: Install all the PyPEEC dependencies.
 #          The optional libraries are included.

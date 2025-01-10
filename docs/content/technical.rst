@@ -33,14 +33,14 @@ The following **optional packages** are required for **Jupyter notebooks**:
 
 PyPEEC is known to **work** with the following **platforms**:
 
-* Linux on x86/x64/glibc
+* Linux on x86/x64/X11/glibc
 * Apple macOS on x86/x64
 * Apple macOS on ARM64
 * MS Windows on x86/x64
 
 Some more **details** on the supported **platforms**:
 
-* The main **target platform** of PyPEEC is **Linux** on x86/x64/glibc.
+* The main **target platform** of PyPEEC is **Linux** on x86/x64/X11/glibc.
 * PyPEEC is a **pure-python package** and should work on any platform.
 * Compatible **Python versions**: 3.10, 3.11, 3.12, and 3.13
 * Any **CUDA and CuPy** compatible **GPU** is supported.
@@ -74,7 +74,7 @@ The development environment is defined in ``conda.yaml``:
 * Contains all the required and optional dependencies.
 * Contains the packaging/development tools.
 * All the version number are pinned.
-* Tested with Linux x86/x64/glibc.
+* Tested with Linux x86/x64/X11/glibc.
 
 The following scripts are used for the packaging and releasing processes:
 
