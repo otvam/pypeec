@@ -74,7 +74,10 @@ class PlotGui:
             import qtpy.QtWidgets
 
             # create and assign a single instance
-            APPQT = qtpy.QtWidgets.QApplication([])
+            APPQT = qtpy.QtWidgets.QApplication(["pypeec"])
+            APPQT.setApplicationDisplayName("pypeec")
+            APPQT.setApplicationName("pypeec")
+            APPQT.setOrganizationName("pypeec")
 
             # set the icon
             filename = importlib.resources.files("pypeec.data").joinpath("pypeec.png")
