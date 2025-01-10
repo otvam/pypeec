@@ -34,8 +34,8 @@ dependencies:
   - pkg-config=0.29.2
   - python-build=1.2.2
   # logging and serialization
-  - scilogger=1.2.3
-  - scisave=1.4.4
+  - scilogger=1.2.4
+  - scisave=1.4.5
   - jsonschema=4.23.0
   # numerical libraries
   - numpy=2.1.3
