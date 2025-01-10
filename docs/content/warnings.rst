@@ -34,8 +34,9 @@ Library Issues
 
 .. important::
     The **plotting code** is probably sensitive to the environment (platform and version of the libraries).
-    Therefore, these dependencies are minimized and insulated from the rest of the code.
+    Particularly, using the Wayland display system (instead of X11) is creating several issues.
     The plotting code (viewer and plotter) is separated from the simulation code (mesher and solver).
+    Hence, these graphical dependencies are minimized and insulated from the rest of the code.
 
 .. important::
     **Jupyter** is not included in the default package dependencies.

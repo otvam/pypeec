@@ -76,6 +76,11 @@ class PlotGui:
             # create and assign a single instance
             APPQT = qtpy.QtWidgets.QApplication([])
 
+            # set the icon
+            filename = importlib.resources.files("pypeec.data").joinpath("pypeec.png")
+            res_icon = qtpy.QtGui.QIcon(str(filename))
+            APPQT.setWindowIcon(res_icon)
+
         # set the app ID in order to get a consistent icon on MS Windows
         if (self.plot_mode == "qt") and (os.name == "nt"):
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("pypeec")
