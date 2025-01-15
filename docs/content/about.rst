@@ -4,32 +4,32 @@ About
 Links
 -----
 
-==========  ========================================
-Website     https://pypeec.otvam.ch
-Repository  https://github.com/otvam/pypeec
-Issues      https://github.com/otvam/pypeec/issues
-==========  ========================================
+=============  ==========================================
+Website        https://pypeec.otvam.ch
+Repository     https://github.com/otvam/pypeec
+Issues         https://github.com/otvam/pypeec/issues
+=============  ==========================================
 
 Maintainer
 ----------
 
-===========  ==================
-Name         **Thomas Guillod**
-Affiliation  Dartmouth College
-Email        guillod@otvam.ch
-Website      https://otvam.ch
-===========  ==================
+=============  ==========================================
+Name           **Thomas Guillod**
+Affiliation    Dartmouth College
+Email          guillod@otvam.ch
+Website        https://otvam.ch
+=============  ==========================================
 
 Release
 -------
 
-==========  =====================================================
-Package     **pypeec**
-Version     |ver| / |date|
-PyPI        https://pypi.org/project/pypeec
-Conda       https://anaconda.org/conda-forge/pypeec
-GitHub      https://github.com/otvam/pypeec/releases
-==========  =====================================================
+=============  ==========================================
+Package        **pypeec**
+Version        |ver| / |date|
+PyPI           https://pypi.org/project/pypeec
+Conda          https://anaconda.org/conda-forge/pypeec
+GitHub         https://github.com/otvam/pypeec/releases
+=============  ==========================================
 
 Authors
 -------
