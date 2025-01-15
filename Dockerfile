@@ -43,18 +43,17 @@ RUN mamba install --yes --channel conda-forge \
 # install PyPEEC (no-deps as everything required has been installed)
 RUN mamba install --yes --no-deps --channel conda-forge pypeec
 
-# clean mamba and fix permissions
+# clean conda data
 RUN mamba clean --all --force-pkgs-dirs --yes
-RUN fix-permissions "${CONDA_DIR}" 
-RUN fix-permissions "${HOME}"
+
+# fix permissions
+RUN fix-permissions "${CONDA_DIR}" && fix-permissions "${HOME}"
 
 # extract the PyPEEC examples
 RUN pypeec examples .
 
 # clean the workspace
-RUN rm -rf *.py
-RUN rm -rf *.sh
-RUN rm -rf work
+RUN rm -rf *.py *.sh work
 
 # allow Jupyter to display VTK graphics
 ENV PYVISTA_TRAME_SERVER_PROXY_PREFIX="/proxy/"
