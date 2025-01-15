@@ -36,7 +36,7 @@ examples_stl/inductor_air
 * Defined with **STL files**
 * **3D air-core spiral inductor**
 
-.. image:: ../examples/examples_stl_inductor_air.png
+.. image:: ../examples/examples_stl/inductor_air.png
 
 examples_stl/inductor_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -44,7 +44,7 @@ examples_stl/inductor_core
 * Defined with **STL files**
 * **3D inductor with a magnetic E-core**
 
-.. image:: ../examples/examples_stl_inductor_core.png
+.. image:: ../examples/examples_stl/inductor_core.png
 
 examples_stl/inductor_toroid
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -52,7 +52,7 @@ examples_stl/inductor_toroid
 * Defined with **STL files**
 * **3D inductor with a toroidal core**
 
-.. image:: ../examples/examples_stl_inductor_toroid.png
+.. image:: ../examples/examples_stl/inductor_toroid.png
 
 examples_stl/transformer_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -60,7 +60,7 @@ examples_stl/transformer_core
 * Defined with **STL files**
 * **Transformer with two windings and a magnetic core**
 
-.. image:: ../examples/examples_stl_transformer_core.png
+.. image:: ../examples/examples_stl/transformer_core.png
 
 examples_stl/transformer_air
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -70,7 +70,7 @@ examples_stl/transformer_air
 * Extraction of the **impedance matrix** from the solution
 * Example for the extraction of the impedance matrix: ``run_matrix.py``
 
-.. image:: ../examples/examples_stl_transformer_air.png
+.. image:: ../examples/examples_stl/transformer_air.png
 
 Shape Mesher Examples
 ---------------------
@@ -81,7 +81,7 @@ examples_shape/busbar
 * Defined with **2D shapes**
 * **Coplanar L-shaped busbar**
 
-.. image:: ../examples/examples_shape_busbar.png
+.. image:: ../examples/examples_shape/busbar.png
 
 examples_shape/coplanar
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -89,7 +89,7 @@ examples_shape/coplanar
 * Defined with **2D shapes**
 * **PCB with coplanar traces**
 
-.. image:: ../examples/examples_shape_coplanar.png
+.. image:: ../examples/examples_shape/coplanar.png
 
 examples_shape/parallel
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -97,7 +97,7 @@ examples_shape/parallel
 * Defined with **2D shapes**
 * **Parallel wires with opposing currents**
 
-.. image:: ../examples/examples_shape_parallel.png
+.. image:: ../examples/examples_shape/parallel.png
 
 examples_shape/hole
 ^^^^^^^^^^^^^^^^^^^
@@ -105,7 +105,7 @@ examples_shape/hole
 * Defined with **2D shapes**
 * **Single PCB trace with a hole**
 
-.. image:: ../examples/examples_shape_hole.png
+.. image:: ../examples/examples_shape/hole.png
 
 examples_shape/wire
 ^^^^^^^^^^^^^^^^^^^
@@ -113,7 +113,7 @@ examples_shape/wire
 * Defined with **2D shapes**
 * **Single straight round wire**
 
-.. image:: ../examples/examples_shape_wire.png
+.. image:: ../examples/examples_shape/wire.png
 
 examples_shape/pwm
 ^^^^^^^^^^^^^^^^^^
@@ -123,7 +123,7 @@ examples_shape/pwm
 * **Non-sinusoidal** analysis with **Fourier** series
 * Example for the frequency domain analysis: ``run_fourier.py``
 
-.. image:: ../examples/examples_shape_pwm.png
+.. image:: ../examples/examples_shape/pwm.png
 
 
 PNG Mesher Examples
@@ -135,7 +135,7 @@ examples_png/inductor_spiral
 * Defined with **PNG files**
 * **Planar spiral inductor**
 
-.. image:: ../examples/examples_png_inductor_spiral.png
+.. image:: ../examples/examples_png/inductor_spiral.png
 
 examples_png/inductor_gap
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -143,7 +143,7 @@ examples_png/inductor_gap
 * Defined with **PNG files**
 * **Gapped inductor with a magnetic E-core**
 
-.. image:: ../examples/examples_png_inductor_gap.png
+.. image:: ../examples/examples_png/inductor_gap.png
 
 examples_png/inductor_pot
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -151,7 +151,7 @@ examples_png/inductor_pot
 * Defined with **PNG files**
 * **Pot-core inductor with external gap**
 
-.. image:: ../examples/examples_png_inductor_pot.png
+.. image:: ../examples/examples_png/inductor_pot.png
 
 examples_png/iron_core
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -159,7 +159,7 @@ examples_png/iron_core
 * Defined with **PNG files**
 * **Iron magnetic core with a non-zero resistivity**
 
-.. image:: ../examples/examples_png_iron_core.png
+.. image:: ../examples/examples_png/iron_core.png
 
 examples_png/shield
 ^^^^^^^^^^^^^^^^^^^
@@ -167,7 +167,7 @@ examples_png/shield
 * Defined with **PNG files**
 * **Conductor loop with a magnetic shield**
 
-.. image:: ../examples/examples_png_shield.png
+.. image:: ../examples/examples_png/shield.png
 
 examples_png/gerber
 ^^^^^^^^^^^^^^^^^^^
@@ -177,7 +177,7 @@ examples_png/gerber
 * Generation of the PNG files from **GERBER files**
 * Example for parsing the GERBER files: ``run_gerber.py``
 
-.. image:: ../examples/examples_png_gerber.png
+.. image:: ../examples/examples_png/gerber.png
 
 Voxel Mesher Examples
 ---------------------
@@ -188,7 +188,7 @@ examples_voxel/slab
 * Defined with **voxel indices**
 * **Simple slab conductor in free space**
 
-.. image:: ../examples/examples_voxel_slab.png
+.. image:: ../examples/examples_voxel/slab.png
 
 examples_voxel/transformer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -196,7 +196,7 @@ examples_voxel/transformer
 * Defined with **voxel indices**
 * **Simple transformer with a short-circuited winding**
 
-.. image:: ../examples/examples_voxel_transformer.png
+.. image:: ../examples/examples_voxel/transformer.png
 
 examples_voxel/anisotropic
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -204,7 +204,7 @@ examples_voxel/anisotropic
 * Defined with **voxel indices**
 * **L-shaped conductor with anisotropic resistivity**
 
-.. image:: ../examples/examples_voxel_anisotropic.png
+.. image:: ../examples/examples_voxel/anisotropic.png
 
 examples_voxel/distributed
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -212,7 +212,7 @@ examples_voxel/distributed
 * Defined with **voxel indices**
 * **Slab conductor with space dependent resistivity**
 
-.. image:: ../examples/examples_voxel_distributed.png
+.. image:: ../examples/examples_voxel/distributed.png
 
 examples_voxel/logo
 ^^^^^^^^^^^^^^^^^^^
@@ -220,7 +220,7 @@ examples_voxel/logo
 * Defined with **voxel indices**
 * **Simple geometry used for the PyPEEC logo**
 
-.. image:: ../examples/examples_voxel_logo.png
+.. image:: ../examples/examples_voxel/logo.png
 
 examples_voxel/core
 ^^^^^^^^^^^^^^^^^^^
@@ -230,4 +230,4 @@ examples_voxel/core
 * **Procedural generation** of the voxel indices (1D and 3D)
 * Example for generating the voxel indices: ``run_voxel.py``
 
-.. image:: ../examples/examples_voxel_core.png
+.. image:: ../examples/examples_voxel/core.png
