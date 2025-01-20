@@ -16,6 +16,7 @@ import scilogger
 import numpy as np
 import pyvista as pv
 import scipy.sparse as sps
+import scipy.special as spe
 
 # get a logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
@@ -59,9 +60,6 @@ def _get_voxelize_stl(pts, connect, mesh, thr):
     # get the point cloud
     cloud = pv.PointSet(pts)
 
-    # required number of test points per voxel
-    cut = thr * (connect.shape[1] / connect.shape[0])
-
     # voxelize the mesh
     try:
         selection = cloud.select_enclosed_points(mesh, tolerance=0.0, check_surface=False)
@@ -77,7 +75,7 @@ def _get_voxelize_stl(pts, connect, mesh, thr):
         count = connect * mask
 
         # get the indices of the extracted voxels
-        idx_voxel = np.flatnonzero(count >= cut)
+        idx_voxel = np.flatnonzero(count >= thr)
     else:
         idx_voxel = np.empty(0, dtype=np.int64)
 
@@ -154,7 +152,7 @@ def _get_voxel_size(d, xyz_max, xyz_min):
     return n, d, c
 
 
-def _get_point_test(d, tol, pts):
+def _get_point_test(d, pts):
     """
     Get the test point coordinates for a single voxel.
     """
@@ -162,15 +160,11 @@ def _get_point_test(d, tol, pts):
     # extract the voxel data
     (dx, dy, dz) = d
 
-    # point vectors
-    if pts == 1:
-        x_vec = [0.0]
-        y_vec = [0.0]
-        z_vec = [0.0]
-    else:
-        x_vec = np.linspace(-dx / 2 + tol, +dx / 2 - tol, pts, dtype=np.float64)
-        y_vec = np.linspace(-dy / 2 + tol, +dy / 2 - tol, pts, dtype=np.float64)
-        z_vec = np.linspace(-dz / 2 + tol, +dz / 2 - tol, pts, dtype=np.float64)
+    # get the quadrature points
+    (v_vec, w_vec) = spe.roots_legendre(pts)
+    x_vec = v_vec*dx/2
+    y_vec = v_vec*dy/2
+    z_vec = v_vec*dz/2
 
     # span the voxel points
     [x_vec, y_vec, z_vec] = np.meshgrid(x_vec, y_vec, z_vec)
@@ -178,10 +172,19 @@ def _get_point_test(d, tol, pts):
     y_vec = y_vec.flatten()
     z_vec = z_vec.flatten()
 
-    # get the points
+    # span the voxel weights
+    [wx_vec, wy_vec, wz_vec] = np.meshgrid(w_vec, w_vec, w_vec)
+    wx_vec = wx_vec.flatten()
+    wy_vec = wy_vec.flatten()
+    wz_vec = wz_vec.flatten()
+
+    # compute the points
     pts_test = np.stack((x_vec, y_vec, z_vec), axis=1)
 
-    return pts_test
+    # compute the weights
+    wgt_test = (wx_vec * wy_vec * wz_vec) / 8
+
+    return pts_test, wgt_test
 
 
 def _get_point_grid(n, d, c):
@@ -219,7 +222,7 @@ def _get_point_grid(n, d, c):
     return pts_grid
 
 
-def _get_voxel_structure(pts_test, pts_grid):
+def _get_voxel_structure(pts_test, wgt_test, pts_grid):
     """
     Get the test points for the complete voxel structure.
     Assign the test points to the voxels.
@@ -236,11 +239,11 @@ def _get_voxel_structure(pts_test, pts_grid):
     pts = pts_test[idx_test] + pts_grid[idx_grid]
 
     # assign the test points to the voxels
-    data = np.ones(len(pts), dtype=np.int64)
+    data = np.tile(wgt_test, len(pts_grid))
     idx_col = np.arange(len(pts), dtype=np.int64)
     idx_row = np.arange(len(pts_grid), dtype=np.int64)
     idx_row = np.repeat(idx_row, len(pts_test))
-    connect = sps.csc_matrix((data, (idx_row, idx_col)), shape=(len(pts_grid), len(pts)), dtype=np.int64)
+    connect = sps.csc_matrix((data, (idx_row, idx_col)), shape=(len(pts_grid), len(pts)), dtype=np.float64)
 
     return pts, connect
 
@@ -287,7 +290,6 @@ def get_mesh(param, domain_stl):
     xyz_min = param["xyz_min"]
     xyz_max = param["xyz_max"]
     check = param["check"]
-    tol = param["tol"]
     thr = param["thr"]
     pts = param["pts"]
 
@@ -309,14 +311,17 @@ def get_mesh(param, domain_stl):
     LOGGER.debug("get the voxel size")
     (n, d, c) = _get_voxel_size(d, xyz_max, xyz_min)
 
+    # get the test points
+    LOGGER.debug("get the test points")
+    (pts_test, wgt_test) = _get_point_test(d, pts)
+
     # get the voxel points
     LOGGER.debug("get the voxel points")
-    pts_test = _get_point_test(d, tol, pts)
     pts_grid = _get_point_grid(n, d, c)
 
     # get the voxel structure
     LOGGER.debug("get the voxel structure")
-    (pts, connect) = _get_voxel_structure(pts_test, pts_grid)
+    (pts, connect) = _get_voxel_structure(pts_test, wgt_test, pts_grid)
 
     # voxelize the meshes and get the indices
     LOGGER.debug("voxelize STL files")
