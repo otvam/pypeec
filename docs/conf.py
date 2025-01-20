@@ -54,9 +54,8 @@ extensions = [
 
 # allowed redirects for the external links
 linkcheck_allowed_redirects = {
-    "http://mozilla.org/*": ".*",
-    "https://mybinder.org/*": ".*",
     "https://dartmouth.edu/*": ".*",
+    "http://mozilla.org/*": ".*",
     "https://doi.org/*": ".*",
 }
 

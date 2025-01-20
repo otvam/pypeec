@@ -8,7 +8,6 @@
 [![doc / sphinx](https://img.shields.io/badge/doc-sphinx-yellow)](https://pypeec.otvam.ch)
 [![pypi / pkg](https://img.shields.io/pypi/v/pypeec?label=pypi&color=green)](https://pypi.org/project/pypeec)
 [![conda / pkg](https://img.shields.io/conda/v/conda-forge/pypeec?label=conda&color=green)](https://anaconda.org/conda-forge/pypeec)
-[![binder / launch](https://img.shields.io/badge/binder-launch-blue)](https://mybinder.org/v2/gh/otvam/pypeec/main?labpath=notebook.ipynb)
 
 ---
 * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**

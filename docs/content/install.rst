@@ -20,18 +20,6 @@ Some **important remarks** about the PyPEEC **packages**:
 * The optional HPC libraries are usually easier to install through Conda.
 * The Jupyter libraries are usually easier to install through Conda.
 
-Test Online With Binder
------------------------
-
-**PyPEEC** can be **tested online without installation**:
-
-* The online test service is provided by Binder.
-* The link will open a JupyterLab instance with PyPEEC.
-* The PyPEEC tutorial and examples are included.
-* The Binder instance is only intended for test purposes.
-* The Binder instance is very slow and memory limited.
-* `Launch PyPEEC with Binder <https://mybinder.org/v2/gh/otvam/pypeec/main?labpath=notebook.ipynb>`__
-
 Using a Python Environment
 --------------------------
 
