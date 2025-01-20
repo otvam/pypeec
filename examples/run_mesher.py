@@ -24,4 +24,7 @@ if __name__ == "__main__":
     file_voxel = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "voxel.json.gz")
 
     # run
-    pypeec.run_mesher_file(file_geometry, file_voxel)
+    pypeec.run_mesher_file(
+        file_geometry=file_geometry,
+        file_voxel=file_voxel,
+    )
