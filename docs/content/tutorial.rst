@@ -38,6 +38,7 @@ Step 3: Mesher
     # Run the mesher from the command line
     #   - geometry.yaml - contains the geometry description (input)
     #   - voxel.json.gz - contains the meshed voxel structure (output)
+
     pypeec mesher \
         --geometry tutorial/geometry.yaml \
         --voxel tutorial/voxel.json.gz
@@ -47,10 +48,15 @@ Step 3: Mesher
     # Run the mesher from the Python interpreter
     #   - geometry.yaml - contains the geometry description (input)
     #   - voxel.json.gz - contains the meshed voxel structure (output)
+
     import pypeec
+
+    file_geometry = "tutorial/geometry.yaml"
+    file_voxel = "tutorial/voxel.json.gz"
+
     pypeec.run_mesher_file(
-        "tutorial/geometry.yaml",
-        "tutorial/voxel.json.gz",
+        file_geometry=file_geometry,
+        file_voxel=file_voxel,
     )
 
 .. literalinclude:: ../tutorial/log_mesher.txt
@@ -65,6 +71,7 @@ Step 4: Viewer
     #   - voxel.json.gz - contains the meshed voxel structure (input)
     #   - viewer.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in viewer.yaml)
+
     pypeec viewer \
         --voxel tutorial/voxel.json.gz \
         --viewer config/viewer.yaml \
@@ -76,10 +83,15 @@ Step 4: Viewer
     #   - voxel.json.gz - contains the meshed voxel structure (input)
     #   - viewer.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in viewer.yaml)
+
     import pypeec
+
+    file_voxel = "tutorial/voxel.json.gz"
+    file_viewer = "config/viewer.yaml"
+
     pypeec.run_viewer_file(
-        "tutorial/voxel.json.gz",
-        "config/viewer.yaml",
+        file_voxel=file_voxel,
+        file_viewer=file_viewer,
         tag_plot=["domain", "graph"],
     )
 
@@ -101,6 +113,7 @@ Step 5: Solver
     #   - problem.yaml - contains the magnetic problem description (input)
     #   - tolerance.yaml - contains the solver numerical tolerances (input)
     #   - solution.json.gz - contains the problem solution (output)
+
     pypeec solver \
         --voxel tutorial/voxel.json.gz \
         --problem tutorial/problem.yaml \
@@ -114,12 +127,19 @@ Step 5: Solver
     #   - problem.yaml - contains the magnetic problem description (input)
     #   - tolerance.yaml - contains the solver numerical tolerances (input)
     #   - solution.json.gz - contains the problem solution (output)
+
     import pypeec
+
+    file_voxel = "tutorial/voxel.json.gz"
+    file_solution = "tutorial/solution.json.gz"
+    file_problem = "tutorial/problem.yaml"
+    file_tolerance = "config/tolerance.yaml"
+
     pypeec.run_solver_file(
-        "tutorial/voxel.json.gz",
-        "tutorial/problem.yaml",
-        "config/tolerance.yaml",
-        "tutorial/solution.json.gz",
+        file_voxel=file_voxel,
+        file_problem=file_problem,
+        file_tolerance=file_tolerance,
+        file_solution=file_solution,
     )
 
 .. literalinclude:: ../tutorial/log_solver.txt
@@ -134,6 +154,7 @@ Step 6: Plotter
     #   - solution.json.gz - contains the problem solution (input)
     #   - plotter.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in plotter.yaml)
+
     pypeec plotter \
         --solution tutorial/solution.json.gz \
         --plotter config/plotter.yaml \
@@ -145,10 +166,15 @@ Step 6: Plotter
     #   - solution.json.gz - contains the problem solution (input)
     #   - plotter.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in plotter.yaml)
+
     import pypeec
+
+    file_solution = "tutorial/solution.json.gz"
+    file_plotter = "config/plotter.yaml"
+
     pypeec.run_plotter_file(
-        "tutorial/solution.json.gz",
-        "config/plotter.yaml",
+        file_solution=file_solution,
+        file_plotter=file_plotter,
         tag_plot=["V_c_norm", "J_c_norm", "H_p_norm", "residuum"],
     )
 
