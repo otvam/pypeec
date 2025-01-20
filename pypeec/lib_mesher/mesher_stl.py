@@ -69,15 +69,11 @@ def _get_voxelize_stl(pts, connect, mesh, thr):
     # create a boolean mask
     mask = selection["SelectedPoints"].view(bool)
 
-    # find the voxel indices
-    if np.any(mask):
-        # count the number of test points per voxel
-        count = connect * mask
+    # count the number of test points per voxel
+    count = connect * mask
 
-        # get the indices of the extracted voxels
-        idx_voxel = np.flatnonzero(count >= thr)
-    else:
-        idx_voxel = np.empty(0, dtype=np.int64)
+    # get the indices of the extracted voxels
+    idx_voxel = np.flatnonzero(count >= thr)
 
     return idx_voxel
 
