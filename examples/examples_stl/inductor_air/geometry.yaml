@@ -13,7 +13,6 @@
         "xyz_min": null
         "xyz_max": null
         "check": true
-        "tol": 1.0e-6
         "thr": 0.5
         "pts": 1
     "domain_stl":

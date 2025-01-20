@@ -10,7 +10,6 @@
             - "xyz_min"
             - "xyz_max"
             - "check"
-            - "tol"
             - "thr"
             - "pts"
         "properties":
@@ -39,10 +38,6 @@
                     "type": "number"
             "check":
                 "type": "boolean"
-                "minimum": 0
-
-            "tol":
-                "type": "number"
                 "minimum": 0
             "thr":
                 "type": "number"

@@ -14,21 +14,18 @@
     #   - check: boolean parameters for checking the STL mesh integrity
     #       - if true, the STL mesh should represent a closed surface
     #       - if false, the surface status of the STL mesh is not checked
-    #   - tol: distance between the voxel boundaries and the voxelization test points
-    #       - if non-zero, a clearance is respected between the test points and the voxel boundary
-    #       - if equal to zero, test points can be located on the voxel boundary
     #   - thr: threshold for the voxelization (in order to keep/exclude voxels)
-    #       - the fraction of test points located inside the shape is computed for each voxel
+    #       - the volume fraction located inside the STL mesh is computed for each voxel
     #       - if the fraction is greater than the threshold, the voxel is added to the structure
     #   - pts: number of test points used for the voxelization (for each voxel)
     #       - if greater than one, several points are used (pts^3 points are created)
-    #       - if one, a single test point is used (in the center the voxel)
+    #       - if equal to one, a single test point is used (in the center the voxel)
+    #       - the Gauss-Legendre quadrature is used to span the points
     "param":
         "d": [10.0e-3, 10.0e-3, 10.0e-3]
         "xyz_min": [-20e-3, -20e-3, -20e-3]
         "xyz_max": [+20e-3, +20e-3, +20e-3]
         "check": true
-        "tol": 1.0e-3
         "thr": 0.5
         "pts": 1
 
