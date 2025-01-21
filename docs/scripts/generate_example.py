@@ -47,11 +47,7 @@ def run_image(folder_example):
     data_voxel = pypeec.run_mesher_data(data_geometry)
 
     # run the viewer
-    pypeec.run_viewer_data(
-        data_voxel,
-        data_viewer,
-        tag_plot=["domain"],
-    )
+    pypeec.run_viewer_data(data_voxel, data_viewer, tag_plot=["domain"])
 
 
 if __name__ == "__main__":

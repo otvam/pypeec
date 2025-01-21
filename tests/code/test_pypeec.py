@@ -140,10 +140,26 @@ def run_workflow(name, use_script):
             _run_script(argv_so)
             _run_script(argv_pl)
         else:
-            pypeec.run_mesher_file(file_geometry, file_voxel)
-            pypeec.run_viewer_file(file_voxel, file_viewer, plot_mode="debug")
-            pypeec.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
-            pypeec.run_plotter_file(file_solution, file_plotter, plot_mode="debug")
+            pypeec.run_mesher_file(
+                file_geometry=file_geometry,
+                file_voxel=file_voxel,
+            )
+            pypeec.run_solver_file(
+                file_voxel=file_voxel,
+                file_problem=file_problem,
+                file_tolerance=file_tolerance,
+                file_solution=file_solution,
+            )
+            pypeec.run_viewer_file(
+                file_voxel=file_voxel,
+                file_viewer=file_viewer,
+                plot_mode="debug",
+            )
+            pypeec.run_plotter_file(
+                file_solution=file_solution,
+                file_plotter=file_plotter,
+                plot_mode="debug",
+            )
 
         # load the files
         data_voxel = scisave.load_data(file_voxel)

@@ -42,8 +42,16 @@ def _solve_peec(folder_example, folder_config):
     file_solution = os.path.join(folder_example, "solution.pkl")
 
     # run the workflow and load the solution
-    pypeec.run_mesher_file(file_geometry, file_voxel)
-    pypeec.run_solver_file(file_voxel, file_problem, file_tolerance, file_solution)
+    pypeec.run_mesher_file(
+        file_geometry=file_geometry,
+        file_voxel=file_voxel,
+    )
+    pypeec.run_solver_file(
+        file_voxel=file_voxel,
+        file_problem=file_problem,
+        file_tolerance=file_tolerance,
+        file_solution=file_solution,
+    )
     data_solution = scisave.load_data(file_solution)
 
     return data_solution
