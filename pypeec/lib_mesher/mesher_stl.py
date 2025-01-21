@@ -158,9 +158,9 @@ def _get_point_test(d, pts):
 
     # get the quadrature points
     (v_vec, w_vec) = spe.roots_legendre(pts)
-    x_vec = v_vec*dx/2
-    y_vec = v_vec*dy/2
-    z_vec = v_vec*dz/2
+    x_vec = v_vec * dx / 2
+    y_vec = v_vec * dy / 2
+    z_vec = v_vec * dz / 2
 
     # span the voxel points
     [x_vec, y_vec, z_vec] = np.meshgrid(x_vec, y_vec, z_vec)
