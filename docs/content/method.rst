@@ -90,8 +90,13 @@ Hence, the computational cost and memory requirement for generating and storing 
    Fig. 6 - Illustration of the remapping of the inductance matrix coefficients.
 
 With all the repeated coefficients, the inductance matrix is a a block-Toeplitz Toeplitz-block matrix.
-For such matrices, the matrix-vector multiplications can be done with Fast Fourier Transforms.
-Hence, the computational complexity of multiplications is reduced from O(n^2) to O(n*log(n)).
+For such matrices, the matrix-vector multiplications can be done with Fast Fourier Transforms (:ref:`Fig. 7 <fig_7>`).
+Hence, the Fast Fourier Transforms are reducing the computational complexity of multiplications from O(n^2) to O(n*log(n)).
+
+.. _fig_7:
+.. figure:: ../method/peec_7.png
+
+   Fig. 7 - Toeplitz matrix-vector multiplication with FFT.
 
 In summary, with a voxel structure, the PEEC method features the following advantages:
 
