@@ -83,8 +83,8 @@ parallel_sweep:
     #   - "segregated" is iterating between the electric and magnetic equations
     "coupling": "direct"
 
-    # tolerance for checking the solution residuum on the final solution
-    "tolerance_options":
+    # options for determining the solver return status
+    "status_options":
         "ignore_status": false         # ignore the solver status
         "ignore_res": true             # ignore the residuum convergence
         "rel_tol": 1.0e-3              # relative tolerance for the residuum convergence

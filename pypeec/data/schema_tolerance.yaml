@@ -59,7 +59,7 @@
         "iter_magnetic_options": *iter_options
 
 #############################################################################
-"tolerance_options": &tolerance_options
+"status_options": &status_options
     "type": "object"
     "required":
         - "ignore_status"
@@ -228,7 +228,7 @@
         "type": "object"
         "required":
             - "coupling"
-            - "tolerance_options"
+            - "status_options"
             - "power_options"
             - "direct_options"
             - "segregated_options"
@@ -238,7 +238,7 @@
                 "enum":
                     - "direct"
                     - "segregated"
-            "tolerance_options": *tolerance_options
+            "status_options": *status_options
             "power_options": *power_options
             "direct_options": *iter_options
             "segregated_options": *segregated_options

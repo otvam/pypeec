@@ -410,16 +410,16 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_
     return status, sol_all
 
 
-def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, tolerance_options):
+def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, status_options):
     """
     Compute the residuum and the solver convergence status.
     """
 
     # extract
-    ignore_status = tolerance_options["ignore_status"]
-    ignore_res = tolerance_options["ignore_res"]
-    rel_tol = tolerance_options["rel_tol"]
-    abs_tol = tolerance_options["abs_tol"]
+    ignore_status = status_options["ignore_status"]
+    ignore_res = status_options["ignore_res"]
+    rel_tol = status_options["rel_tol"]
+    abs_tol = status_options["abs_tol"]
 
     # extract
     (rhs_c, rhs_m) = rhs
@@ -459,7 +459,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
 
     # get the condition options
     coupling = solver_options["coupling"]
-    tolerance_options = solver_options["tolerance_options"]
+    status_options = solver_options["status_options"]
     power_options = solver_options["power_options"]
     segregated_options = solver_options["segregated_options"]
     direct_options = solver_options["direct_options"]
@@ -529,7 +529,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
         iter_obj.get_callback_final(sol)
 
     # get convergence status
-    (status, res, res_val, res_thr) = _get_status(status, sol, rhs, fct_cpl, fct_sys, tolerance_options)
+    (status, res, res_val, res_thr) = _get_status(status, sol, rhs, fct_cpl, fct_sys, status_options)
 
     # extract alg results
     n_sys_eval = op_obj.get_n_sys_eval()
