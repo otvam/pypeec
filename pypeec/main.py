@@ -73,8 +73,9 @@ def run_mesher_file(file_geometry, file_voxel):
 
     # load data
     try:
-        LOGGER.info("load the input data")
+        LOGGER.info("load the input data : start")
         data_geometry = scisave.load_config(file_geometry)
+        LOGGER.info("load the input data : done")
     except Exception as ex:
         LOGGER.log_exception(ex)
         raise ex
@@ -84,8 +85,9 @@ def run_mesher_file(file_geometry, file_voxel):
 
     # save results
     try:
-        LOGGER.info("save the results")
+        LOGGER.info("save the results : start")
         scisave.write_data(file_voxel, data_voxel)
+        LOGGER.info("save the results : done")
     except Exception as ex:
         LOGGER.log_exception(ex)
         raise ex
@@ -172,9 +174,10 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
 
     # load data
     try:
-        LOGGER.info("load the input data")
+        LOGGER.info("load the input data : start")
         data_voxel = scisave.load_data(file_voxel)
         data_viewer = scisave.load_config(file_viewer)
+        LOGGER.info("load the input data : done")
     except Exception as ex:
         LOGGER.log_exception(ex)
         raise ex
@@ -251,10 +254,11 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
 
     # load data
     try:
-        LOGGER.info("load the input data")
+        LOGGER.info("load the input data : start")
         data_voxel = scisave.load_data(file_voxel)
         data_problem = scisave.load_config(file_problem)
         data_tolerance = scisave.load_config(file_tolerance)
+        LOGGER.info("load the input data : done")
     except Exception as ex:
         LOGGER.log_exception(ex)
         raise ex
@@ -264,8 +268,9 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
 
     # save results
     try:
-        LOGGER.info("save the results")
+        LOGGER.info("save the results : start")
         scisave.write_data(file_solution, data_solution)
+        LOGGER.info("save the results : done")
     except Exception as ex:
         LOGGER.log_exception(ex)
         raise ex
@@ -359,9 +364,10 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     # load data
     try:
         # load data
-        LOGGER.info("load the input data")
+        LOGGER.info("load the input data : start")
         data_solution = scisave.load_data(file_solution)
         data_plotter = scisave.load_config(file_plotter)
+        LOGGER.info("load the input data : done")
     except Exception as ex:
         LOGGER.log_exception(ex)
         raise ex
