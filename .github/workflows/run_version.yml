@@ -40,5 +40,5 @@ jobs:
           auto-activate-base: false
           activate-environment: pypeec
       - name: List dependencies
-        shell: bash -el {0}
+        shell: powershell
         run: conda install -v gdk-pixbuf==2.42.12
