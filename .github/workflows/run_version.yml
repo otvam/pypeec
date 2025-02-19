@@ -39,6 +39,6 @@ jobs:
           python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
-      - name: List dependencies
-        shell: powershell
-        run: conda install -v gdk-pixbuf==2.42.12
+      - name: Install dependencies
+        shell: bash -el {0}
+        run: conda install --channel conda-forge --file .github/envs/env_conda.txt
