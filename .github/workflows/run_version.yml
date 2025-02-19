@@ -36,15 +36,10 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
+          environment-file: .github/envs/env.yaml
           python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
-      - name: Clean dependencies
-        shell: bash -el {0}
-        run: conda clean --all
-      - name: Install dependencies
-        shell: bash -el {0}
-        run: conda install -v --channel conda-forge --file .github/envs/env_conda.txt
       - name: List dependencies
         shell: bash -el {0}
         run: conda list --export
