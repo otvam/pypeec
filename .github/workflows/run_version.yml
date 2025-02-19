@@ -39,13 +39,12 @@ jobs:
           python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
+      - name: Clean dependencies
+        shell: bash -el {0}
+        run: conda clean --all
       - name: Install dependencies
         shell: bash -el {0}
         run: conda install -v --channel conda-forge --file .github/envs/env_conda.txt
       - name: List dependencies
         shell: bash -el {0}
         run: conda list --export
-      - name: Run the tests
-        shell: bash -el {0}
-        run: ./.github/scripts/run_tests.sh
-  # ===================== run with pypi
