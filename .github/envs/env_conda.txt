@@ -1,1 +1,2 @@
 gdk-pixbuf==2.42.12=hed59a49_0
+libiconv==1.17=hcfcfb64_2
