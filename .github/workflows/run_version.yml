@@ -36,10 +36,9 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
-          environment-file: .github/envs/env.yaml
           python-version: ${{ matrix.version }}
           auto-activate-base: false
           activate-environment: pypeec
       - name: List dependencies
         shell: bash -el {0}
-        run: conda list --export
+        run: conda install -v gdk-pixbuf==2.42.12
