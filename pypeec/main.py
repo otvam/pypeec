@@ -152,8 +152,8 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         - The file content describes the meshed voxel structure.
         - This input file is loaded by this function (JSON or Pickle format).
     file_viewer: filename
-        The file content describes the different plots to be created.
-        This input file is loaded by this function (JSON or YAML format).
+        - The file content describes the different plots to be created.
+        - This input file is loaded by this function (JSON or YAML format).
     tag_plot : list
         - The list describes plots to be shown.
         - If None or omitted: all the plots are shown.
