@@ -47,6 +47,10 @@ The code is written in **Python** and is fully **open source**!
    :target: https://github.com/otvam/pypeec
    :alt: git / repo
 
+.. image:: images/badge_doi.svg
+   :target: https://doi.org/10.5281/zenodo.14941571
+   :alt: doi / cite
+
 .. image:: images/badge_doc.svg
    :target: https://pypeec.otvam.ch
    :alt: doc / sphinx
