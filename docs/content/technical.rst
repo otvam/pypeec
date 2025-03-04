@@ -34,6 +34,7 @@ The following **optional packages** are required for **Jupyter notebooks**:
 PyPEEC is known to **work** with the following **platforms**:
 
 * Linux on x86/x64/X11/glibc
+* Linux on ARM64/X11/glibc
 * Apple macOS on x86/x64
 * Apple macOS on ARM64
 * MS Windows on x86/x64
