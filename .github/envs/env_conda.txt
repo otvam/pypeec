@@ -6,7 +6,6 @@
 # logging and serialization
 scilogger>=1.2.4
 scisave>=1.4.5
-jsonschema>=4.23.0
 
 # numerical libraries
 numpy>=1.24.0

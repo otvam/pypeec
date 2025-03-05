@@ -9,7 +9,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-import jsonschema
+import scisave
 
 
 def check_tag_list(data_check, tag_list):
@@ -29,7 +29,7 @@ def check_tag_list(data_check, tag_list):
     }
 
     # validate base schema
-    jsonschema.validate(instance=tag_list, schema=schema)
+    scisave.validate_schema(tag_list, schema)
 
     # check tag
     if tag_list is not None:
@@ -48,15 +48,15 @@ def check_plot_options(plot_mode, folder, name):
         "type": ["null", "string"],
         "enum": [None, "qt", "nb_int", "nb_std", "save", "debug"],
     }
-    jsonschema.validate(instance=plot_mode, schema=schema)
+    scisave.validate_schema(plot_mode, schema)
 
     # check folder and name
     schema = {
         "type": ["null", "string"],
         "minLength": 1,
     }
-    jsonschema.validate(instance=folder, schema=schema)
-    jsonschema.validate(instance=name, schema=schema)
+    scisave.validate_schema(folder, schema)
+    scisave.validate_schema(name, schema)
 
 
 def check_data_voxel(data_voxel):
@@ -77,7 +77,7 @@ def check_data_voxel(data_voxel):
     }
 
     # validate base schema
-    jsonschema.validate(instance=data_voxel, schema=schema)
+    scisave.validate_schema(data_voxel, schema)
 
     # extract fields
     status = data_voxel["status"]
@@ -105,7 +105,7 @@ def check_data_solution(data_solution):
     }
 
     # validate base schema
-    jsonschema.validate(instance=data_solution, schema=schema)
+    scisave.validate_schema(data_solution, schema)
 
     # extract fields
     status = data_solution["status"]

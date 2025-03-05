@@ -6,7 +6,7 @@ Dependencies and Platforms
 
 **PyPEEC** is entirely programmed in **Python 3** and has the following **dependencies**:
 
-* SciLogger, SciSave, and jsonschema (logging and serialization)
+* SciLogger and SciSave (logging and serialization)
 * NumPy, SciPy, and Joblib (basic numerical computing libraries)
 * Shapely and Rasterio (only used for the mesher, 2D shape manipulation)
 * Pillow (only used for the mesher, 2D image manipulation)
