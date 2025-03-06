@@ -87,6 +87,7 @@ For such cases, PyPEEC can be very slow and consume a lot of memory.
   * [PyPI](https://pypi.org/project/pypeec)
   * [Conda](https://anaconda.org/conda-forge/pypeec)
   * [GitHub](https://github.com/otvam/pypeec/releases)
+  * [Zenodo](https://doi.org/10.5281/zenodo.14941571)
 
 * **Documentation**
 
