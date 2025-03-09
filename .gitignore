@@ -20,6 +20,11 @@
 *.pkl
 *.pickle
 
+# exclude msgpack files
+*.mpk
+*.msg
+*.msgpack
+
 # exclude cache directories
 **/__pycache__
 

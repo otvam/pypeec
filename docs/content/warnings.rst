@@ -59,7 +59,7 @@ General Issues
 .. warning::
     Python **Pickle files** can be used to store the mesher and solver results.
     Pickling data is not secure. Only load Pickle files that you trust.
-    JSON or GZIP/JSON files can be used to solve this problem.
+    JSON/MessagePack files can be used to solve this problem.
 
 .. warning::
     The **Docker image** is only intended for test purposes.

@@ -57,8 +57,8 @@ For the logging, PyPEEC is using **SciLogger**:
 For the serialization, PyPEEC is using **SciSave**:
 
 * The input/configuration files are either JSON or YAML files.
-* The output/data files are either JSON or Pickle files.
-* Pickle is faster than JSON for large output/data files.
+* The output/data files are either JSON or MessagePack or Pickle files.
+* Pickle/MessagePack files are faster than JSON for large output/data files.
 * More information on the serialization module: https://github.com/otvam/scisave
 
 Packaging and Environment

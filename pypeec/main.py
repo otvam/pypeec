@@ -68,7 +68,7 @@ def run_mesher_file(file_geometry, file_voxel):
         - This input file is loaded by this function (JSON or YAML format).
     file_voxel : filename
         - The file content describes the meshed voxel structure.
-        - This output file is created by this function (JSON or Pickle format).
+        - This output file is created by this function (JSON or MessagePack or Pickle format).
     """
 
     # load data
@@ -150,7 +150,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
     ----------
     file_voxel : filename
         - The file content describes the meshed voxel structure.
-        - This input file is loaded by this function (JSON or Pickle format).
+        - This input file is loaded by this function (JSON or MessagePack or Pickle format).
     file_viewer: filename
         - The file content describes the different plots to be created.
         - This input file is loaded by this function (JSON or YAML format).
@@ -240,7 +240,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     ----------
     file_voxel : filename
         - The file content describes the meshed voxel structure.
-        - This input file is loaded by this function (JSON or Pickle format).
+        - This input file is loaded by this function (JSON or MessagePack or Pickle format).
     file_problem: filename
         - The file content describes the problem to be solved.
         - This input file is loaded by this function (JSON or YAML format).
@@ -249,7 +249,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
         - This input file is loaded by this function (JSON or YAML format).
     file_solution : filename
         - The file content describes the problem solution.
-        - This output file is created by this function (JSON or Pickle format).
+        - This output file is created by this function (JSON or MessagePack or Pickle format).
     """
 
     # load data
@@ -336,7 +336,7 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     ----------
     file_solution : filename
         - The dict describes the problem solution.
-        - This input file is loaded by this function (JSON or Pickle format).
+        - This input file is loaded by this function (JSON or MessagePack or Pickle format).
     file_plotter : filename
         - The dict describes the different plots to be created.
         - This input file is loaded by this function (JSON or YAML format).
