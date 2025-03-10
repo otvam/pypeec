@@ -41,14 +41,19 @@ keywords = [
     "power electronics",
 ]
 classifiers = [
+    "Environment :: Console",
+    "Natural Language :: English",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
     "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
-    "Intended Audience :: Science/Research",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Unix Shell",
     "Topic :: Scientific/Engineering",
-    "Natural Language :: English",
-    "Environment :: Console",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
 ]
 dependencies = [
     "scilogger >= 1.2.4",
