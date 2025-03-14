@@ -71,6 +71,7 @@ class PlotGui:
         # create a single instance of the Qt App
         if (self.plot_mode == "qt") and (APPQT is None):
             # lazy import of the library
+            import qtpy.QtGui
             import qtpy.QtWidgets
 
             # create and assign a single instance
