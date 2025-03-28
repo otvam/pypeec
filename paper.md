@@ -132,12 +132,12 @@ visualize the solutions.
 # Solver Performance
 
 To demonstrate the performance of the solver, a planar air-core spiral inductor 
-is considered. The inductor has a footprint of 4\ mm^2^ and is operated in the 
-40.68\ MHz ISM band. \autoref{fig:performance} shows the ratio between the AC 
-and DC current densities, the relative error on the extracted impedance, and 
-the computational cost. The number of degrees of freedom represents the number 
-of unknowns for the PEEC problem (dense equation system). The computational 
-cost is evaluated with an AMD\ EPYC\ 7543\ CPU (without GPUs).
+is considered [@shape_optim]. The inductor has a footprint of 4\ mm^2^ and is 
+operated in the 40.68\ MHz ISM band. \autoref{fig:performance} shows the ratio 
+between the AC and DC current densities, the relative error on the extracted 
+impedance, and the computational cost. The number of degrees of freedom 
+represents the number of unknowns for the PEEC problem (dense equation system). 
+The computational cost is evaluated with an AMD\ EPYC\ 7543\ CPU (without GPUs).
 
 ![(a)\ Ratio between the AC and DC current densities. (b)\ Relative error on 
 the extract equivalent resistance and the inductance. (c)\ Wall clock time 
