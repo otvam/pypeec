@@ -99,7 +99,7 @@ arbitrary problems without having to modify the source code.
 
 # Capabilities and Workflow
 
-In this paper, the release 5.5 of PyPEEC is considered. PyPEEC solves 3D 
+In this paper, the release 5.6 of PyPEEC is considered. PyPEEC solves 3D 
 magnetostatic and quasi-magnetostatic problems with voxel geometries. An 
 arbitrary number of conductive domains, magnetic domains (ideal and/or lossy), 
 and sources (voltage and/or current) can be used. The current density, flux 
