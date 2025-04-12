@@ -312,7 +312,7 @@ class PlotGui:
 
     def _save_screenshot(self):
         """
-        Save all the plots as images.
+        Save all the plot content as PNG files.
         """
 
         # save the PyVista plots
@@ -325,7 +325,11 @@ class PlotGui:
             filename = self._get_filename(tag, "png")
             fig.savefig(filename)
 
-        # save the VTK objects
+    def _save_data(self):
+        """
+        Save all the plot data as VTK files.
+        """
+
         for tag, vtk in self.vtk_list:
             filename = self._get_filename(tag, "vtk")
             vtk.save(filename)
@@ -351,7 +355,7 @@ class PlotGui:
         # create the figure
         if self.plot_mode in ["nb_int", "nb_std"]:
             pl = self._get_plotter_pyvista_nb(notebook_size)
-        elif self.plot_mode in ["save", "debug"]:
+        elif self.plot_mode in ["png", "vtk", "debug"]:
             pl = self.__get_plotter_pyvista_base(image_size)
         elif self.plot_mode == "qt":
             pl = self._get_plotter_pyvista_qt(tag, show_menu, window_size)
@@ -377,7 +381,7 @@ class PlotGui:
         # create the figure
         if self.plot_mode in ["nb_int", "nb_std"]:
             fig = self._get_figure_matplotlib_nb(notebook_size)
-        elif self.plot_mode in ["save", "debug"]:
+        elif self.plot_mode in ["png", "vtk", "debug"]:
             fig = self._get_figure_matplotlib_base(image_size)
         elif self.plot_mode == "qt":
             fig = self._get_figure_matplotlib_qt(tag, show_menu, window_size)
@@ -412,9 +416,14 @@ class PlotGui:
             LOGGER.debug("display notebook plots")
             self._show_figure_nb(False)
             LOGGER.debug("exit plotting routine")
-        elif self.plot_mode == "save":
-            LOGGER.debug("save and close all the plots")
+        elif self.plot_mode == "png":
+            LOGGER.debug("save PNG files")
             self._save_screenshot()
+            self._close_figure()
+            LOGGER.debug("exit plotting routine")
+        elif self.plot_mode == "vtk":
+            LOGGER.debug("save VTK files")
+            self._save_data()
             self._close_figure()
             LOGGER.debug("exit plotting routine")
         elif self.plot_mode == "debug":

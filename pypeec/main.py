@@ -109,10 +109,11 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
         - The list describes plots to be shown.
         - If None or omitted: all the plots are shown.
     plot_mode : string
-        - If "qt", the Qt framework is used for the rendering.
+        - If "qt", the Qt framework is used for rendering the plots.
         - If "nb_int", interactive plots are rendered within the Jupyter notebook.
         - If "nb_std", static plots are rendered within the Jupyter notebook.
-        - If "save", the plots are not shown but saved as PNG and VTK files.
+        - If "png", the plot content are saved as PNG files.
+        - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
     folder : string
@@ -158,10 +159,11 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         - The list describes plots to be shown.
         - If None or omitted: all the plots are shown.
     plot_mode : string
-        - If "qt", the Qt framework is used for the rendering.
+        - If "qt", the Qt framework is used for rendering the plots.
         - If "nb_int", interactive plots are rendered within the Jupyter notebook.
         - If "nb_std", static plots are rendered within the Jupyter notebook.
-        - If "save", the plots are not shown but saved as PNG and VTK files.
+        - If "png", the plot content are saved as PNG files.
+        - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
     folder : string
@@ -295,10 +297,11 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         - The list describes plots to be shown.
         - If None or omitted: all the plots are shown.
     plot_mode : string
-        - If "qt", the Qt framework is used for the rendering.
+        - If "qt", the Qt framework is used for rendering the plots.
         - If "nb_int", interactive plots are rendered within the Jupyter notebook.
         - If "nb_std", static plots are rendered within the Jupyter notebook.
-        - If "save", the plots are not shown but saved as PNG and VTK files.
+        - If "png", the plot content are saved as PNG files.
+        - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
     folder : string
@@ -347,10 +350,11 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         - The list describes plots to be shown.
         - If None or omitted: all the plots are shown.
     plot_mode : string
-        - If "qt", the Qt framework is used for the rendering.
+        - If "qt", the Qt framework is used for rendering the plots.
         - If "nb_int", interactive plots are rendered within the Jupyter notebook.
         - If "nb_std", static plots are rendered within the Jupyter notebook.
-        - If "save", the plots are not shown but saved as PNG and VTK files.
+        - If "png", the plot content are saved as PNG files.
+        - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
     folder : string
