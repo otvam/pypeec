@@ -51,7 +51,7 @@ class PlotGui:
 
         # check the default values
         if plot_mode is None:
-            plot_mode = "qt"
+            plot_mode = "debug"
         if folder is None:
             folder = os.getcwd()
         if name is None:

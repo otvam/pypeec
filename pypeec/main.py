@@ -114,7 +114,7 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
         - If "nb_std", static plots are rendered within the Jupyter notebook.
         - If "save", the plots are not shown but saved as PNG and VTK files.
         - If "debug", the plots are not shown (test mode).
-        - If None or omitted: the Qt framework is used.
+        - If None or omitted: the debug mode is used.
     folder : string
         - Folder name for saving the screenshots.
         - If None or omitted: the current directory is used.
@@ -163,7 +163,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         - If "nb_std", static plots are rendered within the Jupyter notebook.
         - If "save", the plots are not shown but saved as PNG and VTK files.
         - If "debug", the plots are not shown (test mode).
-        - If None or omitted: the Qt framework is used.
+        - If None or omitted: the debug mode is used.
     folder : string
         - Folder name for saving the screenshots.
         - If None or omitted: the current directory is used.
@@ -300,7 +300,7 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         - If "nb_std", static plots are rendered within the Jupyter notebook.
         - If "save", the plots are not shown but saved as PNG and VTK files.
         - If "debug", the plots are not shown (test mode).
-        - If None or omitted: the Qt framework is used.
+        - If None or omitted: the debug mode is used.
     folder : string
         - Folder name for saving the screenshots.
         - If None or omitted: the current directory is used.
@@ -352,7 +352,7 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         - If "nb_std", static plots are rendered within the Jupyter notebook.
         - If "save", the plots are not shown but saved as PNG and VTK files.
         - If "debug", the plots are not shown (test mode).
-        - If None or omitted: the Qt framework is used.
+        - If None or omitted: the debug mode is used.
     folder : string
         - Folder name for saving the screenshots.
         - If None or omitted: the current directory is used.
