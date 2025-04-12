@@ -6,18 +6,19 @@ Available Packages
 
 * **Python Package** - available through PyPI
 * **Conda Package** - available through conda-forge
+* **Dockerfile** - Ubuntu image with PyPEEC and Jupyter
 
-The following **optional libraries are not included** is the package:
+The following **optional libraries are not included** in the PyPI/Conda package:
 
 * **HPC libraries** - FFTW, PyAMG, MKL/FFT, and MKL/PARDISO
 * **Notebook support** - JupyterLab, IPyWidgets, Trame, and ipympl
 * **GPU libraries** - CuPy and CUDA
 
-Some **important remarks** about the PyPEEC **packages**:
+Some **important remarks** about the **PyPI/Conda packages**:
 
 * PyPEEC packages are architecture and system independent.
 * Some dependencies are architecture and system dependent.
-* The optional HPC libraries are usually easier to install through Conda.
+* The optional HPC/GPU libraries are usually easier to install through Conda.
 * The Jupyter libraries are usually easier to install through Conda.
 
 Using a Python Environment
@@ -72,7 +73,7 @@ Using the Docker Image
     #   - The image is only intended for test purposes
 
     # Clone the repository
-    git clone git@github.com:otvam/pypeec.git
+    git clone git@github.com:otvam/pypeec.git && cd pypeec
 
     # Build the Docker image
     docker build --tag "pypeec:latest" .

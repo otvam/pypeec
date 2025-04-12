@@ -3,8 +3,8 @@
 # WARNING: Only tested with Linux x86/x64/X11/glibc.
 #
 # WARNING: Install all the PyPEEC dependencies.
-#          The optional libraries are included.
-#          The packaging/development tools are included.
+#          The optional libraries (HPC, GPU, and Jupyter) are included.
+#          The packaging and development tools are also included.
 #
 # WARNING: Some listed packages are NOT open source.
 #          INTEL/MKL is not open source.
@@ -13,7 +13,6 @@
 # WARNING: Some listed packages are under a copyleft license.
 #          Qt is under a copyleft license (LGPL and GPL).
 #          FFTW is also under a copyleft license (GPL).
-#
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
