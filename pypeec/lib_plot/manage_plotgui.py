@@ -49,13 +49,17 @@ class PlotGui:
         Set the global plot parameters.
         """
 
-        # check the default values
+        # set the default plot mode
         if plot_mode is None:
             plot_mode = "debug"
-        if folder is None:
-            folder = os.getcwd()
+
+        # set the default for the output filenames
         if name is None:
             name = "pypeec"
+
+        # set the default for the output folder
+        if folder is None:
+            folder = os.getcwd()
 
         # assign variable
         self.plot_mode = plot_mode

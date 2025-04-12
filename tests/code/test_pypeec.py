@@ -109,7 +109,7 @@ def run_workflow(name, use_script):
                 "--viewer",
                 file_viewer,
                 "--plot_mode",
-                "png",
+                "debug",
             ]
             argv_so = [
                 "--quiet",
@@ -131,7 +131,7 @@ def run_workflow(name, use_script):
                 "--plotter",
                 file_plotter,
                 "--plot_mode",
-                "png",
+                "debug",
             ]
 
             # run the scripts
@@ -153,12 +153,12 @@ def run_workflow(name, use_script):
             pypeec.run_viewer_file(
                 file_voxel=file_voxel,
                 file_viewer=file_viewer,
-                plot_mode="png",
+                plot_mode="debug",
             )
             pypeec.run_plotter_file(
                 file_solution=file_solution,
                 file_plotter=file_plotter,
-                plot_mode="png",
+                plot_mode="debug",
             )
 
         # load the files
