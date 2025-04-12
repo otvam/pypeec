@@ -94,43 +94,43 @@ def run_workflow(name, use_script):
         if use_script:
             # get the arguments
             argv_me = [
-                "-q",
-                "me",
-                "-ge",
+                "--quiet",
+                "mesher",
+                "--geometry",
                 file_geometry,
-                "-vo",
+                "--voxel",
                 file_voxel,
             ]
             argv_vi = [
-                "-q",
-                "vi",
-                "-vo",
+                "--quiet",
+                "viewer",
+                "--voxel",
                 file_voxel,
-                "-vi",
+                "--viewer",
                 file_viewer,
-                "-pm",
+                "--plot_mode",
                 "debug",
             ]
             argv_so = [
-                "-q",
-                "so",
-                "-vo",
+                "--quiet",
+                "solver",
+                "--voxel",
                 file_voxel,
-                "-pr",
+                "--problem",
                 file_problem,
-                "-to",
+                "--tolerance",
                 file_tolerance,
-                "-so",
+                "--solution",
                 file_solution,
             ]
             argv_pl = [
-                "-q",
-                "pl",
-                "-so",
+                "--quiet",
+                "plotter",
+                "--solution",
                 file_solution,
-                "-pl",
+                "--plotter",
                 file_plotter,
-                "-pm",
+                "--plot_mode",
                 "debug",
             ]
 
