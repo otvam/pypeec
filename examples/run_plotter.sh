@@ -17,8 +17,12 @@ FILE_PLOTTER="$PATH_ROOT/$FOLDER_CONFIG/plotter.yaml"
 # plot tag (from plotter.yaml)
 TAG_PLOT="V_c_norm J_c_norm H_p_norm residuum"
 
+# plot mode (use Qt framework)
+PLOT_MODE="qt"
+
 # run
 pypeec plotter \
     --solution $FILE_SOLUTION \
     --plotter $FILE_PLOTTER \
     --tag_plot $TAG_PLOT \
+    --plot_mode $PLOT_MODE

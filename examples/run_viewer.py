@@ -26,9 +26,13 @@ if __name__ == "__main__":
     # plot tag (from viewer.yaml)
     tag_plot = ["domain", "graph"]
 
+    # plot mode (use Qt framework)
+    plot_mode = "qt"
+
     # run viewer
     pypeec.run_viewer_file(
         file_voxel=file_voxel,
         file_viewer=file_viewer,
         tag_plot=tag_plot,
+        plot_mode=plot_mode,
     )

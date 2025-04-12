@@ -17,8 +17,12 @@ FILE_VIEWER="$PATH_ROOT/$FOLDER_CONFIG/viewer.yaml"
 # plot tag (from viewer.yaml)
 TAG_PLOT="domain graph"
 
+# plot mode (use Qt framework)
+PLOT_MODE="qt"
+
 # run
 pypeec viewer \
     --voxel $FILE_VOXEL \
     --viewer $FILE_VIEWER \
     --tag_plot $TAG_PLOT \
+    --plot_mode $PLOT_MODE

@@ -31,9 +31,13 @@ if __name__ == "__main__":
         "residuum",
     ]
 
+    # plot mode (use Qt framework)
+    plot_mode = "qt"
+
     # run
     pypeec.run_plotter_file(
         file_solution=file_solution,
         file_plotter=file_plotter,
         tag_plot=tag_plot,
+        plot_mode=plot_mode,
     )
