@@ -121,7 +121,7 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
         - If None or omitted: the current directory is used.
     name : string
         - Prepended at the beginning of the screenshot filenames.
-        - If None or omitted: the original filenames are used.
+        - If None or omitted: the "pypeec" prefix is used.
     """
 
     # execute workflow
@@ -171,7 +171,7 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         - If None or omitted: the current directory is used.
     name : string
         - Prepended at the beginning of the screenshot filenames.
-        - If None or omitted: the original filenames are used.
+        - If None or omitted: the "pypeec" prefix is used.
     """
 
     # load data
@@ -309,7 +309,7 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         - If None or omitted: the current directory is used.
     name : string
         - Prepended at the beginning of the screenshot filenames.
-        - If None or omitted: the original filenames are used.
+        - If None or omitted: the "pypeec" prefix is used.
     """
 
     # execute workflow
@@ -362,7 +362,7 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         - If None or omitted: the current directory is used.
     name : string
         - Prepended at the beginning of the screenshot filenames.
-        - If None or omitted: the original filenames are used.
+        - If None or omitted: the "pypeec" prefix is used.
     """
 
     # load data

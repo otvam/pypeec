@@ -194,16 +194,24 @@ def _get_arg_viewer(subparsers):
     parser.add_argument(
         "-pm",
         "--plot_mode",
-        help="selection of the plot mode (default: window)",
+        help="selection of the plot mode (default: debug)",
         choices=["qt", "nb_int", "nb_std", "png", "vtk", "debug"],
         default=None,
         dest="plot_mode",
     )
     parser.add_argument(
+        "-n",
+        "--name",
+        help="prefix used for the PNG and VTK filenames (default: pypeec)",
+        default=None,
+        metavar="name",
+        dest="name",
+    )
+    parser.add_argument(
         "-f",
         "--folder",
         help="folder for saving the PNG and VTK files (default: cwd)",
-        default=".",
+        default=None,
         metavar="folder",
         dest="folder",
     )
@@ -306,16 +314,24 @@ def _get_arg_plotter(subparsers):
     parser.add_argument(
         "-pm",
         "--plot_mode",
-        help="selection of the plot mode (default: window)",
+        help="selection of the plot mode (default: debug)",
         choices=["qt", "nb_int", "nb_std", "png", "vtk", "debug"],
         default=None,
         dest="plot_mode",
     )
     parser.add_argument(
+        "-n",
+        "--name",
+        help="prefix used for the PNG and VTK filenames (default: pypeec)",
+        default=None,
+        metavar="name",
+        dest="name",
+    )
+    parser.add_argument(
         "-f",
         "--folder",
         help="folder for saving the PNG and VTK files (default: cwd)",
-        default=".",
+        default=None,
         metavar="folder",
         dest="folder",
     )
@@ -402,6 +418,7 @@ def run_arguments(argv):
                 tag_plot=args.tag_plot,
                 plot_mode=args.plot_mode,
                 folder=args.folder,
+                name=args.name,
             )
         elif args.command in ["solver", "so"]:
             pypeec.run_solver_file(
@@ -418,6 +435,7 @@ def run_arguments(argv):
                 tag_plot=args.tag_plot,
                 plot_mode=args.plot_mode,
                 folder=args.folder,
+                name=args.name,
             )
         elif args.command == "examples":
             _run_extract("examples.tar.xz", args.path_extract)
@@ -438,8 +456,8 @@ def run_script():
         - The script can also be used to extract data (examples or documentation).
 
     The script is installed with the package.
-    The name of the command line script is "pypeec".
-    Exit the program with "sys.exit()" and a status exit code.
+        - The name of the command line script is "pypeec".
+        - Use "pypeec --help" for obtaining the argument list.
     """
 
     # get arguments
