@@ -404,6 +404,7 @@ class PlotGui:
 
         LOGGER.debug("number of PyVista plots: %s" % len(self.pl_list))
         LOGGER.debug("number of Matplotlib plots: %s" % len(self.fig_list))
+        LOGGER.debug("number of VTK datasetsqq: %s" % len(self.vtk_list))
 
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
             return
