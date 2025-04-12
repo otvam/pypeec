@@ -23,7 +23,7 @@ if __name__ == "__main__":
     file_solution = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "solution.json.gz")
     file_plotter = os.path.join(PATH_ROOT, FOLDER_CONFIG, "plotter.yaml")
 
-    # plot tag (from plotter.yaml)
+    # list of plots to be shown (defined in plotter.yaml)
     tag_plot = [
         "V_c_norm",
         "J_c_norm",
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         "residuum",
     ]
 
-    # plot mode (use Qt framework)
+    # method used for rendering the plots
     plot_mode = "qt"
 
     # run

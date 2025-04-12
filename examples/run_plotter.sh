@@ -14,10 +14,10 @@ PATH_ROOT=$(dirname "$0")
 FILE_SOLUTION="$PATH_ROOT/$FOLDER_EXAMPLE/solution.json.gz"
 FILE_PLOTTER="$PATH_ROOT/$FOLDER_CONFIG/plotter.yaml"
 
-# plot tag (from plotter.yaml)
+# list of plots to be shown (defined in plotter.yaml)
 TAG_PLOT="V_c_norm J_c_norm H_p_norm residuum"
 
-# plot mode (use Qt framework)
+# method used for rendering the plots
 PLOT_MODE="qt"
 
 # run

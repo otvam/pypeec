@@ -14,10 +14,10 @@ PATH_ROOT=$(dirname "$0")
 FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.json.gz"
 FILE_VIEWER="$PATH_ROOT/$FOLDER_CONFIG/viewer.yaml"
 
-# plot tag (from viewer.yaml)
+# list of plots to be shown (defined in viewer.yaml)
 TAG_PLOT="domain graph"
 
-# plot mode (use Qt framework)
+# method used for rendering the plots
 PLOT_MODE="qt"
 
 # run

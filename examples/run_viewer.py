@@ -23,10 +23,10 @@ if __name__ == "__main__":
     file_voxel = os.path.join(PATH_ROOT, FOLDER_EXAMPLE, "voxel.json.gz")
     file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.yaml")
 
-    # plot tag (from viewer.yaml)
+    # list of plots to be shown (defined in viewer.yaml)
     tag_plot = ["domain", "graph"]
 
-    # plot mode (use Qt framework)
+    # method used for rendering the plots
     plot_mode = "qt"
 
     # run viewer

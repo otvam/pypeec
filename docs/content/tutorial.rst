@@ -71,11 +71,13 @@ Step 4: Viewer
     #   - voxel.json.gz - contains the meshed voxel structure (input)
     #   - viewer.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in viewer.yaml)
+    #   - plot_mode - method used for rendering the plots
 
     pypeec viewer \
         --voxel tutorial/voxel.json.gz \
         --viewer config/viewer.yaml \
-        --tag_plot domain graph
+        --tag_plot domain graph \
+        --plot_mode qt
 
 .. code-block:: python
 
@@ -83,6 +85,7 @@ Step 4: Viewer
     #   - voxel.json.gz - contains the meshed voxel structure (input)
     #   - viewer.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in viewer.yaml)
+    #   - plot_mode - method used for rendering the plots
 
     import pypeec
 
@@ -93,6 +96,7 @@ Step 4: Viewer
         file_voxel=file_voxel,
         file_viewer=file_viewer,
         tag_plot=["domain", "graph"],
+        plot_mode="qt",
     )
 
 .. figure:: ../tutorial/viewer_domain.png
@@ -154,11 +158,13 @@ Step 6: Plotter
     #   - solution.json.gz - contains the problem solution (input)
     #   - plotter.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in plotter.yaml)
+    #   - plot_mode - method used for rendering the plots
 
     pypeec plotter \
         --solution tutorial/solution.json.gz \
         --plotter config/plotter.yaml \
-        --tag_plot V_c_norm J_c_norm H_p_norm residuum
+        --tag_plot V_c_norm J_c_norm H_p_norm residuum \
+        --plot_mode qt
 
 .. code-block:: python
 
@@ -166,6 +172,7 @@ Step 6: Plotter
     #   - solution.json.gz - contains the problem solution (input)
     #   - plotter.yaml - contains the plot configuration (input)
     #   - tag_plot - list of plots to be shown (defined in plotter.yaml)
+    #   - plot_mode - method used for rendering the plots
 
     import pypeec
 
@@ -176,6 +183,7 @@ Step 6: Plotter
         file_solution=file_solution,
         file_plotter=file_plotter,
         tag_plot=["V_c_norm", "J_c_norm", "H_p_norm", "residuum"],
+        plot_mode="qt",
     )
 
 .. figure:: ../tutorial/plotter_V_c_norm.png
