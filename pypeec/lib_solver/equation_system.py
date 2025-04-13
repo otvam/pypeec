@@ -1,6 +1,9 @@
 """
 Different functions for building the equation system.
-Two equation systems are built, one for the preconditioner and one for the full system.
+
+Two different equation systems are built:
+     - A sparse system for the preconditioner.
+     - A dense system for the iterative solver.
 
 The voxel structure has the following size: (nx, ny, nz).
 The problem contains n_vc non-empty electric voxels and n_vm non-empty magnetic voxels.
@@ -81,27 +84,28 @@ Therefore, the problem is formulated slightly differently for this case.
 It should be noted that surface charges are not considered.
 Only volume charges are used, which is an approximation.
 
-For the preconditioner, the diagonal of the inductance and potential matrix is used.
-For the preconditioner, the electric-magnetic coupling matrices are simplified.
-The preconditioner is solved with a sparse matrix factorization and the Schur complement.
+For the preconditioner, the following simplifications are made:
+     - The dense inductance matrix is diagonalized.
+     - The dense potential matrix is diagonalized.
+     - The electric-magnetic coupling matrices are neglected.
+
+With these assumptions, a sparse (electric and magnetic) equation system is obtained.
 The preconditioner is solved separately for the electric and magnetic equations.
 
 The preconditioner matrices (electric and magnetic) have the following form:
     [
-        Z_mat,       A_12_mat;
+        A_11_mat,    A_12_mat;
         A_21_mat,    A_22_mat;
     ]
 
-The matrix impedance matrix (Z_mat) is diagonal and the Schur complement is used:
-    - Y_mat = 1/Z_mat
+The first block matrix is diagonal and the Schur complement is used:
+    - Y_mat = inv(A_11_mat)
     - S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
 
-Two different methods are available to factorize and solve the Schur complement.
-
-For the full equation system, the complete dense matrix are used:
-    - the system is split in three parts: electric, magnetic, and electric-magnetic coupling
-    - the system is meant to be solved with an iterative solver
-    - the full system matrix is not built and a matrix-vector operator is returned
+For the full equation system, the complete dense matrices are used:
+    - The system is split in three parts: electric, magnetic, and electric-magnetic coupling.
+    - The system is meant to be solved with an iterative matrix solver.
+    - A matrix-vector operator describing the system is returned.
 
 Warning
 -------
@@ -196,9 +200,9 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     Compute the sparse matrices using for the electric preconditioner.
 
     The equation system has the following size: n_fc+n_vc+n_src_c+n_src_v.
-    The Schur complement split the system in two subsystems:
+    The equation system is split in two subsystems:
         - n_fc (diagonal block size)
-        - n_vc+n_src_c+n_src_v (Schur complement size)
+        - n_vc+n_src_c+n_src_v (sparse block size)
     """
 
     # get the matrices
@@ -211,15 +215,12 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     # get the angular frequency
     s = 1j * 2 * np.pi * freq
 
-    # get the electric admittance
-    Y_c = 1 / (R_c + s * L_c)
-
     # admittance matrix
-    Y_mat = sps.diags(Y_c, format="csc")
+    A_11_mat = sps.diags(R_c + s * L_c, format="csc")
 
     # assemble the matrices
-    A_12_mat = -A_net_c.transpose()
     A_21_mat = A_net_c
+    A_12_mat = -A_net_c.transpose()
     A_22_mat = sps.csc_matrix((n_vc, n_vc), dtype=np.int64)
 
     # expand for the source matrices
@@ -233,10 +234,7 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     # add the source
     A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=np.complex128, format="csc")
 
-    # computing the Schur complement (with respect to the diagonal admittance matrix)
-    S_mat = A_22_mat - A_21_mat * Y_mat * A_12_mat
-
-    return Y_mat, S_mat, A_12_mat, A_21_mat
+    return A_11_mat, A_22_mat, A_12_mat, A_21_mat
 
 
 def _get_cond_fact_magnetic(A_net_m, R_m, P_m):
@@ -244,39 +242,39 @@ def _get_cond_fact_magnetic(A_net_m, R_m, P_m):
     Compute the sparse matrices using for the magnetic preconditioner.
 
     The equation system has the following size: n_fm+n_vm.
-    The Schur complement split the system in two subsystems:
+    The equation system is split in two subsystems:
         - n_fm (diagonal block size)
-        - n_vm (Schur complement size)
+        - n_vm (sparse block size)
     """
 
     # get the system size
     (n_vm, n_fm) = A_net_m.shape
 
-    # get the magnetic admittance (avoid singularity for DC solution)
-    Y_m = 1 / R_m
-    I_m = np.ones(n_vm, dtype=np.complex128)
-
     # admittance matrix
-    Y_mat = sps.diags(Y_m, format="csc")
-
-    # potential matrix
-    I_mat_m = sps.diags(I_m, format="csc")
+    A_11_mat = sps.diags(R_m, format="csc")
 
     # assemble the matrices
-    A_12_mat = -A_net_m.transpose()
     A_21_mat = P_m * A_net_m
-    A_22_mat = I_mat_m
+    A_12_mat = -A_net_m.transpose()
+    A_22_mat = sps.eye(n_vm, format="csc")
 
-    # computing the Schur complement (with respect to the diagonal admittance matrix)
+    return A_11_mat, A_22_mat, A_12_mat, A_21_mat
+
+
+def _get_schur_extract(A_11_mat, A_22_mat, A_12_mat, A_21_mat):
+    """
+    Compute the Schur complement (with respect to the diagonal admittance matrix).
+    """
+
+    Y_mat = sps.diags(1 / A_11_mat.diagonal(), format="csc")
     S_mat = A_22_mat - A_21_mat * Y_mat * A_12_mat
 
-    return Y_mat, S_mat, A_12_mat, A_21_mat
+    return Y_mat, S_mat
 
 
-def _get_cond_solve(rhs, Y_mat, S_fact, A_12_mat, A_21_mat):
+def _get_schur_solve(rhs, Y_mat, S_fact, A_12_mat, A_21_mat):
     """
-    Solve the preconditioner equation system.
-    The matrix factorization of the Schur complement is used.
+    Solve the equation system with the Schur complement.
     """
 
     # split the system (Schur complement split)
@@ -469,25 +467,25 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     """
 
     # get the Schur complement
-    (Y_mat_c, S_mat_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
-    (Y_mat_m, S_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(A_net_m, R_m, P_m)
+    (A_11_mat_c, A_22_mat_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
+    (A_11_mat_m, A_22_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(A_net_m, R_m, P_m)
 
-    # factorize the Schur
+    # get the Schur complement
+    (Y_mat_c, S_mat_c) = _get_schur_extract(A_11_mat_c, A_22_mat_c, A_12_mat_c, A_21_mat_c)
+    (Y_mat_m, S_mat_m) = _get_schur_extract(A_11_mat_m, A_22_mat_m, A_12_mat_m, A_21_mat_m)
+
+    # factorize the Schur complement
     S_fact_c = matrix_factorization.get_factorize("electric", S_mat_c)
     S_fact_m = matrix_factorization.get_factorize("magnetic", S_mat_m)
 
     # function describing the electric preconditioner
     def fct_c(rhs_c):
-        # solve the system (electric and magnetic)
-        sol_c = _get_cond_solve(rhs_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
-
+        sol_c = _get_schur_solve(rhs_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
         return sol_c
 
     # function describing the magnetic preconditioner
     def fct_m(rhs_m):
-        # solve the system (electric and magnetic)
-        sol_m = _get_cond_solve(rhs_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
-
+        sol_m = _get_schur_solve(rhs_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
         return sol_m
 
     # corresponding linear operator
@@ -508,18 +506,14 @@ def get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m):
     # get the system size and the solution scaling
     (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
 
-    # function describing the electric couling
+    # function describing the electric coupling
     def fct_c(sol_m):
-        # compute the electric-magnetic coupling
         cpl_c = _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c)
-
         return cpl_c
 
-    # function describing the magnetic preconditioner
+    # function describing the magnetic coupling
     def fct_m(sol_c):
-        # compute the electric-magnetic coupling
         cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
-
         return cpl_m
 
     return fct_c, fct_m
@@ -535,16 +529,12 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m)
 
     # function describing the electric equation system
     def fct_c(sol_c):
-        # compute the system multiplication
         rhs_c = _get_system_multiply_electric(sol_c, freq, A_net_c, A_src, R_c, L_op_c)
-
         return rhs_c
 
     # function describing the magnetic equation system
     def fct_m(sol_m):
-        # compute the system multiplication
         rhs_m = _get_system_multiply_magnetic(sol_m, A_net_m, R_m, P_op_m)
-
         return rhs_m
 
     return fct_c, fct_m
