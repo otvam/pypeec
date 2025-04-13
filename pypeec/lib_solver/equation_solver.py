@@ -17,7 +17,7 @@ from pypeec.lib_matrix import matrix_iterative
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-class PowerConvergenceError(RuntimeError):
+class _PowerConvergenceError(RuntimeError):
     """
     Simple exception for signaling the convergence of the complex power.
     """
@@ -101,7 +101,7 @@ class _IterCounter:
 
             # if convergence is achieved, stop the solver and save the solution
             if status:
-                raise PowerConvergenceError(status, sol)
+                raise _PowerConvergenceError(status, sol)
 
     def get_callback_init(self, sol):
         """
@@ -517,7 +517,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
 
             # residuum solver convergence
             LOGGER.debug("solver: residuum convergence")
-        except PowerConvergenceError as ex:
+        except _PowerConvergenceError as ex:
             # power solver convergence
             LOGGER.debug("solver: power convergence")
 
