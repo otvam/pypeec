@@ -26,7 +26,7 @@ dependencies:
   - pip=25.0.1
   - ruff=0.11.5
   - twine=6.1.0
-  - coverage=7.6.8
+  - coverage=7.8.0
   - setuptools_scm=8.2.1
   - sphinx_rtd_theme=3.0.1
   - sphinx=8.2.3
