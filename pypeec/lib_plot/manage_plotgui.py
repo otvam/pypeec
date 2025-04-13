@@ -146,7 +146,7 @@ class PlotGui:
         return pl
 
     @staticmethod
-    def __get_plotter_pyvista_base(image_size):
+    def _get_plotter_pyvista_base(image_size):
         """
         Create a PyVista plotter for silent rendering.
         """
@@ -360,7 +360,7 @@ class PlotGui:
         if self.plot_mode in ["nb_int", "nb_std"]:
             pl = self._get_plotter_pyvista_nb(notebook_size)
         elif self.plot_mode in ["png", "vtk", "debug"]:
-            pl = self.__get_plotter_pyvista_base(image_size)
+            pl = self._get_plotter_pyvista_base(image_size)
         elif self.plot_mode == "qt":
             pl = self._get_plotter_pyvista_qt(tag, show_menu, window_size)
         else:
