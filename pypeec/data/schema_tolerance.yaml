@@ -187,6 +187,7 @@
                     - "SuperLU"
                     - "PARDISO"
                     - "PyAMG"
+                    - "Diagonal"
             "pyamg_options":
                 "type": "object"
                 "required":

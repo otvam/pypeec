@@ -53,12 +53,13 @@ parallel_sweep:
     "fftw_timeout": 100.0              # cache timeout in seconds for FFTW (null for no caching)
     "fftw_byte_align": 16              # size for byte alignment FFTW (null for default)
 
-# sparse matrix factorization options
+# sparse matrix factorization options (for the preconditioner)
 "factorization_options":
     # matrix factorization library
     #   - "SuperLU" is typically slower but is always available (integrated with SciPy)
     #   - "PARDISO" is typically faster than SuperLU (available through Pydiso)
     #   - "PyAMG" is typically slow but uses less memory (risk of convergence issues)
+    #   - "Diagonal" is using a diagonal preconditioner (debug mode)
     "library": "SuperLU"
 
     # options for PyAMG

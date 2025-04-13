@@ -28,7 +28,11 @@ def set_options(fft_options):
     Assign the options and load the right libray.
     """
 
-    # assign global variable
+    # get global variables
+    global FFTN
+    global IFFTN
+
+    # get library parameters
     library = fft_options["library"]
     scipy_worker = fft_options["scipy_worker"]
     fftw_thread = fft_options["fftw_thread"]
@@ -37,27 +41,27 @@ def set_options(fft_options):
 
     # import the right library
     if library == "CuPy":
-        import cupy.fft
+        from cupy import fft
 
         # find FFTN function
         def fct_fftn(mat, shape, axes, _):
-            return cupy.fft.fftn(mat, shape, axes=axes)
+            return fft.fftn(mat, shape, axes=axes)
 
         # find iFFTN function
         def fct_ifftn(mat, shape, axes, _):
-            return cupy.fft.ifftn(mat, shape, axes=axes)
+            return fft.ifftn(mat, shape, axes=axes)
     elif library == "NumPy":
-        import numpy.fft
+        from numpy import fft
 
         # find FFTN function
         def fct_fftn(mat, shape, axes, _):
-            return numpy.fft.fftn(mat, shape, axes=axes)
+            return fft.fftn(mat, shape, axes=axes)
 
         # find iFFTN function
         def fct_ifftn(mat, shape, axes, _):
-            return numpy.fft.ifftn(mat, shape, axes=axes)
+            return fft.ifftn(mat, shape, axes=axes)
     elif library == "SciPy":
-        import scipy.fft
+        from scipy import fft
 
         # find the number of workers
         if scipy_worker < 0:
@@ -67,11 +71,11 @@ def set_options(fft_options):
 
         # find FFTN function
         def fct_fftn(mat, shape, axes, replace):
-            return scipy.fft.fftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
+            return fft.fftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
 
         # find iFFTN function
         def fct_ifftn(mat, shape, axes, replace):
-            return scipy.fft.ifftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
+            return fft.ifftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
     elif library == "MKL":
         import mkl_fft
 
@@ -83,7 +87,7 @@ def set_options(fft_options):
         def fct_ifftn(mat, shape, axes, replace):
             return mkl_fft.ifftn(mat, shape, axes=axes, overwrite_x=replace)
     elif library == "FFTW":
-        import pyfftw
+        from pyfftw import byte_align
         from pyfftw.interfaces import cache
         from pyfftw.interfaces import numpy_fft
 
@@ -102,19 +106,17 @@ def set_options(fft_options):
 
         # find FFTN function
         def fct_fftn(mat, shape, axes, replace):
-            mat = pyfftw.byte_align(mat, n=fftw_byte_align)
+            mat = byte_align(mat, n=fftw_byte_align)
             return numpy_fft.fftn(mat, shape, axes=axes, overwrite_input=replace, threads=fftw_thread)
 
         # find iFFTN function
         def fct_ifftn(mat, shape, axes, replace):
-            mat = pyfftw.byte_align(mat, n=fftw_byte_align)
+            mat = byte_align(mat, n=fftw_byte_align)
             return numpy_fft.ifftn(mat, shape, axes=axes, overwrite_input=replace, threads=fftw_thread)
     else:
         raise ValueError("invalid FFT library")
 
     # assign transforms functions
-    global FFTN
-    global IFFTN
     FFTN = fct_fftn
     IFFTN = fct_ifftn
 

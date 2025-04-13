@@ -117,6 +117,22 @@ def _get_fact_pyamg(mat):
     return factor
 
 
+def _get_fact_diagonal(mat):
+    """
+    Dummy factorization with a diagonal matrix.
+    """
+
+    # get the inverse of the diagonal
+    inv = IMPORTLIB.diags(1/mat.diagonal(), format="csc")
+
+    # apply the diagonal inverse
+    def factor(rhs):
+        sol = inv*rhs
+        return sol
+
+    return factor
+
+
 def _get_factorize_sub(mat):
     """
     Factorize a sparse matrix (main function).
@@ -150,6 +166,8 @@ def _get_factorize_sub(mat):
         factor = _get_fact_pardiso(mat)
     elif LIBRARY == "PyAMG":
         factor = _get_fact_pyamg(mat)
+    elif LIBRARY == "Diagonal":
+        factor = _get_fact_diagonal(mat)
     else:
         raise ValueError("invalid matrix factorization library")
 
@@ -164,10 +182,13 @@ def set_options(factorization_options):
     Assign the options and load the right libray.
     """
 
-    # assign global variable
+    # get global variables
     global LIBRARY
+    global IMPORTLIB
     global PYAMG_OPTIONS
     global PARDISO_OPTIONS
+
+    # get/assign library parameters
     LIBRARY = factorization_options["library"]
     PYAMG_OPTIONS = factorization_options["pyamg_options"]
     PARDISO_OPTIONS = factorization_options["pardiso_options"]
@@ -179,11 +200,12 @@ def set_options(factorization_options):
         import pydiso.mkl_solver as lib_tmp
     elif LIBRARY == "PyAMG":
         import pyamg.aggregation as lib_tmp
+    elif LIBRARY == "Diagonal":
+        import scipy.sparse as lib_tmp
     else:
         raise ValueError("invalid factorization library")
 
-    # assign import library to global
-    global IMPORTLIB
+    # assign the imported library
     IMPORTLIB = lib_tmp
 
     # prevent problematic matrices to trigger warnings

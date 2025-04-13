@@ -375,28 +375,28 @@ def set_options(fft_options):
     Assign the options and load the right libray.
     """
 
-    # assign global variable
+    # get global variables
+    global NPCP
     global LIBRARY
     global MATRIX_SPLIT
+    global USE_FFT_GPU
+
+    # get/assign library parameters
     LIBRARY = fft_options["library"]
     MATRIX_SPLIT = fft_options["matrix_split"]
 
     # import the right library
-    global NPCP
-    global USE_FFT_GPU
-
     if LIBRARY == "CuPy":
         import cupy as lib_tmp
-
-        NPCP = lib_tmp
         USE_FFT_GPU = True
     elif LIBRARY in ["NumPy", "SciPy", "MKL", "FFTW"]:
         import numpy as lib_tmp
-
-        NPCP = lib_tmp
         USE_FFT_GPU = False
     else:
         raise ValueError("invalid FFT library")
+
+    # assign the imported library
+    NPCP = lib_tmp
 
 
 def get_multiply(data, vec_in, flip):
