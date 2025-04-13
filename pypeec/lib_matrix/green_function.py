@@ -3,8 +3,8 @@ Different functions for computing Green functions with voxels.
 Analytical solutions and numerical approximations are used.
 
 The two following integrals are available:
-    - integrate all the dimensions (6D integrals)
-    - integrate the dimensions except the last one (5D integrals)
+    - Integrate all the dimensions (6D integrals).
+    - Integrate the dimensions except the last one (5D integrals).
 
 Exact Inductance Equations for Rectangular Conductors With Applications to More Complicated Geometries
 C. Hoer and C. Love, 1965

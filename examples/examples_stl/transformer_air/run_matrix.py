@@ -1,8 +1,8 @@
 """
 Extract the impedance matrix from the solution:
-    - extract the terminal data (currents and voltages) from the solution
-    - expand the extracted terminal data with the given symmetries
-    - extract the impedance matrix from the terminal data
+    - Extract the terminal data (currents and voltages) from the solution.
+    - Expand the extracted terminal data with the given symmetries.
+    - Extract the impedance matrix from the terminal data.
 """
 
 __author__ = "Thomas Guillod"

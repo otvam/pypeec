@@ -1,8 +1,8 @@
 """
 Compute non-sinusoidal waveforms with Fourier analysis:
-    - extract the frequency domain impedance
-    - compute the waveforms in the frequency domain
-    - transform back the results in the time domain
+    - Extract the frequency domain impedance.
+    - Compute the waveforms in the frequency domain.
+    - Transform back the results in the time domain.
 """
 
 __author__ = "Thomas Guillod"

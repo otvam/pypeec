@@ -2,8 +2,8 @@
 Module for doing matrix-vector multiplication (with circulant tensors and FFT).
 
 The multiplication can be done in two ways:
-    - combined: the computation is done with the 4D tensors
-    - split: the 4D tensors are sliced into several 3D tensors
+    - The computation is done with the 4D tensors ("combined" mode).
+    - The 4D tensors are sliced into several 3D tensors ("split" mode).
 
 The "combined" mode is typically faster than the "split" mode.
 The "split" mode features a reduced memory footprint.
@@ -184,11 +184,11 @@ def _get_compute_combined(name, idx_in, idx_out, mat_fft, vec_in):
     The input tensor has the size: (nx, ny, nz, nd_out).
 
     For the matrix-vector multiplication is done in several steps:
-        - the vector is expanded into a tensor: n_in to (nx, ny, nz, nd_out)
-        - computation the FFT of the obtained tensor: (nx, ny, nz, nd_out) to (2*nx, 2*ny, 2*nz, nd_out)
-        - multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz, nd_in) and (2*nx, 2*ny, 2*nz, nd_out)
-        - computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz, nd_out)
-        - the tensor is flattened into a vector: (2*nx, 2*ny, 2*nz, nd_out) to n_out
+        - The vector is expanded into a tensor: n_in to (nx, ny, nz, nd_out).
+        - Computation the FFT of the obtained tensor: (nx, ny, nz, nd_out) to (2*nx, 2*ny, 2*nz, nd_out).
+        - Multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz, nd_in) and (2*nx, 2*ny, 2*nz, nd_out).
+        - Computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz, nd_out).
+        - The tensor is flattened into a vector: (2*nx, 2*ny, 2*nz, nd_out) to n_out.
     """
 
     # get the input tensor from the input vector
@@ -259,11 +259,11 @@ def _get_compute_split(name, n_out, idx_in, idx_out, mat_fft, vec_in):
     The dimension nd_in and nd_out are used to create the 3D slices.
 
     For the matrix-vector multiplication is done in several steps for each slice:
-        - the vector is expanded into a tensor: n_in to (nx, ny, nz)
-        - computation the FFT of the obtained tensor: (nx, ny, nz) to (2*nx, 2*ny, 2*nz)
-        - multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz) and (2*nx, 2*ny, 2*nz)
-        - computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz)
-        - the tensor is flattened into a vector: (2*nx, 2*ny, 2*nz) to n_out
+        - The vector is expanded into a tensor: n_in to (nx, ny, nz).
+        - Computation the FFT of the obtained tensor: (nx, ny, nz) to (2*nx, 2*ny, 2*nz).
+        - Multiplication of FFT circulant tensors: (2*nx, 2*ny, 2*nz) and (2*nx, 2*ny, 2*nz).
+        - Computation the iFFT of the obtained tensor: (2*nx, 2*ny, 2*nz).
+        - The tensor is flattened into a vector: (2*nx, 2*ny, 2*nz) to n_out.
     """
 
     if name == "potential":

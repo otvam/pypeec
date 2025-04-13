@@ -3,8 +3,8 @@ Module for transforming STL files into a 3D voxel structure.
 Each STL file corresponds to a domain of the 3D voxel structure.
 
 The voxelization is done with PyVista:
-    - using the enclosed point detection
-    - with custom test points
+    - Using the enclosed point detection algorithm.
+    - Legendre test points are used inside the voxels.
 """
 
 __author__ = "Thomas Guillod"
@@ -150,7 +150,7 @@ def _get_voxel_size(d, xyz_max, xyz_min):
 
 def _get_point_test(d, pts):
     """
-    Get the test point coordinates for a single voxel.
+    Get the Legendre test point coordinates for a single voxel.
     """
 
     # extract the voxel data

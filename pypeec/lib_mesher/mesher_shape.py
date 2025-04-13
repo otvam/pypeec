@@ -1,11 +1,11 @@
 """
 Module for transforming a series of 2D vector shapes into a 3D voxel structure.
-The 2D geometry are stacked in order to create a voxel structure.
+The 2D geometries are stacked in order to create a voxel structure.
 
-The following axis definition is used:
-    - x: x-axis of the 2D shapes
-    - y: y-axis of the 2D shapes
-    - z: stacking dimension of the 2D geometries
+The following axis definition is used for the 3D voxel structure:
+    - The x-axis is the x-axis of the 2D shapes (standard cartesian coordinate).
+    - The y-axis is the y-axis of the 2D shapes (standard cartesian coordinate).
+    - The z-axis corresponds to the stacking dimension of the 2D geometries.
 
 The shape handling is done with Shapely.
 The raster conversion is done with Rasterio.
@@ -100,9 +100,9 @@ def _get_shape_mesh(z_min, z_max, obj):
 def _get_shape_single(tag, shape_type, shape_data):
     """
     Get a Shapely object for different shapes:
-        - a trace (multi-segment line)
-        - a pad (filled disc)
-        - a polygon
+        - A trace (multi-segment line).
+        - A pad (filled disc).
+        - A arbitrary polygon.
     """
 
     # get the shape
@@ -463,8 +463,8 @@ def get_mesh(param, layer_stack, geometry_shape):
     """
     Transform a series of 2D vector shapes into a 3D voxel structure.
     The 3D voxel structure is constructed from:
-        - a dict containing the 2D shapes
-        - a list containing the layer stack of shapes
+        - A dict describing the different 2D shapes.
+        - A list containing the layer stack of shapes.
     """
 
     # extract the data

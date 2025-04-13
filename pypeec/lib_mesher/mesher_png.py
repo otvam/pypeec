@@ -1,11 +1,11 @@
 """
 Module for transforming a series of PNG images into a 3D voxel structure.
-The 2D geometry are stacked in order to create a voxel structure.
+The 2D geometries are stacked in order to create a voxel structure.
 
-The following axis definition is used:
-    - x: x-axis of the images (standard cartesian coordinate, not image coordinate)
-    - y: y-axis of the images (standard cartesian coordinate, not image coordinate)
-    - z: stacking dimension of the 2D geometries
+The following axis definition is used for the 3D voxel structure:
+    - The x-axis is the x-axis of the images (standard cartesian coordinate, not image coordinate).
+    - The y-axis is the y-axis of the images (standard cartesian coordinate, not image coordinate).
+    - The z-axis corresponds to the stacking dimension of the 2D geometries.
 
 The image handling is done with Pillow.
 """
@@ -168,8 +168,8 @@ def get_mesh(param, domain_color, layer_stack):
     """
     Transform a series of PNG images into a 3D voxel structure.
     The 3D voxel structure is constructed from:
-        - a dict mapping the pixel colors to domains
-        - a list containing the layer stack of images
+        - A dict mapping the pixel colors to domains.
+        - A list containing the layer stack of images.
     """
 
     # extract the data

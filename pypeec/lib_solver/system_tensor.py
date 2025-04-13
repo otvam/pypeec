@@ -1,7 +1,7 @@
 """
 Get the dense matrices used for the PEEC problem:
-    - the integral of the Green functions
-    - the cross-coupling functions between the faces
+    - The integrals of the Green functions (with 6D integrals).
+    - The cross-coupling functions between the faces (with 5D integrals).
 """
 
 __author__ = "Thomas Guillod"

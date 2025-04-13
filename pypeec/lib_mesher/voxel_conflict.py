@@ -15,8 +15,8 @@ def _get_solve_overlap(domain_def, conflict_rules):
     """
     Detect and remove shared indices (conflict) between two domains.
     The conflict is solved in the following way:
-        - the reference domain remains unchanged
-        - the shared indices are removed from the domain to be fixed
+        - The reference domain indices remain unchanged.
+        - The shared indices are removed from the domain to be fixed.
     """
 
     # extract the data

@@ -1,7 +1,7 @@
 """
 Different functions for handling creating the PEEC dense matrices:
-    - inductance and potential matrix
-    - magnetic-electric coupling matrices
+    - Inductance and potential matrices.
+    - Magnetic-electric coupling matrices.
 
 Function operators are returned for performing the matrix-vector multiplications.
 The multiplication can either be done with the dense matrices or with FFT circulant tensors.
@@ -195,9 +195,9 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
     The face to face coupling matrix is not a Toeplitz matrix with Toeplitz blocks.
     The voxel to voxel coupling matrix is a Toeplitz matrix with Toeplitz blocks.
     Therefore, the following procedure is used:
-        - the face vector is projected into a voxel vector
-        - the multiplication is done with the coupling tensor
-        - voxel vector is projected into a face vector
+        - The face vector is projected into a voxel vector.
+        - The multiplication is done with the coupling tensor.
+        - The voxel vector is projected into a face vector.
 
     It should be noted that this projection has a negative impact on the achieved accuracy.
     However, this step is currently required for obtaining Toeplitz matrices.
