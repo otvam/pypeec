@@ -117,18 +117,13 @@ def _get_fact_pyamg(mat):
     return factor
 
 
-def _get_fact_diagonal(mat):
+def _get_fact_diagonal():
     """
     Dummy factorization with a diagonal matrix.
     """
 
-    # get the inverse of the diagonal
-    inv = IMPORTLIB.diags(1/mat.diagonal(), format="csc")
-
-    # apply the diagonal inverse
     def factor(rhs):
-        sol = inv*rhs
-        return sol
+        return rhs
 
     return factor
 
@@ -167,7 +162,7 @@ def _get_factorize_sub(mat):
     elif LIBRARY == "PyAMG":
         factor = _get_fact_pyamg(mat)
     elif LIBRARY == "Diagonal":
-        factor = _get_fact_diagonal(mat)
+        factor = _get_fact_diagonal()
     else:
         raise ValueError("invalid matrix factorization library")
 
