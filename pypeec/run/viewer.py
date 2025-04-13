@@ -1,17 +1,18 @@
 """
 Main script for visualizing a 3D voxel structure.
+
 Plot the following features:
-    - the different domain composing the voxel structure
-    - the connected components of the voxel structure
-    - the deviation between the original geometry and the voxel structure
+    - The different domains composing the voxel structure.
+    - The connected components of the voxel structure.
+    - The deviation between the original geometry and the voxel structure.
 
-Three different mode are available for the plots:
-    - windowed mode: with the Qt Framework
-    - notebook mode: with Jupyter notebook
-    - silent mode: nothing is shown and the program exit
-
-The plots are generated with PyVista.
-The plots can be saved as PNG images.
+Several plot modes are available:
+    - The Qt framework is used for rendering the plots.
+    - Interactive plots are rendered within the Jupyter notebook.
+    - Static plots are rendered within the Jupyter notebook.
+    - The plot content are saved as PNG files.
+    - The plot data are saved as VTK files.
+    - The plots are not shown (debug mode).
 """
 
 __author__ = "Thomas Guillod"
@@ -34,7 +35,8 @@ def _get_grid_voxel(data_geom):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
-    Add the domain tags to the grid.
+    Convert the point cloud into a PyVista polydata object.
+    Add the domains and connected components to the geometry.
     """
 
     # extract the data
@@ -55,7 +57,7 @@ def _get_grid_voxel(data_geom):
     point = parse_voxel.get_point(pts_cloud)
     reference = parse_voxel.get_reference(reference, voxel)
 
-    # add the domain tag to the geometry
+    # add the domains and connected components to the geometry
     voxel = parse_viewer.set_data(voxel, idx, domain_def, graph_def)
 
     return grid, voxel, point, reference
@@ -63,7 +65,7 @@ def _get_grid_voxel(data_geom):
 
 def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
     """
-    Make a plot with the voxel structure and the domains.
+    Make a plot with the specified user settings.
     """
 
     # extract the data

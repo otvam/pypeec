@@ -1,7 +1,7 @@
 """
 Add data to the PyVista objects for the viewer:
-    - domain description
-    - connected component
+    - Assign an integer variable to the different domains composing the voxel structure.
+    - Assign an integer variable to the connected components of the voxel structure.
 """
 
 __author__ = "Thomas Guillod"

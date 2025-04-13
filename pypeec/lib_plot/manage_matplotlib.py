@@ -1,9 +1,9 @@
 """
-Different functions for plotting solver results with Matplotlib.
+Different functions for plotting results with Matplotlib.
 
 For the plotter, the following plots are available:
-    - plot of the convergence of the matrix solver
-    - histogram of the final residuum of the solution
+    - A plot describing the convergence of the matrix solver.
+    - An histogram describing the residuum of the solution.
 """
 
 __author__ = "Thomas Guillod"
@@ -126,4 +126,4 @@ def get_plot_plotter(fig, res, conv, layout, data_plot, data_options):
             elif layout == "residuum":
                 _get_plot_residuum(fig, res, data_plot)
             else:
-                raise ValueError("invalid plot type and plot feature")
+                raise ValueError("invalid plot layout")

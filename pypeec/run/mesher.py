@@ -4,10 +4,10 @@ Check the input data and mesh the structure.
 The different parts of the code are timed.
 
 Three different kind of geometry can be meshed:
-    - stl: the voxel structure is generated from 3D STL files
-    - png: the voxel structure is generated from stacked PNG images
-    - shape: the voxel structure is generated from stacked 2D vector shapes
-    - voxel: the voxel structure is given with the voxel indices
+    - The voxel structure is generated from 3D STL files.
+    - The voxel structure is generated from stacked PNG images.
+    - The voxel structure is generated from stacked 2D vector shapes.
+    - The voxel structure is given with the voxel indices.
 
 The mesher is implemented with PyVista, Pillow, Shapely, and Rasterio.
 """

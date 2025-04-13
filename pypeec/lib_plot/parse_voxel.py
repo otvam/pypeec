@@ -1,8 +1,8 @@
 """
 Different functions for extracting PyVista object from the voxel structure:
-    - the complete voxel structure (uniform grid)
-    - the structure containing non-empty voxels (unstructured grid)
-    - the defined point cloud (polydata object)
+    - The complete voxel structure (uniform grid).
+    - The structure containing non-empty voxels (unstructured grid).
+    - The defined point cloud (polydata object).
 """
 
 __author__ = "Thomas Guillod"

@@ -6,14 +6,13 @@ The PCB is created with "KiCad - PCB" and the following files are exported:
     - GERBER files for the terminals (user layers)
     - Excellon files for the vias
 
-Finally, this script is used to generate PNG files for the layers:
-    - using "gerbv - Gerber Viewer 2.8" for parsing the GERBER files
-    - using "mogrify - ImageMagick 6.9" for trimming the PNG files
+The external tool "gerbv - Gerber Viewer" is used for parsing the GERBER files.
+The external tool "mogrify - ImageMagick" is used trimming the PNG files.
 
 Warning
 -------
     - This code requires the following external tools: "gerbv" and "mogrify".
-    - This code has only been tested on Linux (Ubuntu 22.04).
+    - This code has only been tested on Linux (Ubuntu 22.04 and 24.04).
 """
 
 __author__ = "Thomas Guillod"

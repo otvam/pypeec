@@ -2,12 +2,12 @@
 Module for handling Fourier series (through FFT/IFFT).
 
 This module is a simple wrapper for FFT/IFFT functions:
-    - the time-domain signals are real and periodic
-    - use exclusively the positive-frequency terms
-    - scale the output as peak value Fourier coefficients
-    - scale the DC coefficient correspondingly
-    - handle undersampling/oversampling for the IFFT
-    - handle truncation/padding for the FFT
+    - The time-domain signals are real and periodic.
+    - Use exclusively the positive-frequency terms.
+    - Scale the output as peak value Fourier coefficients.
+    - Scale the DC coefficient correspondingly.
+    - Handle undersampling/oversampling for the IFFT.
+    - Handle truncation/padding for the FFT.
 """
 
 __author__ = "Thomas Guillod"

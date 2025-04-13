@@ -2,20 +2,20 @@
 Module for extracting the impedance matrix from the solver solution.
 
 The following procedure is used:
-    - extract the terminal data (currents and voltages) from the solution
-    - expand the extracted terminal data with the given symmetries
-    - extract the impedance matrix from the terminal data
+    - Extract the terminal data (currents and voltages) from the solution.
+    - Expand the extracted terminal data with the given symmetries.
+    - Extract the impedance matrix from the terminal data.
 
 For the impedance matrix, the following method is used:
-    - components with an arbitrary number of terminals can be handled
-    - an equation system is formed with all the terminal quantities
-    - the least-square solution of the system is computed
+    - An arbitrary number of terminals can be considered.
+    - An equation system is formed with all the terminal quantities.
+    - The least-square solution of the system is computed.
 
 The impedance matrix is post-processed:
-    - computation of the resistance matrix
-    - computation of the inductance matrix
-    - computation of the quality factors
-    - computation of the couplings
+    - Computation of the resistance matrix.
+    - Computation of the inductance matrix.
+    - Computation of the quality factors.
+    - Computation of the couplings.
 """
 
 __author__ = "Thomas Guillod"
@@ -87,9 +87,9 @@ def _get_matrix_solve(terminal):
     Extract the impedance matrix of the component.
     The impedance matrix is computed with a linear equation system.
     The equation system is built with the following complex variables:
-        - matrix: current excitations
-        - right-hand side: voltage excitations
-        - solution: impedance coefficients
+        - The matrix contains the current excitations.
+        - The right-hand side vector contains the voltage excitations.
+        - The solution vector contains the impedance coefficients.
     """
 
     # extract the data

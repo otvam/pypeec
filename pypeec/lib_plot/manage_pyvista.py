@@ -1,21 +1,21 @@
 """
-Different functions for plotting voxel structures with PyVista.
+Different functions for plotting 3D voxel structures with PyVista.
 
-For the viewer and the plotter, the following object are shown:
-    - the complete voxel structure (as wireframe)
-    - the structure containing non-empty voxels (as wireframe)
-    - the defined point cloud (as points)
+For the viewer and the plotter, the following objects can be shown:
+    - The complete voxel structure (as wireframe).
+    - The structure containing non-empty voxels (as wireframe).
+    - The defined point cloud (as points).
 
 For the viewer, the following plots are available:
-    - the domains are shown for the non-empty voxels
-    - the connected components for the non-empty voxels
+    - The different domains composing the voxel structure.
+    - The connected components of the voxel structure.
+    - The deviation between the original geometry and the voxel structure.
 
 For the plotter, the following plots are available:
-    - material description for the non-empty voxels
-    - scalar plots for the non-empty voxels
-    - arrow plots for the non-empty voxels
-    - scalar plots for the point cloud
-    - arrow plots for the point cloud
+    - The different materials composing the voxel structure.
+    - The scalar variable for the non-empty voxels or the point cloud.
+    - The phasor variable for the non-empty voxels or the point cloud.
+    - The vector variable for the non-empty voxels or the point cloud.
 """
 
 __author__ = "Thomas Guillod"
@@ -57,7 +57,7 @@ def _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme):
             line_width=plot_view["geom_thickness"],
         )
 
-    # plot the cloud points
+    # plot the point cloud
     if plot_view["point_plot"] and (point.n_cells > 0):
         pl.add_mesh(
             point,
@@ -543,19 +543,18 @@ def _plot_mesh(pl, voxel, reference, data_plot, plot_clip, plot_theme):
 
 def get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_options):
     """
-    Plot the voxel structure (for the viewer).
-    The following plot types are available:
-        - the domains are shown for the non-empty voxels
-        - the connected components for the non-empty voxels
-        - the meshing tolerance between the reference and voxelized structures
+    Plot the 3D voxel structure (for the viewer):
+        - The different domains composing the voxel structure.
+        - The connected components of the voxel structure.
+        - The deviation between the original geometry and the voxel structure.
     """
 
-    # get options
+    # extract the data
     plot_clip = data_options["plot_clip"]
     plot_view = data_options["plot_view"]
     plot_theme = data_options["plot_theme"]
 
-    # get the main plot
+    # plot the geometry
     if layout == "domain":
         _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "domain")
     elif layout == "graph":
@@ -563,7 +562,7 @@ def get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_o
     elif layout == "mesh":
         _plot_mesh(pl, voxel, reference, data_plot, plot_clip, plot_theme)
     else:
-        raise ValueError("invalid plot type and plot feature")
+        raise ValueError("invalid plot layout")
 
     # add the wireframe and axis
     _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme)
@@ -571,13 +570,11 @@ def get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_o
 
 def get_plot_plotter(pl, grid, voxel, point, layout, data_plot, data_options):
     """
-    Plot the solution (for the plotter).
-    The following plot types are available:
-        - plot the material and source description on the voxel structure
-        - plot a scalar variable on the voxel structure
-        - plot a scalar variable on the point cloud
-        - plot a vector variable on the voxel structure
-        - plot a vector variable on the point cloud
+    Plot the 3D voxel structure (for the plotter):
+        - The different materials composing the voxel structure.
+        - The scalar variable for the non-empty voxels or the point cloud.
+        - The phasor variable for the non-empty voxels or the point cloud.
+        - The vector variable for the non-empty voxels or the point cloud.
     """
 
     # extract the data
@@ -593,7 +590,7 @@ def get_plot_plotter(pl, grid, voxel, point, layout, data_plot, data_options):
     elif layout in ["norm_point", "phasor_point", "arrow_point"]:
         obj = point
     else:
-        raise ValueError("invalid plot type and plot feature")
+        raise ValueError("invalid plot layout")
 
     # plot the geometry
     if layout == "material":
@@ -608,7 +605,7 @@ def get_plot_plotter(pl, grid, voxel, point, layout, data_plot, data_options):
         obj = _get_arrow(obj, data_plot)
         _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme)
     else:
-        raise ValueError("invalid plot type and plot feature")
+        raise ValueError("invalid plot layout")
 
     # add the wireframe and axis
     _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme)

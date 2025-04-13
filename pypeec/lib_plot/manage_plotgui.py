@@ -1,12 +1,16 @@
 """
-Module for managing plotting windows with PyVista and Matplotlib:
-    - show the plot using the Qt framework
-    - show the plots inside a Jupyter notebook
-    - save the data into files (PNG images and VTK objects)
-    - debug mode (do not render the plots)
+Module for managing plotting windows with PyVista and Matplotlib.
 
-The Qt-related library are only import when used.
-This means that this module can run without Qt.
+Several plot modes are available:
+    - The Qt framework is used for rendering the plots.
+    - Interactive plots are rendered within the Jupyter notebook.
+    - Static plots are rendered within the Jupyter notebook.
+    - The plot content are saved as PNG files.
+    - The plot data are saved as VTK files.
+    - The plots are not shown (debug mode).
+
+The Qt and Jupyter libraries are only imported when used.
+This means that this module can run without Qt and Jupyter.
 
 Warning
 -------
@@ -399,11 +403,7 @@ class PlotGui:
 
     def show(self):
         """
-        Show the plots.
-        The following behavior is done for the different plot mode:
-            - qt: show plot windows with the Qt framework (blocking call)
-            - nb: show the plot inside a Jupyter notebook (non-blocking call)
-            - nop: close all the plots without showing them (non-blocking call)
+        Finalize the plots (show the plots or save the plots).
         """
 
         LOGGER.debug("number of PyVista plots: %s" % len(self.pl_list))

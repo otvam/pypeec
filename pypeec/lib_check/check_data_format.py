@@ -1,10 +1,10 @@
 """
 Module for the checking the data format:
-    - check the geometry data (for the mesher)
-    - check the problem data (for the solver)
-    - check the tolerance data (for the solver)
-    - check the viewer data (for the viewer)
-    - check the plotter data (for the plotter)
+    - Check the geometry data (for the mesher).
+    - Check the problem data (for the solver).
+    - Check the tolerance data (for the solver).
+    - Check the viewer data (for the viewer).
+    - Check the plotter data (for the plotter).
 
 Warning
 -------

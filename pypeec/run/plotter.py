@@ -1,21 +1,21 @@
 """
 Main script for plotting the solution of a PEEC problem.
+
 Plot the following features:
-    - material description
-    - potential (electric and magnetic)
-    - current density divergence and magnetic charges
-    - current density and flux density
-    - magnetic field
-    - solver convergence
+    - The different materials composing the voxel structure.
+    - The electric potential and the magnetic potential.
+    - The current density divergence and the magnetic charge.
+    - The current density and the flux density
+    - The magnetic field on point cloud.
+    - The solver convergence and residuum.
 
-Three different mode are available for the plots:
-    - windowed mode: with the Qt Framework
-    - notebook mode: with Jupyter notebook
-    - silent mode: nothing is shown and the program exit
-
-The 3D plots are generated with PyVista.
-The 2D plots are generated with Matplotlib.
-The plots can be saved as PNG images.
+Several plot modes are available:
+    - The Qt framework is used for rendering the plots.
+    - Interactive plots are rendered within the Jupyter notebook.
+    - Static plots are rendered within the Jupyter notebook.
+    - The plot content are saved as PNG files.
+    - The plot data are saved as VTK files.
+    - The plots are not shown (debug mode).
 """
 
 __author__ = "Thomas Guillod"
@@ -39,7 +39,9 @@ def _get_grid_voxel(data_init, data_sweep):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
-    Add the solver results to the grid.
+    Convert the point cloud into a PyVista polydata object.
+    Add the material and source description to the geometry.
+    Add the solution variables to the geometry.
     """
 
     # extract the data
@@ -65,16 +67,16 @@ def _get_grid_voxel(data_init, data_sweep):
     voxel = parse_voxel.get_voxel(grid, idx)
     point = parse_voxel.get_point(pts_cloud)
 
-    # add the problem solution to the grid
+    # add the material and source description to the geometry
     voxel = parse_plotter.set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v)
 
-    # set the scalar variables
+    # add the solution variables to the geometry
     for name, value in var.items():
-        # extract variable
+        # extract the variable
         var = value["var"]
         cat = value["cat"]
 
-        # parse the variable and assign to the geometry
+        # parse the variable and assign the results to the geometry
         if cat == "scalar_electric":
             voxel = parse_plotter.set_voxel_scalar(voxel, idx, idx_vc, var, name)
         elif cat == "scalar_magnetic":
@@ -94,10 +96,6 @@ def _get_grid_voxel(data_init, data_sweep):
 def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
     """
     Make a plot with the specified user settings.
-    The plot contains the following elements:
-        - the geometry as wireframe
-        - the axis, color bar, and legend
-        - the payload (material description, scalar plots, or arrow plots)
     """
 
     # extract the data

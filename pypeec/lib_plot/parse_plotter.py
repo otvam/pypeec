@@ -1,7 +1,8 @@
 """
 Add data to the PyVista objects for the plotter:
-    - scalar variables
-    - vector variables
+    - Assign an integer variable to the different materials composing the voxel structure.
+    - Compute the absolute value, real part, and imaginary part for the scalar variables.
+    - Compute the norm, real part, and imaginary part for the vector variables.
 """
 
 __author__ = "Thomas Guillod"

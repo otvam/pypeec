@@ -65,7 +65,7 @@ The **PyPEEC** package contains the following **tools**:
 
 * **mesher** - create a 3D voxel structure from STL or PNG files
 * **viewer** - visualization of the 3D voxel structure
-* **solver** - solver for the magnetic field problem
+* **solver** - solver for the quasi-magnetostatic problem
 * **plotter** - visualization of the problem solution
 
 ## Warning

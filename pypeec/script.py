@@ -45,13 +45,6 @@ def _run_display_logo():
 def _run_extract(data_name, path_extract):
     """
     Extract data (config, examples, or documentation).
-
-    Parameters
-    ----------
-    data_name : string
-        Name of the file containing the data.
-    path_extract : string
-        Path where the data will be extracted.
     """
 
     # init

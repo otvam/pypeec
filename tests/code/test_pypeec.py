@@ -54,17 +54,17 @@ def _run_script(argv):
 def run_workflow(name, use_script):
     """
     Run the complete workflow:
-        - run the mesher
-        - run the viewer
-        - run the solver
-        - run the plotter
+        - Run the mesher.
+        - Run the viewer.
+        - Run the solver.
+        - Run the plotter.
 
     The intermediate file are stored with temporary files.
     The temporary files are deleted at the end of the function.
 
     The workflow can be run with two modes:
-        - with the command line script (pypeec.script)
-        - with the API (pypeec.main)
+        - With the command line script (pypeec.script).
+        - With the API (pypeec.main).
     """
 
     # crash on warnings and ignore deprecation
