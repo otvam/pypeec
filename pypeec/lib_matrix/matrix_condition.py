@@ -35,7 +35,7 @@ def _get_inverse_operator(mat, decomposition):
     return op
 
 
-def _get_condition_matrix_sub(mat, norm_options):
+def get_condition_matrix(mat, norm_options):
     """
     Compute an estimate of the condition number (norm 1) of a sparse matrix.
     """
@@ -48,17 +48,13 @@ def _get_condition_matrix_sub(mat, norm_options):
     nnz = mat.size
     (nx, ny) = mat.shape
 
+    # display
+    LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
+    LOGGER.debug("matrix elements: %d / %d" % (nnz, nx * ny))
+
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
         return 0.0
-
-    # compute matrix density
-    density = nnz / (nx * ny)
-
-    # display
-    LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
-    LOGGER.debug("matrix elements: %d" % nnz)
-    LOGGER.debug("matrix density: %.2e" % density)
 
     # get LU decomposition
     LOGGER.debug("compute LU decomposition")
@@ -80,15 +76,3 @@ def _get_condition_matrix_sub(mat, norm_options):
     cond = nrm_ori * nrm_inv
 
     return cond
-
-
-def get_condition_matrix(name, mat, norm_options):
-    """
-    Compute an estimate of the condition number (norm 1) of a sparse matrix.
-    """
-
-    LOGGER.debug("condition: %s" % name)
-    with LOGGER.BlockIndent():
-        data = _get_condition_matrix_sub(mat, norm_options)
-
-    return data

@@ -477,7 +477,38 @@ def _get_compute_split(name, n_out, idx_in, idx_out, mat_fft, vec_in):
     return res
 
 
-def _get_prepare_sub(name, idx_out, idx_in, mat):
+def set_options(fft_options):
+    """
+    Assign the options and load the right libray.
+    """
+
+    # get global variables
+    global FFTN
+    global IFFTN
+    global LOAD
+    global UNLOAD
+    global NPCP
+    global SPLIT
+
+    # extract the data
+    split = fft_options["split"]
+    library = fft_options["library"]
+    alg_options = fft_options["alg_options"]
+
+    # set library parameters
+    (use_gpu, fftn, ifftn) = _get_options_alg(library, alg_options)
+    (npcp, load, unload) = _get_options_gpu(use_gpu)
+
+    # assign the global variables
+    FFTN = fftn
+    IFFTN = ifftn
+    LOAD = load
+    UNLOAD = unload
+    NPCP = npcp
+    SPLIT = split
+
+
+def get_prepare(name, idx_out, idx_in, mat):
     """
     Construct a circulant tensor from a 4D tensor (main function).
     The circulant tensor is constructed along the first 3D.
@@ -486,6 +517,11 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
     The input tensor has the size: (nx, ny, nz, nd_in).
     The output FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd_in).
     """
+
+    # load the data to the GPU
+    mat = LOAD(mat)
+    idx_in = LOAD(idx_in)
+    idx_out = LOAD(idx_out)
 
     # get tensor size
     (nx, ny, nz, nd_in) = mat.shape
@@ -496,8 +532,7 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
     footprint = (itemsize * nnz) / (1024**2)
 
     # display the tensor size
-    LOGGER.debug("tensor size: (%d, %d, %d)" % (nx, ny, nz))
-    LOGGER.debug("tensor footprint: %.2f MB" % footprint)
+    LOGGER.debug("tensor: %s / %.2f MB" % (name, footprint))
 
     # get the sign that will be applied to the different blocks of the tensor
     sign = _get_tensor_sign(name, nd_in)
@@ -537,55 +572,6 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
         idx_out_mat = _get_indices(nx, ny, nz, idx_out, nd_out, None)
 
     return name, n_in, n_out, idx_in_mat, idx_out_mat, mat_fft
-
-
-def set_options(fft_options):
-    """
-    Assign the options and load the right libray.
-    """
-
-    # get global variables
-    global FFTN
-    global IFFTN
-    global LOAD
-    global UNLOAD
-    global NPCP
-    global SPLIT
-
-    # extract the data
-    split = fft_options["split"]
-    library = fft_options["library"]
-    alg_options = fft_options["alg_options"]
-
-    # set library parameters
-    (use_gpu, fftn, ifftn) = _get_options_alg(library, alg_options)
-    (npcp, load, unload) = _get_options_gpu(use_gpu)
-
-    # assign the global variables
-    FFTN = fftn
-    IFFTN = ifftn
-    LOAD = load
-    UNLOAD = unload
-    NPCP = npcp
-    SPLIT = split
-
-
-def get_prepare(name, idx_out, idx_in, mat):
-    """
-    Construct a circulant tensor from a 4D tensor (log wrapper).
-    """
-
-    # load the data to the GPU
-    mat = LOAD(mat)
-    idx_in = LOAD(idx_in)
-    idx_out = LOAD(idx_out)
-
-    # prepare the multiplication
-    LOGGER.debug("multiplication: %s" % name)
-    with LOGGER.BlockIndent():
-        data = _get_prepare_sub(name, idx_out, idx_in, mat)
-
-    return data
 
 
 def get_multiply(data, vec_in, flip):

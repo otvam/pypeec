@@ -575,9 +575,9 @@ def get_solver(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, fct_conv, s
     return sol, status, solver_convergence, solver_status
 
 
-def get_condition(S_mat_cm, conditions_options):
+def get_condition(C_mat_cm, conditions_options):
     """
-    Compute an estimate of the condition number (norm 1) of preconditioner Schur complements.
+    Compute an estimate of the condition number (norm 1) of the sparse system.
     The condition number is used to detect problematic (quasi-singular) systems.
     """
 
@@ -588,12 +588,18 @@ def get_condition(S_mat_cm, conditions_options):
     norm_options = conditions_options["norm_options"]
 
     # extract matrices
-    (S_mat_c, S_mat_m) = S_mat_cm
+    (C_mat_c, C_mat_m) = C_mat_cm
 
     # check the condition
     if check:
-        cond_electric = matrix_condition.get_condition_matrix("electric", S_mat_c, norm_options)
-        cond_magnetic = matrix_condition.get_condition_matrix("magnetic", S_mat_m, norm_options)
+        LOGGER.debug("condition: electric")
+        with LOGGER.BlockIndent():
+            cond_electric = matrix_condition.get_condition_matrix(C_mat_c, norm_options)
+
+        LOGGER.debug("condition: magnetic")
+        with LOGGER.BlockIndent():
+            cond_magnetic = matrix_condition.get_condition_matrix(C_mat_m, norm_options)
+
         status = (cond_electric < tolerance_electric) and (cond_magnetic < tolerance_magnetic)
     else:
         cond_electric = float("nan")

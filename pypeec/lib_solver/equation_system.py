@@ -98,9 +98,7 @@ The preconditioner matrices (electric and magnetic) have the following form:
         A_21_mat,    A_22_mat;
     ]
 
-The first block matrix is diagonal and the Schur complement is used:
-    - Y_mat = inv(A_11_mat)
-    - S_mat = A_22_mat-A_21_mat*Y_mat*A_12_mat
+The first block matrix (A_11_mat) is diagonal and the Schur complement can be used.
 
 For the full equation system, the complete dense matrices are used:
     - The system is split in three parts: electric, magnetic, and electric-magnetic coupling.
@@ -237,40 +235,6 @@ def _get_cond_fact_magnetic(A_net_m, R_m, P_m):
     A_22_mat = sps.eye(n_vm, format="csc")
 
     return A_11_mat, A_22_mat, A_12_mat, A_21_mat
-
-
-def _get_schur_extract(A_11_mat, A_22_mat, A_12_mat, A_21_mat):
-    """
-    Compute the Schur complement (with respect to the diagonal admittance matrix).
-    """
-
-    Y_mat = sps.diags(1 / A_11_mat.diagonal(), format="csc")
-    S_mat = A_22_mat - A_21_mat * Y_mat * A_12_mat
-
-    return Y_mat, S_mat
-
-
-def _get_schur_solve(rhs, Y_mat, S_fact, A_12_mat, A_21_mat):
-    """
-    Solve the equation system with the Schur complement.
-    """
-
-    # split the system (Schur complement split)
-    (n_schur, n_schur) = Y_mat.shape
-
-    # split the rhs vector
-    rhs_a = rhs[:n_schur]
-    rhs_b = rhs[n_schur:]
-
-    # solve the equation system (Schur complement and matrix factorization)
-    tmp = rhs_b - (A_21_mat * (Y_mat * rhs_a))
-    sol_b = matrix_factorization.get_solve(S_fact, tmp)
-    sol_a = Y_mat * (rhs_a - (A_12_mat * sol_b))
-
-    # assemble the solution
-    sol = np.concatenate((sol_a, sol_b))
-
-    return sol
 
 
 def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
@@ -451,37 +415,25 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     These operators are used as a preconditioner for the iterative method solving the full system.
 
     The system is split between the electric and magnetic equations.
-    The Schur complement matrices of the preconditioner are also returned.
+    The Schur complement matrices of the preconditioner can be used.
     These matrices are used to assess the condition number of the system.
     """
 
-    # get the Schur complement
+    # get the sparse system
     (A_11_mat_c, A_22_mat_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
     (A_11_mat_m, A_22_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(A_net_m, R_m, P_m)
 
-    # get the Schur complement
-    (Y_mat_c, S_mat_c) = _get_schur_extract(A_11_mat_c, A_22_mat_c, A_12_mat_c, A_21_mat_c)
-    (Y_mat_m, S_mat_m) = _get_schur_extract(A_11_mat_m, A_22_mat_m, A_12_mat_m, A_21_mat_m)
-
     # factorize the Schur complement
-    S_fact_c = matrix_factorization.get_factorize("electric", S_mat_c)
-    S_fact_m = matrix_factorization.get_factorize("magnetic", S_mat_m)
+    (fct_c, C_mat_c) = matrix_factorization.get_factorize("electric", A_11_mat_c, A_22_mat_c, A_12_mat_c, A_21_mat_c)
+    (fct_m, C_mat_m) = matrix_factorization.get_factorize("magnetic", A_11_mat_m, A_22_mat_m, A_12_mat_m, A_21_mat_m)
 
-    # function describing the electric preconditioner
-    def fct_c(rhs_c):
-        sol_c = _get_schur_solve(rhs_c, Y_mat_c, S_fact_c, A_12_mat_c, A_21_mat_c)
-        return sol_c
-
-    # function describing the magnetic preconditioner
-    def fct_m(rhs_m):
-        sol_m = _get_schur_solve(rhs_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
-        return sol_m
-
-    # combine the electric and magnetic data
+    # combine the electric and magnetic data (preconditioner)
     fct_cm = (fct_c, fct_m)
-    S_mat_cm = (S_mat_c, S_mat_m)
 
-    return fct_cm, S_mat_cm
+    # combine the electric and magnetic data (condition matrix)
+    C_mat_cm = (C_mat_c, C_mat_m)
+
+    return fct_cm, C_mat_cm
 
 
 def get_coupling_operator(freq, n_vc, n_fc, n_vm, n_fm, n_src, K_op_c, K_op_m):

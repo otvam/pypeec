@@ -18,6 +18,8 @@ __license__ = "Mozilla Public License Version 2.0"
 import os
 import warnings
 import scilogger
+import numpy as np
+import scipy.sparse as sps
 
 # get a logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
@@ -130,7 +132,7 @@ def _get_fact_pyamg(pyamg_options, mat):
     return factor
 
 
-def _get_fact_diagonal():
+def _get_fact_dummy():
     """
     Dummy factorization with a diagonal matrix.
     """
@@ -150,21 +152,17 @@ def _get_factorize_sub(mat):
     nnz = mat.size
     (nx, ny) = mat.shape
 
-    # factorization for empty matrices
-    def factor_dummy(rhs):
-        return rhs
+    # display
+    LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
+    LOGGER.debug("matrix elements: %d / %d" % (nnz, nx * ny))
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):
-        return factor_dummy
+        return _get_fact_dummy()
 
     # compute matrix density
     density = nnz / (nx * ny)
 
-    # display
-    LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
-    LOGGER.debug("matrix elements: %d" % nnz)
-    LOGGER.debug("matrix density: %.2e" % density)
 
     # factorize the matrix
     LOGGER.debug("compute factorization")
@@ -174,6 +172,43 @@ def _get_factorize_sub(mat):
     LOGGER.debug("factorization success")
 
     return fct
+
+
+def _get_schur_extract(mat_11, mat_22, mat_12, mat_21):
+    """
+    Compute the Schur complement (with respect to the diagonal matrix).
+    """
+
+    mat_diag = sps.diags(1 / mat_11.diagonal(), format="csc")
+    mat_fact = mat_22 - mat_21 * mat_diag * mat_12
+
+    return mat_fact, mat_diag
+
+
+def _get_schur_solve(fct_fact, mat_diag, mat_12, mat_21):
+    """
+    Solve the equation system with the Schur complement.
+    """
+
+    # split the system (Schur complement split)
+    (n_schur, n_schur) = mat_diag.shape
+
+    # function for solving the Schur complement
+    def solve(rhs):
+        # split the rhs vector
+        rhs_a = rhs[:n_schur]
+        rhs_b = rhs[n_schur:]
+
+        # solve the equation system (Schur complement and matrix factorization)
+        sol_b = fct_fact(rhs_b - (mat_21 * (mat_diag * rhs_a)))
+        sol_a = mat_diag * (rhs_a - (mat_12 * sol_b))
+
+        # assemble the solution
+        sol = np.concatenate((sol_a, sol_b))
+
+        return sol
+
+    return solve
 
 
 def set_options(factorization_options):
@@ -203,7 +238,7 @@ def set_options(factorization_options):
             return _get_fact_pyamg(pyamg_options, mat)
     elif library == "Diagonal":
         def factor(_):
-            return _get_fact_diagonal()
+            return _get_fact_dummy()
     else:
         raise ValueError("invalid factorization library")
 
@@ -212,23 +247,19 @@ def set_options(factorization_options):
     SCHUR = schur
 
 
-def get_factorize(name, mat):
+def get_factorize(name, mat_11, mat_22, mat_12, mat_21):
     """
-    Factorize a sparse matrix (log wrapper).
+    Factorize a sparse matrix (with or without Schur complement).
     """
 
     LOGGER.debug("factorization: %s" % name)
     with LOGGER.BlockIndent():
-        fct = _get_factorize_sub(mat)
+        if SCHUR:
+            (mat_fact, mat_diag) = _get_schur_extract(mat_11, mat_22, mat_12, mat_21)
+            fct_fact = _get_factorize_sub(mat_fact)
+            fct_sol = _get_schur_solve(fct_fact, mat_diag, mat_12, mat_21)
+        else:
+            mat_fact = np.bmat([[mat_11, mat_12], [mat_21, mat_22]])
+            fct_sol = _get_factorize_sub(mat_fact)
 
-    return fct
-
-
-def get_solve(fct, rhs):
-    """
-    Solve an equation system with a given factorization.
-    """
-
-    sol = fct(rhs)
-
-    return sol
+    return fct_sol, mat_fact

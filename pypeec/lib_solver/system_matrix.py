@@ -11,10 +11,14 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import scilogger
 import numpy as np
 import scipy.sparse as sps
 import scipy.constants as cst
 from pypeec.lib_matrix import matrix_multiply
+
+# get a logger
+LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 def _get_face_voxel_indices(n, idx_v, idx_f, A_net, offset):
@@ -100,6 +104,8 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, mult_type):
 
     # check if the matrix is required
     if len(idx_f) == 0:
+        LOGGER.debug("tensor: inductance / empty")
+
         # dummy diagonal coefficient
         L = np.nan
 
@@ -154,6 +160,8 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, mult_type):
 
     # check if the matrix is required
     if len(idx_v) == 0:
+        LOGGER.debug("tensor: potential / empty")
+
         # dummy diagonal coefficient
         P = np.nan
 
@@ -213,6 +221,8 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
 
     # check if the matrix is required
     if (len(idx_fc) == 0) or (len(idx_fm) == 0):
+        LOGGER.debug("tensor: coupling / empty")
+
         # dummy magnetic to the electric multiplication operator
         K_op_c = _get_operator_zeros(idx_fc)
 
