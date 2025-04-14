@@ -34,8 +34,8 @@ def _get_solver(data_sweep):
     # extract the data
     freq = data_sweep["freq"]
     has_converged = data_sweep["has_converged"]
-    P_total = data_sweep["integral"]["P_total"]
-    W_total = data_sweep["integral"]["W_total"]
+    P_total = data_sweep["integral_total"]["P_total"]
+    W_total = data_sweep["integral_total"]["W_total"]
 
     # assemble results
     solver = {
