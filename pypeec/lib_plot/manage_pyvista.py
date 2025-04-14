@@ -340,9 +340,6 @@ def _get_arrow(obj, data_plot):
 def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
     """
     Plot a scalar variable.
-    The plot is either made on:
-        - the unstructured grid describing the non-empty voxels
-        - the polydata (point cloud) used to evaluate the field
     """
 
     # extract
@@ -387,10 +384,6 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
 def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     """
     Plot a vector variable with an arrow plot (quiver plot).
-    The plot is either made on:
-        - the unstructured grid describing the non-empty voxels
-        - the polydata (point cloud) used to evaluate the field
-
     A scalar variable is used to determine the color of the arrows.
     The length of the arrows is constant (and scaled with respect to the voxel size).
     """

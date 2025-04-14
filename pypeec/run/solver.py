@@ -36,7 +36,7 @@ LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 def _run_solver_options(data_solver):
     """
-    Load and configure the optional libraries.
+    Load and configure the numerical libraries.
     """
 
     # extract the data
@@ -51,7 +51,12 @@ def _run_solver_options(data_solver):
 
 def _run_solver_init(data_solver):
     """
-    Compute the voxel geometry, Green functions, and the incidence matrix.
+    Initialize the solver (independent of the solver sweeps):
+        - Load and configure the optional libraries.
+        - Get the voxel geometry and the incidence matrix.
+        - Parse the problem geometry (materials and sources).
+        - Compute the Green functions.
+        - Get the dense operators.
     """
 
     # extract the data
@@ -103,7 +108,7 @@ def _run_solver_init(data_solver):
         # get a summary of the problem size
         problem_status = problem_geometry.get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v)
 
-    # get the Green functions
+    # compute the Green functions
     with LOGGER.BlockTimer("system_tensor"):
         # Green function self-coefficient
         G_self = system_tensor.get_green_self(d)
@@ -114,7 +119,7 @@ def _run_solver_init(data_solver):
         # Green function mutual coefficients
         K_tsr = system_tensor.get_coupling_tensor(n, d, integral_simplify, has_magnetic)
 
-    # get the system operators
+    # get the dense operators
     with LOGGER.BlockTimer("system_matrix"):
         # get the inductance tensor (preconditioner and full problem)
         (L_c, L_op_c) = system_matrix.get_inductance_matrix(n, d, idx_fc, G_self, G_mutual, mult_type)
@@ -176,7 +181,12 @@ def _run_solver_init(data_solver):
 
 def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     """
-    Create the equation system, solve the system, and extract the solution.
+    Solve the problem (for a given solver sweep):
+        - Load and configure the numerical libraries.
+        - Get the material and source values.
+        - Assemble the equation system.
+        - Solve the equation system.
+        - Extract the solution.
     """
 
     # extract the data
@@ -212,7 +222,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     material_val = data_param["material_val"]
     source_val = data_param["source_val"]
 
-    # load and configure the optional libraries
+    # load and configure the numerical libraries
     _run_solver_options(data_solver)
 
     # get the material and source values
@@ -415,7 +425,7 @@ def run(data_voxel, data_problem, data_tolerance):
     LOGGER.info("combine the input data")
     data_solver = {**data_tolerance, **data_geom, **data_problem}
 
-    # create the problem
+    # initialize the solver (independent of the solver sweeps)
     with LOGGER.BlockTimer("init"):
         (data_init, data_internal, sweep_solver, parallel_sweep) = _run_solver_init(data_solver)
 
@@ -423,7 +433,7 @@ def run(data_voxel, data_problem, data_tolerance):
     def fct_compute(tag, data_param, sol_init):
         return _run_parallel_sweep(tag, sol_init, data_solver, data_internal, data_param)
 
-    # compute the different sweeps
+    # solve the different sweeps
     data_sweep = sweep_joblib.get_run_sweep(parallel_sweep, sweep_solver, fct_compute)
 
     # create output data

@@ -1,5 +1,5 @@
 """
-Module for parsing voxel indices.
+Module for creating a voxel structure from given indices.
 Transform the voxel indices into NumPy arrays.
 Check the validity of the indices.
 """

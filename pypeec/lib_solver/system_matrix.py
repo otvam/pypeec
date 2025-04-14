@@ -94,8 +94,8 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, mult_type):
     The green tensor has the following size: (nx, ny, nz, 1).
 
     The tensor is then used to create a matrix-vector linear operator:
-        - input size: n_f
-        - output size: n_f
+        - Input size: n_f.
+        - Output size: n_f.
     """
 
     # check if the matrix is required
@@ -148,8 +148,8 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, mult_type):
     The green tensor has the following size: (nx, ny, nz, 1).
 
     The tensor is then used to create a matrix-vector linear operator:
-        - input size: n_v
-        - output size: n_v
+        - Input size: n_v.
+        - Output size: n_v.
     """
 
     # check if the matrix is required
@@ -203,12 +203,12 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
     However, this step is currently required for obtaining Toeplitz matrices.
 
     For the electric coupling, the matrix-vector linear operator has the following size:
-        - input size: n_fm
-        - output size: n_fc
+        - Input size: n_fm.
+        - Output size: n_fc.
 
     For the magnetic coupling, the matrix-vector linear operator has the following size:
-        - input size: n_fc
-        - output size: n_fm
+        - Input size: n_fc.
+        - Output size: n_fm.
     """
 
     # check if the matrix is required

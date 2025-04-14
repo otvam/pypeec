@@ -1,7 +1,7 @@
 """
 Different functions for handling the problem values:
-    - materials properties (electric and magnetic materials)
-    - source values and internal impedance/admittance
+    - Materials properties (electric and magnetic materials).
+    - Source values and internal impedance/admittance.
 """
 
 __author__ = "Thomas Guillod"

@@ -2,8 +2,8 @@
 Different functions for building the equation system.
 
 Two different equation systems are built:
-     - A sparse system for the preconditioner.
-     - A dense system for the iterative solver.
+    - A sparse system for the preconditioner.
+    - A dense system for the iterative solver.
 
 The voxel structure has the following size: (nx, ny, nz).
 The problem contains n_vc non-empty electric voxels and n_vm non-empty magnetic voxels.
@@ -85,9 +85,9 @@ It should be noted that surface charges are not considered.
 Only volume charges are used, which is an approximation.
 
 For the preconditioner, the following simplifications are made:
-     - The dense inductance matrix is diagonalized.
-     - The dense potential matrix is diagonalized.
-     - The electric-magnetic coupling matrices are neglected.
+    - The dense inductance matrix is diagonalized.
+    - The dense potential matrix is diagonalized.
+    - The electric-magnetic coupling matrices are neglected.
 
 With these assumptions, a sparse (electric and magnetic) equation system is obtained.
 The preconditioner is solved separately for the electric and magnetic equations.
@@ -127,9 +127,8 @@ def _get_system_size(A_net_c, A_net_m, A_src):
     """
     Get the size of the equation system.
 
-    The equation system has the following size:
-        - n_fc+n_vc+n_src_c+n_src_v: electric system
-        - n_fm+n_vm: magnetic system
+    The electric system has the following size: n_fc+n_vc+n_src_c+n_src_v.
+    The magnetic system has the following size: n_fm+n_vm.
     """
 
     # get the matrices
@@ -200,9 +199,7 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     Compute the sparse matrices using for the electric preconditioner.
 
     The equation system has the following size: n_fc+n_vc+n_src_c+n_src_v.
-    The equation system is split in two subsystems:
-        - n_fc (diagonal block size)
-        - n_vc+n_src_c+n_src_v (sparse block size)
+    The first (n_fc, n_fc) block is a diagonal matrix:
     """
 
     # get the matrices
@@ -242,9 +239,7 @@ def _get_cond_fact_magnetic(A_net_m, R_m, P_m):
     Compute the sparse matrices using for the magnetic preconditioner.
 
     The equation system has the following size: n_fm+n_vm.
-    The equation system is split in two subsystems:
-        - n_fm (diagonal block size)
-        - n_vm (sparse block size)
+    The first (n_fm, n_fm) block is a diagonal matrix:
     """
 
     # get the system size
@@ -407,9 +402,9 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, Z_src_v):
     The source matrices connect the sources to the rest of the system.
 
     The source matrices have the following sizes:
-        - A_vc_src: (n_vc, n_src_c+n_src_v)
-        - A_src_vc: (n_src_c+n_src_v, n_vc)
-        - A_src_src: (n_src_c+n_src_v, n_src_c+n_src_v)
+        - A_vc_src which contains A_vc_src_c and A_vc_src_v: (n_vc, n_src_c+n_src_v).
+        - A_src_vc which contains A_src_c_vc and A_src_v_vc: (n_src_c+n_src_v, n_vc).
+        - A_src_src which contains A_src_c_src_c and A_src_v_src_v: (n_src_c+n_src_v, n_src_c+n_src_v).
 
     It should be noted that the matrices connecting the magnetic voxels are all-zeros.
     This is explained by the fact that the sources are only connected to electric voxels.

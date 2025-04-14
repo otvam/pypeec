@@ -358,18 +358,6 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
     return name, n_in, n_out, idx_in_mat, idx_out_mat, mat_fft
 
 
-def get_prepare(name, idx_out, idx_in, mat):
-    """
-    Construct a circulant tensor from a 4D tensor (log wrapper).
-    """
-
-    LOGGER.debug("multiplication: %s" % name)
-    with LOGGER.BlockIndent():
-        data = _get_prepare_sub(name, idx_out, idx_in, mat)
-
-    return data
-
-
 def set_options(fft_options):
     """
     Assign the options and load the right libray.
@@ -397,6 +385,18 @@ def set_options(fft_options):
 
     # assign the imported library
     NPCP = lib_tmp
+
+
+def get_prepare(name, idx_out, idx_in, mat):
+    """
+    Construct a circulant tensor from a 4D tensor (log wrapper).
+    """
+
+    LOGGER.debug("multiplication: %s" % name)
+    with LOGGER.BlockIndent():
+        data = _get_prepare_sub(name, idx_out, idx_in, mat)
+
+    return data
 
 
 def get_multiply(data, vec_in, flip):

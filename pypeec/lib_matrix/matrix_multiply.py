@@ -5,19 +5,21 @@ Module for doing matrix-vector multiplication:
 
 Three different types of matrices are supported:
     - Tensor representing a simple potential matrix.
-        - Size of the last dimension of the input tensor => 1.
-        - Number of dimensions of the input vector => 1.
-        - Number of dimensions of the output vector => 1.
+        - Size of the last dimension of the input tensor: 1.
+        - Number of dimensions of the input vector: 1.
+        - Number of dimensions of the output vector: 1.
     - Tensor representing a block diagonal inductance matrix.
-        - Size of the last dimension of the input tensor => 1.
-        - Number of dimensions of the input vector => 3.
-        - Number of dimensions of the output vector => 3.
+        - Size of the last dimension of the input tensor: 1.
+        - Number of dimensions of the input vector: 3.
+        - Number of dimensions of the output vector: 3.
     - Tensor representing a block off-diagonal coupling matrix.
-        - Size of the last dimension of the input tensor => 3.
-        - Number of dimensions of the input vector => 3.
-        - Number of dimensions of the output vector => 3.
+        - Size of the last dimension of the input tensor: 3.
+        - Number of dimensions of the input vector: 3.
+        - Number of dimensions of the output vector: 3.
 
-A matrix-vector operator is returned for performing the matrix-vector multiplication.
+A matrix-vector operator is returned for performing the matrix-vector multiplication:
+    - For standard multiplication, the full matrix is constructed and stored.
+    - For FFT multiplication, the full matrix is never constructed nor stored.
 """
 
 __author__ = "Thomas Guillod"

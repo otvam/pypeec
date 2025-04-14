@@ -1,9 +1,8 @@
 """
-Provide a function to extract convergence metrics from the solution vector.
-
-The complex power is extracted at the different terminals.
-The total complex power is computed for all the terminals.
-The active and reactive power are returned as metrics.
+Provide functions to extract convergence metrics from the solution vector:
+    - The complex power is extracted at the different terminals.
+    - The total complex power is combined for all the terminals.
+    - The active and reactive power are returned as metrics.
 """
 
 __author__ = "Thomas Guillod"

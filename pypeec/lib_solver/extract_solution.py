@@ -1,11 +1,10 @@
 """
-Different functions for extracting the fields and terminal currents and voltages from the solution vector.
-
-Extract the different fields.
-Extract the losses and energy.
-Extract the integral quantities.
-Extract the source terminal currents and voltages.
-Compute the magnetic field for the point cloud.
+Different functions for extracting the fields and terminal currents and voltages from the solution vector:
+    - Extract the different fields.
+    - Extract the losses and energy.
+    - Extract the integral quantities.
+    - Extract the source terminal currents and voltages.
+    - Compute the magnetic field for the point cloud.
 
 Warning
 -------

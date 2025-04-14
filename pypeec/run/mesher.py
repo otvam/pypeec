@@ -7,7 +7,7 @@ Three different kind of geometry can be meshed:
     - The voxel structure is generated from 3D STL files.
     - The voxel structure is generated from stacked PNG images.
     - The voxel structure is generated from stacked 2D vector shapes.
-    - The voxel structure is given with the voxel indices.
+    - The voxel structure is directly given with the voxel indices.
 
 The mesher is implemented with PyVista, Pillow, Shapely, and Rasterio.
 """
@@ -59,7 +59,7 @@ def _run_mesher(data_geometry):
 
 def _run_voxel(data_voxelize):
     """
-    Generate a 3D voxel structure from indices.
+    Generate a 3D voxel structure from given indices.
     """
 
     # extract the data
@@ -155,9 +155,14 @@ def _run_stl(data_voxelize):
     return reference, data_internal
 
 
-def _run_resample_graph(reference, data_internal, data_geometry):
+def _run_finalize(reference, data_internal, data_geometry):
     """
-    Resampling of a 3D voxel structure (increases the number of voxels).
+    Finalize the generated mesh:
+        - Generate the point cloud.
+        - Resampling the voxel structure.
+        - Resolve conflicts for the voxel structure.
+        - Check the connections inside the voxel structure.
+        - Summarize the properties of the mesh.
     """
 
     # extract the data
@@ -245,8 +250,8 @@ def run(data_geometry):
     # run the mesher
     (reference, data_internal) = _run_mesher(data_geometry)
 
-    # resample and assemble
-    data_geom = _run_resample_graph(reference, data_internal, data_geometry)
+    # finalize the mesh
+    data_geom = _run_finalize(reference, data_internal, data_geometry)
 
     # create output data
     data_voxel = _get_data(data_geom, timestamp)

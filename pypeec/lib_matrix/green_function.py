@@ -3,14 +3,14 @@ Different functions for computing Green functions with voxels.
 Analytical solutions and numerical approximations are used.
 
 The two following integrals are available:
-    - Integrate all the dimensions (6D integrals).
-    - Integrate the dimensions except the last one (5D integrals).
+    - Integrate all the dimensions (for the inductance and potential matrices).
+    - Integrate the dimensions except the last one (for the coupling matrices).
 
 Exact Inductance Equations for Rectangular Conductors With Applications to More Complicated Geometries
-C. Hoer and C. Love, 1965
+C. Hoer and C. Love, Journal of Research of the National Bureau of Standards, 1965
 
 Exact Closed Form Formula for Self Inductance of Conductor of Rectangular Cross Section
-Z. Piatek and B. Baron, 2021
+Z. Piatek and B. Baron, Progress In Electromagnetics Research, 2012
 """
 
 __author__ = "Thomas Guillod"
@@ -207,7 +207,7 @@ def _get_green_preproc(int_type):
 def get_green_ana(d, idx, int_type):
     """
     Compute a Green function between two voxels.
-    An analytical solution is used.
+    A stable analytical solution is used.
     The 5D or 6D integrals can be computed.
     """
 
@@ -255,7 +255,7 @@ def get_green_num(d, idx, int_type):
     """
     Compute a Green function between two voxels.
     The 5D or 6D integrals can be computed.
-    A numerical approximation is used.
+    A fast numerical approximation is used.
     Only valid if the distance between the two voxels is large.
     """
 

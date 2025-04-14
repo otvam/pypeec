@@ -5,6 +5,7 @@ This module is used as a common interface for different matrix solvers:
     - SuperLU is typically slower but is always available (integrated with SciPy).
     - PARDISO is typically faster than SuperLU (available through Pydiso).
     - PyAMG is typically slow but uses less memory (risk of convergence issues).
+    - Diagonal is a dummy factorization (only for debugging).
 
 This module is only importing the required matrix solver.
 This means that the unused matrix solvers are not required.

@@ -1,6 +1,6 @@
 """
 Different functions for resolving conflict between domains.
-Detect and remove shared indices (conflict) between domains.
+Check the integrity of the voxel structure after the resolution.
 """
 
 __author__ = "Thomas Guillod"
@@ -14,9 +14,8 @@ import numpy.random as rnd
 def _get_solve_overlap(domain_def, conflict_rules):
     """
     Detect and remove shared indices (conflict) between two domains.
-    The conflict is solved in the following way:
-        - The reference domain indices remain unchanged.
-        - The shared indices are removed from the domain to be fixed.
+    The duplicated indices are removed from the domains to be resolved.
+    The reference domains indices remain unchanged.
     """
 
     # extract the data

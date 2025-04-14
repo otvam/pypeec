@@ -7,7 +7,7 @@ The PCB is created with "KiCad - PCB" and the following files are exported:
     - Excellon files for the vias
 
 The external tool "gerbv - Gerber Viewer" is used for parsing the GERBER files.
-The external tool "mogrify - ImageMagick" is used trimming the PNG files.
+The external tool "mogrify - ImageMagick" is used for trimming the PNG files.
 
 Warning
 -------
