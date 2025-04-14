@@ -26,6 +26,14 @@
 #       - opacity_voxel: face opacity for the voxelized structure
 #       - opacity_reference: face opacity for the reference structure
 #
+#   - "component": plot a matrix showing the connected the domains (matplotlib)
+#       - title: title located at the top of the plot (null for hiding)
+#       - colorbar: colorbar for the matrix
+#
+#   - "adjacent": plot a matrix showing the adjacent domains (matplotlib)
+#       - title: title located at the top of the plot (null for hiding)
+#       - colorbar: colorbar for the matrix
+#
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 

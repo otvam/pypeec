@@ -3,10 +3,9 @@ Main script for plotting the solution of a PEEC problem.
 
 Plot the following features:
     - The different materials composing the voxel structure.
-    - The electric potential and the magnetic potential.
-    - The current density divergence and the magnetic charge.
-    - The current density and the flux density
-    - The magnetic field on point cloud.
+    - The scalar variable for the non-empty voxels or the point cloud.
+    - The phasor variable for the non-empty voxels or the point cloud.
+    - The vector variable for the non-empty voxels or the point cloud.
     - The solver convergence and residuum.
 
 Several plot modes are available:

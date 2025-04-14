@@ -76,7 +76,7 @@ Step 4: Viewer
     pypeec viewer \
         --voxel tutorial/voxel.json.gz \
         --viewer config/viewer.yaml \
-        --tag_plot domain graph \
+        --tag_plot domain graph adjacent \
         --plot_mode qt
 
 .. code-block:: python
@@ -95,17 +95,21 @@ Step 4: Viewer
     pypeec.run_viewer_file(
         file_voxel=file_voxel,
         file_viewer=file_viewer,
-        tag_plot=["domain", "graph"],
+        tag_plot=["domain", "graph", "adjacent"],
         plot_mode="qt",
     )
 
 .. figure:: ../tutorial/viewer_domain.png
 
-   Plot showing which the different domains.
+   Plot showing the different domains composing the voxel structure.
 
 .. figure:: ../tutorial/viewer_graph.png
 
-   Plot showing which domains are interconnected.
+   Plot showing the connected components composing the voxel structure.
+
+.. figure:: ../tutorial/viewer_adjacent.png
+
+   Plot showing which domains are adjacent to each others.
 
 Step 5: Solver
 --------------

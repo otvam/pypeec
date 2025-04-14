@@ -63,7 +63,7 @@
 #       - marker: plot marker size
 #       - width: line line width
 #
-#   - "convergence": plot the solver residuum histogram (matplotlib)
+#   - "convergence": plot an histogram with the solver residuum (matplotlib)
 #       - title: title located at the top of the plot (null for hiding)
 #       - bar_color: fill color of the bins
 #       - edge_color: "edge color of the bins

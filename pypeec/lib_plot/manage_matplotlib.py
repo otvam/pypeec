@@ -1,6 +1,10 @@
 """
 Different functions for plotting results with Matplotlib.
 
+For the viewer, the following plots are available:
+    - A matrix showing which domains are adjacent to each others.
+    - A matrix showing which domains are connected to each others.
+
 For the plotter, the following plots are available:
     - A plot describing the convergence of the matrix solver.
     - An histogram describing the residuum of the solution.
@@ -154,7 +158,7 @@ def get_plot_plotter(fig, solver_convergence, layout, data_plot, data_options):
 
 def get_plot_viewer(fig, connect_def, layout, data_plot, data_options):
     """
-    Plot the connection matrix (for the viewer).
+    Plot a matrix with the connected/adjacent domains (for the viewer).
     """
 
     # extract the data

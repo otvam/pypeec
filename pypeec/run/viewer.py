@@ -5,6 +5,7 @@ Plot the following features:
     - The different domains composing the voxel structure.
     - The connected components of the voxel structure.
     - The deviation between the original geometry and the voxel structure.
+    - A matrix showing which domains are adjacent/connected to each others.
 
 Several plot modes are available:
     - The Qt framework is used for rendering the plots.

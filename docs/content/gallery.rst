@@ -8,6 +8,7 @@ Viewer (Mesher Results)
 .. image:: ../gallery/viewer_2.png
 .. image:: ../gallery/viewer_3.png
 .. image:: ../gallery/viewer_4.png
+.. image:: ../gallery/viewer_5.png
 
 Plotter (Solver Results)
 ------------------------
