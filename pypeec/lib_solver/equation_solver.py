@@ -10,6 +10,7 @@ import scilogger
 import numpy as np
 import scipy.linalg as lna
 import scipy.sparse.linalg as sla
+from pypeec.lib_matrix import matrix_factorization
 from pypeec.lib_matrix import matrix_condition
 from pypeec.lib_matrix import matrix_iterative
 
@@ -575,7 +576,34 @@ def get_solver(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, fct_conv, s
     return sol, status, solver_convergence, solver_status
 
 
-def get_condition(C_mat_cm, conditions_options):
+def get_factorization(pcd_mat_cm):
+    """
+    Factorize the preconditioner (sparse matrices).
+    """
+
+    # extract matrices
+    (pcd_mat_c, pcd_mat_m) = pcd_mat_cm
+
+    # factorize the electric system
+    LOGGER.debug("factorization: electric")
+    with LOGGER.BlockIndent():
+        (fct_c, C_mat_c) = matrix_factorization.get_factorize(pcd_mat_c)
+
+    # factorize the magnetic system
+    LOGGER.debug("factorization: magnetic")
+    with LOGGER.BlockIndent():
+        (fct_m, C_mat_m) = matrix_factorization.get_factorize(pcd_mat_m)
+
+    # combine the electric and magnetic data (factorization operator)
+    fct_cm = (fct_c, fct_m)
+
+    # combine the electric and magnetic data (factorization operator)
+    C_mat_cm = (C_mat_c, C_mat_m)
+
+    return fct_cm, C_mat_cm
+
+
+def get_condition(cond_mat_cm, conditions_options):
     """
     Compute an estimate of the condition number (norm 1) of the sparse system.
     The condition number is used to detect problematic (quasi-singular) systems.
@@ -588,17 +616,17 @@ def get_condition(C_mat_cm, conditions_options):
     norm_options = conditions_options["norm_options"]
 
     # extract matrices
-    (C_mat_c, C_mat_m) = C_mat_cm
+    (cond_mat_c, cond_mat_m) = cond_mat_cm
 
     # check the condition
     if check:
         LOGGER.debug("condition: electric")
         with LOGGER.BlockIndent():
-            cond_electric = matrix_condition.get_condition_matrix(C_mat_c, norm_options)
+            cond_electric = matrix_condition.get_condition_matrix(cond_mat_c, norm_options)
 
         LOGGER.debug("condition: magnetic")
         with LOGGER.BlockIndent():
-            cond_magnetic = matrix_condition.get_condition_matrix(C_mat_m, norm_options)
+            cond_magnetic = matrix_condition.get_condition_matrix(cond_mat_m, norm_options)
 
         status = (cond_electric < tolerance_electric) and (cond_magnetic < tolerance_magnetic)
     else:

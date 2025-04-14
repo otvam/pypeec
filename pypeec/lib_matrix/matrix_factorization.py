@@ -247,19 +247,24 @@ def set_options(factorization_options):
     SCHUR = schur
 
 
-def get_factorize(name, mat_11, mat_22, mat_12, mat_21):
+def get_factorize(mat):
     """
     Factorize a sparse matrix (with or without Schur complement).
     """
 
-    LOGGER.debug("factorization: %s" % name)
-    with LOGGER.BlockIndent():
-        if SCHUR:
-            (mat_fact, mat_diag) = _get_schur_extract(mat_11, mat_22, mat_12, mat_21)
-            fct_fact = _get_factorize_sub(mat_fact)
-            fct_sol = _get_schur_solve(fct_fact, mat_diag, mat_12, mat_21)
-        else:
-            mat_fact = np.bmat([[mat_11, mat_12], [mat_21, mat_22]])
-            fct_sol = _get_factorize_sub(mat_fact)
+    # extract the data
+    mat_11 = mat["mat_11"]
+    mat_22 = mat["mat_22"]
+    mat_12 = mat["mat_12"]
+    mat_21 = mat["mat_21"]
+
+    # factorize the matrix
+    if SCHUR:
+        (mat_fact, mat_diag) = _get_schur_extract(mat_11, mat_22, mat_12, mat_21)
+        fct_fact = _get_factorize_sub(mat_fact)
+        fct_sol = _get_schur_solve(fct_fact, mat_diag, mat_12, mat_21)
+    else:
+        mat_fact = np.bmat([[mat_11, mat_12], [mat_21, mat_22]])
+        fct_sol = _get_factorize_sub(mat_fact)
 
     return fct_sol, mat_fact

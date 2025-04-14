@@ -372,7 +372,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         )
 
         # get the linear operator for the preconditioner (guess of the inverse)
-        (fct_pcd_cm, C_mat_cm) = equation_system.get_cond_operator(
+        pcd_mat_cm = equation_system.get_cond_operator(
             freq,
             A_net_c,
             A_net_m,
@@ -409,14 +409,22 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
 
     # solve the equation system
     with LOGGER.BlockTimer("equation_solver"):
+        # factorization of the preconditioner (sparse matrices)
+        (fct_pcd_cm, cond_mat_cm) = equation_solver.get_factorization(
+            pcd_mat_cm,
+        )
+
+        # free memory
+        del pcd_mat_cm
+
         # estimate the condition number of the problem (to detect quasi-singular problem)
         (condition_ok, condition_status) = equation_solver.get_condition(
-            C_mat_cm,
+            cond_mat_cm,
             condition_options,
         )
 
         # free memory
-        del C_mat_cm
+        del cond_mat_cm
 
         # get a function to evaluate the solver convergence
         fct_conv = extract_convergence.get_fct_conv(

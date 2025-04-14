@@ -94,11 +94,11 @@ The preconditioner is solved separately for the electric and magnetic equations.
 
 The preconditioner matrices (electric and magnetic) have the following form:
     [
-        A_11_mat,    A_12_mat;
-        A_21_mat,    A_22_mat;
+        mat_11,    mat_12;
+        mat_21,    mat_22;
     ]
 
-The first block matrix (A_11_mat) is diagonal and the Schur complement can be used.
+The first block matrix (mat_11) is diagonal and the Schur complement can be used.
 
 For the full equation system, the complete dense matrices are used:
     - The system is split in three parts: electric, magnetic, and electric-magnetic coupling.
@@ -194,25 +194,28 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     s = 1j * 2 * np.pi * freq
 
     # admittance matrix
-    A_11_mat = sps.diags(R_c + s * L_c, format="csc")
+    mat_11 = sps.diags(R_c + s * L_c, format="csc")
 
     # assemble the matrices
-    A_21_mat = A_net_c
-    A_12_mat = -A_net_c.transpose()
-    A_22_mat = sps.csc_matrix((n_vc, n_vc), dtype=np.int64)
+    mat_21 = A_net_c
+    mat_12 = -A_net_c.transpose()
+    mat_22 = sps.csc_matrix((n_vc, n_vc), dtype=np.int64)
 
     # expand for the source matrices
     A_add = sps.csc_matrix((n_fc, n_src), dtype=np.int64)
-    A_12_mat = sps.hstack([A_12_mat, A_add], dtype=np.complex128, format="csr")
+    mat_12 = sps.hstack([mat_12, A_add], dtype=np.complex128, format="csr")
 
     # expand for the source matrices
     A_add = sps.csc_matrix((n_src, n_fc), dtype=np.int64)
-    A_21_mat = sps.vstack([A_21_mat, A_add], dtype=np.complex128, format="csc")
+    mat_21 = sps.vstack([mat_21, A_add], dtype=np.complex128, format="csc")
 
     # add the source
-    A_22_mat = sps.bmat([[A_22_mat, A_vc_src], [A_src_vc, A_src_src]], dtype=np.complex128, format="csc")
+    mat_22 = sps.bmat([[mat_22, A_vc_src], [A_src_vc, A_src_src]], dtype=np.complex128, format="csc")
 
-    return A_11_mat, A_22_mat, A_12_mat, A_21_mat
+    # assign the matrices
+    pcd_mat = {"mat_11": mat_11, "mat_22": mat_22, "mat_12": mat_12, "mat_21": mat_21}
+
+    return pcd_mat
 
 
 def _get_cond_fact_magnetic(A_net_m, R_m, P_m):
@@ -227,14 +230,17 @@ def _get_cond_fact_magnetic(A_net_m, R_m, P_m):
     (n_vm, n_fm) = A_net_m.shape
 
     # admittance matrix
-    A_11_mat = sps.diags(R_m, format="csc")
+    mat_11 = sps.diags(R_m, format="csc")
 
     # assemble the matrices
-    A_21_mat = P_m * A_net_m
-    A_12_mat = -A_net_m.transpose()
-    A_22_mat = sps.eye(n_vm, format="csc")
+    mat_21 = P_m * A_net_m
+    mat_12 = -A_net_m.transpose()
+    mat_22 = sps.eye(n_vm, format="csc")
 
-    return A_11_mat, A_22_mat, A_12_mat, A_21_mat
+    # assign the matrices
+    pcd_mat = {"mat_11": mat_11, "mat_22": mat_22, "mat_12": mat_12, "mat_21": mat_21}
+
+    return pcd_mat
 
 
 def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
@@ -420,20 +426,13 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
     """
 
     # get the sparse system
-    (A_11_mat_c, A_22_mat_c, A_12_mat_c, A_21_mat_c) = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
-    (A_11_mat_m, A_22_mat_m, A_12_mat_m, A_21_mat_m) = _get_cond_fact_magnetic(A_net_m, R_m, P_m)
-
-    # factorize the Schur complement
-    (fct_c, C_mat_c) = matrix_factorization.get_factorize("electric", A_11_mat_c, A_22_mat_c, A_12_mat_c, A_21_mat_c)
-    (fct_m, C_mat_m) = matrix_factorization.get_factorize("magnetic", A_11_mat_m, A_22_mat_m, A_12_mat_m, A_21_mat_m)
+    pcd_mat_c = _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src)
+    pcd_mat_m = _get_cond_fact_magnetic(A_net_m, R_m, P_m)
 
     # combine the electric and magnetic data (preconditioner)
-    fct_cm = (fct_c, fct_m)
+    pcd_mat_cm = (pcd_mat_c, pcd_mat_m)
 
-    # combine the electric and magnetic data (condition matrix)
-    C_mat_cm = (C_mat_c, C_mat_m)
-
-    return fct_cm, C_mat_cm
+    return pcd_mat_cm
 
 
 def get_coupling_operator(freq, n_vc, n_fc, n_vm, n_fm, n_src, K_op_c, K_op_m):
