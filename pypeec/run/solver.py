@@ -13,8 +13,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import copy
 import scilogger
-from pypeec.lib_matrix import multiply_fft
-from pypeec.lib_matrix import matrix_factorization
 from pypeec.lib_solver import sweep_joblib
 from pypeec.lib_solver import voxel_geometry
 from pypeec.lib_solver import system_tensor
@@ -33,20 +31,6 @@ from pypeec.lib_check import check_data_options
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def _run_solver_options(data_solver):
-    """
-    Load and configure the numerical libraries.
-    """
-
-    # extract the data
-    fft_options = data_solver["fft_options"]
-    factorization_options = data_solver["factorization_options"]
-
-    # set options
-    multiply_fft.set_options(fft_options)
-    matrix_factorization.set_options(factorization_options)
-
-
 def _run_solver_init(data_solver):
     """
     Initialize the solver (independent of the solver sweeps):
@@ -63,16 +47,13 @@ def _run_solver_init(data_solver):
     c = data_solver["c"]
     parallel_sweep = data_solver["parallel_sweep"]
     integral_simplify = data_solver["integral_simplify"]
-    mult_type = data_solver["mult_type"]
+    dense_options = data_solver["dense_options"]
     source_def = data_solver["source_def"]
     material_def = data_solver["material_def"]
     domain_def = data_solver["domain_def"]
     graph_def = data_solver["graph_def"]
     pts_cloud = data_solver["pts_cloud"]
     sweep_solver = data_solver["sweep_solver"]
-
-    # load and configure the optional libraries
-    _run_solver_options(data_solver)
 
     # get the voxel geometry and the incidence matrix
     with LOGGER.BlockTimer("voxel_geometry"):
@@ -180,7 +161,7 @@ def _run_solver_init(data_solver):
             idx_fc,
             G_self,
             G_mutual,
-            mult_type,
+            dense_options,
         )
 
         # get the potential tensor (preconditioner and full problem)
@@ -189,7 +170,7 @@ def _run_solver_init(data_solver):
             idx_vm,
             G_self,
             G_mutual,
-            mult_type,
+            dense_options,
         )
 
         # free memory
@@ -206,7 +187,7 @@ def _run_solver_init(data_solver):
             A_net_c,
             A_net_m,
             K_tsr,
-            mult_type,
+            dense_options,
         )
 
         # free memory
@@ -297,9 +278,6 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     freq = data_param["freq"]
     material_val = data_param["material_val"]
     source_val = data_param["source_val"]
-
-    # load and configure the numerical libraries
-    _run_solver_options(data_solver)
 
     # get the material and source values
     with LOGGER.BlockTimer("problem_value"):

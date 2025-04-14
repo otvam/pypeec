@@ -109,8 +109,7 @@
     - "parallel_sweep"
     - "integral_simplify"
     - "biot_savart"
-    - "mult_type"
-    - "fft_options"
+    - "dense_options"
     - "factorization_options"
     - "solver_options"
     - "condition_options"
@@ -135,38 +134,38 @@
         "enum":
             - "face"
             - "voxel"
-    "mult_type":
-        "type": "string"
-        "enum":
-            - "fft"
-            - "split"
-    "fft_options":
+    "dense_options":
         "type": "object"
         "required":
-            - "library"
+            - "method"
             - "split"
-            - "alg_options"
+            - "fft_options"
         "properties":
-            "library":
+            "method":
                 "type": "string"
                 "enum":
-                    - "NumPy"
-                    - "SciPy"
-                    - "MKL"
-                    - "FFTW"
-                    - "CuPy"
+                    - "fft"
+                    - "dense"
             "split":
                 "type": "boolean"
-
-            "alg_options":
+            "fft_options":
                 "type": "object"
                 "required":
+                    - "library"
                     - "scipy_worker"
                     - "fftw_thread"
                     - "fftw_cache"
                     - "fftw_timeout"
                     - "fftw_byte_align"
                 "properties":
+                    "library":
+                        "type": "string"
+                        "enum":
+                            - "NumPy"
+                            - "SciPy"
+                            - "MKL"
+                            - "FFTW"
+                            - "CuPy"
                     "scipy_worker":
                         "type": "integer"
                     "fftw_thread":

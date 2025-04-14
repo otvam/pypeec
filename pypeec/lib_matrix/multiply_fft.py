@@ -30,8 +30,7 @@ import scilogger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 # dummy options
-LIBRARY = None
-SPLIT = None
+SET = False
 NPCP = None
 LOAD = None
 UNLOAD = None
@@ -69,17 +68,18 @@ def _get_options_gpu(use_gpu):
     return npcp, load, unload
 
 
-def _get_options_alg(library, alg_options):
+def _get_options_alg(fft_options):
     """
     Get the options for the FFT algorithm.
     """
 
     # get library parameters
-    scipy_worker = alg_options["scipy_worker"]
-    fftw_thread = alg_options["fftw_thread"]
-    fftw_cache = alg_options["fftw_cache"]
-    fftw_timeout = alg_options["fftw_timeout"]
-    fftw_byte_align = alg_options["fftw_byte_align"]
+    library = fft_options["library"]
+    scipy_worker = fft_options["scipy_worker"]
+    fftw_thread = fft_options["fftw_thread"]
+    fftw_cache = fft_options["fftw_cache"]
+    fftw_timeout = fft_options["fftw_timeout"]
+    fftw_byte_align = fft_options["fftw_byte_align"]
 
     # import the right library
     if library == "CuPy":
@@ -174,6 +174,34 @@ def _get_options_alg(library, alg_options):
         raise ValueError("invalid FFT library")
 
     return use_gpu, fftn, ifftn
+
+
+def _set_options(fft_options):
+    """
+    Assign the options and load the right libray.
+    """
+
+    # get global variables
+    global SET
+    global FFTN
+    global IFFTN
+    global LOAD
+    global UNLOAD
+    global NPCP
+
+    # set library parameters
+    (use_gpu, fftn, ifftn) = _get_options_alg(fft_options)
+    (npcp, load, unload) = _get_options_gpu(use_gpu)
+
+    # set the flag to prevent the options to be recomputed
+    SET = True
+
+    # assign the global variables
+    FFTN = fftn
+    IFFTN = ifftn
+    LOAD = load
+    UNLOAD = unload
+    NPCP = npcp
 
 
 def _get_fft_tensor_keep(mat, replace):
@@ -477,38 +505,7 @@ def _get_compute_split(name, n_out, idx_in, idx_out, mat_fft, vec_in):
     return res
 
 
-def set_options(fft_options):
-    """
-    Assign the options and load the right libray.
-    """
-
-    # get global variables
-    global FFTN
-    global IFFTN
-    global LOAD
-    global UNLOAD
-    global NPCP
-    global SPLIT
-
-    # extract the data
-    split = fft_options["split"]
-    library = fft_options["library"]
-    alg_options = fft_options["alg_options"]
-
-    # set library parameters
-    (use_gpu, fftn, ifftn) = _get_options_alg(library, alg_options)
-    (npcp, load, unload) = _get_options_gpu(use_gpu)
-
-    # assign the global variables
-    FFTN = fftn
-    IFFTN = ifftn
-    LOAD = load
-    UNLOAD = unload
-    NPCP = npcp
-    SPLIT = split
-
-
-def get_prepare(name, idx_out, idx_in, mat):
+def get_prepare(name, idx_out, idx_in, mat, split, fft_options):
     """
     Construct a circulant tensor from a 4D tensor (main function).
     The circulant tensor is constructed along the first 3D.
@@ -517,6 +514,10 @@ def get_prepare(name, idx_out, idx_in, mat):
     The input tensor has the size: (nx, ny, nz, nd_in).
     The output FFT circulant tensor has the size: (2*nx, 2*ny, 2*nz, nd_in).
     """
+
+    # set the global options (one per process)
+    if not SET:
+        _set_options(fft_options)
 
     # load the data to the GPU
     mat = LOAD(mat)
@@ -555,7 +556,7 @@ def get_prepare(name, idx_out, idx_in, mat):
     n_out = len(idx_out)
 
     # compute the indices for mapping a vector into a tensor
-    if SPLIT:
+    if split:
         # the following method is used for the multiplication
         #   - 4D tensor will be sliced into 3D tensors for the computation
         #   - compute the indices for each 3D slice
@@ -574,7 +575,7 @@ def get_prepare(name, idx_out, idx_in, mat):
     return name, n_in, n_out, idx_in_mat, idx_out_mat, mat_fft
 
 
-def get_multiply(data, vec_in, flip):
+def get_multiply(data, vec_in, split, fft_options, flip):
     """
     Matrix-vector multiplication with FFT.
     If the flip switch is activated, the input and output are flipped.
@@ -584,6 +585,10 @@ def get_multiply(data, vec_in, flip):
     The input vector has the size: n_in.
     The output vector has the size: n_out.
     """
+
+    # set the global options (one per process)
+    if not SET:
+        _set_options(fft_options)
 
     # load the data to the GPU
     vec_in = LOAD(vec_in)
@@ -596,7 +601,7 @@ def get_multiply(data, vec_in, flip):
         (n_out, n_in) = (n_in, n_out)
         (idx_out, idx_in) = (idx_in, idx_out)
 
-    if SPLIT:
+    if split:
         vec_out = _get_compute_split(name, n_out, idx_in, idx_out, mat_fft, vec_in)
     else:
         vec_out = _get_compute_combined(name, idx_in, idx_out, mat_fft, vec_in)
