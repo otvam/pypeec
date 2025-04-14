@@ -268,6 +268,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
     n = data_solver["n"]
     d = data_solver["d"]
     biot_savart = data_solver["biot_savart"]
+    factorization_options = data_solver["factorization_options"]
     condition_options = data_solver["condition_options"]
     solver_options = data_solver["solver_options"]
     pts_cloud = data_solver["pts_cloud"]
@@ -412,6 +413,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         # factorization of the preconditioner (sparse matrices)
         (fct_pcd_cm, cond_mat_cm) = equation_solver.get_factorization(
             pcd_mat_cm,
+            factorization_options,
         )
 
         # free memory

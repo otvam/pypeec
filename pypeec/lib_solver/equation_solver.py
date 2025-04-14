@@ -576,7 +576,7 @@ def get_solver(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, fct_conv, s
     return sol, status, solver_convergence, solver_status
 
 
-def get_factorization(pcd_mat_cm):
+def get_factorization(pcd_mat_cm, factorization_options):
     """
     Factorize the preconditioner (sparse matrices).
     """
@@ -587,12 +587,12 @@ def get_factorization(pcd_mat_cm):
     # factorize the electric system
     LOGGER.debug("factorization: electric")
     with LOGGER.BlockIndent():
-        (fct_c, C_mat_c) = matrix_factorization.get_factorize(pcd_mat_c)
+        (fct_c, C_mat_c) = matrix_factorization.get_factorize(pcd_mat_c, factorization_options)
 
     # factorize the magnetic system
     LOGGER.debug("factorization: magnetic")
     with LOGGER.BlockIndent():
-        (fct_m, C_mat_m) = matrix_factorization.get_factorize(pcd_mat_m)
+        (fct_m, C_mat_m) = matrix_factorization.get_factorize(pcd_mat_m, factorization_options)
 
     # combine the electric and magnetic data (factorization operator)
     fct_cm = (fct_c, fct_m)

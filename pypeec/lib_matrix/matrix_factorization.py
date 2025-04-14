@@ -24,9 +24,6 @@ import scipy.sparse as sps
 # get a logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
-# dummy options
-FACTOR = None
-
 
 def _get_fact_superlu(mat):
     """
@@ -143,7 +140,7 @@ def _get_fact_dummy():
     return factor
 
 
-def _get_factorize_sub(mat):
+def _get_factorize_sub(mat, library, pyamg_options, pardiso_options):
     """
     Factorize a sparse matrix (main function).
     """
@@ -160,13 +157,18 @@ def _get_factorize_sub(mat):
     if (nx, ny) == (0, 0):
         return _get_fact_dummy()
 
-    # compute matrix density
-    density = nnz / (nx * ny)
-
-
     # factorize the matrix
     LOGGER.debug("compute factorization")
-    fct = FACTOR(mat)
+    if library == "SuperLU":
+        fct = _get_fact_superlu(mat)
+    elif library == "PARDISO":
+        fct = _get_fact_pardiso(pardiso_options, mat)
+    elif library == "PyAMG":
+        fct = _get_fact_pyamg(pyamg_options, mat)
+    elif library == "Diagonal":
+        fct = _get_fact_dummy()
+    else:
+        raise ValueError("invalid factorization library")
 
     # display the status
     LOGGER.debug("factorization success")
@@ -211,43 +213,7 @@ def _get_schur_solve(fct_fact, mat_diag, mat_12, mat_21):
     return solve
 
 
-def set_options(factorization_options):
-    """
-    Assign the options and load the right libray.
-    """
-
-    # get global variables
-    global SCHUR
-    global FACTOR
-
-    # get/assign library parameters
-    schur = factorization_options["schur"]
-    library = factorization_options["library"]
-    pyamg_options = factorization_options["pyamg_options"]
-    pardiso_options = factorization_options["pardiso_options"]
-
-    # define the factorization function
-    if library == "SuperLU":
-        def factor(mat):
-            return _get_fact_superlu(mat)
-    elif library == "PARDISO":
-        def factor(mat):
-            return _get_fact_pardiso(pardiso_options, mat)
-    elif library == "PyAMG":
-        def factor(mat):
-            return _get_fact_pyamg(pyamg_options, mat)
-    elif library == "Diagonal":
-        def factor(_):
-            return _get_fact_dummy()
-    else:
-        raise ValueError("invalid factorization library")
-
-    # assign the imported library
-    FACTOR = factor
-    SCHUR = schur
-
-
-def get_factorize(mat):
+def get_factorize(mat, factorization_options):
     """
     Factorize a sparse matrix (with or without Schur complement).
     """
@@ -258,13 +224,19 @@ def get_factorize(mat):
     mat_12 = mat["mat_12"]
     mat_21 = mat["mat_21"]
 
+    # get the options
+    schur = factorization_options["schur"]
+    library = factorization_options["library"]
+    pyamg_options = factorization_options["pyamg_options"]
+    pardiso_options = factorization_options["pardiso_options"]
+
     # factorize the matrix
-    if SCHUR:
+    if schur:
         (mat_fact, mat_diag) = _get_schur_extract(mat_11, mat_22, mat_12, mat_21)
-        fct_fact = _get_factorize_sub(mat_fact)
+        fct_fact = _get_factorize_sub(mat_fact, library, pyamg_options, pardiso_options)
         fct_sol = _get_schur_solve(fct_fact, mat_diag, mat_12, mat_21)
     else:
         mat_fact = np.bmat([[mat_11, mat_12], [mat_21, mat_22]])
-        fct_sol = _get_factorize_sub(mat_fact)
+        fct_sol = _get_factorize_sub(mat_fact, library, pyamg_options, pardiso_options)
 
     return fct_sol, mat_fact

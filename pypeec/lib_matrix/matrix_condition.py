@@ -40,13 +40,13 @@ def get_condition_matrix(mat, norm_options):
     Compute an estimate of the condition number (norm 1) of a sparse matrix.
     """
 
-    # get the options
-    t_accuracy = norm_options["t_accuracy"]
-    n_iter_max = norm_options["n_iter_max"]
-
     # check shape
     nnz = mat.size
     (nx, ny) = mat.shape
+
+    # get the options
+    t_accuracy = norm_options["t_accuracy"]
+    n_iter_max = norm_options["n_iter_max"]
 
     # display
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
