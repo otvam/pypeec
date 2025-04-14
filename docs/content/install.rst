@@ -4,15 +4,15 @@ Installation
 Available Packages
 ------------------
 
-* **Python Package** - available through PyPI
-* **Conda Package** - available through conda-forge
-* **Dockerfile** - Ubuntu image with PyPEEC and Jupyter
+* **Python Package** - Available through PyPI.
+* **Conda Package** - Available through conda-forge.
+* **Dockerfile** - Ubuntu image with PyPEEC and Jupyter.
 
 The following **optional libraries are not included** in the PyPI/Conda package:
 
-* **HPC libraries** - FFTW, PyAMG, MKL/FFT, and MKL/PARDISO
-* **Notebook support** - JupyterLab, IPyWidgets, Trame, and ipympl
-* **GPU libraries** - CuPy and CUDA
+* **HPC libraries** - FFTW, PyAMG, MKL/FFT, and MKL/PARDISO.
+* **Notebook support** - JupyterLab, IPyWidgets, and Trame.
+* **GPU libraries** - CuPy and CUDA.
 
 Some **important remarks** about the **PyPI/Conda packages**:
 

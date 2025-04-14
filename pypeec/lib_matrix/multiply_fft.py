@@ -22,8 +22,9 @@ LOGGER = scilogger.get_logger(__name__, "pypeec")
 # dummy options
 LIBRARY = None
 MATRIX_SPLIT = None
-USE_FFT_GPU = None
 NPCP = None
+LOAD = None
+UNLOAD = None
 
 
 def _get_tensor_sign(name, nd_in):
@@ -316,10 +317,9 @@ def _get_prepare_sub(name, idx_out, idx_in, mat):
     sign = _get_tensor_sign(name, nd_in)
 
     # load the data to the GPU
-    if USE_FFT_GPU:
-        mat = NPCP.asarray(mat)
-        idx_in = NPCP.asarray(idx_in)
-        idx_out = NPCP.asarray(idx_out)
+    mat = LOAD(mat)
+    idx_in = LOAD(idx_in)
+    idx_out = LOAD(idx_out)
 
     # get the FFT circulant tensor
     mat_fft = _get_tensor_circulant(mat, sign)
@@ -364,10 +364,11 @@ def set_options(fft_options):
     """
 
     # get global variables
-    global NPCP
     global LIBRARY
     global MATRIX_SPLIT
-    global USE_FFT_GPU
+    global UNLOAD
+    global LOAD
+    global NPCP
 
     # get/assign library parameters
     LIBRARY = fft_options["library"]
@@ -375,16 +376,32 @@ def set_options(fft_options):
 
     # import the right library
     if LIBRARY == "CuPy":
-        import cupy as lib_tmp
-        USE_FFT_GPU = True
+        import cupy as npcp_tmp
+
+        # define load to GPU function
+        def load_tmp(x):
+            return npcp_tmp.array(x)
+
+        # define unload to GPU function
+        def unload_tmp(x):
+            return npcp_tmp.asnumpy(x)
     elif LIBRARY in ["NumPy", "SciPy", "MKL", "FFTW"]:
-        import numpy as lib_tmp
-        USE_FFT_GPU = False
+        import numpy as npcp_tmp
+
+        # define dummy load function
+        def load_tmp(x):
+            return x
+
+        # define dummy unload function
+        def unload_tmp(x):
+            return x
     else:
         raise ValueError("invalid FFT library")
 
     # assign the imported library
-    NPCP = lib_tmp
+    NPCP = npcp_tmp
+    LOAD = load_tmp
+    UNLOAD = unload_tmp
 
 
 def get_prepare(name, idx_out, idx_in, mat):
@@ -419,8 +436,7 @@ def get_multiply(data, vec_in, flip):
         (idx_out, idx_in) = (idx_in, idx_out)
 
     # load the data to the GPU
-    if USE_FFT_GPU:
-        vec_in = NPCP.array(vec_in)
+    vec_in = LOAD(vec_in)
 
     if MATRIX_SPLIT:
         vec_out = _get_compute_split(name, n_out, idx_in, idx_out, mat_fft, vec_in)
@@ -428,7 +444,6 @@ def get_multiply(data, vec_in, flip):
         vec_out = _get_compute_combined(name, idx_in, idx_out, mat_fft, vec_in)
 
     # unload the data from the GPU
-    if USE_FFT_GPU:
-        vec_out = NPCP.asnumpy(vec_out)
+    vec_out = UNLOAD(vec_out)
 
     return vec_out

@@ -73,45 +73,45 @@ The code is written in **Python** and is fully **open source**!
 
 **PyPEEC** features the following **characteristics**:
 
-* **PEEC method** with **FFT acceleration**
-* **Fast** with **moderate memory** requirements
-* Representation of the **geometry** with **3D voxels**
-* **Parallel processing** and **GPU acceleration** are available
-* Import the **geometry** from **STL**, **PNG**, and **GERBER** files
-* Draw the **geometry** with stacked 2D **vector shapes** or **voxel indices**
-* **Pure Python** and **open source** implementation
-* Can be used from the **command line** pr with an **API**
-* Advanced **plotting and visualization** capabilities
-* Compatible with **Jupyter notebooks**
-* Compatible with **ParaView**
+* **PEEC method** with **FFT acceleration**.
+* **Fast** with **moderate memory** requirements.
+* Representation of the **geometry** with **3D voxels**.
+* **Parallel processing** and **GPU acceleration** are available.
+* Import the **geometry** from **STL**, **PNG**, and **GERBER** files.
+* Draw the **geometry** with stacked 2D **vector shapes** or **voxel indices**.
+* **Pure Python** and **open source** implementation.
+* Can be used from the **command line** pr with an **API**.
+* Advanced **plotting and visualization** capabilities.
+* Compatible with **Jupyter notebooks**.
+* Compatible with **ParaView**.
 
 **PyPEEC** solves the following **3D quasi-magnetostatic problems**:
 
-* Frequency domain solution (DC and AC)
-* Conductive and magnetic domains (ideal or lossy)
-* Isotropic, anisotropic, lumped, and distributed materials
-* Connection of current and voltage sources
-* Extraction of the current density, flux density, and potential
-* Extraction of the terminal voltage, current, and power
-* Computation of the free-space magnetic near-field
+* Frequency domain solution (DC and AC).
+* Conductive and magnetic domains (ideal or lossy).
+* Isotropic, anisotropic, lumped, and distributed materials.
+* Connection of current and voltage sources.
+* Extraction of the current density, flux density, and potential.
+* Extraction of the terminal voltage, current, and power.
+* Computation of the free-space magnetic near-field.
 
 **PyPEEC** has the following **limitations**:
 
-* No capacitive effects
-* No dielectric domains
-* No force computations
-* No advanced boundaries conditions
-* No domain decomposition techniques
-* No hierarchical matrix techniques
-* No model order reduction techniques
-* Limited to voxel geometries
+* No capacitive effects.
+* No dielectric domains.
+* No force computations.
+* No advanced boundaries conditions.
+* No domain decomposition techniques.
+* No hierarchical matrix techniques.
+* No model order reduction techniques.
+* Limited to voxel geometries.
 
 The **PyPEEC** package contains the following **tools**:
 
-* **mesher** - create a 3D voxel structure from STL or PNG files
-* **viewer** - visualization of the 3D voxel structure
-* **solver** - solver for the quasi-magnetostatic problem
-* **plotter** - visualization of the problem solution
+* **mesher** - Create a 3D voxel structure from the geometry.
+* **viewer** - Visualization of the 3D voxel structure.
+* **solver** - Solve the quasi-magnetostatic problem.
+* **plotter** - Visualization of the problem solution.
 
 ------------
 
