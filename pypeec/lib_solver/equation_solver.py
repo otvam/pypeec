@@ -87,10 +87,10 @@ class _IterCounter:
 
         # check for convergence
         if self.stop and (self.n_iter >= n_iter_min):
-            # get best complex power
+            # get the last iteration values
             power_ref = self.power_vec[-1]
 
-            # get previous iteration
+            # get the previous iterations
             power_cmp = self.power_vec[-(self.n_cmp + 1) : -1]
 
             # get convergence status
@@ -387,7 +387,7 @@ def _get_solver_segregated(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm,
         status = status_c and status_m and status_res
 
         # check convergence
-        if (n_iter > n_max) or (status and (n_iter >= n_min)):
+        if (n_iter >= n_max) or (status and (n_iter >= n_min)):
             converged = True
 
     return status, sol
