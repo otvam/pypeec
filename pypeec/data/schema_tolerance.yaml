@@ -143,15 +143,13 @@
     "fft_options":
         "type": "object"
         "required":
-            - "matrix_split"
             - "library"
+            - "matrix_split"
             - "scipy_worker"
             - "fftw_thread"
             - "fftw_timeout"
             - "fftw_byte_align"
         "properties":
-            "matrix_split":
-                "type": "boolean"
             "library":
                 "type": "string"
                 "enum":
@@ -160,6 +158,8 @@
                     - "MKL"
                     - "FFTW"
                     - "CuPy"
+            "matrix_split":
+                "type": "boolean"
             "scipy_worker":
                 "type": "integer"
             "fftw_thread":
@@ -178,6 +178,7 @@
         "type": "object"
         "required":
             - "library"
+            - "schur_complement"
             - "pyamg_options"
             - "pardiso_options"
         "properties":
@@ -188,6 +189,8 @@
                     - "PARDISO"
                     - "PyAMG"
                     - "Diagonal"
+            "schur_complement":
+                "type": "boolean"
             "pyamg_options":
                 "type": "object"
                 "required":

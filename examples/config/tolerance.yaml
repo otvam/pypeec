@@ -55,6 +55,11 @@ parallel_sweep:
 
 # sparse matrix factorization options (for the preconditioner)
 "factorization_options":
+    # handling of the sparse matrix for the factorization
+    #   - if true, the Schur complement is used for the factorization
+    #   - if false, the full matrix is used for the factorization
+    "schur_complement": true
+
     # matrix factorization library
     #   - "SuperLU" is typically slower but is always available (integrated with SciPy)
     #   - "PARDISO" is typically faster than SuperLU (available through Pydiso)
