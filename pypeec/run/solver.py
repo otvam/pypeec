@@ -386,6 +386,14 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
             K_op_m,
         )
 
+    # get a function to evaluate the solver convergence
+    with LOGGER.BlockTimer("extract_convergence"):
+        fct_conv = extract_convergence.get_fct_conv(
+            freq,
+            source_all,
+            sol_idx,
+        )
+
     # solve the equation system
     with LOGGER.BlockTimer("equation_solver"):
         # factorization of the preconditioner (sparse matrices)
@@ -405,13 +413,6 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
 
         # free memory
         del cond_mat_cm
-
-        # get a function to evaluate the solver convergence
-        fct_conv = extract_convergence.get_fct_conv(
-            freq,
-            source_all,
-            sol_idx,
-        )
 
         # solve the equation system
         (sol, solver_ok, solver_convergence, solver_status) = equation_solver.get_solver(

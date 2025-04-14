@@ -192,7 +192,7 @@
                     - "SuperLU"
                     - "PARDISO"
                     - "PyAMG"
-                    - "Diagonal"
+                    - "Identity"
             "schur":
                 "type": "boolean"
             "pyamg_options":

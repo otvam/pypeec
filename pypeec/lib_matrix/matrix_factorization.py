@@ -5,7 +5,7 @@ This module is used as a common interface for different matrix solvers:
     - SuperLU is typically slower but is always available (integrated with SciPy).
     - PARDISO is typically faster than SuperLU (available through Pydiso).
     - PyAMG is typically slow but uses less memory (risk of convergence issues).
-    - Diagonal is a dummy factorization (only for debugging).
+    - Identity is a using an identity matrix as preconditioner (only for debugging).
 
 This module is only importing the required matrix solver.
 This means that the unused matrix solvers are not required.
@@ -165,7 +165,7 @@ def _get_factorize_sub(mat, library, pyamg_options, pardiso_options):
         fct = _get_fact_pardiso(pardiso_options, mat)
     elif library == "PyAMG":
         fct = _get_fact_pyamg(pyamg_options, mat)
-    elif library == "Diagonal":
+    elif library == "Identity":
         fct = _get_fact_dummy()
     else:
         raise ValueError("invalid factorization library")

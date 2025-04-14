@@ -118,7 +118,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 import scipy.sparse as sps
-from pypeec.lib_matrix import matrix_factorization
 
 
 def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
