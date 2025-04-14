@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def _get_plot_residuum(fig, res, data_plot):
+def _get_plot_residuum(fig, residuum, data_plot):
     """
     Plot the final residuum (absolute value) with a histogram.
     """
@@ -30,20 +30,20 @@ def _get_plot_residuum(fig, res, data_plot):
     plt.figure(fig)
 
     # get absolute value
-    res_abs = np.abs(res)
+    residuum = np.abs(residuum)
 
     # clamp small and large values
-    v_min = np.finfo(res_abs.dtype).eps
-    v_max = np.finfo(res_abs.dtype).max
-    res_abs = np.clip(res_abs, v_min, v_max)
+    v_min = np.finfo(residuum.dtype).eps
+    v_max = np.finfo(residuum.dtype).max
+    residuum = np.clip(residuum, v_min, v_max)
 
     # get the bins
-    v_min = np.min(res_abs) / (1 + tol_bins)
-    v_max = np.max(res_abs) * (1 + tol_bins)
+    v_min = np.min(residuum) / (1 + tol_bins)
+    v_max = np.max(residuum) * (1 + tol_bins)
     bins = np.logspace(np.log10(v_min), np.log10(v_max), n_bins)
 
     # plot the histogram
-    plt.hist(res_abs, bins=bins, edgecolor=edge_color, color=bar_color)
+    plt.hist(residuum, bins=bins, edgecolor=edge_color, color=bar_color)
 
     # get log axis
     plt.xscale("log")
@@ -57,7 +57,7 @@ def _get_plot_residuum(fig, res, data_plot):
         plt.title(title)
 
 
-def _get_plot_convergence(fig, conv, data_plot):
+def _get_plot_convergence(fig, power_init, power_final, power_vec, data_plot):
     """
     Plot the convergence of the iterative matrix solver.
     """
@@ -71,11 +71,6 @@ def _get_plot_convergence(fig, conv, data_plot):
 
     # activate the figure
     plt.figure(fig)
-
-    # counts
-    power_init = conv["power_init"]
-    power_final = conv["power_final"]
-    power_vec = conv["power_vec"]
 
     # get convergence
     power_vec = np.concatenate(([power_init], power_vec))
@@ -105,7 +100,29 @@ def _get_plot_convergence(fig, conv, data_plot):
         plt.title(title)
 
 
-def get_plot_plotter(fig, res, conv, layout, data_plot, data_options):
+def _get_plot_matrix(fig, tag_list, component, data_plot):
+    """
+    Plot the domain connections.
+    """
+
+    # extract the data
+    title = data_plot["title"]
+    colorbar = data_plot["colorbar"]
+
+    # activate the figure
+    plt.figure(fig)
+
+    # plot the matrix
+    plt.imshow(component, aspect="auto", cmap=colorbar)
+
+    # add cosmetics
+    plt.xticks(ticks=np.arange(len(tag_list)), labels=tag_list)
+    plt.yticks(ticks=np.arange(len(tag_list)), labels=tag_list)
+    if title is not None:
+        plt.title(title)
+
+
+def get_plot_plotter(fig, solver_convergence, layout, data_plot, data_options):
     """
     Plot the solver status (for the plotter).
     """
@@ -115,6 +132,12 @@ def get_plot_plotter(fig, res, conv, layout, data_plot, data_options):
     legend = data_options["legend"]
     font = data_options["font"]
 
+    # extract the data
+    residuum = solver_convergence["residuum"]
+    power_init = solver_convergence["power_init"]
+    power_final = solver_convergence["power_final"]
+    power_vec = solver_convergence["power_vec"]
+
     # plot parameters
     param = {"font.size": font, "legend.loc": legend}
 
@@ -122,8 +145,37 @@ def get_plot_plotter(fig, res, conv, layout, data_plot, data_options):
     with plt.style.context(style):
         with plt.rc_context(param):
             if layout == "convergence":
-                _get_plot_convergence(fig, conv, data_plot)
+                _get_plot_convergence(fig, power_init, power_final, power_vec, data_plot)
             elif layout == "residuum":
-                _get_plot_residuum(fig, res, data_plot)
+                _get_plot_residuum(fig, residuum, data_plot)
+            else:
+                raise ValueError("invalid plot layout")
+
+
+def get_plot_viewer(fig, connect_def, layout, data_plot, data_options):
+    """
+    Plot the connection matrix (for the viewer).
+    """
+
+    # extract the data
+    style = data_options["style"]
+    legend = data_options["legend"]
+    font = data_options["font"]
+
+    # extract the data
+    tag_list = connect_def["tag_list"]
+    component = connect_def["component"]
+    adjacent = connect_def["adjacent"]
+
+    # plot parameters
+    param = {"font.size": font, "legend.loc": legend}
+
+    # get the main plot
+    with plt.style.context(style):
+        with plt.rc_context(param):
+            if layout == "component":
+                _get_plot_matrix(fig, tag_list, component, data_plot)
+            elif layout == "adjacent":
+                _get_plot_matrix(fig, tag_list, adjacent, data_plot)
             else:
                 raise ValueError("invalid plot layout")

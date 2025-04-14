@@ -58,3 +58,19 @@
         "color_reference": "blue"
         "opacity_voxel": 0.5
         "opacity_reference": 0.5
+"component":
+    "framework": "matplotlib"
+    "layout": "component"
+    "data_window": !include cfg_data_window.yaml
+    "data_options": !include cfg_data_matplotlib.yaml
+    "data_plot":
+        "title": "Component"
+        "colorbar": "viridis"
+"adjacent":
+    "framework": "matplotlib"
+    "layout": "adjacent"
+    "data_window": !include cfg_data_window.yaml
+    "data_options": !include cfg_data_matplotlib.yaml
+    "data_plot":
+        "title": "Adjacent"
+        "colorbar": "viridis"

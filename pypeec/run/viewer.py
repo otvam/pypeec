@@ -23,6 +23,7 @@ import scilogger
 from pypeec.lib_plot import parse_viewer
 from pypeec.lib_plot import parse_voxel
 from pypeec.lib_plot import manage_pyvista
+from pypeec.lib_plot import manage_matplotlib
 from pypeec.lib_plot import manage_plotgui
 from pypeec.lib_check import check_data_format
 from pypeec.lib_check import check_data_options
@@ -45,6 +46,7 @@ def _get_grid_voxel(data_geom):
     c = data_geom["c"]
     domain_def = data_geom["domain_def"]
     graph_def = data_geom["graph_def"]
+    connect_def = data_geom["connect_def"]
     pts_cloud = data_geom["pts_cloud"]
     reference = data_geom["reference"]
 
@@ -60,10 +62,10 @@ def _get_grid_voxel(data_geom):
     # add the domains and connected components to the geometry
     voxel = parse_viewer.set_data(voxel, idx, domain_def, graph_def)
 
-    return grid, voxel, point, reference
+    return grid, voxel, point, reference, connect_def
 
 
-def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
+def _get_plot(tag, data_viewer, grid, voxel, point, reference, connect_def, gui_obj):
     """
     Make a plot with the specified user settings.
     """
@@ -75,15 +77,21 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
     data_plot = data_viewer["data_plot"]
     data_options = data_viewer["data_options"]
 
-    # check framework
-    if framework != "pyvista":
+    # make the plots
+    if framework == "pyvista":
+        # get the plotter
+        pl = gui_obj.open_pyvista(tag, data_window)
+
+        # make the plot
+        manage_pyvista.get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_options)
+    elif framework == "matplotlib":
+        # get the figure
+        fig = gui_obj.open_matplotlib(tag, data_window)
+
+        # make the plot
+        manage_matplotlib.get_plot_viewer(fig, connect_def, layout, data_plot, data_options)
+    else:
         raise ValueError("invalid plot framework")
-
-    # get the plotter
-    pl = gui_obj.open_pyvista(tag, data_window)
-
-    # make the plot
-    manage_pyvista.get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_options)
 
 
 def run(
@@ -121,14 +129,14 @@ def run(
 
     # handle the data
     LOGGER.info("parse data")
-    (grid, voxel, point, reference) = _get_grid_voxel(data_geom)
+    (grid, voxel, point, reference, connect_def) = _get_grid_voxel(data_geom)
 
     # make the plots
     LOGGER.info("generate plots")
     with LOGGER.BlockIndent():
         for tag_plot, data_viewer_tmp in data_viewer.items():
             LOGGER.info("plot / %s" % tag_plot)
-            _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, gui_obj)
+            _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, connect_def, gui_obj)
 
     # add the raw VTK objects
     gui_obj.open_vtk("grid", grid)

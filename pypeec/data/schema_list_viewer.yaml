@@ -67,6 +67,22 @@
             "minimum": 0
 
 #############################################################################
+"data_plot_matrix": &data_plot_matrix
+    "type": "object"
+    "required":
+        - "title"
+        - "colorbar"
+    properties:
+        "title":
+            "type":
+                - "null"
+                - "string"
+            "minLength": 1
+        "colorbar":
+            "type": "string"
+            "minLength": 1
+
+#############################################################################
 "type": "object"
 "additionalProperties":
     "type": "object"
@@ -88,6 +104,8 @@
                 - "domain"
                 - "graph"
                 - "mesh"
+                - "component"
+                - "adjacent"
         "data_window": !include schema_plot_window.yaml
     "allOf":
         -   if:
@@ -131,3 +149,21 @@
                     "data_plot": *data_plot_mesh
                     "framework":
                         "const": "pyvista"
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "component"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_matrix
+                    "framework":
+                        "const": "matplotlib"
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "adjacent"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_matrix
+                    "framework":
+                        "const": "matplotlib"

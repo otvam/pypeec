@@ -61,7 +61,6 @@ class _IterCounter:
         self.power_vec = []
         self.power_final = None
         self.power_init = None
-        self.sol = None
 
     def get_callback_run(self, sol):
         """
@@ -131,13 +130,6 @@ class _IterCounter:
         # log the results
         LOGGER.debug(f"final / {power_tmp:.2e} VA")
 
-    def get_sol(self):
-        """
-        Get the temporary solution.
-        """
-
-        return self.sol
-
     def get_n_iter(self):
         """
         Get the number of iterations.
@@ -145,18 +137,19 @@ class _IterCounter:
 
         return self.n_iter
 
-    def get_conv(self):
+    def get_solver_convergence(self, residuum):
         """
         Get a summary of the convergence process.
         """
 
-        conv = {
+        solver_convergence = {
             "power_init": self.power_init,
             "power_final": self.power_final,
             "power_vec": self.power_vec,
+            "residuum": residuum,
         }
 
-        return conv
+        return solver_convergence
 
 
 class _OpCounter:
@@ -217,18 +210,13 @@ class _OpCounter:
         return self.n_sys_eval
 
 
-def _fct_pcd_all(rhs_tmp, rhs, fct_pcd):
+def _fct_pcd_all(rhs_tmp, n_dof_c, n_dof_m, fct_pcd_cm):
     """
-    Function describing the preconditioner for the coupling system.
+    Function describing the preconditioner for the system.
     """
 
     # extract
-    (rhs_c, rhs_m) = rhs
-    (fct_pcd_c, fct_pcd_m) = fct_pcd
-
-    # get problem size
-    n_dof_c = len(rhs_c)
-    n_dof_m = len(rhs_m)
+    (fct_pcd_c, fct_pcd_m) = fct_pcd_cm
 
     # split vector
     rhs_c = rhs_tmp[0:n_dof_c]
@@ -239,24 +227,19 @@ def _fct_pcd_all(rhs_tmp, rhs, fct_pcd):
     sol_m = fct_pcd_m(rhs_m)
 
     # assemble solution
-    sol_all = np.concatenate((sol_c, sol_m))
+    sol = np.concatenate((sol_c, sol_m))
 
-    return sol_all
+    return sol
 
 
-def _fct_sys_all(sol_tmp, rhs, fct_cpl, fct_sys):
+def _fct_sys_all(sol_tmp, n_dof_c, n_dof_m, fct_cpl_cm, fct_sys_cm):
     """
-    Function describing the equation system for the coupling system.
+    Function describing the equation system.
     """
 
     # extract
-    (rhs_c, rhs_m) = rhs
-    (fct_cpl_c, fct_cpl_m) = fct_cpl
-    (fct_sys_c, fct_sys_m) = fct_sys
-
-    # get problem size
-    n_dof_c = len(rhs_c)
-    n_dof_m = len(rhs_m)
+    (fct_cpl_c, fct_cpl_m) = fct_cpl_cm
+    (fct_sys_c, fct_sys_m) = fct_sys_cm
 
     # split vector
     sol_c = sol_tmp[0:n_dof_c]
@@ -267,18 +250,18 @@ def _fct_sys_all(sol_tmp, rhs, fct_cpl, fct_sys):
     rhs_m = fct_sys_m(sol_m) + fct_cpl_m(sol_c)
 
     # assemble solution
-    rhs_all = np.concatenate((rhs_c, rhs_m))
+    rhs = np.concatenate((rhs_c, rhs_m))
 
-    return rhs_all
+    return rhs
 
 
-def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, direct_options, op_obj, iter_obj):
+def _get_solver_direct(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, direct_options, op_obj, iter_obj):
     """
     Solve the coupled magnetic-electric equation system with an iterative solver.
     """
 
     # extract
-    (rhs_c, rhs_m) = rhs
+    (rhs_c, rhs_m) = rhs_cm
 
     # get problem size
     n_dof_c = len(rhs_c)
@@ -286,11 +269,11 @@ def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, direct_options,
 
     # function describing the preconditioner
     def fct_pcd_all(rhs_tmp):
-        return _fct_pcd_all(rhs_tmp, rhs, fct_pcd)
+        return _fct_pcd_all(rhs_tmp, n_dof_c, n_dof_m, fct_pcd_cm)
 
     # function describing the equation system
     def fct_sys_all(sol_tmp):
-        return _fct_sys_all(sol_tmp, rhs, fct_cpl, fct_sys)
+        return _fct_sys_all(sol_tmp, n_dof_c, n_dof_m, fct_cpl_cm, fct_sys_cm)
 
     # get operator
     op_pcd = op_obj.get_fct_pcd(fct_pcd_all, n_dof_c + n_dof_m)
@@ -301,12 +284,12 @@ def _get_solver_direct(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, direct_options,
         iter_obj.get_callback_run(sol)
 
     # assemble rhs
-    rhs_all = np.concatenate((rhs_c, rhs_m))
+    rhs = np.concatenate((rhs_c, rhs_m))
 
     # call the solver
-    (status, sol_all) = matrix_iterative.get_solve(sol_init, op_sys, op_pcd, rhs_all, fct_callback, direct_options)
+    (status, sol) = matrix_iterative.get_solve(sol_init, op_sys, op_pcd, rhs, fct_callback, direct_options)
 
-    return status, sol_all
+    return status, sol
 
 
 def _get_solver_domain(sol_init, sol_other, fct_cpl, fct_sys, fct_pcd, rhs, iter_options, op_obj):
@@ -341,7 +324,7 @@ def _get_solver_domain(sol_init, sol_other, fct_cpl, fct_sys, fct_pcd, rhs, iter
     return status, sol
 
 
-def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_options, op_obj, iter_obj):
+def _get_solver_segregated(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, segregated_options, op_obj, iter_obj):
     """
     Solve the segregated magnetic-electric equation system with an iterative solver.
     """
@@ -357,10 +340,10 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_
     iter_magnetic_options = segregated_options["iter_magnetic_options"]
 
     # extract
-    (rhs_c, rhs_m) = rhs
-    (fct_cpl_c, fct_cpl_m) = fct_cpl
-    (fct_sys_c, fct_sys_m) = fct_sys
-    (fct_pcd_c, fct_pcd_m) = fct_pcd
+    (rhs_c, rhs_m) = rhs_cm
+    (fct_cpl_c, fct_cpl_m) = fct_cpl_cm
+    (fct_sys_c, fct_sys_m) = fct_sys_cm
+    (fct_pcd_c, fct_pcd_m) = fct_pcd_cm
 
     # get problem size
     n_dof_c = len(rhs_c)
@@ -373,7 +356,7 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_
     # init
     converged = False
     status = None
-    sol_all = None
+    sol = None
 
     # solve
     while not converged:
@@ -390,27 +373,27 @@ def _get_solver_segregated(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, segregated_
         res_m = fct_sys_m(sol_m) + fct_cpl_m(sol_c) - rhs_m
 
         # aggregate the results
-        sol_all = np.concatenate((sol_c, sol_m))
-        res_all = np.concatenate((res_c, res_m))
-        rhs_all = np.concatenate((rhs_c, rhs_m))
+        sol = np.concatenate((sol_c, sol_m))
+        res = np.concatenate((res_c, res_m))
+        rhs = np.concatenate((rhs_c, rhs_m))
 
         # run callback
-        iter_obj.get_callback_run(sol_all)
+        iter_obj.get_callback_run(sol)
         n_iter = iter_obj.get_n_iter()
 
         # check status
-        res_thr = np.maximum(rel_tol * lna.norm(rhs_all), abs_tol)
-        status_res = lna.norm(res_all) <= res_thr
+        res_thr = np.maximum(rel_tol * lna.norm(rhs), abs_tol)
+        status_res = lna.norm(res) <= res_thr
         status = status_c and status_m and status_res
 
         # check convergence
         if (n_iter > n_max) or (status and (n_iter >= n_min)):
             converged = True
 
-    return status, sol_all
+    return status, sol
 
 
-def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, status_options):
+def _get_status(status, sol, rhs_cm, fct_cpl_cm, fct_sys_cm, status_options):
     """
     Compute the residuum and the solver convergence status.
     """
@@ -422,16 +405,22 @@ def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, status_options):
     abs_tol = status_options["abs_tol"]
 
     # extract
-    (rhs_c, rhs_m) = rhs
+    (rhs_c, rhs_m) = rhs_cm
 
-    # get sol
-    rhs_all = np.concatenate((rhs_c, rhs_m))
-    out_all = _fct_sys_all(sol_all, rhs, fct_cpl, fct_sys)
-    res_all = out_all - rhs_all
+    # get problem size
+    n_dof_c = len(rhs_c)
+    n_dof_m = len(rhs_m)
+
+    # get solution
+    rhs = np.concatenate((rhs_c, rhs_m))
+    out = _fct_sys_all(sol, n_dof_c, n_dof_m, fct_cpl_cm, fct_sys_cm)
+
+    # get residuum value
+    residuum = out - rhs
+    residuum_val = lna.norm(residuum)
 
     # residuum threshold
-    res_val = lna.norm(res_all)
-    res_thr = np.maximum(rel_tol * lna.norm(rhs_all), abs_tol)
+    residuum_thr = np.maximum(rel_tol * lna.norm(rhs), abs_tol)
 
     # consider the solver status
     if ignore_status:
@@ -441,17 +430,17 @@ def _get_status(status, sol_all, rhs, fct_cpl, fct_sys, status_options):
 
     # consider the residuum status
     if ignore_res:
-        status_res = True
+        status_residuum = True
     else:
-        status_res = res_val < res_thr
+        status_residuum = residuum_val < residuum_thr
 
     # global status
-    status = bool(status_res and status_solver)
+    status = bool(status_residuum and status_solver)
 
-    return status, res_all, res_val, res_thr
+    return status, residuum, residuum_val, residuum_thr
 
 
-def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_options):
+def get_solver(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, fct_conv, solver_options):
     """
     Solve the equation system with an iterative solver.
     The equation system and the preconditioner are described with linear operator.
@@ -465,7 +454,7 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
     direct_options = solver_options["direct_options"]
 
     # get system size
-    (rhs_c, rhs_m) = rhs
+    (rhs_c, rhs_m) = rhs_cm
     n_dof_electric = len(rhs_c)
     n_dof_magnetic = len(rhs_m)
     n_dof_total = n_dof_electric + n_dof_magnetic
@@ -474,8 +463,10 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
     if sol_init is None:
         sol_init = np.zeros(n_dof_total, dtype=np.complex128)
 
-    # create operator and iter counter object
+    # create operator counter
     op_obj = _OpCounter()
+
+    # create iteration counter and convergence check
     iter_obj = _IterCounter(fct_conv, power_options)
 
     # call the solver
@@ -493,10 +484,10 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
             if coupling == "direct":
                 (status, sol) = _get_solver_direct(
                     sol_init,
-                    fct_cpl,
-                    fct_sys,
-                    fct_pcd,
-                    rhs,
+                    fct_cpl_cm,
+                    fct_sys_cm,
+                    fct_pcd_cm,
+                    rhs_cm,
                     direct_options,
                     op_obj,
                     iter_obj,
@@ -504,10 +495,10 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
             elif coupling == "segregated":
                 (status, sol) = _get_solver_segregated(
                     sol_init,
-                    fct_cpl,
-                    fct_sys,
-                    fct_pcd,
-                    rhs,
+                    fct_cpl_cm,
+                    fct_sys_cm,
+                    fct_pcd_cm,
+                    rhs_cm,
                     segregated_options,
                     op_obj,
                     iter_obj,
@@ -529,13 +520,24 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
         iter_obj.get_callback_final(sol)
 
     # get convergence status
-    (status, res, res_val, res_thr) = _get_status(status, sol, rhs, fct_cpl, fct_sys, status_options)
+    (status, residuum, residuum_val, residuum_thr) = _get_status(
+        status,
+        sol,
+        rhs_cm,
+        fct_cpl_cm,
+        fct_sys_cm,
+        status_options,
+    )
 
-    # extract alg results
+    # extract operator call statistics
     n_sys_eval = op_obj.get_n_sys_eval()
     n_pcd_eval = op_obj.get_n_pcd_eval()
+
+    # extract convergence results
+    solver_convergence = iter_obj.get_solver_convergence(residuum)
+
+    # extract number of iterations
     n_iter = iter_obj.get_n_iter()
-    conv = iter_obj.get_conv()
 
     # assign the results
     solver_status = {
@@ -545,8 +547,8 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
         "n_iter": n_iter,
         "n_sys_eval": n_sys_eval,
         "n_pcd_eval": n_pcd_eval,
-        "res_val": res_val,
-        "res_thr": res_thr,
+        "residuum_val": residuum_val,
+        "residuum_thr": residuum_thr,
         "status": status,
     }
 
@@ -561,8 +563,8 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
         LOGGER.debug("n_iter = %d" % n_iter)
         LOGGER.debug("n_sys_eval = %d" % n_sys_eval)
         LOGGER.debug("n_pcd_eval = %d" % n_pcd_eval)
-        LOGGER.debug("res_val = %.2e" % res_val)
-        LOGGER.debug("res_thr = %.2e" % res_thr)
+        LOGGER.debug("residuum_val = %.2e" % residuum_val)
+        LOGGER.debug("residuum_thr = %.2e" % residuum_thr)
 
         # display status
         if status:
@@ -570,10 +572,10 @@ def get_solver(sol_init, fct_cpl, fct_sys, fct_pcd, rhs, fct_conv, solver_option
         else:
             LOGGER.warning("convergence issues")
 
-    return sol, res, conv, status, solver_status
+    return sol, status, solver_convergence, solver_status
 
 
-def get_condition(S_mat, conditions_options):
+def get_condition(S_mat_cm, conditions_options):
     """
     Compute an estimate of the condition number (norm 1) of preconditioner Schur complements.
     The condition number is used to detect problematic (quasi-singular) systems.
@@ -586,7 +588,7 @@ def get_condition(S_mat, conditions_options):
     norm_options = conditions_options["norm_options"]
 
     # extract matrices
-    (S_mat_c, S_mat_m) = S_mat
+    (S_mat_c, S_mat_m) = S_mat_cm
 
     # check the condition
     if check:

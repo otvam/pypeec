@@ -123,25 +123,6 @@ import scipy.sparse as sps
 from pypeec.lib_matrix import matrix_factorization
 
 
-def _get_system_size(A_net_c, A_net_m, A_src):
-    """
-    Get the size of the equation system.
-
-    The electric system has the following size: n_fc+n_vc+n_src_c+n_src_v.
-    The magnetic system has the following size: n_fm+n_vm.
-    """
-
-    # get the matrices
-    (A_vc_src, A_src_vc, A_src_src) = A_src
-
-    # get the system size
-    (n_vc, n_fc) = A_net_c.shape
-    (n_vm, n_fm) = A_net_m.shape
-    (n_src, n_src) = A_src_src.shape
-
-    return n_vc, n_fc, n_vm, n_fm, n_src
-
-
 def _get_coupling_electric(sol_m, freq, n_vc, n_fc, n_fm, n_src, K_op_c):
     """
     Compute the magnetic to electric couplings.
@@ -203,7 +184,9 @@ def _get_cond_fact_electric(freq, A_net_c, R_c, L_c, A_src):
     """
 
     # get the matrices
-    (A_vc_src, A_src_vc, A_src_src) = A_src
+    A_vc_src = A_src["A_vc_src"]
+    A_src_vc = A_src["A_src_vc"]
+    A_src_src = A_src["A_src_src"]
 
     # get the system size
     (n_vc, n_fc) = A_net_c.shape
@@ -299,7 +282,9 @@ def _get_system_multiply_electric(sol, freq, A_net_c, A_src, R_c, L_op_c):
     """
 
     # get the matrices
-    (A_vc_src, A_src_vc, A_src_src) = A_src
+    A_vc_src = A_src["A_vc_src"]
+    A_src_vc = A_src["A_src_vc"]
+    A_src_src = A_src["A_src_src"]
 
     # get the system size
     (n_vc, n_fc) = A_net_c.shape
@@ -392,7 +377,10 @@ def get_source_vector(idx_vc, idx_vm, idx_fc, idx_fm, I_src_c, V_src_v):
     # assemble
     rhs_c = np.concatenate((rhs_c, I_src_c, V_src_v))
 
-    return rhs_c, rhs_m
+    # combine the electric and magnetic data
+    rhs_cm = (rhs_c, rhs_m)
+
+    return rhs_cm
 
 
 def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, Z_src_v):
@@ -448,7 +436,13 @@ def get_source_matrix(idx_vc, idx_src_c, idx_src_v, Y_src_c, Z_src_v):
     val = np.concatenate((cst_src_c, Z_src_v))
     A_src_src = sps.csc_matrix((val, (idx_row, idx_col)), shape=(n_src_c + n_src_v, n_src_c + n_src_v), dtype=np.complex128)
 
-    return A_vc_src, A_src_vc, A_src_src
+    # number of sources
+    n_src = n_src_v + n_src_c
+
+    # assign the matrices
+    A_src = {"A_vc_src": A_vc_src, "A_src_vc": A_src_vc, "A_src_src": A_src_src}
+
+    return A_src, n_src
 
 
 def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
@@ -483,23 +477,20 @@ def get_cond_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_c, P_m):
         sol_m = _get_schur_solve(rhs_m, Y_mat_m, S_fact_m, A_12_mat_m, A_21_mat_m)
         return sol_m
 
-    # corresponding linear operator
-    fct = (fct_c, fct_m)
-    S_mat = (S_mat_c, S_mat_m)
+    # combine the electric and magnetic data
+    fct_cm = (fct_c, fct_m)
+    S_mat_cm = (S_mat_c, S_mat_m)
 
-    return fct, S_mat
+    return fct_cm, S_mat_cm
 
 
-def get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m):
+def get_coupling_operator(freq, n_vc, n_fc, n_vm, n_fm, n_src, K_op_c, K_op_m):
     """
     Get linear operators that represent the electric-magnetic couplings.
 
     The system is split between the electric and magnetic equations.
     These operators are coupling both systems.
     """
-
-    # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
 
     # function describing the electric coupling
     def fct_c(sol_m):
@@ -511,7 +502,10 @@ def get_coupling_operator(freq, A_net_c, A_net_m, A_src, K_op_c, K_op_m):
         cpl_m = _get_coupling_magnetic(sol_c, n_fc, n_vm, K_op_m)
         return cpl_m
 
-    return fct_c, fct_m
+    # combine the electric and magnetic data
+    fct_cm = (fct_c, fct_m)
+
+    return fct_cm
 
 
 def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m):
@@ -532,16 +526,22 @@ def get_system_operator(freq, A_net_c, A_net_m, A_src, R_c, R_m, L_op_c, P_op_m)
         rhs_m = _get_system_multiply_magnetic(sol_m, A_net_m, R_m, P_op_m)
         return rhs_m
 
-    return fct_c, fct_m
+    # combine the electric and magnetic data
+    fct_cm = (fct_c, fct_m)
+
+    return fct_cm
 
 
-def get_system_sol_idx(A_net_c, A_net_m, A_src):
+def get_system_sol_idx(idx_vc, idx_fc, idx_vm, idx_fm, n_src):
     """
     Get the indices of the vectors composing the solution.
     """
 
-    # get the system size and the solution scaling
-    (n_vc, n_fc, n_vm, n_fm, n_src) = _get_system_size(A_net_c, A_net_m, A_src)
+    # get the system size
+    n_vc = len(idx_vc)
+    n_fc = len(idx_fc)
+    n_vm = len(idx_vm)
+    n_fm = len(idx_fm)
 
     # init index dict
     sol_idx = {}
@@ -563,4 +563,4 @@ def get_system_sol_idx(A_net_c, A_net_m, A_src):
     sol_idx["V_vm"] = range(n_offset, n_offset + n_vm)
     n_offset += n_vm
 
-    return sol_idx
+    return sol_idx, n_vc, n_fc, n_vm, n_fm

@@ -35,7 +35,7 @@ LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 def _run_mesher(data_geometry):
     """
-    Run the mesher
+    Create and voxelize the geometry.
     """
 
     # extract the input data
@@ -44,17 +44,17 @@ def _run_mesher(data_geometry):
 
     # voxelize the geometry
     if mesh_type == "voxel":
-        (reference, data_internal) = _run_voxel(data_voxelize)
+        (n, d, c, domain_def, reference) = _run_voxel(data_voxelize)
     elif mesh_type == "shape":
-        (reference, data_internal) = _run_shape(data_voxelize)
+        (n, d, c, domain_def, reference) = _run_shape(data_voxelize)
     elif mesh_type == "png":
-        (reference, data_internal) = _run_png(data_voxelize)
+        (n, d, c, domain_def, reference) = _run_png(data_voxelize)
     elif mesh_type == "stl":
-        (reference, data_internal) = _run_stl(data_voxelize)
+        (n, d, c, domain_def, reference) = _run_stl(data_voxelize)
     else:
         raise ValueError("invalid mesh type")
 
-    return reference, data_internal
+    return n, d, c, domain_def, reference
 
 
 def _run_voxel(data_voxelize):
@@ -68,17 +68,12 @@ def _run_voxel(data_voxelize):
 
     # process the indices arrays
     with LOGGER.BlockTimer("mesher_voxel"):
-        (n, d, c, domain_def, reference) = mesher_voxel.get_mesh(param, domain_index)
+        (n, d, c, domain_def, reference) = mesher_voxel.get_mesh(
+            param,
+            domain_index,
+        )
 
-    # assemble the data
-    data_internal = {
-        "n": n,
-        "d": d,
-        "c": c,
-        "domain_def": domain_def,
-    }
-
-    return reference, data_internal
+    return n, d, c, domain_def, reference
 
 
 def _run_shape(data_voxelize):
@@ -93,17 +88,13 @@ def _run_shape(data_voxelize):
 
     # process the shapes
     with LOGGER.BlockTimer("mesher_shape"):
-        (n, d, c, domain_def, reference) = mesher_shape.get_mesh(param, layer_stack, geometry_shape)
+        (n, d, c, domain_def, reference) = mesher_shape.get_mesh(
+            param,
+            layer_stack,
+            geometry_shape,
+        )
 
-    # assemble the data
-    data_internal = {
-        "n": n,
-        "d": d,
-        "c": c,
-        "domain_def": domain_def,
-    }
-
-    return reference, data_internal
+    return n, d, c, domain_def, reference
 
 
 def _run_png(data_voxelize):
@@ -118,17 +109,13 @@ def _run_png(data_voxelize):
 
     # voxelize the PNG files
     with LOGGER.BlockTimer("mesher_png"):
-        (n, d, c, domain_def, reference) = mesher_png.get_mesh(param, domain_color, layer_stack)
+        (n, d, c, domain_def, reference) = mesher_png.get_mesh(
+            param,
+            domain_color,
+            layer_stack,
+        )
 
-    # assemble the data
-    data_internal = {
-        "n": n,
-        "d": d,
-        "c": c,
-        "domain_def": domain_def,
-    }
-
-    return reference, data_internal
+    return n, d, c, domain_def, reference
 
 
 def _run_stl(data_voxelize):
@@ -142,22 +129,17 @@ def _run_stl(data_voxelize):
 
     # voxelize the STL files
     with LOGGER.BlockTimer("mesher_stl"):
-        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(param, domain_stl)
+        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(
+            param,
+            domain_stl,
+        )
 
-    # assemble the data
-    data_internal = {
-        "n": n,
-        "d": d,
-        "c": c,
-        "domain_def": domain_def,
-    }
-
-    return reference, data_internal
+    return n, d, c, domain_def, reference
 
 
-def _run_finalize(reference, data_internal, data_geometry):
+def _run_finalize(n, d, c, domain_def, reference, data_geometry):
     """
-    Finalize the generated mesh:
+    Finalize the generated geometry:
         - Generate the point cloud.
         - Resampling the voxel structure.
         - Resolve conflicts for the voxel structure.
@@ -171,26 +153,47 @@ def _run_finalize(reference, data_internal, data_geometry):
     data_conflict = data_geometry["data_conflict"]
     data_integrity = data_geometry["data_integrity"]
 
-    # extract the data
-    n = data_internal["n"]
-    d = data_internal["d"]
-    c = data_internal["c"]
-    domain_def = data_internal["domain_def"]
-
     with LOGGER.BlockTimer("voxel_point"):
-        pts_cloud = voxel_point.get_point(n, d, c, domain_def, data_point)
+        pts_cloud = voxel_point.get_point(
+            n,
+            d,
+            c,
+            domain_def,
+            data_point,
+        )
 
     with LOGGER.BlockTimer("voxel_resampling"):
-        (n, d, c, s, domain_def) = voxel_resampling.get_resampling(n, d, c, domain_def, data_resampling)
+        (n, d, c, s, domain_def) = voxel_resampling.get_resampling(
+            n,
+            d,
+            c,
+            domain_def,
+            data_resampling,
+        )
 
     with LOGGER.BlockTimer("voxel_conflict"):
-        domain_def = voxel_conflict.get_conflict(domain_def, data_conflict)
+        domain_def = voxel_conflict.get_conflict(
+            domain_def,
+            data_conflict,
+        )
 
     with LOGGER.BlockTimer("voxel_integrity"):
-        graph_def = voxel_integrity.get_integrity(n, domain_def, data_integrity)
+        (graph_def, connect_def) = voxel_integrity.get_integrity(
+            n,
+            domain_def,
+            data_integrity,
+        )
 
     with LOGGER.BlockTimer("voxel_summary"):
-        voxel_status = voxel_summary.get_summary(n, d, s, c, pts_cloud, domain_def, graph_def)
+        voxel_status = voxel_summary.get_summary(
+            n,
+            d,
+            s,
+            c,
+            pts_cloud,
+            domain_def,
+            graph_def,
+        )
 
     # assemble the data
     data_geom = {
@@ -202,6 +205,7 @@ def _run_finalize(reference, data_internal, data_geometry):
         "pts_cloud": pts_cloud,
         "domain_def": domain_def,
         "graph_def": graph_def,
+        "connect_def": connect_def,
         "reference": reference,
     }
 
@@ -248,10 +252,10 @@ def run(data_geometry):
     check_data_format.check_data_geometry(data_geometry)
 
     # run the mesher
-    (reference, data_internal) = _run_mesher(data_geometry)
+    (n, d, c, domain_def, reference) = _run_mesher(data_geometry)
 
     # finalize the mesh
-    data_geom = _run_finalize(reference, data_internal, data_geometry)
+    data_geom = _run_finalize(n, d, c, domain_def, reference, data_geometry)
 
     # create output data
     data_voxel = _get_data(data_geom, timestamp)

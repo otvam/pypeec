@@ -286,7 +286,7 @@ def get_integral(P_fc, P_fm, W_fc, W_fm, S_total):
     W_total = W_electric + W_magnetic
 
     # assign the integral quantities
-    integral = {
+    integral_total = {
         "P_electric": P_electric,
         "P_magnetic": P_magnetic,
         "W_electric": W_electric,
@@ -308,7 +308,7 @@ def get_integral(P_fc, P_fm, W_fc, W_fm, S_total):
         LOGGER.debug("P_total = %.2e W" % P_total)
         LOGGER.debug("W_total = %.2e J" % W_total)
 
-    return integral
+    return integral_total
 
 
 def get_material(material_all, A_net_c, A_net_m, P_fc, P_fm):
@@ -318,7 +318,7 @@ def get_material(material_all, A_net_c, A_net_m, P_fc, P_fm):
     """
 
     # init material dict
-    material = {}
+    material_losses = {}
 
     # compute the losses of the voxels
     P_vc = 0.5 * np.abs(A_net_c) * P_fc
@@ -336,7 +336,7 @@ def get_material(material_all, A_net_c, A_net_m, P_fc, P_fm):
         P_tmp = P_vc_tmp + P_vm_tmp
 
         # assign the losses
-        material[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_total": P_tmp}
+        material_losses[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_total": P_tmp}
 
         # display
         LOGGER.debug("domain: %s" % tag)
@@ -345,7 +345,7 @@ def get_material(material_all, A_net_c, A_net_m, P_fc, P_fm):
             LOGGER.debug("P_magnetic = %.2e W" % P_vm_tmp)
             LOGGER.debug("P_total = %.2e W" % P_tmp)
 
-    return material
+    return material_losses
 
 
 def get_source(freq, source_all, I_src, V_vc):
@@ -357,7 +357,7 @@ def get_source(freq, source_all, I_src, V_vc):
     """
 
     # init source dict
-    source = {}
+    source_values = {}
 
     # total complex power
     S_total = 0.0
@@ -392,7 +392,7 @@ def get_source(freq, source_all, I_src, V_vc):
             I_tmp = np.sum(I_tmp)
 
         # assign the current and voltage
-        source[tag] = {
+        source_values[tag] = {
             "V": V_tmp,
             "I": I_tmp,
             "S": S_tmp,
@@ -412,4 +412,4 @@ def get_source(freq, source_all, I_src, V_vc):
             LOGGER.debug("I = %+.2e + %+.2ej A" % (I_tmp.real, I_tmp.imag))
             LOGGER.debug("S = %+.2e + %+.2ej VA" % (S_tmp.real, S_tmp.imag))
 
-    return source, S_total
+    return source_values, S_total

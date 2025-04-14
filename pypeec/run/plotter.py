@@ -55,9 +55,8 @@ def _get_grid_voxel(data_init, data_sweep):
     pts_cloud = data_init["pts_cloud"]
 
     # extract the data
-    var = data_sweep["var"]
-    res = data_sweep["res"]
-    conv = data_sweep["conv"]
+    field_values = data_sweep["field_values"]
+    solver_convergence = data_sweep["solver_convergence"]
 
     # get voxel indices
     idx = parse_plotter.get_voxel(idx_vc, idx_vm)
@@ -71,7 +70,7 @@ def _get_grid_voxel(data_init, data_sweep):
     voxel = parse_plotter.set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v)
 
     # add the solution variables to the geometry
-    for name, value in var.items():
+    for name, value in field_values.items():
         # extract the variable
         var = value["var"]
         cat = value["cat"]
@@ -90,10 +89,10 @@ def _get_grid_voxel(data_init, data_sweep):
         else:
             raise ValueError("invalid variable type")
 
-    return grid, voxel, point, res, conv
+    return grid, voxel, point, solver_convergence
 
 
-def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
+def _get_plot(tag, data_plotter, grid, voxel, point, solver_convergence, gui_obj):
     """
     Make a plot with the specified user settings.
     """
@@ -117,7 +116,7 @@ def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
         fig = gui_obj.open_matplotlib(tag, data_window)
 
         # make the plot
-        manage_matplotlib.get_plot_plotter(fig, res, conv, layout, data_plot, data_options)
+        manage_matplotlib.get_plot_plotter(fig, solver_convergence, layout, data_plot, data_options)
     else:
         raise ValueError("invalid plot framework")
 
@@ -128,7 +127,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
     """
 
     # handle the data
-    (grid, voxel, point, res, conv) = _get_grid_voxel(data_init, data_sweep)
+    (grid, voxel, point, solver_convergence) = _get_grid_voxel(data_init, data_sweep)
 
     # add the raw VTK objects
     gui_obj.open_vtk(tag_sweep + "_grid", grid)
@@ -138,7 +137,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
     # make the plots
     for tag_plot, data_plotter_tmp in data_plotter.items():
         LOGGER.info("plot / %s" % tag_plot)
-        _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, res, conv, gui_obj)
+        _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, solver_convergence, gui_obj)
 
 
 def run(
