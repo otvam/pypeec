@@ -445,7 +445,7 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
         del fct_conv
 
         # compute convergence
-        has_converged = solver_ok and condition_ok
+        solution_ok = solver_ok and condition_ok
 
     # extract the solution
     with LOGGER.BlockTimer("extract_solution"):
@@ -572,17 +572,17 @@ def _run_solver_sweep(data_solver, data_internal, data_param, sol_init):
 
     # assign the results (will be merged in the solver output)
     data_sweep = {
-        "freq": freq,
-        "has_converged": has_converged,
-        "solver_ok": solver_ok,
-        "condition_ok": condition_ok,
-        "solver_status": solver_status,
-        "condition_status": condition_status,
-        "solver_convergence": solver_convergence,
-        "integral_total": integral_total,
-        "material_losses": material_losses,
-        "source_values": source_values,
-        "field_values": field_values,
+        "freq": freq,  # frequency of the solution
+        "solution_ok": solution_ok,  # boolean describing if the solution is good
+        "solver_ok": solver_ok,  # boolean describing if the iterative solver has converged
+        "condition_ok": condition_ok,  # boolean indicating if the equation system condition is good
+        "solver_status": solver_status,  # dict describing the iterative solver status
+        "condition_status": condition_status,  # dict describing the equation system condition
+        "solver_convergence": solver_convergence,  # dict with the solver convergence and residuum
+        "integral_total": integral_total,  # integral of the losses, energy, and power
+        "material_losses": material_losses,  # dict with the losses in the different materials
+        "source_values": source_values,  # dict with the terminal current, voltage, and power
+        "field_values": field_values,  # dict with the field variables
     }
 
     return data_sweep, sol
@@ -610,7 +610,7 @@ def _get_data(data_init, data_sweep, timestamp):
     # get status
     status = True
     for data_sweep_tmp in data_sweep.values():
-        status = status and data_sweep_tmp["has_converged"]
+        status = status and data_sweep_tmp["solution_ok"]
         status = status and data_sweep_tmp["solver_ok"]
         status = status and data_sweep_tmp["condition_ok"]
 

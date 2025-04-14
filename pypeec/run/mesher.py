@@ -197,16 +197,16 @@ def _run_finalize(n, d, c, domain_def, reference, data_geometry):
 
     # assemble the data
     data_geom = {
-        "n": n,
-        "d": d,
-        "s": s,
-        "c": c,
-        "voxel_status": voxel_status,
-        "pts_cloud": pts_cloud,
-        "domain_def": domain_def,
-        "graph_def": graph_def,
-        "connect_def": connect_def,
-        "reference": reference,
+        "d": d,  # tuple with the size of a single voxel
+        "n": n,  # tuple with the number of voxels composing structure
+        "s": s,  # tuple with the total size of the structure
+        "c": c,  # tuple with the center of the voxel structure
+        "voxel_status": voxel_status,  # dict with a summary of the voxel structure
+        "pts_cloud": pts_cloud,  # array with coordinates of the point cloud
+        "domain_def": domain_def,  # dict with the indices of the different domains
+        "graph_def": graph_def,  # list with the indices of the connected components
+        "connect_def": connect_def,  # dict describing the connected/adjacent domains
+        "reference": reference,  # dict with the faces and points of the original geometry
     }
 
     return data_geom

@@ -10,13 +10,13 @@
     "solver": {
         "sim_dc": {
             "freq": 0.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 5.999999999999999e-06,
             "W_total": 8.285707532840879e-08
         },
         "sim_ac": {
             "freq": 1000.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 0.0002182348836910582,
             "W_total": 4.142853766418362e-08
         }

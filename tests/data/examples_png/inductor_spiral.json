@@ -10,7 +10,7 @@
     "solver": {
         "sim_default": {
             "freq": 1000000.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 1.1188705178196872,
             "W_total": 3.2557855644348145e-07
         }

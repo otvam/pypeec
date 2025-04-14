@@ -10,43 +10,43 @@
     "solver": {
         "sim_0": {
             "freq": 10000.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 20.22454560639517,
             "W_total": 4.2782770524379874e-05
         },
         "sim_1": {
             "freq": 21500.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 16.8595026875703,
             "W_total": 3.5554403531804474e-05
         },
         "sim_2": {
             "freq": 46400.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 9.56950242763735,
             "W_total": 1.9904356468814764e-05
         },
         "sim_3": {
             "freq": 100000.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 3.3421289835408956,
             "W_total": 6.591038681247021e-06
         },
         "sim_4": {
             "freq": 215000.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 0.957942152665514,
             "W_total": 1.647794065920709e-06
         },
         "sim_5": {
             "freq": 464000.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 0.26549564350025573,
             "W_total": 3.7601082501054335e-07
         },
         "sim_6": {
             "freq": 1000000.0,
-            "has_converged": true,
+            "solution_ok": true,
             "P_total": 0.07154108093669805,
             "W_total": 8.342527711062545e-08
         }
