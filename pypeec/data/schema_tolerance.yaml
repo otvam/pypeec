@@ -139,16 +139,13 @@
         "type": "string"
         "enum":
             - "fft"
-            - "direct"
+            - "split"
     "fft_options":
         "type": "object"
         "required":
             - "library"
-            - "matrix_split"
-            - "scipy_worker"
-            - "fftw_thread"
-            - "fftw_timeout"
-            - "fftw_byte_align"
+            - "split"
+            - "alg_options"
         "properties":
             "library":
                 "type": "string"
@@ -158,22 +155,30 @@
                     - "MKL"
                     - "FFTW"
                     - "CuPy"
-            "matrix_split":
+            "split":
                 "type": "boolean"
-            "scipy_worker":
-                "type": "integer"
-            "fftw_thread":
-                "type": "integer"
-            "fftw_timeout":
-                "type":
-                    - "null"
-                    - "number"
-                "minimum": 0
-            "fftw_byte_align":
-                "type":
-                    - "null"
-                    - "integer"
-                "minimum": 0
+
+            "alg_options":
+                "type": "object"
+                "required":
+                    - "scipy_worker"
+                    - "fftw_thread"
+                    - "fftw_cache"
+                    - "fftw_timeout"
+                    - "fftw_byte_align"
+                "properties":
+                    "scipy_worker":
+                        "type": "integer"
+                    "fftw_thread":
+                        "type": "integer"
+                    "fftw_cache":
+                        "type": "boolean"
+                    "fftw_timeout":
+                        "type": "number"
+                        "minimum": 0
+                    "fftw_byte_align":
+                        "type": "integer"
+                        "minimum": 0
     "factorization_options":
         "type": "object"
         "required":

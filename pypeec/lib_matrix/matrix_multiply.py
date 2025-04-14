@@ -27,7 +27,7 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 from pypeec.lib_matrix import multiply_fft
-from pypeec.lib_matrix import multiply_direct
+from pypeec.lib_matrix import multiply_dense
 
 
 def _get_multiply(data, vec_in, mult_type, flip):
@@ -37,8 +37,8 @@ def _get_multiply(data, vec_in, mult_type, flip):
 
     if mult_type == "fft":
         res_out = multiply_fft.get_multiply(data, vec_in, flip)
-    elif mult_type == "direct":
-        res_out = multiply_direct.get_multiply(data, vec_in, flip)
+    elif mult_type == "dense":
+        res_out = multiply_dense.get_multiply(data, vec_in, flip)
     else:
         raise ValueError("invalid multiplication library")
 
@@ -52,8 +52,8 @@ def _get_prepare(name, idx_out, idx_in, mat, mult_type):
 
     if mult_type == "fft":
         data = multiply_fft.get_prepare(name, idx_out, idx_in, mat)
-    elif mult_type == "direct":
-        data = multiply_direct.get_prepare(name, idx_out, idx_in, mat)
+    elif mult_type == "dense":
+        data = multiply_dense.get_prepare(name, idx_out, idx_in, mat)
     else:
         raise ValueError("invalid multiplication library")
 

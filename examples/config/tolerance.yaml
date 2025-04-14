@@ -26,9 +26,9 @@ parallel_sweep:
 
 # method for dense matrix multiplication
 #   - "fft" for doing the multiplication with circulant tensors and FFT
-#   - "direct" for standard matrix multiplication
-#   - "direct" is extremely slow and memory intensive
-#   - "direct" is only useful for debugging and educational purposes
+#   - "dense" for standard matrix multiplication
+#   - "dense" is extremely slow and memory intensive
+#   - "dense" is only useful for debugging and educational purposes
 "mult_type": "fft"
 
 # FFT algorithm options
@@ -38,7 +38,7 @@ parallel_sweep:
     #   - if false, the 4D tensors are sliced into several 3D tensors
     #   - splitting the tensors has a slightly increased computational cost
     #   - splitting the tensors reduces the memory footprint of the computation
-    "matrix_split": true
+    "split": true
 
     # FFT library
     #   - "NumPy" FFT library is always available (integrated with NumPy)
@@ -48,10 +48,13 @@ parallel_sweep:
     #   - "CuPy" is extremely fast but require GPUs compatible with the CUDA toolkit.
     "library": "SciPy"
 
-    "scipy_worker": -1                 # number of workers for SciPy (0 for disabling, -1 for number of cores)
-    "fftw_thread": -1                  # number of threads for FFTW (0 for disabling, -1 for number of cores)
-    "fftw_timeout": 100.0              # cache timeout in seconds for FFTW (null for no caching)
-    "fftw_byte_align": 16              # size for byte alignment FFTW (null for default)
+    # FFT algorithm options
+    "alg_options":
+        "scipy_worker": -1             # number of workers for SciPy (0 for disabling, -1 for number of cores)
+        "fftw_thread": -1              # number of threads for FFTW (0 for disabling, -1 for number of cores)
+        "fftw_cache": true             # use (or not) a cache for storing the FFTW planning data
+        "fftw_timeout": 100.0          # cache timeout in seconds for FFTW
+        "fftw_byte_align": 16          # size for byte alignment FFTW
 
 # sparse matrix factorization options (for the preconditioner)
 "factorization_options":

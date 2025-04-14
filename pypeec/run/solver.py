@@ -13,9 +13,8 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import copy
 import scilogger
-from pypeec.lib_matrix import matrix_factorization
 from pypeec.lib_matrix import multiply_fft
-from pypeec.lib_matrix import fourier_transform
+from pypeec.lib_matrix import matrix_factorization
 from pypeec.lib_solver import sweep_joblib
 from pypeec.lib_solver import voxel_geometry
 from pypeec.lib_solver import system_tensor
@@ -40,13 +39,12 @@ def _run_solver_options(data_solver):
     """
 
     # extract the data
-    factorization_options = data_solver["factorization_options"]
     fft_options = data_solver["fft_options"]
+    factorization_options = data_solver["factorization_options"]
 
     # set options
-    matrix_factorization.set_options(factorization_options)
-    fourier_transform.set_options(fft_options)
     multiply_fft.set_options(fft_options)
+    matrix_factorization.set_options(factorization_options)
 
 
 def _run_solver_init(data_solver):
