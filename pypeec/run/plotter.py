@@ -107,13 +107,13 @@ def _get_plot(tag, data_plotter, grid, voxel, point, res, conv, gui_obj):
 
     # make the plots
     if framework == "pyvista":
-        # get the plotter (with the Qt framework)
+        # get the plotter
         pl = gui_obj.open_pyvista(tag, data_window)
 
         # make the plot
         manage_pyvista.get_plot_plotter(pl, grid, voxel, point, layout, data_plot, data_options)
     elif framework == "matplotlib":
-        # get the figure (with the Qt framework)
+        # get the figure
         fig = gui_obj.open_matplotlib(tag, data_window)
 
         # make the plot

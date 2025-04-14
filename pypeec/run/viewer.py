@@ -79,7 +79,7 @@ def _get_plot(tag, data_viewer, grid, voxel, point, reference, gui_obj):
     if framework != "pyvista":
         raise ValueError("invalid plot framework")
 
-    # get the plotter (with the Qt framework)
+    # get the plotter
     pl = gui_obj.open_pyvista(tag, data_window)
 
     # make the plot
