@@ -183,7 +183,7 @@
         "type": "object"
         "required":
             - "library"
-            - "schur_complement"
+            - "schur"
             - "pyamg_options"
             - "pardiso_options"
         "properties":
@@ -194,7 +194,7 @@
                     - "PARDISO"
                     - "PyAMG"
                     - "Diagonal"
-            "schur_complement":
+            "schur":
                 "type": "boolean"
             "pyamg_options":
                 "type": "object"

@@ -23,10 +23,7 @@ import scilogger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 # dummy options
-LIBRARY = None
-IMPORTLIB = None
-PYAMG_OPTIONS = None
-PARDISO_OPTIONS = None
+FACTOR = None
 
 
 def _get_fact_superlu(mat):
@@ -34,9 +31,14 @@ def _get_fact_superlu(mat):
     Factorize a matrix with SuperLU.
     """
 
+    import scipy.sparse.linalg as lib
+
+    # prevent problematic matrices to trigger warnings
+    warnings.filterwarnings("error", module="scipy.sparse.linalg")
+
     # factorize the matrix
     try:
-        mat_factor = IMPORTLIB.splu(mat)
+        mat_factor = lib.splu(mat)
     except Warning:
         raise RuntimeError("invalid factorization: SuperLU") from None
 
@@ -48,14 +50,19 @@ def _get_fact_superlu(mat):
     return factor
 
 
-def _get_fact_pardiso(mat):
+def _get_fact_pardiso(pardiso_options, mat):
     """
     Factorize a matrix with PARDISO.
     """
 
+    import pydiso.mkl_solver as lib
+
+    # prevent problematic matrices to trigger warnings
+    warnings.filterwarnings("error", module="pydiso.mkl_solver")
+
     # get options
-    thread_pardiso = PARDISO_OPTIONS["thread_pardiso"]
-    thread_mkl = PARDISO_OPTIONS["thread_mkl"]
+    thread_pardiso = pardiso_options["thread_pardiso"]
+    thread_mkl = pardiso_options["thread_mkl"]
 
     # find the number of threads
     if thread_pardiso < 0:
@@ -69,14 +76,14 @@ def _get_fact_pardiso(mat):
 
     # set number of threads
     if thread_pardiso is not None:
-        IMPORTLIB.set_mkl_pardiso_threads(thread_pardiso)
+        lib.set_mkl_pardiso_threads(thread_pardiso)
     if thread_mkl is not None:
-        IMPORTLIB.set_mkl_threads(thread_mkl)
+        lib.set_mkl_threads(thread_mkl)
 
     # factorize the matrix
     try:
         mat = mat.tocsr()
-        mat_factor = IMPORTLIB.MKLPardisoSolver(mat, factor=True, verbose=False)
+        mat_factor = lib.MKLPardisoSolver(mat, factor=True, verbose=False)
     except Warning:
         raise RuntimeError("invalid factorization: PARDISO") from None
 
@@ -88,23 +95,28 @@ def _get_fact_pardiso(mat):
     return factor
 
 
-def _get_fact_pyamg(mat):
+def _get_fact_pyamg(pyamg_options, mat):
     """
     Factorize a matrix with PyAMG.
     """
 
+    import pyamg.aggregation as lib
+
+    # prevent problematic matrices to trigger warnings
+    warnings.filterwarnings("error", module="pyamg.aggregation")
+
     # get options
-    tol = PYAMG_OPTIONS["tol"]
-    solver = PYAMG_OPTIONS["solver"]
-    krylov = PYAMG_OPTIONS["krylov"]
+    tol = pyamg_options["tol"]
+    solver = pyamg_options["solver"]
+    krylov = pyamg_options["krylov"]
 
     # factorize the matrix
     try:
         mat = mat.tocsr()
         if solver == "root":
-            solver = IMPORTLIB.rootnode_solver(mat)
+            solver = lib.rootnode_solver(mat)
         elif solver == "adapt":
-            (solver, work) = IMPORTLIB.adaptive_sa_solver(mat)
+            (solver, work) = lib.adaptive_sa_solver(mat)
         else:
             raise ValueError("invalid AMF solver name")
     except Warning:
@@ -156,21 +168,12 @@ def _get_factorize_sub(mat):
 
     # factorize the matrix
     LOGGER.debug("compute factorization")
-    if LIBRARY == "SuperLU":
-        factor = _get_fact_superlu(mat)
-    elif LIBRARY == "PARDISO":
-        factor = _get_fact_pardiso(mat)
-    elif LIBRARY == "PyAMG":
-        factor = _get_fact_pyamg(mat)
-    elif LIBRARY == "Diagonal":
-        factor = _get_fact_diagonal()
-    else:
-        raise ValueError("invalid matrix factorization library")
+    fct = FACTOR(mat)
 
     # display the status
     LOGGER.debug("factorization success")
 
-    return factor
+    return fct
 
 
 def set_options(factorization_options):
@@ -179,35 +182,34 @@ def set_options(factorization_options):
     """
 
     # get global variables
-    global LIBRARY
-    global IMPORTLIB
-    global PYAMG_OPTIONS
-    global PARDISO_OPTIONS
+    global SCHUR
+    global FACTOR
 
     # get/assign library parameters
-    LIBRARY = factorization_options["library"]
-    PYAMG_OPTIONS = factorization_options["pyamg_options"]
-    PARDISO_OPTIONS = factorization_options["pardiso_options"]
+    schur = factorization_options["schur"]
+    library = factorization_options["library"]
+    pyamg_options = factorization_options["pyamg_options"]
+    pardiso_options = factorization_options["pardiso_options"]
 
-    # import the right library
-    if LIBRARY == "SuperLU":
-        import scipy.sparse.linalg as lib_tmp
-    elif LIBRARY == "PARDISO":
-        import pydiso.mkl_solver as lib_tmp
-    elif LIBRARY == "PyAMG":
-        import pyamg.aggregation as lib_tmp
-    elif LIBRARY == "Diagonal":
-        import scipy.sparse as lib_tmp
+    # define the factorization function
+    if library == "SuperLU":
+        def factor(mat):
+            return _get_fact_superlu(mat)
+    elif library == "PARDISO":
+        def factor(mat):
+            return _get_fact_pardiso(pardiso_options, mat)
+    elif library == "PyAMG":
+        def factor(mat):
+            return _get_fact_pyamg(pyamg_options, mat)
+    elif library == "Diagonal":
+        def factor(_):
+            return _get_fact_diagonal()
     else:
         raise ValueError("invalid factorization library")
 
     # assign the imported library
-    IMPORTLIB = lib_tmp
-
-    # prevent problematic matrices to trigger warnings
-    warnings.filterwarnings("error", module="scipy.sparse.linalg")
-    warnings.filterwarnings("error", module="pyamg.aggregation")
-    warnings.filterwarnings("error", module="pydiso.mkl_solver")
+    FACTOR = factor
+    SCHUR = schur
 
 
 def get_factorize(name, mat):
@@ -217,16 +219,16 @@ def get_factorize(name, mat):
 
     LOGGER.debug("factorization: %s" % name)
     with LOGGER.BlockIndent():
-        factor = _get_factorize_sub(mat)
+        fct = _get_factorize_sub(mat)
 
-    return factor
+    return fct
 
 
-def get_solve(factor, rhs):
+def get_solve(fct, rhs):
     """
     Solve an equation system with a given factorization.
     """
 
-    sol = factor(rhs)
+    sol = fct(rhs)
 
     return sol

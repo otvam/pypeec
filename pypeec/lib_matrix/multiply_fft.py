@@ -39,19 +39,13 @@ FFTN = None
 IFFTN = None
 
 
-def _set_options_gpu(library, split):
+def _get_options_gpu(use_gpu):
     """
-    Assign the options and load the right libray.
+    Get the options for the GPU support.
     """
-
-    # get global variables
-    global UNLOAD
-    global LOAD
-    global NPCP
-    global SPLIT
 
     # import the right library
-    if library == "CuPy":
+    if use_gpu:
         import cupy as npcp
 
         # define load to GPU function
@@ -61,7 +55,7 @@ def _set_options_gpu(library, split):
         # define unload to GPU function
         def unload(x):
             return npcp.asnumpy(x)
-    elif library in ["NumPy", "SciPy", "MKL", "FFTW"]:
+    else:
         import numpy as npcp
 
         # define dummy load function
@@ -71,24 +65,14 @@ def _set_options_gpu(library, split):
         # define dummy unload function
         def unload(x):
             return x
-    else:
-        raise ValueError("invalid FFT library")
 
-    # assign the imported library
-    SPLIT = split
-    NPCP = npcp
-    LOAD = load
-    UNLOAD = unload
+    return npcp, load, unload
 
 
-def _set_options_alg(library, alg_options):
+def _get_options_alg(library, alg_options):
     """
-    Assign the options and load the right libray.
+    Get the options for the FFT algorithm.
     """
-
-    # get global variables
-    global FFTN
-    global IFFTN
 
     # get library parameters
     scipy_worker = alg_options["scipy_worker"]
@@ -101,25 +85,34 @@ def _set_options_alg(library, alg_options):
     if library == "CuPy":
         from cupy import fft
 
+        # the data should be loaded on the GPU
+        use_gpu = True
+
         # find FFTN function
-        def fct_fftn(mat, shape, axes, _):
+        def fftn(mat, shape, axes, _):
             return fft.fftn(mat, shape, axes=axes)
 
         # find iFFTN function
-        def fct_ifftn(mat, shape, axes, _):
+        def ifftn(mat, shape, axes, _):
             return fft.ifftn(mat, shape, axes=axes)
     elif library == "NumPy":
         from numpy import fft
 
+        # the data should stay on the CPU
+        use_gpu = False
+
         # find FFTN function
-        def fct_fftn(mat, shape, axes, _):
+        def fftn(mat, shape, axes, _):
             return fft.fftn(mat, shape, axes=axes)
 
         # find iFFTN function
-        def fct_ifftn(mat, shape, axes, _):
+        def ifftn(mat, shape, axes, _):
             return fft.ifftn(mat, shape, axes=axes)
     elif library == "SciPy":
         from scipy import fft
+
+        # the data should stay on the CPU
+        use_gpu = False
 
         # find the number of workers
         if scipy_worker < 0:
@@ -128,26 +121,32 @@ def _set_options_alg(library, alg_options):
             scipy_worker = None
 
         # find FFTN function
-        def fct_fftn(mat, shape, axes, replace):
+        def fftn(mat, shape, axes, replace):
             return fft.fftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
 
         # find iFFTN function
-        def fct_ifftn(mat, shape, axes, replace):
+        def ifftn(mat, shape, axes, replace):
             return fft.ifftn(mat, shape, axes=axes, overwrite_x=replace, workers=scipy_worker)
     elif library == "MKL":
         import mkl_fft
 
+        # the data should stay on the CPU
+        use_gpu = False
+
         # find FFTN function
-        def fct_fftn(mat, shape, axes, replace):
+        def fftn(mat, shape, axes, replace):
             return mkl_fft.fftn(mat, shape, axes=axes, overwrite_x=replace)
 
         # find iFFTN function
-        def fct_ifftn(mat, shape, axes, replace):
+        def ifftn(mat, shape, axes, replace):
             return mkl_fft.ifftn(mat, shape, axes=axes, overwrite_x=replace)
     elif library == "FFTW":
         from pyfftw import byte_align
         from pyfftw.interfaces import cache
         from pyfftw.interfaces import numpy_fft
+
+        # the data should stay on the CPU
+        use_gpu = False
 
         # find the number of threads
         if fftw_thread < 0:
@@ -163,20 +162,18 @@ def _set_options_alg(library, alg_options):
             cache.disable()
 
         # find FFTN function
-        def fct_fftn(mat, shape, axes, replace):
+        def fftn(mat, shape, axes, replace):
             mat = byte_align(mat, n=fftw_byte_align)
             return numpy_fft.fftn(mat, shape, axes=axes, overwrite_input=replace, threads=fftw_thread)
 
         # find iFFTN function
-        def fct_ifftn(mat, shape, axes, replace):
+        def ifftn(mat, shape, axes, replace):
             mat = byte_align(mat, n=fftw_byte_align)
             return numpy_fft.ifftn(mat, shape, axes=axes, overwrite_input=replace, threads=fftw_thread)
     else:
         raise ValueError("invalid FFT library")
 
-    # assign transforms functions
-    FFTN = fct_fftn
-    IFFTN = fct_ifftn
+    return use_gpu, fftn, ifftn
 
 
 def _get_fft_tensor_keep(mat, replace):
@@ -547,14 +544,30 @@ def set_options(fft_options):
     Assign the options and load the right libray.
     """
 
+    # get global variables
+    global FFTN
+    global IFFTN
+    global LOAD
+    global UNLOAD
+    global NPCP
+    global SPLIT
+
     # extract the data
     split = fft_options["split"]
     library = fft_options["library"]
     alg_options = fft_options["alg_options"]
 
     # set library parameters
-    _set_options_gpu(library, split)
-    _set_options_alg(library, alg_options)
+    (use_gpu, fftn, ifftn) = _get_options_alg(library, alg_options)
+    (npcp, load, unload) = _get_options_gpu(use_gpu)
+
+    # assign the global variables
+    FFTN = fftn
+    IFFTN = ifftn
+    LOAD = load
+    UNLOAD = unload
+    NPCP = npcp
+    SPLIT = split
 
 
 def get_prepare(name, idx_out, idx_in, mat):

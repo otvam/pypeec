@@ -61,7 +61,7 @@ parallel_sweep:
     # handling of the sparse matrix for the factorization
     #   - if true, the Schur complement is used for the factorization
     #   - if false, the full matrix is used for the factorization
-    "schur_complement": true
+    "schur": true
 
     # matrix factorization library
     #   - "SuperLU" is typically slower but is always available (integrated with SciPy)
