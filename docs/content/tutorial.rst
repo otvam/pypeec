@@ -103,9 +103,9 @@ Step 4: Viewer
 
    Plot showing the different domains composing the voxel structure.
 
-.. figure:: ../tutorial/viewer_graph.png
+.. figure:: ../tutorial/viewer_voxelization.png
 
-   Plot showing the connected components composing the voxel structure.
+   Plot comparing the voxelized and original geometries.
 
 .. figure:: ../tutorial/viewer_adjacent.png
 
@@ -190,15 +190,15 @@ Step 6: Plotter
         plot_mode="qt",
     )
 
-.. figure:: ../tutorial/plotter_V_c_norm.png
+.. figure:: ../tutorial/plotter_voltage.png
 
    Plot showing the electric potential.
 
-.. figure:: ../tutorial/plotter_J_c_norm.png
+.. figure:: ../tutorial/plotter_current.png
 
    Plot showing the current density.
 
-.. figure:: ../tutorial/plotter_H_p_norm.png
+.. figure:: ../tutorial/plotter_field.png
 
    Plot showing the generated magnetic field.
 
