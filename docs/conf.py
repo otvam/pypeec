@@ -47,10 +47,7 @@ rst_epilog = """
 rst_epilog = rst_epilog.format(ver=ver, date=date)
 
 # load extensions
-extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
-]
+extensions = ["sphinx.ext.autodoc"]
 
 # allowed redirects for the external links
 linkcheck_allowed_redirects = {

@@ -10,9 +10,9 @@ List of Packages
 ``pypeec``               Main PyPEEC package.
 -----------------------  -------------------------------------------------------
 -----------------------  -------------------------------------------------------
-``pypeec.run``                Mesher, solver, viewer, and plotter.
-``pypeec.utils``              Various independent utils for data manipulation.
-``pypeec.data``               Modules containing all the static data.
+``pypeec.run``           Mesher, solver, viewer, and plotter.
+``pypeec.utils``         Various independent utils for data manipulation.
+``pypeec.data``          Modules containing all the static data.
 -----------------------  -------------------------------------------------------
 -----------------------  -------------------------------------------------------
 ``pypeec.lib_check``     Library for checking the integrity of the input data.
