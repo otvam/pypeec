@@ -14,6 +14,10 @@ function build_docs {
   echo "============================== BUILD: DOCS"
   echo "======================================================================"
 
+  # clean documentation
+  rm -rf html && mkdir -p html
+  rm -rf website && mkdir -p website
+
   # create folders
   mkdir -p docs/_static
   mkdir -p docs/_templates
@@ -37,7 +41,7 @@ function build_docs {
   rm -rf html/output.txt
 
   # copy html for website
-  cp -r html website
+  cp -r html/* website
 
   # add the hidden files
   touch website/.gitignore

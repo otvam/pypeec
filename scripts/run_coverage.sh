@@ -13,8 +13,7 @@ function coverage_run {
   echo "======================================================================"
 
   # clean coverage
-  rm -rf coverage
-  mkdir -p coverage
+  rm -rf coverage && mkdir -p coverage
 
   # run the coverage report
   python \

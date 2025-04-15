@@ -38,7 +38,7 @@ rm -rf pypeec/data/documentation.tar.xz
 # clean package data
 rm -rf dist
 rm -rf build
-rm -rf pypeec.egg-info
+rm -rf *.egg-info
 
 # clean generated folders
 rm -rf html
