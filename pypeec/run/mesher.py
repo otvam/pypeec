@@ -18,6 +18,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import copy
 import scilogger
+import pypeec
 from pypeec.lib_mesher import mesher_voxel
 from pypeec.lib_mesher import mesher_shape
 from pypeec.lib_mesher import mesher_png
@@ -225,6 +226,9 @@ def _get_data(data_geom, timestamp):
 
     # extract the solution
     data_voxel = {
+        "pkg_name": pypeec.__name__,
+        "pkg_version": pypeec.__version__,
+        "format": "mesher",
         "date": date,
         "duration": duration,
         "seconds": seconds,

@@ -68,6 +68,9 @@ def check_data_voxel(data_voxel):
     schema = {
         "type": "object",
         "required": [
+            "pkg_name",
+            "pkg_version",
+            "format",
             "date",
             "duration",
             "seconds",
@@ -95,6 +98,9 @@ def check_data_solution(data_solution):
     schema = {
         "type": "object",
         "required": [
+            "pkg_name",
+            "pkg_version",
+            "format",
             "date",
             "duration",
             "seconds",

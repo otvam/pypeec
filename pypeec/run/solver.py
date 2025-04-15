@@ -13,6 +13,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import copy
 import scilogger
+import pypeec
 from pypeec.lib_solver import sweep_joblib
 from pypeec.lib_solver import voxel_geometry
 from pypeec.lib_solver import system_tensor
@@ -607,6 +608,9 @@ def _get_data(data_init, data_sweep, timestamp):
 
     # extract the solution
     data_solution = {
+        "pkg_name": pypeec.__name__,
+        "pkg_version": pypeec.__version__,
+        "format": "solver",
         "date": date,
         "duration": duration,
         "seconds": seconds,
