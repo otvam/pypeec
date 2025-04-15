@@ -60,9 +60,9 @@ linkcheck_allowed_redirects = {
 }
 
 # define folder paths
-templates_path = ["_templates"]
-html_static_path = ["_static"]
-html_theme_path = ["_static"]
+templates_path = ["."]
+html_static_path = ["."]
+html_theme_path = ["."]
 
 # html base options
 html_baseurl = "https://pypeec.otvam.ch"
