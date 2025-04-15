@@ -104,20 +104,20 @@ def _get_plot_convergence(fig, power_init, power_final, power_vec, data_plot):
         plt.title(title)
 
 
-def _get_plot_matrix(fig, tag_list, component, data_plot):
+def _get_plot_matrix(fig, tag_list, mat, data_plot):
     """
     Plot the domain connections.
     """
 
     # extract the data
     title = data_plot["title"]
-    colorbar = data_plot["colorbar"]
+    colormap = data_plot["colormap"]
 
     # activate the figure
     plt.figure(fig)
 
     # plot the matrix
-    plt.imshow(component, aspect="auto", cmap=colorbar)
+    plt.imshow(mat, aspect="auto", cmap=colormap)
 
     # add cosmetics
     plt.xticks(ticks=np.arange(len(tag_list)), labels=tag_list)
@@ -168,8 +168,8 @@ def get_plot_viewer(fig, connect_def, layout, data_plot, data_options):
 
     # extract the data
     tag_list = connect_def["tag_list"]
-    component = connect_def["component"]
-    adjacent = connect_def["adjacent"]
+    connected_mat = connect_def["connected_mat"]
+    adjacent_mat = connect_def["adjacent_mat"]
 
     # plot parameters
     param = {"font.size": font, "legend.loc": legend}
@@ -177,9 +177,9 @@ def get_plot_viewer(fig, connect_def, layout, data_plot, data_options):
     # get the main plot
     with plt.style.context(style):
         with plt.rc_context(param):
-            if layout == "component":
-                _get_plot_matrix(fig, tag_list, component, data_plot)
+            if layout == "connected":
+                _get_plot_matrix(fig, tag_list, connected_mat, data_plot)
             elif layout == "adjacent":
-                _get_plot_matrix(fig, tag_list, adjacent, data_plot)
+                _get_plot_matrix(fig, tag_list, adjacent_mat, data_plot)
             else:
                 raise ValueError("invalid plot layout")

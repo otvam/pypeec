@@ -27,25 +27,23 @@ def set_voxel_material(voxel, idx, idx_vc, idx_vm, idx_src_c, idx_src_v):
     idx_vcm_local = np.logical_and(idx_vc_local, idx_vm_local)
 
     # init the material
-    material = np.empty(len(idx), dtype=np.int64)
+    material_tag = np.empty(len(idx), dtype=np.int64)
 
     # assign the materials
-    material[idx_vc_local] = 1
-    material[idx_vm_local] = 2
-    material[idx_vcm_local] = 3
+    material_tag[idx_vc_local] = 1
+    material_tag[idx_vm_local] = 2
+    material_tag[idx_vcm_local] = 3
 
     # assign the sources
-    material[idx_src_c_local] = 4
-    material[idx_src_v_local] = 5
+    material_tag[idx_src_c_local] = 4
+    material_tag[idx_src_v_local] = 5
 
-    # get sorted indices
+    # sort data with the indices
     idx_sort = np.argsort(idx)
-
-    # sort data
-    material = material[idx_sort]
+    material_tag = material_tag[idx_sort]
 
     # assign the data to the geometry
-    voxel["material"] = material
+    voxel["material_tag"] = material_tag
 
     return voxel
 

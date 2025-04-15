@@ -178,7 +178,7 @@ def _run_finalize(n, d, c, domain_def, reference, data_geometry):
         )
 
     with LOGGER.BlockTimer("voxel_integrity"):
-        (graph_def, connect_def) = voxel_integrity.get_integrity(
+        (component_def, connect_def) = voxel_integrity.get_integrity(
             n,
             domain_def,
             data_integrity,
@@ -192,7 +192,7 @@ def _run_finalize(n, d, c, domain_def, reference, data_geometry):
             c,
             pts_cloud,
             domain_def,
-            graph_def,
+            component_def,
         )
 
     # assemble the data
@@ -204,7 +204,7 @@ def _run_finalize(n, d, c, domain_def, reference, data_geometry):
         "voxel_status": voxel_status,  # dict with a summary of the voxel structure
         "pts_cloud": pts_cloud,  # array with coordinates of the point cloud
         "domain_def": domain_def,  # dict with the indices of the different domains
-        "graph_def": graph_def,  # list with the indices of the connected components
+        "component_def": component_def,  # list with the indices of the connected components
         "connect_def": connect_def,  # dict describing the connected/adjacent domains
         "reference": reference,  # dict with the faces and points of the original geometry
     }

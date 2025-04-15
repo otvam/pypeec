@@ -12,7 +12,7 @@ import scilogger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
+def get_summary(n, d, s, c, pts_cloud, domain_def, component_def):
     """
     Get a dict summarizing a 3D voxel structure.
     """
@@ -25,7 +25,7 @@ def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
 
     # compute voxel numbers
     n_total = nx * ny * nz
-    n_graph = len(graph_def)
+    n_component = len(component_def)
     n_domain = len(domain_def)
     n_cloud = len(pts_cloud)
 
@@ -54,7 +54,7 @@ def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
         "V_used": V_used,
         "ratio": ratio,
         "n_domain": n_domain,
-        "n_graph": n_graph,
+        "n_component": n_component,
         "n_cloud": n_cloud,
     }
 
@@ -76,7 +76,7 @@ def get_summary(n, d, s, c, pts_cloud, domain_def, graph_def):
         LOGGER.debug("n_used = %d" % n_used)
         LOGGER.debug("ratio = %.2e" % ratio)
         LOGGER.debug("n_domain = %d" % n_domain)
-        LOGGER.debug("n_graph = %d" % n_graph)
+        LOGGER.debug("n_component = %d" % n_component)
         LOGGER.debug("n_cloud = %d" % n_cloud)
 
     # plot the domain size

@@ -82,7 +82,7 @@ def _get_connection_matrix(n):
     return voxel_matrix
 
 
-def _get_graph(graph_matrix, idx):
+def _get_component(graph_matrix, idx):
     """
     Get the connected components in the graph.
     """
@@ -95,16 +95,16 @@ def _get_graph(graph_matrix, idx):
     )
 
     # get the indices of the connected components
-    graph_def = []
+    component_def = []
     for i in range(n_comp):
         idx_local = labels == i
-        idx_graph = idx[idx_local]
-        graph_def.append(idx_graph)
+        idx_component = idx[idx_local]
+        component_def.append(idx_component)
 
-    return graph_def
+    return component_def
 
 
-def _check_domain_rule(domain_group, connected, tag_list, matrix, tag):
+def _check_domain_rule(domain_group, connected, tag_list, mat, tag):
     """
     Check a rule between domain groups.
     """
@@ -117,7 +117,7 @@ def _check_domain_rule(domain_group, connected, tag_list, matrix, tag):
         for j, tag_group_j in enumerate(domain_group):
             idx_i = np.flatnonzero(np.isin(tag_list, tag_group_i))
             idx_j = np.flatnonzero(np.isin(tag_list, tag_group_j))
-            rule[i, j] = np.any(matrix[idx_i, idx_j])
+            rule[i, j] = np.any(mat[idx_i, idx_j])
 
     # count connection
     rule = np.count_nonzero(rule, axis=1)
@@ -144,10 +144,10 @@ def _check_domain_connected(connect_def, domain_connected, tag):
 
     # extract the data
     tag_list = connect_def["tag_list"]
-    component = connect_def["component"]
+    connected_mat = connect_def["connected_mat"]
 
     # check the rule
-    _check_domain_rule(domain_group, connected, tag_list, component, tag)
+    _check_domain_rule(domain_group, connected, tag_list, connected_mat, tag)
 
 
 def _check_domain_adjacent(connect_def, domain_connected, tag):
@@ -161,13 +161,13 @@ def _check_domain_adjacent(connect_def, domain_connected, tag):
 
     # extract the data
     tag_list = connect_def["tag_list"]
-    adjacent = connect_def["adjacent"]
+    adjacent_mat = connect_def["adjacent_mat"]
 
     # check the rule
-    _check_domain_rule(domain_group, connected, tag_list, adjacent, tag)
+    _check_domain_rule(domain_group, connected, tag_list, adjacent_mat, tag)
 
 
-def _get_connect(domain_def, graph_def, voxel_matrix):
+def _get_connect(domain_def, component_def, voxel_matrix):
     """
     Find the connection matrices between the domains (connected components and adjacent domains).
     """
@@ -175,25 +175,25 @@ def _get_connect(domain_def, graph_def, voxel_matrix):
     # get the domains
     tag_list = list(domain_def.keys())
 
-    # init the graph data
-    component = np.zeros((len(tag_list), len(tag_list)), dtype=bool)
-    adjacent = np.zeros((len(tag_list), len(tag_list)), dtype=bool)
+    # init the connection data
+    connected_mat = np.zeros((len(tag_list), len(tag_list)), dtype=bool)
+    adjacent_mat = np.zeros((len(tag_list), len(tag_list)), dtype=bool)
 
     # build the matrices
     for i, idx_i in enumerate(domain_def.values()):
         for j, idx_j in enumerate(domain_def.values()):
             # find the connected domains
-            for idx_graph in graph_def:
-                component_i = len(np.intersect1d(idx_graph, idx_i)) > 0
-                component_j = len(np.intersect1d(idx_graph, idx_j)) > 0
-                component[i, j] = component[i, j] or (component_i and component_j)
+            for idx_component in component_def:
+                connected_i = len(np.intersect1d(idx_component, idx_i)) > 0
+                connected_j = len(np.intersect1d(idx_component, idx_j)) > 0
+                connected_mat[i, j] = connected_mat[i, j] or (connected_i and connected_j)
 
             # find the adjacent domains
             idx_shared = voxel_matrix[idx_i, :][:, idx_j]
-            adjacent[i, j] = idx_shared.count_nonzero() > 0
+            adjacent_mat[i, j] = idx_shared.count_nonzero() > 0
 
     # assign the data
-    connect_def = {"tag_list": tag_list, "component": component, "adjacent": adjacent}
+    connect_def = {"tag_list": tag_list, "connected_mat": connected_mat, "adjacent_mat": adjacent_mat}
 
     return connect_def
 
@@ -219,10 +219,10 @@ def get_integrity(n, domain_def, data_integrity):
     graph_matrix = graph_matrix[:, idx]
 
     # find the connected components in the graph
-    graph_def = _get_graph(graph_matrix, idx)
+    component_def = _get_component(graph_matrix, idx)
 
     # get the connection between the domains
-    connect_def = _get_connect(domain_def, graph_def, voxel_matrix)
+    connect_def = _get_connect(domain_def, component_def, voxel_matrix)
 
     # check the connections between the adjacent domains
     for tag, domain_tmp in domain_adjacent.items():
@@ -232,4 +232,4 @@ def get_integrity(n, domain_def, data_integrity):
     for tag, domain_tmp in domain_connected.items():
         _check_domain_connected(connect_def, domain_tmp, tag)
 
-    return graph_def, connect_def
+    return component_def, connect_def

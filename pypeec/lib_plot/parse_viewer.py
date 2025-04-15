@@ -11,78 +11,80 @@ __license__ = "Mozilla Public License Version 2.0"
 import numpy as np
 
 
-def _get_graph_component(idx, graph_def):
+def _get_connected_component(idx, component_def):
     """
     Find the connected components for a specific domain.
     Assign a different scalar for each connected component.
     """
 
     # init the data with invalid data
-    graph = np.zeros(len(idx), dtype=np.int64)
+    component = np.zeros(len(idx), dtype=np.int64)
 
     # find to corresponding connected components
-    for i, idx_graph in enumerate(graph_def):
+    for counter, idx_component in enumerate(component_def):
         # find which indices are part of the connected component
-        idx_ok = np.isin(idx, idx_graph)
+        idx_ok = np.isin(idx, idx_component)
 
         # assign the component number to the corresponding indices
-        graph[idx_ok] = i + 1
+        component[idx_ok] = counter + 1
 
     # check that everything was assigned
-    if not np.all(graph):
+    if not np.all(component):
         raise RuntimeError("some voxels are not part of the graph")
 
-    return graph
+    return component
 
 
-def _get_geometry_tag(domain_def, graph_def):
+def _get_component_tag(domain_def, component_def):
     """
-    Assign a different integer for each domain.
     Assign a different integer for each connected component.
     """
 
-    # init
-    domain = np.empty(0, dtype=np.int64)
-    graph = np.empty(0, dtype=np.int64)
+    # init data
+    connected_tag = np.empty(0, dtype=np.int64)
 
-    # get the indices and colors
-    counter = 1
+    # get the connected component tags
     for idx_tmp in domain_def.values():
-        # assign the color (n different integer for each domain)
-        domain_tmp = np.full(len(idx_tmp), counter, dtype=np.int64)
+        connected_tmp = _get_connected_component(idx_tmp, component_def)
+        connected_tag = np.append(connected_tag, connected_tmp)
 
-        # find the connected components corresponding to the indices
-        graph_tmp = _get_graph_component(idx_tmp, graph_def)
-
-        # append the indices and colors
-        domain = np.append(domain, domain_tmp)
-        graph = np.append(graph, graph_tmp)
-
-        # update the domain counter
-        counter += 1
-
-    return domain, graph
+    return connected_tag
 
 
-def set_data(voxel, idx, domain_def, graph_def):
+def _get_domain_tag(domain_def):
+    """
+    Assign a different integer for each domain.
+    """
+
+    # init data
+    domain_tag = np.empty(0, dtype=np.int64)
+
+    # get the domain tags
+    for counter, idx_tmp in enumerate(domain_def.values()):
+        domain_tmp = np.full(len(idx_tmp), counter + 1, dtype=np.int64)
+        domain_tag = np.append(domain_tag, domain_tmp)
+
+    return domain_tag
+
+
+def set_data(voxel, idx, domain_def, component_def):
     """
     Add the domain and connected component description to the unstructured grid.
     Integers are used to encode the different tags.
     """
 
     # get the data
-    (domain, graph) = _get_geometry_tag(domain_def, graph_def)
+    domain_tag = _get_domain_tag(domain_def)
+    component_tag = _get_component_tag(domain_def, component_def)
 
-    # get sorted indices
+    # sort data with the indices
     idx = np.argsort(idx)
-
-    # sort data
-    domain = domain[idx]
-    graph = graph[idx]
+    domain_tag = domain_tag[idx]
+    component_tag = component_tag[idx]
 
     # assign the data to the geometry
-    voxel["domain"] = domain
-    voxel["graph"] = graph
+    voxel["domain_tag"] = domain_tag
+    voxel["component_tag"] = component_tag
 
     return voxel
 

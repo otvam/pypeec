@@ -24,7 +24,7 @@ if __name__ == "__main__":
     file_viewer = os.path.join(PATH_ROOT, FOLDER_CONFIG, "viewer.yaml")
 
     # list of plots to be shown (defined in viewer.yaml)
-    tag_plot = ["domain", "graph", "adjacent"]
+    tag_plot = ["domain", "component", "adjacent"]
 
     # method used for rendering the plots
     plot_mode = "qt"

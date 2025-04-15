@@ -9,17 +9,17 @@
 #
 # For the viewer, the following types of plots are available:
 #
-#   - "domain": plot the different domains composing the voxel structures
+#   - "domain": plot the different domains composing the voxel structure
 #       - title: title located at the corner of the plot (null for hiding)
 #       - colormap: colormap used to plot the different voxel groups
 #       - opacity: opacity of the face color
 #
-#   - "graph": plot the connections between the voxels
+#   - "component": plot the connect components of the voxel structure
 #       - title: title located at the corner of the plot (null for hiding)
 #       - colormap: colormap used to plot the different voxel groups
 #       - opacity: opacity of the face color
 #
-#   - "mesh": plot the deviation between the voxelized and reference geometries
+#   - "voxelization": plot the deviation between the voxelized and reference geometries
 #       - title: title located at the corner of the plot (null for hiding)
 #       - color_voxel: face color for the voxelized structure
 #       - color_reference: face color for the reference structure
@@ -28,11 +28,11 @@
 #
 #   - "component": plot a matrix showing the connected the domains (matplotlib)
 #       - title: title located at the top of the plot (null for hiding)
-#       - colorbar: colorbar for the matrix
+#       - colormap: colormap used for the matrix values
 #
 #   - "adjacent": plot a matrix showing the adjacent domains (matplotlib)
 #       - title: title located at the top of the plot (null for hiding)
-#       - colorbar: colorbar for the matrix
+#       - colormap: colormap used for the matrix values
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -43,42 +43,42 @@
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "title": "Domain"
+        "title": "Voxel Domains"
         "colormap": "Accent"
         "opacity": 1.0
-"graph":
+"component":
     "framework": "pyvista"
-    "layout": "graph"
+    "layout": "component"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "title": "Graph"
+        "title": "Connected Components"
         "colormap": "Accent"
         "opacity": 1.0
-"mesh":
+"voxelization":
     "framework": "pyvista"
-    "layout": "mesh"
+    "layout": "voxelization"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "title": "Mesh"
+        "title": "Voxelization Results"
         "color_voxel": "red"
         "color_reference": "blue"
         "opacity_voxel": 0.5
         "opacity_reference": 0.5
-"component":
+"connected":
     "framework": "matplotlib"
-    "layout": "component"
+    "layout": "connected"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
-        "title": "Component"
-        "colorbar": "viridis"
+        "title": "Connected Domains"
+        "colormap": "RdYlGn"
 "adjacent":
     "framework": "matplotlib"
     "layout": "adjacent"
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
-        "title": "Adjacent"
-        "colorbar": "viridis"
+        "title": "Adjacent Domains"
+        "colormap": "RdYlGn"

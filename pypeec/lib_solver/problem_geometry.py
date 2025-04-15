@@ -54,23 +54,25 @@ def _check_indices(idx_vc, idx_src_c, idx_src_v):
         raise RuntimeError("voltage source voxels should overlap with electric voxels")
 
 
-def _check_source_graph(idx_vc, idx_src_c, idx_src_v, graph_def):
+def _check_source_graph(idx_vc, idx_src_c, idx_src_v, component_def):
     """
     Check that there is at least one source per connected component.
     A connected components without a source would lead to a singular problem.
     """
 
-    for idx_graph in graph_def:
-        has_electric = len(np.intersect1d(idx_graph, idx_vc)) > 0
-        has_current_source = len(np.intersect1d(idx_graph, idx_src_c)) > 0
-        has_voltage_source = len(np.intersect1d(idx_graph, idx_src_v)) > 0
+    for idx_component in component_def:
+        # check the material and sources for the connected component
+        has_electric = len(np.intersect1d(idx_component, idx_vc)) > 0
+        has_current_source = len(np.intersect1d(idx_component, idx_src_c)) > 0
+        has_voltage_source = len(np.intersect1d(idx_component, idx_src_v)) > 0
 
+        # electric components should include at least one source
         if has_electric:
             if not (has_current_source or has_voltage_source):
                 raise RuntimeError("electric components should include at least one source")
 
 
-def get_problem_type(idx_vc, idx_vm, idx_src_c, idx_src_v, graph_def):
+def get_problem_type(idx_vc, idx_vm, idx_src_c, idx_src_v, component_def):
     """
     Check the validity of the problem.
     Detect if magnetic material are present.
@@ -78,7 +80,7 @@ def get_problem_type(idx_vc, idx_vm, idx_src_c, idx_src_v, graph_def):
 
     # check voxel indices
     _check_indices(idx_vc, idx_src_c, idx_src_v)
-    _check_source_graph(idx_vc, idx_src_c, idx_src_v, graph_def)
+    _check_source_graph(idx_vc, idx_src_c, idx_src_v, component_def)
 
     # detect the existence of magnetic domains
     has_magnetic = len(idx_vm) > 0

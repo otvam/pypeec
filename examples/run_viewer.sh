@@ -15,7 +15,7 @@ FILE_VOXEL="$PATH_ROOT/$FOLDER_EXAMPLE/voxel.json.gz"
 FILE_VIEWER="$PATH_ROOT/$FOLDER_CONFIG/viewer.yaml"
 
 # list of plots to be shown (defined in viewer.yaml)
-TAG_PLOT="domain graph adjacent"
+TAG_PLOT="domain component adjacent"
 
 # method used for rendering the plots
 PLOT_MODE="qt"

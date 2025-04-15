@@ -51,7 +51,7 @@ def _run_solver_init(data_solver):
     source_def = data_solver["source_def"]
     material_def = data_solver["material_def"]
     domain_def = data_solver["domain_def"]
-    graph_def = data_solver["graph_def"]
+    component_def = data_solver["component_def"]
     pts_cloud = data_solver["pts_cloud"]
     sweep_solver = data_solver["sweep_solver"]
 
@@ -100,7 +100,7 @@ def _run_solver_init(data_solver):
             idx_vm,
             idx_src_c,
             idx_src_v,
-            graph_def,
+            component_def,
         )
 
         # reduce the incidence matrix to the non-empty voxels and compute face indices

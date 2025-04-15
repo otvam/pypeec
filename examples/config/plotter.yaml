@@ -79,7 +79,7 @@
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_pyvista.yaml
     "data_plot":
-        "title": "Material"
+        "title": "Voxel Materials"
         "color_electric": "darkorange"
         "color_magnetic": "gainsboro"
         "color_electromagnetic": "darkviolet"
@@ -248,7 +248,7 @@
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
-        "title": "Convergence"
+        "title": "Solver Convergence"
         "color_active": "red"
         "color_reactive": "blue"
         "marker": 8.0
@@ -259,7 +259,7 @@
     "data_window": !include cfg_data_window.yaml
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
-        "title": "Residuum"
+        "title": "Solver Residuum"
         "bar_color": "blue"
         "edge_color": "black"
         "tol_bins": 0.05

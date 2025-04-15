@@ -462,7 +462,7 @@ def _plot_material(pl, voxel, data_plot, plot_clip, plot_theme):
     arg = dict(
         clim=[1, 5],
         show_scalar_bar=False,
-        scalars="material",
+        scalars="material_tag",
         cmap=cmap,
     )
     if voxel_tmp.n_cells > 0:
@@ -496,7 +496,7 @@ def _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, var):
         _get_clip_mesh(pl, voxel_tmp, arg, plot_clip)
 
 
-def _plot_mesh(pl, voxel, reference, data_plot, plot_clip, plot_theme):
+def _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme):
     """
     Plot the reference and voxelized structures in order to assess the voxelization error.
     """
@@ -549,11 +549,11 @@ def get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_o
 
     # plot the geometry
     if layout == "domain":
-        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "domain")
-    elif layout == "graph":
-        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "graph")
-    elif layout == "mesh":
-        _plot_mesh(pl, voxel, reference, data_plot, plot_clip, plot_theme)
+        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "domain_tag")
+    elif layout == "component":
+        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "component_tag")
+    elif layout == "voxelization":
+        _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme)
     else:
         raise ValueError("invalid plot layout")
 

@@ -95,7 +95,7 @@ Step 4: Viewer
     pypeec.run_viewer_file(
         file_voxel=file_voxel,
         file_viewer=file_viewer,
-        tag_plot=["domain", "graph", "adjacent"],
+        tag_plot=["domain", "component", "adjacent"],
         plot_mode="qt",
     )
 

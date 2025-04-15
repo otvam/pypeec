@@ -19,7 +19,7 @@
             "minimum": 0
 
 #############################################################################
-"data_plot_graph": &data_plot_graph
+"data_plot_component": &data_plot_component
     "type": "object"
     "required":
         - "title"
@@ -39,7 +39,7 @@
             "minimum": 0
 
 #############################################################################
-"data_plot_mesh": &data_plot_mesh
+"data_plot_voxelization": &data_plot_voxelization
     "type": "object"
     "required":
         - "title"
@@ -71,14 +71,14 @@
     "type": "object"
     "required":
         - "title"
-        - "colorbar"
+        - "colormap"
     properties:
         "title":
             "type":
                 - "null"
                 - "string"
             "minLength": 1
-        "colorbar":
+        "colormap":
             "type": "string"
             "minLength": 1
 
@@ -102,9 +102,9 @@
             "type": "string"
             "enum":
                 - "domain"
-                - "graph"
-                - "mesh"
                 - "component"
+                - "voxelization"
+                - "connected"
                 - "adjacent"
         "data_window": !include schema_plot_window.yaml
     "allOf":
@@ -134,25 +134,25 @@
         -   if:
                 "properties":
                     "layout":
-                        "const": "graph"
-            "then":
-                "properties":
-                    "data_plot": *data_plot_graph
-                    "framework":
-                        "const": "pyvista"
-        -   if:
-                "properties":
-                    "layout":
-                        "const": "mesh"
-            "then":
-                "properties":
-                    "data_plot": *data_plot_mesh
-                    "framework":
-                        "const": "pyvista"
-        -   if:
-                "properties":
-                    "layout":
                         "const": "component"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_component
+                    "framework":
+                        "const": "pyvista"
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "voxelization"
+            "then":
+                "properties":
+                    "data_plot": *data_plot_voxelization
+                    "framework":
+                        "const": "pyvista"
+        -   if:
+                "properties":
+                    "layout":
+                        "const": "connected"
             "then":
                 "properties":
                     "data_plot": *data_plot_matrix
