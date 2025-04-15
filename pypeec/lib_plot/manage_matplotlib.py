@@ -120,6 +120,7 @@ def _get_plot_matrix(fig, tag_list, mat, data_plot):
     plt.imshow(mat, aspect="auto", cmap=colormap)
 
     # add cosmetics
+    plt.grid()
     plt.xticks(ticks=np.arange(len(tag_list)), labels=tag_list)
     plt.yticks(ticks=np.arange(len(tag_list)), labels=tag_list)
     if title is not None:
