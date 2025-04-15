@@ -236,7 +236,7 @@ def get_factorize(mat, factorization_options):
         fct_fact = _get_factorize_sub(mat_fact, library, pyamg_options, pardiso_options)
         fct_sol = _get_schur_solve(fct_fact, mat_diag, mat_12, mat_21)
     else:
-        mat_fact = np.bmat([[mat_11, mat_12], [mat_21, mat_22]])
+        mat_fact = sps.bmat([[mat_11, mat_12], [mat_21, mat_22]], format="csc")
         fct_sol = _get_factorize_sub(mat_fact, library, pyamg_options, pardiso_options)
 
     return fct_sol, mat_fact
