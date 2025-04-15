@@ -64,8 +64,8 @@
     "type": "object"
     "required":
         - "title"
-        - "bar_color"
-        - "edge_color"
+        - "color_bar"
+        - "color_edge"
         - "tol_bins"
         - "n_bins"
     properties:
@@ -74,10 +74,10 @@
                 - "null"
                 - "string"
             "minLength": 1
-        "bar_color":
+        "color_bar":
             "type": "string"
             "minLength": 1
-        "edge_color":
+        "color_edge":
             "type": "string"
             "minLength": 1
         "tol_bins":

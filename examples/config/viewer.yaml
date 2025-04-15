@@ -28,11 +28,17 @@
 #
 #   - "component": plot a matrix showing the connected the domains (matplotlib)
 #       - title: title located at the top of the plot (null for hiding)
-#       - colormap: colormap used for the matrix values
+#       - color_edge: line color between the elements
+#       - color_true: fill color for the true values
+#       - color_false: fill color for the false values
+#       - width: line width between the elements
 #
 #   - "adjacent": plot a matrix showing the adjacent domains (matplotlib)
 #       - title: title located at the top of the plot (null for hiding)
-#       - colormap: colormap used for the matrix values
+#       - color_edge: line color between the elements
+#       - color_true: fill color for the true values
+#       - color_false: fill color for the false values
+#       - width: line width between the elements
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
@@ -73,7 +79,10 @@
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
         "title": "Connected Domains"
-        "colormap": "RdYlGn"
+        "color_edge": "black"
+        "color_true": "green"
+        "color_false": "gray"
+        "width": 2.0
 "adjacent":
     "framework": "matplotlib"
     "layout": "adjacent"
@@ -81,4 +90,7 @@
     "data_options": !include cfg_data_matplotlib.yaml
     "data_plot":
         "title": "Adjacent Domains"
-        "colormap": "RdYlGn"
+        "color_edge": "black"
+        "color_true": "green"
+        "color_false": "gray"
+        "width": 2.0

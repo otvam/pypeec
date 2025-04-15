@@ -16,6 +16,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.colors as col
 
 
 def _get_plot_residuum(fig, residuum, data_plot):
@@ -27,8 +28,8 @@ def _get_plot_residuum(fig, residuum, data_plot):
     title = data_plot["title"]
     n_bins = data_plot["n_bins"]
     tol_bins = data_plot["tol_bins"]
-    bar_color = data_plot["bar_color"]
-    edge_color = data_plot["edge_color"]
+    color_bar = data_plot["color_bar"]
+    color_edge = data_plot["color_edge"]
 
     # activate the figure
     plt.figure(fig)
@@ -47,7 +48,7 @@ def _get_plot_residuum(fig, residuum, data_plot):
     bins = np.logspace(np.log10(v_min), np.log10(v_max), n_bins)
 
     # plot the histogram
-    plt.hist(residuum, bins=bins, edgecolor=edge_color, color=bar_color)
+    plt.hist(residuum, bins=bins, edgecolor=color_edge, color=color_bar)
 
     # get log axis
     plt.xscale("log")
@@ -111,18 +112,26 @@ def _get_plot_matrix(fig, tag_list, mat, data_plot):
 
     # extract the data
     title = data_plot["title"]
-    colormap = data_plot["colormap"]
+    width = data_plot["width"]
+    color_edge = data_plot["color_edge"]
+    color_true = data_plot["color_true"]
+    color_false = data_plot["color_false"]
+
+    # position vector and color matrix
+    vec = np.arange(len(tag_list))
+    mesh = np.full((len(tag_list), len(tag_list), 3), np.nan, dtype=np.float64)
+    mesh[mat == True, :] = col.to_rgb(color_true)
+    mesh[mat == False, :] = col.to_rgb(color_false)
 
     # activate the figure
     plt.figure(fig)
 
     # plot the matrix
-    plt.imshow(mat, aspect="auto", cmap=colormap)
+    plt.pcolormesh(vec, vec, mesh, edgecolors=color_edge, linewidth=width)
 
     # add cosmetics
-    plt.grid()
-    plt.xticks(ticks=np.arange(len(tag_list)), labels=tag_list)
-    plt.yticks(ticks=np.arange(len(tag_list)), labels=tag_list)
+    plt.xticks(ticks=vec, labels=tag_list)
+    plt.yticks(ticks=vec, labels=tag_list)
     if title is not None:
         plt.title(title)
 

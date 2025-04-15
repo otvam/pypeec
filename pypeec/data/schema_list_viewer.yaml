@@ -71,14 +71,26 @@
     "type": "object"
     "required":
         - "title"
-        - "colormap"
+        - "width"
+        - "color_edge"
+        - "color_true"
+        - "color_false"
     properties:
         "title":
             "type":
                 - "null"
                 - "string"
             "minLength": 1
-        "colormap":
+        "width":
+            "type": "number"
+            "minimum": 0
+        "color_edge":
+            "type": "string"
+            "minLength": 1
+        "color_true":
+            "type": "string"
+            "minLength": 1
+        "color_false":
             "type": "string"
             "minLength": 1
 
