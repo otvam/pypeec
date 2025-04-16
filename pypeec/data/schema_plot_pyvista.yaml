@@ -43,13 +43,13 @@
                 "type": "string"
                 "minLength": 1
             "title_font":
-                "type": "number"
+                "type": "integer"
                 "minimum": 0
             "colorbar_font":
-                "type": "number"
+                "type": "integer"
                 "minimum": 0
             "colorbar_size":
-                "type": "number"
+                "type": "integer"
                 "minimum": 0
             "colorbar_plot":
                 "type": "boolean"
@@ -91,6 +91,7 @@
             "grid_opacity":
                 "type": "number"
                 "minimum": 0
+                "maximum": 1
             "geom_plot":
                 "type": "boolean"
             "geom_thickness":
@@ -102,6 +103,7 @@
             "geom_opacity":
                 "type": "number"
                 "minimum": 0
+                "maximum": 1
             "point_plot":
                 "type": "boolean"
             "point_color":
@@ -113,6 +115,7 @@
             "point_opacity":
                 "type": "number"
                 "minimum": 0
+                "maximum": 1
             "camera_roll":
                 "type":
                     - "null"

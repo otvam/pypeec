@@ -5,18 +5,18 @@
 
 # options for defining cut planes
 "plot_filter":
-    "slice": false                 # add (or not) a slice plane for rendering
+    "slice": true                 # add (or not) a slice plane for rendering
     "clip": false                 # add (or not) a clip plane for rendering
     "invert": false               # invert (or not) the clipping/slicing direction
-    "normal": "x"                 # normal of the clipping/slicing direction
+    "normal": "z"                 # normal of the clipping/slicing direction
     "value": 0.0                  # initial position for the clipping/slicing
 
 # theme of the figure
 "plot_theme":
     "text_color": "black"              # color of the text elements
-    "title_font": 10.0                 # font size of the text displayed on the window corner
-    "colorbar_font": 15.0              # font size of the color bar
-    "colorbar_size": 5.0               # number of division for the colorbar
+    "title_font": 10                   # font size of the text displayed on the window corner
+    "colorbar_font": 15                # font size of the color bar
+    "colorbar_size": 5                 # number of division for the colorbar
     "colorbar_plot": true              # show (or not) the colorbar
     "background_color": "gray"         # background color of the plot
     "axis_add": true                   # add (or not) the axis marker

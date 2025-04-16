@@ -11,5 +11,5 @@
         "type": "string"
         "minLength": 1
     "font":
-        "type": "number"
+        "type": "integer"
         "minimum": 0
