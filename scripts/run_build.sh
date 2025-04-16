@@ -18,6 +18,10 @@ function build_docs {
   rm -rf html && mkdir -p html
   rm -rf website && mkdir -p website
 
+  # create folders
+  mkdir -p docs/_static
+  mkdir -p docs/_templates
+
   # build documentation
   sphinx-build -W -b html docs html
 

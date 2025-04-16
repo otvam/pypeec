@@ -45,4 +45,8 @@ rm -rf html
 rm -rf website
 rm -rf coverage
 
+# clean Sphinx data
+rm -rf docs/_static
+rm -rf docs/_templates
+
 exit 0

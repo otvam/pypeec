@@ -46,6 +46,10 @@ html/
 website/
 coverage/
 
+# exclude Sphinx data
+docs/_static/
+docs/_templates/
+
 # exclude temporary folders
 scratch/
 temp/
