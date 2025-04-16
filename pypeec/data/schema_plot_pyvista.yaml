@@ -1,28 +1,31 @@
 "type": "object"
 "required":
-    - "plot_clip"
+    - "plot_filter"
     - "plot_theme"
     - "plot_view"
 "properties":
-    "plot_clip":
+    "plot_filter":
         "type": "object"
         "required":
-            - "clip_plot"
-            - "clip_invert"
-            - "clip_normal"
-            - "clip_value"
+            - "clip"
+            - "slice"
+            - "invert"
+            - "normal"
+            - "value"
         "properties":
-            "plot_clip":
+            "clip":
                 "type": "boolean"
-            "clip_invert":
+            "slice":
                 "type": "boolean"
-            "clip_normal":
+            "invert":
+                "type": "boolean"
+            "normal":
                 "type": "string"
                 "enum":
                     - "x"
                     - "y"
                     - "z"
-            "clip_value":
+            "value":
                 "type": "number"
     "plot_theme":
         "type": "object"
@@ -40,13 +43,13 @@
                 "type": "string"
                 "minLength": 1
             "title_font":
-                "type": "integer"
+                "type": "number"
                 "minimum": 0
             "colorbar_font":
-                "type": "integer"
+                "type": "number"
                 "minimum": 0
             "colorbar_size":
-                "type": "integer"
+                "type": "number"
                 "minimum": 0
             "colorbar_plot":
                 "type": "boolean"
@@ -56,7 +59,7 @@
             "axis_add":
                 "type": "boolean"
             "axis_size":
-                "type": "integer"
+                "type": "number"
                 "minimum": 0
     "plot_view":
         "type": "object"

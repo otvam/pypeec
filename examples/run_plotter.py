@@ -24,12 +24,7 @@ if __name__ == "__main__":
     file_plotter = os.path.join(PATH_ROOT, FOLDER_CONFIG, "plotter.yaml")
 
     # list of plots to be shown (defined in plotter.yaml)
-    tag_plot = [
-        "V_c_norm",
-        "J_c_norm",
-        "H_p_norm",
-        "residuum",
-    ]
+    tag_plot = ["V_c_norm", "J_c_norm", "H_p_norm", "residuum"]
 
     # method used for rendering the plots
     plot_mode = "qt"

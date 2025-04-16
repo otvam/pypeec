@@ -97,26 +97,32 @@ def _get_plot_title(pl, title, plot_theme):
     )
 
 
-def _get_clip_mesh(pl, obj, arg, plot_clip):
+def _get_filter_mesh(pl, obj, arg, plot_filter):
     """
     Add an object (either full view or clipped).
     """
 
     # extract
-    clip_plot = plot_clip["clip_plot"]
-    clip_invert = plot_clip["clip_invert"]
-    clip_normal = plot_clip["clip_normal"]
-    clip_value = plot_clip["clip_value"]
+    clip = plot_filter["clip"]
+    slice = plot_filter["slice"]
+    invert = plot_filter["invert"]
+    normal = plot_filter["normal"]
+    value = plot_filter["value"]
 
     # clip the plot
-    if clip_plot:
-        obj = obj.clip(normal=clip_normal, value=clip_value, invert=clip_invert)
+    if clip:
+        obj = obj.clip(normal=normal, origin=(value, value, value), invert=invert)
+
+    # slice the plot
+    if slice:
+        obj = obj.slice(normal=normal, origin=(value, value, value))
 
     # add the full plot
-    pl.add_mesh(
-        obj,
-        **arg,
-     )
+    if obj.n_cells > 0:
+        pl.add_mesh(
+            obj,
+            **arg,
+         )
 
 
 def _get_scale_norm(obj, scale):
@@ -327,7 +333,7 @@ def _get_arrow(obj, data_plot):
     return obj_tmp
 
 
-def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
+def _plot_scalar(pl, obj, data_plot, plot_filter, plot_theme):
     """
     Plot a scalar variable.
     """
@@ -367,11 +373,10 @@ def _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme):
         scalar_bar_args=scalar_bar_args,
         render_points_as_spheres=True,
     )
-    if obj.n_cells > 0:
-        _get_clip_mesh(pl, obj, arg, plot_clip)
+    _get_filter_mesh(pl, obj, arg, plot_filter)
 
 
-def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
+def _plot_arrow(pl, grid, obj, data_plot, plot_filter, plot_theme):
     """
     Plot a vector variable with an arrow plot (quiver plot).
     A scalar variable is used to determine the color of the arrows.
@@ -417,10 +422,10 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme):
     )
     if obj.n_cells > 0:
         glyph_tmp = obj.glyph(orient="vector", scale=False, factor=factor)
-        _get_clip_mesh(pl, glyph_tmp, arg, plot_clip)
+        _get_filter_mesh(pl, glyph_tmp, arg, plot_filter)
 
 
-def _plot_material(pl, voxel, data_plot, plot_clip, plot_theme):
+def _plot_material(pl, voxel, data_plot, plot_filter, plot_theme):
     """
     Plot the material and source description.
     """
@@ -455,11 +460,10 @@ def _plot_material(pl, voxel, data_plot, plot_clip, plot_theme):
         scalars="material_tag",
         cmap=cmap,
     )
-    if voxel_tmp.n_cells > 0:
-        _get_clip_mesh(pl, voxel_tmp, arg, plot_clip)
+    _get_filter_mesh(pl, voxel_tmp, arg, plot_filter)
 
 
-def _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, var):
+def _plot_geometry(pl, voxel, data_plot, plot_filter, plot_theme, var):
     """
     Plot an integer variable on the voxel structure (material or connection).
     """
@@ -482,11 +486,10 @@ def _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, var):
         cmap=colormap,
         opacity=opacity,
     )
-    if voxel_tmp.n_cells > 0:
-        _get_clip_mesh(pl, voxel_tmp, arg, plot_clip)
+    _get_filter_mesh(pl, voxel_tmp, arg, plot_filter)
 
 
-def _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme):
+def _plot_voxelization(pl, voxel, reference, data_plot, plot_filter, plot_theme):
     """
     Plot the reference and voxelized structures in order to assess the voxelization error.
     """
@@ -494,6 +497,8 @@ def _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme):
     # extract the data
     color_voxel = data_plot["color_voxel"]
     color_reference = data_plot["color_reference"]
+    width_voxel = data_plot["width_voxel"]
+    width_reference = data_plot["width_reference"]
     opacity_voxel = data_plot["opacity_voxel"]
     opacity_reference = data_plot["opacity_reference"]
     title = data_plot["title"]
@@ -510,18 +515,18 @@ def _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme):
         show_scalar_bar=False,
         color=color_voxel,
         opacity=opacity_voxel,
+        line_width=width_voxel,
     )
-    if voxel_tmp.n_cells > 0:
-        _get_clip_mesh(pl, voxel_tmp, arg, plot_clip)
+    _get_filter_mesh(pl, voxel_tmp, arg, plot_filter)
 
     # add the resulting plot to the plotter
     arg = dict(
         show_scalar_bar=False,
         color=color_reference,
         opacity=opacity_reference,
+        line_width=width_reference,
     )
-    if voxel_tmp.n_cells > 0:
-        _get_clip_mesh(pl, reference_tmp, arg, plot_clip)
+    _get_filter_mesh(pl, reference_tmp, arg, plot_filter)
 
 
 def get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_options):
@@ -533,17 +538,17 @@ def get_plot_viewer(pl, grid, voxel, point, reference, layout, data_plot, data_o
     """
 
     # extract the data
-    plot_clip = data_options["plot_clip"]
+    plot_filter = data_options["plot_filter"]
     plot_view = data_options["plot_view"]
     plot_theme = data_options["plot_theme"]
 
     # plot the geometry
     if layout == "domain":
-        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "domain_tag")
+        _plot_geometry(pl, voxel, data_plot, plot_filter, plot_theme, "domain_tag")
     elif layout == "component":
-        _plot_geometry(pl, voxel, data_plot, plot_clip, plot_theme, "component_tag")
+        _plot_geometry(pl, voxel, data_plot, plot_filter, plot_theme, "component_tag")
     elif layout == "voxelization":
-        _plot_voxelization(pl, voxel, reference, data_plot, plot_clip, plot_theme)
+        _plot_voxelization(pl, voxel, reference, data_plot, plot_filter, plot_theme)
     else:
         raise ValueError("invalid plot layout")
 
@@ -561,7 +566,7 @@ def get_plot_plotter(pl, grid, voxel, point, layout, data_plot, data_options):
     """
 
     # extract the data
-    plot_clip = data_options["plot_clip"]
+    plot_filter = data_options["plot_filter"]
     plot_view = data_options["plot_view"]
     plot_theme = data_options["plot_theme"]
 
@@ -577,16 +582,16 @@ def get_plot_plotter(pl, grid, voxel, point, layout, data_plot, data_options):
 
     # plot the geometry
     if layout == "material":
-        _plot_material(pl, voxel, data_plot, plot_clip, plot_theme)
+        _plot_material(pl, voxel, data_plot, plot_filter, plot_theme)
     elif layout in ["norm_voxel", "norm_point"]:
         obj = _get_norm(obj, data_plot)
-        _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme)
+        _plot_scalar(pl, obj, data_plot, plot_filter, plot_theme)
     elif layout in ["phasor_voxel", "phasor_point"]:
         obj = _get_phasor(obj, data_plot)
-        _plot_scalar(pl, obj, data_plot, plot_clip, plot_theme)
+        _plot_scalar(pl, obj, data_plot, plot_filter, plot_theme)
     elif layout in ["arrow_voxel", "arrow_point"]:
         obj = _get_arrow(obj, data_plot)
-        _plot_arrow(pl, grid, obj, data_plot, plot_clip, plot_theme)
+        _plot_arrow(pl, grid, obj, data_plot, plot_filter, plot_theme)
     else:
         raise ValueError("invalid plot layout")
 

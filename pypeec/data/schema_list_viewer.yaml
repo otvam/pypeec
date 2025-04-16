@@ -45,6 +45,8 @@
         - "title"
         - "color_voxel"
         - "color_reference"
+        - "width_voxel"
+        - "width_reference"
         - "opacity_voxel"
         - "opacity_reference"
     properties:
@@ -59,6 +61,12 @@
         "color_reference":
             "type": "string"
             "minLength": 1
+        "width_voxel":
+            "type": "number"
+            "minimum": 0
+        "width_reference":
+            "type": "number"
+            "minimum": 0
         "opacity_voxel":
             "type": "number"
             "minimum": 0

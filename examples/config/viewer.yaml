@@ -23,6 +23,8 @@
 #       - title: title located at the corner of the plot (null for hiding)
 #       - color_voxel: face color for the voxelized structure
 #       - color_reference: face color for the reference structure
+#       - width_voxel: edge thickness for the voxelized structure
+#       - width_reference: edge thickness for the reference structure
 #       - opacity_voxel: face opacity for the voxelized structure
 #       - opacity_reference: face opacity for the reference structure
 #
@@ -70,6 +72,8 @@
         "title": "Voxelization Results"
         "color_voxel": "red"
         "color_reference": "blue"
+        "width_voxel": 2.0
+        "width_reference": 2.0
         "opacity_voxel": 0.5
         "opacity_reference": 0.5
 "connected":
