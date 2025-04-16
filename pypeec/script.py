@@ -10,61 +10,19 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import sys
-import shutil
 import argparse
-import importlib.resources
 import pypeec
 
 
-def _run_display_logo():
+def  _get_banner():
     """
-    Display the logo as a splash screen.
+    Display the banner on the standard error stream.
     """
 
     try:
-        # get the logo path
-        filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
-
-        # load the logo as utf-8
-        with filename.open("r", encoding="utf-8") as fid:
-            data = fid.read()
-
-        # try to decode the logo
-        data = data.encode(sys.stderr.encoding)
-
-        # display the logo
-        print("", flush=True, file=sys.stderr)
-        sys.stderr.buffer.flush()
-        sys.stderr.buffer.write(data)
-        sys.stderr.buffer.flush()
-        print("", flush=True, file=sys.stderr)
+        print(pypeec.__banner__, flush=True, file=sys.stderr)
     except (UnicodeDecodeError, UnicodeEncodeError):
         pass
-
-
-def _run_extract(data_name, path_extract):
-    """
-    Extract data (config, examples, or documentation).
-    """
-
-    # init
-    print("data extraction: start", flush=True, file=sys.stderr)
-
-    # execute workflow
-    try:
-        print("data extraction: extract", flush=True, file=sys.stderr)
-        folder = importlib.resources.files("pypeec.data")
-        with importlib.resources.as_file(folder.joinpath(data_name)) as fid:
-            shutil.unpack_archive(fid, path_extract, format="xztar")
-    except FileNotFoundError:
-        print("data extraction: extraction failure", flush=True, file=sys.stderr)
-        print("data extraction: data is not packaged", flush=True, file=sys.stderr)
-    except OSError:
-        print("data extraction: extraction failure", flush=True, file=sys.stderr)
-        print("data extraction: extraction problem", flush=True, file=sys.stderr)
-
-    # teardown
-    print("data extraction: finished", flush=True, file=sys.stderr)
 
 
 def _get_parser():
@@ -80,20 +38,12 @@ def _get_parser():
         allow_abbrev=False,
     )
 
-    # get version
-    try:
-        filename = importlib.resources.files("pypeec.data").joinpath("version.txt")
-        with filename.open("r") as fid:
-            version = fid.read()
-    except FileNotFoundError:
-        version = "x.x.x"
-
     # display the version
     parser.add_argument(
         "-v",
         "--version",
         action="version",
-        version="PyPEEC %s" % version,
+        version="%s / %s" % (pypeec.__name__, pypeec.__version__),
     )
 
     # hide logo
@@ -393,9 +343,9 @@ def run_arguments(argv):
     except SystemExit as status:
         return status.code
 
-    # display logo
+    # display the banner text
     if not args.is_quiet:
-        _run_display_logo()
+        _get_banner()
 
     # run the code
     try:
@@ -431,9 +381,9 @@ def run_arguments(argv):
                 name=args.name,
             )
         elif args.command == "examples":
-            _run_extract("examples.tar.xz", args.path_extract)
+            pypeec.run_extract_examples(args.path_extract)
         elif args.command == "documentation":
-            _run_extract("documentation.tar.xz", args.path_extract)
+            pypeec.run_extract_documentation(args.path_extract)
         else:
             raise ValueError("invalid command")
     except Exception:

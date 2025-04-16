@@ -1,3 +1,4 @@
+import sys
 import importlib.resources
 
 # set basic metadata
@@ -10,8 +11,13 @@ try:
     filename = importlib.resources.files("pypeec.data").joinpath("version.txt")
     with filename.open("r") as fid:
         __version__ = fid.read()
-except FileNotFoundError:
+except Exception:
     __version__ = "x.x.x"
+
+# get the banner text
+filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
+with filename.open("r") as fid:
+    __banner__ = fid.read()
 
 # import the script method
 from pypeec.script import *

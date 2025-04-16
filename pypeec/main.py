@@ -12,12 +12,32 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import shutil
 import scisave
 import scilogger
+import importlib.resources
 import pypeec
 
 # create the logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
+
+
+def _run_extract_archive(data_name, path_extract):
+    """
+    Extract an archive from the package data (examples,or documentation).
+    """
+
+    # init
+    LOGGER.info("data extraction: start")
+
+    # execute workflow
+    LOGGER.info("data extraction: extract")
+    folder = importlib.resources.files("pypeec.data")
+    with importlib.resources.as_file(folder.joinpath(data_name)) as fid:
+        shutil.unpack_archive(fid, path_extract, format="xztar")
+
+    # teardown
+    LOGGER.info("data extraction: finished")
 
 
 def _create_data(layout, timestamp, data):
@@ -110,8 +130,9 @@ def _load_data(layout_out, data_out):
 
 def run_mesher_data(data_geometry):
     """
-    Main script for meshing the geometry and generating a 3D voxel structure.
+    Function for meshing the geometry and generating a 3D voxel structure.
         - Get the geometry data as an argument.
+        - Create a 3D voxel structure from the geometry.
         - Return the created voxel data.
 
     Parameters
@@ -146,8 +167,9 @@ def run_mesher_data(data_geometry):
 
 def run_mesher_file(file_geometry, file_voxel):
     """
-    Main script for meshing the geometry and generating a 3D voxel structure.
+    Function for meshing the geometry and generating a 3D voxel structure.
         - Load the geometry data from a file.
+        - Create a 3D voxel structure from the geometry.
         - Write the created voxel data in a file.
 
     Parameters
@@ -188,9 +210,10 @@ def run_mesher_file(file_geometry, file_voxel):
 
 def run_viewer_data(data_voxel, data_viewer, **kwargs):
     """
-    Main script for visualizing a 3D voxel structure.
+    Function for visualizing a 3D voxel structure.
         - Get the voxel data as an argument.
         - Get the viewer data as an argument.
+        - Visualize the 3D voxel structure.
 
     Parameters
     ----------
@@ -236,9 +259,10 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
 
 def run_viewer_file(file_voxel, file_viewer, **kwargs):
     """
-    Main script for visualizing a 3D voxel structure.
+    Function for visualizing a 3D voxel structure.
         - Load the voxel data from a file.
         - Load the viewer data from a file.
+        - Visualize the 3D voxel structure.
 
     Parameters
     ----------
@@ -284,10 +308,11 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
 
 def run_solver_data(data_voxel, data_problem, data_tolerance):
     """
-    Main script for solving a problem with the PEEC solver.
+    Function for solving a problem with the PEEC solver.
         - Get the voxel data as an argument.
         - Get the problem data as an argument.
         - Get the tolerance data as an argument.
+        - Solve the quasi-magnetostatic problem.
         - Return the created solution data.
 
     Parameters
@@ -326,10 +351,11 @@ def run_solver_data(data_voxel, data_problem, data_tolerance):
 
 def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     """
-    Main script for solving a problem with the PEEC solver.
+    Function for solving a problem with the PEEC solver.
         - Load the voxel data from a file.
         - Load the problem data from a file.
         - Load the tolerance data from a file.
+        - Solve the quasi-magnetostatic problem.
         - Write the created solution data in a file.
 
     Parameters
@@ -379,9 +405,10 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
 
 def run_plotter_data(data_solution, data_plotter, **kwargs):
     """
-    Main script for plotting the solution of a PEEC problem.
+    Function for plotting the solution of a PEEC problem.
         - Get the solution data as an argument.
         - Get the plotter data as an argument.
+        - Visualize of the problem solution
 
     Parameters
     ----------
@@ -430,9 +457,10 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
 
 def run_plotter_file(file_solution, file_plotter, **kwargs):
     """
-    Main script for plotting the solution of a PEEC problem.
+    Function for plotting the solution of a PEEC problem.
         - Load the solution data from a file.
         - Load the plotter data from a file.
+        - Visualize of the problem solution
 
     Parameters
     ----------
@@ -478,3 +506,43 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
 
     # run the tool
     run_plotter_data(data_solution, data_plotter, **kwargs)
+
+
+def run_extract_examples(path_extract):
+    """
+    Function for extract the PyPEEC examples.
+        - Get a filesytem path as an argument.
+        - Extract the data at the specified location.
+
+    Parameters
+    ----------
+    path_extract : path
+        - Path where the data should be extracted.
+    """
+
+    # execute workflow
+    try:
+        _run_extract_archive("examples.tar.xz", path_extract)
+    except Exception as ex:
+        LOGGER.log_exception(ex)
+        raise ex
+
+
+def run_extract_documentation(path_extract):
+    """
+    Function for extract the PyPEEC documentation.
+        - Get a filesytem path as an argument.
+        - Extract the data at the specified location.
+
+    Parameters
+    ----------
+    path_extract : path
+        - Path where the data should be extracted.
+    """
+
+    # execute workflow
+    try:
+        _run_extract_archive("documentation.tar.xz", path_extract)
+    except Exception as ex:
+        LOGGER.log_exception(ex)
+        raise ex
