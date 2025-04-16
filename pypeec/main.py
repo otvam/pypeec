@@ -14,9 +14,74 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import scisave
 import scilogger
+import pypeec
 
 # create the logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
+
+
+def _create_data(datatype, timestamp, data):
+    """
+    Create an output data structure.
+    """
+
+    # get timing information
+    (seconds, duration, date) = scilogger.get_duration(timestamp)
+
+    # construct the metadata
+    meta = {
+        "name": pypeec.__name__,
+        "version": pypeec.__version__,
+        "datatype": datatype,
+        "duration": duration,
+        "seconds": seconds,
+        "date": date,
+    }
+
+    # assemble the output data
+    data_out = {
+        "meta": meta,
+        "data": data,
+    }
+
+    return data_out
+
+
+def _load_data(datatype_out, data_out):
+    """
+    Load an output data structure.
+    """
+
+    # check fields
+    schema = {
+        "type": "object",
+        "required": [
+            "meta",
+            "data",
+        ],
+    }
+
+    # validate base schema
+    scisave.validate_schema(data_out, schema)
+
+    # extract the output data
+    meta = data_out["meta"]
+    data = data_out["data"]
+
+    # extract meta
+    name = meta["name"]
+    version = meta["version"]
+    datatype = meta["datatype"]
+
+    # check that the datatype is correct
+    if datatype != datatype_out:
+        raise ValueError("invalid data format: %s" % datatype)
+
+    # display a warning in case of a version mismatch
+    if (name != pypeec.__name__) or (version != pypeec.__version__):
+        LOGGER.warning("invalid data version: %s / %s" % (name, version))
+
+    return data
 
 
 def run_mesher_data(data_geometry):
@@ -71,6 +136,9 @@ def run_mesher_file(file_geometry, file_voxel):
         - This output file is created by this function (JSON or MessagePack or Pickle format).
     """
 
+    # get timestamp
+    timestamp = scilogger.get_timestamp()
+
     # load data
     try:
         LOGGER.info("load the input data : start")
@@ -86,6 +154,7 @@ def run_mesher_file(file_geometry, file_voxel):
     # save results
     try:
         LOGGER.info("save the results : start")
+        data_voxel = _create_data("data_voxel", timestamp, data_voxel)
         scisave.write_data(file_voxel, data_voxel)
         LOGGER.info("save the results : done")
     except Exception as ex:
@@ -177,8 +246,9 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
     # load data
     try:
         LOGGER.info("load the input data : start")
-        data_voxel = scisave.load_data(file_voxel)
         data_viewer = scisave.load_config(file_viewer)
+        data_voxel = scisave.load_data(file_voxel)
+        data_voxel = _load_data("data_voxel", data_voxel)
         LOGGER.info("load the input data : done")
     except Exception as ex:
         LOGGER.log_exception(ex)
@@ -254,12 +324,16 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
         - This output file is created by this function (JSON or MessagePack or Pickle format).
     """
 
+    # get timestamp
+    timestamp = scilogger.get_timestamp()
+
     # load data
     try:
         LOGGER.info("load the input data : start")
-        data_voxel = scisave.load_data(file_voxel)
         data_problem = scisave.load_config(file_problem)
         data_tolerance = scisave.load_config(file_tolerance)
+        data_voxel = scisave.load_data(file_voxel)
+        data_voxel = _load_data("data_voxel", data_voxel)
         LOGGER.info("load the input data : done")
     except Exception as ex:
         LOGGER.log_exception(ex)
@@ -271,6 +345,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
     # save results
     try:
         LOGGER.info("save the results : start")
+        data_solution = _create_data("data_solution", timestamp, data_solution)
         scisave.write_data(file_solution, data_solution)
         LOGGER.info("save the results : done")
     except Exception as ex:
@@ -369,8 +444,9 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     try:
         # load data
         LOGGER.info("load the input data : start")
-        data_solution = scisave.load_data(file_solution)
         data_plotter = scisave.load_config(file_plotter)
+        data_solution = scisave.load_data(file_solution)
+        data_solution = _load_data("data_solution", data_solution)
         LOGGER.info("load the input data : done")
     except Exception as ex:
         LOGGER.log_exception(ex)
