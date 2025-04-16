@@ -199,7 +199,7 @@ def _get_symmetry_expand(data, symmetry):
     return data_all
 
 
-def _get_extract_sweep(source, terminal_list):
+def _get_extract_sweep(source_values, terminal_list):
     """
     Get the terminal currents and voltages for a specific sweep.
     """
@@ -215,8 +215,8 @@ def _get_extract_sweep(source, terminal_list):
         sink = terminal["sink"]
 
         # extract the terminal quantities
-        V_vec[idx] = source[src]["V"] - source[sink]["V"]
-        I_vec[idx] = (source[src]["I"] - source[sink]["I"]) / 2
+        V_vec[idx] = source_values[src]["V"] - source_values[sink]["V"]
+        I_vec[idx] = (source_values[src]["I"] - source_values[sink]["I"]) / 2
 
     # assign the data
     V_vec = np.array(V_vec, dtype=np.complex128)
@@ -282,10 +282,12 @@ def get_extract(data_solution, sweep_list, terminal_list):
     """
 
     # extract the data
+    status = data_solution["status"]
     data_init = data_solution["data_init"]
     data_sweep = data_solution["data_sweep"]
 
     # check solution
+    assert status, "invalid solution"
     assert isinstance(data_init, dict), "invalid solution"
     assert isinstance(data_sweep, dict), "invalid solution"
 
@@ -300,13 +302,14 @@ def get_extract(data_solution, sweep_list, terminal_list):
 
     # extract data
     for idx, sweep in enumerate(sweep_list):
-        # extract the data
-        data_sweep_tmp = data_sweep[sweep]
-        freq = data_sweep_tmp["freq"]
-        source = data_sweep_tmp["source"]
+        # extract the frequency
+        freq = data_sweep[sweep]["freq"]
+
+        # extract the terminal properties
+        source_values = data_sweep[sweep]["source_values"]
 
         # compute
-        (V_vec, I_vec) = _get_extract_sweep(source, terminal_list)
+        (V_vec, I_vec) = _get_extract_sweep(source_values, terminal_list)
 
         # assign
         V_mat[:, idx] = V_vec

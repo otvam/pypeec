@@ -33,26 +33,22 @@ def _solve_peec(folder_example, folder_config):
     # define the input
     file_geometry = os.path.join(folder_example, "geometry.yaml")
     file_problem = os.path.join(folder_example, "problem.yaml")
-
-    # define the configuration
     file_tolerance = os.path.join(folder_config, "tolerance.yaml")
 
-    # define the output
-    file_voxel = os.path.join(folder_example, "voxel.pkl")
-    file_solution = os.path.join(folder_example, "solution.pkl")
+    # load the input
+    data_geometry = scisave.load_config(file_geometry)
+    data_problem = scisave.load_config(file_problem)
+    data_tolerance = scisave.load_config(file_tolerance)
 
-    # run the workflow and load the solution
-    pypeec.run_mesher_file(
-        file_geometry=file_geometry,
-        file_voxel=file_voxel,
+    # run the workflow (mesher and solver)
+    data_voxel = pypeec.run_mesher_data(
+        data_geometry=data_geometry,
     )
-    pypeec.run_solver_file(
-        file_voxel=file_voxel,
-        file_problem=file_problem,
-        file_tolerance=file_tolerance,
-        file_solution=file_solution,
+    data_solution = pypeec.run_solver_data(
+        data_voxel=data_voxel,
+        data_problem=data_problem,
+        data_tolerance=data_tolerance,
     )
-    data_solution = scisave.load_data(file_solution)
 
     return data_solution
 
