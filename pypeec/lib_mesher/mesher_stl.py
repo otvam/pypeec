@@ -33,7 +33,7 @@ def _get_load_stl(filename, scale, offset, check):
     # load the mesh
     try:
         mesh = pv.read(filename, force_ext=".stl")
-    except ValueError:
+    except Exception:
         raise RuntimeError("invalid stl: invalid file: %s" % filename) from None
 
     # check that the mesh is not empty

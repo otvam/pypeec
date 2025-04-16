@@ -39,7 +39,7 @@ def _get_load_image(filename_list, size):
         # load the image
         try:
             img = pmg.open(filename, formats=["png"])
-        except OSError:
+        except Exception:
             raise RuntimeError("invalid png: invalid file: %s" % filename) from None
 
         # cast to array
@@ -52,7 +52,7 @@ def _get_load_image(filename_list, size):
 
         # check image
         if not (img.shape == (nx, ny, 4)):
-            raise RuntimeError("invalid image:  invalid size: %s" % filename)
+            raise RuntimeError("invalid image: invalid size: %s" % filename)
 
         # store the loaded image
         img_list.append(img)
