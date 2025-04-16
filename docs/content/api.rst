@@ -22,32 +22,34 @@ List of Packages
 ``pypeec.lib_solver``    Modules used by the solver.
 =======================  =======================================================
 
-Mesher Function
----------------
+Mesher Functions
+----------------
 
 .. autofunction:: run_mesher_data
 .. autofunction:: run_mesher_file
 
-Viewer Function
----------------
+Viewer Functions
+----------------
 
 .. autofunction:: run_viewer_data
 .. autofunction:: run_viewer_file
 
-Solver Function
----------------
+Solver Functions
+----------------
 
 .. autofunction:: run_solver_data
 .. autofunction:: run_solver_file
 
-Plotter Function
-----------------
+Plotter Functions
+-----------------
 
 .. autofunction:: run_plotter_data
 .. autofunction:: run_plotter_file
 
-Command Line
-------------
+Other Functions
+---------------
 
+.. autofunction:: run_extract_examples
+.. autofunction:: run_extract_documentation
 .. autofunction:: run_arguments
 .. autofunction:: run_script
