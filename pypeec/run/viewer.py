@@ -33,7 +33,7 @@ from pypeec.lib_check import check_data_options
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def _get_grid_voxel(data_geom):
+def _get_grid_voxel(data_voxel):
     """
     Convert the complete voxel geometry into a PyVista uniform grid.
     Convert the non-empty voxel geometry into a PyVista unstructured grid.
@@ -42,14 +42,14 @@ def _get_grid_voxel(data_geom):
     """
 
     # extract the data
-    n = data_geom["n"]
-    d = data_geom["d"]
-    c = data_geom["c"]
-    domain_def = data_geom["domain_def"]
-    component_def = data_geom["component_def"]
-    connect_def = data_geom["connect_def"]
-    pts_cloud = data_geom["pts_cloud"]
-    reference = data_geom["reference"]
+    n = data_voxel["n"]
+    d = data_voxel["d"]
+    c = data_voxel["c"]
+    domain_def = data_voxel["domain_def"]
+    component_def = data_voxel["component_def"]
+    connect_def = data_voxel["connect_def"]
+    pts_cloud = data_voxel["pts_cloud"]
+    reference = data_voxel["reference"]
 
     # get voxel indices
     idx = parse_viewer.get_voxel(domain_def)
@@ -108,12 +108,6 @@ def run(
     Handle invalid data with exceptions.
     """
 
-    # check the voxel data
-    LOGGER.info("check the voxel data")
-    (status, data_geom) = check_data_options.check_data_voxel(data_voxel)
-    if not status:
-        LOGGER.warning("invalid status for the voxel data")
-
     # check the input data
     LOGGER.info("check the input data")
     check_data_format.check_data_viewer(data_viewer)
@@ -130,7 +124,7 @@ def run(
 
     # handle the data
     LOGGER.info("parse data")
-    (grid, voxel, point, reference, connect_def) = _get_grid_voxel(data_geom)
+    (grid, voxel, point, reference, connect_def) = _get_grid_voxel(data_voxel)
 
     # make the plots
     LOGGER.info("generate plots")

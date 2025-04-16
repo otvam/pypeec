@@ -18,7 +18,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import copy
 import scilogger
-import pypeec
 from pypeec.lib_mesher import mesher_voxel
 from pypeec.lib_mesher import mesher_shape
 from pypeec.lib_mesher import mesher_png
@@ -197,7 +196,7 @@ def _run_finalize(n, d, c, domain_def, reference, data_geometry):
         )
 
     # assemble the data
-    data_geom = {
+    data = {
         "d": d,  # tuple with the size of a single voxel
         "n": n,  # tuple with the number of voxels composing structure
         "s": s,  # tuple with the total size of the structure
@@ -210,38 +209,7 @@ def _run_finalize(n, d, c, domain_def, reference, data_geometry):
         "reference": reference,  # dict with the faces and points of the original geometry
     }
 
-    return data_geom
-
-
-def _get_data(data_geom, timestamp):
-    """
-    Assemble the returned data.
-    """
-
-    # get timing information
-    (seconds, duration, date) = scilogger.get_duration(timestamp)
-
-    # construct the metadata
-    meta = {
-        "pkg_name": pypeec.__name__,
-        "pkg_version": pypeec.__version__,
-        "date": date,
-        "duration": duration,
-        "seconds": seconds,
-    }
-
-    # get status (mesher always terminates successfully)
-    status = True
-
-    # assemble the output data
-    data_voxel = {
-        "format": "pypeec_mesher",
-        "meta": meta,
-        "status": status,
-        "data_geom": data_geom,
-    }
-
-    return data_voxel
+    return data
 
 
 def run(data_geometry):
@@ -249,9 +217,6 @@ def run(data_geometry):
     Main script for meshing the geometry and generating a 3D voxel structure.
     Handle invalid data with exceptions.
     """
-
-    # get timestamp
-    timestamp = scilogger.get_timestamp()
 
     # make copies of input data
     data_geometry = copy.deepcopy(data_geometry)
@@ -264,9 +229,6 @@ def run(data_geometry):
     (n, d, c, domain_def, reference) = _run_mesher(data_geometry)
 
     # finalize the mesh
-    data_geom = _run_finalize(n, d, c, domain_def, reference, data_geometry)
-
-    # create output data
-    data_voxel = _get_data(data_geom, timestamp)
+    data_voxel = _run_finalize(n, d, c, domain_def, reference, data_geometry)
 
     return data_voxel

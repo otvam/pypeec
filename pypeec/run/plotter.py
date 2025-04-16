@@ -139,6 +139,23 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
         _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, solver_convergence, gui_obj)
 
 
+def _run_extract_solution(data_solution):
+    """
+    Extract the solution data and check the status.
+    """
+
+    # extract the data
+    status = data_solution["status"]
+    data_init = data_solution["data_init"]
+    data_sweep = data_solution["data_sweep"]
+
+    # show warning
+    if not status:
+        LOGGER.warning("problem detected for the solver")
+
+    return data_init, data_sweep
+
+
 def run(
     data_solution,
     data_plotter,
@@ -155,9 +172,7 @@ def run(
 
     # check the solution data
     LOGGER.info("check the solution data")
-    (status, data_init, data_sweep) = check_data_options.check_data_solution(data_solution)
-    if not status:
-        LOGGER.warning("invalid status for the solution data")
+    (data_init, data_sweep) = _run_extract_solution(data_solution)
 
     # check the input data
     LOGGER.info("check the input data")

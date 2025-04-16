@@ -13,7 +13,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import copy
 import scilogger
-import pypeec
 from pypeec.lib_solver import sweep_joblib
 from pypeec.lib_solver import voxel_geometry
 from pypeec.lib_solver import system_tensor
@@ -25,7 +24,6 @@ from pypeec.lib_solver import equation_solver
 from pypeec.lib_solver import extract_solution
 from pypeec.lib_solver import extract_convergence
 from pypeec.lib_check import check_data_format
-from pypeec.lib_check import check_data_options
 
 
 # get a logger
@@ -587,42 +585,26 @@ def _run_parallel_sweep(tag, sol_init, data_solver, data_internal, data_param):
     return data_sweep, sol
 
 
-def _get_data(data_init, data_sweep, timestamp):
+def _run_assemble_solution(data_init, data_sweep):
     """
-    Assemble the returned data.
+    Get the global status and combine the solution data.
     """
 
-    # get timing information
-    (seconds, duration, date) = scilogger.get_duration(timestamp)
-
-    # construct the metadata
-    meta = {
-        "pkg_name": pypeec.__name__,
-        "pkg_version": pypeec.__version__,
-        "date": date,
-        "duration": duration,
-        "seconds": seconds,
-    }
-
-    # get status (combine the status of the all the sweeps)
+    # init the status
     status = True
+
+    # combine the status of the all the sweeps
     for data_sweep_tmp in data_sweep.values():
         status = status and data_sweep_tmp["solution_ok"]
         status = status and data_sweep_tmp["solver_ok"]
         status = status and data_sweep_tmp["condition_ok"]
 
-    # show warning if the status is negative
+    # combine the data
+    data_solution = {"status": status, "data_init": data_init, "data_sweep": data_sweep}
+
+    # show warning
     if not status:
         LOGGER.warning("problem detected for the solver")
-
-    # assemble the output data
-    data_solution = {
-        "format": "pypeec_solver",
-        "meta": meta,
-        "status": status,
-        "data_init": data_init,
-        "data_sweep": data_sweep,
-    }
 
     return data_solution
 
@@ -633,19 +615,10 @@ def run(data_voxel, data_problem, data_tolerance):
     Handle invalid data with exceptions.
     """
 
-    # get timestamp
-    timestamp = scilogger.get_timestamp()
-
     # make copies of inputs
     data_voxel = copy.deepcopy(data_voxel)
     data_problem = copy.deepcopy(data_problem)
     data_tolerance = copy.deepcopy(data_tolerance)
-
-    # check the voxel data
-    LOGGER.info("check the voxel data")
-    (status, data_geom) = check_data_options.check_data_voxel(data_voxel)
-    if not status:
-        LOGGER.warning("invalid status for the voxel data")
 
     # check the input data
     LOGGER.info("check the input data")
@@ -654,7 +627,7 @@ def run(data_voxel, data_problem, data_tolerance):
 
     # combine the problem and voxel data
     LOGGER.info("combine the input data")
-    data_solver = {**data_tolerance, **data_geom, **data_problem}
+    data_solver = {**data_tolerance, **data_voxel, **data_problem}
 
     # initialize the solver (independent of the solver sweeps)
     with LOGGER.BlockTimer("init"):
@@ -667,7 +640,7 @@ def run(data_voxel, data_problem, data_tolerance):
     # solve the different sweeps
     data_sweep = sweep_joblib.get_run_sweep(parallel_sweep, sweep_solver, fct_compute)
 
-    # create output data
-    data_solution = _get_data(data_init, data_sweep, timestamp)
+    # get the gloval status
+    data_solution = _run_assemble_solution(data_init, data_sweep)
 
     return data_solution
