@@ -22,7 +22,7 @@ import pypeec
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def _run_extract_archive(data_name, path):
+def _run_extract_archive(filename, path):
     """
     Extract an archive from the package data (examples,or documentation).
     """
@@ -32,9 +32,14 @@ def _run_extract_archive(data_name, path):
 
     # execute workflow
     LOGGER.info("data extraction: extract")
-    folder = importlib.resources.files("pypeec.data")
-    with importlib.resources.as_file(folder.joinpath(data_name)) as fid:
-        shutil.unpack_archive(fid, path, format="xztar")
+    try:
+        folder = importlib.resources.files("pypeec.data")
+        with importlib.resources.as_file(folder.joinpath(filename)) as fid:
+            shutil.unpack_archive(fid, path, format="xztar")
+    except FileNotFoundError:
+        raise RuntimeError("archive not found: %s" % filename) from None
+    except OSError:
+        raise RuntimeError("extraction failed: %s" % path) from None
 
     # teardown
     LOGGER.info("data extraction: finished")
