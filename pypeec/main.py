@@ -80,9 +80,9 @@ def _load_data(layout_out, data_out):
             "data",
         ],
         "properties": {
-            "meta" : {"type": "object"},
+            "meta": {"type": "object"},
             "data": {"type": "object"},
-        }
+        },
     }
     scisave.validate_schema(data_out, schema)
 
@@ -102,13 +102,13 @@ def _load_data(layout_out, data_out):
             "date",
         ],
         "properties": {
-            "meta" : {"type": "string", "minLength": 1},
-            "version" : {"type": "string", "minLength": 1},
+            "meta": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1},
             "layout": {"type": "string", "minLength": 1},
             "date": {"type": "string", "minLength": 1},
             "duration": {"type": "string", "minLength": 1},
             "seconds": {"type": "number", "minimum": 0},
-        }
+        },
     }
     scisave.validate_schema(meta, schema)
 

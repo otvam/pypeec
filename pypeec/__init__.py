@@ -1,10 +1,15 @@
-import sys
 import importlib.resources
 
 # set basic metadata
 __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
+
+# import the script method
+from pypeec.script import *
+
+# import the main method
+from pypeec.main import *
 
 # get the version number
 try:
@@ -18,9 +23,3 @@ except FileNotFoundError:
 filename = importlib.resources.files("pypeec.data").joinpath("banner.txt")
 with filename.open("r", encoding="utf-8") as fid:
     __banner__ = fid.read()
-
-# import the script method
-from pypeec.script import *
-
-# import the main method
-from pypeec.main import *

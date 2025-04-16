@@ -14,7 +14,7 @@ import argparse
 import pypeec
 
 
-def  _get_banner():
+def _get_banner():
     """
     Display the banner on the standard error stream.
     """
