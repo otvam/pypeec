@@ -50,7 +50,7 @@ def get_condition_matrix(mat, norm_options):
 
     # display
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
-    LOGGER.debug("matrix elements: %d / %d" % (nnz, nx * ny))
+    LOGGER.debug("matrix elements: %d" % nnz)
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):

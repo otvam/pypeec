@@ -151,7 +151,7 @@ def _get_factorize_sub(mat, library, pyamg_options, pardiso_options):
 
     # display
     LOGGER.debug("matrix size: (%d, %d)" % (nx, ny))
-    LOGGER.debug("matrix elements: %d / %d" % (nnz, nx * ny))
+    LOGGER.debug("matrix elements: %d" % nnz)
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):

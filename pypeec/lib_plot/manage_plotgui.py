@@ -79,7 +79,6 @@ class PlotGui:
         # create a single instance of the Qt App
         if (self.plot_mode == "qt") and (APPQT is None):
             # lazy import of the library
-            import qtpy.QtGui
             import qtpy.QtWidgets
 
             # create and assign a single instance
@@ -87,11 +86,6 @@ class PlotGui:
             APPQT.setApplicationDisplayName("pypeec")
             APPQT.setApplicationName("pypeec")
             APPQT.setOrganizationName("pypeec")
-
-            # set the icon
-            filename = importlib.resources.files("pypeec.data").joinpath("icon.png")
-            res_icon = qtpy.QtGui.QIcon(str(filename))
-            APPQT.setWindowIcon(res_icon)
 
         # set the app ID in order to get a consistent icon on MS Windows
         if (self.plot_mode == "qt") and (os.name == "nt"):
@@ -108,6 +102,28 @@ class PlotGui:
             matplotlib.use("inline")
 
     @staticmethod
+    def _set_window_qt(window, title, window_size):
+        """
+        Set the title, size, and icon of a Qt window.
+        """
+
+        # lazy import of the library
+        import qtpy.QtGui
+
+        # get the icon
+        filename = importlib.resources.files("pypeec.data").joinpath("icon.png")
+        res_icon = qtpy.QtGui.QIcon(str(filename))
+
+        # set the Qt options
+        window.setWindowTitle(title)
+        window.setWindowIcon(res_icon)
+
+        # set window size
+        if window_size is not None:
+            (sx, sy) = window_size
+            window.resize(sx, sy)
+
+    @staticmethod
     def _get_plotter_pyvista_qt(title, show_menu, window_size):
         """
         Create a PyVista plotter for the Qt framework.
@@ -116,21 +132,15 @@ class PlotGui:
         # lazy import of the library
         import pyvistaqt
 
-        # cast window size
-        if window_size is not None:
-            window_size = tuple(window_size)
-
         # get Qt plotter
         pl = pyvistaqt.BackgroundPlotter(
             show=False,
             toolbar=show_menu,
             menu_bar=show_menu,
-            title=title,
-            window_size=window_size,
         )
-        # set icon
-        filename = importlib.resources.files("pypeec.data").joinpath("icon.png")
-        pl.set_icon(str(filename))
+
+        # set the Qt options
+        PlotGui._set_window_qt(pl.app_window, title, window_size)
 
         return pl
 
@@ -170,32 +180,21 @@ class PlotGui:
         Create a Matplotlib figure for the Qt framework.
         """
 
-        # lazy import of the library
-        import qtpy.QtGui
-
-        # get the icon
-        filename = importlib.resources.files("pypeec.data").joinpath("icon.png")
-        res_icon = qtpy.QtGui.QIcon(str(filename))
-
         # get the figure
         with matplotlib.pyplot.ioff():
             fig = matplotlib.pyplot.figure(tight_layout=True)
 
+        # set the manager
+        manager = matplotlib.pyplot.get_current_fig_manager()
+
         # set the Qt options
-        man = matplotlib.pyplot.get_current_fig_manager()
-        man.window.setWindowTitle(title)
-        man.window.setWindowIcon(res_icon)
+        PlotGui._set_window_qt(manager.window, title, window_size)
 
-        # set the menu
+        # set the menu options
         if show_menu:
-            man.toolbar.show()
+            manager.toolbar.show()
         else:
-            man.toolbar.hide()
-
-        # set window size
-        if window_size is not None:
-            (sx, sy) = window_size
-            man.window.resize(sx, sy)
+            manager.toolbar.hide()
 
         return fig
 
@@ -243,16 +242,8 @@ class PlotGui:
         """
         Show all the figures (Qt framework).
         """
-
-        # signal handler for closing all the windows
-        def signal_handler(*_):
-            for _, pl in self.pl_list:
-                pl.app_window.close()
-            matplotlib.pyplot.close("all")
-            sys.exit(130)
-
         # signal for quitting the event loop with interrupt signal
-        signal.signal(signal.SIGINT, signal_handler)
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
 
         # show the different PyVista plots
         for _, pl in self.pl_list:
@@ -362,11 +353,11 @@ class PlotGui:
 
         # create the figure
         if self.plot_mode in ["nb_int", "nb_std"]:
-            pl = self._get_plotter_pyvista_nb(notebook_size)
+            pl = PlotGui._get_plotter_pyvista_nb(notebook_size)
         elif self.plot_mode in ["png", "vtk", "debug"]:
-            pl = self._get_plotter_pyvista_base(image_size)
+            pl = PlotGui._get_plotter_pyvista_base(image_size)
         elif self.plot_mode == "qt":
-            pl = self._get_plotter_pyvista_qt(tag, show_menu, window_size)
+            pl = PlotGui._get_plotter_pyvista_qt(tag, show_menu, window_size)
         else:
             raise ValueError("invalid plot mode")
 
@@ -388,11 +379,11 @@ class PlotGui:
 
         # create the figure
         if self.plot_mode in ["nb_int", "nb_std"]:
-            fig = self._get_figure_matplotlib_nb(notebook_size)
+            fig = PlotGui._get_figure_matplotlib_nb(notebook_size)
         elif self.plot_mode in ["png", "vtk", "debug"]:
-            fig = self._get_figure_matplotlib_base(image_size)
+            fig = PlotGui._get_figure_matplotlib_base(image_size)
         elif self.plot_mode == "qt":
-            fig = self._get_figure_matplotlib_qt(tag, show_menu, window_size)
+            fig = PlotGui._get_figure_matplotlib_qt(tag, show_menu, window_size)
         else:
             raise ValueError("invalid plot mode")
 
