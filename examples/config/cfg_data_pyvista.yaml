@@ -14,7 +14,7 @@
 # theme of the figure
 "plot_theme":
     "text_color": "black"              # color of the text elements
-    "title_font": 10                   # font size of the text displayed on the window corner
+    "title_font": 10                   # font size of the title
     "colorbar_font": 15                # font size of the color bar
     "colorbar_size": 5                 # number of division for the colorbar
     "colorbar_plot": true              # show (or not) the colorbar

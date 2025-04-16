@@ -92,6 +92,7 @@ def _get_plot_title(pl, title, plot_theme):
     # add titles
     pl.add_text(
         title,
+        position="upper_edge",
         font_size=plot_theme["title_font"],
         color=plot_theme["text_color"],
     )
@@ -122,7 +123,7 @@ def _get_filter_mesh(pl, obj, arg, plot_filter):
         pl.add_mesh(
             obj,
             **arg,
-         )
+        )
 
 
 def _get_scale_norm(obj, scale):
