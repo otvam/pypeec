@@ -105,28 +105,18 @@ def _get_clip_mesh(pl, obj, arg, plot_clip):
     # extract
     clip_plot = plot_clip["clip_plot"]
     clip_invert = plot_clip["clip_invert"]
-    clip_axis = plot_clip["clip_axis"]
+    clip_normal = plot_clip["clip_normal"]
     clip_value = plot_clip["clip_value"]
 
-    # add the plot
+    # clip the plot
     if clip_plot:
-        # add the clipping arguments
-        arg["invert"] = clip_invert
-        arg["normal"] = clip_axis
-        arg["value"] = clip_value
-        arg["normal_rotation"] = False
+        obj = obj.clip(normal=clip_normal, value=clip_value, invert=clip_invert)
 
-        # add the clipped plot
-        pl.add_mesh_clip_plane(
-            obj,
-            **arg,
-        )
-    else:
-        # add the full plot
-        pl.add_mesh(
-            obj,
-            **arg,
-        )
+    # add the full plot
+    pl.add_mesh(
+        obj,
+        **arg,
+     )
 
 
 def _get_scale_norm(obj, scale):

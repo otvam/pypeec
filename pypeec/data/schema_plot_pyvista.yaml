@@ -9,14 +9,14 @@
         "required":
             - "clip_plot"
             - "clip_invert"
-            - "clip_axis"
+            - "clip_normal"
             - "clip_value"
         "properties":
             "plot_clip":
                 "type": "boolean"
             "clip_invert":
                 "type": "boolean"
-            "clip_axis":
+            "clip_normal":
                 "type": "string"
                 "enum":
                     - "x"

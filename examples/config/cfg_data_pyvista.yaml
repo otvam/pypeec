@@ -5,9 +5,9 @@
 
 # options for defining cut planes
 "plot_clip":
-    "clip_plot": false                 # add (or not) a widget for interactive clipping
+    "clip_plot": false                 # add (or not) a clip plane for rendering
     "clip_invert": false               # invert (or not) the clipping direction
-    "clip_axis": "z"                   # normal of the clipping direction
+    "clip_normal": "z"                 # normal of the clipping direction
     "clip_value": 0.0                  # initial position for the clipping
 
 # theme of the figure
