@@ -14,10 +14,7 @@ def check_tag_list(data_check, tag_list):
     Check the list of plots to be shown.
     """
 
-    # allowed tags
-    tag_allowed = list(data_check.keys())
-
-    # check fields
+    # check tag_list with a schema
     schema = {
         "type": ["null", "array"],
         "items": {
@@ -25,11 +22,12 @@ def check_tag_list(data_check, tag_list):
             "minLength": 1,
         },
     }
-
-    # validate base schema
     scisave.validate_schema(tag_list, schema)
 
-    # check tag
+    # get a list with the allowed tags
+    tag_allowed = list(data_check.keys())
+
+    # check that the provided tags a subset of the allowed tags
     if tag_list is not None:
         for tag in tag_list:
             if tag not in tag_allowed:
@@ -41,14 +39,14 @@ def check_plot_options(plot_mode, folder, name):
     Check the plot mode (display or not the plots).
     """
 
-    # check plot_mode
+    # check plot_mode with a schema
     schema = {
         "type": ["null", "string"],
         "enum": [None, "qt", "nb_int", "nb_std", "png", "vtk", "debug"],
     }
     scisave.validate_schema(plot_mode, schema)
 
-    # check folder and name
+    # check folder and name with a schema
     schema = {
         "type": ["null", "string"],
         "minLength": 1,

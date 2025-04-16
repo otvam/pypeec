@@ -20,7 +20,7 @@ import pypeec
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def _create_data(datatype, timestamp, data):
+def _create_data(layout, timestamp, data):
     """
     Create an output data structure.
     """
@@ -32,10 +32,10 @@ def _create_data(datatype, timestamp, data):
     meta = {
         "name": pypeec.__name__,
         "version": pypeec.__version__,
-        "datatype": datatype,
+        "layout": layout,
+        "date": date,
         "duration": duration,
         "seconds": seconds,
-        "date": date,
     }
 
     # assemble the output data
@@ -47,35 +47,59 @@ def _create_data(datatype, timestamp, data):
     return data_out
 
 
-def _load_data(datatype_out, data_out):
+def _load_data(layout_out, data_out):
     """
     Load an output data structure.
     """
 
-    # check fields
+    # check the output data
     schema = {
         "type": "object",
         "required": [
             "meta",
             "data",
         ],
+        "properties": {
+            "meta" : {"type": "object"},
+            "data": {"type": "object"},
+        }
     }
-
-    # validate base schema
     scisave.validate_schema(data_out, schema)
 
     # extract the output data
     meta = data_out["meta"]
     data = data_out["data"]
 
+    # check the metata
+    schema = {
+        "type": "object",
+        "required": [
+            "name",
+            "version",
+            "layout",
+            "seconds",
+            "duration",
+            "date",
+        ],
+        "properties": {
+            "meta" : {"type": "string", "minLength": 1},
+            "version" : {"type": "string", "minLength": 1},
+            "layout": {"type": "string", "minLength": 1},
+            "date": {"type": "string", "minLength": 1},
+            "duration": {"type": "string", "minLength": 1},
+            "seconds": {"type": "number", "minimum": 0},
+        }
+    }
+    scisave.validate_schema(meta, schema)
+
     # extract meta
     name = meta["name"]
     version = meta["version"]
-    datatype = meta["datatype"]
+    layout = meta["layout"]
 
-    # check that the datatype is correct
-    if datatype != datatype_out:
-        raise ValueError("invalid data format: %s" % datatype)
+    # check that the layout is correct
+    if layout != layout_out:
+        raise ValueError("invalid data format: %s" % layout)
 
     # display a warning in case of a version mismatch
     if (name != pypeec.__name__) or (version != pypeec.__version__):
