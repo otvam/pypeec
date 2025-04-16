@@ -118,10 +118,11 @@ def _get_plot_matrix(fig, tag_list, mat, data_plot):
     color_false = data_plot["color_false"]
 
     # position vector and color matrix
+    inv = np.invert(mat)
     vec = np.arange(len(tag_list))
     mesh = np.full((len(tag_list), len(tag_list), 3), np.nan, dtype=np.float64)
-    mesh[mat == True, :] = col.to_rgb(color_true)
-    mesh[mat == False, :] = col.to_rgb(color_false)
+    mesh[mat, :] = col.to_rgb(color_true)
+    mesh[inv, :] = col.to_rgb(color_false)
 
     # activate the figure
     plt.figure(fig)

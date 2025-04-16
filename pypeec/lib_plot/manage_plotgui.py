@@ -24,7 +24,6 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import os
-import sys
 import ctypes
 import signal
 import os.path

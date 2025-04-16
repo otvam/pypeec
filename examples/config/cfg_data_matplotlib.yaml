@@ -3,6 +3,6 @@
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
 
-"style": "default"         # string with a Matplotlib style
-"legend": "best"           # location of the legend box
-"font": 12                 # reference font size of the figure
+"style": "default"                     # string with a Matplotlib style
+"legend": "best"                       # location of the legend box
+"font": 12                             # reference font size of the figure

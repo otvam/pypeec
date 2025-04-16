@@ -5,11 +5,11 @@
 
 # options for defining cut planes
 "plot_filter":
-    "slice": false                # add (or not) a slice plane for rendering
-    "clip": false                 # add (or not) a clip plane for rendering
-    "invert": false               # invert (or not) the clipping direction
-    "normal": "z"                 # normal of the clipping/slicing plane
-    "value": 0.0                  # initial position for the clipping/slicing
+    "slice": false                     # add (or not) a slice plane for rendering
+    "clip": false                      # add (or not) a clip plane for rendering
+    "invert": false                    # invert (or not) the clipping direction
+    "normal": "z"                      # normal of the clipping/slicing plane
+    "value": 0.0                       # initial position for the clipping/slicing
 
 # theme of the figure
 "plot_theme":
@@ -20,7 +20,7 @@
     "colorbar_plot": true              # show (or not) the colorbar
     "background_color": "gray"         # background color of the plot
     "axis_add": true                   # add (or not) the axis marker
-    "axis_size": 2.0                  # size of the axis marker
+    "axis_size": 2.0                   # size of the axis marker
 
 # options controlling the view rendering
 "plot_view":
