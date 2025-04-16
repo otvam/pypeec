@@ -5,10 +5,10 @@
 
 # options for defining cut planes
 "plot_filter":
-    "slice": true                 # add (or not) a slice plane for rendering
+    "slice": false                # add (or not) a slice plane for rendering
     "clip": false                 # add (or not) a clip plane for rendering
-    "invert": false               # invert (or not) the clipping/slicing direction
-    "normal": "z"                 # normal of the clipping/slicing direction
+    "invert": false               # invert (or not) the clipping direction
+    "normal": "z"                 # normal of the clipping/slicing plane
     "value": 0.0                  # initial position for the clipping/slicing
 
 # theme of the figure
