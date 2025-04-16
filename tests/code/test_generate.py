@@ -8,14 +8,14 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 
-def _get_mesher(data_geom):
+def _get_mesher(data_voxel):
     """
     Get the results produced by the mesher.
     """
 
     # extract the data
-    n_total = data_geom["voxel_status"]["n_total"]
-    n_used = data_geom["voxel_status"]["n_used"]
+    n_total = data_voxel["voxel_status"]["n_total"]
+    n_used = data_voxel["voxel_status"]["n_used"]
 
     # assemble results
     mesher = {
@@ -54,11 +54,29 @@ def generate_results(data_voxel, data_solution):
     """
 
     # extract the data
-    data_geom = data_voxel["data_geom"]
+    meta_voxel = data_voxel["meta"]
+    data_voxel = data_voxel["data"]
+    assert isinstance(meta_voxel, dict), "invalid solution"
+    assert isinstance(data_voxel, dict), "invalid solution"
+
+    # extract the data
+    meta_solution = data_solution["meta"]
+    data_solution = data_solution["data"]
+    assert isinstance(meta_solution, dict), "invalid solution"
+    assert isinstance(data_solution, dict), "invalid solution"
+
+    # extract the data
+    status = data_solution["status"]
+    data_init = data_solution["data_init"]
     data_sweep = data_solution["data_sweep"]
 
+    # check solution
+    assert status, "invalid solution"
+    assert isinstance(data_init, dict), "invalid solution"
+    assert isinstance(data_sweep, dict), "invalid solution"
+
     # check the mesher
-    mesher = _get_mesher(data_geom)
+    mesher = _get_mesher(data_voxel)
 
     # check the solver
     solver = {}
