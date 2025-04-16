@@ -592,28 +592,33 @@ def _get_data(data_init, data_sweep, timestamp):
     Assemble the returned data.
     """
 
-    # end message
+    # get timing information
     (seconds, duration, date) = scilogger.get_duration(timestamp)
 
-    # get status
+    # construct the metadata
+    meta = {
+        "pkg_name": pypeec.__name__,
+        "pkg_version": pypeec.__version__,
+        "date": date,
+        "duration": duration,
+        "seconds": seconds,
+    }
+
+    # get status (combine the status of the all the sweeps)
     status = True
     for data_sweep_tmp in data_sweep.values():
         status = status and data_sweep_tmp["solution_ok"]
         status = status and data_sweep_tmp["solver_ok"]
         status = status and data_sweep_tmp["condition_ok"]
 
-    # get warning
+    # show warning if the status is negative
     if not status:
         LOGGER.warning("problem detected for the solver")
 
-    # extract the solution
+    # assemble the output data
     data_solution = {
-        "pkg_name": pypeec.__name__,
-        "pkg_version": pypeec.__version__,
-        "format": "solver",
-        "date": date,
-        "duration": duration,
-        "seconds": seconds,
+        "format": "pypeec_solver",
+        "meta": meta,
         "status": status,
         "data_init": data_init,
         "data_sweep": data_sweep,

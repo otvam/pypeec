@@ -218,20 +218,25 @@ def _get_data(data_geom, timestamp):
     Assemble the returned data.
     """
 
-    # end message
+    # get timing information
     (seconds, duration, date) = scilogger.get_duration(timestamp)
 
-    # get status
-    status = True
-
-    # extract the solution
-    data_voxel = {
+    # construct the metadata
+    meta = {
         "pkg_name": pypeec.__name__,
         "pkg_version": pypeec.__version__,
-        "format": "mesher",
         "date": date,
         "duration": duration,
         "seconds": seconds,
+    }
+
+    # get status (mesher always terminates successfully)
+    status = True
+
+    # assemble the output data
+    data_voxel = {
+        "format": "pypeec_mesher",
+        "meta": meta,
         "status": status,
         "data_geom": data_geom,
     }
