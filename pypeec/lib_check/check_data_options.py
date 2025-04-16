@@ -25,6 +25,7 @@ def check_tag_list(data_check, tag_list):
         "type": ["null", "array"],
         "items": {
             "type": "string",
+            "minLength": 1,
         },
     }
 
