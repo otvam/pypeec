@@ -34,7 +34,7 @@ def check_tag_list(data_check, tag_list):
                 raise ValueError("invalid plot tag: %s" % tag)
 
 
-def check_plot_options(plot_mode, folder, name):
+def check_plot_options(plot_mode, path, name):
     """
     Check the plot mode (display or not the plots).
     """
@@ -46,10 +46,10 @@ def check_plot_options(plot_mode, folder, name):
     }
     scisave.validate_schema(plot_mode, schema)
 
-    # check folder and name with a schema
+    # check path and name with a schema
     schema = {
         "type": ["null", "string"],
         "minLength": 1,
     }
-    scisave.validate_schema(folder, schema)
+    scisave.validate_schema(path, schema)
     scisave.validate_schema(name, schema)

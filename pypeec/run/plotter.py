@@ -162,7 +162,7 @@ def run(
     tag_sweep=None,
     tag_plot=None,
     plot_mode=None,
-    folder=None,
+    path=None,
     name=None,
 ):
     """
@@ -177,7 +177,7 @@ def run(
     # check the input data
     LOGGER.info("check the input data")
     check_data_format.check_data_plotter(data_plotter)
-    check_data_options.check_plot_options(plot_mode, folder, name)
+    check_data_options.check_plot_options(plot_mode, path, name)
     check_data_options.check_tag_list(data_sweep, tag_sweep)
     check_data_options.check_tag_list(data_plotter, tag_plot)
 
@@ -189,7 +189,7 @@ def run(
 
     # create the Qt app (should be at the beginning)
     LOGGER.info("init the plot manager")
-    gui_obj = manage_plotgui.PlotGui(plot_mode, folder, name)
+    gui_obj = manage_plotgui.PlotGui(plot_mode, path, name)
 
     # plot the sweeps
     for tag_sweep, data_sweep_tmp in data_sweep.items():

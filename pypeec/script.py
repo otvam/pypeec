@@ -152,11 +152,11 @@ def _get_arg_viewer(subparsers):
     )
     parser.add_argument(
         "-f",
-        "--folder",
-        help="folder for saving the PNG and VTK files (default: cwd)",
+        "--path",
+        help="path for saving the PNG and VTK files (default: cwd)",
         default=None,
-        metavar="folder",
-        dest="folder",
+        metavar="path",
+        dest="path",
     )
 
 
@@ -272,11 +272,11 @@ def _get_arg_plotter(subparsers):
     )
     parser.add_argument(
         "-f",
-        "--folder",
-        help="folder for saving the PNG and VTK files (default: cwd)",
+        "--path",
+        help="path for saving the PNG and VTK files (default: cwd)",
         default=None,
-        metavar="folder",
-        dest="folder",
+        metavar="path",
+        dest="path",
     )
 
 
@@ -294,7 +294,7 @@ def _get_arg_extract(subparsers):
         help="path where the examples should be extracted",
         type=str,
         metavar="path",
-        dest="path_extract",
+        dest="path",
     )
 
     # add the documentation data parser
@@ -306,7 +306,7 @@ def _get_arg_extract(subparsers):
         help="path where the documentation should be extracted",
         type=str,
         metavar="path",
-        dest="path_extract",
+        dest="path",
     )
 
 
@@ -360,7 +360,7 @@ def run_arguments(argv):
                 args.file_viewer,
                 tag_plot=args.tag_plot,
                 plot_mode=args.plot_mode,
-                folder=args.folder,
+                path=args.path,
                 name=args.name,
             )
         elif args.command in ["solver", "so"]:
@@ -377,13 +377,13 @@ def run_arguments(argv):
                 tag_sweep=args.tag_sweep,
                 tag_plot=args.tag_plot,
                 plot_mode=args.plot_mode,
-                folder=args.folder,
+                path=args.path,
                 name=args.name,
             )
         elif args.command == "examples":
-            pypeec.run_extract_examples(args.path_extract)
+            pypeec.run_extract_examples(args.path)
         elif args.command == "documentation":
-            pypeec.run_extract_documentation(args.path_extract)
+            pypeec.run_extract_documentation(args.path)
         else:
             raise ValueError("invalid command")
     except Exception:

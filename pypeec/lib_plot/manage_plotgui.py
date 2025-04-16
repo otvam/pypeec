@@ -46,7 +46,7 @@ class PlotGui:
     Manage PyVista and Matplotlib plots.
     """
 
-    def __init__(self, plot_mode, folder, name):
+    def __init__(self, plot_mode, path, name):
         """
         Constructor.
         Create the Qt application.
@@ -61,13 +61,13 @@ class PlotGui:
         if name is None:
             name = "pypeec"
 
-        # set the default for the output folder
-        if folder is None:
-            folder = os.getcwd()
+        # set the default for the output path
+        if path is None:
+            path = os.getcwd()
 
         # assign variable
         self.plot_mode = plot_mode
-        self.folder = folder
+        self.path = path
         self.name = name
         self.pl_list = []
         self.fig_list = []
@@ -314,7 +314,7 @@ class PlotGui:
         """
 
         filename = "%s_%s.%s" % (self.name, tag, ext)
-        filename = os.path.join(self.folder, filename)
+        filename = os.path.join(self.path, filename)
 
         return filename
 

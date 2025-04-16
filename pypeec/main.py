@@ -22,7 +22,7 @@ import pypeec
 LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
-def _run_extract_archive(data_name, path_extract):
+def _run_extract_archive(data_name, path):
     """
     Extract an archive from the package data (examples,or documentation).
     """
@@ -34,7 +34,7 @@ def _run_extract_archive(data_name, path_extract):
     LOGGER.info("data extraction: extract")
     folder = importlib.resources.files("pypeec.data")
     with importlib.resources.as_file(folder.joinpath(data_name)) as fid:
-        shutil.unpack_archive(fid, path_extract, format="xztar")
+        shutil.unpack_archive(fid, path, format="xztar")
 
     # teardown
     LOGGER.info("data extraction: finished")
@@ -232,8 +232,8 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
         - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
-    folder : string
-        - Folder name for saving the screenshots.
+    path : path
+        - Path where the plots should be generated.
         - If None or omitted: the current directory is used.
     name : string
         - Prepended at the beginning of the screenshot filenames.
@@ -283,8 +283,8 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
-    folder : string
-        - Folder name for saving the screenshots.
+    path : path
+        - Path where the plots should be generated.
         - If None or omitted: the current directory is used.
     name : string
         - Prepended at the beginning of the screenshot filenames.
@@ -430,8 +430,8 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
-    folder : string
-        - Folder name for saving the screenshots.
+    path : path
+        - Path where the plots should be generated.
         - If None or omitted: the current directory is used.
     name : string
         - Prepended at the beginning of the screenshot filenames.
@@ -484,8 +484,8 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
-    folder : string
-        - Folder name for saving the screenshots.
+    path : path
+        - Path where the plots should be generated.
         - If None or omitted: the current directory is used.
     name : string
         - Prepended at the beginning of the screenshot filenames.
@@ -508,7 +508,7 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     run_plotter_data(data_solution, data_plotter, **kwargs)
 
 
-def run_extract_examples(path_extract):
+def run_extract_examples(path):
     """
     Function for extract the PyPEEC examples.
         - Get a filesytem path as an argument.
@@ -516,19 +516,19 @@ def run_extract_examples(path_extract):
 
     Parameters
     ----------
-    path_extract : path
+    path : path
         - Path where the data should be extracted.
     """
 
     # execute workflow
     try:
-        _run_extract_archive("examples.tar.xz", path_extract)
+        _run_extract_archive("examples.tar.xz", path)
     except Exception as ex:
         LOGGER.log_exception(ex)
         raise ex
 
 
-def run_extract_documentation(path_extract):
+def run_extract_documentation(path):
     """
     Function for extract the PyPEEC documentation.
         - Get a filesytem path as an argument.
@@ -536,13 +536,13 @@ def run_extract_documentation(path_extract):
 
     Parameters
     ----------
-    path_extract : path
+    path : path
         - Path where the data should be extracted.
     """
 
     # execute workflow
     try:
-        _run_extract_archive("documentation.tar.xz", path_extract)
+        _run_extract_archive("documentation.tar.xz", path)
     except Exception as ex:
         LOGGER.log_exception(ex)
         raise ex
