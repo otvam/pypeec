@@ -9,14 +9,14 @@ __license__ = "Mozilla Public License Version 2.0"
 # get the version number
 try:
     filename = importlib.resources.files("pypeec.data").joinpath("version.txt")
-    with filename.open("r") as fid:
+    with filename.open("r", encoding="utf-8") as fid:
         __version__ = fid.read()
-except Exception:
+except FileNotFoundError:
     __version__ = "x.x.x"
 
 # get the banner text
 filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
-with filename.open("r") as fid:
+with filename.open("r", encoding="utf-8") as fid:
     __banner__ = fid.read()
 
 # import the script method

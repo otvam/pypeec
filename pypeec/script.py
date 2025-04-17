@@ -20,7 +20,9 @@ def  _get_banner():
     """
 
     try:
+        print("", flush=True, file=sys.stderr)
         print(pypeec.__banner__, flush=True, file=sys.stderr)
+        print("", flush=True, file=sys.stderr)
     except (UnicodeDecodeError, UnicodeEncodeError):
         pass
 
