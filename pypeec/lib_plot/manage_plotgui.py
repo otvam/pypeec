@@ -89,7 +89,7 @@ class PlotGui:
             APPQT.setOrganizationName("pypeec")
 
             # set the icon
-            filename = importlib.resources.files("pypeec.data").joinpath("pypeec.png")
+            filename = importlib.resources.files("pypeec.data").joinpath("icon.png")
             res_icon = qtpy.QtGui.QIcon(str(filename))
             APPQT.setWindowIcon(res_icon)
 
@@ -129,7 +129,7 @@ class PlotGui:
             window_size=window_size,
         )
         # set icon
-        filename = importlib.resources.files("pypeec.data").joinpath("pypeec.png")
+        filename = importlib.resources.files("pypeec.data").joinpath("icon.png")
         pl.set_icon(str(filename))
 
         return pl
@@ -174,7 +174,7 @@ class PlotGui:
         import qtpy.QtGui
 
         # get the icon
-        filename = importlib.resources.files("pypeec.data").joinpath("pypeec.png")
+        filename = importlib.resources.files("pypeec.data").joinpath("icon.png")
         res_icon = qtpy.QtGui.QIcon(str(filename))
 
         # get the figure

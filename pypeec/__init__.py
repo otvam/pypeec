@@ -15,7 +15,7 @@ except FileNotFoundError:
     __version__ = "x.x.x"
 
 # get the banner text
-filename = importlib.resources.files("pypeec.data").joinpath("pypeec.txt")
+filename = importlib.resources.files("pypeec.data").joinpath("banner.txt")
 with filename.open("r", encoding="utf-8") as fid:
     __banner__ = fid.read()
 
