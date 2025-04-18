@@ -60,7 +60,7 @@ def _get_material_field(val_dict):
             val = np.array(val, dtype=np.float64)
 
         # check
-        if not (val.shape == (len(idx), 3)):
+        if val.shape != (len(idx), 3):
             raise RuntimeError("vector length does not match the number of voxels")
 
         # update
@@ -100,7 +100,7 @@ def _get_source_field(val_dict):
             val = np.array(val, dtype=np.float64)
 
         # check
-        if not (len(val) == len(idx)):
+        if len(val) != len(idx):
             raise RuntimeError("vector length does not match the number of voxels")
 
         # update

@@ -43,7 +43,7 @@ def get_mesh(param, domain_index):
         idx_tmp = np.array(idx, dtype=np.int64)
 
         # check the indices
-        if not (len(np.unique(idx_tmp)) == len(idx_tmp)):
+        if len(np.unique(idx_tmp)) != len(idx_tmp):
             raise RuntimeError("invalid index: %s: indices should be unique" % tag)
         if not (np.all(idx_tmp >= 0) and np.all(idx_tmp < nv)):
             raise RuntimeError("invalid index: %s: invalid index range" % tag)

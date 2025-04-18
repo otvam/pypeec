@@ -51,7 +51,7 @@ def _get_load_image(filename_list, size):
         img = np.flip(img, axis=1)
 
         # check image
-        if not (img.shape == (nx, ny, 4)):
+        if img.shape != (nx, ny, 4):
             raise RuntimeError("invalid image: invalid size: %s" % filename)
 
         # store the loaded image

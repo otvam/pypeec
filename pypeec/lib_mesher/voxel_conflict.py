@@ -83,7 +83,7 @@ def _get_resolution(domain_def):
         idx_all = np.append(idx_all, idx)
 
     # check that all the conflicts are resolved
-    if not (len(np.unique(idx_all)) == len(idx_all)):
+    if len(np.unique(idx_all)) != len(idx_all):
         raise RuntimeError("invalid domain: domain indices should be unique")
 
 
