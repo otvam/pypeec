@@ -79,10 +79,10 @@ if __name__ == "__main__":
     LOGGER.info("show the linear indices")
     with LOGGER.BlockIndent():
         for tag, idx in idx_linear.items():
-            LOGGER.info("%s = %s" % (tag, idx.tolist()))
+            LOGGER.info("%s = %s", tag, idx.tolist())
 
     # display the tensor indices
     LOGGER.info("shoow the tensor indices")
     with LOGGER.BlockIndent():
         for tag, idx in idx_tensor.items():
-            LOGGER.info("%s = %s" % (tag, idx.tolist()))
+            LOGGER.info("%s = %s", tag, idx.tolist())

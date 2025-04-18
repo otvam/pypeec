@@ -299,14 +299,14 @@ def get_integral(P_fc, P_fm, W_fc, W_fm, S_total):
     # display
     LOGGER.debug("integral")
     with LOGGER.BlockIndent():
-        LOGGER.debug("S_total_real = %.2e VA" % S_total.real)
-        LOGGER.debug("S_total_imag = %.2ej VA" % S_total.imag)
-        LOGGER.debug("P_electric = %.2e W" % P_electric)
-        LOGGER.debug("P_magnetic = %.2e W" % P_magnetic)
-        LOGGER.debug("W_electric = %.2e J" % W_electric)
-        LOGGER.debug("W_magnetic = %.2e J" % W_magnetic)
-        LOGGER.debug("P_total = %.2e W" % P_total)
-        LOGGER.debug("W_total = %.2e J" % W_total)
+        LOGGER.debug("S_total_real = %.2e VA", S_total.real)
+        LOGGER.debug("S_total_imag = %.2ej VA", S_total.imag)
+        LOGGER.debug("P_electric = %.2e W", P_electric)
+        LOGGER.debug("P_magnetic = %.2e W", P_magnetic)
+        LOGGER.debug("W_electric = %.2e J", W_electric)
+        LOGGER.debug("W_magnetic = %.2e J", W_magnetic)
+        LOGGER.debug("P_total = %.2e W", P_total)
+        LOGGER.debug("W_total = %.2e J", W_total)
 
     return integral_total
 
@@ -339,11 +339,11 @@ def get_material(material_all, A_net_c, A_net_m, P_fc, P_fm):
         material_losses[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_total": P_tmp}
 
         # display
-        LOGGER.debug("domain: %s" % tag)
+        LOGGER.debug("domain: %s", tag)
         with LOGGER.BlockIndent():
-            LOGGER.debug("P_electric = %.2e W" % P_vc_tmp)
-            LOGGER.debug("P_magnetic = %.2e W" % P_vm_tmp)
-            LOGGER.debug("P_total = %.2e W" % P_tmp)
+            LOGGER.debug("P_electric = %.2e W", P_vc_tmp)
+            LOGGER.debug("P_magnetic = %.2e W", P_vm_tmp)
+            LOGGER.debug("P_total = %.2e W", P_tmp)
 
     return material_losses
 
@@ -404,12 +404,12 @@ def get_source(freq, source_all, I_src, V_vc):
         S_total += S_tmp
 
         # display
-        LOGGER.debug("terminal: %s" % tag)
+        LOGGER.debug("terminal: %s", tag)
         with LOGGER.BlockIndent():
             # source type
-            LOGGER.debug("type = %s / %s" % (source_type, var_type))
-            LOGGER.debug("V = %+.2e + %+.2ej V" % (V_tmp.real, V_tmp.imag))
-            LOGGER.debug("I = %+.2e + %+.2ej A" % (I_tmp.real, I_tmp.imag))
-            LOGGER.debug("S = %+.2e + %+.2ej VA" % (S_tmp.real, S_tmp.imag))
+            LOGGER.debug("type = %s / %s", source_type, var_type)
+            LOGGER.debug("V = %+.2e + %+.2ej V", V_tmp.real, V_tmp.imag)
+            LOGGER.debug("I = %+.2e + %+.2ej A", I_tmp.real, I_tmp.imag)
+            LOGGER.debug("S = %+.2e + %+.2ej VA", S_tmp.real, S_tmp.imag)
 
     return source_values, S_total

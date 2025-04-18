@@ -533,7 +533,7 @@ def get_prepare(name, idx_out, idx_in, mat, split, fft_options):
     footprint = (itemsize * nnz) / (1024**2)
 
     # display the tensor size
-    LOGGER.debug("tensor: %s / %.2f MB" % (name, footprint))
+    LOGGER.debug("tensor: %s / %.2f MB", name, footprint)
 
     # get the sign that will be applied to the different blocks of the tensor
     sign = _get_tensor_sign(name, nd_in)

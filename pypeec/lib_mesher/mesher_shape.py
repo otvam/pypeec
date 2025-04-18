@@ -376,7 +376,7 @@ def _get_domain_def(n, d, c, geometry_shape, stack_idx, shape_obj):
     # remove duplicates
     for tag, idx_voxel in domain_def.items():
         idx_voxel = np.unique(idx_voxel)
-        LOGGER.debug("%s: n_voxel = %d" % (tag, len(idx_voxel)))
+        LOGGER.debug("%s: n_voxel = %d", tag, len(idx_voxel))
         domain_def[tag] = idx_voxel
 
     return domain_def

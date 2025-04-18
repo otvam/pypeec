@@ -37,7 +37,7 @@ def get_mesh(param, domain_index):
     # check data
     for tag, idx in domain_index.items():
         # disp
-        LOGGER.debug("%s: size = %d" % (tag, len(idx)))
+        LOGGER.debug("%s: size = %d", tag, len(idx))
 
         # parse the array
         idx_tmp = np.array(idx, dtype=np.int64)

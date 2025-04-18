@@ -128,7 +128,7 @@ def _load_data(layout_out, data_out):
 
     # display a warning in case of a version mismatch
     if (name != pypeec.__name__) or (version != pypeec.__version__):
-        LOGGER.warning("invalid data version: %s / %s" % (name, version))
+        LOGGER.warning("invalid data version: %s / %s", name, version)
 
     return data
 

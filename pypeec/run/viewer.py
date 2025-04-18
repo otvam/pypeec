@@ -130,7 +130,7 @@ def run(
     LOGGER.info("generate plots")
     with LOGGER.BlockIndent():
         for tag_plot, data_viewer_tmp in data_viewer.items():
-            LOGGER.info("plot / %s" % tag_plot)
+            LOGGER.info("plot / %s", tag_plot)
             _get_plot(tag_plot, data_viewer_tmp, grid, voxel, point, reference, connect_def, gui_obj)
 
     # add the raw VTK objects

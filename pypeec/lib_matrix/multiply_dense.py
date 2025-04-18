@@ -130,7 +130,7 @@ def get_prepare(name, idx_out, idx_in, mat):
     footprint = (itemsize * n_out * n_in) / (1024**2)
 
     # display the matrix size
-    LOGGER.debug("tensor: %s / %.2f MB" % (name, footprint))
+    LOGGER.debug("tensor: %s / %.2f MB", name, footprint)
 
     # get the permutation for sorting
     idx_perm_out = np.argsort(idx_out)

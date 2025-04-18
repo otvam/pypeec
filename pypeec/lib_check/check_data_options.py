@@ -31,7 +31,7 @@ def check_tag_list(data_check, tag_list):
     if tag_list is not None:
         for tag in tag_list:
             if tag not in tag_allowed:
-                raise ValueError("invalid plot tag: %s" % tag)
+                raise ValueError("invalid plot tag: %s", tag)
 
 
 def check_plot_options(plot_mode, path, name):

@@ -273,13 +273,13 @@ class PlotGui:
         # show the different PyVista plots
         with LOGGER.BlockIndent():
             for tag, pl in self.pl_list:
-                LOGGER.debug("show / %s" % tag)
+                LOGGER.debug("show / %s", tag)
                 pl.show()
 
         # show the different Matplotlib plots
         with LOGGER.BlockIndent():
             for tag, fig in self.fig_list:
-                LOGGER.debug("show / %s" % tag)
+                LOGGER.debug("show / %s", tag)
                 if interactive:
                     IPython.display.display(fig.canvas)
                 else:
@@ -396,9 +396,9 @@ class PlotGui:
         Finalize the plots (show the plots or save the plots).
         """
 
-        LOGGER.debug("number of PyVista plots: %s" % len(self.pl_list))
-        LOGGER.debug("number of Matplotlib plots: %s" % len(self.fig_list))
-        LOGGER.debug("number of VTK datasets: %s" % len(self.vtk_list))
+        LOGGER.debug("number of PyVista plots: %s", len(self.pl_list))
+        LOGGER.debug("number of Matplotlib plots: %s", len(self.fig_list))
+        LOGGER.debug("number of VTK datasets: %s", len(self.vtk_list))
 
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
             return

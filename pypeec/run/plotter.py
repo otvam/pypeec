@@ -135,7 +135,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
 
     # make the plots
     for tag_plot, data_plotter_tmp in data_plotter.items():
-        LOGGER.info("plot / %s" % tag_plot)
+        LOGGER.info("plot / %s", tag_plot)
         _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, solver_convergence, gui_obj)
 
 

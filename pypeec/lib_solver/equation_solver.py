@@ -557,15 +557,15 @@ def get_solver(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, fct_conv, s
     LOGGER.debug("solver summary")
     with LOGGER.BlockIndent():
         # display results
-        LOGGER.debug("status = %s" % status)
-        LOGGER.debug("n_dof_total = %d" % n_dof_total)
-        LOGGER.debug("n_dof_electric = %d" % n_dof_electric)
-        LOGGER.debug("n_dof_magnetic = %d" % n_dof_magnetic)
-        LOGGER.debug("n_iter = %d" % n_iter)
-        LOGGER.debug("n_sys_eval = %d" % n_sys_eval)
-        LOGGER.debug("n_pcd_eval = %d" % n_pcd_eval)
-        LOGGER.debug("residuum_val = %.2e" % residuum_val)
-        LOGGER.debug("residuum_thr = %.2e" % residuum_thr)
+        LOGGER.debug("status = %s", status)
+        LOGGER.debug("n_dof_total = %d", n_dof_total)
+        LOGGER.debug("n_dof_electric = %d", n_dof_electric)
+        LOGGER.debug("n_dof_magnetic = %d", n_dof_magnetic)
+        LOGGER.debug("n_iter = %d", n_iter)
+        LOGGER.debug("n_sys_eval = %d", n_sys_eval)
+        LOGGER.debug("n_pcd_eval = %d", n_pcd_eval)
+        LOGGER.debug("residuum_val = %.2e", residuum_val)
+        LOGGER.debug("residuum_thr = %.2e", residuum_thr)
 
         # display status
         if status:
@@ -648,11 +648,11 @@ def get_condition(cond_mat_cm, conditions_options):
     # display status
     LOGGER.debug("condition summary")
     with LOGGER.BlockIndent():
-        LOGGER.debug("check = %s" % check)
-        LOGGER.debug("status = %s" % status)
+        LOGGER.debug("check = %s", check)
+        LOGGER.debug("status = %s", status)
         if check:
-            LOGGER.debug("cond_electric = %.2e" % cond_electric)
-            LOGGER.debug("cond_magnetic = %.2e" % cond_magnetic)
+            LOGGER.debug("cond_electric = %.2e", cond_electric)
+            LOGGER.debug("cond_magnetic = %.2e", cond_magnetic)
             if status:
                 LOGGER.debug("matrix condition is good")
             else:

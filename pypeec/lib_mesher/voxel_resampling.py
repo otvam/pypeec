@@ -262,9 +262,9 @@ def get_resampling(n, d, c, domain_def, data_resampling):
     resampling_factor = data_resampling["resampling_factor"]
 
     # display number of voxels
-    LOGGER.debug("use_reduce = %s" % use_reduce)
-    LOGGER.debug("use_resample = %s" % use_resample)
-    LOGGER.debug("original number = %d" % np.prod(n))
+    LOGGER.debug("use_reduce = %s", use_reduce)
+    LOGGER.debug("use_resample = %s", use_resample)
+    LOGGER.debug("original number = %d", np.prod(n))
 
     # remove unused voxels
     if use_reduce:
@@ -278,6 +278,6 @@ def get_resampling(n, d, c, domain_def, data_resampling):
     s = tuple(x * y for x, y in zip(n, d, strict=True))
 
     # display number of voxels
-    LOGGER.debug("final number = %d" % np.prod(n))
+    LOGGER.debug("final number = %d", np.prod(n))
 
     return n, d, c, s, domain_def

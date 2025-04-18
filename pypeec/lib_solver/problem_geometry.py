@@ -294,17 +294,17 @@ def get_status(n, idx_vc, idx_vm, idx_fc, idx_fm, idx_src_c, idx_src_v):
     }
 
     # display status
-    LOGGER.debug("n_voxel_total = %d" % n_voxel_total)
-    LOGGER.debug("n_voxel_used = %d" % n_voxel_used)
-    LOGGER.debug("n_face_total = %d" % n_face_total)
-    LOGGER.debug("n_face_used = %d" % n_face_used)
-    LOGGER.debug("n_voxel_electric = %d" % n_voxel_electric)
-    LOGGER.debug("n_voxel_magnetic = %d" % n_voxel_magnetic)
-    LOGGER.debug("n_face_electric = %d" % n_face_electric)
-    LOGGER.debug("n_face_magnetic = %d" % n_face_magnetic)
-    LOGGER.debug("n_src_current = %d" % n_src_current)
-    LOGGER.debug("n_src_voltage = %d" % n_src_voltage)
-    LOGGER.debug("ratio_voxel = %.2e" % ratio_voxel)
-    LOGGER.debug("ratio_face = %.2e" % ratio_face)
+    LOGGER.debug("n_voxel_total = %d", n_voxel_total)
+    LOGGER.debug("n_voxel_used = %d", n_voxel_used)
+    LOGGER.debug("n_face_total = %d", n_face_total)
+    LOGGER.debug("n_face_used = %d", n_face_used)
+    LOGGER.debug("n_voxel_electric = %d", n_voxel_electric)
+    LOGGER.debug("n_voxel_magnetic = %d", n_voxel_magnetic)
+    LOGGER.debug("n_face_electric = %d", n_face_electric)
+    LOGGER.debug("n_face_magnetic = %d", n_face_magnetic)
+    LOGGER.debug("n_src_current = %d", n_src_current)
+    LOGGER.debug("n_src_voltage = %d", n_src_voltage)
+    LOGGER.debug("ratio_voxel = %.2e", ratio_voxel)
+    LOGGER.debug("ratio_face = %.2e", ratio_face)
 
     return problem_status

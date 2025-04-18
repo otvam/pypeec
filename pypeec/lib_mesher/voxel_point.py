@@ -91,9 +91,9 @@ def get_point(n, d, c, domain_def, data_point):
     pts_cloud = data_point["pts_cloud"]
 
     # display number of cloud points
-    LOGGER.debug("check_cloud = %s" % check_cloud)
-    LOGGER.debug("filter_cloud = %s" % filter_cloud)
-    LOGGER.debug("original number = %d" % len(pts_cloud))
+    LOGGER.debug("check_cloud = %s", check_cloud)
+    LOGGER.debug("filter_cloud = %s", filter_cloud)
+    LOGGER.debug("original number = %d", len(pts_cloud))
 
     # cast to array
     pts_cloud = np.array(pts_cloud, np.float64)
@@ -111,6 +111,6 @@ def get_point(n, d, c, domain_def, data_point):
                 raise RuntimeError("all the cloud points should be located outside the voxel structure")
 
     # display number of cloud points
-    LOGGER.debug("final number = %d" % len(pts_cloud))
+    LOGGER.debug("final number = %d", len(pts_cloud))
 
     return pts_cloud

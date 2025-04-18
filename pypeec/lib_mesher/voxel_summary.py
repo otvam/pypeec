@@ -61,28 +61,28 @@ def get_summary(n, d, s, c, pts_cloud, domain_def, component_def):
     # display status
     LOGGER.debug("voxel size")
     with LOGGER.BlockIndent():
-        LOGGER.debug("n = (%d, %d, %d)" % (nx, ny, nz))
-        LOGGER.debug("d = (%.2e, %.2e, %.2e)" % (dx, dy, dz))
-        LOGGER.debug("s = (%.2e, %.2e, %.2e)" % (sx, sy, sz))
-        LOGGER.debug("c = (%.2e, %.2e, %.2e)" % (cx, cy, cz))
-        LOGGER.debug("A = (%.2e, %.2e, %.2e)" % (A_xy, A_yz, A_xz))
+        LOGGER.debug("n = (%d, %d, %d)", nx, ny, nz)
+        LOGGER.debug("d = (%.2e, %.2e, %.2e)", dx, dy, dz)
+        LOGGER.debug("s = (%.2e, %.2e, %.2e)", sx, sy, sz)
+        LOGGER.debug("c = (%.2e, %.2e, %.2e)", cx, cy, cz)
+        LOGGER.debug("A = (%.2e, %.2e, %.2e)", A_xy, A_yz, A_xz)
 
     # plot the voxel number
     LOGGER.debug("voxel summary")
     with LOGGER.BlockIndent():
-        LOGGER.debug("V_total = %.2e" % V_total)
-        LOGGER.debug("V_used = %.2e" % V_used)
-        LOGGER.debug("n_total = %d" % n_total)
-        LOGGER.debug("n_used = %d" % n_used)
-        LOGGER.debug("ratio = %.2e" % ratio)
-        LOGGER.debug("n_domain = %d" % n_domain)
-        LOGGER.debug("n_component = %d" % n_component)
-        LOGGER.debug("n_cloud = %d" % n_cloud)
+        LOGGER.debug("V_total = %.2e", V_total)
+        LOGGER.debug("V_used = %.2e", V_used)
+        LOGGER.debug("n_total = %d", n_total)
+        LOGGER.debug("n_used = %d", n_used)
+        LOGGER.debug("ratio = %.2e", ratio)
+        LOGGER.debug("n_domain = %d", n_domain)
+        LOGGER.debug("n_component = %d", n_component)
+        LOGGER.debug("n_cloud = %d", n_cloud)
 
     # plot the domain size
     LOGGER.debug("voxel domain")
     with LOGGER.BlockIndent():
         for tag, idx in domain_def.items():
-            LOGGER.debug("%s = %d" % (tag, len(idx)))
+            LOGGER.debug("%s = %d", tag, len(idx))
 
     return voxel_status
