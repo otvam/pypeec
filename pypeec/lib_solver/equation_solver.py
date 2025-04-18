@@ -81,7 +81,7 @@ class _IterCounter:
         self.power_vec.append(power_tmp)
 
         # log the results
-        LOGGER.debug("i = %d / %s VA", iter_tmp, "{:.2e}".format(power_tmp))
+        LOGGER.debug("i = %d / %s VA", iter_tmp, f"{power_tmp:.2e}")
 
         # convergence iter condition
         n_iter_min = np.max([2, self.n_cmp + 1, self.n_min])
@@ -115,7 +115,7 @@ class _IterCounter:
         self.power_init = power_tmp
 
         # log the results
-        LOGGER.debug("init / %s VA", "{:.2e}".format(power_tmp))
+        LOGGER.debug("init / %s VA", f"{power_tmp:.2e}")
 
     def get_callback_final(self, sol):
         """
@@ -129,7 +129,7 @@ class _IterCounter:
         self.power_final = power_tmp
 
         # log the results
-        LOGGER.debug("final / %s VA", "{:.2e}".format(power_tmp))
+        LOGGER.debug("final / %s VA", f"{power_tmp:.2e}")
 
     def get_n_iter(self):
         """

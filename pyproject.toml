@@ -116,7 +116,7 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "B", "UP"]
-ignore = ["UP031", "F403"]
+ignore = ["UP031", "F401"]
 
 [tool.ruff.format]
 quote-style = "double"

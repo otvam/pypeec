@@ -37,8 +37,8 @@ def _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
     gerber_def = data_gerber["gerber_def"]
 
     # get base color
-    color_edge = tuple([257 * x for x in color_edge])
-    color_background = tuple([257 * x for x in color_background])
+    color_edge = tuple(257 * x for x in color_edge)
+    color_background = tuple(257 * x for x in color_background)
 
     # get GERBER edge file
     gerber_edge = os.path.join(folder_gerber, gerber_edge)
@@ -60,7 +60,7 @@ def _get_gerbv_file(filename_gerbv, folder_gerber, data_gerber, data_stack):
 
             # get layer color
             color = color_def[color]
-            color = tuple([257 * x for x in color])
+            color = tuple(257 * x for x in color)
 
             # get GERBER file
             gerber = gerber_def[gerber]
@@ -107,15 +107,15 @@ def _get_png_file(filename_gerbv, filename_png, margin, voxel, oversampling):
         border,
         resolution,
     )
-    subprocess.run(cmd, shell=True)
+    subprocess.run(cmd, shell=True, check=True)
 
     # cut the border
     cmd = "mogrify -trim %s" % filename_png
-    subprocess.run(cmd, shell=True)
+    subprocess.run(cmd, shell=True, check=True)
 
     # cut the border
     cmd = "mogrify -sample %.2f%% %s" % (resize, filename_png)
-    subprocess.run(cmd, shell=True)
+    subprocess.run(cmd, shell=True, check=True)
 
 
 def _get_convert_layer(tag, data_export, data_gerber, data_stack):

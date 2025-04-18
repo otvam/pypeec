@@ -408,8 +408,8 @@ def get_source(freq, source_all, I_src, V_vc):
         with LOGGER.BlockIndent():
             # source type
             LOGGER.debug("type = %s / %s", source_type, var_type)
-            LOGGER.debug("V = %+.2e + %+.2ej V", V_tmp.real, V_tmp.imag)
-            LOGGER.debug("I = %+.2e + %+.2ej A", I_tmp.real, I_tmp.imag)
-            LOGGER.debug("S = %+.2e + %+.2ej VA", S_tmp.real, S_tmp.imag)
+            LOGGER.debug("V = %s V", f"{V_tmp:+.2e}")
+            LOGGER.debug("I = %s A", f"{I_tmp:+.2e}")
+            LOGGER.debug("S = %s VA", f"{S_tmp:+.2e}")
 
     return source_values, S_total
