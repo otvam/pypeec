@@ -141,9 +141,9 @@ def _get_voxel_size(d, xyz_max, xyz_min):
 
     # check voxel validity
     if not np.all(d > 0):
-        RuntimeError("invalid voxel dimension: should be positive")
+        raise RuntimeError("invalid voxel dimension: should be positive")
     if not np.all(n > 0):
-        RuntimeError("invalid voxel number: should be positive")
+        raise RuntimeError("invalid voxel number: should be positive")
 
     return n, d, c
 

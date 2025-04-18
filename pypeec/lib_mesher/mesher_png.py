@@ -185,7 +185,7 @@ def get_mesh(param, domain_color, layer_stack):
 
     # check voxel validity
     if (nx < 1) or (ny < 1):
-        RuntimeError("invalid image size: should be positive")
+        raise RuntimeError("invalid image size: should be positive")
 
     # init the layer stack
     nz = 0
@@ -206,7 +206,7 @@ def get_mesh(param, domain_color, layer_stack):
 
     # check voxel validity
     if nz < 1:
-        RuntimeError("invalid stack size: should be positive")
+        raise RuntimeError("invalid stack size: should be positive")
 
     # assemble
     n = [nx, ny, nz]

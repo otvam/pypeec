@@ -115,7 +115,7 @@ def _get_fact_pyamg(pyamg_options, mat):
         if solver == "root":
             solver = lib.rootnode_solver(mat)
         elif solver == "adapt":
-            (solver, work) = lib.adaptive_sa_solver(mat)
+            (solver, _) = lib.adaptive_sa_solver(mat)
         else:
             raise ValueError("invalid AMF solver name")
     except Warning:
