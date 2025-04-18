@@ -11,6 +11,10 @@ from tests.code import test_workflow
 
 # duplicate of the test class
 class TestShape(test_workflow.TestWorkflow):
+    """
+    Dummy class insuring the test discovery.
+    """
+
     pass
 
 
