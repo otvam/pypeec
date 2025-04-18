@@ -11,11 +11,7 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import os.path
 import datetime
-import scilogger
 import scisave
-
-# disable logging
-scilogger.disable()
 
 # get the path the folder
 PATH_ROOT = os.path.dirname(__file__)
