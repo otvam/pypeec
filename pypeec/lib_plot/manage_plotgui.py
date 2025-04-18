@@ -24,9 +24,9 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 import os
+import os.path
 import ctypes
 import signal
-import os.path
 import importlib.resources
 import matplotlib.pyplot
 import matplotlib
@@ -253,14 +253,14 @@ class PlotGui:
             fig.show()
 
         # enter the event loop
-        exit_code = APPQT.exec()
+        status = APPQT.exec()
 
         # quit app
         APPQT.quit()
 
         # check status
-        if exit_code != 0:
-            RuntimeError("error during the Qt event loop / exit_code = %d" % exit_code)
+        if status != 0:
+            raise RuntimeError("error during the Qt event loop / exit_code = %d" % status)
 
     def _show_figure_nb(self, interactive):
         """

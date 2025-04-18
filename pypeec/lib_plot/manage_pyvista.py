@@ -356,24 +356,24 @@ def _plot_scalar(pl, obj, data_plot, plot_filter, plot_theme):
     _get_plot_title(pl, title, plot_theme)
 
     # color bar options
-    scalar_bar_args = dict(
-        title=legend,
-        n_labels=colorbar_size,
-        label_font_size=colorbar_font,
-        title_font_size=colorbar_font,
-        color=text_color,
-    )
+    scalar_bar_args = {
+        "title": legend,
+        "n_labels": colorbar_size,
+        "label_font_size": colorbar_font,
+        "title_font_size": colorbar_font,
+        "color": text_color,
+    }
 
     # add the resulting plot to the plotter
-    arg = dict(
-        scalars="norm",
-        log_scale=log,
-        clim=color_lim,
-        point_size=point_size,
-        show_scalar_bar=colorbar_plot,
-        scalar_bar_args=scalar_bar_args,
-        render_points_as_spheres=True,
-    )
+    arg = {
+        "scalars": "norm",
+        "log_scale": log,
+        "clim": color_lim,
+        "point_size": point_size,
+        "show_scalar_bar": colorbar_plot,
+        "scalar_bar_args": scalar_bar_args,
+        "render_points_as_spheres": True,
+    }
     _get_filter_mesh(pl, obj, arg, plot_filter)
 
 
@@ -401,26 +401,26 @@ def _plot_arrow(pl, grid, obj, data_plot, plot_filter, plot_theme):
     _get_plot_title(pl, title, plot_theme)
 
     # color bar options
-    scalar_bar_args = dict(
-        title=legend,
-        n_labels=colorbar_size,
-        label_font_size=colorbar_font,
-        title_font_size=colorbar_font,
-        color=text_color,
-    )
+    scalar_bar_args = {
+        "title": legend,
+        "n_labels": colorbar_size,
+        "label_font_size": colorbar_font,
+        "title_font_size": colorbar_font,
+        "color": text_color,
+    }
 
     # get arrow size
     d_char = min(grid.spacing)
     factor = d_char * arrow_scale
 
     # add the resulting plot to the plotter
-    arg = dict(
-        scalars="norm",
-        log_scale=log,
-        clim=color_lim,
-        show_scalar_bar=colorbar_plot,
-        scalar_bar_args=scalar_bar_args,
-    )
+    arg = {
+        "scalars": "norm",
+        "log_scale": log,
+        "clim": color_lim,
+        "show_scalar_bar": colorbar_plot,
+        "scalar_bar_args": scalar_bar_args,
+    }
     if obj.n_cells > 0:
         glyph_tmp = obj.glyph(orient="vector", scale=False, factor=factor)
         _get_filter_mesh(pl, glyph_tmp, arg, plot_filter)
@@ -455,12 +455,12 @@ def _plot_material(pl, voxel, data_plot, plot_filter, plot_theme):
     voxel_tmp = voxel.copy(deep=True)
 
     # add the resulting plot to the plotter
-    arg = dict(
-        clim=[1, 5],
-        show_scalar_bar=False,
-        scalars="material_tag",
-        cmap=cmap,
-    )
+    arg = {
+        "clim": [1, 5],
+        "show_scalar_bar": False,
+        "scalars": "material_tag",
+        "cmap": cmap,
+    }
     _get_filter_mesh(pl, voxel_tmp, arg, plot_filter)
 
 
@@ -481,12 +481,12 @@ def _plot_geometry(pl, voxel, data_plot, plot_filter, plot_theme, var):
     voxel_tmp = voxel.copy(deep=True)
 
     # add the resulting plot to the plotter
-    arg = dict(
-        show_scalar_bar=False,
-        scalars=var,
-        cmap=colormap,
-        opacity=opacity,
-    )
+    arg = {
+        "show_scalar_bar": False,
+        "scalars": var,
+        "cmap": colormap,
+        "opacity": opacity,
+    }
     _get_filter_mesh(pl, voxel_tmp, arg, plot_filter)
 
 
@@ -512,21 +512,21 @@ def _plot_voxelization(pl, voxel, reference, data_plot, plot_filter, plot_theme)
     reference_tmp = reference.copy(deep=True)
 
     # add the resulting plot to the plotter
-    arg = dict(
-        show_scalar_bar=False,
-        color=color_voxel,
-        opacity=opacity_voxel,
-        line_width=width_voxel,
-    )
+    arg = {
+        "show_scalar_bar": False,
+        "color": color_voxel,
+        "opacity": opacity_voxel,
+        "line_width": width_voxel,
+    }
     _get_filter_mesh(pl, voxel_tmp, arg, plot_filter)
 
     # add the resulting plot to the plotter
-    arg = dict(
-        show_scalar_bar=False,
-        color=color_reference,
-        opacity=opacity_reference,
-        line_width=width_reference,
-    )
+    arg = {
+        "show_scalar_bar": False,
+        "color": color_reference,
+        "opacity": opacity_reference,
+        "line_width": width_reference,
+    }
     _get_filter_mesh(pl, reference_tmp, arg, plot_filter)
 
 
