@@ -1,3 +1,7 @@
+"""
+Root level module (import main functions and set metadata).
+"""
+
 import importlib.resources
 
 # set basic metadata
@@ -6,10 +10,16 @@ __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
 # import the script method
-from pypeec.script import *
+from pypeec.script import run_script
+from pypeec.script import run_arguments
 
 # import the main method
-from pypeec.main import *
+from pypeec.main import run_extract_examples
+from pypeec.main import run_extract_documentation
+from pypeec.main import run_mesher_data, run_mesher_file
+from pypeec.main import run_viewer_data, run_viewer_file
+from pypeec.main import run_solver_data, run_solver_file
+from pypeec.main import run_plotter_data, run_plotter_file
 
 # get the version number
 try:
