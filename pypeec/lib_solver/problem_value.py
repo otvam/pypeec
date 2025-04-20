@@ -8,12 +8,8 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-import scilogger
 import numpy as np
 import scipy.constants as cst
-
-# get a logger
-LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 
 def _get_material_field(val_dict):
