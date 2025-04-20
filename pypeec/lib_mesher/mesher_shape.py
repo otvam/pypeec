@@ -345,7 +345,7 @@ def _get_layer_stack(layer_stack, dz, cz):
     return stack_pos, stack_idx, stack_tag
 
 
-def _get_domain_def(n, d, c, geometry_shape, stack_idx, shape_obj):
+def _get_domain_def(n, d, c, domain_def, stack_idx, shape_obj):
     """
     Voxelize the shapes and assign the indices to a dict.
     """
@@ -353,11 +353,6 @@ def _get_domain_def(n, d, c, geometry_shape, stack_idx, shape_obj):
     # get the voxelization bounds
     xyz_min = c - (n * d) / 2
     xyz_max = c + (n * d) / 2
-
-    # init the domain dict
-    domain_def = {}
-    for tag in geometry_shape:
-        domain_def[tag] = np.empty(0, np.int64)
 
     # voxelize the shapes
     for shape_obj_tmp in shape_obj:
@@ -376,16 +371,22 @@ def _get_domain_def(n, d, c, geometry_shape, stack_idx, shape_obj):
     # remove duplicates
     for tag, idx_voxel in domain_def.items():
         idx_voxel = np.unique(idx_voxel)
-        LOGGER.debug("%s: n_voxel = %d", tag, len(idx_voxel))
+        LOGGER.debug("domain = %s / size = %d", tag, len(idx_voxel))
         domain_def[tag] = idx_voxel
 
     return domain_def
 
 
-def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
+def _get_voxel_size(dx, dy, dz, stack_pos, xy_max_obj, xy_min_obj, xy_max, xy_min):
     """
     Get the parameters (size, dimension, and center) of the voxel structure.
     """
+
+    # if no bounds are provided, find the min/max bounds
+    if xy_min is None:
+        xy_min = xy_min_obj
+    if xy_max is None:
+        xy_max = xy_max_obj
 
     # get the voxel geometry
     (x_min, y_min) = xy_min
@@ -407,8 +408,7 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min):
     n = np.rint((xyz_max - xyz_min) / d)
     d = (xyz_max - xyz_min) / n
 
-    # cast data
-    d = d.astype(np.float64)
+    # cast rounded data to integer
     n = n.astype(np.int64)
 
     # check voxel validity
@@ -477,40 +477,34 @@ def get_mesh(param, layer_stack, geometry_shape):
     xy_min = param["xy_min"]
     xy_max = param["xy_max"]
 
-    # parse layers
-    LOGGER.debug("parse the layers")
-    (stack_pos, stack_idx, stack_tag) = _get_layer_stack(layer_stack, dz, cz)
-
-    # create the shapes
-    LOGGER.debug("create the shapes")
-    (shape_obj, xy_min_obj, xy_max_obj) = _get_shape_obj(geometry_shape, stack_tag, simplify, construct)
-
-    # if provided, the specified bounds are used, otherwise the shape bounds are used
-    if xy_min is not None:
-        xy_min = np.array(xy_min, np.float64)
-    else:
-        xy_min = xy_min_obj
-    if xy_max is not None:
-        xy_max = np.array(xy_max, np.float64)
-    else:
-        xy_max = xy_max_obj
-
-    # geometry size
-    LOGGER.debug("get the voxel size")
-    (n, d, c) = _get_voxel_size(dx, dy, dz, stack_pos, xy_max, xy_min)
-
     # init domain definition dict
     domain_def = {}
     for tag in geometry_shape:
         domain_def[tag] = np.empty(0, np.int64)
 
-    # voxelize the shapes and get the indices
-    LOGGER.debug("voxelize the shapes")
-    domain_def = _get_domain_def(n, d, c, domain_def, stack_idx, shape_obj)
+    # prepare the shapes
+    LOGGER.debug("prepare the shapes")
+    with LOGGER.BlockIndent():
+        # parse layers
+        LOGGER.debug("parse the layers")
+        (stack_pos, stack_idx, stack_tag) = _get_layer_stack(layer_stack, dz, cz)
 
-    # merge the shapes representing the original geometry
-    LOGGER.debug("merge the shapes")
-    reference = _get_merge_shape(stack_pos, shape_obj)
+        # create the shapes
+        LOGGER.debug("create the shapes")
+        (shape_obj, xy_min_obj, xy_max_obj) = _get_shape_obj(geometry_shape, stack_tag, simplify, construct)
+
+        # geometry size
+        LOGGER.debug("get the voxel size")
+        (n, d, c) = _get_voxel_size(dx, dy, dz, stack_pos, xy_max_obj, xy_min_obj, xy_max, xy_min)
+
+        # merge the shapes representing the original geometry
+        LOGGER.debug("merge the shapes")
+        reference = _get_merge_shape(stack_pos, shape_obj)
+
+    # voxelize the shapes
+    LOGGER.debug("voxelize the shapes")
+    with LOGGER.BlockIndent():
+        domain_def = _get_domain_def(n, d, c, domain_def, stack_idx, shape_obj)
 
     # cast to lists
     n = n.tolist()

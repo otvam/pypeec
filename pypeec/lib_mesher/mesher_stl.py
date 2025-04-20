@@ -123,10 +123,20 @@ def _get_mesh_stl(domain_stl, check):
     return mesh_stl, reference, xyz_min, xyz_max
 
 
-def _get_voxel_size(d, xyz_max, xyz_min):
+def _get_voxel_size(d, xyz_max_stl, xyz_min_stl, xyz_max, xyz_min):
     """
     Get the parameters (size, dimension, and center) of the voxel structure.
     """
+
+    # if no bounds are provided, find the min/max bounds
+    if xyz_min is None:
+        xyz_min = xyz_min_stl
+    if xyz_max is None:
+        xyz_max = xyz_max_stl
+
+    # get the arrays
+    xyz_min = np.array(xyz_min, np.float64)
+    xyz_max = np.array(xyz_max, np.float64)
 
     # geometry size
     c = (xyz_max + xyz_min) / 2
@@ -135,8 +145,7 @@ def _get_voxel_size(d, xyz_max, xyz_min):
     n = np.rint((xyz_max - xyz_min) / d)
     d = (xyz_max - xyz_min) / n
 
-    # cast data
-    d = d.astype(np.float64)
+    # cast rounded data to integer
     n = n.astype(np.int64)
 
     # check voxel validity
@@ -244,15 +253,10 @@ def _get_voxel_structure(pts_test, wgt_test, pts_grid):
     return pts, connect
 
 
-def _get_domain_def(pts, connect, domain_stl, mesh_stl, thr):
+def _get_domain_def(pts, connect, domain_def, mesh_stl, thr):
     """
     Voxelize meshes and assign the indices to a dict.
     """
-
-    # init the domain dict
-    domain_def = {}
-    for tag in domain_stl:
-        domain_def[tag] = np.empty(0, np.int64)
 
     # voxelize the meshes
     for mesh_stl_tmp in mesh_stl:
@@ -269,7 +273,7 @@ def _get_domain_def(pts, connect, domain_stl, mesh_stl, thr):
     # remove duplicates
     for tag, idx_voxel in domain_def.items():
         idx_voxel = np.unique(idx_voxel)
-        LOGGER.debug("%s: n_voxel = %d", tag, len(idx_voxel))
+        LOGGER.debug("domain = %s / size = %d", tag, len(idx_voxel))
         domain_def[tag] = idx_voxel
 
     return domain_def
@@ -289,39 +293,38 @@ def get_mesh(param, domain_stl):
     thr = param["thr"]
     pts = param["pts"]
 
-    # load the mesh and get the STL bounds
-    LOGGER.debug("load STL files")
-    (mesh_stl, reference, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl, check)
+    # init the domain dict
+    domain_def = {}
+    for tag in domain_stl:
+        domain_def[tag] = np.empty(0, np.int64)
 
-    # if provided, the specified bounds are used, otherwise the mesh bounds are used
-    if xyz_min is not None:
-        xyz_min = np.array(xyz_min, np.float64)
-    else:
-        xyz_min = xyz_min_stl
-    if xyz_max is not None:
-        xyz_max = np.array(xyz_max, np.float64)
-    else:
-        xyz_max = xyz_max_stl
+    # prepare the meshes
+    LOGGER.debug("prepare the meshes")
+    with LOGGER.BlockIndent():
+        # load the mesh and get the STL bounds
+        LOGGER.debug("load STL files")
+        (mesh_stl, reference, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl, check)
 
-    # geometry size
-    LOGGER.debug("get the voxel size")
-    (n, d, c) = _get_voxel_size(d, xyz_max, xyz_min)
+        # geometry size
+        LOGGER.debug("get the voxel size")
+        (n, d, c) = _get_voxel_size(d, xyz_max_stl, xyz_min_stl, xyz_max, xyz_min)
 
-    # get the test points
-    LOGGER.debug("get the test points")
-    (pts_test, wgt_test) = _get_point_test(d, pts)
+        # get the test points
+        LOGGER.debug("get the test points")
+        (pts_test, wgt_test) = _get_point_test(d, pts)
 
-    # get the voxel points
-    LOGGER.debug("get the voxel points")
-    pts_grid = _get_point_grid(n, d, c)
+        # get the voxel points
+        LOGGER.debug("get the voxel points")
+        pts_grid = _get_point_grid(n, d, c)
 
-    # get the voxel structure
-    LOGGER.debug("get the voxel structure")
-    (pts, connect) = _get_voxel_structure(pts_test, wgt_test, pts_grid)
+        # get the voxel structure
+        LOGGER.debug("get the voxel structure")
+        (pts, connect) = _get_voxel_structure(pts_test, wgt_test, pts_grid)
 
-    # voxelize the meshes and get the indices
-    LOGGER.debug("voxelize STL files")
-    domain_def = _get_domain_def(pts, connect, domain_stl, mesh_stl, thr)
+    # voxelize the meshes
+    LOGGER.debug("voxelize the meshes")
+    with LOGGER.BlockIndent():
+        domain_def = _get_domain_def(pts, connect, domain_def, mesh_stl, thr)
 
     # cast to lists
     n = n.tolist()
