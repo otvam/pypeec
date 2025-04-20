@@ -533,7 +533,7 @@ def get_prepare(name, idx_out, idx_in, mat, split, fft_options):
     footprint = (itemsize * nnz) / (1024**2)
 
     # display the tensor size
-    LOGGER.debug("tensor: %s / %.2f MB", name, footprint)
+    LOGGER.debug("%s / footprint = %.2f MB", name, footprint)
 
     # get the sign that will be applied to the different blocks of the tensor
     sign = _get_tensor_sign(name, nd_in)
@@ -572,7 +572,10 @@ def get_prepare(name, idx_out, idx_in, mat, split, fft_options):
         idx_in_mat = _get_indices(nx, ny, nz, idx_in, nd_out, None)
         idx_out_mat = _get_indices(nx, ny, nz, idx_out, nd_out, None)
 
-    return name, n_in, n_out, idx_in_mat, idx_out_mat, mat_fft
+    # assemble
+    data = (name, n_in, n_out, idx_in_mat, idx_out_mat, mat_fft)
+
+    return data
 
 
 def get_multiply(data, vec_in, split, fft_options, flip):

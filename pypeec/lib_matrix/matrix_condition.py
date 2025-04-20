@@ -49,8 +49,8 @@ def get_condition_matrix(mat, norm_options):
     n_iter_max = norm_options["n_iter_max"]
 
     # display
-    LOGGER.debug("matrix size: (%d, %d)", nx, ny)
-    LOGGER.debug("matrix elements: %d", nnz)
+    LOGGER.debug("matrix / size = (%d, %d)", nx, ny)
+    LOGGER.debug("matrix / sparsity = %d", nnz)
 
     # check if the matrix is empty
     if (nx, ny) == (0, 0):

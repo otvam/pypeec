@@ -91,7 +91,7 @@ def _get_grid_voxel(data_init, data_sweep):
     return grid, voxel, point, solver_convergence
 
 
-def _get_plot(tag, data_plotter, grid, voxel, point, solver_convergence, gui_obj):
+def _get_plot(tag_sweep, tag_plot, data_plotter, grid, voxel, point, solver_convergence, gui_obj):
     """
     Make a plot with the specified user settings.
     """
@@ -102,6 +102,9 @@ def _get_plot(tag, data_plotter, grid, voxel, point, solver_convergence, gui_obj
     data_window = data_plotter["data_window"]
     data_plot = data_plotter["data_plot"]
     data_options = data_plotter["data_options"]
+
+    # combine the plot tags
+    tag = tag_sweep + "_" + tag_plot
 
     # make the plots
     if framework == "pyvista":
@@ -136,7 +139,7 @@ def _get_sweep(tag_sweep, data_sweep, data_init, data_plotter, gui_obj):
     # make the plots
     for tag_plot, data_plotter_tmp in data_plotter.items():
         LOGGER.info("plot / %s", tag_plot)
-        _get_plot(tag_sweep + "_" + tag_plot, data_plotter_tmp, grid, voxel, point, solver_convergence, gui_obj)
+        _get_plot(tag_sweep, tag_plot, data_plotter_tmp, grid, voxel, point, solver_convergence, gui_obj)
 
 
 def _run_extract_solution(data_solution):
@@ -193,7 +196,7 @@ def run(
 
     # plot the sweeps
     for tag_sweep, data_sweep_tmp in data_sweep.items():
-        LOGGER.info("plot sweep: %s", tag_sweep)
+        LOGGER.info("sweep / %s", tag_sweep)
         with LOGGER.BlockIndent():
             _get_sweep(tag_sweep, data_sweep_tmp, data_init, data_plotter, gui_obj)
 

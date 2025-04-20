@@ -102,10 +102,11 @@ def get_inductance_matrix(n, d, idx_f, G_self, G_mutual, dense_options):
         - Output size: n_f.
     """
 
+    # get the operator size
+    LOGGER.debug("inductance / operator = (%d x %d)", len(idx_f), len(idx_f))
+
     # check if the matrix is required
     if len(idx_f) == 0:
-        LOGGER.debug("tensor: inductance / empty")
-
         # dummy diagonal coefficient
         L = np.nan
 
@@ -158,10 +159,11 @@ def get_potential_matrix(d, idx_v, G_self, G_mutual, dense_options):
         - Output size: n_v.
     """
 
+    # get the operator size
+    LOGGER.debug("potential / operator = (%d x %d)", len(idx_v), len(idx_v))
+
     # check if the matrix is required
     if len(idx_v) == 0:
-        LOGGER.debug("tensor: potential / empty")
-
         # dummy diagonal coefficient
         P = np.nan
 
@@ -219,10 +221,12 @@ def get_coupling_matrix(n, idx_vc, idx_vm, idx_fc, idx_fm, A_net_c, A_net_m, K_t
         - Output size: n_fm.
     """
 
+    # get the operator size
+    LOGGER.debug("coupling / operator = (%d x %d)", len(idx_fc), len(idx_fm))
+    LOGGER.debug("coupling / operator = (%d x %d)", len(idx_fm), len(idx_fc))
+
     # check if the matrix is required
     if (len(idx_fc) == 0) or (len(idx_fm) == 0):
-        LOGGER.debug("tensor: coupling / empty")
-
         # dummy magnetic to the electric multiplication operator
         K_op_c = _get_operator_zeros(idx_fc)
 

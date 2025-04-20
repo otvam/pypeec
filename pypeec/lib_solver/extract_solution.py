@@ -339,7 +339,7 @@ def get_material(material_all, A_net_c, A_net_m, P_fc, P_fm):
         material_losses[tag] = {"P_electric": P_vc_tmp, "P_magnetic": P_vm_tmp, "P_total": P_tmp}
 
         # display
-        LOGGER.debug("domain: %s", tag)
+        LOGGER.debug("domain = %s", tag)
         with LOGGER.BlockIndent():
             LOGGER.debug("P_electric = %.2e W", P_vc_tmp)
             LOGGER.debug("P_magnetic = %.2e W", P_vm_tmp)
@@ -404,7 +404,7 @@ def get_source(freq, source_all, I_src, V_vc):
         S_total += S_tmp
 
         # display
-        LOGGER.debug("terminal: %s", tag)
+        LOGGER.debug("terminal = %s", tag)
         with LOGGER.BlockIndent():
             # source type
             LOGGER.debug("type = %s / %s", source_type, var_type)

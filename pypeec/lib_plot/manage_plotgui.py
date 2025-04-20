@@ -396,9 +396,11 @@ class PlotGui:
         Finalize the plots (show the plots or save the plots).
         """
 
-        LOGGER.debug("number of PyVista plots: %s", len(self.pl_list))
-        LOGGER.debug("number of Matplotlib plots: %s", len(self.fig_list))
-        LOGGER.debug("number of VTK datasets: %s", len(self.vtk_list))
+        LOGGER.debug("plot statistics")
+        with LOGGER.BlockIndent():
+            LOGGER.debug("number of 3D plots = %s", len(self.pl_list))
+            LOGGER.debug("number of 2D plots = %s", len(self.fig_list))
+            LOGGER.debug("number of VTK datasets = %s", len(self.vtk_list))
 
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
             return

@@ -579,7 +579,7 @@ def _run_parallel_sweep(tag, sol_init, data_solver, data_internal, data_param):
     Wrapper to solve a sweep in parallel (ensure that everything can be serialized).
     """
 
-    with LOGGER.BlockTimer("run sweep: " + tag):
+    with LOGGER.BlockTimer("sweep / %s" % tag):
         (data_sweep, sol) = _run_solver_sweep(data_solver, data_internal, data_param, sol_init)
 
     return data_sweep, sol

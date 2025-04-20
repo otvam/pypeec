@@ -81,7 +81,7 @@ class _IterCounter:
         self.power_vec.append(power_tmp)
 
         # log the results
-        LOGGER.debug("i = %d / %s VA", iter_tmp, f"{power_tmp:.2e}")
+        LOGGER.debug("iter = %d / S = %s VA", iter_tmp, f"{power_tmp:.2e}")
 
         # convergence iter condition
         n_iter_min = np.max([2, self.n_cmp + 1, self.n_min])
@@ -476,9 +476,6 @@ def get_solver(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, fct_conv, s
         # first callback with the solution
         iter_obj.get_callback_init(sol_init)
 
-        # start the solver
-        LOGGER.debug("solver: start")
-
         # solve the equation system
         try:
             # run the solver
@@ -508,10 +505,10 @@ def get_solver(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, fct_conv, s
                 raise ValueError("invalid coupling method")
 
             # residuum solver convergence
-            LOGGER.debug("solver: residuum convergence")
+            power = False
         except _PowerConvergenceError as ex:
             # power solver convergence
-            LOGGER.debug("solver: power convergence")
+            power = True
 
             # get the solution
             status = ex.status
@@ -551,16 +548,18 @@ def get_solver(sol_init, fct_cpl_cm, fct_sys_cm, fct_pcd_cm, rhs_cm, fct_conv, s
         "residuum_val": residuum_val,
         "residuum_thr": residuum_thr,
         "status": status,
+        "power": power,
     }
 
     # display results
     LOGGER.debug("solver summary")
     with LOGGER.BlockIndent():
         # display results
-        LOGGER.debug("status = %s", status)
         LOGGER.debug("n_dof_total = %d", n_dof_total)
         LOGGER.debug("n_dof_electric = %d", n_dof_electric)
         LOGGER.debug("n_dof_magnetic = %d", n_dof_magnetic)
+        LOGGER.debug("status = %s", status)
+        LOGGER.debug("power = %s", power)
         LOGGER.debug("n_iter = %d", n_iter)
         LOGGER.debug("n_sys_eval = %d", n_sys_eval)
         LOGGER.debug("n_pcd_eval = %d", n_pcd_eval)
@@ -585,12 +584,12 @@ def get_factorization(pcd_mat_cm, factorization_options):
     (pcd_mat_c, pcd_mat_m) = pcd_mat_cm
 
     # factorize the electric system
-    LOGGER.debug("factorization: electric")
+    LOGGER.debug("factorization / electric")
     with LOGGER.BlockIndent():
         (fct_c, C_mat_c) = matrix_factorization.get_factorize(pcd_mat_c, factorization_options)
 
     # factorize the magnetic system
-    LOGGER.debug("factorization: magnetic")
+    LOGGER.debug("factorization / magnetic")
     with LOGGER.BlockIndent():
         (fct_m, C_mat_m) = matrix_factorization.get_factorize(pcd_mat_m, factorization_options)
 
@@ -620,11 +619,11 @@ def get_condition(cond_mat_cm, conditions_options):
 
     # check the condition
     if check:
-        LOGGER.debug("condition: electric")
+        LOGGER.debug("condition / electric")
         with LOGGER.BlockIndent():
             cond_electric = matrix_condition.get_condition_matrix(cond_mat_c, norm_options)
 
-        LOGGER.debug("condition: magnetic")
+        LOGGER.debug("condition / magnetic")
         with LOGGER.BlockIndent():
             cond_magnetic = matrix_condition.get_condition_matrix(cond_mat_m, norm_options)
 

@@ -48,9 +48,9 @@ def _get_dense_zero(idx_out, idx_in, mat, idx_row, idx_col):
     n_col = np.count_nonzero(idx_col)
 
     # create an empty matrix
-    mat_dense = np.zeros((n_row, n_col), dtype=np.float64)
+    data = np.zeros((n_row, n_col), dtype=np.float64)
 
-    return mat_dense
+    return data
 
 
 def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
@@ -64,9 +64,6 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
 
     # voxel index array
     (idx_x, idx_y, idx_z) = _get_voxel_indices(nx, ny, nz)
-
-    # get the coefficients
-    mat_tmp = mat.flatten(order="F")
 
     # get the indices of the non-empty face for the current dimension
     idx_row = np.isin(np.arange(idx_row * nv, (idx_row + 1) * nv, dtype=np.int64), idx_out)
@@ -108,10 +105,13 @@ def _get_dense_diag(idx_out, idx_in, mat, idx_row, idx_col, sign_type):
     # get the linear indices
     idx = idx_x_tmp + idx_y_tmp * nx + idx_z_tmp * nx * ny
 
-    # assemble the full matrix for the current dimension
-    mat_dense = sign * mat_tmp[idx]
+    # get the coefficients
+    mat_tmp = mat.flatten(order="F")
 
-    return mat_dense
+    # assemble the full matrix for the current dimension
+    data = sign * mat_tmp[idx]
+
+    return data
 
 
 def get_prepare(name, idx_out, idx_in, mat):
@@ -130,7 +130,7 @@ def get_prepare(name, idx_out, idx_in, mat):
     footprint = (itemsize * n_out * n_in) / (1024**2)
 
     # display the matrix size
-    LOGGER.debug("tensor: %s / %.2f MB", name, footprint)
+    LOGGER.debug("%s / footprint =  %.2f MB", name, footprint)
 
     # get the permutation for sorting
     idx_perm_out = np.argsort(idx_out)
@@ -146,60 +146,60 @@ def get_prepare(name, idx_out, idx_in, mat):
 
     # get the matrix (sorted indices)
     if name == "potential":
-        mat_dense = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
+        data = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
     elif name == "inductance":
         # fill the diagonal blocks
-        mat_dense_xx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
-        mat_dense_yy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 1, 1, "abs")
-        mat_dense_zz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 2, 2, "abs")
+        data_xx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 0, 0, "abs")
+        data_yy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 1, 1, "abs")
+        data_zz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 2, 2, "abs")
 
         # the off-diagonal blocks are empty
-        mat_dense_xy = _get_dense_zero(idx_out, idx_in, mat, 0, 1)
-        mat_dense_xz = _get_dense_zero(idx_out, idx_in, mat, 0, 2)
-        mat_dense_yx = _get_dense_zero(idx_out, idx_in, mat, 1, 0)
-        mat_dense_yz = _get_dense_zero(idx_out, idx_in, mat, 1, 2)
-        mat_dense_zx = _get_dense_zero(idx_out, idx_in, mat, 2, 0)
-        mat_dense_zy = _get_dense_zero(idx_out, idx_in, mat, 2, 1)
+        data_xy = _get_dense_zero(idx_out, idx_in, mat, 0, 1)
+        data_xz = _get_dense_zero(idx_out, idx_in, mat, 0, 2)
+        data_yx = _get_dense_zero(idx_out, idx_in, mat, 1, 0)
+        data_yz = _get_dense_zero(idx_out, idx_in, mat, 1, 2)
+        data_zx = _get_dense_zero(idx_out, idx_in, mat, 2, 0)
+        data_zy = _get_dense_zero(idx_out, idx_in, mat, 2, 1)
 
         # assemble the matrix from the blocks
-        mat_dense = [
-            [mat_dense_xx, mat_dense_xy, mat_dense_xz],
-            [mat_dense_yx, mat_dense_yy, mat_dense_yz],
-            [mat_dense_zx, mat_dense_zy, mat_dense_zz],
+        data = [
+            [data_xx, data_xy, data_xz],
+            [data_yx, data_yy, data_yz],
+            [data_zx, data_zy, data_zz],
         ]
-        mat_dense = np.block(mat_dense)
+        data = np.block(data)
     elif name == "coupling":
         # fill the off-diagonal blocks
-        mat_dense_xy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 2], 0, 1, "z")
-        mat_dense_xz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 1], 0, 2, "y")
-        mat_dense_yx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 2], 1, 0, "z")
-        mat_dense_yz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 1, 2, "x")
-        mat_dense_zx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 1], 2, 0, "y")
-        mat_dense_zy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 2, 1, "x")
+        data_xy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 2], 0, 1, "z")
+        data_xz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 1], 0, 2, "y")
+        data_yx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 2], 1, 0, "z")
+        data_yz = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 1, 2, "x")
+        data_zx = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 1], 2, 0, "y")
+        data_zy = _get_dense_diag(idx_out, idx_in, mat[:, :, :, 0], 2, 1, "x")
 
         # the diagonal blocks are empty
-        mat_dense_xx = _get_dense_zero(idx_out, idx_in, mat, 0, 0)
-        mat_dense_yy = _get_dense_zero(idx_out, idx_in, mat, 1, 1)
-        mat_dense_zz = _get_dense_zero(idx_out, idx_in, mat, 2, 2)
+        data_xx = _get_dense_zero(idx_out, idx_in, mat, 0, 0)
+        data_yy = _get_dense_zero(idx_out, idx_in, mat, 1, 1)
+        data_zz = _get_dense_zero(idx_out, idx_in, mat, 2, 2)
 
         # assemble the matrix from the blocks
-        mat_dense = [
-            [mat_dense_xx, +mat_dense_xy, +mat_dense_xz],
-            [-mat_dense_yx, mat_dense_yy, +mat_dense_yz],
-            [-mat_dense_zx, -mat_dense_zy, mat_dense_zz],
+        data = [
+            [data_xx, +data_xy, +data_xz],
+            [-data_yx, data_yy, +data_yz],
+            [-data_zx, -data_zy, data_zz],
         ]
-        mat_dense = np.block(mat_dense)
+        data = np.block(data)
     else:
         raise ValueError("invalid matrix type")
 
     # restore the original indices order
-    mat_dense = mat_dense[idx_rev_out, :]
-    mat_dense = mat_dense[:, idx_rev_in]
+    data = data[idx_rev_out, :]
+    data = data[:, idx_rev_in]
 
-    return mat_dense
+    return data
 
 
-def get_multiply(mat_dense, vec_in, flip):
+def get_multiply(data, vec_in, flip):
     """
     Matrix-vector multiplication.
     If the flip switch is activated, the input and output are flipped.
@@ -210,8 +210,8 @@ def get_multiply(mat_dense, vec_in, flip):
     """
 
     if flip:
-        res_out = np.matmul(vec_in, mat_dense)
+        res_out = np.matmul(vec_in, data)
     else:
-        res_out = np.matmul(mat_dense, vec_in)
+        res_out = np.matmul(data, vec_in)
 
     return res_out
