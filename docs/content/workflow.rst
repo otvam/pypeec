@@ -119,5 +119,5 @@ The following **open-source tools** can be used to generate **GERBER** files:
 
 The following **open-source tools** can be used to **visualize 3D VTK** files:
 
-* Fast and minimalist: ``F3D``
 * Flexible and powerful: ``ParaView``
+* Fast and minimalist: ``F3D``

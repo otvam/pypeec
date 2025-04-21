@@ -1,198 +1,197 @@
 00:00:00.00 : pypeec   : info     : load the input data : start
-00:00:00.03 : pypeec   : info     : load the input data : done
-00:00:00.03 : pypeec   : info     : load the solver
-00:00:00.34 : pypeec   : info     : run the solver
-00:00:00.34 : pypeec   : info     : check the voxel data
-00:00:00.34 : pypeec   : info     : check the input data
-00:00:00.34 : pypeec   : info     : combine the input data
-00:00:00.34 : pypeec   : info     : init : enter : 00:00:00.00
-00:00:00.34 : pypeec   : info     :     voxel_geometry : enter : 00:00:00.00
-00:00:00.51 : pypeec   : info     :     voxel_geometry : exit : 00:00:00.17
-00:00:00.51 : pypeec   : info     :     problem_geometry : enter : 00:00:00.00
-00:00:00.56 : pypeec   : debug    :         n_voxel_total = 331056
-00:00:00.56 : pypeec   : debug    :         n_voxel_used = 21215
-00:00:00.56 : pypeec   : debug    :         n_face_total = 993168
-00:00:00.56 : pypeec   : debug    :         n_face_used = 42062
-00:00:00.56 : pypeec   : debug    :         n_voxel_electric = 21215
-00:00:00.56 : pypeec   : debug    :         n_voxel_magnetic = 0
-00:00:00.56 : pypeec   : debug    :         n_face_electric = 42062
-00:00:00.56 : pypeec   : debug    :         n_face_magnetic = 0
-00:00:00.56 : pypeec   : debug    :         n_src_current = 0
-00:00:00.56 : pypeec   : debug    :         n_src_voltage = 722
-00:00:00.56 : pypeec   : debug    :         ratio_voxel = 6.41e-02
-00:00:00.56 : pypeec   : debug    :         ratio_face = 4.24e-02
-00:00:00.56 : pypeec   : info     :     problem_geometry : exit : 00:00:00.05
-00:00:00.56 : pypeec   : info     :     system_tensor : enter : 00:00:00.00
-00:00:00.56 : pypeec   : debug    :         analytical solution: 6D / 1
-00:00:00.59 : pypeec   : debug    :         analytical solution: 6D / 4624
-00:00:00.75 : pypeec   : debug    :         numerical approximation: 6D / 326432
-00:00:00.77 : pypeec   : info     :     system_tensor : exit : 00:00:00.21
-00:00:00.77 : pypeec   : info     :     system_matrix : enter : 00:00:00.00
-00:00:00.80 : pypeec   : debug    :         tensor: inductance / 40.41 MB
-00:00:00.92 : pypeec   : debug    :         tensor: potential / empty
-00:00:00.92 : pypeec   : debug    :         tensor: coupling / empty
-00:00:00.92 : pypeec   : info     :     system_matrix : exit : 00:00:00.15
-00:00:00.92 : pypeec   : info     : init : exit : 00:00:00.57
-00:00:00.92 : pypeec   : info     : run sweep: sim_dc : enter : 00:00:00.00
-00:00:00.92 : pypeec   : info     :     problem_value : enter : 00:00:00.00
-00:00:00.93 : pypeec   : info     :     problem_value : exit : 00:00:00.02
-00:00:00.93 : pypeec   : info     :     equation_system : enter : 00:00:00.00
-00:00:00.94 : pypeec   : info     :     equation_system : exit : 00:00:00.01
-00:00:00.94 : pypeec   : info     :     extract_convergence : enter : 00:00:00.00
-00:00:00.94 : pypeec   : info     :     extract_convergence : exit : 00:00:00.00
-00:00:00.94 : pypeec   : info     :     equation_solver : enter : 00:00:00.00
-00:00:00.94 : pypeec   : debug    :         factorization: electric
-00:00:00.95 : pypeec   : debug    :             matrix size: (21937, 21937)
-00:00:00.95 : pypeec   : debug    :             matrix elements: 107505 / 481231969
-00:00:00.95 : pypeec   : debug    :             compute factorization
-00:00:01.06 : pypeec   : debug    :             factorization success
-00:00:01.06 : pypeec   : debug    :         factorization: magnetic
-00:00:01.06 : pypeec   : debug    :             matrix size: (0, 0)
-00:00:01.06 : pypeec   : debug    :             matrix elements: 0 / 0
-00:00:01.06 : pypeec   : debug    :         condition: electric
-00:00:01.06 : pypeec   : debug    :             matrix size: (21937, 21937)
-00:00:01.06 : pypeec   : debug    :             matrix elements: 107505 / 481231969
-00:00:01.06 : pypeec   : debug    :             compute LU decomposition
-00:00:01.15 : pypeec   : debug    :             estimate norm of the inverse
-00:00:01.19 : pypeec   : debug    :             estimate norm of the matrix
-00:00:01.20 : pypeec   : debug    :             compute condition estimate
-00:00:01.20 : pypeec   : debug    :         condition: magnetic
-00:00:01.20 : pypeec   : debug    :             matrix size: (0, 0)
-00:00:01.20 : pypeec   : debug    :             matrix elements: 0 / 0
-00:00:01.20 : pypeec   : debug    :         condition summary
-00:00:01.20 : pypeec   : debug    :             check = True
-00:00:01.20 : pypeec   : debug    :             status = True
-00:00:01.20 : pypeec   : debug    :             cond_electric = 3.25e+06
-00:00:01.20 : pypeec   : debug    :             cond_magnetic = 0.00e+00
-00:00:01.20 : pypeec   : debug    :             matrix condition is good
-00:00:01.20 : pypeec   : debug    :         solver run
-00:00:01.21 : pypeec   : debug    :             init / 0.00e+00+0.00e+00j VA
-00:00:01.21 : pypeec   : debug    :             solver: start
-00:00:01.24 : pypeec   : debug    :             i = 1 / 1.98e+01+0.00e+00j VA
-00:00:01.24 : pypeec   : debug    :             solver: residuum convergence
-00:00:01.25 : pypeec   : debug    :             final / 1.98e+01+0.00e+00j VA
-00:00:01.25 : pypeec   : debug    :         solver summary
-00:00:01.25 : pypeec   : debug    :             status = True
-00:00:01.25 : pypeec   : debug    :             n_dof_total = 63999
-00:00:01.25 : pypeec   : debug    :             n_dof_electric = 63999
-00:00:01.25 : pypeec   : debug    :             n_dof_magnetic = 0
-00:00:01.25 : pypeec   : debug    :             n_iter = 1
-00:00:01.25 : pypeec   : debug    :             n_sys_eval = 2
-00:00:01.25 : pypeec   : debug    :             n_pcd_eval = 3
-00:00:01.25 : pypeec   : debug    :             residuum_val = 9.43e-11
-00:00:01.25 : pypeec   : debug    :             residuum_thr = 1.90e-02
-00:00:01.25 : pypeec   : debug    :             convergence achieved
-00:00:01.25 : pypeec   : info     :     equation_solver : exit : 00:00:00.31
-00:00:01.25 : pypeec   : info     :     extract_solution : enter : 00:00:00.00
-00:00:01.66 : pypeec   : debug    :         domain: trace_via
-00:00:01.66 : pypeec   : debug    :             P_electric = 1.96e+01 W
-00:00:01.66 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
-00:00:01.66 : pypeec   : debug    :             P_total = 1.96e+01 W
-00:00:01.66 : pypeec   : debug    :         domain: src_sink
-00:00:01.66 : pypeec   : debug    :             P_electric = 1.70e-01 W
-00:00:01.66 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
-00:00:01.66 : pypeec   : debug    :             P_total = 1.70e-01 W
-00:00:01.66 : pypeec   : debug    :         terminal: src
-00:00:01.66 : pypeec   : debug    :             type = voltage / lumped
-00:00:01.66 : pypeec   : debug    :             V = +9.79e-01 + +0.00e+00j V
-00:00:01.66 : pypeec   : debug    :             I = +2.06e+01 + +0.00e+00j A
-00:00:01.66 : pypeec   : debug    :             S = +2.02e+01 + +0.00e+00j VA
-00:00:01.66 : pypeec   : debug    :         terminal: sink
-00:00:01.66 : pypeec   : debug    :             type = voltage / lumped
-00:00:01.66 : pypeec   : debug    :             V = +2.06e-02 + +0.00e+00j V
-00:00:01.66 : pypeec   : debug    :             I = -2.06e+01 + +0.00e+00j A
-00:00:01.66 : pypeec   : debug    :             S = -4.28e-01 + +0.00e+00j VA
-00:00:01.66 : pypeec   : debug    :         integral
-00:00:01.66 : pypeec   : debug    :             S_total_real = 1.98e+01 VA
-00:00:01.66 : pypeec   : debug    :             S_total_imag = 0.00e+00j VA
-00:00:01.66 : pypeec   : debug    :             P_electric = 1.98e+01 W
-00:00:01.66 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
-00:00:01.66 : pypeec   : debug    :             W_electric = 1.24e-05 J
-00:00:01.66 : pypeec   : debug    :             W_magnetic = 0.00e+00 J
-00:00:01.66 : pypeec   : debug    :             P_total = 1.98e+01 W
-00:00:01.66 : pypeec   : debug    :             W_total = 1.24e-05 J
-00:00:01.91 : pypeec   : info     :     extract_solution : exit : 00:00:00.66
-00:00:01.91 : pypeec   : info     : run sweep: sim_dc : exit : 00:00:00.99
-00:00:01.91 : pypeec   : info     : run sweep: sim_ac : enter : 00:00:00.00
-00:00:01.91 : pypeec   : info     :     problem_value : enter : 00:00:00.00
-00:00:01.93 : pypeec   : info     :     problem_value : exit : 00:00:00.03
-00:00:01.93 : pypeec   : info     :     equation_system : enter : 00:00:00.00
-00:00:01.94 : pypeec   : info     :     equation_system : exit : 00:00:00.01
-00:00:01.94 : pypeec   : info     :     extract_convergence : enter : 00:00:00.00
-00:00:01.94 : pypeec   : info     :     extract_convergence : exit : 00:00:00.00
-00:00:01.94 : pypeec   : info     :     equation_solver : enter : 00:00:00.00
-00:00:01.94 : pypeec   : debug    :         factorization: electric
-00:00:01.95 : pypeec   : debug    :             matrix size: (21937, 21937)
-00:00:01.95 : pypeec   : debug    :             matrix elements: 107505 / 481231969
-00:00:01.95 : pypeec   : debug    :             compute factorization
-00:00:02.05 : pypeec   : debug    :             factorization success
-00:00:02.05 : pypeec   : debug    :         factorization: magnetic
-00:00:02.05 : pypeec   : debug    :             matrix size: (0, 0)
-00:00:02.05 : pypeec   : debug    :             matrix elements: 0 / 0
-00:00:02.05 : pypeec   : debug    :         condition: electric
-00:00:02.05 : pypeec   : debug    :             matrix size: (21937, 21937)
-00:00:02.05 : pypeec   : debug    :             matrix elements: 107505 / 481231969
-00:00:02.05 : pypeec   : debug    :             compute LU decomposition
-00:00:02.14 : pypeec   : debug    :             estimate norm of the inverse
-00:00:02.21 : pypeec   : debug    :             estimate norm of the matrix
-00:00:02.22 : pypeec   : debug    :             compute condition estimate
-00:00:02.22 : pypeec   : debug    :         condition: magnetic
-00:00:02.22 : pypeec   : debug    :             matrix size: (0, 0)
-00:00:02.22 : pypeec   : debug    :             matrix elements: 0 / 0
-00:00:02.22 : pypeec   : debug    :         condition summary
-00:00:02.22 : pypeec   : debug    :             check = True
-00:00:02.22 : pypeec   : debug    :             status = True
-00:00:02.22 : pypeec   : debug    :             cond_electric = 3.25e+06
-00:00:02.22 : pypeec   : debug    :             cond_magnetic = 0.00e+00
-00:00:02.22 : pypeec   : debug    :             matrix condition is good
-00:00:02.22 : pypeec   : debug    :         solver run
-00:00:02.23 : pypeec   : debug    :             init / 9.89e+00+0.00e+00j VA
-00:00:02.23 : pypeec   : debug    :             solver: start
-00:00:06.69 : pypeec   : debug    :             i = 1 / 2.03e-01+1.35e+00j VA
-00:00:06.69 : pypeec   : debug    :             solver: residuum convergence
-00:00:06.69 : pypeec   : debug    :             final / 2.03e-01+1.35e+00j VA
-00:00:07.08 : pypeec   : debug    :         solver summary
-00:00:07.08 : pypeec   : debug    :             status = True
-00:00:07.08 : pypeec   : debug    :             n_dof_total = 63999
-00:00:07.08 : pypeec   : debug    :             n_dof_electric = 63999
-00:00:07.08 : pypeec   : debug    :             n_dof_magnetic = 0
-00:00:07.08 : pypeec   : debug    :             n_iter = 1
-00:00:07.08 : pypeec   : debug    :             n_sys_eval = 12
-00:00:07.08 : pypeec   : debug    :             n_pcd_eval = 12
-00:00:07.08 : pypeec   : debug    :             residuum_val = 1.16e-06
-00:00:07.08 : pypeec   : debug    :             residuum_thr = 1.90e-02
-00:00:07.08 : pypeec   : debug    :             convergence achieved
-00:00:07.08 : pypeec   : info     :     equation_solver : exit : 00:00:05.14
-00:00:07.08 : pypeec   : info     :     extract_solution : enter : 00:00:00.00
-00:00:07.43 : pypeec   : debug    :         domain: trace_via
-00:00:07.43 : pypeec   : debug    :             P_electric = 2.01e-01 W
-00:00:07.43 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
-00:00:07.43 : pypeec   : debug    :             P_total = 2.01e-01 W
-00:00:07.43 : pypeec   : debug    :         domain: src_sink
-00:00:07.43 : pypeec   : debug    :             P_electric = 1.96e-03 W
-00:00:07.43 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
-00:00:07.43 : pypeec   : debug    :             P_total = 1.96e-03 W
-00:00:07.43 : pypeec   : debug    :         terminal: src
-00:00:07.43 : pypeec   : debug    :             type = voltage / lumped
-00:00:07.43 : pypeec   : debug    :             V = +1.00e+00 + +2.70e-03j V
-00:00:07.43 : pypeec   : debug    :             I = +4.37e-01 + -2.70e+00j A
-00:00:07.43 : pypeec   : debug    :             S = +2.11e-01 + +1.35e+00j VA
-00:00:07.43 : pypeec   : debug    :         terminal: sink
-00:00:07.43 : pypeec   : debug    :             type = voltage / lumped
-00:00:07.43 : pypeec   : debug    :             V = +4.37e-04 + -2.70e-03j V
-00:00:07.43 : pypeec   : debug    :             I = -4.37e-01 + +2.70e+00j A
-00:00:07.43 : pypeec   : debug    :             S = -7.67e-03 + -1.58e-15j VA
-00:00:07.43 : pypeec   : debug    :         integral
-00:00:07.43 : pypeec   : debug    :             S_total_real = 2.03e-01 VA
-00:00:07.43 : pypeec   : debug    :             S_total_imag = 1.35e+00j VA
-00:00:07.43 : pypeec   : debug    :             P_electric = 2.03e-01 W
-00:00:07.43 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
-00:00:07.43 : pypeec   : debug    :             W_electric = 1.07e-07 J
-00:00:07.43 : pypeec   : debug    :             W_magnetic = 0.00e+00 J
-00:00:07.43 : pypeec   : debug    :             P_total = 2.03e-01 W
-00:00:07.43 : pypeec   : debug    :             W_total = 1.07e-07 J
-00:00:07.66 : pypeec   : info     :     extract_solution : exit : 00:00:00.59
-00:00:07.66 : pypeec   : info     : run sweep: sim_ac : exit : 00:00:05.76
-00:00:07.66 : pypeec   : info     : successful solver termination
-00:00:07.66 : pypeec   : info     : save the results : start
-00:00:10.78 : pypeec   : info     : save the results : done
+00:00:00.10 : pypeec   : info     : load the input data : done
+00:00:00.10 : pypeec   : info     : load the solver
+00:00:01.07 : pypeec   : info     : run the solver
+00:00:01.07 : pypeec   : info     : check the input data
+00:00:01.08 : pypeec   : info     : combine the input data
+00:00:01.08 : pypeec   : info     : init : enter : 00:00:00.00
+00:00:01.09 : pypeec   : info     :     voxel_geometry : enter : 00:00:00.00
+00:00:01.53 : pypeec   : info     :     voxel_geometry : exit : 00:00:00.44
+00:00:01.53 : pypeec   : info     :     problem_geometry : enter : 00:00:00.00
+00:00:01.67 : pypeec   : debug    :         n_voxel_total = 331056
+00:00:01.67 : pypeec   : debug    :         n_voxel_used = 21215
+00:00:01.67 : pypeec   : debug    :         n_face_total = 993168
+00:00:01.67 : pypeec   : debug    :         n_face_used = 42062
+00:00:01.67 : pypeec   : debug    :         n_voxel_electric = 21215
+00:00:01.67 : pypeec   : debug    :         n_voxel_magnetic = 0
+00:00:01.67 : pypeec   : debug    :         n_face_electric = 42062
+00:00:01.67 : pypeec   : debug    :         n_face_magnetic = 0
+00:00:01.67 : pypeec   : debug    :         n_src_current = 0
+00:00:01.67 : pypeec   : debug    :         n_src_voltage = 722
+00:00:01.67 : pypeec   : debug    :         ratio_voxel = 6.41e-02
+00:00:01.67 : pypeec   : debug    :         ratio_face = 4.24e-02
+00:00:01.67 : pypeec   : info     :     problem_geometry : exit : 00:00:00.15
+00:00:01.67 : pypeec   : info     :     system_tensor : enter : 00:00:00.00
+00:00:01.67 : pypeec   : debug    :         analytical / 6D / size = 1
+00:00:01.74 : pypeec   : debug    :         analytical / 6D / size = 4624
+00:00:02.17 : pypeec   : debug    :         numerical / 6D / size = 326432
+00:00:02.21 : pypeec   : info     :     system_tensor : exit : 00:00:00.53
+00:00:02.21 : pypeec   : info     :     system_matrix : enter : 00:00:00.00
+00:00:02.21 : pypeec   : debug    :         inductance / operator = (42062 x 42062)
+00:00:02.29 : pypeec   : debug    :         inductance / footprint = 40.41 MB
+00:00:02.54 : pypeec   : debug    :         potential / operator = (0 x 0)
+00:00:02.54 : pypeec   : debug    :         coupling / operator = (42062 x 0)
+00:00:02.54 : pypeec   : debug    :         coupling / operator = (0 x 42062)
+00:00:02.54 : pypeec   : info     :     system_matrix : exit : 00:00:00.33
+00:00:02.54 : pypeec   : info     : init : exit : 00:00:01.45
+00:00:02.54 : pypeec   : info     : sweep / sim_dc : enter : 00:00:00.00
+00:00:02.54 : pypeec   : info     :     problem_value : enter : 00:00:00.00
+00:00:02.58 : pypeec   : info     :     problem_value : exit : 00:00:00.04
+00:00:02.58 : pypeec   : info     :     equation_system : enter : 00:00:00.00
+00:00:02.60 : pypeec   : info     :     equation_system : exit : 00:00:00.02
+00:00:02.60 : pypeec   : info     :     extract_convergence : enter : 00:00:00.00
+00:00:02.60 : pypeec   : info     :     extract_convergence : exit : 00:00:00.00
+00:00:02.60 : pypeec   : info     :     equation_solver : enter : 00:00:00.00
+00:00:02.60 : pypeec   : debug    :         factorization / electric
+00:00:02.63 : pypeec   : debug    :             matrix / size = (21937, 21937)
+00:00:02.63 : pypeec   : debug    :             matrix / sparsity = 107505
+00:00:02.63 : pypeec   : debug    :             compute factorization
+00:00:06.98 : pypeec   : debug    :             factorization success
+00:00:06.98 : pypeec   : debug    :         factorization / magnetic
+00:00:06.98 : pypeec   : debug    :             matrix / size = (0, 0)
+00:00:06.98 : pypeec   : debug    :             matrix / sparsity = 0
+00:00:06.98 : pypeec   : debug    :         condition / electric
+00:00:06.98 : pypeec   : debug    :             matrix / size = (21937, 21937)
+00:00:06.98 : pypeec   : debug    :             matrix / sparsity = 107505
+00:00:06.98 : pypeec   : debug    :             compute LU decomposition
+00:00:10.15 : pypeec   : debug    :             estimate norm of the inverse
+00:00:10.40 : pypeec   : debug    :             estimate norm of the matrix
+00:00:10.60 : pypeec   : debug    :             compute condition estimate
+00:00:10.61 : pypeec   : debug    :         condition / magnetic
+00:00:10.61 : pypeec   : debug    :             matrix / size = (0, 0)
+00:00:10.61 : pypeec   : debug    :             matrix / sparsity = 0
+00:00:10.61 : pypeec   : debug    :         condition summary
+00:00:10.61 : pypeec   : debug    :             check = True
+00:00:10.61 : pypeec   : debug    :             status = True
+00:00:10.61 : pypeec   : debug    :             cond_electric = 3.25e+06
+00:00:10.61 : pypeec   : debug    :             cond_magnetic = 0.00e+00
+00:00:10.61 : pypeec   : debug    :             matrix condition is good
+00:00:10.61 : pypeec   : debug    :         solver run
+00:00:10.64 : pypeec   : debug    :             init / 0.00e+00+0.00e+00j VA
+00:00:10.89 : pypeec   : debug    :             iter = 1 / S = 1.98e+01+0.00e+00j VA
+00:00:10.90 : pypeec   : debug    :             final / 1.98e+01+0.00e+00j VA
+00:00:10.91 : pypeec   : debug    :         solver summary
+00:00:10.91 : pypeec   : debug    :             n_dof_total = 63999
+00:00:10.91 : pypeec   : debug    :             n_dof_electric = 63999
+00:00:10.91 : pypeec   : debug    :             n_dof_magnetic = 0
+00:00:10.91 : pypeec   : debug    :             status = True
+00:00:10.91 : pypeec   : debug    :             power = False
+00:00:10.91 : pypeec   : debug    :             n_iter = 1
+00:00:10.91 : pypeec   : debug    :             n_sys_eval = 2
+00:00:10.91 : pypeec   : debug    :             n_pcd_eval = 3
+00:00:10.92 : pypeec   : debug    :             residuum_val = 9.43e-11
+00:00:10.92 : pypeec   : debug    :             residuum_thr = 1.90e-02
+00:00:10.92 : pypeec   : debug    :             convergence achieved
+00:00:10.92 : pypeec   : info     :     equation_solver : exit : 00:00:08.32
+00:00:10.92 : pypeec   : info     :     extract_solution : enter : 00:00:00.00
+00:00:11.94 : pypeec   : debug    :         domain = trace_via
+00:00:11.94 : pypeec   : debug    :             P_electric = 1.96e+01 W
+00:00:11.94 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
+00:00:11.94 : pypeec   : debug    :             P_total = 1.96e+01 W
+00:00:11.94 : pypeec   : debug    :         domain = src_sink
+00:00:11.94 : pypeec   : debug    :             P_electric = 1.70e-01 W
+00:00:11.94 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
+00:00:11.94 : pypeec   : debug    :             P_total = 1.70e-01 W
+00:00:11.94 : pypeec   : debug    :         terminal = src
+00:00:11.94 : pypeec   : debug    :             type = voltage / lumped
+00:00:11.94 : pypeec   : debug    :             V = +9.79e-01+0.00e+00j V
+00:00:11.94 : pypeec   : debug    :             I = +2.06e+01+0.00e+00j A
+00:00:11.94 : pypeec   : debug    :             S = +2.02e+01+0.00e+00j VA
+00:00:11.94 : pypeec   : debug    :         terminal = sink
+00:00:11.94 : pypeec   : debug    :             type = voltage / lumped
+00:00:11.94 : pypeec   : debug    :             V = +2.06e-02+0.00e+00j V
+00:00:11.94 : pypeec   : debug    :             I = -2.06e+01+0.00e+00j A
+00:00:11.94 : pypeec   : debug    :             S = -4.28e-01+0.00e+00j VA
+00:00:11.94 : pypeec   : debug    :         integral
+00:00:11.95 : pypeec   : debug    :             S_total_real = 1.98e+01 VA
+00:00:11.95 : pypeec   : debug    :             S_total_imag = 0.00e+00j VA
+00:00:11.95 : pypeec   : debug    :             P_electric = 1.98e+01 W
+00:00:11.95 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
+00:00:11.95 : pypeec   : debug    :             W_electric = 1.24e-05 J
+00:00:11.95 : pypeec   : debug    :             W_magnetic = 0.00e+00 J
+00:00:11.95 : pypeec   : debug    :             P_total = 1.98e+01 W
+00:00:11.95 : pypeec   : debug    :             W_total = 1.24e-05 J
+00:00:12.54 : pypeec   : info     :     extract_solution : exit : 00:00:01.62
+00:00:12.54 : pypeec   : info     : sweep / sim_dc : exit : 00:00:10.01
+00:00:12.54 : pypeec   : info     : sweep / sim_ac : enter : 00:00:00.00
+00:00:12.54 : pypeec   : info     :     problem_value : enter : 00:00:00.00
+00:00:12.59 : pypeec   : info     :     problem_value : exit : 00:00:00.04
+00:00:12.59 : pypeec   : info     :     equation_system : enter : 00:00:00.00
+00:00:12.61 : pypeec   : info     :     equation_system : exit : 00:00:00.02
+00:00:12.61 : pypeec   : info     :     extract_convergence : enter : 00:00:00.00
+00:00:12.61 : pypeec   : info     :     extract_convergence : exit : 00:00:00.00
+00:00:12.61 : pypeec   : info     :     equation_solver : enter : 00:00:00.00
+00:00:12.61 : pypeec   : debug    :         factorization / electric
+00:00:12.63 : pypeec   : debug    :             matrix / size = (21937, 21937)
+00:00:12.63 : pypeec   : debug    :             matrix / sparsity = 107505
+00:00:12.63 : pypeec   : debug    :             compute factorization
+00:00:14.06 : pypeec   : debug    :             factorization success
+00:00:14.06 : pypeec   : debug    :         factorization / magnetic
+00:00:14.06 : pypeec   : debug    :             matrix / size = (0, 0)
+00:00:14.06 : pypeec   : debug    :             matrix / sparsity = 0
+00:00:14.06 : pypeec   : debug    :         condition / electric
+00:00:14.06 : pypeec   : debug    :             matrix / size = (21937, 21937)
+00:00:14.06 : pypeec   : debug    :             matrix / sparsity = 107505
+00:00:14.06 : pypeec   : debug    :             compute LU decomposition
+00:00:17.49 : pypeec   : debug    :             estimate norm of the inverse
+00:00:17.80 : pypeec   : debug    :             estimate norm of the matrix
+00:00:17.95 : pypeec   : debug    :             compute condition estimate
+00:00:17.95 : pypeec   : debug    :         condition / magnetic
+00:00:17.95 : pypeec   : debug    :             matrix / size = (0, 0)
+00:00:17.95 : pypeec   : debug    :             matrix / sparsity = 0
+00:00:17.95 : pypeec   : debug    :         condition summary
+00:00:17.95 : pypeec   : debug    :             check = True
+00:00:17.95 : pypeec   : debug    :             status = True
+00:00:17.95 : pypeec   : debug    :             cond_electric = 3.25e+06
+00:00:17.95 : pypeec   : debug    :             cond_magnetic = 0.00e+00
+00:00:17.95 : pypeec   : debug    :             matrix condition is good
+00:00:17.95 : pypeec   : debug    :         solver run
+00:00:17.96 : pypeec   : debug    :             init / 9.89e+00+0.00e+00j VA
+00:00:28.69 : pypeec   : debug    :             iter = 1 / S = 2.03e-01+1.35e+00j VA
+00:00:28.71 : pypeec   : debug    :             final / 2.03e-01+1.35e+00j VA
+00:00:29.19 : pypeec   : debug    :         solver summary
+00:00:29.19 : pypeec   : debug    :             n_dof_total = 63999
+00:00:29.19 : pypeec   : debug    :             n_dof_electric = 63999
+00:00:29.19 : pypeec   : debug    :             n_dof_magnetic = 0
+00:00:29.19 : pypeec   : debug    :             status = True
+00:00:29.19 : pypeec   : debug    :             power = False
+00:00:29.19 : pypeec   : debug    :             n_iter = 1
+00:00:29.19 : pypeec   : debug    :             n_sys_eval = 12
+00:00:29.19 : pypeec   : debug    :             n_pcd_eval = 12
+00:00:29.19 : pypeec   : debug    :             residuum_val = 1.16e-06
+00:00:29.19 : pypeec   : debug    :             residuum_thr = 1.90e-02
+00:00:29.19 : pypeec   : debug    :             convergence achieved
+00:00:29.19 : pypeec   : info     :     equation_solver : exit : 00:00:16.58
+00:00:29.19 : pypeec   : info     :     extract_solution : enter : 00:00:00.00
+00:00:29.70 : pypeec   : debug    :         domain = trace_via
+00:00:29.70 : pypeec   : debug    :             P_electric = 2.01e-01 W
+00:00:29.70 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
+00:00:29.70 : pypeec   : debug    :             P_total = 2.01e-01 W
+00:00:29.70 : pypeec   : debug    :         domain = src_sink
+00:00:29.71 : pypeec   : debug    :             P_electric = 1.96e-03 W
+00:00:29.71 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
+00:00:29.71 : pypeec   : debug    :             P_total = 1.96e-03 W
+00:00:29.71 : pypeec   : debug    :         terminal = src
+00:00:29.71 : pypeec   : debug    :             type = voltage / lumped
+00:00:29.71 : pypeec   : debug    :             V = +1.00e+00+2.70e-03j V
+00:00:29.71 : pypeec   : debug    :             I = +4.37e-01-2.70e+00j A
+00:00:29.71 : pypeec   : debug    :             S = +2.11e-01+1.35e+00j VA
+00:00:29.71 : pypeec   : debug    :         terminal = sink
+00:00:29.71 : pypeec   : debug    :             type = voltage / lumped
+00:00:29.71 : pypeec   : debug    :             V = +4.37e-04-2.70e-03j V
+00:00:29.71 : pypeec   : debug    :             I = -4.37e-01+2.70e+00j A
+00:00:29.71 : pypeec   : debug    :             S = -7.67e-03-1.58e-15j VA
+00:00:29.71 : pypeec   : debug    :         integral
+00:00:29.71 : pypeec   : debug    :             S_total_real = 2.03e-01 VA
+00:00:29.71 : pypeec   : debug    :             S_total_imag = 1.35e+00j VA
+00:00:29.71 : pypeec   : debug    :             P_electric = 2.03e-01 W
+00:00:29.71 : pypeec   : debug    :             P_magnetic = 0.00e+00 W
+00:00:29.71 : pypeec   : debug    :             W_electric = 1.07e-07 J
+00:00:29.71 : pypeec   : debug    :             W_magnetic = 0.00e+00 J
+00:00:29.71 : pypeec   : debug    :             P_total = 2.03e-01 W
+00:00:29.71 : pypeec   : debug    :             W_total = 1.07e-07 J
+00:00:30.22 : pypeec   : info     :     extract_solution : exit : 00:00:01.03
+00:00:30.22 : pypeec   : info     : sweep / sim_ac : exit : 00:00:17.68
+00:00:30.22 : pypeec   : info     : successful solver termination
+00:00:30.22 : pypeec   : info     : save the results : start
+00:00:36.74 : pypeec   : info     : save the results : done

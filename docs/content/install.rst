@@ -31,10 +31,10 @@ Using a Python Environment
     #   - Supported versions: 3.10, 3.11, 3.12, and 3.13
     #   - Python executable: "python" or "python3"
 
-    # Create a Python Virtual Environment
+    # Create a Python virtual environment
     python -m venv venv
 
-    # Activate the Python Virtual Environment
+    # Activate the Python environment
     source venv/bin/activate
 
     # Install PyPEEC from PyPI
@@ -53,10 +53,10 @@ Using a Conda Environment
     #   - Miniforge is sufficient for installing PyPEEC
     #   - Using mamba as a dependency solver is faster
 
-    # Create a Conda Environment with a Python interpreter
+    # Create a Conda environment with a Python interpreter
     mamba create -n pypeec python=3.11 pypeec
 
-    # Activate the Conda Environment
+    # Activate the Conda environment
     mamba activate pypeec
 
     # Check that PyPEEC is available

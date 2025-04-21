@@ -7,8 +7,8 @@ Step 1: Setup
 .. code-block:: bash
 
     # Install PyPEEC
-    #   - With a Python Environment
-    #   - With a Conda Environment
+    #   - With a Python environment
+    #   - With a Conda environment
 
     # Check the PyPEEC version
     pypeec --version
@@ -24,7 +24,7 @@ Step 2: Introduction
 
 This tutorial demonstrates how PyPEEC can be used to simulate a four-layer PCB coil.
 The coil has two terminals and the simulation is done in the frequency domain.
-All the command are executed inside the virtual environment from the ``examples`` folder.
+All the commands are executed inside the virtual environment from the ``examples`` folder.
 
 .. figure:: ../tutorial/geometry.png
 

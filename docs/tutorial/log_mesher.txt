@@ -1,57 +1,58 @@
 00:00:00.00 : pypeec   : info     : load the input data : start
-00:00:00.02 : pypeec   : info     : load the input data : done
-00:00:00.02 : pypeec   : info     : load the mesher
-00:00:01.11 : pypeec   : info     : run the mesher
-00:00:01.11 : pypeec   : info     : check the input data
-00:00:01.11 : pypeec   : info     : mesher_shape : enter : 00:00:00.00
-00:00:01.11 : pypeec   : debug    :     parse the layers
-00:00:01.11 : pypeec   : debug    :     create the shapes
-00:00:01.12 : pypeec   : debug    :     get the voxel size
-00:00:01.12 : pypeec   : debug    :     voxelize the shapes
-00:00:01.16 : pypeec   : debug    :     trace: n_voxel = 19728
-00:00:01.16 : pypeec   : debug    :     via: n_voxel = 1195
-00:00:01.16 : pypeec   : debug    :     src: n_voxel = 361
-00:00:01.16 : pypeec   : debug    :     sink: n_voxel = 361
-00:00:01.16 : pypeec   : debug    :     merge the shapes
-00:00:01.18 : pypeec   : info     : mesher_shape : exit : 00:00:00.06
-00:00:01.18 : pypeec   : info     : voxel_point : enter : 00:00:00.00
-00:00:01.18 : pypeec   : debug    :     check_cloud = True
-00:00:01.18 : pypeec   : debug    :     filter_cloud = True
-00:00:01.18 : pypeec   : debug    :     original number = 25
-00:00:01.19 : pypeec   : debug    :     final number = 25
-00:00:01.19 : pypeec   : info     : voxel_point : exit : 00:00:00.02
-00:00:01.19 : pypeec   : info     : voxel_resampling : enter : 00:00:00.00
-00:00:01.19 : pypeec   : debug    :     use_reduce = False
-00:00:01.19 : pypeec   : debug    :     use_resample = False
-00:00:01.19 : pypeec   : debug    :     original number = 331056
-00:00:01.19 : pypeec   : debug    :     final number = 331056
-00:00:01.19 : pypeec   : info     : voxel_resampling : exit : 00:00:00.00
-00:00:01.19 : pypeec   : info     : voxel_conflict : enter : 00:00:00.00
-00:00:01.20 : pypeec   : info     : voxel_conflict : exit : 00:00:00.00
-00:00:01.20 : pypeec   : info     : voxel_integrity : enter : 00:00:00.00
-00:00:01.51 : pypeec   : info     : voxel_integrity : exit : 00:00:00.31
-00:00:01.51 : pypeec   : info     : voxel_summary : enter : 00:00:00.00
-00:00:01.51 : pypeec   : debug    :     voxel size
-00:00:01.51 : pypeec   : debug    :         n = (132, 132, 19)
-00:00:01.51 : pypeec   : debug    :         d = (3.50e-05, 3.50e-05, 3.50e-05)
-00:00:01.51 : pypeec   : debug    :         s = (4.63e-03, 4.63e-03, 6.65e-04)
-00:00:01.51 : pypeec   : debug    :         c = (1.94e-03, 1.94e-03, 0.00e+00)
-00:00:01.51 : pypeec   : debug    :         A = (2.14e-05, 3.08e-06, 3.08e-06)
-00:00:01.51 : pypeec   : debug    :     voxel summary
-00:00:01.51 : pypeec   : debug    :         V_total = 1.42e-08
-00:00:01.51 : pypeec   : debug    :         V_used = 9.12e-10
-00:00:01.51 : pypeec   : debug    :         n_total = 331056
-00:00:01.51 : pypeec   : debug    :         n_used = 21215
-00:00:01.51 : pypeec   : debug    :         ratio = 6.41e-02
-00:00:01.51 : pypeec   : debug    :         n_domain = 4
-00:00:01.51 : pypeec   : debug    :         n_component = 1
-00:00:01.51 : pypeec   : debug    :         n_cloud = 25
-00:00:01.51 : pypeec   : debug    :     voxel domain
-00:00:01.51 : pypeec   : debug    :         trace = 19298
-00:00:01.51 : pypeec   : debug    :         via = 1195
-00:00:01.51 : pypeec   : debug    :         src = 361
-00:00:01.51 : pypeec   : debug    :         sink = 361
-00:00:01.51 : pypeec   : info     : voxel_summary : exit : 00:00:00.00
-00:00:01.51 : pypeec   : info     : successful mesher termination
-00:00:01.51 : pypeec   : info     : save the results : start
-00:00:01.66 : pypeec   : info     : save the results : done
+00:00:00.08 : pypeec   : info     : load the input data : done
+00:00:00.08 : pypeec   : info     : load the mesher
+00:00:06.90 : pypeec   : info     : run the mesher
+00:00:06.90 : pypeec   : info     : check the input data
+00:00:06.91 : pypeec   : info     : mesher_shape : enter : 00:00:00.00
+00:00:06.91 : pypeec   : debug    :     prepare the shapes
+00:00:06.91 : pypeec   : debug    :         parse the layers
+00:00:06.92 : pypeec   : debug    :         create the shapes
+00:00:06.96 : pypeec   : debug    :         get the voxel size
+00:00:06.96 : pypeec   : debug    :         merge the shapes
+00:00:07.06 : pypeec   : debug    :     voxelize the shapes
+00:00:07.35 : pypeec   : debug    :         domain = trace / size = 19728
+00:00:07.35 : pypeec   : debug    :         domain = via / size = 1195
+00:00:07.35 : pypeec   : debug    :         domain = src / size = 361
+00:00:07.35 : pypeec   : debug    :         domain = sink / size = 361
+00:00:07.35 : pypeec   : info     : mesher_shape : exit : 00:00:00.44
+00:00:07.35 : pypeec   : info     : voxel_point : enter : 00:00:00.00
+00:00:07.35 : pypeec   : debug    :     check_cloud = True
+00:00:07.35 : pypeec   : debug    :     filter_cloud = True
+00:00:07.35 : pypeec   : debug    :     original number = 25
+00:00:07.42 : pypeec   : debug    :     final number = 25
+00:00:07.42 : pypeec   : info     : voxel_point : exit : 00:00:00.07
+00:00:07.42 : pypeec   : info     : voxel_resampling : enter : 00:00:00.00
+00:00:07.42 : pypeec   : debug    :     use_reduce = False
+00:00:07.42 : pypeec   : debug    :     use_resample = False
+00:00:07.42 : pypeec   : debug    :     original number = 331056
+00:00:07.42 : pypeec   : debug    :     final number = 331056
+00:00:07.42 : pypeec   : info     : voxel_resampling : exit : 00:00:00.00
+00:00:07.42 : pypeec   : info     : voxel_conflict : enter : 00:00:00.00
+00:00:07.43 : pypeec   : info     : voxel_conflict : exit : 00:00:00.00
+00:00:07.43 : pypeec   : info     : voxel_integrity : enter : 00:00:00.00
+00:00:08.24 : pypeec   : info     : voxel_integrity : exit : 00:00:00.81
+00:00:08.24 : pypeec   : info     : voxel_summary : enter : 00:00:00.00
+00:00:08.24 : pypeec   : debug    :     voxel size
+00:00:08.24 : pypeec   : debug    :         n = (132, 132, 19)
+00:00:08.24 : pypeec   : debug    :         d = (3.50e-05, 3.50e-05, 3.50e-05)
+00:00:08.24 : pypeec   : debug    :         s = (4.63e-03, 4.63e-03, 6.65e-04)
+00:00:08.24 : pypeec   : debug    :         c = (1.94e-03, 1.94e-03, 0.00e+00)
+00:00:08.24 : pypeec   : debug    :         A = (2.14e-05, 3.08e-06, 3.08e-06)
+00:00:08.24 : pypeec   : debug    :     voxel summary
+00:00:08.24 : pypeec   : debug    :         V_total = 1.42e-08
+00:00:08.24 : pypeec   : debug    :         V_used = 9.12e-10
+00:00:08.24 : pypeec   : debug    :         n_total = 331056
+00:00:08.24 : pypeec   : debug    :         n_used = 21215
+00:00:08.24 : pypeec   : debug    :         ratio = 6.41e-02
+00:00:08.24 : pypeec   : debug    :         n_domain = 4
+00:00:08.24 : pypeec   : debug    :         n_component = 1
+00:00:08.24 : pypeec   : debug    :         n_cloud = 25
+00:00:08.24 : pypeec   : debug    :     voxel domain
+00:00:08.24 : pypeec   : debug    :         trace = 19298
+00:00:08.24 : pypeec   : debug    :         via = 1195
+00:00:08.24 : pypeec   : debug    :         src = 361
+00:00:08.24 : pypeec   : debug    :         sink = 361
+00:00:08.24 : pypeec   : info     : voxel_summary : exit : 00:00:00.00
+00:00:08.24 : pypeec   : info     : successful mesher termination
+00:00:08.24 : pypeec   : info     : save the results : start
+00:00:08.67 : pypeec   : info     : save the results : done
