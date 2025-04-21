@@ -66,9 +66,10 @@ def set_voxel_scalar(voxel, idx, idx_var, var, name):
     var_all = var_all[idx_s]
 
     # assign potential
-    voxel[name + "_re"] = np.real(var_all)
-    voxel[name + "_im"] = np.imag(var_all)
-    voxel[name + "_norm"] = np.abs(var_all)
+    if voxel.n_cells > 0:
+        voxel[name + "_re"] = np.real(var_all)
+        voxel[name + "_im"] = np.imag(var_all)
+        voxel[name + "_norm"] = np.abs(var_all)
 
     return voxel
 
@@ -92,9 +93,10 @@ def set_voxel_vector(voxel, idx, idx_var, var, name):
     var_all = var_all[idx_s]
 
     # assign the vector and the norm
-    voxel[name + "_re"] = np.real(var_all)
-    voxel[name + "_im"] = np.imag(var_all)
-    voxel[name + "_norm"] = lna.norm(var_all, axis=1)
+    if voxel.n_cells > 0:
+        voxel[name + "_re"] = np.real(var_all)
+        voxel[name + "_im"] = np.imag(var_all)
+        voxel[name + "_norm"] = lna.norm(var_all, axis=1)
 
     return voxel
 
@@ -106,9 +108,10 @@ def set_point_cloud(point, var, name):
     """
 
     # assign the vector and the norm
-    point[name + "_re"] = np.real(var)
-    point[name + "_im"] = np.imag(var)
-    point[name + "_norm"] = lna.norm(var, axis=1)
+    if point.n_cells > 0:
+        point[name + "_re"] = np.real(var)
+        point[name + "_im"] = np.imag(var)
+        point[name + "_norm"] = lna.norm(var, axis=1)
 
     return point
 

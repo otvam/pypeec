@@ -132,7 +132,7 @@ def _get_scale_norm(obj, scale):
     The operation is done with respect to the norm variable.
     """
 
-    # if the voxel structure is empty, nothing to do
+    # check object is not empty
     if obj.n_cells == 0:
         return obj
 
@@ -155,7 +155,7 @@ def _get_filter_arrow(obj, arrow_threshold):
     The operation is done with respect to the norm variable.
     """
 
-    # if the voxel structure is empty, nothing to do
+    # check object is not empty
     if obj.n_cells == 0:
         return obj
 
@@ -183,7 +183,7 @@ def _get_filter_norm(obj, filter_lim):
     The operation is done with respect to the norm variable.
     """
 
-    # if the voxel structure is empty, nothing to do
+    # check object is not empty
     if obj.n_cells == 0:
         return obj
 
@@ -212,7 +212,7 @@ def _get_clamp_norm(obj, clamp_lim):
     The operation is done with respect to the norm variable.
     """
 
-    # if the voxel structure is empty, nothing to do
+    # check object is not empty
     if obj.n_cells == 0:
         return obj
 
@@ -241,6 +241,10 @@ def _get_norm(obj, data_plot):
     Get and prepare a scalar norm variable.
     """
 
+    # check object is not empty
+    if obj.n_cells == 0:
+        return obj
+
     # extract
     var = data_plot["var"]
     scale = data_plot["scale"]
@@ -268,6 +272,10 @@ def _get_phasor(obj, data_plot):
     """
     Get and prepare a scalar phasor variable.
     """
+
+    # check object is not empty
+    if obj.n_cells == 0:
+        return obj
 
     # extract
     var = data_plot["var"]
@@ -301,6 +309,10 @@ def _get_arrow(obj, data_plot):
     """
     Get and prepare a vector phasor variable.
     """
+
+    # check object is not empty
+    if obj.n_cells == 0:
+        return obj
 
     # extract
     var = data_plot["var"]
@@ -374,7 +386,8 @@ def _plot_scalar(pl, obj, data_plot, plot_filter, plot_theme):
         "scalar_bar_args": scalar_bar_args,
         "render_points_as_spheres": True,
     }
-    _get_filter_mesh(pl, obj, arg, plot_filter)
+    if obj.n_cells > 0:
+        _get_filter_mesh(pl, obj, arg, plot_filter)
 
 
 def _plot_arrow(pl, grid, obj, data_plot, plot_filter, plot_theme):
