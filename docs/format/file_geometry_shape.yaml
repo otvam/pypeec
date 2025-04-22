@@ -40,10 +40,10 @@
         - {"n_layer": 1, "tag_layer": "terminal"}
 
     # definition of the shapes composing the different domains
-    #   - dict with the domain name and a list of shape to be assembled
+    #   - dict with the domain name and a list of shapes to be assembled
     #   - required information, the dict cannot be empty
     #   - domain definition
-    #       - shape_layer: list of layer where the shape is located
+    #       - shape_layer: list of layers where the shape is located
     #       - shape_operation: composition operation for assembling the shape ("add" or "sub")
     #       - shape_type: type of the shape ("pad" or "trace" or "polygon")
     #       - shape_data: data containing the shape geometry

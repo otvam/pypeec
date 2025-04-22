@@ -12,7 +12,7 @@
 # parallel pool/thread control for the sweeps
 parallel_sweep:
     "n_jobs": 0                        # number of processes (0 for disabling, -1 for number of cores)
-    "n_threads": null                  # number of inner thread per process (None for optimal number)
+    "n_threads": null                  # number of inner threads per process (None for optimal number)
 
 # control where numerical approximations are used for the Green and coupling functions
 #   - if the normalized voxel distance is smaller than the threshold, analytical solutions are used
@@ -29,7 +29,7 @@ parallel_sweep:
     # method for dense matrix multiplication
     #   - "fft" for doing the multiplication with circulant tensors and FFT
     #   - "dense" for standard matrix multiplication with the full matrix
-    #   - "dense" is extremely slow and memory intensive
+    #   - "dense" is extremely slow and memory-intensive (dense matrices)
     #   - "dense" is only useful for debugging and educational purposes
     "method": "fft"
 
@@ -47,7 +47,7 @@ parallel_sweep:
         #   - "SciPy" FFT library is always available (integrated with SciPy)
         #   - "FFTW" has to be installed separately (available through pyFFTW)
         #   - "MKL" has to be installed separately (available through mkl_fft)
-        #   - "CuPy" is extremely fast but require GPUs compatible with the CUDA toolkit.
+        #   - "CuPy" is extremely fast but requires GPUs compatible with the CUDA toolkit.
         "library": "SciPy"
 
         # FFT algorithm options

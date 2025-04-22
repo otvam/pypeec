@@ -49,7 +49,7 @@
         - {"n_layer": 1, "tag_layer": "copper_4"}
 
     # definition of the shapes composing the different domains
-    #   - shape_layer: list of layer where the shape is located
+    #   - shape_layer: list of layers where the shape is located
     #   - shape_operation: composition operation for assembling the shape ("add" or "sub")
     #   - shape_type: type of the shape ("pad" or "trace" or "polygon")
     #   - shape_data: data containing the shape geometry

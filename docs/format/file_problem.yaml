@@ -81,15 +81,15 @@
 #                   - "lumped" and "anisotropic": array
 #                       - the array contains the anisotropic parameters
 #                       - the same parameters are used for all the voxels
-#                       - arrays with following size are used: (3)
+#                       - arrays with the following size are used: (3)
 #                   - "distributed" and "isotropic": array
 #                       - the material parameters are isotropic
 #                       - different parameters are used for each voxel
-#                       - arrays with following size are used: (n_voxel)
+#                       - arrays with the following size are used: (n_voxel)
 #                   - "distributed" and "anisotropic": 2D array
 #                       - the material parameters are anisotropic
 #                       - different parameters are used for each voxel
-#                       - arrays with following size are used: (n_voxel, 3)
+#                       - arrays with the following size are used: (n_voxel, 3)
 #           - source_val: source parameters
 #               - dict of dicts with the source name and the source definition
 #               - current source definition
@@ -114,7 +114,7 @@
 #                   - "distributed": array
 #                       - the source is using distributed parameters
 #                       - different parameters are used for each voxel
-#                       - arrays with following size are used: (n_voxel)
+#                       - arrays with the following size are used: (n_voxel)
 "sweep_solver":
     "sim_dc":
         "init": null

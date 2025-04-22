@@ -16,7 +16,7 @@
     "text_color": "black"              # color of the text elements
     "title_font": 10                   # font size of the title
     "colorbar_font": 15                # font size of the color bar
-    "colorbar_size": 5                 # number of division for the colorbar
+    "colorbar_size": 5                 # number of divisions for the colorbar
     "colorbar_plot": true              # show (or not) the colorbar
     "background_color": "gray"         # background color of the plot
     "axis_add": true                   # add (or not) the axis marker

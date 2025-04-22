@@ -5,4 +5,4 @@
 
 "style": "default"                     # string with a Matplotlib style
 "legend": "best"                       # location of the legend box
-"font": 12                             # reference font size of the figure
+"font": 12                             # reference font size for the figure

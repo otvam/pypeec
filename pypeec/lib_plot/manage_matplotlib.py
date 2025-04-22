@@ -7,7 +7,7 @@ For the viewer, the following plots are available:
 
 For the plotter, the following plots are available:
     - A plot describing the convergence of the matrix solver.
-    - An histogram describing the residuum of the solution.
+    - A histogram describing the residuum of the solution.
 """
 
 __author__ = "Thomas Guillod"

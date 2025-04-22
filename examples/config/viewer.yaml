@@ -1,6 +1,6 @@
 # PyPEEC options for the viewer renderings.
 #
-# A plot is described with a dictionary with the following fields:
+# A plot is described by a dictionary with the following fields:
 #   - framework: framework used for the rendering ("pyvista" or "matplotlib")
 #   - layout: string describing the plot type (see description below)
 #   - data_window: dictionary describing the plot window
@@ -14,7 +14,7 @@
 #       - colormap: colormap used to plot the different voxel groups
 #       - opacity: opacity of the face color
 #
-#   - "component": plot the connect components of the voxel structure
+#   - "component": plot the connected components of the voxel structure
 #       - title: title located at the corner of the plot (null for hiding)
 #       - colormap: colormap used to plot the different voxel groups
 #       - opacity: opacity of the face color
@@ -28,7 +28,7 @@
 #       - opacity_voxel: face opacity for the voxelized structure
 #       - opacity_reference: face opacity for the reference structure
 #
-#   - "component": plot a matrix showing the connected the domains (matplotlib)
+#   - "component": plot a matrix showing the connected domains (matplotlib)
 #       - title: title located at the top of the plot (null for hiding)
 #       - color_edge: line color between the elements
 #       - color_true: fill color for the true values
