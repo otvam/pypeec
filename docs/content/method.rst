@@ -31,18 +31,18 @@ PEEC for Quasi-Static Problems
 ------------------------------
 
 For the quasi-static solution (AC solution), the system cannot be represented with a purely resistive circuit.
-A natural step would be to extend the resistive circuit with self inductances (:ref:`Fig. 3 <fig_3>`).
+A natural step would be to extend the resistive circuit with self-inductances (:ref:`Fig. 3 <fig_3>`).
 However, the obtained current distribution is identical to the DC solution, which is incorrect.
 
 .. _fig_3:
 .. figure:: ../method/peec_3.png
 
-   Fig. 3 - Extension of the PEEC circuit with self inductances (incorrect solution).
+   Fig. 3 - Extension of the PEEC circuit with self-inductances (incorrect solution).
 
-The reason behind this incorrect solution is linked to the Faraday's law of induction.
+The reason behind this incorrect solution is linked to Faraday's law of induction.
 The magnetic field produced by the current of a cell is inducing a voltage in the neighboring cells.
-Therefore, self inductances are not sufficient, mutual inductances between the cells are also required.
-The updated equivalent circuit (:ref:`Fig. 4 <fig_4>`) depicts the resistances, self inductances, and mutual inductances.
+Therefore, self-inductances are not sufficient, mutual inductances between the cells are also required.
+The updated equivalent circuit (:ref:`Fig. 4 <fig_4>`) depicts the resistances, self-inductances, and mutual inductances.
 The obtained current distribution differs from the DC solution, which can be explained by the induced currents (eddy currents).
 It can be seen that the current distribution is concentrated towards the edges of the busbar (skin and proximity effects).
 
@@ -51,9 +51,9 @@ It can be seen that the current distribution is concentrated towards the edges o
 
    Fig. 4 - PEEC equivalent circuit and solution for the quasi-static problem.
 
-With this simple example, the main advantanges of the PEEC method are apparent:
+With this simple example, the main advantages of the PEEC method are apparent:
 
-* Only the active materials are discretized (no need to mesh the free-space).
+* Only the active materials are discretized (no need to mesh the free space).
 * Intuitive understanding of the equation discretization process.
 * Straightforward connection of external circuit elements.
 
@@ -70,7 +70,7 @@ FFT-Accelerated PEEC Method
 Several methods can be used to mitigate the dense matrix problem (domain decomposition, hierarchical matrix, multipole method, etc.).
 PyPEEC is using the FFT-accelerated method proposed in 2022 (`paper <https://doi.org/10.1109/TPEL.2021.3092431>`__).
 This variant of the PEEC method relies on the translational invariance of the mutual inductance coefficients.
-In other word, the mutual inductance between two cells is only dependent on their relative positions to each other.
+In other words, the mutual inductance between two cells is only dependent on their relative positions to each other.
 Therefore, if a regular voxel structure is used for the discretization, many coefficients are identical (:ref:`Fig. 5 <fig_5>`).
 
 .. _fig_5:
@@ -89,9 +89,9 @@ Hence, the computational cost and memory requirement for generating and storing 
 
    Fig. 6 - Illustration of the remapping of the inductance matrix coefficients.
 
-With all the repeated coefficients, the inductance matrix is a a block-Toeplitz Toeplitz-block matrix.
+With all the repeated coefficients, the inductance matrix is a block-Toeplitz Toeplitz-block matrix.
 For such matrices, the matrix-vector multiplications can be done with Fast Fourier Transforms (:ref:`Fig. 7 <fig_7>`).
-Hence, the Fast Fourier Transforms are reducing the computational complexity of multiplications from O(n^2) to O(n*log(n)).
+Hence, the Fast Fourier Transforms reduce the computational complexity of multiplications from O(n^2) to O(n*log(n)).
 
 .. _fig_7:
 .. figure:: ../method/peec_7.png
@@ -108,7 +108,7 @@ In summary, with a voxel structure, the PEEC method features the following advan
 Numerical Optimization
 ----------------------
 
-The code is reasonably optimized, leveraging NumPy and SciPy for the heavy operations.
+The code is reasonably optimized, leveraging NumPy and SciPy for the numerical operations.
 All the code is vectorized, no loops are used for the array/matrix/tensor operations.
 Sparse matrix algebra is used wherever appropriate to speed up the code and limit the memory consumption.
 Wherever possible, multithreading/multiprocessing is used for exploiting multicore CPUs.
@@ -122,8 +122,8 @@ The following optimizations are available for the computationally heavy operatio
 
 * Two different approaches can be used to solve the equation system.
 
-  * direct - The electric and magnetic equations are solved together.
-  * segregated - The electric and magnetic equations are solved separately.
+  * Direct solver - The electric and magnetic equations are solved together.
+  * Segregated solver - The electric and magnetic equations are solved separately.
 
 * Different sparse factorization algorithms are available for the sparse preconditioner.
 
@@ -136,13 +136,13 @@ The following optimizations are available for the computationally heavy operatio
   * GMRES - Generalized Minimal RESidual algorithm.
   * GCROT - Flexible GCROT(m,k) algorithm (often faster).
 
-* The FFTs for computing matrix-vector product can be done with several algorithms.
+* The FFTs used for the matrix-vector products can be done with several algorithms.
 
   * NumPy FFT library is always available (integrated with NumPy).
   * SciPy FFT library is always available (integrated with SciPy).
   * FFTW has to be installed separately (available through pyFFTW).
   * MKL/FFT has to be installed separately (available through mkl_fft).
-  * CuPy is extremely fast but require GPUs compatible with the CUDA toolkit.
+  * CuPy is extremely fast but requires GPUs compatible with the CUDA toolkit.
 
 * The ``file_tolerance`` input file is used to define all the numerical parameters:
 

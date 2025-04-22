@@ -8,7 +8,7 @@ PyPEEC Workflow
 
    Description of the PyPEEC workflow (mesher, viewer, solver, and plotter).
    The input files (geometry, problem, tolerance, plotter, and viewer) are either in JSON or YAML formats.
-   The output files (voxel and solution) are either in JSON or MessagePack or Pickle formats.
+   The output files (voxel and solution) are either in JSON, MessagePack or Pickle formats.
 
 PyPEEC Tools
 ------------
@@ -41,9 +41,9 @@ PyPEEC Tools
   * Creation of the equation system describing the PEEC problem.
   * Extraction of a sparse pre-conditioner for the dense system.
   * Extraction of a matrix-vector linear operator for the full system.
-  * Computation the condition number of the pre-conditioner equation system.
-  * Solve the equation system with the pre-conditioner and the linear operator
-  * Extract the solution (terminal voltages and currents, scalar fields, and vector fields)
+  * Computation of the condition number of the pre-conditioner equation system.
+  * Solve the equation system with the pre-conditioner and the linear operator.
+  * Extract the solution (terminal voltages and currents, scalar fields, and vector fields).
 
 * **plotter**
 
@@ -57,14 +57,14 @@ Entry Points and Scripts
 
 The entry points of the different tools are located in the ``pypeec`` module:
 
-* Running the tools with files as input/ouput:
+* Running the tools with files as input/output:
 
   * ``run_mesher_file`` - Run the **mesher**.
   * ``run_viewer_file`` - Run the **viewer**.
   * ``run_solver_file`` - Run the **solver**.
   * ``run_plotter_file`` - Run the **plotter**.
 
-* Running the tools with data as input/ouput:
+* Running the tools with data as input/output:
 
   * ``run_mesher_data`` - Run the **mesher**.
   * ``run_viewer_data`` - Run the **viewer**.

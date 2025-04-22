@@ -8,7 +8,7 @@ PyPEEC Workflow
 
    Description of the PyPEEC workflow (mesher, viewer, solver, and plotter).
    The input files (geometry, problem, tolerance, plotter, and viewer) are either in JSON or YAML formats.
-   The output files (voxel and solution) are either in JSON or MessagePack or Pickle formats.
+   The output files (voxel and solution) are either in JSON, MessagePack or Pickle formats.
 
 Geometry File Format
 --------------------

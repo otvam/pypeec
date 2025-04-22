@@ -80,7 +80,7 @@ The code is written in **Python** and is fully **open source**!
 * Import the **geometry** from **STL**, **PNG**, and **GERBER** files.
 * Draw the **geometry** with stacked 2D **vector shapes** or **voxel indices**.
 * **Pure Python** and **open source** implementation.
-* Can be used from the **command line** pr with an **API**.
+* Can be used from the **command line** or with an **API**.
 * Advanced **plotting and visualization** capabilities.
 * Compatible with **Jupyter notebooks**.
 * Compatible with **ParaView**.
@@ -100,7 +100,7 @@ The code is written in **Python** and is fully **open source**!
 * No capacitive effects.
 * No dielectric domains.
 * No force computations.
-* No advanced boundaries conditions.
+* No advanced boundary conditions.
 * No domain decomposition techniques.
 * No hierarchical matrix techniques.
 * No model order reduction techniques.

@@ -16,8 +16,8 @@ The following **optional libraries are not included** in the PyPI/Conda package:
 
 Some **important remarks** about the **PyPI/Conda packages**:
 
-* PyPEEC packages are architecture and system independent.
-* Some dependencies are architecture and system dependent.
+* PyPEEC packages are architecture and system-independent.
+* Some dependencies are architecture and system-dependent.
 * The optional HPC/GPU libraries are usually easier to install through Conda.
 * The Jupyter libraries are usually easier to install through Conda.
 

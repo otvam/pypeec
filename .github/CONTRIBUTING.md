@@ -10,6 +10,6 @@ For the bug reports, please report the following information:
 * The **operating system/platform/hardware**.
 * A **clear and concise description** of the bug.
 * A **minimal working example** for the bug.
-* For PyVista related bugs, please include the `pyvista.Report` output.
-* For NumPy related bugs, please include the `numpy.show_config` output.
-* For SciPy related bugs, please include the `scipy.show_config` output.
+* For PyVista-related bugs, please include the `pyvista.Report` output.
+* For NumPy-related bugs, please include the `numpy.show_config` output.
+* For SciPy-related bugs, please include the `scipy.show_config` output.
