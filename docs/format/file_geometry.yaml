@@ -26,7 +26,7 @@
         - [-1.0, +1.0, +1.0]
         - [+1.0, -1.0, +1.0]
         - [+1.0, +1.0, -1.0]
-        -
+
 # control the resampling of the voxel structure
 "data_resampling":
     # reduce (or not) the voxel structure by removing unused voxels
