@@ -143,7 +143,7 @@ def run_mesher_data(data_geometry):
     Parameters
     ----------
     data_geometry : data
-        - The dict describes the geometry, meshing and resampling process.
+        - The dict describes the geometry meshing and resampling process.
 
     Returns
     -------
@@ -180,11 +180,11 @@ def run_mesher_file(file_geometry, file_voxel):
     Parameters
     ----------
     file_geometry : filename
-        - The file content describes the geometry, meshing and resampling process.
+        - The file content describes the geometry meshing and resampling process.
         - This input file is loaded by this function (JSON or YAML format).
     file_voxel : filename
         - The file content describes the meshed voxel structure.
-        - This output file is created by this function (JSON or MessagePack or Pickle format).
+        - This output file is created by the function (JSON or MessagePack or Pickle format).
     """
 
     # get timestamp
@@ -227,13 +227,13 @@ def run_viewer_data(data_voxel, data_viewer, **kwargs):
     data_viewer: data
         - The dict describes the different plots to be created.
     tag_plot : list
-        - The list describes plots to be shown.
+        - The list describes the plots to be shown.
         - If None or omitted: all the plots are shown.
     plot_mode : string
         - If "qt", the Qt framework is used for rendering the plots.
         - If "nb_int", interactive plots are rendered within the Jupyter notebook.
         - If "nb_std", static plots are rendered within the Jupyter notebook.
-        - If "png", the plot content are saved as PNG files.
+        - If "png", the plot images are saved as PNG files.
         - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
@@ -278,13 +278,13 @@ def run_viewer_file(file_voxel, file_viewer, **kwargs):
         - The file content describes the different plots to be created.
         - This input file is loaded by this function (JSON or YAML format).
     tag_plot : list
-        - The list describes plots to be shown.
+        - The list describes the plots to be shown.
         - If None or omitted: all the plots are shown.
     plot_mode : string
         - If "qt", the Qt framework is used for rendering the plots.
         - If "nb_int", interactive plots are rendered within the Jupyter notebook.
         - If "nb_std", static plots are rendered within the Jupyter notebook.
-        - If "png", the plot content are saved as PNG files.
+        - If "png", the plot images are saved as PNG files.
         - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
@@ -376,7 +376,7 @@ def run_solver_file(file_voxel, file_problem, file_tolerance, file_solution):
         - This input file is loaded by this function (JSON or YAML format).
     file_solution : filename
         - The file content describes the problem solution.
-        - This output file is created by this function (JSON or MessagePack or Pickle format).
+        - This output file is created by the function (JSON or MessagePack or Pickle format).
     """
 
     # get timestamp
@@ -413,7 +413,7 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
     Function for plotting the solution of a PEEC problem.
         - Get the solution data as an argument.
         - Get the plotter data as an argument.
-        - Visualize of the problem solution
+        - Visualize the problem solution
 
     Parameters
     ----------
@@ -425,13 +425,13 @@ def run_plotter_data(data_solution, data_plotter, **kwargs):
         - The list describes the solver sweeps to be shown.
         - If None or omitted: all the sweeps are shown.
     tag_plot : list
-        - The list describes plots to be shown.
+        - The list describes the plots to be shown.
         - If None or omitted: all the plots are shown.
     plot_mode : string
         - If "qt", the Qt framework is used for rendering the plots.
         - If "nb_int", interactive plots are rendered within the Jupyter notebook.
         - If "nb_std", static plots are rendered within the Jupyter notebook.
-        - If "png", the plot content are saved as PNG files.
+        - If "png", the plot images are saved as PNG files.
         - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
@@ -465,7 +465,7 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
     Function for plotting the solution of a PEEC problem.
         - Load the solution data from a file.
         - Load the plotter data from a file.
-        - Visualize of the problem solution
+        - Visualize the problem solution
 
     Parameters
     ----------
@@ -479,13 +479,13 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
         - The list describes the solver sweeps to be shown.
         - If None or omitted: all the sweeps are shown.
     tag_plot : list
-        - The list describes plots to be shown.
+        - The list describes the plots to be shown.
         - If None or omitted: all the plots are shown.
     plot_mode : string
         - If "qt", the Qt framework is used for rendering the plots.
         - If "nb_int", interactive plots are rendered within the Jupyter notebook.
         - If "nb_std", static plots are rendered within the Jupyter notebook.
-        - If "png", the plot content are saved as PNG files.
+        - If "png", the plot images are saved as PNG files.
         - If "vtk", the plot data are saved as VTK files.
         - If "debug", the plots are not shown (test mode).
         - If None or omitted: the debug mode is used.
@@ -515,8 +515,8 @@ def run_plotter_file(file_solution, file_plotter, **kwargs):
 
 def run_extract_examples(path):
     """
-    Function for extract the PyPEEC examples.
-        - Get a filesytem path as an argument.
+    Function for extracting the PyPEEC examples.
+        - Get a file system path as an argument.
         - Extract the data at the specified location.
 
     Parameters
@@ -535,8 +535,8 @@ def run_extract_examples(path):
 
 def run_extract_documentation(path):
     """
-    Function for extract the PyPEEC documentation.
-        - Get a filesytem path as an argument.
+    Function for extracting the PyPEEC documentation.
+        - Get a file system path as an argument.
         - Extract the data at the specified location.
 
     Parameters

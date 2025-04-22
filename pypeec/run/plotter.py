@@ -12,7 +12,7 @@ Several plot modes are available:
     - The Qt framework is used for rendering the plots.
     - Interactive plots are rendered within the Jupyter notebook.
     - Static plots are rendered within the Jupyter notebook.
-    - The plot content are saved as PNG files.
+    - The plot images are saved as PNG files.
     - The plot data are saved as VTK files.
     - The plots are not shown (debug mode).
 """

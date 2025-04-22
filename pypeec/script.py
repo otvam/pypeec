@@ -402,7 +402,7 @@ def run_script():
 
     The script is installed with the package.
         - The name of the command line script is "pypeec".
-        - Use "pypeec --help" for obtaining the argument list.
+        - Use "pypeec --help" to obtain the argument list.
     """
 
     # get arguments

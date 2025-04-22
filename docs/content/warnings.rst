@@ -9,7 +9,7 @@ PyPEEC Issues
     This implies that large geometries with small features cannot be meshed efficiently.
 
 .. note::
-    If should be noted than the **inductance** is only fully defined for closed loops.
+    If should be noted that the **inductance** is only fully defined for closed loops.
     For non-closed loops, only the concept of **partial inductance** is well defined.
 
 .. note::
@@ -67,7 +67,7 @@ General Issues
     Do not use the image for public-facing servers.
 
 .. warning::
-    The **dependencies** are under **various licences**.
+    The **dependencies** are under **various licenses**.
     Make sure to respect these licenses if you package and/or distribute these libraries.
     Qt is under a copyleft license (LGPL and GPL). FFTW is also under a copyleft license (GPL).
     INTEL/MKL and NVIDIA/CUDA are proprietary software (these libraries are optional).
