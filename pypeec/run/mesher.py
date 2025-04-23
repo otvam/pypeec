@@ -18,10 +18,6 @@ __license__ = "Mozilla Public License Version 2.0"
 
 import copy
 import scilogger
-from pypeec.lib_mesher import mesher_voxel
-from pypeec.lib_mesher import mesher_shape
-from pypeec.lib_mesher import mesher_png
-from pypeec.lib_mesher import mesher_stl
 from pypeec.lib_mesher import voxel_point
 from pypeec.lib_mesher import voxel_conflict
 from pypeec.lib_mesher import voxel_resampling
@@ -62,6 +58,9 @@ def _run_voxel(data_voxelize):
     Generate a 3D voxel structure from given indices.
     """
 
+    # load the mesher module
+    from pypeec.lib_mesher import mesher_voxel
+
     # extract the data
     param = data_voxelize["param"]
     domain_index = data_voxelize["domain_index"]
@@ -80,6 +79,9 @@ def _run_shape(data_voxelize):
     """
     Generate a 3D voxel structure from 2D vector shapes.
     """
+
+    # load the mesher module
+    from pypeec.lib_mesher import mesher_shape
 
     # extract the data
     param = data_voxelize["param"]
@@ -102,6 +104,9 @@ def _run_png(data_voxelize):
     Generate a 3D voxel structure from PNG images.
     """
 
+    # load the mesher module
+    from pypeec.lib_mesher import mesher_png
+
     # extract the data
     param = data_voxelize["param"]
     domain_color = data_voxelize["domain_color"]
@@ -122,6 +127,9 @@ def _run_stl(data_voxelize):
     """
     Generate a 3D voxel structure from 3D STL files.
     """
+
+    # load the mesher module
+    from pypeec.lib_mesher import mesher_stl
 
     # extract the data
     param = data_voxelize["param"]
