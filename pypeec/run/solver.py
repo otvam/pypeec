@@ -604,7 +604,7 @@ def _run_assemble_solution(data_init, data_sweep):
 
     # show warning
     if not status:
-        LOGGER.warning("problem detected for the solver")
+        LOGGER.warning("problem detected with the solution")
 
     return data_solution
 

@@ -154,7 +154,7 @@ def _run_extract_solution(data_solution):
 
     # show warning
     if not status:
-        LOGGER.warning("problem detected for the solver")
+        LOGGER.warning("problem detected with the solution")
 
     return data_init, data_sweep
 
