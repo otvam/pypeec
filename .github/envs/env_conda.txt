@@ -1,4 +1,4 @@
-# Definition of the Conda Environment for PyPEEC (minimum versions).
+# Definition of the Conda environment for PyPEEC (minimum versions).
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0

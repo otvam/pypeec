@@ -1,4 +1,4 @@
-# Definition of the Python Virtual Environment (minimum versions).
+# Definition of the Python virtual environment (minimum versions).
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0

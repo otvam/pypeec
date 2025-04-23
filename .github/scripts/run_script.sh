@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script for testing the main script.
+# Script for testing the main scripts.
 #
 # Thomas Guillod - Dartmouth College
 # Mozilla Public License Version 2.0
