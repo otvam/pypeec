@@ -92,7 +92,7 @@ def _get_shape_mesh(z_min, z_max, obj):
     polygon = polygon.delaunay_2d(edge_source=polygon)
 
     # extrude the polygon into a 3D mesh
-    mesh = polygon.extrude((0, 0, z_max - z_min), capping=True)
+    mesh = polygon.extrude((0.0, 0.0, z_max - z_min), capping=True)
 
     return mesh
 
