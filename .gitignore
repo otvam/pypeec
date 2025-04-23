@@ -25,6 +25,9 @@
 *.msg
 *.msgpack
 
+# exclude VTK files
+*.vtk
+
 # exclude cache directories
 **/__pycache__
 
