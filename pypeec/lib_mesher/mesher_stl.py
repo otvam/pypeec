@@ -80,15 +80,12 @@ def _get_voxelize_stl(pts, connect, mesh, thr):
 
 def _get_mesh_stl(domain_stl, check):
     """
-    Load meshes from STL files and find the minimum and maximum coordinates.
+    Load meshes from STL files.
     Find the bounding box for all the meshes (minimum and maximum coordinates).
     """
 
-    # init mesh list (for the voxelization)
-    mesh_stl = []
-
-    # init mesh list (for the reference meshes)
-    geom_def = []
+    # init mesh dict
+    mesh_stl = {}
 
     # init the coordinate (minimum and maximum coordinates)
     xyz_min = np.full(3, +np.inf, dtype=np.float64)
@@ -115,16 +112,10 @@ def _get_mesh_stl(domain_stl, check):
             xyz_max = np.maximum(xyz_max, tmp_max)
 
             # assign the mesh
-            mesh_stl.append({"tag": tag, "mesh": mesh})
+            mesh_stl[tag] = mesh
 
-            # cast the surface mesh to a dict
-            geom_def.append({
-                "faces": np.array(mesh.faces, dtype=np.int64),
-                "lines": np.array(mesh.lines, dtype=np.int64),
-                "points": np.array(mesh.points, dtype=np.float64),
-            })
 
-    return mesh_stl, geom_def, xyz_min, xyz_max
+    return mesh_stl, xyz_min, xyz_max
 
 
 def _get_voxel_size(d, xyz_max_stl, xyz_min_stl, xyz_max, xyz_min):
@@ -257,17 +248,33 @@ def _get_voxel_structure(pts_test, wgt_test, pts_grid):
     return pts, connect
 
 
+def _get_merge_mesh(mesh_stl):
+    """
+    Transform all the 3D Polydata into 3D surface meshes.
+    The meshes represent the original (non-voxelized) geometry.
+    """
+
+    # init mesh list
+    geom_def = []
+
+    # cast the surface mesh to a dict
+    for mesh in mesh_stl.values():
+        geom_def.append({
+            "faces": np.array(mesh.faces, dtype=np.int64),
+            "lines": np.array(mesh.lines, dtype=np.int64),
+            "points": np.array(mesh.points, dtype=np.float64),
+        })
+
+    return geom_def
+
+
 def _get_domain_def(pts, connect, domain_def, mesh_stl, thr):
     """
     Voxelize meshes and assign the indices to a dict.
     """
 
     # voxelize the meshes
-    for mesh_stl_tmp in mesh_stl:
-        # extract the data
-        tag = mesh_stl_tmp["tag"]
-        mesh = mesh_stl_tmp["mesh"]
-
+    for tag, mesh in mesh_stl.items():
         # voxelize and get the indices
         idx_voxel = _get_voxelize_stl(pts, connect, mesh, thr)
 
@@ -307,7 +314,7 @@ def get_mesh(param, domain_stl):
     with LOGGER.BlockIndent():
         # load the mesh and get the STL bounds
         LOGGER.debug("load STL files")
-        (mesh_stl, geom_def, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl, check)
+        (mesh_stl, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl, check)
 
         # geometry size
         LOGGER.debug("get the voxel size")
@@ -324,6 +331,10 @@ def get_mesh(param, domain_stl):
         # get the voxel structure
         LOGGER.debug("get the voxel structure")
         (pts, connect) = _get_voxel_structure(pts_test, wgt_test, pts_grid)
+
+        # merge the meshes representing the original geometry
+        LOGGER.debug("merge the meshes")
+        geom_def = _get_merge_mesh(mesh_stl)
 
     # voxelize the meshes
     LOGGER.debug("voxelize the meshes")
