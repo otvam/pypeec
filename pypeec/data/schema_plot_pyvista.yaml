@@ -68,10 +68,10 @@
             - "grid_thickness"
             - "grid_color"
             - "grid_opacity"
-            - "geom_plot"
-            - "geom_thickness"
-            - "geom_color"
-            - "geom_opacity"
+            - "voxel_plot"
+            - "voxel_thickness"
+            - "voxel_color"
+            - "voxel_opacity"
             - "point_plot"
             - "point_color"
             - "point_size"
@@ -92,15 +92,15 @@
                 "type": "number"
                 "minimum": 0
                 "maximum": 1
-            "geom_plot":
+            "voxel_plot":
                 "type": "boolean"
-            "geom_thickness":
+            "voxel_thickness":
                 "type": "number"
                 "minimum": 0
-            "geom_color":
+            "voxel_color":
                 "type": "string"
                 "minLength": 1
-            "geom_opacity":
+            "voxel_opacity":
                 "type": "number"
                 "minimum": 0
                 "maximum": 1

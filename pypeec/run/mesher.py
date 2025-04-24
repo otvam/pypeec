@@ -40,17 +40,17 @@ def _run_mesher(data_geometry):
 
     # voxelize the geometry
     if mesh_type == "voxel":
-        (n, d, c, domain_def, reference) = _run_voxel(data_voxelize)
+        (n, d, c, domain_def, geom_def) = _run_voxel(data_voxelize)
     elif mesh_type == "shape":
-        (n, d, c, domain_def, reference) = _run_shape(data_voxelize)
+        (n, d, c, domain_def, geom_def) = _run_shape(data_voxelize)
     elif mesh_type == "png":
-        (n, d, c, domain_def, reference) = _run_png(data_voxelize)
+        (n, d, c, domain_def, geom_def) = _run_png(data_voxelize)
     elif mesh_type == "stl":
-        (n, d, c, domain_def, reference) = _run_stl(data_voxelize)
+        (n, d, c, domain_def, geom_def) = _run_stl(data_voxelize)
     else:
         raise ValueError("invalid mesh type")
 
-    return n, d, c, domain_def, reference
+    return n, d, c, domain_def, geom_def
 
 
 def _run_voxel(data_voxelize):
@@ -67,12 +67,12 @@ def _run_voxel(data_voxelize):
 
     # process the indices arrays
     with LOGGER.BlockTimer("mesher_voxel"):
-        (n, d, c, domain_def, reference) = mesher_voxel.get_mesh(
+        (n, d, c, domain_def, geom_def) = mesher_voxel.get_mesh(
             param,
             domain_index,
         )
 
-    return n, d, c, domain_def, reference
+    return n, d, c, domain_def, geom_def
 
 
 def _run_shape(data_voxelize):
@@ -90,13 +90,13 @@ def _run_shape(data_voxelize):
 
     # process the shapes
     with LOGGER.BlockTimer("mesher_shape"):
-        (n, d, c, domain_def, reference) = mesher_shape.get_mesh(
+        (n, d, c, domain_def, geom_def) = mesher_shape.get_mesh(
             param,
             layer_stack,
             geometry_shape,
         )
 
-    return n, d, c, domain_def, reference
+    return n, d, c, domain_def, geom_def
 
 
 def _run_png(data_voxelize):
@@ -114,13 +114,13 @@ def _run_png(data_voxelize):
 
     # voxelize the PNG files
     with LOGGER.BlockTimer("mesher_png"):
-        (n, d, c, domain_def, reference) = mesher_png.get_mesh(
+        (n, d, c, domain_def, geom_def) = mesher_png.get_mesh(
             param,
             domain_color,
             layer_stack,
         )
 
-    return n, d, c, domain_def, reference
+    return n, d, c, domain_def, geom_def
 
 
 def _run_stl(data_voxelize):
@@ -137,15 +137,15 @@ def _run_stl(data_voxelize):
 
     # voxelize the STL files
     with LOGGER.BlockTimer("mesher_stl"):
-        (n, d, c, domain_def, reference) = mesher_stl.get_mesh(
+        (n, d, c, domain_def, geom_def) = mesher_stl.get_mesh(
             param,
             domain_stl,
         )
 
-    return n, d, c, domain_def, reference
+    return n, d, c, domain_def, geom_def
 
 
-def _run_finalize(n, d, c, domain_def, reference, data_geometry):
+def _run_finalize(n, d, c, domain_def, geom_def, data_geometry):
     """
     Finalize the generated geometry:
         - Generate the point cloud.
@@ -214,7 +214,7 @@ def _run_finalize(n, d, c, domain_def, reference, data_geometry):
         "domain_def": domain_def,  # dict with the indices of the different domains
         "component_def": component_def,  # list with the indices of the connected components
         "connect_def": connect_def,  # dict describing the connected/adjacent domains
-        "reference": reference,  # dict with the faces and points of the original geometry
+        "geom_def": geom_def,  # list of meshes representing the original geometry
     }
 
     return data
@@ -234,9 +234,9 @@ def run(data_geometry):
     check_data_format.check_data_geometry(data_geometry)
 
     # run the mesher
-    (n, d, c, domain_def, reference) = _run_mesher(data_geometry)
+    (n, d, c, domain_def, geom_def) = _run_mesher(data_geometry)
 
     # finalize the mesh
-    data_voxel = _run_finalize(n, d, c, domain_def, reference, data_geometry)
+    data_voxel = _run_finalize(n, d, c, domain_def, geom_def, data_geometry)
 
     return data_voxel

@@ -39,7 +39,7 @@ def run_image(folder_example):
     data_viewer["domain"]["data_options"]["plot_theme"]["background_color"] = "white"
     data_viewer["domain"]["data_options"]["plot_theme"]["axis_add"] = False
     data_viewer["domain"]["data_options"]["plot_view"]["grid_plot"] = False
-    data_viewer["domain"]["data_options"]["plot_view"]["geom_plot"] = False
+    data_viewer["domain"]["data_options"]["plot_view"]["voxel_plot"] = False
     data_viewer["domain"]["data_options"]["plot_view"]["point_plot"] = False
     data_viewer["domain"]["data_plot"]["title"] = None
 
@@ -47,7 +47,7 @@ def run_image(folder_example):
     data_voxel = pypeec.run_mesher_data(data_geometry)
 
     # run the viewer
-    pypeec.run_viewer_data(data_voxel, data_viewer, tag_plot=["domain"])
+    pypeec.run_viewer_data(data_voxel, data_viewer, tag_plot=["domain"], plot_mode="qt")
 
 
 if __name__ == "__main__":

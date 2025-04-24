@@ -48,13 +48,13 @@ def _get_plot_view_theme(pl, grid, voxel, point, plot_view, plot_theme):
         )
 
     # plot the non-empty voxels
-    if plot_view["geom_plot"] and (voxel.n_cells > 0):
+    if plot_view["voxel_plot"] and (voxel.n_cells > 0):
         pl.add_mesh(
             voxel,
             style="wireframe",
-            color=plot_view["geom_color"],
-            opacity=plot_view["geom_opacity"],
-            line_width=plot_view["geom_thickness"],
+            color=plot_view["voxel_color"],
+            opacity=plot_view["voxel_opacity"],
+            line_width=plot_view["voxel_thickness"],
         )
 
     # plot the point cloud

@@ -21,17 +21,12 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
-import vtk
 import warnings
 import scilogger
 import numpy as np
-import pyvista as pv
 import shapely as sha
 import rasterio.features as raf
 import rasterio.transform as rat
-
-# prevent VTK to mess up the output
-vtk.vtkObject.GlobalWarningDisplayOff()
 
 # prevent problematic linear transform to trigger warnings
 warnings.filterwarnings("ignore", module="shapely")
@@ -44,7 +39,7 @@ LOGGER = scilogger.get_logger(__name__, "pypeec")
 
 def _get_boundary_polygon(bnd, z_min):
     """
-    Convert a Shapely boundary into a PyVista polygon.
+    Convert a Shapely boundary into a line mesh.
     """
 
     # check that the boundary is closed
@@ -58,24 +53,29 @@ def _get_boundary_polygon(bnd, z_min):
     # get the 3D boundary
     z = np.full(len(xy), z_min, dtype=np.float64)
     z = np.expand_dims(z, axis=1)
-    xyz = np.hstack((xy, z))
+    points = np.hstack((xy, z))
 
     # remove the duplicated points
-    xyz = xyz[:-1]
+    points = points[:-1]
 
-    # get the face indices
-    lines = np.arange(len(xyz))
-    lines = np.concatenate(([len(xyz)+1], lines, [0]))
+    # get the indices
+    faces = np.empty(0, dtype=np.int64)
+    lines = np.arange(len(points), dtype=np.int64)
+    lines = np.concatenate(([len(points)+1], lines, [0]))
 
     # create the polygon
-    mesh = pv.PolyData(xyz, lines=lines)
+    mesh = {
+        "faces": np.array(faces, dtype=np.int64),
+        "lines": np.array(lines, dtype=np.int64),
+        "points": np.array(points, dtype=np.float64),
+    }
 
     return mesh
 
 
-def _get_shape_mesh(z_min, z_max, obj):
+def _get_shape_mesh(obj, z_min, z_max):
     """
-    Extrude a Shapely polygon into a PyVista mesh.
+    Extrude a Shapely polygon into line meshes.
     """
 
     # ensure that the polygon has a positive orientation
@@ -85,19 +85,19 @@ def _get_shape_mesh(z_min, z_max, obj):
     bnd = obj.exterior
     holes = obj.interiors
 
-    # create an empty mesh
-    mesh = pv.PolyData()
+    # init mesh list
+    geom_def = []
 
     # polygon for the external boundaries
-    mesh += _get_boundary_polygon(bnd, z_min)
-    mesh += _get_boundary_polygon(bnd, z_max)
+    geom_def.append(_get_boundary_polygon(bnd, z_min))
+    geom_def.append(_get_boundary_polygon(bnd, z_max))
 
     # polygon for the holes
     for bnd in holes:
-        mesh += _get_boundary_polygon(bnd, z_min)
-        mesh += _get_boundary_polygon(bnd, z_max)
+        geom_def.append(_get_boundary_polygon(bnd, z_min))
+        geom_def.append(_get_boundary_polygon(bnd, z_max))
 
-    return mesh
+    return geom_def
 
 
 def _get_shape_single(tag, shape_type, shape_data):
@@ -426,13 +426,11 @@ def _get_voxel_size(dx, dy, dz, stack_pos, xy_max_obj, xy_min_obj, xy_max, xy_mi
 def _get_merge_shape(stack_pos, shape_obj):
     """
     Transform all the 2D vector shapes into 3D meshes.
-    Merge all the meshes into a single mesh.
-    The resulting mesh represent the original geometry.
-    This mesh can be used to assess the quality of the voxelization.
+    The resulting meshes represent the original geometry.
     """
 
-    # create an empty mesh
-    reference = pv.PolyData()
+    # init mesh list
+    geom_def = []
 
     # merge all the shapes
     for shape_obj_tmp in shape_obj:
@@ -446,14 +444,14 @@ def _get_merge_shape(stack_pos, shape_obj):
 
         # transform the shapes into meshes
         if isinstance(obj, sha.Polygon):
-            reference += _get_shape_mesh(z_min, z_max, obj)
+            geom_def += _get_shape_mesh(obj, z_min, z_max)
         elif isinstance(obj, sha.MultiPolygon):
             for obj_tmp in obj.geoms:
-                reference += _get_shape_mesh(z_min, z_max, obj_tmp)
+                geom_def += _get_shape_mesh(obj_tmp, z_min, z_max)
         else:
             raise ValueError("invalid shape type")
 
-    return reference
+    return geom_def
 
 
 def get_mesh(param, layer_stack, geometry_shape):
@@ -496,7 +494,7 @@ def get_mesh(param, layer_stack, geometry_shape):
 
         # merge the shapes representing the original geometry
         LOGGER.debug("merge the shapes")
-        reference = _get_merge_shape(stack_pos, shape_obj)
+        geom_def = _get_merge_shape(stack_pos, shape_obj)
 
     # voxelize the shapes
     LOGGER.debug("voxelize the shapes")
@@ -508,11 +506,4 @@ def get_mesh(param, layer_stack, geometry_shape):
     d = d.tolist()
     c = c.tolist()
 
-    # cast reference mesh
-    reference = {
-        "faces": np.array(reference.faces, dtype=np.int64),
-        "lines": np.array(reference.lines, dtype=np.int64),
-        "points": np.array(reference.points, dtype=np.float64),
-    }
-
-    return n, d, c, domain_def, reference
+    return n, d, c, domain_def, geom_def

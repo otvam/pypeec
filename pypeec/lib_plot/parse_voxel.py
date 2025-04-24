@@ -64,17 +64,19 @@ def get_point(pts_cloud):
     return point
 
 
-def get_reference(reference):
+def get_reference(geom_def):
     """
     Construct a PyVista object from the reference mesh.
     """
 
-    if reference is None:
-        reference = pv.PolyData()
-    else:
-        points = reference["points"]
-        lines = reference["lines"]
-        faces = reference["faces"]
-        reference = pv.PolyData(points, lines=lines, faces=faces)
+    # create an empty mesh
+    reference = pv.PolyData()
+
+    # add the different reference mesh objects
+    for geom_tmp in geom_def:
+        points = geom_tmp["points"]
+        lines = geom_tmp["lines"]
+        faces = geom_tmp["faces"]
+        reference += pv.PolyData(points, lines=lines, faces=faces)
 
     return reference

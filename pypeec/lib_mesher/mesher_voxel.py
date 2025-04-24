@@ -29,7 +29,7 @@ def get_mesh(param, domain_index):
     nv = np.prod(n)
 
     # no reference geometry, direct voxelization
-    reference = None
+    geom_def = []
 
     # init new domain indices
     domain_def = {}
@@ -51,4 +51,4 @@ def get_mesh(param, domain_index):
         # add the new item
         domain_def[tag] = idx_tmp
 
-    return n, d, c, domain_def, reference
+    return n, d, c, domain_def, geom_def

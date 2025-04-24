@@ -84,9 +84,11 @@ def _get_mesh_stl(domain_stl, check):
     Find the bounding box for all the meshes (minimum and maximum coordinates).
     """
 
-    # init STL mesh list
+    # init mesh list (for the voxelization)
     mesh_stl = []
-    mesh_all = []
+
+    # init mesh list (for the reference meshes)
+    geom_def = []
 
     # init the coordinate (minimum and maximum coordinates)
     xyz_min = np.full(3, +np.inf, dtype=np.float64)
@@ -113,14 +115,16 @@ def _get_mesh_stl(domain_stl, check):
             xyz_max = np.maximum(xyz_max, tmp_max)
 
             # assign the mesh
-            mesh_all.append(mesh)
             mesh_stl.append({"tag": tag, "mesh": mesh})
 
-    # merge all the meshes
-    reference = pv.MultiBlock(mesh_all)
-    reference = reference.combine().extract_surface()
+            # cast the surface mesh to a dict
+            geom_def.append({
+                "faces": np.array(mesh.faces, dtype=np.int64),
+                "lines": np.array(mesh.lines, dtype=np.int64),
+                "points": np.array(mesh.points, dtype=np.float64),
+            })
 
-    return mesh_stl, reference, xyz_min, xyz_max
+    return mesh_stl, geom_def, xyz_min, xyz_max
 
 
 def _get_voxel_size(d, xyz_max_stl, xyz_min_stl, xyz_max, xyz_min):
@@ -303,7 +307,7 @@ def get_mesh(param, domain_stl):
     with LOGGER.BlockIndent():
         # load the mesh and get the STL bounds
         LOGGER.debug("load STL files")
-        (mesh_stl, reference, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl, check)
+        (mesh_stl, geom_def, xyz_min_stl, xyz_max_stl) = _get_mesh_stl(domain_stl, check)
 
         # geometry size
         LOGGER.debug("get the voxel size")
@@ -331,11 +335,4 @@ def get_mesh(param, domain_stl):
     d = d.tolist()
     c = c.tolist()
 
-    # cast reference mesh
-    reference = {
-        "faces": np.array(reference.faces, dtype=np.int64),
-        "lines": np.array(reference.lines, dtype=np.int64),
-        "points": np.array(reference.points, dtype=np.float64),
-    }
-
-    return n, d, c, domain_def, reference
+    return n, d, c, domain_def, geom_def

@@ -178,7 +178,7 @@ def get_mesh(param, domain_color, layer_stack):
     size = param["size"]
 
     # no reference geometry, direct voxelization
-    reference = None
+    geom_def = []
 
     # get the image size
     (nx, ny) = size
@@ -211,4 +211,4 @@ def get_mesh(param, domain_color, layer_stack):
     # assemble
     n = [nx, ny, nz]
 
-    return n, d, c, domain_def, reference
+    return n, d, c, domain_def, geom_def
