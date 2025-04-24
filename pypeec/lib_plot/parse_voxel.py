@@ -9,8 +9,12 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import vtk
 import numpy as np
 import pyvista as pv
+
+# prevent VTK to mess up the output
+vtk.vtkObject.GlobalWarningDisplayOff()
 
 
 def get_grid(n, d, c):
@@ -72,11 +76,12 @@ def get_reference(geom_def):
     # create an empty mesh
     reference = pv.PolyData()
 
-    # add the different reference mesh objects
+    # add the different reference meshes
     for geom_tmp in geom_def:
-        points = geom_tmp["points"]
-        lines = geom_tmp["lines"]
-        faces = geom_tmp["faces"]
-        reference += pv.PolyData(points, lines=lines, faces=faces)
+        reference += pv.PolyData(
+            geom_tmp["points"],
+            lines=geom_tmp["lines"],
+            faces=geom_tmp["faces"],
+        )
 
     return reference

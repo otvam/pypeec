@@ -32,9 +32,13 @@ import matplotlib.pyplot
 import matplotlib
 import pyvista
 import scilogger
+import vtk
 
 # get a logger
 LOGGER = scilogger.get_logger(__name__, "pypeec")
+
+# prevent VTK to mess up the output
+vtk.vtkObject.GlobalWarningDisplayOff()
 
 # variable for the Qt application single instance
 APPQT = None
