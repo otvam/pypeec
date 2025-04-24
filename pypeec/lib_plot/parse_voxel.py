@@ -64,16 +64,17 @@ def get_point(pts_cloud):
     return point
 
 
-def get_reference(reference, voxel):
+def get_reference(reference):
     """
     Construct a PyVista object from the reference mesh.
     """
 
     if reference is None:
-        reference = voxel
+        reference = pv.PolyData()
     else:
         points = reference["points"]
+        lines = reference["lines"]
         faces = reference["faces"]
-        reference = pv.PolyData(points, faces)
+        reference = pv.PolyData(points, lines=lines, faces=faces)
 
     return reference

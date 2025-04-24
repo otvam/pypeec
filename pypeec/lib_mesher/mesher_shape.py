@@ -21,6 +21,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import vtk
 import warnings
 import scilogger
 import numpy as np
@@ -28,6 +29,9 @@ import pyvista as pv
 import shapely as sha
 import rasterio.features as raf
 import rasterio.transform as rat
+
+# prevent VTK to mess up the output
+vtk.vtkObject.GlobalWarningDisplayOff()
 
 # prevent problematic linear transform to trigger warnings
 warnings.filterwarnings("ignore", module="shapely")
@@ -60,13 +64,13 @@ def _get_boundary_polygon(bnd, z_min):
     xyz = xyz[:-1]
 
     # get the face indices
-    faces = np.arange(len(xyz) + 1)
-    faces = np.roll(faces, 1)
+    lines = np.arange(len(xyz))
+    lines = np.concatenate(([len(xyz)+1], lines, [0]))
 
     # create the polygon
-    polygon = pv.PolyData(xyz, faces=faces)
+    mesh = pv.PolyData(xyz, lines=lines)
 
-    return polygon
+    return mesh
 
 
 def _get_shape_mesh(z_min, z_max, obj):
@@ -81,18 +85,17 @@ def _get_shape_mesh(z_min, z_max, obj):
     bnd = obj.exterior
     holes = obj.interiors
 
+    # create an empty mesh
+    mesh = pv.PolyData()
+
     # polygon for the external boundaries
-    polygon = _get_boundary_polygon(bnd, z_min)
+    mesh += _get_boundary_polygon(bnd, z_min)
+    mesh += _get_boundary_polygon(bnd, z_max)
 
     # polygon for the holes
     for bnd in holes:
-        polygon += _get_boundary_polygon(bnd, z_min)
-
-    # triangulate the resulting polygon
-    polygon = polygon.delaunay_2d(edge_source=polygon)
-
-    # extrude the polygon into a 3D mesh
-    mesh = polygon.extrude((0.0, 0.0, z_max - z_min), capping=True)
+        mesh += _get_boundary_polygon(bnd, z_min)
+        mesh += _get_boundary_polygon(bnd, z_max)
 
     return mesh
 
@@ -428,8 +431,8 @@ def _get_merge_shape(stack_pos, shape_obj):
     This mesh can be used to assess the quality of the voxelization.
     """
 
-    # list for storing the meshes
-    mesh_list = []
+    # create an empty mesh
+    reference = pv.PolyData()
 
     # merge all the shapes
     for shape_obj_tmp in shape_obj:
@@ -443,18 +446,12 @@ def _get_merge_shape(stack_pos, shape_obj):
 
         # transform the shapes into meshes
         if isinstance(obj, sha.Polygon):
-            mesh = _get_shape_mesh(z_min, z_max, obj)
-            mesh_list.append(mesh)
+            reference += _get_shape_mesh(z_min, z_max, obj)
         elif isinstance(obj, sha.MultiPolygon):
             for obj_tmp in obj.geoms:
-                mesh = _get_shape_mesh(z_min, z_max, obj_tmp)
-                mesh_list.append(mesh)
+                reference += _get_shape_mesh(z_min, z_max, obj_tmp)
         else:
             raise ValueError("invalid shape type")
-
-    # assemble the meshes
-    reference = pv.MultiBlock(mesh_list)
-    reference = reference.combine().extract_surface()
 
     return reference
 
@@ -514,6 +511,7 @@ def get_mesh(param, layer_stack, geometry_shape):
     # cast reference mesh
     reference = {
         "faces": np.array(reference.faces, dtype=np.int64),
+        "lines": np.array(reference.lines, dtype=np.int64),
         "points": np.array(reference.points, dtype=np.float64),
     }
 

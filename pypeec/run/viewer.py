@@ -58,7 +58,7 @@ def _get_grid_voxel(data_voxel):
     grid = parse_voxel.get_grid(n, d, c)
     voxel = parse_voxel.get_voxel(grid, idx)
     point = parse_voxel.get_point(pts_cloud)
-    reference = parse_voxel.get_reference(reference, voxel)
+    reference = parse_voxel.get_reference(reference)
 
     # add the domains and connected components to the geometry
     voxel = parse_viewer.set_data(voxel, idx, domain_def, component_def)

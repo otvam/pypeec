@@ -334,6 +334,7 @@ def get_mesh(param, domain_stl):
     # cast reference mesh
     reference = {
         "faces": np.array(reference.faces, dtype=np.int64),
+        "lines": np.array(reference.lines, dtype=np.int64),
         "points": np.array(reference.points, dtype=np.float64),
     }
 
