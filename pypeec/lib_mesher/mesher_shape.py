@@ -86,7 +86,7 @@ def _get_idx_voxel(n, idx_shape, stack_idx):
     return idx_voxel
 
 
-def _get_boundary_polygon(bnd, z_min):
+def _get_boundary_polygon(tag, bnd, z_min):
     """
     Convert a Shapely boundary into a line mesh.
     """
@@ -114,6 +114,7 @@ def _get_boundary_polygon(bnd, z_min):
 
     # create the polygon
     mesh = {
+        "tag": tag,
         "faces": np.array(faces, dtype=np.int64),
         "lines": np.array(lines, dtype=np.int64),
         "points": np.array(points, dtype=np.float64),
@@ -122,7 +123,7 @@ def _get_boundary_polygon(bnd, z_min):
     return mesh
 
 
-def _get_shape_mesh(obj, z_min, z_max):
+def _get_shape_mesh(tag, obj, z_min, z_max):
     """
     Extrude a Shapely polygon into line meshes.
     """
@@ -138,13 +139,13 @@ def _get_shape_mesh(obj, z_min, z_max):
     geom_def = []
 
     # polygon for the external boundaries
-    geom_def.append(_get_boundary_polygon(bnd, z_min))
-    geom_def.append(_get_boundary_polygon(bnd, z_max))
+    geom_def.append(_get_boundary_polygon(tag, bnd, z_min))
+    geom_def.append(_get_boundary_polygon(tag, bnd, z_max))
 
     # polygon for the holes
     for bnd in holes:
-        geom_def.append(_get_boundary_polygon(bnd, z_min))
-        geom_def.append(_get_boundary_polygon(bnd, z_max))
+        geom_def.append(_get_boundary_polygon(tag, bnd, z_min))
+        geom_def.append(_get_boundary_polygon(tag, bnd, z_max))
 
     return geom_def
 
@@ -316,8 +317,8 @@ def _get_shape_obj(geometry_shape, stack_tag, simplify, construct):
     Find the bounding box for all the shapes (minimum and maximum coordinates).
     """
 
-    # init shape dict
-    shape_obj = {}
+    # init shape list
+    shape_obj = []
 
     # init the coordinate (minimum and maximum coordinates)
     xy_min = np.full(2, +np.inf, dtype=np.float64)
@@ -343,7 +344,7 @@ def _get_shape_obj(geometry_shape, stack_tag, simplify, construct):
             xy_max = np.maximum(xy_max, tmp_max)
 
             # assign the object
-            shape_obj[tag] = (obj, idx)
+            shape_obj.append({"tag": tag, "idx": idx, "obj": obj})
 
     return shape_obj, xy_min, xy_max
 
@@ -401,17 +402,22 @@ def _get_merge_shape(stack_pos, shape_obj):
     geom_def = []
 
     # merge all the shapes
-    for obj, idx in shape_obj.values():
+    for shape_obj_tmp in shape_obj:
+        # extract the data
+        tag = shape_obj_tmp["tag"]
+        obj = shape_obj_tmp["obj"]
+        idx = shape_obj_tmp["idx"]
+
         # get the coordinates
         z_min = stack_pos[idx + 0]
         z_max = stack_pos[idx + 1]
 
         # transform the shapes into meshes
         if isinstance(obj, sha.Polygon):
-            geom_def += _get_shape_mesh(obj, z_min, z_max)
+            geom_def += _get_shape_mesh(tag, obj, z_min, z_max)
         elif isinstance(obj, sha.MultiPolygon):
             for obj_tmp in obj.geoms:
-                geom_def += _get_shape_mesh(obj_tmp, z_min, z_max)
+                geom_def += _get_shape_mesh(tag, obj_tmp, z_min, z_max)
         else:
             raise ValueError("invalid shape type")
 
@@ -428,7 +434,12 @@ def _get_domain_def(n, d, c, domain_def, stack_idx, shape_obj):
     xyz_max = c + (n * d) / 2
 
     # voxelize the shapes
-    for tag, (obj, idx) in shape_obj.items():
+    for shape_obj_tmp in shape_obj:
+        # extract the data
+        tag = shape_obj_tmp["tag"]
+        obj = shape_obj_tmp["obj"]
+        idx = shape_obj_tmp["idx"]
+
         # voxelize and get the indices
         idx_shape = _get_voxelize_shape(n, xyz_min, xyz_max, obj)
         idx_voxel = _get_idx_voxel(n, idx_shape, stack_idx[idx])

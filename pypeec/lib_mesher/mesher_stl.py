@@ -84,8 +84,8 @@ def _get_mesh_stl(domain_stl, check):
     Find the bounding box for all the meshes (minimum and maximum coordinates).
     """
 
-    # init mesh dict
-    mesh_stl = {}
+    # init mesh list
+    mesh_stl = []
 
     # init the coordinate (minimum and maximum coordinates)
     xyz_min = np.full(3, +np.inf, dtype=np.float64)
@@ -112,7 +112,7 @@ def _get_mesh_stl(domain_stl, check):
             xyz_max = np.maximum(xyz_max, tmp_max)
 
             # assign the mesh
-            mesh_stl[tag] = mesh
+            mesh_stl.append({"tag": tag, "mesh": mesh})
 
 
     return mesh_stl, xyz_min, xyz_max
@@ -258,8 +258,14 @@ def _get_merge_mesh(mesh_stl):
     geom_def = []
 
     # cast the surface mesh to a dict
-    for mesh in mesh_stl.values():
+    for mesh_stl_tmp in mesh_stl:
+        # extract the data
+        tag = mesh_stl_tmp["tag"]
+        mesh = mesh_stl_tmp["mesh"]
+
+        # add the mesh
         geom_def.append({
+            "tag": tag,
             "faces": np.array(mesh.faces, dtype=np.int64),
             "lines": np.array(mesh.lines, dtype=np.int64),
             "points": np.array(mesh.points, dtype=np.float64),
@@ -274,7 +280,11 @@ def _get_domain_def(pts, connect, domain_def, mesh_stl, thr):
     """
 
     # voxelize the meshes
-    for tag, mesh in mesh_stl.items():
+    for mesh_stl_tmp in mesh_stl:
+        # extract the data
+        tag = mesh_stl_tmp["tag"]
+        mesh = mesh_stl_tmp["mesh"]
+
         # voxelize and get the indices
         idx_voxel = _get_voxelize_stl(pts, connect, mesh, thr)
 
