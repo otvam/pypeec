@@ -10,9 +10,9 @@ name: Run Hook Tests
 
 on:
   # ===================== job triggers
-  push:
-  pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
 
 jobs:
   # ===================== run the tests

@@ -13,9 +13,9 @@ name: Run Version Tests
 
 on:
   # ===================== job triggers
+  push:
+  pull_request:
   workflow_dispatch:
-  schedule:
-    - cron: "0 2 * * 1"
 
 jobs:
   # ===================== run with conda
@@ -24,14 +24,9 @@ jobs:
       fail-fast: false
       matrix:
         system:
-          - "ubuntu-latest"
-          - "macos-latest"
           - "windows-latest"
         version:
-          - "3.10"
           - "3.11"
-          - "3.12"
-          - "3.13"
     name: conda / ${{ matrix.system }} / ${{ matrix.version }}
     runs-on: ${{ matrix.system }}
     timeout-minutes: 20
@@ -59,14 +54,9 @@ jobs:
       fail-fast: false
       matrix:
         system:
-          - "ubuntu-latest"
-          - "macos-latest"
           - "windows-latest"
         version:
-          - "3.10"
           - "3.11"
-          - "3.12"
-          - "3.13"
     name: pip / ${{ matrix.system }} / ${{ matrix.version }}
     runs-on: ${{ matrix.system }}
     timeout-minutes: 20
