@@ -74,7 +74,7 @@ class PlotGui:
         self.name = name
         self.pl_list = []
         self.fig_list = []
-        self.vtk_list = []
+        self.obj_list = []
 
         # variable for the Qt application single instance
         global APPQT
@@ -332,16 +332,16 @@ class PlotGui:
         Save all the plot data as VTK files.
         """
 
-        for tag, vtk in self.vtk_list:
+        for tag, obj in self.obj_list:
             filename = self._get_filename(tag, "vtk")
-            vtk.save(filename)
+            obj.save(filename)
 
-    def open_vtk(self, tag, vtk):
+    def open_vtk(self, tag, obj):
         """
         Add a VTK object.
         """
 
-        self.vtk_list.append((tag, vtk))
+        self.obj_list.append((tag, obj))
 
     def open_pyvista(self, tag, data_window):
         """
@@ -404,7 +404,7 @@ class PlotGui:
         with LOGGER.BlockIndent():
             LOGGER.debug("number of 3D plots = %s", len(self.pl_list))
             LOGGER.debug("number of 2D plots = %s", len(self.fig_list))
-            LOGGER.debug("number of VTK datasets = %s", len(self.vtk_list))
+            LOGGER.debug("number of VTK datasets = %s", len(self.obj_list))
 
         if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
             return

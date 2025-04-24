@@ -110,7 +110,7 @@ def _get_boundary_polygon(tag, bnd, z_min):
     # get the indices
     faces = np.empty(0, dtype=np.int64)
     lines = np.arange(len(points), dtype=np.int64)
-    lines = np.concatenate(([len(points)+1], lines, [0]))
+    lines = np.concatenate(([len(points) + 1], lines, [0]))
 
     # create the polygon
     mesh = {

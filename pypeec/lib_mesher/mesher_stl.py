@@ -114,7 +114,6 @@ def _get_mesh_stl(domain_stl, check):
             # assign the mesh
             mesh_stl.append({"tag": tag, "mesh": mesh})
 
-
     return mesh_stl, xyz_min, xyz_max
 
 
@@ -264,12 +263,14 @@ def _get_merge_mesh(mesh_stl):
         mesh = mesh_stl_tmp["mesh"]
 
         # add the mesh
-        geom_def.append({
-            "tag": tag,
-            "faces": np.array(mesh.faces, dtype=np.int64),
-            "lines": np.array(mesh.lines, dtype=np.int64),
-            "points": np.array(mesh.points, dtype=np.float64),
-        })
+        geom_def.append(
+            {
+                "tag": tag,
+                "faces": np.array(mesh.faces, dtype=np.int64),
+                "lines": np.array(mesh.lines, dtype=np.int64),
+                "points": np.array(mesh.points, dtype=np.float64),
+            }
+        )
 
     return geom_def
 
