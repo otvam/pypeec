@@ -25,6 +25,27 @@ scilogger.disable()
 PATH_ROOT = os.path.dirname(__file__)
 
 
+def _create_temp_file():
+    """
+    Get a temporary file.
+    """
+
+    (_, filename) = tempfile.mkstemp(suffix=".mpk")
+
+    return filename
+
+
+def _delete_temp_file(filename):
+    """
+    Delete a temporary file.
+    """
+
+    try:
+        os.remove(filename)
+    except OSError:
+        pass
+
+
 def _get_run_mesher(use_script, file_geometry, file_voxel):
     """
     Run the mesher.
@@ -166,8 +187,8 @@ def run_workflow(name, use_script):
     file_tolerance = os.path.join(folder_examples, "config", "tolerance.yaml")
 
     # get the temporary files
-    (_, file_voxel) = tempfile.mkstemp(suffix=".mpk")
-    (_, file_solution) = tempfile.mkstemp(suffix=".mpk")
+    file_voxel = _create_temp_file()
+    file_solution = _create_temp_file()
 
     # run the workflow and load the results
     try:
@@ -181,8 +202,8 @@ def run_workflow(name, use_script):
         data_voxel = scisave.load_data(file_voxel)
         data_solution = scisave.load_data(file_solution)
     finally:
-        # close the temporary files
-        os.remove(file_voxel)
-        os.remove(file_solution)
+        # delete the temporary files
+        _delete_temp_file(file_voxel)
+        _delete_temp_file(file_solution)
 
     return data_voxel, data_solution
