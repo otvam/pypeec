@@ -8,7 +8,7 @@
    version="1.1"
    id="svg1"
    xml:space="preserve"
-   inkscape:version="1.4 (1:1.4+202410161351+e7c3feb100)"
+   inkscape:version="1.4.1 (1:1.4.1+202503302257+93de688d07)"
    sodipodi:docname="peec_7.svg"
    inkscape:export-filename="peec_7.png"
    inkscape:export-xdpi="145.14"
@@ -27,9 +27,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1.5042686"
-     inkscape:cx="222.3672"
-     inkscape:cy="393.87913"
+     inkscape:zoom="1.0636785"
+     inkscape:cx="220.93141"
+     inkscape:cy="287.21084"
      inkscape:window-width="2494"
      inkscape:window-height="1371"
      inkscape:window-x="66"
@@ -745,7 +745,17 @@
          x="2.0020676"
          y="112.20966">Step 4. - Extract the Toeplitz matrix-vector multiplication result </tspan></text><g
        id="g6"
-       transform="translate(-41.032847,-145.57022)"><g
+       transform="translate(-41.032847,-145.57022)"><desc
+         id="desc1">\begin{align*}
+T_{n \times n} = \left[\begin{array}{cccccc} 
+ a_1 &amp; a_2 &amp; a_3 &amp; \cdots &amp; \cdots &amp; a_n \\
+ a_2 &amp; a_1 &amp; a_2 &amp; \ddots &amp; &amp; \vdots \\
+ a_3 &amp; a_2 &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\ 
+ \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; a_2 &amp; a_3 \\
+ \vdots &amp; &amp; \ddots &amp; a_2 &amp; a_1 &amp; a_2 \\
+ a_n &amp; \cdots &amp; \cdots &amp; a_3 &amp; a_2 &amp; a_1
+\end{array}\right]
+\end{align*}</desc><g
          fill="#000000"
          fill-opacity="1"
          id="g35"
@@ -1651,7 +1661,22 @@
            y="225.13699"
            id="use146" /></g></g><g
        id="g7"
-       transform="translate(64.748257,-198.80753)"><g
+       transform="translate(64.748257,-198.80753)"><desc
+         id="desc2">\begin{align*}
+C_{2n \times 2n} = \left[\begin{array}{ccccc|cccccc} 
+ a_1 &amp; a_2 &amp; a_3 &amp; \cdots &amp; a_n &amp; a_1 &amp; a_n &amp; a_{n-1} &amp; \cdots &amp; a_2 \\
+ a_2 &amp; a_1 &amp; \ddots &amp; &amp; \vdots &amp; a_n &amp; a_1 &amp; \ddots &amp; &amp; \vdots \\
+ a_3 &amp; \ddots &amp; \ddots &amp; \ddots &amp; a_3 &amp; a_{n-1} &amp; \ddots &amp; \ddots &amp; \ddots &amp; a_{n-1} \\ 
+ \vdots &amp; &amp; \ddots &amp; a_1 &amp; a_2 &amp; \vdots &amp; &amp; \ddots &amp; a_1 &amp; a_n \\
+ a_n &amp; \cdots &amp; a_3 &amp; a_2 &amp; a_1 &amp; a_2 &amp; \cdots &amp; a_{n-1} &amp; a_n &amp; a_1 \\ 
+\hline
+ a_1 &amp; a_n &amp; a_{n-1} &amp; \cdots &amp; a_2 &amp; a_1 &amp; a_2 &amp; a_3 &amp; \cdots &amp; a_n \\
+ a_n &amp; a_1 &amp; \ddots &amp; &amp; \vdots &amp; a_2 &amp; a_1 &amp; \ddots &amp; &amp; \vdots \\
+ a_{n-1} &amp; \ddots &amp; \ddots &amp; \ddots &amp; a_{n-1} &amp; a_3 &amp; \ddots &amp; \ddots &amp; \ddots &amp; a_3 \\ 
+ \vdots &amp; &amp; \ddots &amp; a_1 &amp; a_n &amp; \vdots &amp; &amp; \ddots &amp; a_1 &amp; a_2 &amp; \\
+ a_2 &amp; \cdots &amp; a_{n-1} &amp; a_n &amp; a_1 &amp; a_n &amp; \cdots &amp; a_3 &amp; a_2 &amp; a_1
+\end{array}\right]
+\end{align*}</desc><g
          fill="#000000"
          fill-opacity="1"
          id="g148"
@@ -4048,7 +4073,12 @@
            y="405.93701"
            id="use433" /></g></g><g
        id="g8"
-       transform="translate(-28.748342,-194.71443)"><g
+       transform="translate(-28.748342,-194.71443)"><desc
+         id="desc3">\begin{align*}
+\underline{c}_{2n} = \left[\begin{array}{ccccc|cccccc}
+a_1 &amp; a_2 &amp; a_3 &amp; \cdots &amp; a_n &amp; a_1 &amp; a_n &amp; a_{n-1} &amp; \cdots &amp; a_2
+\end{array}\right]
+\end{align*}</desc><g
          fill="#000000"
          fill-opacity="1"
          id="g435"
@@ -4326,7 +4356,13 @@
        d="M 1.6168341,126.22783 H 209.38001"
        id="path36-6" /><g
        id="g1"
-       transform="translate(126.61054,-47.510047)"><g
+       transform="translate(126.61054,-47.510047)"><desc
+         id="desc4">\begin{align*}
+\underline{y}_{2n} = C_{2n \times 2n} \, \underline{x}_{2n} = \mathrm{IFFT} \left( 
+\mathrm{FFT} \left( \underline{c}_{2n} \right) \otimes
+\mathrm{FFT} \left( \underline{x}_{2n} \right)
+\right)
+\end{align*}</desc><g
          fill="#000000"
          fill-opacity="1"
          id="g465-1"
@@ -4624,7 +4660,13 @@
            y="502.34201"
            id="use500-9" /></g></g><g
        id="g2"
-       transform="translate(124.97649,-44.710507)"><g
+       transform="translate(124.97649,-44.710507)"><desc
+         id="desc5">\begin{align*}
+y_n = T_{n \times n} \,\, \underline{x}_n = 
+\left[\begin{array}{cc}I_{n \times n} &amp; 0_{n \times n}\end{array}\right] \,
+C_{2n \times 2n} \,
+\left[\begin{array}{c}\underline{x}_n \\ \underline{0}_n\end{array}\right]
+\end{align*}</desc><g
          fill="#000000"
          fill-opacity="1"
          id="g501-7"
