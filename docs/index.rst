@@ -1,6 +1,11 @@
 PyPEEC - 3D Quasi-Magnetostatic Solver
 ======================================
 
+..
+   author = "Thomas Guillod"
+   copyright = "Thomas Guillod - Dartmouth College"
+   license = "Mozilla Public License Version 2.0"
+
 .. toctree::
    :caption: General Doc
    :maxdepth: 0

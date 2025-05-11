@@ -1,7 +1,10 @@
 API Doc
 =======
 
-.. currentmodule:: pypeec
+..
+   author = "Thomas Guillod"
+   copyright = "Thomas Guillod - Dartmouth College"
+   license = "Mozilla Public License Version 2.0"
 
 List of Packages
 ----------------
@@ -21,31 +24,31 @@ List of Packages
 Mesher Functions
 ----------------
 
-.. autofunction:: run_mesher_data
-.. autofunction:: run_mesher_file
+.. autofunction:: pypeec.run_mesher_data
+.. autofunction:: pypeec.run_mesher_file
 
 Viewer Functions
 ----------------
 
-.. autofunction:: run_viewer_data
-.. autofunction:: run_viewer_file
+.. autofunction:: pypeec.run_viewer_data
+.. autofunction:: pypeec.run_viewer_file
 
 Solver Functions
 ----------------
 
-.. autofunction:: run_solver_data
-.. autofunction:: run_solver_file
+.. autofunction:: pypeec.run_solver_data
+.. autofunction:: pypeec.run_solver_file
 
 Plotter Functions
 -----------------
 
-.. autofunction:: run_plotter_data
-.. autofunction:: run_plotter_file
+.. autofunction:: pypeec.run_plotter_data
+.. autofunction:: pypeec.run_plotter_file
 
 Other Functions
 ---------------
 
-.. autofunction:: run_extract_examples
-.. autofunction:: run_extract_documentation
-.. autofunction:: run_arguments
-.. autofunction:: run_script
+.. autofunction:: pypeec.run_extract_examples
+.. autofunction:: pypeec.run_extract_documentation
+.. autofunction:: pypeec.run_arguments
+.. autofunction:: pypeec.run_script

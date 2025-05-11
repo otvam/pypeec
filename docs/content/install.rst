@@ -1,6 +1,11 @@
 Installation
 ============
 
+..
+   author = "Thomas Guillod"
+   copyright = "Thomas Guillod - Dartmouth College"
+   license = "Mozilla Public License Version 2.0"
+
 Available Packages
 ------------------
 
