@@ -69,6 +69,7 @@
         - {"domain_resolve": ["trace"], "domain_keep": ["src"]}
         - {"domain_resolve": ["trace"], "domain_keep": ["sink"]}
 "data_integrity":
+    "check_integrity": true
     "domain_connected":
         "conductor": {"domain_group": [["trace"], ["src"], ["sink"]], "connected": true}
     "domain_adjacent":

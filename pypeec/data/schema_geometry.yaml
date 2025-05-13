@@ -85,9 +85,12 @@
     "data_integrity":
         "type": "object"
         "required":
+            - "check_integrity"
             - "domain_connected"
             - "domain_adjacent"
         "properties":
+            "check_integrity":
+                "type": "boolean"
             "domain_connected":
                 "type": "object"
                 "additionalProperties":

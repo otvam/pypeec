@@ -95,6 +95,7 @@
     "resolve_random": false
     "conflict_rules": []
 "data_integrity":
+    "check_integrity": true
     "domain_connected":
         "pri_conductor": {"domain_group": [["pri_coil"], ["pri_src"], ["pri_sink"]], "connected": true}
         "sec_conductor": {"domain_group": [["sec_coil"], ["sec_short"]], "connected": true}

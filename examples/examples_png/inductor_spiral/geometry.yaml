@@ -33,6 +33,7 @@
     "resolve_random": false
     "conflict_rules": []
 "data_integrity":
+    "check_integrity": true
     "domain_connected":
         "conductor": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}
     "domain_adjacent":

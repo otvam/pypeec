@@ -177,9 +177,11 @@
         - {"domain_resolve": ["trace"], "domain_keep": ["sink"]}
 
 # parameters for checking the integrity of the voxel structure
+#   - check_integrity: perform (or not) the integrity checks
 #   - domain_connected: check if specified domains are connected to each other
 #   - domain_adjacent: check if specified domains are adjacent to each other
 "data_integrity":
+    "check_integrity": true
     "domain_connected":
         "conductor": {"domain_group": [["trace", "via"], ["src", "sink"]], "connected": true}
     "domain_adjacent":

@@ -204,6 +204,7 @@ def get_integrity(n, domain_def, data_integrity):
     """
 
     # extract the data
+    check_integrity = data_integrity["check_integrity"]
     domain_connected = data_integrity["domain_connected"]
     domain_adjacent = data_integrity["domain_adjacent"]
 
@@ -224,12 +225,14 @@ def get_integrity(n, domain_def, data_integrity):
     # get the connection between the domains
     connect_def = _get_connect(domain_def, component_def, voxel_matrix)
 
-    # check the connections between the adjacent domains
-    for tag, domain_tmp in domain_adjacent.items():
-        _check_domain_adjacent(connect_def, domain_tmp, tag)
+    # check the voxel structure (if required)
+    if check_integrity:
+        # check the connections between the adjacent domains
+        for tag, domain_tmp in domain_adjacent.items():
+            _check_domain_adjacent(connect_def, domain_tmp, tag)
 
-    # check the connection between the connected components
-    for tag, domain_tmp in domain_connected.items():
-        _check_domain_connected(connect_def, domain_tmp, tag)
+        # check the connection between the connected components
+        for tag, domain_tmp in domain_connected.items():
+            _check_domain_connected(connect_def, domain_tmp, tag)
 
     return component_def, connect_def

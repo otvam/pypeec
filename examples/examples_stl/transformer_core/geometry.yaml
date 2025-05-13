@@ -40,6 +40,7 @@
         - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_src"]}
         - {"domain_resolve": ["sec_coil"], "domain_keep": ["sec_sink"]}
 "data_integrity":
+    "check_integrity": true
     "domain_connected":
         "pri_conductor": {"domain_group": [["pri_coil"], ["pri_src"], ["pri_sink"]], "connected": true}
         "sec_conductor": {"domain_group": [["sec_coil"], ["sec_src"], ["sec_sink"]], "connected": true}

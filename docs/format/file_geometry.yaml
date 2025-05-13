@@ -63,20 +63,19 @@
         - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_src"]}
         - {"domain_resolve": ["dom_cond"], "domain_keep": ["dom_sink"]}
 
-# compute (or not) the connections between the domains
-#   - compute the connected components between the voxels
-#   - check the connections between the adjacent domains
-#   - check the connections between the connected components
-"check_integrity": true
-
 # parameters for checking the integrity of the voxel structure
 "data_integrity":
+    # check (or not) the connections between the domains
+    #   - check the connections between the adjacent domains
+    #   - check the connections between the connected components
+    "check_integrity": true
+
     # check if specified domains are connected to each other
     #   - dict of dicts with the connection name and the connection definition
     #   - optional feature, the dict can be empty without having an impact on the results
     #   - check definition
     #       - connected: boolean specified if the specified domains should be connected
-    #       - domain_group: list of list of domains where the connections are checked
+    #       - domain_group: list of lists of domains where the connections are checked
     #           - the outer list domains are used for the connection checks
     #           - the inner list domains are merged together
     "domain_connected":
@@ -88,7 +87,7 @@
     #   - optional feature, the dict can be empty without having an impact on the results
     #   - check definition
     #       - connected: boolean specified if the specified domains should be connected
-    #       - domain_group: list of list of domains where the connections are checked
+    #       - domain_group: list of lists of domains where the connections are checked
     #           - the outer list domains are used for the connection checks
     #           - the inner list domains are merged together
     "domain_adjacent":

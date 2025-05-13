@@ -35,6 +35,7 @@
         - {"domain_resolve": ["coil"], "domain_keep": ["src"]}
         - {"domain_resolve": ["coil"], "domain_keep": ["sink"]}
 "data_integrity":
+    "check_integrity": true
     "domain_connected":
         "conductor": {"domain_group": [["coil"], ["src"], ["sink"]], "connected": true}
         "core": {"domain_group": [["core"], ["coil", "src", "sink"]], "connected": false}
