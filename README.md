@@ -1,5 +1,15 @@
 # PyPEEC - 3D Quasi-Magnetostatic Solver
 
+![PyPEEC Banner](docs/images/banner.png)
+
+[![python 3](https://img.shields.io/badge/python_3-orange)](https://www.python.org/downloads)
+[![MPL-2.0](https://img.shields.io/badge/MPL--2.0-orange)](http://mozilla.org/MPL/2.0)
+[![git / repo](https://img.shields.io/badge/git-repo-yellow)](https://github.com/otvam/pypeec)
+[![doi / cite](https://img.shields.io/badge/doi-cite-yellow)](https://doi.org/10.5281/zenodo.14941571)
+[![doc / sphinx](https://img.shields.io/badge/doc-sphinx-yellow)](https://pypeec.otvam.ch)
+[![pypi / pkg](https://img.shields.io/pypi/v/pypeec?label=pypi&color=green)](https://pypi.org/project/pypeec)
+[![conda / pkg](https://img.shields.io/conda/v/conda-forge/pypeec?label=conda&color=green)](https://anaconda.org/conda-forge/pypeec)
+
 ---
 * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**
 * **Repository: [github.com/otvam/pypeec](https://github.com/otvam/pypeec)**
@@ -9,8 +19,8 @@
 
 ## Summary
 
-**PyPEEC** is a **3D quasi-magnetostatic PEEC solver** developed at **Dartmouth College** within the Power Management Integration Center (PMIC). 
-PyPEEC is a **fast solver** (FFT and GPU accelerated) that can simulate a large variety of **magnetic components** (inductors, transformers, chokes, IPT coils, busbars, etc.). 
+**PyPEEC** is a **3D quasi-magnetostatic PEEC solver** developed at **Dartmouth College** within the Power Management Integration Center (PMIC).
+PyPEEC is a **fast solver** (FFT and GPU accelerated) that can simulate a large variety of **magnetic components** (inductors, transformers, chokes, IPT coils, busbars, etc.).
 The tool contains a **mesher** (STL, PNG, and GERBER formats), a **solver** (static and frequency domain), and **advanced plotting** capabilities.
 The code is written in **Python** and is fully **open source**!
 
@@ -120,3 +130,4 @@ LGPLv2, LGPLv3, GPLv2, and GPLv3.
 
 ---
 
+![Dartmouth and PMIC](docs/images/institution.png)
