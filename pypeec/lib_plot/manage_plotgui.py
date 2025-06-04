@@ -245,6 +245,11 @@ class PlotGui:
         """
         Show all the figures (Qt framework).
         """
+
+        # return if nothing to be shown
+        if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
+            return
+
         # signal for quitting the event loop with interrupt signal
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -270,6 +275,10 @@ class PlotGui:
         """
         Show all the figures (Jupyter notebooks)
         """
+
+        # return if nothing to be shown
+        if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
+            return
 
         # lazy import of the library
         import IPython.display
@@ -405,9 +414,6 @@ class PlotGui:
             LOGGER.debug("number of 3D plots = %s", len(self.pl_list))
             LOGGER.debug("number of 2D plots = %s", len(self.fig_list))
             LOGGER.debug("number of VTK datasets = %s", len(self.obj_list))
-
-        if (len(self.pl_list) == 0) and (len(self.fig_list) == 0):
-            return
 
         if self.plot_mode == "nb_int":
             LOGGER.debug("display notebook plots")
