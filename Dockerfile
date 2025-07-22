@@ -20,23 +20,23 @@ LABEL org.opencontainers.image.licenses="MPL-2.0 and others"
 
 # install all the dependencies (but not PyPEEC)
 RUN mamba install --yes --channel conda-forge \
+    vtk==9.3.1=osmesa_py312h838d114_109 \
     scilogger==1.2.5 \
     scisave==1.6.0 \
     numpy==2.3.1 \
     scipy==1.16.0 \
     joblib==1.5.1 \
-    vtk==9.3.1=osmesa_py312h838d114_109 \
     pyvista==0.45.3 \
     shapely==2.0.6 \
     rasterio==1.4.3 \
     pillow==11.3.0 \
     matplotlib-base==3.10.3 \
     jupyter-server-proxy==4.4.0 \
-    ipywidgets==8.1.5 \
-    trame-vtk==2.8.12 \
-    trame-vuetify==2.7.2 \
-    trame==3.7.0 \
-    ipympl=0.9.4
+    ipywidgets==8.1.7 \
+    trame-vtk==2.9.1 \
+    trame-vuetify==3.0.1 \
+    trame==3.10.2 \
+    ipympl=0.9.7
 
 # install PyPEEC (no-deps as everything required has been installed)
 RUN mamba install --yes --no-deps --channel conda-forge pypeec
