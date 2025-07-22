@@ -21,13 +21,13 @@ name: pypeec
 channels: [conda-forge]
 dependencies:
   # base installation
-  - python=3.11
+  - python=3.12.11
   # dev tools
-  - pip=25.0.1
-  - ruff=0.11.5
+  - pip=25.1.1
+  - ruff=0.12.4
   - twine=6.1.0
-  - coverage=7.8.0
-  - setuptools_scm=8.2.1
+  - coverage=7.9.2
+  - setuptools_scm=8.3.1
   - sphinx_rtd_theme=3.0.1
   - sphinx=8.2.3
   - pkg-config=0.29.2
@@ -36,34 +36,34 @@ dependencies:
   - scilogger=1.2.5
   - scisave=1.6.0
   # numerical libraries
-  - numpy=2.1.3
-  - scipy=1.14.1
-  - joblib=1.4.2
+  - numpy=2.3.1
+  - scipy=1.16.0
+  - joblib=1.5.1
   # geometry libraries
-  - vtk=9.3.1
-  - pyvista=0.44.2
-  - shapely=2.0.6
-  - rasterio=1.4.2
-  - pillow=11.0.0
-  - matplotlib-base=3.9.2
+  - vtk=9.4.2
+  - pyvista=0.45.3
+  - shapely=2.1.1
+  - rasterio=1.4.3
+  - pillow=11.3.0
+  - matplotlib-base=3.10.3
   # interface libraries
-  - qtpy=2.4.2
-  - pyside6=6.7.3
-  - pyvistaqt=0.11.1
+  - qtpy=2.4.3
+  - pyside6=6.9.1
+  - pyvistaqt=0.11.2
   # optional packages for Jupyter
-  - jupyterlab=4.3.1
+  - jupyterlab=4.4.5
   - jupyter-server-proxy=4.4.0
-  - ipywidgets=8.1.5
-  - trame-vtk=2.8.12
-  - trame-vuetify=2.7.2
-  - trame=3.7.0
-  - ipympl=0.9.4
+  - ipywidgets=8.1.7
+  - trame-vtk=2.9.1
+  - trame-vuetify=3.0.1
+  - trame=3.10.2
+  - ipympl=0.9.7
   # optional optimized numerical libraries
   - pyamg=5.2.1
-  - cupy=13.3.0
+  - cupy=13.4.1
   - pyfftw=0.15.0
   - pydiso=0.1.2
-  - mkl_fft=1.3.11
+  - mkl_fft=2.0.0
   # optional optimized numerical toolkits
   - mkl-devel=2024.2.2
-  - cudatoolkit=11.8.0
+  - cuda-version=11.8
