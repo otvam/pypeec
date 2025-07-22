@@ -86,7 +86,7 @@ Using the Docker Image
     # Run the Docker image
     docker run -p 8888:8888 \
         "pypeec:latest" "start-notebook.py" \
-        --NotebookApp.password="" --NotebookApp.token=""
+        --ServerApp.password="" --IdentityProvider.token=""
 
     # Access Jupyter inside the Docker image
     xdg-open "http://127.0.0.1:8888/lab/tree/notebook.ipynb"
