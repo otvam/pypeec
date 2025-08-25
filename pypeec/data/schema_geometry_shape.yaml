@@ -1,4 +1,18 @@
 #############################################################################
+"shape_data_json": &shape_data_json
+    "type": "object"
+    "required":
+        - "buffer"
+        - "json"
+    properties:
+        "diameter":
+            "type": "buffer"
+            "minimum": 0
+        "json":
+            "type": "string"
+            "minLength": 1
+
+#############################################################################
 "shape_data_pad": &shape_data_pad
     "type": "object"
     "required":
@@ -171,10 +185,18 @@
                     "shape_type":
                         "type": "string"
                         "enum":
+                            - "json"
                             - "trace"
                             - "pad"
                             - "polygon"
                 "allOf":
+                    -   if:
+                            "properties":
+                                "shape_type":
+                                    "const": "json"
+                        "then":
+                            "properties":
+                                "shape_data": *shape_data_json
                     -   if:
                             "properties":
                                 "shape_type":
