@@ -153,13 +153,19 @@ def _get_shape_mesh(tag, obj, z_min, z_max):
 def _get_shape_single(tag, shape_type, shape_data):
     """
     Get a Shapely object for different shapes:
+        - A GeoJSON object.
         - A trace (multi-segment line).
         - A pad (filled disc).
         - A arbitrary polygon.
     """
 
     # get the shape
-    if shape_type == "pad":
+    if shape_type == "json":
+        buffer = 1.0 * shape_data["buffer"]
+        json = shape_data["json"]
+
+        obj = sha.from_geojson(json)
+    elif shape_type == "pad":
         buffer = 0.5 * shape_data["diameter"]
         coord = shape_data["coord"]
 
