@@ -24,49 +24,49 @@
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
-                "shape_type": "json"
+                "shape_type": "geojson"
                 "shape_data":
                     "buffer": 0.5e-3
-                    "json": '{"type":"LineString","coordinates":[[0.0,0.0],[0.015,0.0]]}'
+                    "data": {"type":"LineString","coordinates":[[0.0,0.0],[0.015,0.0]]}
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
-                "shape_type": "json"
+                "shape_type": "geojson"
                 "shape_data":
                     "buffer": 0.5e-3
-                    "json": '{"type":"LineString","coordinates":[[0.0,0.002],[0.015,0.002]]}'
+                    "data": {"type":"LineString","coordinates":[[0.0,0.002],[0.015,0.002]]}
         "pri_src":
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
-                "shape_type": "json"
+                "shape_type": "geojson"
                 "shape_data":
                     "buffer": 0.5e-3
-                    "json": '{"type":"Point","coordinates":[0.0,0.0]}'
+                    "data": {"type":"Point","coordinates":[0.0,0.0]}
         "pri_sink":
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
-                "shape_type": "json"
+                "shape_type": "geojson"
                 "shape_data":
                     "buffer": 0.5e-3
-                    "json": '{"type":"Point","coordinates":[0.015,0.0]}'
+                    "data": {"type":"Point","coordinates":[0.015,0.0]}
         "sec_src":
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
-                "shape_type": "json"
+                "shape_type": "geojson"
                 "shape_data":
                     "buffer": 0.5e-3
-                    "json": '{"type":"Point","coordinates":[0.0,0.002]}'
+                    "data": {"type":"Point","coordinates":[0.0,0.002]}
         "sec_sink":
             -
                 "shape_layer": ["copper"]
                 "shape_operation": "add"
-                "shape_type": "json"
+                "shape_type": "geojson"
                 "shape_data":
                     "buffer": 0.5e-3
-                    "json": '{"type":"Point","coordinates":[0.015,0.002]}'
+                    "data": {"type":"Point","coordinates":[0.015,0.002]}
 "data_point":
     "check_cloud": true
     "filter_cloud": true

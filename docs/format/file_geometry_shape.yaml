@@ -45,9 +45,9 @@
     #   - domain definition
     #       - shape_layer: list of layers where the shape is located
     #       - shape_operation: composition operation for assembling the shape ("add" or "sub")
-    #       - shape_type: type of the shape ("json", "pad" or "trace" or "polygon")
+    #       - shape_type: type of the shape ("geojson", "pad" or "trace" or "polygon")
     #       - shape_data: data containing the shape geometry
-    #           - "json"
+    #           - "geojson"
     #               - json: string with the GeoJSON object
     #               - buffer: thickness of the buffer around the polygons
     #           - "pad"
@@ -65,10 +65,10 @@
             -
                 "shape_layer": ["cond"]
                 "shape_operation": "add"
-                "shape_type": "json"
+                "shape_type": "geojson"
                 "shape_data":
                     "buffer": 0.5e-3
-                    "json": '{"type":"LineString","coordinates":[[0.0,0.0],[0.015,0.0]]}'
+                    "data": {"type":"LineString","coordinates":[[0.0,0.0],[0.015,0.0]]}
         "dom_cond":
             -
                 "shape_layer": ["cond"]

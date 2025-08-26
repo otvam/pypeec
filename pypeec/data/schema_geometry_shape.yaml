@@ -1,16 +1,16 @@
 #############################################################################
-"shape_data_json": &shape_data_json
+"shape_data_geojson": &shape_data_geojson
     "type": "object"
     "required":
         - "buffer"
-        - "json"
+        - "data"
     properties:
         "diameter":
             "type": "buffer"
             "minimum": 0
-        "json":
-            "type": "string"
-            "minLength": 1
+        "data":
+            "type": "object"
+            "minProperties": 1
 
 #############################################################################
 "shape_data_pad": &shape_data_pad
@@ -185,7 +185,7 @@
                     "shape_type":
                         "type": "string"
                         "enum":
-                            - "json"
+                            - "geojson"
                             - "trace"
                             - "pad"
                             - "polygon"
@@ -193,10 +193,10 @@
                     -   if:
                             "properties":
                                 "shape_type":
-                                    "const": "json"
+                                    "const": "geojson"
                         "then":
                             "properties":
-                                "shape_data": *shape_data_json
+                                "shape_data": *shape_data_geojson
                     -   if:
                             "properties":
                                 "shape_type":

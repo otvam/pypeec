@@ -21,6 +21,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "Mozilla Public License Version 2.0"
 
+import json
 import warnings
 import scilogger
 import numpy as np
@@ -160,11 +161,12 @@ def _get_shape_single(tag, shape_type, shape_data):
     """
 
     # get the shape
-    if shape_type == "json":
+    if shape_type == "geojson":
         buffer = 1.0 * shape_data["buffer"]
-        json = shape_data["json"]
+        data = shape_data["data"]
 
-        obj = sha.from_geojson(json)
+        data = json.dumps(data)
+        obj = sha.from_geojson(data)
     elif shape_type == "pad":
         buffer = 0.5 * shape_data["diameter"]
         coord = shape_data["coord"]
