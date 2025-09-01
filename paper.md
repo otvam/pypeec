@@ -117,7 +117,7 @@ multi-core CPUs and GPUs. Optional HPC libraries are available for accelerating
 the sparse preconditioner factorization (MKL/PARDISO and PyAMG) and the FFT 
 operations (FFTW, MKL/FFT, and CuPy/CUDA). PyPEEC can be used through an API, a 
 command-line tool, or Jupyter notebooks. The package is available through the
-Python package index (PyPi) and the community-driven packaging for Conda
+Python package index (PyPi) and the community-driven Conda package index
 (conda-forge). A Docker image with JupyterLab is also maintained. 
 
 \autoref{fig:workflow} depicts the PyPEEC workflow. First, the *mesher* builds 
