@@ -41,7 +41,7 @@ of the free space. This paper introduces PyPEEC, an open-source Python solver
 targeting 3D quasi-magnetostatic problems such as inductors, transformers, 
 chokes, IPT coils, or busbars. The geometry is described with voxels and the 
 solver uses an FFT-accelerated variant of the PEEC method. The FFT acceleration 
-drastically reduces the computational costs and the memory footprint.
+drastically reduces the computational cost and the memory footprint.
 
 # Statement of Need
 
@@ -61,7 +61,7 @@ cost and the memory requirement become problematic for large problems.
 
 This problem can be mitigated if the geometry is represented with voxels 
 [@fft_peec; @yucel]. The first advantage of such geometries is that the Green's 
-functions (i.e. the inductance and potential matrices) have analytical 
+functions (i.e., the inductance and potential matrices) have analytical 
 solutions, avoiding computationally intensive numerical integrals [@hoer_exact; 
 @piatek_exact]. The second advantage is that, due to the regular voxel 
 discretization, many coefficients of the inductance and potential matrices are 
@@ -69,13 +69,13 @@ redundant. The dense matrices are block-Toeplitz Toeplitz-block matrices and
 feature the following key properties [@fft_multi_solver; @fft_multi_theory]:
 
 - The block-Toeplitz Toeplitz-block matrices can be embedded into circulant 
-tensors reducing the memory requirements from $O(n^2)$ to $O(n)$.
+tensors, reducing the memory requirements from $O(n^2)$ to $O(n)$.
 - The matrix-vector multiplications can be done with Fourier transforms. With 
 an FFT algorithm, the computational complexity of matrix-vector multiplications 
 is reduced from $O(n^2)$ to $O(n \log(n))$. 
 
 Different variants of the FFT-accelerated PEEC method have been shown to be 
-extremely fast for a large variety of electromagnetic problems such as 
+extremely fast for a large variety of electromagnetic problems, such as 
 high-frequency transformers [@fft_peec], power inductors [@marconato], human 
 body field exposure [@human_peec], nuclear fusion devices [@bettini], and PCB 
 layouts [@grossner].
@@ -83,9 +83,9 @@ layouts [@grossner].
 An open-source implementation ("FFT-PEEC") of the FFT-accelerated PEEC method 
 already exists [@peec_code; @nlie_code]. However, this code can only handle 
 magnetic materials for static simulations (and not in the frequency domain). 
-Moreover, depending on the considered quasi-static problem (e.g. geometries 
+Moreover, depending on the considered quasi-static problem (e.g., geometries 
 with multiple conductors), the source code requires some adaptations. The 
-open-source tools "VoxHenry" and "MARIE" are also used FFT-accelerated methods 
+open-source tools "VoxHenry" and "MARIE" are also using FFT-accelerated methods, 
 but are specialized for full-wave solutions without magnetic materials 
 [@vox_code; @marie_code]. Finally, it should be noted that all the 
 aforementioned implementations depend on proprietary programming languages and 
@@ -120,13 +120,13 @@ command-line tool, or Jupyter notebooks. The package is available through the
 Python package index (PyPi) and the community-driven packaging for Conda
 (conda-forge). A Docker image with JupyterLab is also maintained. 
 
-\autoref{fig:workflow} depicts the PyPEEC workflow. First the *mesher* builds 
+\autoref{fig:workflow} depicts the PyPEEC workflow. First, the *mesher* builds 
 the geometry (from vector shapes, STL files, PNG files, or GERBER files), 
 performs the voxelization, and checks the validity of the discretization. 
 Afterward, the *solver* creates the FFT-multiplication operators, assembles the 
-equation systems, extract sparse preconditioners, solves the problem, and 
+equation systems, extracts sparse preconditioners, solves the problem, and 
 post-processes the solution. The *viewer* and the *plotter* are used to 
-visualize the results. Aternatively, ParaView can be used to analyze and 
+visualize the results. Alternatively, ParaView can be used to analyze and 
 visualize the solutions.
 
 # Solver Performance
@@ -140,7 +140,7 @@ represents the number of unknowns for the PEEC problem (dense equation system).
 The computational cost is evaluated with an AMD\ EPYC\ 7543\ CPU (without GPUs).
 
 ![(a)\ Ratio between the AC and DC current densities. (b)\ Relative error on 
-the extract equivalent resistance and the inductance. (c)\ Wall clock time 
+the extracted equivalent resistance and the inductance. (c)\ Wall clock time 
 duration for the complete workflow.](performance.pdf){#fig:performance 
 width="100%"}
 
@@ -152,10 +152,10 @@ acceleration allows dense PEEC problems with 10^7^ degrees of freedom to be
 solved in 80 seconds.
 
 The performances of PyPEEC are impacted by the following factors. For
-problems dominated by eddy-currents and/or containing magnetic materials,
+problems dominated by eddy currents and/or containing magnetic materials,
 the majority of the computational effort (typically over 70%) is linked
-to the FFT accelerated multiplications. In such cases, the performances
-are directly driven by the FFT solver and benefits from the available
+to the FFT-accelerated multiplications. In such cases, the performances
+are directly driven by the FFT solver and benefit from the available
 parallel and GPU algorithms. Finally, it should be noted that PyPEEC is
 using a regular voxel structure to represent the geometry. This implies
 that large geometries with small features cannot be meshed efficiently.
