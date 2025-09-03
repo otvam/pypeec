@@ -1,0 +1,38 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Guillod
+  given-names: Thomas
+  orcid: "https://orcid.org/0000-0003-0738-5823"
+- family-names: Sullivan
+  given-names: Charles R.
+  orcid: "https://orcid.org/0000-0001-7492-9005"
+contact:
+- family-names: Guillod
+  given-names: Thomas
+  orcid: "https://orcid.org/0000-0003-0738-5823"
+doi: 10.5281/zenodo.16764265
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Guillod
+    given-names: Thomas
+    orcid: "https://orcid.org/0000-0003-0738-5823"
+  - family-names: Sullivan
+    given-names: Charles R.
+    orcid: "https://orcid.org/0000-0001-7492-9005"
+  date-published: 2025-09-02
+  doi: 10.21105/joss.06644
+  issn: 2475-9066
+  issue: 113
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 6644
+  title: "PyPEEC: A 3D Quasi-Magnetostatic Solver using an
+    FFT-Accelerated PEEC Method with Voxelization"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.06644"
+  volume: 10
+title: "PyPEEC: A 3D Quasi-Magnetostatic Solver using an FFT-Accelerated
+  PEEC Method with Voxelization"
