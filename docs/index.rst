@@ -52,9 +52,9 @@ The code is written in **Python** and is fully **open source**!
    :target: https://github.com/otvam/pypeec
    :alt: git / repo
 
-.. image:: images/badge_doi.svg
-   :target: https://doi.org/10.5281/zenodo.14941571
-   :alt: doi / cite
+.. image:: images/badge_paper.svg
+   :target: https://doi.org/10.21105/joss.06644
+   :alt: paper / 10.21105/joss.06644
 
 .. image:: images/badge_doc.svg
    :target: https://pypeec.otvam.ch
@@ -71,6 +71,7 @@ The code is written in **Python** and is fully **open source**!
 .. important::
     * **Website:** `pypeec.otvam.ch <https://pypeec.otvam.ch>`__
     * **Repository:** `github.com/otvam/pypeec <https://github.com/otvam/pypeec>`__
+    * **Paper:** `doi.org/10.21105/joss.06644 <https://doi.org/10.21105/joss.06644>`__
     * **Conda:** `anaconda.org/conda-forge/pypeec <https://anaconda.org/conda-forge/pypeec>`__
     * **PyPI:** `pypi.org/project/pypeec <https://pypi.org/project/pypeec>`__
 

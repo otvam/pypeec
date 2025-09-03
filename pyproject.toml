@@ -79,6 +79,7 @@ Homepage = "https://pypeec.otvam.ch"
 Repository = "https://github.com/otvam/pypeec"
 Releases = "https://github.com/otvam/pypeec/releases"
 Issues = "https://github.com/otvam/pypeec/issues"
+Paper = "https://doi.org/10.21105/joss.06644"
 
 [project.readme]
 file = "README.md"

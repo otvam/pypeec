@@ -5,7 +5,7 @@
 [![python 3](https://img.shields.io/badge/python_3-orange)](https://www.python.org/downloads)
 [![MPL-2.0](https://img.shields.io/badge/MPL--2.0-orange)](http://mozilla.org/MPL/2.0)
 [![git / repo](https://img.shields.io/badge/git-repo-yellow)](https://github.com/otvam/pypeec)
-[![doi / cite](https://img.shields.io/badge/doi-cite-yellow)](https://doi.org/10.5281/zenodo.14941571)
+[![paper / 10.21105/joss.06644](https://img.shields.io/badge/paper-10.21105/joss.06644-yellow)](https://doi.org/10.21105/joss.06644)
 [![doc / sphinx](https://img.shields.io/badge/doc-sphinx-yellow)](https://pypeec.otvam.ch)
 [![pypi / pkg](https://img.shields.io/pypi/v/pypeec?label=pypi&color=green)](https://pypi.org/project/pypeec)
 [![conda / pkg](https://img.shields.io/conda/v/conda-forge/pypeec?label=conda&color=green)](https://anaconda.org/conda-forge/pypeec)
@@ -13,6 +13,7 @@
 ---
 * **Website: [pypeec.otvam.ch](https://pypeec.otvam.ch)**
 * **Repository: [github.com/otvam/pypeec](https://github.com/otvam/pypeec)**
+* **Paper: [doi.org/10.21105/joss.06644](https://doi.org/10.21105/joss.06644)**
 * **Conda: [anaconda.org/conda-forge/pypeec](https://anaconda.org/conda-forge/pypeec)**
 * **PyPI: [pypi.org/project/pypeec](https://pypi.org/project/pypeec)**
 ---
@@ -80,6 +81,8 @@ For such cases, PyPEEC can be very slow and consume a lot of memory.
 
   * [Website](https://pypeec.otvam.ch)
   * [Repository](https://github.com/otvam/pypeec)
+  * [Paper](https://doi.org/10.21105/joss.06644)
+  * [Citation](https://doi.org/10.21105/joss.06644)
   * [Issues](https://github.com/otvam/pypeec/issues)
 
 * **Releases**
