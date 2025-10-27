@@ -36,7 +36,7 @@ jobs:
     runs-on: ${{ matrix.system }}
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v3
         with:
@@ -71,9 +71,9 @@ jobs:
     runs-on: ${{ matrix.system }}
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.version }}
       - name: Install dependencies
