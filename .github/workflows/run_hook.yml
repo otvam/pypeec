@@ -26,4 +26,5 @@ jobs:
         with:
           python-version: '3.13'
       - name: Python version
+        shell: bash
         run: python --version
