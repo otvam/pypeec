@@ -42,7 +42,7 @@ def check_plot_options(plot_mode, path, name):
     # check plot_mode with a schema
     schema = {
         "type": ["null", "string"],
-        "enum": [None, "qt", "nb_int", "nb_std", "png", "vtk", "debug"],
+        "enum": [None, "qt", "nb", "png", "vtk", "debug"],
     }
     scisave.validate_schema(plot_mode, schema)
 

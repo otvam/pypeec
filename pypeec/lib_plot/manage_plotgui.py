@@ -97,10 +97,7 @@ class PlotGui:
         # setup PyVista and Matplotlib
         if self.plot_mode == "qt":
             matplotlib.use("QtAgg")
-        if self.plot_mode == "nb_int":
-            pyvista.set_jupyter_backend("trame")
-            matplotlib.use("ipympl")
-        if self.plot_mode == "nb_std":
+        if self.plot_mode == "nb":
             pyvista.set_jupyter_backend("static")
             matplotlib.use("inline")
 
@@ -271,7 +268,7 @@ class PlotGui:
         if status != 0:
             raise RuntimeError("error during the Qt event loop / exit_code = %d" % status)
 
-    def _show_figure_nb(self, interactive):
+    def _show_figure_nb(self):
         """
         Show all the figures (Jupyter notebooks)
         """
@@ -293,10 +290,7 @@ class PlotGui:
         with LOGGER.BlockIndent():
             for tag, fig in self.fig_list:
                 LOGGER.debug("show / %s", tag)
-                if interactive:
-                    IPython.display.display(fig.canvas)
-                else:
-                    IPython.display.display(fig)
+                IPython.display.display(fig)
 
     def _close_figure(self):
         """
@@ -364,10 +358,10 @@ class PlotGui:
         notebook_size = data_window["notebook_size"]
 
         # create the figure
-        if self.plot_mode in ["nb_int", "nb_std"]:
-            pl = PlotGui._get_plotter_pyvista_nb(notebook_size)
-        elif self.plot_mode in ["png", "vtk", "debug"]:
+        if self.plot_mode in ["png", "vtk", "debug"]:
             pl = PlotGui._get_plotter_pyvista_base(image_size)
+        elif self.plot_mode == "nb":
+            pl = PlotGui._get_plotter_pyvista_nb(notebook_size)
         elif self.plot_mode == "qt":
             pl = PlotGui._get_plotter_pyvista_qt(tag, show_menu, window_size)
         else:
@@ -390,10 +384,10 @@ class PlotGui:
         notebook_size = data_window["notebook_size"]
 
         # create the figure
-        if self.plot_mode in ["nb_int", "nb_std"]:
-            fig = PlotGui._get_figure_matplotlib_nb(notebook_size)
-        elif self.plot_mode in ["png", "vtk", "debug"]:
+        if self.plot_mode in ["png", "vtk", "debug"]:
             fig = PlotGui._get_figure_matplotlib_base(image_size)
+        elif self.plot_mode == "nb":
+            fig = PlotGui._get_figure_matplotlib_nb(notebook_size)
         elif self.plot_mode == "qt":
             fig = PlotGui._get_figure_matplotlib_qt(tag, show_menu, window_size)
         else:
@@ -415,13 +409,9 @@ class PlotGui:
             LOGGER.debug("number of 2D plots = %s", len(self.fig_list))
             LOGGER.debug("number of VTK datasets = %s", len(self.obj_list))
 
-        if self.plot_mode == "nb_int":
+        if self.plot_mode == "nb":
             LOGGER.debug("display notebook plots")
-            self._show_figure_nb(True)
-            LOGGER.debug("exit plotting routine")
-        elif self.plot_mode == "nb_std":
-            LOGGER.debug("display notebook plots")
-            self._show_figure_nb(False)
+            self._show_figure_nb()
             LOGGER.debug("exit plotting routine")
         elif self.plot_mode == "png":
             LOGGER.debug("save PNG files")

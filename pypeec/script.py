@@ -140,7 +140,7 @@ def _get_arg_viewer(subparsers):
         "-pm",
         "--plot_mode",
         help="selection of the plot mode (default: debug)",
-        choices=["qt", "nb_int", "nb_std", "png", "vtk", "debug"],
+        choices=["qt", "nb", "png", "vtk", "debug"],
         default=None,
         dest="plot_mode",
     )
@@ -260,7 +260,7 @@ def _get_arg_plotter(subparsers):
         "-pm",
         "--plot_mode",
         help="selection of the plot mode (default: debug)",
-        choices=["qt", "nb_int", "nb_std", "png", "vtk", "debug"],
+        choices=["qt", "nb", "png", "vtk", "debug"],
         default=None,
         dest="plot_mode",
     )
