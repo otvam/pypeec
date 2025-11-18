@@ -8,19 +8,19 @@ scilogger==1.2.5
 scisave==1.6.0
 
 # numerical libraries
-numpy==2.3.1
-scipy==1.16.0
-joblib==1.5.1
+numpy==2.3.5
+scipy==1.16.3
+joblib==1.5.2
 
 # geometry libraries
-vtk==9.4.2
-pyvista==0.45.3
-shapely==2.1.1
+vtk==9.5.2
+pyvista==0.46.4
+shapely==2.1.2
 rasterio==1.4.3
-pillow==11.3.0
-matplotlib==3.10.3
+pillow==12.0.0
+matplotlib==3.10.8
 
 # interface libraries
-qtpy==2.4.2
-pyside6==6.9.1
-pyvistaqt==0.11.2
+qtpy==2.4.3
+pyside6==6.9.3
+pyvistaqt==0.11.3
