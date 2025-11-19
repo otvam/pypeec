@@ -8,7 +8,7 @@
 # Mozilla Public License Version 2.0
 
 # definition of the base image
-FROM quay.io/jupyter/base-notebook:2025-07-14
+FROM quay.io/jupyter/base-notebook:2025-11-10
 
 # image metadata
 LABEL org.opencontainers.image.authors="Thomas Guillod <guillod@otvam.ch>"
@@ -20,25 +20,20 @@ LABEL org.opencontainers.image.licenses="MPL-2.0 and others"
 
 # install all the dependencies (but not PyPEEC)
 RUN mamba install --yes --channel conda-forge \
-    vtk==9.4.2 \
+    vtk==9.5.2 \
     mesalib==25.0.5 \
     scilogger==1.2.5 \
     scisave==1.6.0 \
-    numpy==2.3.1 \
-    scipy==1.16.0 \
-    joblib==1.5.1 \
-    pyvista==0.45.3 \
-    shapely==2.1.1 \
+    numpy==2.3.5 \
+    scipy==1.16.3 \
+    joblib==1.5.2 \
+    pyvista==0.46.4 \
+    shapely==2.1.2 \
     rasterio==1.4.3 \
-    pillow==11.3.0 \
-    matplotlib-base==3.10.3 \
-    jupyterlab==4.4.5 \
-    jupyter-server-proxy==4.4.0 \
-    ipywidgets==8.1.7 \
-    trame-vtk==2.9.1 \
-    trame-vuetify==3.0.1 \
-    trame==3.10.2 \
-    ipympl=0.9.7
+    pillow==12.0.0 \
+    matplotlib-base==3.10.8 \
+    jupyterlab==4.5.0 \
+    ipython=9.7.0
 
 # install PyPEEC (no-deps as everything required has been installed)
 RUN mamba install --yes --no-deps --channel conda-forge pypeec
